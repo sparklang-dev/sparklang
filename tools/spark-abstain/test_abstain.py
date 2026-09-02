@@ -308,6 +308,110 @@ class HfHookMockTests(unittest.TestCase):
         )
         self.assertIsNone(h)
 
+    def test_vllm_mock_http_ok(self) -> None:
+        payload = json.dumps(
+            {
+                "object": "spark.hidden",
+                "hidden": [0.25, -0.5, 1.0],
+                "dim": 3,
+                "source": "mock",
+            }
+        ).encode("utf-8")
+
+        class _Resp:
+            status = 200
+
+            def read(self) -> bytes:
+                return payload
+
+            def __enter__(self) -> "_Resp":
+                return self
+
+            def __exit__(self, *a: object) -> None:
+                return None
+
+        with patch(
+            "sparklang.abstain.spark_hidden.urllib.request.urlopen",
+            return_value=_Resp(),
+        ):
+            h = try_vllm_last_hidden(
+                "http://mock.local:8765",
+                "Who is the mayor?",
+                timeout_s=1.0,
+            )
+        self.assertIsNotNone(h)
+        assert h is not None
+        self.assertEqual(list(h.tolist()), [0.25, -0.5, 1.0])
+
+    def test_vllm_mock_bad_dim(self) -> None:
+        payload = json.dumps(
+            {"hidden": [1.0, 2.0], "dim": 99}
+        ).encode("utf-8")
+
+        class _Resp:
+            status = 200
+
+            def read(self) -> bytes:
+                return payload
+
+            def __enter__(self) -> "_Resp":
+                return self
+
+            def __exit__(self, *a: object) -> None:
+                return None
+
+        with patch(
+            "sparklang.abstain.spark_hidden.urllib.request.urlopen",
+            return_value=_Resp(),
+        ):
+            h = try_vllm_last_hidden(
+                "http://mock.local:8765", "x", timeout_s=1.0
+            )
+        self.assertIsNone(h)
+
+
+class SparkHiddenContractTests(unittest.TestCase):
+    """``/spark_hidden`` request/response contract (no GPU)."""
+
+    def test_parse_request_ok(self) -> None:
+        from sparklang.abstain.spark_hidden import parse_request
+
+        r = parse_request(
+            {"prompt": " hi ", "max_length": 64, "layer": -1}
+        )
+        self.assertEqual(r.prompt, "hi")
+        self.assertEqual(r.max_length, 64)
+
+    def test_parse_request_empty_prompt(self) -> None:
+        from sparklang.abstain.spark_hidden import (
+            SparkHiddenContractError,
+            parse_request,
+        )
+
+        with self.assertRaises(SparkHiddenContractError):
+            parse_request({"prompt": "  "})
+
+    def test_parse_response_roundtrip(self) -> None:
+        from sparklang.abstain.spark_hidden import (
+            build_response,
+            parse_response,
+        )
+
+        built = build_response(
+            [0.1, 0.2],
+            model="toy_stub",
+            source="toy_stub",
+        )
+        again = parse_response(built.to_dict())
+        self.assertEqual(again.dim, 2)
+        self.assertEqual(again.hidden, [0.1, 0.2])
+        self.assertEqual(again.object, "spark.hidden")
+
+    def test_post_empty_base(self) -> None:
+        from sparklang.abstain.spark_hidden import post_spark_hidden
+
+        self.assertIsNone(post_spark_hidden("", "p"))
+
 
 class ExportTrainTests(unittest.TestCase):
     """Export toy/backbone hiddens → train dim-matched head."""

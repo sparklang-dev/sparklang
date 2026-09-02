@@ -141,19 +141,30 @@ make test-abstain
 
         <h2 id="spark_hidden">vLLM <code class="inline-code">/spark_hidden</code> contract</h2>
         <p>Stock OpenAI-compat servers do not export last-layer states.
-        Optional sidecar:</p>
+        Spark expects an optional sidecar:</p>
         <pre><code class="language-http">POST {SPARK_ABSTAIN_VLLM_URL}/spark_hidden
-{"prompt":"…"}
-→ {"hidden":[…], "dim": N}
+{"prompt":"…", "max_length": 512, "layer": -1}
+→ {"object":"spark.hidden", "hidden":[…], "dim": N,
+   "model":"…", "source":"hf_prefill"}
 </code></pre>
-        <p>Laptop stub:
-        <code class="inline-code">tools/spark-abstain/spark_hidden_stub.py</code>
-        (toy vectors — not vLLM).</p>
+        <p><strong>HF sidecar</strong> (real last-token export):
+        <code class="inline-code">pip install -e 'python/[sidecar]'</code>
+        then
+        <code class="inline-code">tools/spark-abstain/spark_hidden_sidecar.py --model /path/to/hf-model</code>.
+        Env: <code class="inline-code">SPARK_ABSTAIN_VLLM_URL</code>,
+        optional <code class="inline-code">SPARK_ABSTAIN_VLLM_TOKEN</code> /
+        <code class="inline-code">SPARK_ABSTAIN_VLLM_TIMEOUT</code>.</p>
+        <p>Laptop stub (toy vectors — CI only):
+        <code class="inline-code">tools/spark-abstain/spark_hidden_stub.py</code>.
+        Shared contract:
+        <code class="inline-code">python/sparklang/abstain/spark_hidden.py</code>.</p>
 
         <h2 id="gaps">Honest gaps</h2>
         <ul>
           <li>CI never loads a 27B — toy / bag-hash fixtures only.</li>
           <li>Retrain on real backbone hiddens before claiming gate quality.</li>
+          <li>Stock vLLM still needs the HF sidecar (or a future plugin)
+            for <code class="inline-code">/spark_hidden</code>.</li>
           <li>Labeled corpus is user-supplied; fixtures are tiny.</li>
           <li>llama.cpp / GGUF hidden hooks — out of scope.</li>
         </ul>

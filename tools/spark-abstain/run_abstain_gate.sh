@@ -112,4 +112,33 @@ SPARK_ABSTAIN_STUB=1 ./spark-abstain --live ask \
   >/tmp/spark-ab-ask-stub.txt
 grep -q '"abstain":true' /tmp/spark-ab-ask-stub.txt
 
+# Contract stub HTTP → live ask (toy dim 16; no GPU)
+PYTHONPATH=python python3 tools/spark-abstain/spark_hidden_stub.py \
+  --host 127.0.0.1 --port 18765 --dim 16 &
+STUB_PID=$!
+cleanup_stub() { kill "$STUB_PID" 2>/dev/null || true; }
+trap cleanup_stub EXIT
+for _ in 1 2 3 4 5 6 7 8 9 10; do
+  if curl -sf -X POST "http://127.0.0.1:18765/spark_hidden" \
+    -H 'Content-Type: application/json' \
+    -d '{"prompt":"ping"}' >/tmp/spark-ab-stub-http.json; then
+    break
+  fi
+  sleep 0.2
+done
+grep -q '"object": "spark.hidden"\|"object":"spark.hidden"' \
+  /tmp/spark-ab-stub-http.json
+grep -q '"source": "toy_stub"\|"source":"toy_stub"' \
+  /tmp/spark-ab-stub-http.json
+SPARK_ABSTAIN_VLLM_URL=http://127.0.0.1:18765 \
+  ./spark-abstain --live ask \
+  --prompt "Who is the mayor of Springfield?" \
+  --weights out/heads-test/abstain16.pt \
+  >/tmp/spark-ab-ask-vllm.txt
+grep -q '"hidden_source": "vllm_spark_hidden"\|"hidden_source":"vllm_spark_hidden"' \
+  /tmp/spark-ab-ask-vllm.txt
+grep -q '"mode": "live"\|"mode":"live"' /tmp/spark-ab-ask-vllm.txt
+cleanup_stub
+trap - EXIT
+
 echo "test-abstain OK"

@@ -237,25 +237,73 @@ Continue without an in-process HF generate returns
 ### vLLM `/spark_hidden` contract
 
 Stock OpenAI-compat `/v1/chat/completions` does **not** return
-last-layer states. Spark expects an optional sidecar:
+last-layer states. Spark expects an optional sidecar (or vLLM
+plugin that speaks the same path):
 
 ```http
 POST {SPARK_ABSTAIN_VLLM_URL}/spark_hidden
 Content-Type: application/json
+Authorization: Bearer <optional SPARK_ABSTAIN_VLLM_TOKEN>
 
-{"prompt":"Who is the mayor of Springfield?"}
+{"prompt":"Who is the mayor of Springfield?",
+ "max_length": 512, "layer": -1}
 ```
+
+Optional request fields: `model` (must match loaded backbone or
+be omitted), `max_length`, `layer` (default `-1` = last layer).
 
 ```json
-{"hidden":[0.1, -0.2, …], "dim": 16}
+{"object":"spark.hidden",
+ "hidden":[0.1, -0.2],
+ "dim": 2,
+ "model":"/path/to/hf-model",
+ "source":"hf_prefill",
+ "layer": -1,
+ "prompt_tokens": 8}
 ```
 
+- `object` — `"spark.hidden"` (OpenAI-adjacent type tag)
 - `hidden` — float list, length = head `hidden_dim`
-- `dim` — optional; if present must match `len(hidden)`
-- Non-2xx / missing `hidden` → no invent; ask fails closed
-  (or falls through to next source)
+- `dim` — required for hosts that send it; must equal
+  `len(hidden)`
+- `source` — `hf_prefill` (real sidecar) or `toy_stub` (CI)
+- Non-2xx / missing `hidden` / dim mismatch → client returns
+  no invent; ask fails closed (or falls through to next source)
+- Shared parsers: `python/sparklang/abstain/spark_hidden.py`
 
-Laptop stub (toy vectors, not vLLM):
+Also: `GET /health` → `{"ok":true, "model":"…"}`.
+
+### HF sidecar (production-shaped)
+
+Loads one **explicit** HF dir / hub id and serves last-token
+hiddens. Sit beside stock vLLM chat — do not expect stock vLLM
+to grow this path without a plugin.
+
+```bash
+pip install -e 'python/[sidecar]'   # fastapi + uvicorn + transformers
+
+PYTHONPATH=python python3 \
+  tools/spark-abstain/spark_hidden_sidecar.py \
+  --model /path/to/hf-model --host 127.0.0.1 --port 8765
+
+# optional auth:
+#   --token secret   # or SPARK_HIDDEN_TOKEN / SPARK_ABSTAIN_VLLM_TOKEN
+
+export SPARK_ABSTAIN_VLLM_URL=http://127.0.0.1:8765
+# export SPARK_ABSTAIN_VLLM_TOKEN=secret
+# export SPARK_ABSTAIN_VLLM_TIMEOUT=60
+./spark-abstain --live ask \
+  --prompt "Who is the mayor of Springfield?" \
+  --weights out/heads/abstain.pt
+```
+
+Env for the process: `SPARK_HIDDEN_MODEL` (or
+`SPARK_ABSTAIN_MODEL`), `SPARK_HIDDEN_HOST`, `SPARK_HIDDEN_PORT`,
+`SPARK_HIDDEN_TOKEN`. Never pass `auto` / `code` / `fast`.
+
+### Laptop stub (CI / toy)
+
+Toy vectors — same JSON contract, **not** a real LM:
 
 ```bash
 PYTHONPATH=python python3 \
@@ -275,11 +323,18 @@ PYTHONPATH=python python3 \
 | `SPARK_ABSTAIN_MODEL` | Local HF dir or hub id |
 | `SPARK_ABSTAIN_HF=1` | Allow hub id + HF forward / generate |
 | `SPARK_ABSTAIN_HIDDEN` | Pre-exported last-token hidden |
-| `SPARK_ABSTAIN_VLLM_URL` | Optional `/spark_hidden` sidecar |
+| `SPARK_ABSTAIN_VLLM_URL` | `/spark_hidden` sidecar base URL |
+| `SPARK_ABSTAIN_VLLM_TIMEOUT` | Client timeout seconds (default 30) |
+| `SPARK_ABSTAIN_VLLM_TOKEN` | Optional Bearer for sidecar |
+| `SPARK_HIDDEN_MODEL` | Sidecar loaded backbone (explicit) |
+| `SPARK_HIDDEN_HOST` / `PORT` / `TOKEN` | Sidecar listen / auth |
 
-Optional Python extra: `pip install -e 'python/[hf]'`
-(`transformers`). CI does **not** install it; unit tests mock
-HF tensors.
+Optional Python extras:
+
+- `pip install -e 'python/[hf]'` — transformers only
+- `pip install -e 'python/[sidecar]'` — FastAPI + uvicorn + HF
+
+CI does **not** install them; unit tests mock HTTP / HF tensors.
 
 ## Honest gaps
 
@@ -289,8 +344,9 @@ HF tensors.
   is **not** compatible with a real LM hidden size — retrain on
   exported hiddens from the **target** backbone before claiming
   gate quality.
-- vLLM path needs a host that implements `/spark_hidden`; stock
-  OpenAI-compat servers do not export last-layer states.
+- Stock vLLM still lacks native hidden export; use the HF
+  sidecar (or a future in-process plugin speaking
+  `/spark_hidden`). The stub is for contract/CI only.
 - llama.cpp / GGUF hidden hooks are still out of scope.
 - Labeled abstain data is **user-supplied** — we ship a tiny
   fixture, not a production corpus.

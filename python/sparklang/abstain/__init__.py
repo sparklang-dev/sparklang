@@ -12,18 +12,30 @@ from sparklang.abstain.gate import GateConfig, GateDecision, select_before_sampl
 from sparklang.abstain.generate import live_ask, score_hidden
 from sparklang.abstain.head import AbstainHead, head_from_state
 from sparklang.abstain.parse import parse_head_stmt
+from sparklang.abstain.spark_hidden import (
+    SparkHiddenRequest,
+    SparkHiddenResponse,
+    parse_request,
+    parse_response,
+    post_spark_hidden,
+)
 from sparklang.abstain.train import train_abstain_head
 
 __all__ = [
     "AbstainHead",
     "GateConfig",
     "GateDecision",
+    "SparkHiddenRequest",
+    "SparkHiddenResponse",
     "attach_head",
     "export_hiddens",
     "head_from_state",
     "live_ask",
     "load_manifest",
     "parse_head_stmt",
+    "parse_request",
+    "parse_response",
+    "post_spark_hidden",
     "score_hidden",
     "select_before_sample",
     "toy_backbone_hidden",

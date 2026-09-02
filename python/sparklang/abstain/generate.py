@@ -10,8 +10,6 @@ from __future__ import annotations
 
 import json
 import os
-import urllib.error
-import urllib.request
 from pathlib import Path
 from typing import Any, Optional, Union
 
@@ -300,31 +298,32 @@ def try_vllm_last_hidden(
     base_url: str,
     prompt: str,
     *,
-    timeout_s: float = 5.0,
+    timeout_s: Optional[float] = None,
+    model: Optional[str] = None,
+    token: Optional[str] = None,
 ) -> Optional[torch.Tensor]:
-    """Best-effort vLLM sidecar hidden export.
+    """Best-effort ``/spark_hidden`` sidecar (vLLM-shaped) export.
 
-    Expects POST ``{base}/spark_hidden`` JSON
-    ``{"prompt": "..."}`` → ``{"hidden": [float, ...]}``.
+    Contract: ``sparklang.abstain.spark_hidden``. Env::
+
+      SPARK_ABSTAIN_VLLM_URL
+      SPARK_ABSTAIN_VLLM_TIMEOUT  (default 30s)
+      SPARK_ABSTAIN_VLLM_TOKEN    (optional Bearer)
+
     Returns None on any miss — never invents.
     """
-    url = base_url.rstrip("/") + "/spark_hidden"
-    body = json.dumps({"prompt": prompt}).encode("utf-8")
-    req = urllib.request.Request(
-        url,
-        data=body,
-        headers={"Content-Type": "application/json"},
-        method="POST",
+    from sparklang.abstain.spark_hidden import post_spark_hidden
+
+    packed = post_spark_hidden(
+        base_url,
+        prompt,
+        model=model,
+        timeout_s=timeout_s,
+        token=token,
     )
-    try:
-        with urllib.request.urlopen(req, timeout=timeout_s) as resp:
-            payload = json.loads(resp.read().decode("utf-8"))
-    except (urllib.error.URLError, TimeoutError, ValueError, OSError):
+    if packed is None:
         return None
-    feats = payload.get("hidden") if isinstance(payload, dict) else None
-    if not isinstance(feats, list) or not feats:
-        return None
-    return torch.tensor(feats, dtype=torch.float32)
+    return torch.tensor(packed.hidden, dtype=torch.float32)
 
 
 def _resolve_head_and_cfg(
@@ -386,7 +385,8 @@ def live_ask(
       SPARK_ABSTAIN_WEIGHTS / SPARK_ABSTAIN_MANIFEST
       SPARK_ABSTAIN_MODEL / SPARK_ABSTAIN_HIDDEN
       SPARK_ABSTAIN_HF=1  (allow hub id + HF forward)
-      SPARK_ABSTAIN_VLLM_URL  (optional /spark_hidden)
+      SPARK_ABSTAIN_VLLM_URL  (optional /spark_hidden sidecar)
+      SPARK_ABSTAIN_VLLM_TIMEOUT / SPARK_ABSTAIN_VLLM_TOKEN
     """
     weights = weights or os.environ.get("SPARK_ABSTAIN_WEIGHTS") or None
     manifest = (
@@ -432,9 +432,13 @@ def live_ask(
         if hidden is not None:
             source = "hf_prefill"
     if hidden is None and vllm_url:
-        hidden = try_vllm_last_hidden(vllm_url, prompt)
+        hidden = try_vllm_last_hidden(
+            vllm_url,
+            prompt,
+            model=model,
+        )
         if hidden is not None:
-            source = "vllm"
+            source = "vllm_spark_hidden"
 
     if hidden is None:
         raise SystemExit(

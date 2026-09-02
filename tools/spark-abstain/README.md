@@ -33,5 +33,19 @@ See [docs/ABSTAIN_HEADS.md](../../docs/ABSTAIN_HEADS.md).
   --hidden /tmp/hidden.pt
 SPARK_ABSTAIN_STUB=1 ./spark-abstain --live ask \
   --prompt "Who is the mayor of Springfield?"
+
+# HF /spark_hidden sidecar (beside stock vLLM chat)
+pip install -e 'python/[sidecar]'
+PYTHONPATH=python python3 tools/spark-abstain/spark_hidden_sidecar.py \
+  --model /path/to/hf-model --port 8765
+SPARK_ABSTAIN_VLLM_URL=http://127.0.0.1:8765 \
+  ./spark-abstain --live ask --prompt "…" --weights out/heads/abstain.pt
+
+# CI contract stub (toy vectors)
+PYTHONPATH=python python3 tools/spark-abstain/spark_hidden_stub.py \
+  --port 8765 --dim 16
+
 make test-abstain
 ```
+
+Contract + client: `python/sparklang/abstain/spark_hidden.py`.

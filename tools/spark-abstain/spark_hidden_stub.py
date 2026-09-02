@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """Minimal /spark_hidden stub for local abstain verify (toy vectors).
 
-Not vLLM. Stock OpenAI-compat servers do not export last-layer
-hiddens — this stub matches the SparkLang contract so CI / laptop
-can exercise ``SPARK_ABSTAIN_VLLM_URL`` without a 27B.
+Not the HF sidecar. Stock OpenAI-compat servers do not export
+last-layer hiddens — this stub matches the SparkLang contract so
+CI / laptop can exercise ``SPARK_ABSTAIN_VLLM_URL`` without a GPU.
+
+Real HF export: ``tools/spark-abstain/spark_hidden_sidecar.py``.
 
   PYTHONPATH=python python3 tools/spark-abstain/spark_hidden_stub.py \\
     --port 8765 --dim 16
@@ -25,6 +27,11 @@ if _PY.is_dir() and str(_PY) not in sys.path:
     sys.path.insert(0, str(_PY))
 
 from sparklang.abstain.export import toy_backbone_hidden  # noqa: E402
+from sparklang.abstain.spark_hidden import (  # noqa: E402
+    SparkHiddenContractError,
+    build_response,
+    parse_request,
+)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -46,6 +53,25 @@ def main(argv: list[str] | None = None) -> int:
                 "%s - %s\n" % (self.address_string(), fmt % a)
             )
 
+        def do_GET(self) -> None:  # noqa: N802
+            if self.path.rstrip("/") != "/health":
+                self.send_error(404, "use GET /health")
+                return
+            payload = {
+                "ok": True,
+                "object": "spark.hidden.health",
+                "source": "toy_stub",
+                "dim": dim,
+            }
+            data = json.dumps(payload).encode("utf-8")
+            self.send_response(200)
+            self.send_header(
+                "Content-Type", "application/json"
+            )
+            self.send_header("Content-Length", str(len(data)))
+            self.end_headers()
+            self.wfile.write(data)
+
         def do_POST(self) -> None:  # noqa: N802
             if self.path.rstrip("/") != "/spark_hidden":
                 self.send_error(404, "use POST /spark_hidden")
@@ -57,18 +83,20 @@ def main(argv: list[str] | None = None) -> int:
             except json.JSONDecodeError:
                 self.send_error(400, "bad json")
                 return
-            prompt = str(body.get("prompt") or "")
-            if not prompt:
-                self.send_error(400, "need prompt")
+            try:
+                req = parse_request(body)
+            except SparkHiddenContractError as exc:
+                self.send_error(400, str(exc))
                 return
             hidden = toy_backbone_hidden(
-                prompt, dim, seed=seed
+                req.prompt, dim, seed=seed
             )
-            payload = {
-                "hidden": hidden,
-                "dim": dim,
-                "source": "toy_stub",
-            }
+            payload = build_response(
+                hidden,
+                model="toy_stub",
+                source="toy_stub",
+                layer=req.layer,
+            ).to_dict()
             data = json.dumps(payload).encode("utf-8")
             self.send_response(200)
             self.send_header(

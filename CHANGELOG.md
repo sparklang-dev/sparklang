@@ -4,6 +4,18 @@ All notable user-facing releases of **SparkLang** (the Spark programming
 language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
+## 0.6.15 — 2026-09-02
+
+- **Abstain `/spark_hidden` sidecar:** real HF FastAPI/uvicorn
+  export beside stock vLLM
+  (`tools/spark-abstain/spark_hidden_sidecar.py`), shared
+  OpenAI-adjacent contract
+  (`python/sparklang/abstain/spark_hidden.py`), hardened client
+  (`SPARK_ABSTAIN_VLLM_URL` / `TIMEOUT` / `TOKEN`). Stub kept for
+  CI. Extra: `pip install -e 'python/[sidecar]'`. Docs:
+  [docs/ABSTAIN_HEADS.md](docs/ABSTAIN_HEADS.md). Gate:
+  `make test-abstain` (HTTP mocked; no GPU).
+
 ## 0.6.14 — 2026-09-02
 
 - **Abstain export→train (dim-matched):** `./spark-abstain --live export`
