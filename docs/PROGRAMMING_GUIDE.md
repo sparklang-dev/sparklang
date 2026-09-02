@@ -71,6 +71,7 @@ make machine-proof   # file(1) + objdump of _start
 | `make` / `make all` | VM + companions |
 | `make test` | `tests/run_dry.sh` + HDL check |
 | `make test-examples` | every `examples/*.spark` under `--dry-run` |
+| `make test-host-embed` | Python `sparklang` host embed + `--embed` handshake |
 | `make test-e2e-browser` | browser dry E2E (no display) |
 | `make ide` | interim Cursor workspace open (not product IDE) |
 | `make clean` | remove ELF + companion binaries |
@@ -113,6 +114,26 @@ export OPENAI_API_KEY=…          # sk-bf-* ; never commit
 | `--allow-net` | `review url` may fetch remote `http(s)` |
 | `--allow-net-capture` | Live AF_PACKET capture (needs `CAP_NET_RAW`) |
 | `--pstn-live` + `SPARK_PSTN=1` | PSTN dial (off by default) |
+
+### Host embed (Python)
+
+Call Spark from a host language — dry-run default, same fixtures as CLI:
+
+```bash
+PYTHONPATH=python python -c "
+from sparklang import run
+r = run('examples/hello.spark')
+print(r.stdout)
+assert r.ok
+"
+PYTHONPATH=python python -m sparklang examples/hello.spark
+./spark --embed   # JSON handshake: api=python
+make test-host-embed
+```
+
+Package lives in `python/sparklang/`. JS / C FFI are **next**. See
+[LANGUAGE.md](LANGUAGE.md) (`shell` / `run` / host embed) and
+[ADOPTION_BAR.md](ADOPTION_BAR.md).
 
 ---
 

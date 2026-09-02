@@ -334,7 +334,7 @@ machine-proof: spark
 	$(OBJDUMP) -d ./spark | sed -n '/<_start>:/,/^$$/p' | head -20
 
 test: spark companions spark-bootstrap test-sparkbc test-ai-playbooks \
-	test-extract test-expect
+	test-extract test-expect test-host-embed
 	./tests/run_dry.sh
 	./tests/hdl_check.sh
 	./bootstrap/tests/run_bootstrap.sh
@@ -485,6 +485,11 @@ test-extract: spark-extract spark
 test-expect: spark-expect spark
 	chmod +x tools/expect/run_expect_gate.sh
 	./tools/expect/run_expect_gate.sh
+
+.PHONY: test-host-embed
+test-host-embed: spark
+	chmod +x tools/host_embed/run_host_embed_gate.sh
+	./tools/host_embed/run_host_embed_gate.sh
 
 .PHONY: test-train-http
 test-train-http: spark-train-http spark

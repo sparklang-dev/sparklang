@@ -9,7 +9,8 @@ Prioritized against the adoption bar. Status: **done** / **next** / **won't**
 - Changelog + release process doc
 - `embed` / `retrieve` first-class ops + dry fixtures + `spark-rag-http`
 - Dry-run escape hatch: `shell` / `run` allowlist fixtures
-- `./spark --embed` FFI handshake stub
+- Python host embed: `from sparklang import run` (`python/sparklang/`);
+  `./spark --embed` JSON handshake (`api=python`); JS/C FFI still next
 - Per-`ask` `[accounting]` line (dry zeros; live usage when present)
 - Positioning: not a Bifrost plugin; dry-run first
 - `http get` / `http post` + timeout + dry fixture files + live
@@ -22,7 +23,7 @@ Prioritized against the adoption bar. Status: **done** / **next** / **won't**
 | Extract | Schema validation + JSON-mode + retry on miss |
 | Ask | Streaming token/SSE path |
 | Eval | Expectation pass/fail harness (not only alias compare) |
-| Escape | Live `--allow-shell` argv policy; `import spark` host embed |
+| Escape | Live `--allow-shell` argv policy; JS / C host FFI |
 | Accounting | Wall-clock latency on live ask; run-level rollup |
 | LSP | Prefer editor LSP + highlighting over IDE chrome |
 | Receptionist | Promote `examples/receptionist_goal.spark` off `[goal]` when transfer + eval syntax exist |

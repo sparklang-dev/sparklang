@@ -4,6 +4,16 @@ All notable user-facing releases of **SparkLang** (the Spark programming
 language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
+## 0.6.10 — 2026-09-02
+
+- **Python host embed:** `from sparklang import run` under
+  `python/sparklang/` runs a `.spark` path or source string via the
+  `spark` CLI (dry-run default; `live=True` opt-in). Returns stdout /
+  stderr / exit code; missing binary or path fails loud.
+- `./spark --embed` handshake advertises `api=python` (JS / C FFI
+  remain `[next]`).
+- Example: `examples/python/host_embed.py`. Gate: `make test-host-embed`.
+
 ## 0.6.9 — 2026-09-02
 
 - **Language `method "…"`** on `model train` / `model build`

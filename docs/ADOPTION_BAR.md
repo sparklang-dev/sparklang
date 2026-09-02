@@ -20,7 +20,7 @@ Not Apache Spark. Not AdaCore SPARK.
 | Versioned releases + changelog | **done** | `CHANGELOG.md` + site `/CHANGELOG.html`; GitHub Release **0.6.2** (rename). Installer kit artifacts remain **0.6.0** until next packaging |
 | Searchable name (SparkLang) | **done** | Hero / About / footers; public `sparklang-dev/sparklang`. CLI stays `spark` / `./spark-bootstrap` |
 | Escape hatch (`.spark` → host) | **done (dry)** | `shell` / `run` allowlist dry-run fixtures; live gated exec = **next** |
-| Escape hatch (host → `.spark`) | **next** | `./spark --embed` stub JSON handshake; `import spark` FFI = **next** |
+| Escape hatch (host → `.spark`) | **done (Python)** | `from sparklang import run` (`python/sparklang/`); dry-run default, live opt-in; `./spark --embed` JSON handshake. JS / C FFI = **next** |
 | `retrieve` / `embed` language ops | **done** | Dry fixtures + live `./spark-rag-http`; see LANGUAGE.md |
 | Real `http get` / `post` | **done** | Dry fixture files + timeout; live `./spark-http` (curl). `bearer` / `header` + `retries` / `backoff` on documented failure classes |
 | Typed `extract` + JSON-mode validate/retry | **partial** | Validation shipped: required vs `?` optional fields, `string`/`int`/`float`/`bool` types, top-level only, non-zero exit on a miss. Dry-run reads a real `fixture "PATH"`. Live extract and retry-on-miss = **next** |
@@ -38,9 +38,12 @@ Not Apache Spark. Not AdaCore SPARK.
 Without both directions, a DSL dies:
 
 1. **From `.spark`:** `shell "echo …"` / `run "…"` — dry-run allowlist only
-   (`echo` / `true` / `false`). Arbitrary exec refused offline.
-2. **Into `.spark`:** `./spark --embed` prints a stub handshake today;
-   real Python/JS embed API is **next**.
+   (`echo` / `true` / `false`). Arbitrary exec refused offline. Live
+   `--allow-shell` = **next**.
+2. **Into `.spark`:** Python host embed is **shipped** —
+   `from sparklang import run` (path or source string; dry-run default).
+   Handshake: `./spark --embed`. Gate: `make test-host-embed`.
+   JS / C FFI remain **next**.
 
 ## Worth using over script + gateway
 

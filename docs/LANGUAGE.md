@@ -182,9 +182,25 @@ run "python" "-c" "print(1)" -> out
 |------|----------|
 | **Dry-run** | **Never** execs arbitrary shells. Allowlist `echo` / `true` / `false` → fixture stdout (`[shell] dry …`). Anything else → fail loud. |
 | **Live** | `[next]` gated exec (`--allow-shell`) with argv allowlist — not shipped as open `system()`. |
-| **Host embed** | CLI stub `./spark --embed` prints a JSON handshake for FFI; `import spark` / JS require are `[next]`. |
+| **Host embed (Python)** | **Shipped.** `from sparklang import run` under `python/sparklang/` invokes `./spark --dry-run` (default) or `--live`. Returns stdout / stderr / exit code; missing binary or path → fail loud. `./spark --embed` prints a JSON handshake advertising the Python API. **JS `require` / C FFI = `[next]`.** |
 
-See [ADOPTION_BAR.md](ADOPTION_BAR.md). Example: `examples/shell_escape.spark`.
+```python
+from sparklang import run
+
+r = run("examples/hello.spark")          # dry-run default
+print(r.stdout, r.returncode)
+r = run('print "from host"\n')         # inline source → temp .spark
+# r = run("examples/ask_live.spark", live=True)  # opt-in
+```
+
+```bash
+PYTHONPATH=python python -m sparklang examples/hello.spark
+./spark --embed   # {"api":"python","package":"sparklang",…}
+make test-host-embed
+```
+
+See [ADOPTION_BAR.md](ADOPTION_BAR.md). Examples: `examples/shell_escape.spark`
+(from `.spark` → host), `examples/python/host_embed.py` (host → `.spark`).
 
 ### `http get` / `http post` (shipped)
 

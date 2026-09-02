@@ -116,8 +116,8 @@
         </tr>
         <tr>
         <td>Escape hatch (host → <code class="inline-code">.spark</code>)</td>
-        <td><strong>next</strong></td>
-        <td><code class="inline-code">./spark --embed</code> stub JSON handshake; <code class="inline-code">import spark</code> FFI = <strong>next</strong></td>
+        <td><strong>done (Python)</strong></td>
+        <td><code class="inline-code">from sparklang import run</code> (<code class="inline-code">python/sparklang/</code>); dry-run default, live opt-in; <code class="inline-code">./spark --embed</code> JSON handshake. JS / C FFI = <strong>next</strong></td>
         </tr>
         <tr>
         <td><code class="inline-code">retrieve</code> / <code class="inline-code">embed</code> language ops</td>
@@ -180,9 +180,12 @@
         <p>Without both directions, a DSL dies:</p>
         <ol class="doc__ol">
         <li><strong>From <code class="inline-code">.spark</code>:</strong> <code class="inline-code">shell "echo …"</code> / <code class="inline-code">run "…"</code> — dry-run allowlist only
-           (<code class="inline-code">echo</code> / <code class="inline-code">true</code> / <code class="inline-code">false</code>). Arbitrary exec refused offline.</li>
-        <li><strong>Into <code class="inline-code">.spark</code>:</strong> <code class="inline-code">./spark --embed</code> prints a stub handshake today;
-           real Python/JS embed API is <strong>next</strong>.</li>
+           (<code class="inline-code">echo</code> / <code class="inline-code">true</code> / <code class="inline-code">false</code>). Arbitrary exec refused offline. Live
+           <code class="inline-code">--allow-shell</code> = <strong>next</strong>.</li>
+        <li><strong>Into <code class="inline-code">.spark</code>:</strong> Python host embed is <strong>shipped</strong> —
+           <code class="inline-code">from sparklang import run</code> (path or source string; dry-run default).
+           Handshake: <code class="inline-code">./spark --embed</code>. Gate: <code class="inline-code">make test-host-embed</code>.
+           JS / C FFI remain <strong>next</strong>.</li>
         </ol>
         <h2 id="worth-using-over-script-gateway">Worth using over script + gateway</h2>
         <p>Shipped enough to dry-demo RAG + ask + classify + http get/post (with

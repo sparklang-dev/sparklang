@@ -112,9 +112,9 @@
 
         model status &quot;job-dry-001&quot; -&gt; status
         </code></pre>
-        <p><code class="inline-code">method &quot;…&quot;</code> is optional (<code class="inline-code">spark_distill_cpu</code> default).
-        Live GAS forwards the statement with <code class="inline-code">./spark-train-http --spark-line</code>.
-        Status polls the <strong>quoted</strong> job id (not a hardcoded <code class="inline-code">job-dry-001</code>).</p>
+        <p><code class="inline-code">method "…"</code> is optional (<code class="inline-code">spark_distill_cpu</code> default). Live GAS forwards
+        the statement with <code class="inline-code">./spark-train-http --spark-line</code>. Status polls the
+        <strong>quoted</strong> job id from the line (not a hardcoded <code class="inline-code">job-dry-001</code>).</p>
         <h2 id="job-lifecycle">Job lifecycle</h2>
         <pre class="doc__pre"><code class="inline-code">submit  →  accepted (job_id)
                 →  running
@@ -253,13 +253,14 @@
         </table></div>
         <p>Select via (first match wins):</p>
         <ol class="doc__ol">
-        <li>Language <code class="inline-code">method &quot;…&quot;</code> on <code class="inline-code">model train</code> / <code class="inline-code">model build</code> (live <code class="inline-code">--spark-line</code>)</li>
+        <li>Language <code class="inline-code">method "…"</code> on <code class="inline-code">model train</code> / <code class="inline-code">model build</code> (live
+           <code class="inline-code">--spark-line</code>)</li>
         <li>Companion <code class="inline-code">--method</code> / POST body <code class="inline-code">method</code> / env <code class="inline-code">SPARK_TRAIN_METHOD</code></li>
         <li>Or <code class="inline-code">base</code> equal to a method id (reference trainer only)</li>
         <li>Default: <code class="inline-code">spark_distill_cpu</code></li>
         </ol>
-        <p>Unknown method → fail loud. Dry status for an unknown job id → fail loud
-        (no silent <code class="inline-code">job-dry-001</code>).</p>
+        <p>Unknown method → fail loud (exit 2). Dry status for an unknown job id
+        → fail loud (no silent <code class="inline-code">job-dry-001</code>).</p>
         <p>HTTP <code class="inline-code">artifacts.adapter</code> remains a <strong>compat alias</strong> to the method’s
         primary weight file (not a LoRA adapter).</p>
         <p>When <code class="inline-code">out</code> basename matches <code class="inline-code">job-*</code>, that basename is the <code class="inline-code">job_id</code>.</p>
@@ -317,9 +318,10 @@
         <p><code class="inline-code">make test</code> never starts GPU jobs or dials the network.</p>
         <h2 id="product-story">Product story</h2>
         <p>Spark ships <strong>multiple</strong> CPU training methods behind one HTTP contract —
-        distill, preference pack, playbook fit, FAQ index. That is the product story: not
-        LoRA-by-default, not a marker file pretending to be weights. Larger
-        full-SFT / multi-node remain operator backends behind the same contract.</p>
+        distill, preference pack, playbook fit, FAQ index. That is the product
+        story: not LoRA-by-default, not a marker file pretending to be weights.
+        Larger full-SFT / multi-node remain operator backends behind the same
+        contract.</p>
         <h2 id="not-in-mvp">Not in MVP</h2>
         <ul class="doc__ul">
         <li>Auto dataset curation / labeling UI</li>
@@ -327,6 +329,7 @@
         <li>Full LoRA studio / multi-node scheduler UI</li>
         <li>Invented owner train-grant strings</li>
         <li>Bifrost alias pickers as “Step 2” of building a model</li>
+        <li>Language-level <code class="inline-code">method "…"</code> keyword on <code class="inline-code">model train</code> (use env / companion)</li>
         </ul>
       </article>
       </main>

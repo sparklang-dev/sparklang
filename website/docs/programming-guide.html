@@ -3,17 +3,17 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Program with Spark — Spark</title>
-    <meta name="description" content="Spark — Program with Spark" />
+    <title>Programming guide — Spark</title>
+    <meta name="description" content="How to build, run, and write SparkLang (.spark) programs." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
-    <link rel="stylesheet" href="/css/tokens.css?v=pos060" />
-    <link rel="stylesheet" href="/css/site.css?v=pos060" />
+    <link rel="stylesheet" href="/css/tokens.css?v=bb4433f" />
+    <link rel="stylesheet" href="/css/site.css?v=bb4433f" />
   </head>
   <body class="doc-page">
     <header class="site-header">
       <div class="shell header-inner">
-        <a class="site-brand" href="/" aria-label="SparkLang home">
+        <a class="site-brand" href="/" aria-label="Spark home">
           <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
             <path d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z" fill="currentColor" />
           </svg>
@@ -33,7 +33,9 @@
               <li class="nav-more">
                 <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">More</button>
                 <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/adoption-bar.html">Adoption bar</a></li>
                   <li><a href="/docs/ai-models.html">AI models</a></li>
+                  <li><a href="/docs/native-network-web.html">Network + web</a></li>
                   <li><a href="/docs/programming-guide.html">Programming guide</a></li>
                   <li><a href="/docs/ide.html">IDE</a></li>
                   <li><a href="/docs/self-host.html">Contributor internals</a></li>
@@ -54,23 +56,28 @@
       <main class="doc-main">
       <nav class="doc__nav" aria-label="Docs">
         <a href="/learn/">Learn</a>
-        <a href="/docs/programming-guide.html" aria-current="page">Programming guide</a>
+        <a href="/docs/adoption-bar.html">Adoption bar</a>
+        <a href="/docs/ai-models.html">AI models</a>
+        <a href="/docs/model-training.html">Model training</a>
+        <a href="/docs/native-network-web.html">Network + web</a>
+        <a href="/docs/programming-guide.html">Programming guide</a>
         <a href="/docs/language.html">Language reference</a>
         <a href="/docs/ide.html">IDE</a>
+        <a href="/docs/self-host.html">Contributor internals</a>
         <a href="/downloads.html">Downloads</a>
-      </nav>
-      <article class="doc__body">
+      </nav>      <article class="doc__body">
         <h1 id="program-with-spark">Program with Spark</h1>
         <p><strong>Canonical programming guide</strong> for the Spark language.
-        Statement reference: <a href="/docs/language.html">Language reference</a>.</p>
+        Statement reference: <a href="/docs/language.html">LANGUAGE.md</a>.</p>
         <p><strong>Primary today:</strong> CLI <code class="inline-code">./spark</code> (this guide). Verified IDE language ops:
         <code class="inline-code">ide new|open|save|run|buffer|ask|show</code> and <code class="inline-code">ide keys</code> / <code class="inline-code">ide key</code> —
-        <a href="/docs/ide.html">IDE status</a>. Editor paint is a <strong>wire + PPM</strong> (gutter/glyphs + AI
+        <a href="/docs/ide.html">IDE.md</a>. Editor paint is a <strong>wire + PPM</strong> (gutter/glyphs + AI
         strip; <code class="inline-code">make test-ide-paint</code>), not a <code class="inline-code">.spark</code> statement. <code class="inline-code">ide show</code>
-        reuses real <code class="inline-code">spark-engine-show</code>. See verified ops below.</p>
-        <p><strong>Rule:</strong> ops and flags below match the shipped runtime, shipped
+        reuses real <code class="inline-code">spark-engine-show</code>. Do not invent more.</p>
+        <p><strong>Rule:</strong> ops and flags below match <code class="inline-code">asm/</code> dispatch, shipped
         <code class="inline-code">examples/*.spark</code>, and commands verified under <code class="inline-code">--dry-run</code> (or companion
-        <code class="inline-code">--dry</code>) on this tree.</p>
+        <code class="inline-code">--dry</code>) on this tree. If something is not listed here, do not assume it
+        exists.</p>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
@@ -84,51 +91,95 @@
         <td>How to build, run, and write <code class="inline-code">.spark</code> (CLI)</td>
         </tr>
         <tr>
-        <td><a href="/docs/ide.html">IDE status</a></td>
-        <td>Verified <code class="inline-code">ide</code> ops; external editor optional</td>
+        <td><a href="/docs/ide.html">IDE.md</a></td>
+        <td>Verified <code class="inline-code">ide</code> ops; interim Cursor optional</td>
         </tr>
         <tr>
-        <td><a href="/docs/language.html">Language reference</a></td>
+        <td><a href="/docs/language.html">LANGUAGE.md</a></td>
         <td>Full statement reference</td>
         </tr>
         <tr>
-        <td>Live <code class="inline-code">ask</code> (source repo)</td>
-        <td>API credentials + <code class="inline-code">--live</code></td>
+        <td><a href="/docs/ai-models.html#live-gateway-integration-wired-today">ASK_LIVE.md</a></td>
+        <td>Optional live gateway <code class="inline-code">ask</code></td>
         </tr>
         <tr>
-        <td>VOICE.md (<code class="inline-code">VOICE.md</code> in repo)</td>
+        <td><a href="/docs/language.html">VOICE.md</a></td>
         <td>STT/TTS / PSTN</td>
         </tr>
         <tr>
-        <td>ENCRYPT_GATEWAY.md (<code class="inline-code">ENCRYPT_GATEWAY.md</code> in repo)</td>
+        <td><a href="/docs/ai-models.html">ENCRYPT_GATEWAY.md</a></td>
         <td>Encrypt-to-model</td>
         </tr>
         <tr>
-        <td>MODEL_ANALYSIS.md (<code class="inline-code">MODEL_ANALYSIS.md</code> in repo)</td>
+        <td><a href="/docs/ai-models.html">MODEL_ANALYSIS.md</a></td>
         <td>Model analyze/improve</td>
         </tr>
         <tr>
-        <td>OS_DESIGN.md (<code class="inline-code">OS_DESIGN.md</code> in repo)</td>
+        <td><code class="inline-code">OS_DESIGN.md</code></td>
         <td>OS blueprints</td>
+        </tr>
+        <tr>
+        <td><a href="/docs/self-host.html">SELF_HOST.md</a></td>
+        <td>A+B+C self-host path (GAS scaffold → B/C → Spark)</td>
         </tr>
         </tbody>
         </table></div>
-        <p>Spark ships as a single language repository. Browser and engine
-        examples in-repo are optional; the CLI workflow below is the primary path.</p>
+        <p><strong>Repos:</strong> language SoT = this <code class="inline-code">spark</code> repo. Browser product host =
+        sibling <code class="inline-code">spark-browser</code> (Qt shim). Engine-B asm examples exist in-repo
+        (see §10); they are not a substitute for the language CLI workflow.</p>
         <hr class="doc__hr" />
         <h2 id="1-what-spark-is">1. What Spark is</h2>
-        <p>You write <strong><code class="inline-code">.spark</code> files</strong> and run them with the
-        <code class="inline-code">spark</code> command from <a href="/downloads.html">Downloads</a>.
-        Spark runs as a native binary — install a package for your platform and start with
-        <code class="inline-code">spark --dry-run</code>.</p>
-        <p>Docs cover proven ops and fixture examples you can dry-run today.</p>
+        <p>You write <strong><code class="inline-code">.spark</code> files</strong>. Today they run on the shipped <code class="inline-code">./spark</code>
+        ELF <strong>GAS scaffold</strong> (<code class="inline-code">asm/</code>). <strong>Authoring SoT DECIDED (A+B+C):</strong>
+        self-host destination (A), thin C bootstrap (<code class="inline-code">bootstrap/</code>), Spark-native
+        assembler (<code class="inline-code">sparkasm/</code>). Do not treat GAS as forever SoT; do not start
+        a Rust/Python VM from IDE work. See <a href="/docs/self-host.html">SELF_HOST.md</a>.</p>
+        <p><strong>Honesty banner:</strong> not full ES / not full CSS / not a full compiler /
+        not Google.com parity / not Electron. Fixture HTML + proven ops only.</p>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Tier (today)</th>
+        <th>What</th>
+        <th>Path</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td>Machine code</td>
+        <td>CPU runs ELF</td>
+        <td><code class="inline-code">./spark</code> (GAS scaffold)</td>
+        </tr>
+        <tr>
+        <td>Assembly scaffold</td>
+        <td>GAS → <code class="inline-code">as</code> → <code class="inline-code">ld</code></td>
+        <td><code class="inline-code">asm/*.s</code> (disposable)</td>
+        </tr>
+        <tr>
+        <td>B bootstrap</td>
+        <td>Thin C dry VM</td>
+        <td><code class="inline-code">bootstrap/</code> → <code class="inline-code">spark-bootstrap</code></td>
+        </tr>
+        <tr>
+        <td>C assembler</td>
+        <td><code class="inline-code">.sasm</code> → ELF <code class="inline-code">.o</code></td>
+        <td><code class="inline-code">sparkasm/</code> (phase-1)</td>
+        </tr>
+        <tr>
+        <td>HDL (optional stub)</td>
+        <td>classify sketch</td>
+        <td><code class="inline-code">hdl/classify_score.v</code></td>
+        </tr>
+        </tbody>
+        </table></div>
         <p>Live HTTP for <code class="inline-code">ask</code> is a <strong>companion</strong> (<code class="inline-code">./spark-ask-http</code>) forked only
         under <code class="inline-code">--live</code>. Dry-run does not dial the network for ask.</p>
         <p>This is <strong>not</strong> Apache Spark / Databricks.</p>
         <hr class="doc__hr" />
         <h2 id="2-build">2. Build</h2>
-        <pre class="doc__pre"><code class="language-bash">make                 # ./spark + companions (from source checkout)
-        ./spark --version
+        <pre class="doc__pre"><code class="language-bash">make                 # ./spark + companions
+        ./spark --version    # e.g. spark 0.6.0 (x86_64 asm + companions)
+        make machine-proof   # file(1) + objdump of _start
         </code></pre>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
@@ -144,11 +195,15 @@
         </tr>
         <tr>
         <td><code class="inline-code">make test</code></td>
-        <td><code class="inline-code">tests/run_dry.sh</code></td>
+        <td><code class="inline-code">tests/run_dry.sh</code> + HDL check</td>
         </tr>
         <tr>
         <td><code class="inline-code">make test-examples</code></td>
         <td>every <code class="inline-code">examples/*.spark</code> under <code class="inline-code">--dry-run</code></td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">make test-host-embed</code></td>
+        <td>Python <code class="inline-code">sparklang</code> host embed + <code class="inline-code">--embed</code> handshake</td>
         </tr>
         <tr>
         <td><code class="inline-code">make test-e2e-browser</code></td>
@@ -156,29 +211,34 @@
         </tr>
         <tr>
         <td><code class="inline-code">make ide</code></td>
-        <td>open external editor workspace (not product IDE)</td>
+        <td>interim Cursor workspace open (not product IDE)</td>
         </tr>
         <tr>
         <td><code class="inline-code">make clean</code></td>
-        <td>remove binaries and build artifacts</td>
+        <td>remove ELF + companion binaries</td>
         </tr>
         </tbody>
         </table></div>
+        <p>If <code class="inline-code">make</code> fails on <code class="inline-code">asm/engine_*.s</code> while parallel engine work is in
+        flight, that is an engine-lane assemble/link issue — not a reason to
+        invent a different language runtime. Re-run <code class="inline-code">make</code> when those objects
+        link; language examples below were verified when <code class="inline-code">./spark</code> was present.</p>
         <hr class="doc__hr" />
         <h2 id="3-run-dry-vs-live">3. Run: dry vs live</h2>
         <p>Verified usage from bare <code class="inline-code">./spark</code>:</p>
-        <pre class="doc__pre"><code>Usage: spark --dry-run [--allow-net] [--allow-net-capture] &lt;file.spark&gt;
-               spark --live &lt;file.spark&gt;  # live model API
-               spark --live --pstn-live &lt;file&gt;  # PSTN off unless enabled
+        <pre class="doc__pre"><code class="inline-code">Usage: spark --dry-run [--allow-net] [--allow-net-capture] &lt;file.spark&gt;
+               spark --live &lt;file.spark&gt;  # optional ask → AI_GATEWAY_URL
+               spark --live --pstn-live &lt;file&gt;  # PSTN off unless SPARK_PSTN=1
                spark --version
         </code></pre>
-        <p>There is <strong>no</strong> <code class="inline-code">./spark ide</code> subcommand. IDE core is <strong>language
-        ops</strong> (<code class="inline-code">ide open|save|run|…</code>) — <a href="/docs/ide.html">IDE status</a>,
+        <p>There is <strong>no</strong> <code class="inline-code">./spark ide</code> ELF subcommand. IDE core is <strong>language
+        ops</strong> (<code class="inline-code">ide open|save|run|…</code>) — <a href="/docs/ide.html">IDE.md</a>,
         <code class="inline-code">examples/ide_hello.spark</code>.</p>
         <pre class="doc__pre"><code class="language-bash">./spark --dry-run examples/hello.spark
         ./spark --dry-run examples/ide_hello.spark
 
         export AI_GATEWAY_URL=http://127.0.0.1:4000
+        export OPENAI_API_KEY=…          # sk-bf-* ; never commit
         ./spark --live examples/ask_live.spark
         </code></pre>
         <div class="doc__table-wrap"><table class="doc__table">
@@ -211,10 +271,25 @@
         </tr>
         </tbody>
         </table></div>
+        <h3 id="host-embed-python">Host embed (Python)</h3>
+        <p>Call Spark from a host language — dry-run default, same fixtures as CLI:</p>
+        <pre class="doc__pre"><code class="language-bash">PYTHONPATH=python python -c &quot;
+        from sparklang import run
+        r = run('examples/hello.spark')
+        print(r.stdout)
+        assert r.ok
+        &quot;
+        PYTHONPATH=python python -m sparklang examples/hello.spark
+        ./spark --embed   # JSON handshake: api=python
+        make test-host-embed
+        </code></pre>
+        <p>Package lives in <code class="inline-code">python/sparklang/</code>. JS / C FFI are <strong>next</strong>. See
+        <a href="/docs/language.html">LANGUAGE.md</a> (<code class="inline-code">shell</code> / <code class="inline-code">run</code> / host embed) and
+        <a href="/docs/adoption-bar.html">ADOPTION_BAR.md</a>.</p>
         <hr class="doc__hr" />
         <h2 id="4-first-program">4. First program</h2>
         <p>File: <code class="inline-code">examples/hello.spark</code> (verified <code class="inline-code">rc=0</code> under <code class="inline-code">--dry-run</code>):</p>
-        <pre class="doc__pre"><code>model code
+        <pre class="doc__pre"><code class="inline-code">model code
 
         ask &quot;Explain gravity in one sentence&quot; -&gt; text
 
@@ -229,39 +304,44 @@
         <li><code class="inline-code">-&gt; name</code> binds a result</li>
         <li><code class="inline-code">|</code> may prefix a pipeline step</li>
         </ul>
-        <p>Optional <code class="inline-code">spark.toml</code> (<code class="inline-code">model = "fast"</code>) sets a default model on startup.
-        You can also put <code class="inline-code">model</code> or <code class="inline-code">use</code> in the file.</p>
+        <p>Optional <code class="inline-code">spark.toml</code> documents defaults; the <strong>bootstrap</strong> VM reads
+        <code class="inline-code">model = "…"</code> from cwd on startup. <code class="inline-code">./spark</code> (GAS) still needs <code class="inline-code">model</code> or
+        <code class="inline-code">use</code> in the <code class="inline-code">.spark</code> file. See <code class="inline-code">LANGUAGE_IMPROVEMENTS.md</code>.</p>
         <hr class="doc__hr" />
         <h2 id="5-syntax-verified-examples">5. Syntax (verified examples)</h2>
-        <h3 id="50-dx-sugar">5.0 DX sugar (<code class="inline-code">use</code>, <code class="inline-code">?</code>)</h3>
-        <p><code class="inline-code">examples/hello_sugar.spark</code>,
-        <code class="inline-code">examples/dx_showcase.spark</code></p>
-        <pre class="doc__pre"><code>use code
-? "Explain gravity in one sentence" -&gt; text
-say "Hello" -&gt; "out.wav"</code></pre>
-        <p>Each subsection below names a file dry-run successfully.</p>
+        <h3 id="50-dx-sugar-use-say">5.0 DX sugar (<code class="inline-code">use</code>, <code class="inline-code">?</code>, <code class="inline-code">say</code>)</h3>
+        <p><code class="inline-code">examples/hello_sugar.spark</code>, <code class="inline-code">examples/dx_showcase.spark</code></p>
+        <pre class="doc__pre"><code class="inline-code">use code                    # alias for: model code
+
+        ? &quot;Explain gravity in one sentence&quot; -&gt; text   # alias for ask
+
+        say &quot;Hello&quot; -&gt; &quot;out.wav&quot;    # alias for speak
+        </code></pre>
+        <p>Bootstrap also supports <code class="inline-code">include "lib/ai.spark"</code> and <code class="inline-code">{var}</code> interpolation
+        in ask/<code class="inline-code">?</code> prompts — see <code class="inline-code">LANGUAGE_IMPROVEMENTS.md</code>.</p>
         <h3 id="51-model-ask">5.1 <code class="inline-code">model</code> + <code class="inline-code">ask</code></h3>
         <p><code class="inline-code">examples/hello.spark</code>, <code class="inline-code">examples/ask_live.spark</code></p>
-        <pre class="doc__pre"><code>model code          # or fast | best (model aliases)
+        <pre class="doc__pre"><code class="inline-code">model code          # or fast | best (gateway aliases)
 
         ask &quot;Explain gravity in one sentence&quot; -&gt; text
         print text
         </code></pre>
-        <p>Live ask needs <code class="inline-code">--live</code>, <code class="inline-code">./spark-ask-http</code>, and
-        <code class="inline-code">AI_GATEWAY_URL</code> (any OpenAI-compatible gateway); optional key for <code class="inline-code">--live</code>.</p>
+        <p>Live ask needs <code class="inline-code">--live</code> + <code class="inline-code">./spark-ask-http</code> + env — <a href="/docs/ai-models.html#live-gateway-integration-wired-today">ASK_LIVE.md</a>.</p>
         <h3 id="52-ask-probe-gateway-probe">5.2 <code class="inline-code">ask probe</code> / <code class="inline-code">gateway probe</code></h3>
         <p><code class="inline-code">examples/ask_probe.spark</code>, <code class="inline-code">examples/gateway_probe.spark</code><br />
-        Dry-run prints credential-readiness JSON (no network).</p>
-        <pre class="doc__pre"><code>ask probe -&gt; info
+        (requires companion <code class="inline-code">./spark-ask-probe</code>; dry prints probe-credential readiness
+        JSON, no public HTTP)</p>
+        <pre class="doc__pre"><code class="inline-code">ask probe -&gt; info
         gateway probe -&gt; info
         </code></pre>
         <pre class="doc__pre"><code class="language-bash">./spark --dry-run examples/ask_probe.spark
         ./spark-ask-probe --dry
         </code></pre>
-        <p>HTTP 401 or missing credentials → exit non-zero with a clear message.</p>
+        <p>Live public probe / HTTP 401 → credential unavailable (exit non-zero);
+        do not invent routing. See ASK_LIVE.md.</p>
         <h3 id="53-classify">5.3 <code class="inline-code">classify</code></h3>
         <p><code class="inline-code">examples/classify_intent.spark</code></p>
-        <pre class="doc__pre"><code>classify Intent { support, sales, spam }
+        <pre class="doc__pre"><code class="inline-code">classify Intent { support, sales, spam }
           from &quot;My account is locked and I need help&quot;
           min_confidence 0.7
           -&gt; intent
@@ -272,14 +352,14 @@ say "Hello" -&gt; "out.wav"</code></pre>
         </code></pre>
         <h3 id="54-extract">5.4 <code class="inline-code">extract</code></h3>
         <p><code class="inline-code">examples/extract_person.spark</code></p>
-        <pre class="doc__pre"><code>extract Person {
+        <pre class="doc__pre"><code class="inline-code">extract Person {
           name: string
           age: int
         } from &quot;Ada Lovelace was born in 1815&quot; -&gt; person
         </code></pre>
         <h3 id="55-pipeline">5.5 <code class="inline-code">pipeline</code></h3>
         <p><code class="inline-code">examples/pipeline_translate.spark</code></p>
-        <pre class="doc__pre"><code>let doc &quot;Office printers need regular cleaning and toner checks.&quot;
+        <pre class="doc__pre"><code class="inline-code">let doc &quot;Office printers need regular cleaning and toner checks.&quot;
 
         pipeline {
           ask &quot;Summarize: {doc}&quot; -&gt; summary
@@ -288,7 +368,7 @@ say "Hello" -&gt; "out.wav"</code></pre>
         </code></pre>
         <h3 id="56-tool-with-tools">5.6 <code class="inline-code">tool</code> / <code class="inline-code">with tools</code></h3>
         <p><code class="inline-code">examples/tool_agent.spark</code></p>
-        <pre class="doc__pre"><code>tool weather(city: string) -&gt; string {
+        <pre class="doc__pre"><code class="inline-code">tool weather(city: string) -&gt; string {
           &quot;stub:local&quot;
         }
 
@@ -300,7 +380,7 @@ say "Hello" -&gt; "out.wav"</code></pre>
         <h3 id="57-review-builder-implement">5.7 <code class="inline-code">review</code> / <code class="inline-code">builder</code> / <code class="inline-code">implement</code></h3>
         <p><code class="inline-code">examples/review_builder.spark</code>, <code class="inline-code">examples/ide.spark</code><br />
         (dry-run writes <code class="inline-code">out/program.spark</code>; <strong>not</strong> the product IDE)</p>
-        <pre class="doc__pre"><code>review path &quot;examples/fixtures/sample.js&quot; -&gt; report
+        <pre class="doc__pre"><code class="inline-code">review path &quot;examples/fixtures/sample.js&quot; -&gt; report
         review url &quot;file://examples/fixtures/sample.js&quot; -&gt; report_url
         review text &quot;function x(){ eval(y); }&quot; -&gt; report_text
 
@@ -310,9 +390,9 @@ say "Hello" -&gt; "out.wav"</code></pre>
         <p>Remote <code class="inline-code">http(s)</code> review needs <code class="inline-code">--allow-net</code>. Never evaluates web JS.</p>
         <h3 id="57b-ide-core-ide">5.7b IDE core (<code class="inline-code">ide</code>)</h3>
         <p>Verified (<code class="inline-code">examples/ide_hello.spark</code>, <code class="inline-code">examples/ide_ask.spark</code>,
-        <code class="inline-code">examples/ide_show.spark</code>, <code class="inline-code">make test</code>, this tree
+        <code class="inline-code">examples/ide_show.spark</code>, <code class="inline-code">make test</code>, ask ship <code class="inline-code">dc54d92</code>, this tree
         <code class="inline-code">rc=0</code>):</p>
-        <pre class="doc__pre"><code>ide new
+        <pre class="doc__pre"><code class="inline-code">ide new
         ide open &quot;examples/hello.spark&quot; -&gt; opened
         ide buffer -&gt; shown
         ide save &quot;out/ide/ide_hello_saved.spark&quot; -&gt; saved
@@ -341,8 +421,8 @@ say "Hello" -&gt; "out.wav"</code></pre>
         <td>Write buffer to path</td>
         </tr>
         <tr>
-        <td><code class="inline-code">ide buffer</code></td>
-        <td>Terminal dump of buffer</td>
+        <td><code class="inline-code">ide buffer</code> / <code class="inline-code">ide buffer -&gt; shown</code></td>
+        <td>Terminal dump of buffer; bind optional (not <code class="inline-code">show</code>)</td>
         </tr>
         <tr>
         <td><code class="inline-code">ide run</code></td>
@@ -372,15 +452,84 @@ say "Hello" -&gt; "out.wav"</code></pre>
 
         ./spark --dry-run examples/ide_save_reopen.spark
         # open → save → reopen; saved file sha256/size == hello.spark
+
+        ./spark --dry-run examples/ide_new_chain.spark
+        # new → buffer → save (0-byte) → open → buffer; dirty * then clear
+
+        ./spark --dry-run examples/ide_buffer_forms.spark
+        # open → buffer -&gt; shown (body) → new → bare buffer; not show
+
+        ./spark --dry-run examples/ide_save_forms.spark
+        # open → save &quot;path&quot; → bare save; sha == hello.spark
+
+        ./spark --dry-run examples/ide_show_forms.spark
+        # open → bare show → show &quot;editor.ppm&quot;; both ide.show
+
+        ./spark --dry-run examples/ide_ask_forms.spark
+        # open → bare ask → ask &quot;instruction&quot;; both Gravity fixture
+
+        ./spark --dry-run examples/ide_new_forms.spark
+        # bare new → quoted new path; both dirty true (not keymap n)
+
+        ./spark --dry-run examples/ide_run_forms.spark
+        # open → run -&gt; ran → bare run; both dry-run Gravity
         </code></pre>
-        <p>Display window = engine companion. Details: <a href="/docs/ide.html">IDE status</a>.</p>
+        <p>No PyQt / Electron IDE. Display window = engine companion only.
+        Details: <a href="/docs/ide.html">IDE.md</a>. Reports:
+        <code class="inline-code">reports/spark-ide-ask-20260831.md</code>,
+        <code class="inline-code">reports/spark-ide-show-20260831.md</code>,
+        <code class="inline-code">reports/spark-ide-run-show-20260831.md</code>,
+        <code class="inline-code">reports/spark-ide-ask-show-20260831.md</code>,
+        <code class="inline-code">reports/spark-ide-save-reopen-20260831.md</code>,
+        <code class="inline-code">reports/spark-ide-new-chain-20260831.md</code>,
+        <code class="inline-code">reports/spark-ide-buffer-forms-20260831.md</code>,
+        <code class="inline-code">reports/spark-ide-save-forms-20260831.md</code>,
+        <code class="inline-code">reports/spark-ide-show-forms-20260831.md</code>,
+        <code class="inline-code">reports/spark-ide-ask-forms-20260831.md</code>,
+        <code class="inline-code">reports/spark-ide-new-forms-20260831.md</code>,
+        <code class="inline-code">reports/spark-ide-run-forms-20260831.md</code>,
+        <code class="inline-code">reports/spark-ide-save-nopath-20260831.md</code>,
+        <code class="inline-code">reports/spark-ide-run-nobuf-20260831.md</code>,
+        <code class="inline-code">reports/spark-ide-ask-nobuf-20260831.md</code>,
+        <code class="inline-code">reports/spark-ide-open-nopath-20260831.md</code>,
+        <code class="inline-code">reports/spark-ide-bind-forms-20260831.md</code>,
+        <code class="inline-code">reports/spark-ide-status-path-20260831.md</code>,
+        <code class="inline-code">reports/spark-ide-ask-bind-20260831.md</code>,
+        <code class="inline-code">reports/spark-ide-open-miss-20260831.md</code>,
+        <code class="inline-code">reports/spark-ide-show-miss-20260831.md</code>,
+        <code class="inline-code">reports/spark-ide-show-notppm-20260831.md</code>,
+        <code class="inline-code">reports/spark-ide-keys-miss-20260831.md</code>,
+        <code class="inline-code">reports/spark-ide-run-bind-20260831.md</code>,
+        <code class="inline-code">reports/spark-ide-new-bind-20260831.md</code>,
+        <code class="inline-code">reports/spark-ide-ask-quote-bind-20260831.md</code>,
+        <code class="inline-code">reports/spark-ide-key-bad-20260831.md</code>,
+        <code class="inline-code">reports/spark-ide-buffer-bind-20260831.md</code>,
+        <code class="inline-code">reports/spark-ide-keys-bare-20260831.md</code>,
+        <code class="inline-code">reports/spark-ide-key-open-nopath-20260831.md</code>,
+        <code class="inline-code">reports/spark-ide-open-bind-20260831.md</code>,
+        <code class="inline-code">reports/spark-ide-save-bind-20260831.md</code>,
+        <code class="inline-code">reports/spark-ide-status-new-star-20260831.md</code>,
+        <code class="inline-code">reports/spark-ide-key-quit-alone-20260831.md</code>,
+        <code class="inline-code">reports/spark-ide-status-clear-20260831.md</code>,
+        <code class="inline-code">reports/spark-ide-key-show-alone-20260831.md</code>.</p>
         <h3 id="57c-ide-keymap-ide-keys-ide-key">5.7c IDE keymap (<code class="inline-code">ide keys</code> / <code class="inline-code">ide key</code>)</h3>
-        <p>        Verified (<code class="inline-code">examples/ide_keys.spark</code>, save/run token proofs,
-        <code class="inline-code">rc=0</code> on this tree).
-        Script fixtures:
+        <p>Verified (<code class="inline-code">examples/ide_keys.spark</code>, commit <code class="inline-code">51fbe8f</code> + show polish,
+        save token proof <code class="inline-code">examples/ide_keys_save.spark</code>, run token proof
+        <code class="inline-code">examples/ide_keys_run.spark</code>, quit token proof
+        <code class="inline-code">examples/ide_keys_quit.spark</code>, show token proof
+        <code class="inline-code">examples/ide_keys_show.spark</code>, open token proof
+        <code class="inline-code">examples/ide_keys_open.spark</code>, long-form proof
+        <code class="inline-code">examples/ide_keys_long.spark</code>, long-form srs proof
+        <code class="inline-code">examples/ide_keys_long_srs.spark</code>, unknown-token proof
+        <code class="inline-code">examples/ide_keys_unknown.spark</code>, this tree <code class="inline-code">rc=0</code>).
+        Asm: <code class="inline-code">asm/ide_keys.s</code>. Script fixtures:
         <code class="inline-code">examples/fixtures/ide/cmds.txt</code>, <code class="inline-code">cmds_save.txt</code> (<code class="inline-code">s</code> → save),
-        <code class="inline-code">cmds_run.txt</code> (<code class="inline-code">r</code> → run).</p>
-        <pre class="doc__pre"><code>ide keys &quot;examples/fixtures/ide/cmds.txt&quot;
+        <code class="inline-code">cmds_run.txt</code> (<code class="inline-code">r</code> → run), <code class="inline-code">cmds_quit.txt</code> (<code class="inline-code">q</code> → quit),
+        <code class="inline-code">cmds_show.txt</code> (<code class="inline-code">w</code> → show), <code class="inline-code">cmds_open.txt</code> (<code class="inline-code">o</code> → open),
+        <code class="inline-code">cmds_long.txt</code> (<code class="inline-code">open</code> / <code class="inline-code">quit</code> long forms),
+        <code class="inline-code">cmds_long_srs.txt</code> (<code class="inline-code">save</code> / <code class="inline-code">run</code> / <code class="inline-code">show</code> long forms),
+        <code class="inline-code">cmds_unknown.txt</code> (<code class="inline-code">x</code> → unknown ok:false).</p>
+        <pre class="doc__pre"><code class="inline-code">ide keys &quot;examples/fixtures/ide/cmds.txt&quot;
 
         ide key open &quot;examples/hello.spark&quot;
         ide key show
@@ -418,15 +567,105 @@ say "Hello" -&gt; "out.wav"</code></pre>
 
         ./spark --dry-run examples/ide_keys_run.spark
         # script `r` → {&quot;cmd&quot;:&quot;run&quot;,&quot;path&quot;:&quot;examples/hello.spark&quot;}; dry no fork
+
+        ./spark --dry-run examples/ide_keys_quit.spark
+        # script `q` → {&quot;cmd&quot;:&quot;quit&quot;,&quot;path&quot;:&quot;examples/hello.spark&quot;}; ends loop
+
+        ./spark --dry-run examples/ide_keys_show.spark
+        # script `w` → {&quot;cmd&quot;:&quot;show&quot;,&quot;path&quot;:&quot;examples/hello.spark&quot;}; dry PPM
+
+        ./spark --dry-run examples/ide_keys_open.spark
+        # script `o` → {&quot;cmd&quot;:&quot;open&quot;,&quot;path&quot;:&quot;examples/hello.spark&quot;}; paints
+
+        ./spark --dry-run examples/ide_keys_long.spark
+        # script `open`/`quit` long forms (aliases of o/q)
+
+        ./spark --dry-run examples/ide_keys_long_srs.spark
+        # script `save`/`run`/`show` long forms (aliases of s/r/w)
+
+        ./spark --dry-run examples/ide_keys_unknown.spark
+        # script `x` → {&quot;cmd&quot;:&quot;unknown&quot;,&quot;ok&quot;:false}; quit ends loop
+
+        ./spark --dry-run examples/ide_save_nopath.spark
+        # bare save no path → rc!=0
+
+        ./spark --dry-run examples/ide_run_nobuf.spark
+        # bare run empty buffer → rc!=0
+
+        ./spark --dry-run examples/ide_ask_nobuf.spark
+        # bare ask empty buffer → rc!=0
+
+        ./spark --dry-run examples/ide_open_nopath.spark
+        # bare open no path → rc!=0
+
+        ./spark --dry-run examples/ide_bind_forms.spark
+        # open -&gt; opened; save -&gt; saved; print JSON
+
+        ./spark --dry-run examples/ide_status_path.spark
+        # status.txt == examples/hello.spark
+
+        ./spark --dry-run examples/ide_ask_bind.spark
+        # ask -&gt; reply; print reply → Gravity
+
+        ./spark --dry-run examples/ide_open_miss.spark
+        # open missing path → rc!=0
+
+        ./spark --dry-run examples/ide_show_miss.spark
+        # show missing .ppm → rc!=0
+
+        ./spark --dry-run examples/ide_show_notppm.spark
+        # show .spark (not P6/.rgb) → rc!=0
+
+        ./spark --dry-run examples/ide_keys_miss.spark
+        # keys missing cmds script → rc!=0
+
+        ./spark --dry-run examples/ide_run_bind.spark
+        # run -&gt; ran; print ran → op JSON
+
+        ./spark --dry-run examples/ide_new_bind.spark
+        # new -&gt; created; print created → op JSON
+
+        ./spark --dry-run examples/ide_ask_quote_bind.spark
+        # ask &quot;…&quot; -&gt; reply; print reply → Gravity
+
+        ./spark --dry-run examples/ide_key_bad.spark
+        # ide key x → rc!=0 (want quit|save|run|open|show)
+
+        ./spark --dry-run examples/ide_buffer_bind.spark
+        # buffer -&gt; dump; print dump → op JSON
+
+        ./spark --dry-run examples/ide_keys_bare.spark
+        # bare ide keys → default cmds.txt
+
+        ./spark --dry-run examples/ide_key_open_nopath.spark
+        # ide key open (no path) → ok:false, rc=0
+
+        ./spark --dry-run examples/ide_open_bind.spark
+        # open -&gt; opened; print opened → op JSON
+
+        ./spark --dry-run examples/ide_save_bind.spark
+        # save -&gt; saved; print saved → op JSON
+
+        ./spark --dry-run examples/ide_status_new_star.spark
+        # new path → status.txt ends *
+
+        ./spark --dry-run examples/ide_key_quit_alone.spark
+        # bare ide key quit → ok:true + keys_trace
+
+        ./spark --dry-run examples/ide_status_clear.spark
+        # new + save → status.txt without *
+
+        ./spark --dry-run examples/ide_key_show_alone.spark
+        # bare ide key show → editor.ppm + keys_trace
         </code></pre>
-        <p><strong>Dry-run:</strong> traces only for save/run (no write / no fork). Open still
-        does real <code class="inline-code">open</code>+<code class="inline-code">read</code> <strong>and</strong> paints <code class="inline-code">editor.ppm</code>. Show dry-validates
-        via <code class="inline-code">engine_window_show</code>. No mouse GUI. Use the proven keymap
-        tokens listed above.</p>
+        <p><strong>Dry-run:</strong> traces only for save/run (no write / no fork). Quit ends
+        the keymap loop. Open still does real <code class="inline-code">open</code>+<code class="inline-code">read</code> <strong>and</strong> paints
+        <code class="inline-code">editor.ppm</code>. Show dry-validates via <code class="inline-code">engine_window_show</code>. No mouse GUI.
+        Do <strong>not</strong> invent key tokens.</p>
         <h3 id="57d-editor-paint-ppm-not-a-language-op">5.7d Editor paint (PPM — not a language op)</h3>
-        <p>Verified (<code class="inline-code">make test-ide-paint</code>, status strip + dirty <code class="inline-code">*</code>
-        after <code class="inline-code">ide new</code> + AI panel, PASS this tree). There is
-        <strong>no</strong> <code class="inline-code">ide paint</code> statement in <code class="inline-code">.spark</code>. Paint is wired internally: core
+        <p>Verified (<code class="inline-code">make test-ide-paint</code>, status strip <code class="inline-code">b029a4a</code> + dirty <code class="inline-code">*</code>
+        after <code class="inline-code">ide new</code> + AI panel on <code class="inline-code">dc54d92</code>, PASS this tree). There is
+        <strong>no</strong> <code class="inline-code">ide paint</code> statement in <code class="inline-code">.spark</code>. Paint is asm ABI: core
         exports <code class="inline-code">ide_buf</code> / <code class="inline-code">ide_buf_len</code> / <code class="inline-code">ide_dirty</code> and calls
         <code class="inline-code">ide_paint_bind</code> after <code class="inline-code">new</code>/<code class="inline-code">open</code>/<code class="inline-code">save</code>; <code class="inline-code">ide ask</code> calls
         <code class="inline-code">ide_ai_set</code> then rewrites PPM. Paint owns <code class="inline-code">ide_cursor</code> /
@@ -440,9 +679,11 @@ say "Hello" -&gt; "out.wav"</code></pre>
         ./spark --dry-run examples/ide_dirty_status.spark
         # → dirty true on new; status_dirty.txt ends *; save clears
         </code></pre>
+        <p>Report: <code class="inline-code">reports/spark-ide-status-strip-20260831.md</code>,
+        <code class="inline-code">reports/spark-ide-dirty-status-20260831.md</code>.</p>
         <h3 id="58-voice">5.8 Voice</h3>
         <p><code class="inline-code">examples/voice_turn.spark</code> (and VOICE.md examples)</p>
-        <pre class="doc__pre"><code>voice {
+        <pre class="doc__pre"><code class="inline-code">voice {
           listen -&gt; user
           classify Intent { support, sales } from user -&gt; intent
           ask &quot;Reply helpfully to: {user}&quot; -&gt; reply
@@ -455,7 +696,7 @@ say "Hello" -&gt; "out.wav"</code></pre>
         <code class="inline-code">SPARK_PSTN=1</code>.</p>
         <h3 id="59-browser-mitm-language-driver">5.9 Browser / MITM (language driver)</h3>
         <p>Canonical dry entry: <code class="inline-code">examples/browser_main.spark</code></p>
-        <pre class="doc__pre"><code>browser run &quot;examples/browser_main.spark&quot; -&gt; session
+        <pre class="doc__pre"><code class="inline-code">browser run &quot;examples/browser_main.spark&quot; -&gt; session
         browser goto &quot;https://example.com/&quot; -&gt; page
         mitm enable -&gt; mitm_session
         mitm filter &quot;example\\.com&quot; -&gt; filt
@@ -474,8 +715,8 @@ say "Hello" -&gt; "out.wav"</code></pre>
         <td><code class="inline-code">./spark --dry-run examples/browser_main.spark</code></td>
         </tr>
         <tr>
-        <td>Live</td>
-        <td><code class="inline-code">./spark --live examples/browser_main.spark</code></td>
+        <td>Live product</td>
+        <td><code class="inline-code">cd ../spark-browser &amp;&amp; make run</code> → <code class="inline-code">./spark --live browser/run.spark</code></td>
         </tr>
         <tr>
         <td>Dry E2E</td>
@@ -492,7 +733,7 @@ say "Hello" -&gt; "out.wav"</code></pre>
         <p>Do <strong>not</strong> document <code class="inline-code">python3 -m spark_browser run</code> as the product entry.</p>
         <h3 id="510-encrypt-gateway">5.10 Encrypt gateway</h3>
         <p><code class="inline-code">examples/encrypt_gateway.spark</code> (needs <code class="inline-code">./spark-enc-gateway</code>)</p>
-        <pre class="doc__pre"><code>crypto keygen -&gt; key
+        <pre class="doc__pre"><code class="inline-code">crypto keygen -&gt; key
         encrypt gateway enable key
         gateway encrypt on
         encrypt seal text &quot;…&quot; -&gt; blob
@@ -548,20 +789,21 @@ say "Hello" -&gt; "out.wav"</code></pre>
         <tr>
         <td>Model improve</td>
         <td><code class="inline-code">model_improve.spark</code></td>
-        <td>fixtures; build writes a plan only</td>
+        <td>fixtures; build ≠ <code class="inline-code">train@*</code></td>
         </tr>
         </tbody>
         </table></div>
         <hr class="doc__hr" />
         <h2 id="6-layout">6. Layout</h2>
-        <pre class="doc__pre"><code>examples/*.spark     # programs
+        <pre class="doc__pre"><code class="inline-code">examples/*.spark     # programs
         docs/                # this guide + LANGUAGE.md + …
+        asm/*.s              # VM (do not thrash engine_* from app docs)
         tools/               # companions (ask-http, review-url, …)
-        templates/           # os / browser templates
+        templates/           # os / browser scaffolds
         out/                 # implement / HAR / decompile / engine artifacts
         tests/               # dry harness
         spark.toml           # documented defaults (not VM-parsed for aliases)
-        spark.code-workspace # optional editor workspace
+        spark.code-workspace # Cursor workspace (IDE.md)
         </code></pre>
         <hr class="doc__hr" />
         <h2 id="7-debugging">7. Debugging</h2>
@@ -583,7 +825,7 @@ say "Hello" -&gt; "out.wav"</code></pre>
         </tr>
         <tr>
         <td><code class="inline-code">ask probe</code> fail</td>
-        <td>Check API credentials and companion binary</td>
+        <td>probe credential path — see ASK_LIVE.md</td>
         </tr>
         <tr>
         <td><code class="inline-code">review url</code> blocked</td>
@@ -595,7 +837,7 @@ say "Hello" -&gt; "out.wav"</code></pre>
         </tr>
         <tr>
         <td>Prefer GPU 2</td>
-        <td>Refused (reserved GPU) — see <code class="inline-code">examples/neg/cuda_prefer_*</code></td>
+        <td>Refused (voice GPU) — see <code class="inline-code">examples/neg/cuda_prefer_*</code></td>
         </tr>
         </tbody>
         </table></div>
@@ -640,14 +882,26 @@ say "Hello" -&gt; "out.wav"</code></pre>
         make test-ide-paint   # PPM paint wire (not a .spark op)
         </code></pre>
         <p><code class="inline-code">make test</code> stays offline for ask/vendor speech. If <code class="inline-code">./spark</code> disappears
-        mid-suite while the binary is rebuilding, re-run <code class="inline-code">make</code> then <code class="inline-code">make test</code>.</p>
+        mid-suite while engine objects are relinking, re-run <code class="inline-code">make</code> then <code class="inline-code">make test</code>.</p>
+        <hr class="doc__hr" />
+        <h2 id="9-hardware-asm">9. Hardware / asm</h2>
+        <ul class="doc__ul">
+        <li><strong>Users program in Spark.</strong> The VM is asm→ELF.</li>
+        <li>Do not edit <code class="inline-code">asm/engine_*.s</code> from an app/docs lane while engine agents
+          work that tree.</li>
+        <li><code class="inline-code">make machine-proof</code> shows ELF64 + <code class="inline-code">_start</code> disassembly when the binary
+          links.</li>
+        </ul>
         <hr class="doc__hr" />
         <h2 id="10-engine-b-verified-ops-only">10. Engine B (verified ops only)</h2>
         <p>Documented here only after dry-run (or gated fail) on this tree.</p>
-        <p>Phase-1 <code class="inline-code">&lt;script&gt;</code> → <code class="inline-code">engine_js_eval</code>. HTTPS uses OpenSSL BIO companion <code class="inline-code">./spark-engine-fetch-tls</code>.</p>
+        <p><strong>Honesty banner:</strong> <strong>Not</strong> a full browser. <strong>Not</strong> full CSS / full ES /
+        Google.com / Electron. Phase-1 <code class="inline-code">&lt;script&gt;</code> → <code class="inline-code">engine_js_eval</code> only.
+        HTTPS is OpenSSL BIO companion <code class="inline-code">./spark-engine-fetch-tls</code> — <strong>not</strong>
+        TLS-in-asm.</p>
         <h3 id="dry-pipeline-fetchparsecsslayoutpaintshow">Dry pipeline (fetch→parse→css→layout→paint→show)</h3>
         <p><code class="inline-code">examples/engine_pipeline.spark</code> (verified on this tree):</p>
-        <pre class="doc__pre"><code>engine fetch &quot;file://engine/fixtures/style_basic.html&quot; -&gt; body
+        <pre class="doc__pre"><code class="inline-code">engine fetch &quot;file://engine/fixtures/style_basic.html&quot; -&gt; body
         engine parse &quot;out/engine/body.bin&quot; -&gt; dom
         engine css attach -&gt; styles
         engine layout -&gt; boxes
@@ -663,9 +917,10 @@ say "Hello" -&gt; "out.wav"</code></pre>
         <code class="inline-code">cell_text</code>). Also <code class="inline-code">examples/engine_fetch_parse_layout.spark</code>.
         Proofs: <code class="inline-code">make test-engine-pipeline-table</code>, <code class="inline-code">make test-engine-layout</code>,
         <code class="inline-code">make test-engine-fetch-parse-layout</code>.</p>
-        <p><strong>CSS padding (real):</strong> shorthand <code class="inline-code">padding</code> px on block/cell boxes;
-        <strong><code class="inline-code">border-width</code> px</strong> on table cells; display
-        subset includes table/table-row/table-cell, plus padding and border-width in px.</p>
+        <p><strong>CSS padding (real):</strong> shorthand <code class="inline-code">padding</code> px on block/cell boxes
+        (<code class="inline-code">e313b21</code>); <strong><code class="inline-code">border-width</code> px</strong> on table cells (<code class="inline-code">60e2b44</code>); display
+        subset includes table/table-row/table-cell — <strong>not</strong> full CSS / <code class="inline-code">%</code> /
+        multi-value shorthand.</p>
         <p>Artifacts: <code class="inline-code">out/engine/body.bin</code>, <code class="inline-code">out/browser/engine/dom.json</code>,
         <code class="inline-code">out/browser/engine/css.json</code>, <code class="inline-code">out/engine/pipeline.ppm</code>,
         <code class="inline-code">out/browser/show.json</code>. Layout without prior parse <strong>fail closed</strong>
@@ -683,10 +938,11 @@ say "Hello" -&gt; "out.wav"</code></pre>
         <pre class="doc__pre"><code class="language-bash">./spark-engine-show --ppm out/engine/pipeline.ppm --hold 5000
         ./spark-engine-show --dry --ppm out/engine/pipeline.ppm   # no X11
         </code></pre>
-        <p>Dry <code class="inline-code">make test</code> never forks X11.</p>
+        <p>Dry <code class="inline-code">make test</code> never forks X11. Report:
+        <code class="inline-code">reports/spark-engine-show-live-20260831.md</code>.</p>
         <h3 id="engine-parse-outbrowserenginedomjson"><code class="inline-code">engine parse</code> → <code class="inline-code">out/browser/engine/dom.json</code></h3>
         <p><code class="inline-code">examples/engine_parse.spark</code> (verified <code class="inline-code">rc=0</code>):</p>
-        <pre class="doc__pre"><code>engine parse &quot;engine/fixtures/hello.html&quot; -&gt; dom
+        <pre class="doc__pre"><code class="inline-code">engine parse &quot;engine/fixtures/hello.html&quot; -&gt; dom
         </code></pre>
         <p>Writes DOM JSON under <code class="inline-code">out/browser/engine/dom.json</code>
         (<code class="inline-code">"op":"engine.parse"</code>, <code class="inline-code">"engine":"spark-asm-html"</code>, node list).</p>
@@ -727,17 +983,16 @@ say "Hello" -&gt; "out.wav"</code></pre>
         </tr>
         </tbody>
         </table></div>
-        <pre class="doc__pre"><code>engine fetch &quot;file://examples/fixtures/engine/sample.html&quot; -&gt; body
+        <pre class="doc__pre"><code class="inline-code">engine fetch &quot;file://examples/fixtures/engine/sample.html&quot; -&gt; body
         # http/https with --allow-net:
         # ./spark --dry-run --allow-net your_fetch.spark
         </code></pre>
-        <p>HTTPS uses a companion binary — OpenSSL BIO via
-        <code class="inline-code">./spark-engine-fetch-tls</code>. Verified:
-        <code class="inline-code">engine_fetch_tls_companion_*</code> +
+        <p>HTTPS is <strong>not</strong> TLS-in-asm / <strong>not</strong> Python — companion only
+        (<code class="inline-code">27252f4</code>). PASS: <code class="inline-code">engine_fetch_tls_companion_*</code> +
         <code class="inline-code">engine_fetch_https_openssl_bio</code>.</p>
         <h3 id="js-phase-1-only"><code class="inline-code">js</code> phase-1 only</h3>
         <p>Verified: <code class="inline-code">examples/js_phase1.spark</code>, <code class="inline-code">browser/engine/js.spark</code>.</p>
-        <pre class="doc__pre"><code>js eval &quot;1+1&quot; -&gt; sum
+        <pre class="doc__pre"><code class="inline-code">js eval &quot;1+1&quot; -&gt; sum
         js eval &quot;'a'+'b'&quot; -&gt; cat
         js eval &quot;-1&quot; -&gt; neg
         js eval &quot;var x = 1; x+2&quot; -&gt; vsum
@@ -745,23 +1000,79 @@ say "Hello" -&gt; "out.wav"</code></pre>
         js console -&gt; buf          # dump console buffer (browser/engine/js.spark)
         js selftest -&gt; ok
         </code></pre>
-        <p>Runtime prints <code class="inline-code">phase1 numbers/strings/+/unary- /var-num/console.log</code>.
+        <p>Runtime prints <code class="inline-code">phase1 numbers/strings/+/unary- /var-num/console.log (not full ES)</code>.
         Artifacts: <code class="inline-code">out/engine/js_result.txt</code>, <code class="inline-code">out/engine/js_console.txt</code>.</p>
         <p><strong>DOM hook (real):</strong> <code class="inline-code">engine parse</code> walks <code class="inline-code">&lt;script&gt;</code> text children and
         calls <code class="inline-code">engine_js_eval</code> (same phase-1 slice). Proof:
         <code class="inline-code">engine/fixtures/hello.html</code> (<code class="inline-code">1+1</code>), <code class="inline-code">engine/fixtures/script_log.html</code>,
         <code class="inline-code">./engine/tests/js_script_dom.sh</code>.</p>
         <p><strong>Unary <code class="inline-code">-</code>:</strong> prefix on a number primary (<code class="inline-code">-1</code>, <code class="inline-code">-1+3</code>, <code class="inline-code">--1</code>).
-        Binary <code class="inline-code">-</code> and <code class="inline-code">-'str'</code> fail loud.</p>
+        Binary <code class="inline-code">-</code> and <code class="inline-code">-'str'</code> fail loud. Not full ES.</p>
         <p><strong><code class="inline-code">var</code> number assign:</strong> <code class="inline-code">var x = 1</code> / <code class="inline-code">var x = 1; x+2</code> (RHS must be
         number). <code class="inline-code">var x = 'a'</code>, undeclared <code class="inline-code">x</code>, <code class="inline-code">let</code>/<code class="inline-code">const</code> fail loud.</p>
-        <p>Phase-1 slice: numbers, strings, <code class="inline-code">+</code>, unary <code class="inline-code">-</code>, <code class="inline-code">var</code> num, and console.log.</p>
+        <p><strong>Explicitly not yet:</strong> full ES, modules, DOM APIs, <code class="inline-code">var</code> strings,
+        binary <code class="inline-code">-</code>, or a JS standard library beyond this phase-1 slice.</p>
+        <p>Product GUI PyQt spark-browser is <strong>PARKED</strong> — engine B pixels are the
+        product render SoT. See <a href="/docs/self-host.html">SELF_HOST.md</a>.</p>
         <hr class="doc__hr" />
-        <h2 id="11-what-spark-includes">11. What Spark includes today</h2>
-        <p>Real surface area you can dry-run now:</p>
-        <p><code class="inline-code">model</code> / <code class="inline-code">ask</code> / <code class="inline-code">classify</code> / <code class="inline-code">extract</code> / <code class="inline-code">pipeline</code> /
+        <h2 id="11-honest-gaps-not-in-the-language">11. Honest gaps (not in the language)</h2>
+        <p>Standard-tutorial topics that are <strong>not</strong> Spark syntax today — omit from
+        examples; do not invent:</p>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Topic</th>
+        <th>Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><code class="inline-code">if</code> / <code class="inline-code">while</code> / <code class="inline-code">for</code></td>
+        <td><strong>Not</strong> in shipped examples / LANGUAGE statements</td>
+        </tr>
+        <tr>
+        <td>User-defined <code class="inline-code">fn</code> / modules / imports</td>
+        <td><strong>Not</strong> present (tools are <code class="inline-code">tool</code> + <code class="inline-code">with tools</code>)</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">include "path"</code> in <code class="inline-code">./spark</code> (GAS)</td>
+        <td><strong>Not</strong> yet — bootstrap VM only</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">{var}</code> in ask prompts (GAS)</td>
+        <td><strong>Not</strong> yet — bootstrap interpolates</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">ide paint</code> as a <code class="inline-code">.spark</code> op</td>
+        <td><strong>Not</strong> — paint is ABI + <code class="inline-code">make test-ide-paint</code></td>
+        </tr>
+        <tr>
+        <td>Electron / PyQt product IDE chrome</td>
+        <td><strong>Not</strong> built — buffer + keys + ask/show + PPM only</td>
+        </tr>
+        <tr>
+        <td>Full CSS / Google.com</td>
+        <td><strong>Not</strong> — fixture HTML + display/padding subset</td>
+        </tr>
+        <tr>
+        <td>Full ES</td>
+        <td><strong>Not</strong> — phase-1 <code class="inline-code">+</code> / unary <code class="inline-code">-</code> / <code class="inline-code">var</code> num / console.log</td>
+        </tr>
+        <tr>
+        <td>HTTPS TLS inside asm</td>
+        <td><strong>Not</strong> — OpenSSL BIO companion under <code class="inline-code">--allow-net</code></td>
+        </tr>
+        <tr>
+        <td>Full compiler / Stage 4–5</td>
+        <td><strong>Partial</strong> — C <code class="inline-code">--compile</code> + <code class="inline-code">bc_vm</code> for SPARK_BC.md op families; Spark-hosted compiler not started</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <p>What <strong>is</strong> real: <code class="inline-code">model</code> / <code class="inline-code">ask</code> / <code class="inline-code">classify</code> / <code class="inline-code">extract</code> / <code class="inline-code">pipeline</code> /
         <code class="inline-code">tool</code> / <code class="inline-code">review</code>→<code class="inline-code">builder</code>→<code class="inline-code">implement</code> / <code class="inline-code">voice</code> / gateway encrypt /
-        verified <code class="inline-code">ide</code> ops / engine B pipeline.</p>
+        verified <code class="inline-code">ide</code> ops / engine B fixture pipeline. A+B+C:
+        <a href="/docs/self-host.html">SELF_HOST.md</a>, <code class="inline-code">bootstrap/README.md</code>,
+        <code class="inline-code">sparkasm/README.md</code>, <code class="inline-code">selfhost/README.md</code>.</p>
         <hr class="doc__hr" />
         <h2 id="12-cheat-sheet">12. Cheat sheet</h2>
         <pre class="doc__pre"><code class="language-bash">make &amp;&amp; ./spark --version
@@ -772,25 +1083,26 @@ say "Hello" -&gt; "out.wav"</code></pre>
         ./spark --dry-run examples/engine_pipeline.spark
         ./spark --dry-run examples/engine_pipeline_table.spark
         ./spark --dry-run examples/js_phase1.spark
+        make test-bootstrap
+        make -C sparkasm test
+        make test-selfhost-lex
+        make test-sparkbc
+        ./spark-bootstrap --compile examples/hello.spark -o /tmp/hello.sparkbc
+        ./spark-bootstrap --run-bc /tmp/hello.sparkbc
         # make test-ide-paint   # PPM + status strip (not a .spark op)
-        # optional: make ide  (opens external editor — see IDE docs)
+        # optional interim editor: make ide  (Cursor host — see IDE.md)
         </code></pre>
-        <p>Next: <a href="/docs/ide.html">IDE status</a> (verified <code class="inline-code">ide</code> ops; CLI stays primary).</p>
+        <p>Next: <a href="/docs/ide.html">IDE.md</a> (verified <code class="inline-code">ide</code> ops; CLI stays primary).</p>
       </article>
-    </main>
+      </main>
     </div>
 
-        <footer class="site-footer">
+    <footer class="site-footer">
       <div class="shell footer-inner">
-        <div class="footer-brand">
-          <span>SparkLang — the Spark programming language</span>
-          <span class="footer-meta">v0.6.2 · MIT</span>
-        </div>
+        <span>Spark programming language</span>
         <nav class="footer-nav" aria-label="Footer">
-          <a href="/about.html">About</a>
-<a href="/LICENSE.txt">License</a>
-          <a href="/CHANGELOG.html">Changelog</a>
           <a href="/learn/">Learn</a>
+          <a href="/docs/language.html">Reference</a>
           <a href="/downloads.html">Downloads</a>
           <a href="/playground.html">Playground</a>
         </nav>

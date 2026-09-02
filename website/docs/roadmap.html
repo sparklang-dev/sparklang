@@ -75,7 +75,8 @@
         <li>Changelog + release process doc</li>
         <li><code class="inline-code">embed</code> / <code class="inline-code">retrieve</code> first-class ops + dry fixtures + <code class="inline-code">spark-rag-http</code></li>
         <li>Dry-run escape hatch: <code class="inline-code">shell</code> / <code class="inline-code">run</code> allowlist fixtures</li>
-        <li><code class="inline-code">./spark --embed</code> FFI handshake stub</li>
+        <li>Python host embed: <code class="inline-code">from sparklang import run</code> (<code class="inline-code">python/sparklang/</code>);
+          <code class="inline-code">./spark --embed</code> JSON handshake (<code class="inline-code">api=python</code>); JS/C FFI still next</li>
         <li>Per-<code class="inline-code">ask</code> <code class="inline-code">[accounting]</code> line (dry zeros; live usage when present)</li>
         <li>Positioning: not a Bifrost plugin; dry-run first</li>
         <li><code class="inline-code">http get</code> / <code class="inline-code">http post</code> + timeout + dry fixture files + live
@@ -104,7 +105,7 @@
         </tr>
         <tr>
         <td>Escape</td>
-        <td>Live <code class="inline-code">--allow-shell</code> argv policy; <code class="inline-code">import spark</code> host embed</td>
+        <td>Live <code class="inline-code">--allow-shell</code> argv policy; JS / C host FFI</td>
         </tr>
         <tr>
         <td>Accounting</td>

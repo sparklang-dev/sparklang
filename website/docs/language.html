@@ -130,8 +130,16 @@
 
         model train dataset &quot;examples/fixtures/train/dataset.jsonl&quot; base &quot;fixture-base&quot; out &quot;out/train/job-dry-001&quot; backend &quot;http&quot; method &quot;spark_distill_cpu&quot; -&gt; job
         model build -&gt; job                               # same as train
-        model status &quot;job-dry-001&quot; -&gt; status
+        model status &quot;job-dry-001&quot; -&gt; status             # polls that job id
         </code></pre>
+        <p>Optional <strong><code class="inline-code">method "…"</code></strong> selects the training algorithm
+        (<code class="inline-code">spark_distill_cpu</code> | <code class="inline-code">spark_pref_pack</code> | <code class="inline-code">spark_playbook_fit</code> |
+        <code class="inline-code">spark_faq_index</code>).
+        Default when omitted: <code class="inline-code">spark_distill_cpu</code> (env <code class="inline-code">SPARK_TRAIN_METHOD</code>
+        override). Live GAS passes the statement via
+        <code class="inline-code">./spark-train-http --spark-line</code>; status uses the <strong>quoted</strong> job id
+        (never a hardcoded <code class="inline-code">job-dry-001</code>). GAS-first — no SPARK_BC opcode yet
+        (see <a href="/docs/self-host.html">SPARK_BC.md</a>).</p>
         <p><strong>Backends:</strong> <code class="inline-code">http</code> (default MVP companion <code class="inline-code">./spark-train-http</code>),
         <code class="inline-code">local-yield</code> (optional allowlisted <code class="inline-code">train@</code> unit), <code class="inline-code">huggingface</code>
         (reserved — not wired). Env: <code class="inline-code">SPARK_TRAIN_BACKEND</code>, <code class="inline-code">SPARK_TRAIN_URL</code>,
@@ -212,12 +220,24 @@
         <td><code class="inline-code">[next]</code> gated exec (<code class="inline-code">--allow-shell</code>) with argv allowlist — not shipped as open <code class="inline-code">system()</code>.</td>
         </tr>
         <tr>
-        <td><strong>Host embed</strong></td>
-        <td>CLI stub <code class="inline-code">./spark --embed</code> prints a JSON handshake for FFI; <code class="inline-code">import spark</code> / JS require are <code class="inline-code">[next]</code>.</td>
+        <td><strong>Host embed (Python)</strong></td>
+        <td><strong>Shipped.</strong> <code class="inline-code">from sparklang import run</code> under <code class="inline-code">python/sparklang/</code> invokes <code class="inline-code">./spark --dry-run</code> (default) or <code class="inline-code">--live</code>. Returns stdout / stderr / exit code; missing binary or path → fail loud. <code class="inline-code">./spark --embed</code> prints a JSON handshake advertising the Python API. <strong>JS <code class="inline-code">require</code> / C FFI = <code class="inline-code">[next]</code>.</strong></td>
         </tr>
         </tbody>
         </table></div>
-        <p>See <a href="/docs/adoption-bar.html">ADOPTION_BAR.md</a>. Example: <code class="inline-code">examples/shell_escape.spark</code>.</p>
+        <pre class="doc__pre"><code class="language-python">from sparklang import run
+
+        r = run(&quot;examples/hello.spark&quot;)          # dry-run default
+        print(r.stdout, r.returncode)
+        r = run('print &quot;from host&quot;\n')         # inline source → temp .spark
+        # r = run(&quot;examples/ask_live.spark&quot;, live=True)  # opt-in
+        </code></pre>
+        <pre class="doc__pre"><code class="language-bash">PYTHONPATH=python python -m sparklang examples/hello.spark
+        ./spark --embed   # {&quot;api&quot;:&quot;python&quot;,&quot;package&quot;:&quot;sparklang&quot;,…}
+        make test-host-embed
+        </code></pre>
+        <p>See <a href="/docs/adoption-bar.html">ADOPTION_BAR.md</a>. Examples: <code class="inline-code">examples/shell_escape.spark</code>
+        (from <code class="inline-code">.spark</code> → host), <code class="inline-code">examples/python/host_embed.py</code> (host → <code class="inline-code">.spark</code>).</p>
         <h3 id="http-get-http-post-shipped"><code class="inline-code">http get</code> / <code class="inline-code">http post</code> (shipped)</h3>
         <p>Generic HTTP client ops — <strong>not</strong> Bifrost-specific and <strong>not</strong>
         <code class="inline-code">engine fetch</code> <code class="inline-code">file://</code>. Dry-run never dials the network.</p>

@@ -198,9 +198,11 @@ msg_accounting:
     .ascii "note=dry-run\n"
 msg_accounting_len = . - msg_accounting
 msg_embed_cli:
-    .ascii "{\"spark_embed\":true,\"api\":\"stub\","
-    .ascii "\"note\":\"FFI host embed handshake — "
-    .ascii "import spark is [next]\"}\n"
+    .ascii "{\"spark_embed\":true,\"api\":\"python\","
+    .ascii "\"package\":\"sparklang\","
+    .ascii "\"import\":\"from sparklang import run\","
+    .ascii "\"module\":\"python/sparklang\","
+    .ascii "\"js\":\"[next]\",\"c_ffi\":\"[next]\"}\n"
 msg_embed_cli_len = . - msg_embed_cli
 dry_shell_echo:
     .ascii "{\"ok\":true,\"mode\":\"dry-run\","
