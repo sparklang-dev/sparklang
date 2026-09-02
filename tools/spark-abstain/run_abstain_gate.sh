@@ -41,6 +41,26 @@ grep -q '"state":"succeeded"' /tmp/spark-ab-train.txt
 test -f out/heads-test/abstain.pt
 test -f out/heads-test/abstain.meta.json
 
+# Export (toy backbone) → train dim-matched head → ask
+./spark-abstain --live export \
+  --dataset examples/fixtures/abstain/labels_text.jsonl \
+  --out out/heads-test/exported.jsonl \
+  --hidden-dim 16 >/tmp/spark-ab-export.txt
+grep -q '"source":"toy"' /tmp/spark-ab-export.txt
+grep -q '"hidden_dim":16' /tmp/spark-ab-export.txt
+./spark-abstain --live train \
+  --dataset out/heads-test/exported.jsonl \
+  --kind internal \
+  --out out/heads-test/abstain16.pt \
+  --hidden-dim 16 >/tmp/spark-ab-train16.txt
+grep -q '"state":"succeeded"' /tmp/spark-ab-train16.txt
+# Also accept the committed exported fixture
+./spark-abstain --live train \
+  --dataset examples/fixtures/abstain/labels_exported.jsonl \
+  --out out/heads-test/from-shipped.pt \
+  --hidden-dim 16 >/tmp/spark-ab-shipped.txt
+grep -q '"state":"succeeded"' /tmp/spark-ab-shipped.txt
+
 ./spark-abstain --live attach \
   --model out/heads-test \
   --weights out/heads-test/abstain.pt \
@@ -66,6 +86,25 @@ PY
 grep -q '"op":"head_ask"' /tmp/spark-ab-ask-live.txt
 grep -q '"mode":"live"' /tmp/spark-ab-ask-live.txt
 grep -q '"hidden_source":"file"' /tmp/spark-ab-ask-live.txt
+
+# Dim-matched ask from toy export (16-d)
+PYTHONPATH=python python3 - <<'PY'
+import torch
+from pathlib import Path
+from sparklang.abstain.export import toy_backbone_hidden
+h = toy_backbone_hidden(
+    "Who is the mayor of Springfield?", 16, seed=42
+)
+torch.save(torch.tensor(h), Path("out/heads-test/h16.pt"))
+print("ok")
+PY
+./spark-abstain --live ask \
+  --prompt "Who is the mayor of Springfield?" \
+  --weights out/heads-test/abstain16.pt \
+  --hidden out/heads-test/h16.pt \
+  >/tmp/spark-ab-ask16.txt
+grep -q '"hidden_source":"file"' /tmp/spark-ab-ask16.txt
+grep -q '"mode":"live"' /tmp/spark-ab-ask16.txt
 
 # Stub ask still works without weights
 SPARK_ABSTAIN_STUB=1 ./spark-abstain --live ask \

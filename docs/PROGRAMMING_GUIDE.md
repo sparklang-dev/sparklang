@@ -19,6 +19,7 @@ exists.
 | This file | How to build, run, and write `.spark` (CLI) |
 | [IDE.md](IDE.md) | Verified `ide` ops; interim Cursor optional |
 | [LANGUAGE.md](LANGUAGE.md) | Full statement reference |
+| [ABSTAIN_HEADS.md](ABSTAIN_HEADS.md) | IDK / abstain heads + `./spark-abstain` |
 | [ASK_LIVE.md](ASK_LIVE.md) | Optional live gateway `ask` |
 | [VOICE.md](VOICE.md) | STT/TTS / PSTN |
 | [ENCRYPT_GATEWAY.md](ENCRYPT_GATEWAY.md) | Encrypt-to-model |

@@ -35,6 +35,7 @@
                 <ul class="nav-more__menu" hidden>
                   <li><a href="/docs/adoption-bar.html">Adoption bar</a></li>
                   <li><a href="/docs/ai-models.html">AI models</a></li>
+                  <li><a href="/docs/abstain-heads.html">Abstain heads</a></li>
                   <li><a href="/docs/native-network-web.html">Network + web</a></li>
                   <li><a href="/docs/programming-guide.html">Programming guide</a></li>
                   <li><a href="/docs/ide.html">IDE</a></li>
@@ -59,6 +60,7 @@
         <a href="/docs/adoption-bar.html">Adoption bar</a>
         <a href="/docs/ai-models.html" aria-current="page">AI models</a>
         <a href="/docs/model-training.html" aria-current="page">Model training</a>
+        <a href="/docs/abstain-heads.html">Abstain heads</a>
         <a href="/docs/native-network-web.html">Network + web</a>
         <a href="/docs/programming-guide.html">Programming guide</a>
         <a href="/docs/language.html">Language reference</a>
@@ -75,6 +77,7 @@
         <p><strong>Default story:</strong> dry-run / offline / no keys. Live <code class="inline-code">ask</code> / <code class="inline-code">embed</code> /
         <code class="inline-code">retrieve</code> via gateway env is <strong>optional</strong> (<code class="inline-code">./spark --live</code>).</p>
         <p><strong>Related:</strong> <a href="/docs/model-training.html">MODEL_TRAINING.md</a> (train jobs) ·
+        <a href="/docs/abstain-heads.html">ABSTAIN_HEADS.md</a> (IDK / abstain) ·
         <a href="/docs/ai-models.html">MODEL_ANALYSIS.md</a> (eval methodology) ·
         <a href="/learn/build-model.html">AI_PLAYBOOKS.md</a> (coding playbooks) ·
         <a href="/docs/language.html">LANGUAGE.md</a> (full statement reference) ·
@@ -94,6 +97,11 @@
         <td><strong>Train / build</strong> real jobs</td>
         <td><code class="inline-code">model train</code> / <code class="inline-code">model build</code> → job; <code class="inline-code">model status</code></td>
         <td>Dry fixtures; live <code class="inline-code">./spark-train-http</code> (<code class="inline-code">http</code> or allowlisted <code class="inline-code">local-yield</code>) — see <a href="/docs/model-training.html">MODEL_TRAINING.md</a></td>
+        </tr>
+        <tr>
+        <td><strong>Abstain / IDK heads</strong></td>
+        <td><code class="inline-code">head abstain|train|attach|ask</code></td>
+        <td>Probe on frozen local LLM; SELECT before SAMPLE; <a href="/docs/abstain-heads.html">ABSTAIN_HEADS.md</a></td>
         </tr>
         <tr>
         <td><strong>Analyze</strong> reachable models</td>

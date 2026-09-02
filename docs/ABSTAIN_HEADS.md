@@ -4,7 +4,9 @@ Decode-layer **select-before-sample** so a local (or orchestrated)
 model can emit a configured IDK string and halt instead of inventing.
 
 **Not a Bifrost plugin.** Dry-run first. No fake trained weights in
-fixtures. No owner/TLP PII on public surfaces.
+fixtures. No owner/TLP PII on public surfaces. Live model is an
+**explicit** HF path or `org/name` — never gateway aliases
+(`auto` / `code` / `fast`).
 
 ## Research (short)
 
@@ -27,8 +29,8 @@ fixtures. No owner/TLP PII on public surfaces.
    exported hidden vectors (or top-k logprobs) from a local generate
    step; does not mutate the HF module graph.
 3. **Cloud models:** no local hidden states → **outer**
-   verify-or-refuse in the orchestrator (SoT / expect / HTTP), not an
-   attached head.
+   verify-or-refuse in the **orchestrator** (SoT / `expect` / HTTP),
+   not an attached head and **not** Bifrost alias picking.
 4. **Why not LoRA by default:** Spark’s CPU train methods already
    reject LoRA for job methods; abstain only needs a binary gate.
    A probe is cheaper, CPU-trainable, and attachable to an existing
@@ -66,6 +68,17 @@ Gate params: `threshold` (τ), optional `entropy` / `margin` floors.
 On abstain: emit `idk` string, set `halted=true`, do **not** sample
 continuation tokens.
 
+## Dry-run vs live
+
+| Mode | What runs | Weights / hidden |
+|------|-----------|------------------|
+| `./spark --dry-run` / `./spark-abstain --dry` | Fixture JSON only | No real `.pt`; no HF |
+| `SPARK_ABSTAIN_STUB=1` + `--live ask` | Dry inventable heuristics | **Not** real `p(abstain\|h)` |
+| `./spark-abstain --live train\|export\|attach` | CPU torch / files | Real `.pt` / JSONL |
+| `./spark-abstain --live ask` (no stub) | SELECT-before-SAMPLE | Needs weights + hidden source |
+
+Dry never invents trained weights. Live refuse gateway short names.
+
 ## Runtime flow
 
 ```
@@ -78,19 +91,24 @@ hidden h_t  →  head  →  p_abstain
 
 Optional SoT / logit mask for inventable facts stays orthogonal
 (`expect`, HTTP verify, retrieve) — compose in the same `.spark`
-program.
+program. Cloud outer verify-or-refuse is that orchestrator path.
 
-## Commands (companion)
+## Commands (`./spark-abstain`)
 
 ```bash
 # Dry (CI — no GPU weights)
 ./spark-abstain --dry --stmt-file /tmp/head.stmt --out /tmp/out.json
 ./spark --dry-run examples/head_abstain.spark
 
-# Train head (CPU; real tiny torch weights when dataset given)
+# Export dim-matched hiddens (toy = CI; --model = real HF)
+./spark-abstain --live export \
+  --dataset examples/fixtures/abstain/labels_text.jsonl \
+  --out out/heads/exported.jsonl --hidden-dim 16
+
+# Train head on exported (or bag-hash) JSONL
 ./spark-abstain --live train \
-  --dataset examples/fixtures/abstain/labels.jsonl \
-  --kind internal --out out/heads/abstain.pt --hidden-dim 64
+  --dataset examples/fixtures/abstain/labels_exported.jsonl \
+  --kind internal --out out/heads/abstain.pt --hidden-dim 16
 
 # Attach to local model directory
 ./spark-abstain --live attach \
@@ -100,7 +118,53 @@ program.
 
 # Gate unit check (Python)
 python3 -m sparklang.abstain.gate --p 0.8 --threshold 0.7
+
+make test-abstain
 ```
+
+Shipped fixtures:
+
+- `examples/fixtures/abstain/labels.jsonl` — bag-hash dim **64** (legacy CI)
+- `examples/fixtures/abstain/labels_text.jsonl` — text + label only
+- `examples/fixtures/abstain/labels_exported.jsonl` — toy-backbone
+  dim **16** (export→train contract; retrain on real HF hiddens
+  before claiming gate quality on a live LM)
+
+## Train from exported backbone hiddens (preferred)
+
+Head `hidden_dim` **must** equal the backbone last-layer width.
+Pipeline:
+
+1. Label prompts (`text` + `label` 0/1) in JSONL.
+2. **Export** last-token hiddens at that width.
+3. **Train** the probe on those rows.
+4. **Attach** + **ask** with the same backbone (or matching
+   `--hidden` / `/spark_hidden`).
+
+```bash
+# A) Real HF backbone (needs pip install -e 'python/[hf]' + weights)
+SPARK_ABSTAIN_HF=1 \
+./spark-abstain --live export \
+  --dataset examples/fixtures/abstain/labels_text.jsonl \
+  --model /path/to/local-hf-model \
+  --out out/heads/from-hf.jsonl
+# hidden_dim inferred from the model; do not pass a mismatched --hidden-dim
+
+./spark-abstain --live train \
+  --dataset out/heads/from-hf.jsonl \
+  --out out/heads/abstain.pt
+
+# B) CI / offline — toy backbone (same CLI, honest source=toy)
+./spark-abstain --live export \
+  --dataset examples/fixtures/abstain/labels_text.jsonl \
+  --out out/heads/exported.jsonl --hidden-dim 16
+./spark-abstain --live train \
+  --dataset out/heads/exported.jsonl \
+  --out out/heads/abstain16.pt --hidden-dim 16
+```
+
+Toy export is **not** production LoRA and **not** a 27B. It only
+proves the dim-matched file contract on CPU.
 
 ## Live generate path (HF / hidden file / vLLM)
 
@@ -117,8 +181,8 @@ model line from aliases.
 1. `SPARK_ABSTAIN_HIDDEN` — `.pt` tensor or JSON float list
 2. HF transformers prefill when model path exists **or**
    `SPARK_ABSTAIN_HF=1` + explicit hub id (`SPARK_ABSTAIN_MODEL`)
-3. Best-effort vLLM: `SPARK_ABSTAIN_VLLM_URL` → POST
-   `{url}/spark_hidden` with `{"prompt":…}` → `{"hidden":[…]}`
+3. Best-effort vLLM-shaped sidecar: `SPARK_ABSTAIN_VLLM_URL` → POST
+   `{url}/spark_hidden` (see contract below)
 
 **Head weights**
 
@@ -137,23 +201,9 @@ Uses dry inventable heuristics — **not** a real `p(abstain|h)`.
 
 ### Example: local HF dir (no hub download)
 
-Head `hidden_dim` must match the backbone’s last-layer width
-(e.g. train on exported hiddens from that model, not the 64-d
-fixture hash vectors).
-
 ```bash
 pip install -e 'python/[hf]'   # optional: transformers
 
-./spark-abstain --live train \
-  --dataset path/to/labels-with-real-hiddens.jsonl \
-  --out out/heads/abstain.pt
-
-./spark-abstain --live attach \
-  --model /path/to/local-hf-model \
-  --weights out/heads/abstain.pt \
-  --out /path/to/local-hf-model/spark_abstain_manifest.json
-
-# SELECT-before-SAMPLE in one HF load (prefill → gate → generate)
 SPARK_ABSTAIN_HF=1 \
 ./spark-abstain --live ask \
   --prompt "Who is the mayor of Springfield?" \
@@ -184,6 +234,37 @@ export SPARK_ABSTAIN_WEIGHTS=out/heads/abstain.pt
 Continue without an in-process HF generate returns
 `"note": "continue - SAMPLE deferred …"` and empty `text`.
 
+### vLLM `/spark_hidden` contract
+
+Stock OpenAI-compat `/v1/chat/completions` does **not** return
+last-layer states. Spark expects an optional sidecar:
+
+```http
+POST {SPARK_ABSTAIN_VLLM_URL}/spark_hidden
+Content-Type: application/json
+
+{"prompt":"Who is the mayor of Springfield?"}
+```
+
+```json
+{"hidden":[0.1, -0.2, …], "dim": 16}
+```
+
+- `hidden` — float list, length = head `hidden_dim`
+- `dim` — optional; if present must match `len(hidden)`
+- Non-2xx / missing `hidden` → no invent; ask fails closed
+  (or falls through to next source)
+
+Laptop stub (toy vectors, not vLLM):
+
+```bash
+PYTHONPATH=python python3 \
+  tools/spark-abstain/spark_hidden_stub.py --port 8765 --dim 16
+# then:
+# SPARK_ABSTAIN_VLLM_URL=http://127.0.0.1:8765 \
+#   ./spark-abstain --live ask … --weights out/heads/abstain16.pt
+```
+
 ### Env reference
 
 | Env | Role |
@@ -204,16 +285,17 @@ HF tensors.
 
 - Dry-run / CI never loads a 27B. Fixtures + stub / synthetic
   hidden only. Live HF is opt-in via env + local weights.
-- Head trained on fixture hash features (dim 64) is **not**
-  compatible with a real LM hidden size — retrain on exported
-  hiddens from the target backbone before claiming gate quality.
+- Head trained on fixture bag-hash (dim 64) or toy export (dim 16)
+  is **not** compatible with a real LM hidden size — retrain on
+  exported hiddens from the **target** backbone before claiming
+  gate quality.
 - vLLM path needs a host that implements `/spark_hidden`; stock
   OpenAI-compat servers do not export last-layer states.
 - llama.cpp / GGUF hidden hooks are still out of scope.
 - Labeled abstain data is **user-supplied** — we ship a tiny
   fixture, not a production corpus.
-- Cloud verify-or-refuse is documented + composable; not a second
-  gateway plugin.
+- Cloud verify-or-refuse is documented + composable (orchestrator);
+  not a second gateway plugin and not Bifrost aliases.
 - Do **not** call this production-ready without real head weights
-  matched to the live backbone.
+  matched to the live backbone. Not production LoRA.
 - Never resolve `auto`/`code`/`fast` (or similar) as the live model.

@@ -106,14 +106,18 @@ Companion `./spark-abstain`. Design: [ABSTAIN_HEADS.md](ABSTAIN_HEADS.md).
 head abstain internal model "path" weights "out/heads/abstain.pt" threshold 0.7 idk "I don't know." -> gate
 head abstain external model "path" weights "out/heads/ext.pt" threshold 0.7 -> gate
 head train dataset "examples/fixtures/abstain/labels.jsonl" kind internal out "out/heads/abstain.pt" hidden_dim 64 -> job
+# Prefer dim-matched export (see ABSTAIN_HEADS.md):
+# head train dataset "examples/fixtures/abstain/labels_exported.jsonl" …
+#   kind internal out "out/heads/abstain.pt" hidden_dim 16 -> job
 head attach model "path" weights "out/heads/abstain.pt" out "out/heads/manifest.json" -> attach
 head ask "Who is the mayor of Springfield?" -> answer
 ```
 
 SELECT before SAMPLE: if `p(abstain) ≥ threshold` (or entropy/margin
 trip) → emit `idk` and halt. Internal = probe registered with a frozen
-backbone; external = sidecar on exported hiddens/logprobs. Not LoRA.
-Dry-run = fixtures only.
+backbone; external = sidecar on exported hiddens/logprobs. Prefer
+`./spark-abstain --live export` then train so `hidden_dim` matches the
+backbone. Not LoRA. Dry-run = fixtures only. Never `auto`/`code`/`fast`.
 
 **“All models”** = all reachable configured model ids + discovered local
 vLLM endpoints (read-only) — **not** every model in existence. Catalog:

@@ -1,15 +1,26 @@
 # spark-abstain companion
 
 Forked by GAS `head …` statements. Dry fixtures by default.
-Live: CPU train / attach / gated ask (not LoRA).
+Live: CPU export / train / attach / gated ask (not LoRA).
 
 See [docs/ABSTAIN_HEADS.md](../../docs/ABSTAIN_HEADS.md).
 
 ```bash
 ./spark-abstain --dry --stmt-file stmt.txt --out out.json
+
+# Prefer: export dim-matched hiddens, then train
+./spark-abstain --live export \
+  --dataset examples/fixtures/abstain/labels_text.jsonl \
+  --out out/heads/exported.jsonl --hidden-dim 16
+./spark-abstain --live train \
+  --dataset out/heads/exported.jsonl \
+  --out out/heads/abstain.pt --hidden-dim 16
+
+# Legacy bag-hash fixture (dim 64)
 ./spark-abstain --live train \
   --dataset examples/fixtures/abstain/labels.jsonl \
-  --out out/heads/abstain.pt --hidden-dim 64
+  --out out/heads/abstain64.pt --hidden-dim 64
+
 ./spark-abstain --live attach \
   --model /path/to/hf-model \
   --weights out/heads/abstain.pt \

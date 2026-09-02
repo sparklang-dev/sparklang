@@ -34,6 +34,7 @@ build, dry vs live, syntax with real `examples/`, layout, debug, tests.
 | Doc | Role |
 |-----|------|
 | **[AI models](docs/AI_MODELS.md)** | Model create/modify; dry-run first; optional live gateway |
+| **[Abstain / IDK heads](docs/ABSTAIN_HEADS.md)** | SELECT-before-SAMPLE; `./spark-abstain` |
 | **[Program with Spark](docs/PROGRAMMING_GUIDE.md)** | Canonical how-to |
 | **[AI playbooks](docs/AI_PLAYBOOKS.md)** | Coding playbooks + explicit model line |
 | **[IDE](docs/IDE.md)** | Verified `ide` ops + interim Cursor editor |
@@ -263,6 +264,7 @@ selfhost/                # lane A seeds + lex.c goldens
 hdl/classify_score.v     # parallel classify HDL stub
 examples/*.spark
 docs/AI_MODELS.md                # user-facing model create/modify + roadmap
+docs/ABSTAIN_HEADS.md      # IDK / abstain heads + spark-abstain
 docs/PROGRAMMING_GUIDE.md  # canonical programming guide
 docs/IDE.md                # Spark IDE + CLI loop
 docs/LANGUAGE.md

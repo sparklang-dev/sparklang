@@ -7,6 +7,7 @@ Internal = probe on frozen backbone; external = sidecar scorer.
 from __future__ import annotations
 
 from sparklang.abstain.attach import attach_head, load_manifest
+from sparklang.abstain.export import export_hiddens, toy_backbone_hidden
 from sparklang.abstain.gate import GateConfig, GateDecision, select_before_sample
 from sparklang.abstain.generate import live_ask, score_hidden
 from sparklang.abstain.head import AbstainHead, head_from_state
@@ -18,11 +19,13 @@ __all__ = [
     "GateConfig",
     "GateDecision",
     "attach_head",
+    "export_hiddens",
     "head_from_state",
     "live_ask",
     "load_manifest",
     "parse_head_stmt",
     "score_hidden",
     "select_before_sample",
+    "toy_backbone_hidden",
     "train_abstain_head",
 ]

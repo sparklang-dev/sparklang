@@ -73,6 +73,36 @@
 <p>All notable user-facing releases of <strong>SparkLang</strong> (the Spark programming
 language) are listed here. Site and installers track
 <code>website/downloads/manifest.json</code>.</p>
+<h2>0.6.14 — 2026-09-02</h2>
+<ul>
+<li><strong>Abstain export→train (dim-matched):</strong>
+  <code>./spark-abstain --live export</code> writes JSONL hiddens
+  from an explicit HF backbone or a CPU toy backbone.
+  Fixtures <code>labels_text.jsonl</code> /
+  <code>labels_exported.jsonl</code>. Docs:
+  <a href="/docs/abstain-heads.html">Abstain heads</a>.
+  Gate: <code>make test-abstain</code>.</li>
+</ul>
+<h2>0.6.13 — 2026-09-02</h2>
+<ul>
+<li><strong>No Bifrost-style model alias pick:</strong> dry-run /
+  <code>use auto</code> keeps the prior configured model; live
+  refuses <code>--model auto</code>. Explicit HF path /
+  <code>org/name</code> only.</li>
+</ul>
+<h2>0.6.12 — 2026-09-02</h2>
+<ul>
+<li><strong>Abstain HF hooks:</strong> live <code>head ask</code>
+  SELECT-before-SAMPLE from last-token hidden
+  (file / HF / optional <code>/spark_hidden</code>).
+  See <a href="/docs/abstain-heads.html">Abstain heads</a>.</li>
+</ul>
+<h2>0.6.11 — 2026-09-02</h2>
+<ul>
+<li><strong>Abstain / IDK heads:</strong>
+  <code>head abstain|train|attach|ask</code> +
+  <code>./spark-abstain</code>. Not LoRA.</li>
+</ul>
 <h2>0.6.10 — 2026-09-02</h2>
 <ul>
 <li><strong>Python host embed:</strong> <code>from sparklang import run</code>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Abstain / IDK heads — Spark</title>
+    <meta name="description" content="SparkLang abstain heads: SELECT-before-SAMPLE, spark-abstain export/train/attach/ask, no gateway alias pick." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/css/tokens.css?v=bb4433f" />
+    <link rel="stylesheet" href="/css/site.css?v=bb4433f" />
+  </head>
+  <body class="doc-page">
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="site-brand" href="/" aria-label="Spark home">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z" fill="currentColor" />
+          </svg>
+          Spark
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+        </button>
+        <div class="header-nav-wrap">
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <ul class="nav-primary">
+              <li><a href="/learn/">Learn</a></li>
+              <li><a href="/docs/language.html">Docs</a></li>
+              <li><a href="/downloads.html">Download</a></li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">More</button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/adoption-bar.html">Adoption bar</a></li>
+                  <li><a href="/docs/ai-models.html">AI models</a></li>
+                  <li><a href="/docs/abstain-heads.html">Abstain heads</a></li>
+                  <li><a href="/docs/native-network-web.html">Network + web</a></li>
+                  <li><a href="/docs/programming-guide.html">Programming guide</a></li>
+                  <li><a href="/docs/ide.html">IDE</a></li>
+                  <li><a href="/docs/self-host.html">Contributor internals</a></li>
+                </ul>
+              </li>
+            </ul>
+            <a href="/playground.html" class="nav-cta">Try</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <div class="shell doc-layout">
+      <aside class="doc-sidebar" aria-label="Table of contents">
+        <p class="doc-sidebar__title">On this page</p>
+        <nav id="doc-toc-list"></nav>
+      </aside>
+      <main class="doc-main">
+      <nav class="doc__nav" aria-label="Docs">
+        <a href="/learn/">Learn</a>
+        <a href="/docs/adoption-bar.html">Adoption bar</a>
+        <a href="/docs/ai-models.html">AI models</a>
+        <a href="/docs/model-training.html">Model training</a>
+        <a href="/docs/abstain-heads.html" aria-current="page">Abstain heads</a>
+        <a href="/docs/native-network-web.html">Network + web</a>
+        <a href="/docs/programming-guide.html">Programming guide</a>
+        <a href="/docs/language.html">Language reference</a>
+        <a href="/docs/ide.html">IDE</a>
+        <a href="/docs/self-host.html">Contributor internals</a>
+        <a href="/downloads.html">Downloads</a>
+      </nav>
+      <article class="doc__body">
+        <h1 id="abstain-idk-heads">Abstain / IDK heads</h1>
+        <p>Decode-layer <strong>SELECT-before-SAMPLE</strong>: if
+        <code class="inline-code">p(abstain|h) ≥ τ</code>, emit a configured IDK string and
+        halt instead of inventing. Companion
+        <code class="inline-code">./spark-abstain</code>. Full design:
+        repo <code class="inline-code">docs/ABSTAIN_HEADS.md</code>.</p>
+        <p><strong>Not</strong> a Bifrost plugin. <strong>Not</strong> production LoRA.
+        Live model = explicit HF path or <code class="inline-code">org/name</code> only —
+        never <code class="inline-code">auto</code> / <code class="inline-code">code</code> / <code class="inline-code">fast</code>.</p>
+
+        <h2 id="architecture">Architecture</h2>
+        <ul>
+          <li><strong>Internal head</strong> — linear/MLP probe on frozen backbone last-token hidden.</li>
+          <li><strong>External head</strong> — same math as a sidecar on exported hiddens.</li>
+          <li><strong>Cloud</strong> — outer verify-or-refuse in the <em>orchestrator</em>
+            (<code class="inline-code">expect</code> / HTTP / SoT), not an attached head.</li>
+        </ul>
+        <pre><code class="language-text">hidden h_t  →  head  →  p_abstain
+                │
+        SELECT: if p ≥ τ → IDK + HALT
+                else     → SAMPLE
+</code></pre>
+
+        <h2 id="dry-vs-live">Dry-run vs live</h2>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead><tr><th>Mode</th><th>Behavior</th></tr></thead>
+        <tbody>
+        <tr>
+          <td><code class="inline-code">--dry-run</code> / <code class="inline-code">--dry</code></td>
+          <td>Fixture JSON only — no real <code class="inline-code">.pt</code>, no HF</td>
+        </tr>
+        <tr>
+          <td><code class="inline-code">SPARK_ABSTAIN_STUB=1</code></td>
+          <td>Dry inventable heuristics — <strong>not</strong> real <code class="inline-code">p(abstain|h)</code></td>
+        </tr>
+        <tr>
+          <td><code class="inline-code">--live export|train|attach|ask</code></td>
+          <td>Real CPU weights / SELECT; needs hidden source for ask</td>
+        </tr>
+        </tbody>
+        </table></div>
+
+        <h2 id="commands">Commands</h2>
+        <pre><code class="language-bash"># Preferred: export dim-matched hiddens, then train
+./spark-abstain --live export \
+  --dataset examples/fixtures/abstain/labels_text.jsonl \
+  --out out/heads/exported.jsonl --hidden-dim 16
+./spark-abstain --live train \
+  --dataset out/heads/exported.jsonl \
+  --out out/heads/abstain.pt --hidden-dim 16
+
+# Real HF export (optional transformers extra)
+SPARK_ABSTAIN_HF=1 ./spark-abstain --live export \
+  --dataset examples/fixtures/abstain/labels_text.jsonl \
+  --model /path/to/local-hf-model \
+  --out out/heads/from-hf.jsonl
+
+./spark-abstain --live attach \
+  --model /path/to/hf-model \
+  --weights out/heads/abstain.pt \
+  --out /path/to/hf-model/spark_abstain_manifest.json
+
+SPARK_ABSTAIN_HF=1 ./spark-abstain --live ask \
+  --prompt "Who is the mayor of Springfield?" \
+  --model /path/to/local-hf-model \
+  --weights out/heads/abstain.pt
+
+make test-abstain
+</code></pre>
+
+        <h2 id="spark_hidden">vLLM <code class="inline-code">/spark_hidden</code> contract</h2>
+        <p>Stock OpenAI-compat servers do not export last-layer states.
+        Optional sidecar:</p>
+        <pre><code class="language-http">POST {SPARK_ABSTAIN_VLLM_URL}/spark_hidden
+{"prompt":"…"}
+→ {"hidden":[…], "dim": N}
+</code></pre>
+        <p>Laptop stub:
+        <code class="inline-code">tools/spark-abstain/spark_hidden_stub.py</code>
+        (toy vectors — not vLLM).</p>
+
+        <h2 id="gaps">Honest gaps</h2>
+        <ul>
+          <li>CI never loads a 27B — toy / bag-hash fixtures only.</li>
+          <li>Retrain on real backbone hiddens before claiming gate quality.</li>
+          <li>Labeled corpus is user-supplied; fixtures are tiny.</li>
+          <li>llama.cpp / GGUF hidden hooks — out of scope.</li>
+        </ul>
+
+        <p>Related: <a href="/docs/ai-models.html">AI models</a> ·
+        <a href="/docs/language.html">Language</a> ·
+        <a href="/docs/model-training.html">Model training</a>.</p>
+      </article>
+      </main>
+    </div>
+
+    <footer class="site-footer">
+      <div class="shell footer-inner">
+        <div class="footer-brand">
+          <span class="footer-mark">Spark</span>
+          <span class="footer-meta">MIT</span>
+        </div>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="/docs/language.html">Reference</a>
+          <a href="/CHANGELOG.html">Changelog</a>
+          <a href="/downloads.html">Downloads</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="/js/site.js?v=bb4433f" defer></script>
+  </body>
+</html>

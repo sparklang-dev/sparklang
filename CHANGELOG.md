@@ -4,6 +4,18 @@ All notable user-facing releases of **SparkLang** (the Spark programming
 language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
+## 0.6.14 — 2026-09-02
+
+- **Abstain export→train (dim-matched):** `./spark-abstain --live export`
+  writes JSONL hiddens from an explicit HF backbone (`--model`) or a
+  CPU **toy** backbone (`--hidden-dim`, CI). Train on those rows so
+  `hidden_dim` matches ask. Fixtures:
+  `labels_text.jsonl`, `labels_exported.jsonl` (dim 16). Optional
+  `tools/spark-abstain/spark_hidden_stub.py` for the `/spark_hidden`
+  contract. Docs: [docs/ABSTAIN_HEADS.md](docs/ABSTAIN_HEADS.md)
+  (wired from README / PROGRAMMING_GUIDE / site). Gate:
+  `make test-abstain`.
+
 ## 0.6.13 — 2026-09-02
 
 - **No Bifrost-style model alias pick:** dry-run / `use auto` no longer

@@ -4,6 +4,7 @@
 Usage:
   spark-abstain --dry|--live --stmt-file PATH --out PATH
   spark-abstain --live train --dataset … --out …
+  spark-abstain --live export --dataset … --out … [--model|dim]
   spark-abstain --live attach --model … --weights … --out …
   spark-abstain --live ask --prompt … --weights … [--hidden|/HF]
 """
@@ -24,6 +25,7 @@ if _PY.is_dir() and str(_PY) not in sys.path:
 
 from sparklang.abstain.attach import attach_head
 from sparklang.abstain.dry import dry_result, dumps_compact
+from sparklang.abstain.export import export_hiddens
 from sparklang.abstain.gate import GateConfig, select_before_sample
 from sparklang.abstain.generate import live_ask
 from sparklang.abstain.parse import parse_head_stmt
@@ -135,7 +137,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument(
         "cmd",
         nargs="?",
-        choices=("train", "attach", "gate", "ask"),
+        choices=("train", "attach", "gate", "ask", "export"),
     )
     ap.add_argument("--dataset")
     ap.add_argument("--model")
@@ -145,12 +147,29 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--prompt")
     ap.add_argument("--kind", default="internal")
     ap.add_argument("--hidden-dim", type=int)
+    ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--threshold", type=float, default=0.7)
     ap.add_argument("--idk", default="I don't know.")
     ap.add_argument("--p", type=float)
     ap.add_argument("--max-new-tokens", type=int, default=32)
     args = ap.parse_args(argv)
     live = bool(args.live)
+
+    if args.cmd == "export":
+        if not live:
+            raise SystemExit("export needs --live")
+        if not args.dataset or not args.out:
+            raise SystemExit("export needs --dataset and --out")
+        result = export_hiddens(
+            args.dataset,
+            args.out,
+            model=args.model,
+            hidden_dim=args.hidden_dim,
+            seed=int(args.seed),
+            kind=str(args.kind or "internal"),
+        )
+        _write_out(dumps_compact(result), None)
+        return 0
 
     if args.cmd == "gate":
         if args.p is None:
@@ -245,7 +264,8 @@ def main(argv: list[str] | None = None) -> int:
 
     if not args.stmt_file:
         raise SystemExit(
-            "need --stmt-file or train|attach|gate|ask"
+            "need --stmt-file or "
+            "train|export|attach|gate|ask"
         )
     stmt = Path(args.stmt_file).read_text(encoding="utf-8")
     # First non-comment line

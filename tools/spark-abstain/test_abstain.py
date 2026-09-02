@@ -309,5 +309,67 @@ class HfHookMockTests(unittest.TestCase):
         self.assertIsNone(h)
 
 
+class ExportTrainTests(unittest.TestCase):
+    """Export toy/backbone hiddens → train dim-matched head."""
+
+    def test_toy_export_then_train(self) -> None:
+        from sparklang.abstain.export import (
+            export_hiddens,
+            toy_backbone_hidden,
+        )
+
+        text_ds = ROOT / "examples/fixtures/abstain/labels_text.jsonl"
+        with tempfile.TemporaryDirectory() as td:
+            td_p = Path(td)
+            exported = td_p / "exp.jsonl"
+            info = export_hiddens(
+                text_ds,
+                exported,
+                hidden_dim=16,
+                seed=42,
+            )
+            self.assertEqual(info["source"], "toy")
+            self.assertEqual(info["hidden_dim"], 16)
+            self.assertTrue(exported.is_file())
+            out = td_p / "h.pt"
+            train = train_abstain_head(
+                exported,
+                out,
+                kind="internal",
+                steps=80,
+                hidden_dim=16,
+            )
+            self.assertEqual(train["state"], "succeeded")
+            self.assertEqual(train["hidden_dim"], 16)
+            # Ask with matching toy hidden for inventable prompt.
+            head = AbstainHead(16)
+            # Reload trained weights.
+            from sparklang.abstain.head import load_head
+
+            head = load_head(out)
+            self.assertEqual(head.hidden_dim, 16)
+            hid = torch.tensor(
+                toy_backbone_hidden(
+                    "Who is the mayor of Springfield?",
+                    16,
+                    seed=42,
+                ),
+                dtype=torch.float32,
+            )
+            p = score_hidden(head, hid)
+            self.assertGreaterEqual(p, 0.0)
+            self.assertLessEqual(p, 1.0)
+
+    def test_shipped_exported_fixture(self) -> None:
+        ds = ROOT / "examples/fixtures/abstain/labels_exported.jsonl"
+        with tempfile.TemporaryDirectory() as td:
+            out = Path(td) / "h.pt"
+            info = train_abstain_head(
+                ds, out, kind="internal", steps=50, hidden_dim=16
+            )
+            self.assertEqual(info["hidden_dim"], 16)
+            self.assertTrue(out.is_file())
+
+
 if __name__ == "__main__":
     unittest.main()
