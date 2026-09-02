@@ -1,6 +1,6 @@
-# Spark stdlib — model analyze/compare/improve/build helpers
+# Spark stdlib — model analyze/compare/improve/train helpers
 # bootstrap: include "lib/model.spark"
-# mode: dry-run (fixtures only) | live (gateway for analyze/compare)
+# mode: dry-run (fixtures only) | live (train via spark-train-http)
 
 model code
 
@@ -14,54 +14,25 @@ model code
 # model compare ["fast", "code", "best"]
 #   on suite "examples/eval_suite.json" -> comparison
 
-# @helper model_compare_two: Head-to-head two aliases
-# model compare ["fast", "code"]
-#   on suite "examples/eval_suite.json" -> comparison
-
-# @helper model_improve_quality: Blueprint preferring quality
+# @helper model_improve_quality: Heuristic prefer quality
 # model improve from report prefer quality -> blueprint
 
-# @helper model_improve_speed: Blueprint preferring speed
-# model improve from report prefer speed -> blueprint
+# @helper model_plan_markdown: Optional markdown plan (not weights)
+# model plan blueprint into "out/better-model.md"
 
-# @helper model_improve_cost: Blueprint preferring cost
-# model improve from report prefer cost -> blueprint
+# @helper model_train_job: Submit training job (dry fixtures or live)
+# model train dataset "examples/fixtures/train/dataset.jsonl" \
+#   base "fixture-base" out "out/train/job-dry-001" backend "http" -> job
 
-# @helper model_improve_local: Blueprint preferring local models
-# model improve from report prefer local -> blueprint
+# @helper model_build_alias: model build is an alias for model train
+# model build -> job
 
-# @helper model_build_markdown: Write blueprint to markdown path
-# model build blueprint into "out/better-model.md"
+# @helper model_status_job: Poll job + artifact paths
+# model status "job-dry-001" -> status
 
-# @helper model_workflow_full: Analyze → compare → improve → build chain
-# model analyze "code" -> report
-# model compare ["fast", "code", "best"] on suite "examples/eval_suite.json" -> comparison
-# model improve from report prefer quality -> blueprint
-# model build blueprint into "out/my-model.md"
+# @helper model_workflow_train: Train then status
+# model train -> job
+# model status "job-dry-001" -> status
 
 # @helper model_set_alias: Set default model for following ops
 # use best
-
-# @helper model_set_code: Use code alias for heavy tasks
-# model code
-
-# @helper model_pipeline_tune: Model ops inside pipeline (sequential binds)
-# pipeline {
-#   model analyze "fast" -> report
-#   | model improve from report prefer speed -> blueprint
-# }
-
-# @helper model_build_review_note: Build then print path for human review
-# model build blueprint into "out/plan.md"
-# print "Review out/plan.md before live training"
-
-# @helper model_analyze_then_improve: Skip compare when suite unavailable
-# model analyze "fast" -> report
-# model improve from report prefer quality -> blueprint
-
-# @helper model_compare_best_winner: Three-way with best in set
-# model compare ["code", "best", "fast"]
-#   on suite "examples/eval_suite.json" -> comparison
-
-# @helper model_improve_auto: Let improve pick prefer auto
-# model improve from report prefer auto -> blueprint

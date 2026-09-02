@@ -27,9 +27,10 @@ EOF
 
 ## Maintainer
 
-Public maintainer identity: GitHub org **sparklang-dev** / repo
-https://github.com/sparklang-dev/sparklang (renamed from `…/spark` 2026-09-02)
+Public source: GitHub org **sparklang-dev** /
+https://github.com/sparklang-dev/sparklang
 — no private store or personal ops data on the public site.
+Private development remains `sparklang-dev/sparklang`.
 
 **CLI names:** `spark` / `./spark-bootstrap` remain the UX entrypoints.
 Product name in docs/site is **SparkLang**.

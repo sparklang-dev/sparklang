@@ -11,8 +11,9 @@ Spark, and **not** AdaCore SPARK.
 Default loop: dry-run / offline / no keys. Live gateway only when you opt in.
 
 First-class surface: `ask`, `classify`, `extract`, `pipeline`, tools,
-**model analyze/compare/improve/build** (blueprint / eval sugar — **not**
-weight training), **review/builder/implement**, **os design/generate**,
+**model train/build/status** (real jobs — dry fixtures first),
+**model analyze/compare/improve/plan** (eval helpers),
+**review/builder/implement**, **os design/generate**,
 browser/mitm, cuda/pcie, encrypt-to-model companion — one reviewable file.
 
 **Trust:** [MIT LICENSE](LICENSE) ·
@@ -46,6 +47,7 @@ build, dry vs live, syntax with real `examples/`, layout, debug, tests.
 ```bash
 make
 ./spark --dry-run examples/hello.spark
+./spark --dry-run examples/http_get.spark   # http get + fixture (no network)
 ./spark --dry-run examples/ide.spark    # review → builder → implement (not the IDE)
 make test
 ```
@@ -150,7 +152,8 @@ make test-e2e-browser   # browser dry E2E (no display)
 - **`review` / `builder` / `implement`** — static review (path/url/text),
   level pick (lower/mid/higher), codegen into `out/`
 - **`model`** — switch aliases (`fast`, `code`, `best`) **or**
-  `analyze` / `compare` / `improve` / `build` (fixture-backed blueprint
+  `train` / `build` / `status` (real jobs; dry fixtures) plus
+  `analyze` / `compare` / `improve` / `plan` (eval helpers)
   sugar; see [docs/MODEL_ANALYSIS.md](docs/MODEL_ANALYSIS.md))
 - **`cuda` / `memory` / `pcie`** — asm `/dev/nvidia*` + `NV_ESC_*`
   ioctl; `mlock` pin; **live PCIe link** via sysfs
@@ -186,7 +189,8 @@ Network **capture** stays gated behind `--allow-net-capture`. Dry-run
 network **never** claims a live sniff without `--allow-net-capture`.
 Probe with `network capture probe` / `./spark-net-capture --probe`
 (`claimed:false`). Live CAP miss → exit **4**.
-Model **build** writes blueprint/config only — never starts `train@*`.
+Model **train** / **build** submit jobs (dry fixtures or live
+`spark-train-http`); see [docs/MODEL_TRAINING.md](docs/MODEL_TRAINING.md).
 **`os generate`** writes educational stubs only — never reboots or
 installs an OS on the developer host.
 See [docs/LANGUAGE.md](docs/LANGUAGE.md).
@@ -277,6 +281,7 @@ Makefile
 - Not full ES / full CSS / Google.com / Electron / a finished self-host compiler
 - Not a vendor voice product — Spark stays generic STT/TTS
 - Not a claim of FPGA bitstream shipping in CI
-- Not unauthorized GPU training (`train@*`) — improve/build = blueprints
+- Not silent GPU train — dry-run never starts jobs; live needs
+  `SPARK_TRAIN_*` + allowlist / URL (see MODEL_TRAINING.md)
 - Not a wipe/replace of the host Linux — never reboot / never `dd` live disks
 - Encrypt-to-model ≠ redact/tokenize; CA mint is still `mitm ca-*` only

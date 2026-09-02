@@ -59,16 +59,14 @@
       <article class="doc__body" style="max-width: none">
         <h1>Playground</h1>
         <p>
-          Edit <code class="inline-code">.spark</code> source, preview
-          <strong>dry-run</strong> output in the browser, and try a
-          <strong>browser voice demo</strong> (Web Speech API). This is an
-          honest preview — not a cloud IDE. Live model and voice ops run on
-          your machine with the Spark runtime.
+          Edit <code class="inline-code">.spark</code> source and preview
+          dry-run fixture output in the browser. Optional browser voice demo
+          uses the Web Speech API. Live runs use the Spark runtime on your
+          machine (<a href="/downloads.html">Downloads</a>).
         </p>
 
         <div class="pg-tabs" role="tablist" aria-label="Playground sections">
           <button type="button" class="pg-tab is-active" role="tab" id="pg-tab-code" data-tab="code" aria-controls="pg-panel-code" aria-selected="true" tabindex="0">Code</button>
-          <button type="button" class="pg-tab" role="tab" id="pg-tab-models" data-tab="models" aria-controls="pg-panel-models" aria-selected="false" tabindex="-1">Models</button>
           <button type="button" class="pg-tab" role="tab" id="pg-tab-voice" data-tab="voice" aria-controls="pg-panel-voice" aria-selected="false" tabindex="-1">Voice</button>
         </div>
 
@@ -117,7 +115,7 @@
               </li>
               <li>
                 Live:
-                <code class="inline-code">export AI_GATEWAY_URL=http://127.0.0.1:4000</code>
+                <code class="inline-code">export AI_GATEWAY_URL=https://your-gateway.example/v1</code>
                 then
                 <code class="inline-code">./spark-run.sh --live my_program.spark</code>
               </li>
@@ -125,41 +123,6 @@
             <p class="pg-live-note">
               API keys stay on your machine — never paste them into this page.
             </p>
-          </div>
-        </section>
-
-        <!-- Models panel -->
-        <section class="pg-panel" id="pg-panel-models" data-panel="models" role="tabpanel" aria-labelledby="pg-tab-models" hidden>
-          <p>
-            Pick a default model alias. Changing the alias updates the
-            <code class="inline-code">use</code> line in the Code editor and
-            shows what <code class="inline-code">model analyze</code>,
-            <code class="inline-code">compare</code>,
-            <code class="inline-code">improve</code>, and
-            <code class="inline-code">build</code> would return in dry-run.
-          </p>
-
-          <div class="pg-model-controls">
-            <label for="pg-model-alias">Default model alias:</label>
-            <select id="pg-model-alias" aria-label="Model alias">
-              <option value="fast">fast</option>
-              <option value="code" selected>code</option>
-              <option value="best">best</option>
-            </select>
-          </div>
-
-          <div class="pg-split">
-            <div>
-              <h2 class="pg-subhead">Dry-run preview</h2>
-              <pre id="pg-model-preview" class="try-output pg-preview"></pre>
-            </div>
-            <div>
-              <h2 class="pg-subhead">Full workflow snippet</h2>
-              <pre class="try-output pg-snippet-wrap"><code id="pg-workflow-snippet"></code></pre>
-              <button type="button" class="btn btn--secondary" id="pg-copy-workflow">
-                Copy workflow
-              </button>
-            </div>
           </div>
         </section>
 

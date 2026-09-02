@@ -1,5 +1,5 @@
-# Model analyze → compare → improve → build (blueprint/config only)
-# Dry-run: fixture metrics only — no live leaderboard, no train@
+# Model analyze → compare → improve → plan (eval helpers)
+# Train jobs: examples/model_train.spark / docs/MODEL_TRAINING.md
 model code
 
 model analyze "alias-code" -> report
@@ -10,4 +10,4 @@ model compare ["fast", "code", "best"] on suite "examples/eval_suite.json" -> co
 
 model improve from report prefer quality -> blueprint
 
-model build blueprint into "out/better-model.md"
+model plan blueprint into "out/better-model.md"

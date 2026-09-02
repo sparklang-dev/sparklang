@@ -1,8 +1,8 @@
 {
   "generated": true,
   "version": 1,
-  "helperCount": 155,
-  "totalEntries": 197,
+  "helperCount": 151,
+  "totalEntries": 196,
   "categoryCount": 13,
   "categories": [
     "AI",
@@ -118,9 +118,9 @@
       "category": "AI",
       "description": "Dry gateway probe credential check (no network under `--dry-run`):",
       "syntax": "ask probe -> info\ngateway probe -> info",
-      "mode": "gas-only",
+      "mode": "dry-run",
       "source": "language",
-      "example": "examples/ask_probe.spark",
+      "example": "examples/shell_escape.spark",
       "popular": true
     },
     {
@@ -979,14 +979,43 @@
       "source": "language"
     },
     {
+      "id": "lang-embed",
+      "name": "embed",
+      "category": "Core",
+      "description": "Gateway-shaped RAG surface. Dry-run uses fixtures under",
+      "syntax": "embed \"Spark is a language for AI workflows\" -> vec\nembed \"\u2026\" model embed-rag -> vec\nembed \"\u2026\" model embed -> vec",
+      "mode": "dry-run",
+      "source": "language",
+      "example": "examples/shell_escape.spark"
+    },
+    {
+      "id": "lang-http-get",
+      "name": "http get",
+      "category": "Core",
+      "description": "Generic HTTP client ops \u2014 **not** Bifrost-specific and **not**",
+      "syntax": "http get \"https://example.com/\" fixture \"examples/fixtures/http/get_ok.json\" timeout 5 -> resp\nhttp post \"https://example.com/api\" body \"{\\\"ping\\\":true}\" fixture \"examples/fixtures/http/post_ok.json\" timeout 5 -> resp",
+      "mode": "dry-run",
+      "source": "language",
+      "example": "examples/http_get.spark"
+    },
+    {
+      "id": "lang-shell",
+      "name": "shell",
+      "category": "Core",
+      "description": "Call the host from `.spark`, and (design) embed `.spark` from a host",
+      "syntax": "shell \"echo hello\" -> out\nrun \"python\" \"-c\" \"print(1)\" -> out",
+      "mode": "live",
+      "source": "language",
+      "example": "examples/shell_escape.spark"
+    },
+    {
       "id": "lang-use-alias",
       "name": "use <alias>",
       "category": "Core",
       "description": "Set default model/alias for following calls (`fast`, `code`, `best`, \u2026).",
       "syntax": "use fast          # same as: model fast\nmodel code        # long form still works\nuse auto          # pick fast or code from task text (bootstrap dry-run)",
-      "mode": "bootstrap-only",
-      "source": "language",
-      "example": "examples/model_improve.spark"
+      "mode": "dry-run",
+      "source": "language"
     },
     {
       "id": "lang-gateway-probe",
@@ -1244,11 +1273,11 @@
       "id": "lang-model-analyze",
       "name": "model analyze",
       "category": "Model",
-      "description": "Analyze reachable models, compare on a suite, propose a better config, and",
-      "syntax": "model analyze \"alias-code\" -> report\nmodel analyze all -> catalog_report\n\nmodel compare [\"fast\", \"code\", \"best\"] on suite \"examples/eval_suite.json\" -> comparison\n\nmodel improve from report prefer quality -> blueprint\n# prefer: quality | speed | cost | local\n\nmodel build blueprint into \"out/better-model.md\"",
+      "description": "Analyze and compare reachable models, propose improvements, **train**",
+      "syntax": "model analyze \"alias-code\" -> report\nmodel analyze all -> catalog_report\n\nmodel compare [\"fast\", \"code\", \"best\"] on suite \"examples/eval_suite.json\" -> comparison\n\nmodel improve from report prefer quality -> blueprint\n# prefer: quality | speed | cost | local\n\nmodel plan blueprint into \"out/better-model.md\"   # markdown only\n\nmodel train dataset \"examples/fixtures/train/dataset.jsonl\" base \"fixture-base\" out \"out/train/job-dry-001\" backend \"http\" -> job\nmodel build -> job                         ",
       "mode": "bootstrap-only",
       "source": "language",
-      "example": "examples/model_improve.spark",
+      "example": "examples/model_train.spark",
       "popular": true
     },
     {
@@ -1272,41 +1301,11 @@
       "libFile": "lib/model.spark"
     },
     {
-      "id": "lib-model-analyze-then-improve",
-      "name": "model_analyze_then_improve",
+      "id": "lib-model-build-alias",
+      "name": "model_build_alias",
       "category": "Model",
-      "description": "Skip compare when suite unavailable",
-      "syntax": "model analyze \"fast\" -> report\nmodel improve from report prefer quality -> blueprint",
-      "mode": "dry-run",
-      "source": "stdlib",
-      "libFile": "lib/model.spark"
-    },
-    {
-      "id": "lib-model-build-markdown",
-      "name": "model_build_markdown",
-      "category": "Model",
-      "description": "Write blueprint to markdown path",
-      "syntax": "model build blueprint into \"out/better-model.md\"",
-      "mode": "dry-run",
-      "source": "stdlib",
-      "libFile": "lib/model.spark"
-    },
-    {
-      "id": "lib-model-build-review-note",
-      "name": "model_build_review_note",
-      "category": "Model",
-      "description": "Build then print path for human review",
-      "syntax": "model build blueprint into \"out/plan.md\"\nprint \"Review out/plan.md before live training\"",
-      "mode": "dry-run",
-      "source": "stdlib",
-      "libFile": "lib/model.spark"
-    },
-    {
-      "id": "lib-model-compare-best-winner",
-      "name": "model_compare_best_winner",
-      "category": "Model",
-      "description": "Three-way with best in set",
-      "syntax": "model compare [\"code\", \"best\", \"fast\"]\non suite \"examples/eval_suite.json\" -> comparison",
+      "description": "model build is an alias for model train",
+      "syntax": "model build -> job",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/model.spark"
@@ -1322,53 +1321,10 @@
       "libFile": "lib/model.spark"
     },
     {
-      "id": "lib-model-compare-two",
-      "name": "model_compare_two",
-      "category": "Model",
-      "description": "Head-to-head two aliases",
-      "syntax": "model compare [\"fast\", \"code\"]\non suite \"examples/eval_suite.json\" -> comparison",
-      "mode": "dry-run",
-      "source": "stdlib",
-      "libFile": "lib/model.spark"
-    },
-    {
-      "id": "lib-model-improve-auto",
-      "name": "model_improve_auto",
-      "category": "Model",
-      "description": "Let improve pick prefer auto",
-      "syntax": "model improve from report prefer auto -> blueprint",
-      "mode": "dry-run",
-      "source": "stdlib",
-      "example": "examples/model_improve.spark",
-      "libFile": "lib/model.spark"
-    },
-    {
-      "id": "lib-model-improve-cost",
-      "name": "model_improve_cost",
-      "category": "Model",
-      "description": "Blueprint preferring cost",
-      "syntax": "model improve from report prefer cost -> blueprint",
-      "mode": "dry-run",
-      "source": "stdlib",
-      "example": "examples/model_improve.spark",
-      "libFile": "lib/model.spark"
-    },
-    {
-      "id": "lib-model-improve-local",
-      "name": "model_improve_local",
-      "category": "Model",
-      "description": "Blueprint preferring local models",
-      "syntax": "model improve from report prefer local -> blueprint",
-      "mode": "dry-run",
-      "source": "stdlib",
-      "example": "examples/model_improve.spark",
-      "libFile": "lib/model.spark"
-    },
-    {
       "id": "lib-model-improve-quality",
       "name": "model_improve_quality",
       "category": "Model",
-      "description": "Blueprint preferring quality",
+      "description": "Heuristic prefer quality",
       "syntax": "model improve from report prefer quality -> blueprint",
       "mode": "dry-run",
       "source": "stdlib",
@@ -1376,22 +1332,11 @@
       "libFile": "lib/model.spark"
     },
     {
-      "id": "lib-model-improve-speed",
-      "name": "model_improve_speed",
+      "id": "lib-model-plan-markdown",
+      "name": "model_plan_markdown",
       "category": "Model",
-      "description": "Blueprint preferring speed",
-      "syntax": "model improve from report prefer speed -> blueprint",
-      "mode": "dry-run",
-      "source": "stdlib",
-      "example": "examples/model_improve.spark",
-      "libFile": "lib/model.spark"
-    },
-    {
-      "id": "lib-model-pipeline-tune",
-      "name": "model_pipeline_tune",
-      "category": "Model",
-      "description": "Model ops inside pipeline (sequential binds)",
-      "syntax": "pipeline {\nmodel analyze \"fast\" -> report\n| model improve from report prefer speed -> blueprint\n}",
+      "description": "Optional markdown plan (not weights)",
+      "syntax": "model plan blueprint into \"out/better-model.md\"",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/model.spark"
@@ -1407,25 +1352,35 @@
       "libFile": "lib/model.spark"
     },
     {
-      "id": "lib-model-set-code",
-      "name": "model_set_code",
+      "id": "lib-model-status-job",
+      "name": "model_status_job",
       "category": "Model",
-      "description": "Use code alias for heavy tasks",
-      "syntax": "model code",
+      "description": "Poll job + artifact paths",
+      "syntax": "model status \"job-dry-001\" -> status",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/model.spark"
     },
     {
-      "id": "lib-model-workflow-full",
-      "name": "model_workflow_full",
+      "id": "lib-model-train-job",
+      "name": "model_train_job",
       "category": "Model",
-      "description": "Analyze \u2192 compare \u2192 improve \u2192 build chain",
-      "syntax": "model analyze \"code\" -> report\nmodel compare [\"fast\", \"code\", \"best\"] on suite \"examples/eval_suite.json\" -> comparison\nmodel improve from report prefer quality -> blueprint\nmodel build blueprint into \"out/my-model.md\"",
+      "description": "Submit training job (dry fixtures or live)",
+      "syntax": "model train dataset \"examples/fixtures/train/dataset.jsonl\" \\\nbase \"fixture-base\" out \"out/train/job-dry-001\" backend \"http\" -> job",
       "mode": "dry-run",
       "source": "stdlib",
-      "libFile": "lib/model.spark",
-      "popular": true
+      "example": "examples/model_train.spark",
+      "libFile": "lib/model.spark"
+    },
+    {
+      "id": "lib-model-workflow-train",
+      "name": "model_workflow_train",
+      "category": "Model",
+      "description": "Train then status",
+      "syntax": "model train -> job\nmodel status \"job-dry-001\" -> status",
+      "mode": "dry-run",
+      "source": "stdlib",
+      "libFile": "lib/model.spark"
     },
     {
       "id": "lib-http-ask-dry-pattern",
@@ -1454,7 +1409,7 @@
       "category": "Network",
       "description": "gateway probe credential check (dry-run)",
       "syntax": "ask probe -> info",
-      "mode": "dry-run",
+      "mode": "live",
       "source": "stdlib",
       "example": "examples/ask_probe.spark",
       "libFile": "lib/http.spark",
@@ -1543,6 +1498,28 @@
       "libFile": "lib/http.spark"
     },
     {
+      "id": "lib-http-get-dry",
+      "name": "http_get_dry",
+      "category": "Network",
+      "description": "Dry-run GET from a real fixture file",
+      "syntax": "http get \"https://example.com/\" fixture \"examples/fixtures/http/get_ok.json\" timeout 5 -> resp",
+      "mode": "dry-run",
+      "source": "stdlib",
+      "example": "examples/http_get.spark",
+      "libFile": "lib/http.spark"
+    },
+    {
+      "id": "lib-http-get-live",
+      "name": "http_get_live",
+      "category": "Network",
+      "description": "Live GET (needs ./spark --live + curl)",
+      "syntax": "http get \"https://example.com/\" timeout 10 -> resp",
+      "mode": "dry-run",
+      "source": "stdlib",
+      "example": "examples/http_get.spark",
+      "libFile": "lib/http.spark"
+    },
+    {
       "id": "lib-http-mitm-har-export",
       "name": "http_mitm_har_export",
       "category": "Network",
@@ -1612,6 +1589,17 @@
       "syntax": "network open \"examples/fixtures/sample.pcap\" -> pcap",
       "mode": "dry-run",
       "source": "stdlib",
+      "libFile": "lib/http.spark"
+    },
+    {
+      "id": "lib-http-post-dry",
+      "name": "http_post_dry",
+      "category": "Network",
+      "description": "Dry-run POST from a real fixture file",
+      "syntax": "http post \"https://example.com/api\" body \"{\\\"ping\\\":true}\" fixture \"examples/fixtures/http/post_ok.json\" timeout 5 -> resp",
+      "mode": "dry-run",
+      "source": "stdlib",
+      "example": "examples/http_post.spark",
       "libFile": "lib/http.spark"
     },
     {
@@ -2041,9 +2029,9 @@
       "category": "AI",
       "description": "Dry gateway probe credential check (no network under `--dry-run`):",
       "syntax": "ask probe -> info\ngateway probe -> info",
-      "mode": "gas-only",
+      "mode": "dry-run",
       "source": "language",
-      "example": "examples/ask_probe.spark",
+      "example": "examples/shell_escape.spark",
       "popular": true
     },
     {
@@ -2130,22 +2118,11 @@
       "id": "lang-model-analyze",
       "name": "model analyze",
       "category": "Model",
-      "description": "Analyze reachable models, compare on a suite, propose a better config, and",
-      "syntax": "model analyze \"alias-code\" -> report\nmodel analyze all -> catalog_report\n\nmodel compare [\"fast\", \"code\", \"best\"] on suite \"examples/eval_suite.json\" -> comparison\n\nmodel improve from report prefer quality -> blueprint\n# prefer: quality | speed | cost | local\n\nmodel build blueprint into \"out/better-model.md\"",
+      "description": "Analyze and compare reachable models, propose improvements, **train**",
+      "syntax": "model analyze \"alias-code\" -> report\nmodel analyze all -> catalog_report\n\nmodel compare [\"fast\", \"code\", \"best\"] on suite \"examples/eval_suite.json\" -> comparison\n\nmodel improve from report prefer quality -> blueprint\n# prefer: quality | speed | cost | local\n\nmodel plan blueprint into \"out/better-model.md\"   # markdown only\n\nmodel train dataset \"examples/fixtures/train/dataset.jsonl\" base \"fixture-base\" out \"out/train/job-dry-001\" backend \"http\" -> job\nmodel build -> job                         ",
       "mode": "bootstrap-only",
       "source": "language",
-      "example": "examples/model_improve.spark",
-      "popular": true
-    },
-    {
-      "id": "lib-model-workflow-full",
-      "name": "model_workflow_full",
-      "category": "Model",
-      "description": "Analyze \u2192 compare \u2192 improve \u2192 build chain",
-      "syntax": "model analyze \"code\" -> report\nmodel compare [\"fast\", \"code\", \"best\"] on suite \"examples/eval_suite.json\" -> comparison\nmodel improve from report prefer quality -> blueprint\nmodel build blueprint into \"out/my-model.md\"",
-      "mode": "dry-run",
-      "source": "stdlib",
-      "libFile": "lib/model.spark",
+      "example": "examples/model_train.spark",
       "popular": true
     },
     {
@@ -2154,7 +2131,7 @@
       "category": "Network",
       "description": "gateway probe credential check (dry-run)",
       "syntax": "ask probe -> info",
-      "mode": "dry-run",
+      "mode": "live",
       "source": "stdlib",
       "example": "examples/ask_probe.spark",
       "libFile": "lib/http.spark",

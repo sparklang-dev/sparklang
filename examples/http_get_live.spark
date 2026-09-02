@@ -1,0 +1,8 @@
+# Live http get — needs ./spark --live + curl + network.
+# Dry-run without fixture fails loud (no invented body) — expected.
+#   ./spark --live examples/http_get_live.spark
+
+model fast
+
+http get "https://example.com/" timeout 10 -> resp
+print resp

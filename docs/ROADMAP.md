@@ -12,12 +12,14 @@ Prioritized against the adoption bar. Status: **done** / **next** / **won't**
 - `./spark --embed` FFI handshake stub
 - Per-`ask` `[accounting]` line (dry zeros; live usage when present)
 - Positioning: not a Bifrost plugin; dry-run first
+- `http get` / `http post` + timeout + dry fixture files + live
+  `./spark-http` (auth/retries still **next**)
 
 ## Next
 
 | Track | What |
 |-------|------|
-| HTTP | `http get` / `http post` with auth, retries, timeouts |
+| HTTP | Auth / bearer headers; retries |
 | Extract | Schema validation + JSON-mode + retry on miss |
 | Ask | Streaming token/SSE path |
 | Eval | Expectation pass/fail harness (not only alias compare) |
@@ -31,7 +33,7 @@ Prioritized against the adoption bar. Status: **done** / **next** / **won't**
 
 | Track | What |
 |-------|------|
-| Rename | GitHub `sparklang-dev/sparklang` → `sparklang-dev/sparklang` (OWNER-CONFIRM **yes** 2026-09-02). Site already sparklang.dev. CLI remains `spark`. |
+| Rename | Public `sparklang-dev/sparklang` live; private `sparklang-dev/sparklang` retained. Site sparklang.dev. CLI remains `spark`. |
 
 ## Won't (near-term focus)
 

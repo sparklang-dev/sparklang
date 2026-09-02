@@ -57,6 +57,9 @@ SECTION_CATEGORIES: dict[str, str] = {
     "model compare": "Model",
     "model improve": "Model",
     "model build": "Model",
+    "model train": "Model",
+    "model status": "Model",
+    "model plan": "Model",
 }
 
 MODE_HINTS: dict[str, str] = {

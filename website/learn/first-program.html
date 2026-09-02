@@ -71,17 +71,13 @@
 
           <h2 id="hello-spark">hello.spark</h2>
           <p>Create a file named <code class="inline-code">hello.spark</code>:</p>
-          <pre class="doc__pre"><code>use code
-
-ask "Explain gravity in one sentence" -> text
+          <pre class="doc__pre"><code>ask "Explain gravity in one sentence" -> text
 
 print text</code></pre>
           <p>
-            <code class="inline-code">use code</code> is sugar for
-            <code class="inline-code">model code</code> — it sets the default model
-            alias for following <code class="inline-code">ask</code> calls. Aliases like
-            <code class="inline-code">fast</code> and <code class="inline-code">best</code> are
-            configured in your runtime, not hardcoded vendor strings.
+            Dry-run needs no gateway. Live
+            <code class="inline-code">ask</code> uses your
+            <code class="inline-code">AI_GATEWAY_URL</code>.
           </p>
 
           <h2 id="run-it">Run it</h2>
@@ -90,13 +86,12 @@ print text</code></pre>
             Dry-run returns a fixture reply so you can iterate without an API key.
             For a real response:
           </p>
-          <pre class="doc__pre"><code class="language-bash">export AI_GATEWAY_URL=http://127.0.0.1:4000
+          <pre class="doc__pre"><code class="language-bash">export AI_GATEWAY_URL=https://your-gateway.example/v1
 ./spark --live hello.spark</code></pre>
 
           <h2 id="sugar">Optional sugar</h2>
           <p>Spark supports shorthand for quick scripts:</p>
-          <pre class="doc__pre"><code>use fast
-? "Explain gravity in one sentence" -> text
+          <pre class="doc__pre"><code>? "Explain gravity in one sentence" -> text
 print text</code></pre>
           <p>
             <code class="inline-code">?</code> is sugar for

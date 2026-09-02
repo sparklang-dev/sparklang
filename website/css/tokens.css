@@ -36,6 +36,8 @@
   --radius-sm: 4px;
   --radius-md: 8px;
   --max-width: 72rem;
+  /* Readable docs measure (~72–80ch); tables need this room. */
+  --doc-measure: 56rem;
   --sidebar-width: 14rem;
   --header-height: 3.25rem;
 

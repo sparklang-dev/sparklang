@@ -10,8 +10,8 @@
     />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
-    <link rel="stylesheet" href="/css/tokens.css?v=pos060" />
-    <link rel="stylesheet" href="/css/site.css?v=pos060" />
+    <link rel="stylesheet" href="/css/tokens.css?v=aboutw0902" />
+    <link rel="stylesheet" href="/css/site.css?v=aboutw0902" />
   </head>
   <body class="doc-page">
     <header class="site-header">
@@ -66,28 +66,51 @@
     </header>
 
     <div class="shell doc-layout">
-      <main class="doc-main" style="max-width: 42rem; margin: 0 auto">
+      <main class="doc-main">
         <p class="doc-breadcrumb"><a href="/">Home</a> / Changelog</p>
         <article class="doc__body">
 <h1>Changelog</h1>
 <p>All notable user-facing releases of <strong>SparkLang</strong> (the Spark programming
 language) are listed here. Site and installers track
 <code>website/downloads/manifest.json</code>.</p>
+<h2>0.6.4 — 2026-09-02</h2>
+<ul>
+<li><strong>Landing thesis:</strong> homepage leads with train + dry-run CI (why a language:
+  reviewable <code class="inline-code">.spark</code> + fixtures without keys). Voice / network /
+  browser demoted to “also”. Trust strip: MIT · v0.6.3+ · Sparklang naming;
+  no broken personal GitHub CTA.</li>
+<li><code class="inline-code">model train</code> / <code class="inline-code">model build</code> = real jobs;
+  <code class="inline-code">model plan</code> = plan only.</li>
+</ul>
+
 <h2>0.6.1 — 2026-09-02</h2>
-<p>Adoption-bar pass (honest checklist — see <code>docs/ADOPTION_BAR.md</code>):</p>
+<p>Status / feature pass:</p>
 <ul>
 <li>First-class <code>embed</code> / <code>retrieve</code> + dry fixtures + <code>spark-rag-http</code> (also #21).</li>
-<li>Escape hatch dry-run: <code>shell</code> / <code>run</code> allowlist; <code>./spark --embed</code> stub.</li>
+<li>Shell/run dry-run: <code>shell</code> / <code>run</code> allowlist; <code>./spark --embed</code> stub.</li>
 <li>Per-<code>ask</code> <code>[accounting]</code> (dry zeros; live prints gateway <code>usage</code> when present).</li>
 <li>Docs: ADOPTION_BAR, ROADMAP, RELEASE; receptionist <code>[goal]</code> example.</li>
 <li>Site: SparkLang searchability; de-emphasize MITM/pcap/IDE/voice-as-prod.</li>
+</ul>
+
+<h2>0.6.3 — 2026-09-02</h2>
+<ul>
+<li><strong>Model training pillar:</strong> <code class="inline-code">model train</code> /
+  <code class="inline-code">model build</code> submit real training jobs;
+  <code class="inline-code">model status</code> polls artifacts. Dry fixtures under
+  <code class="inline-code">examples/fixtures/train/</code>. Live companion
+  <code class="inline-code">./spark-train-http</code>
+  (<code class="inline-code">SPARK_TRAIN_BACKEND=http|local-yield</code>).
+  Docs: <a href="/docs/model-training.html">Model training</a>.</li>
+<li><code class="inline-code">model plan</code> replaces blueprint-only markdown export.</li>
+<li>Analyze / compare / improve stay eval helpers.</li>
 </ul>
 
 <h2>0.6.2 — 2026-09-02</h2>
 <ul>
 <li><strong>Product rename:</strong> public identity is <strong>SparkLang</strong> at
   <a href="https://sparklang.dev/">https://sparklang.dev/</a>
-  (site, docs, About, adoption bar). Source: github.com/sparklang-dev/sparklang.</li>
+  (site, docs, About, status). Public org source when ready.</li>
 <li><strong>CLI:</strong> binary / bootstrap names stay <code class="inline-code">spark</code> and
   <code class="inline-code">./spark-bootstrap</code> (no overnight break).</li>
 <li><strong>IDE:</strong> language <code class="inline-code">ide</code> ops kept; editor story prefers
@@ -103,8 +126,8 @@ language) are listed here. Site and installers track
 <li>Optional live <code>ask</code> via any OpenAI-compatible <code>AI_GATEWAY_URL</code> (not required
   for the default dry-run story).</li>
 <li>Optional surfaces: voice/PSTN (gated), browser/MITM, network capture.</li>
-<li><code>model analyze</code> / <code>compare</code> / <code>improve</code> / <code>build</code> = blueprint and eval sugar
-  — not weight training.</li>
+<li><code>model analyze</code> / <code>compare</code> / <code>improve</code> = eval helpers;
+  train/build/status arrived in 0.6.3.</li>
 </ul>
 <h2>Earlier</h2>
 <p>Prior notes stay on this page and in the installer
@@ -118,7 +141,7 @@ language) are listed here. Site and installers track
       <div class="shell footer-inner">
         <div class="footer-brand">
           <span>SparkLang — the Spark programming language</span>
-          <span class="footer-meta">v0.6.2 · MIT</span>
+          <span class="footer-meta">v0.6.3 · MIT</span>
         </div>
         <nav class="footer-nav" aria-label="Footer">
           <a href="/about.html">About</a>

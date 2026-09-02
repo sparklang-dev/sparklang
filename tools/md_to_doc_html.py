@@ -20,6 +20,7 @@ DOC_NAV = """\
         <a href="/learn/">Learn</a>
         <a href="/docs/adoption-bar.html"{ab}>Adoption bar</a>
         <a href="/docs/ai-models.html"{ai}>AI models</a>
+        <a href="/docs/model-training.html"{ai}>Model training</a>
         <a href="/docs/native-network-web.html"{nn}>Network + web</a>
         <a href="/docs/programming-guide.html">Programming guide</a>
         <a href="/docs/language.html">Language reference</a>
@@ -123,6 +124,7 @@ MD_LINK_MAP = {
 "AI_MODELS.md": "/docs/ai-models.html",
     "ASK_LIVE.md": "/docs/ai-models.html#live-gateway-integration-wired-today",
     "MODEL_ANALYSIS.md": "/docs/ai-models.html",
+    "MODEL_TRAINING.md": "/docs/model-training.html",
     "AI_PLAYBOOKS.md": "/learn/build-model.html",
     "ENCRYPT_GATEWAY.md": "/docs/ai-models.html",
     "IDE.md": "/docs/ide.html",
@@ -269,8 +271,16 @@ def main() -> int:
             docs / "AI_MODELS.md",
             out / "ai-models.html",
             "AI models",
-            "What SparkLang means for model analyze, compare, improve, "
-            "build, live ask, and embed/retrieve.",
+            "What SparkLang means for model train, analyze, compare, "
+            "improve, plan, live ask, and embed/retrieve.",
+            "ai",
+        )
+        render(
+            docs / "MODEL_TRAINING.md",
+            out / "model-training.html",
+            "Model training",
+            "SparkLang model train / build — real jobs, dry fixtures, "
+            "HTTP and local-yield backends.",
             "ai",
         )
         render(

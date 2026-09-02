@@ -1,0 +1,17 @@
+---
+description: Spark language file conventions (.spark, asm, HDL)
+globs: "**/*.{spark,s,v,toml}"
+alwaysApply: false
+---
+
+# Spark language files
+
+- `.spark` programs are line-oriented; `#` comments; `->` bindings; `|` pipelines
+- Prefer gateway aliases in `model` lines (`fast`, `code`, `best`)
+- Asm sources live under `asm/` (GAS **scaffold**); keep dry-run free of net I/O
+- Authoring SoT **A+B+C** (`docs/SELF_HOST.md`): bootstrap/, sparkasm/, selfhost/
+- HDL under `hdl/` is educational/stub unless CI proves otherwise
+- Live HTTP / TLS / X11 are **companions** only (`spark-ask-http`,
+  `spark-engine-fetch-tls`, `spark-engine-show`) — not the language
+- Honesty: not full ES / full CSS / Google.com / Electron / full compiler
+- After language changes: `make` then `make test` before claiming green

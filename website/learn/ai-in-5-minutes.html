@@ -70,35 +70,27 @@
             and pipeline.
           </p>
 
-          <h2 id="model-workflow">Create &amp; tune models</h2>
+          <h2 id="model-workflow">Train a model</h2>
           <p>
-            When you outgrow a single <code class="inline-code">use fast</code>,
-            Spark has a four-step workflow to analyze, compare, improve, and
-            export a model blueprint:
+            <code class="inline-code">model train</code> /
+            <code class="inline-code">model build</code> submit a real training
+            job (adapters / checkpoints) — not a markdown blueprint.
+            <code class="inline-code">model plan</code> is plan-only.
+            Dry-run uses fixtures (no GPU). Poll with
+            <code class="inline-code">model status</code>:
           </p>
-          <pre class="doc__pre"><code>model code
-
-model analyze "fast" -> report
-
-model compare ["fast", "code", "best"]
-  on suite "examples/eval_suite.json" -> comparison
-
-model improve from report prefer quality -> blueprint
-
-model build blueprint into "out/my-model.md"</code></pre>
-          <pre class="doc__pre"><code class="language-bash">./spark --dry-run examples/model_improve.spark</code></pre>
+          <pre class="doc__pre"><code>model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" -> job
+model status "job-dry-001" -> status</code></pre>
+          <pre class="doc__pre"><code class="language-bash">./spark --dry-run examples/model_train.spark</code></pre>
           <p>
-            <code class="inline-code">model build</code> writes a markdown plan —
-            review it before any live training. See
-            <a href="/docs/ai-models.html">AI models guide</a>,
+            See
+            <a href="/docs/model-training.html">Model training</a>,
             <a href="/playground.html">Playground</a>, or the
-            <a href="/learn/build-model.html">interactive wizard</a>.
+            <a href="/learn/build-model.html">Build a Model</a> tutorial.
           </p>
 
           <h2 id="classify">classify — label text</h2>
-          <pre class="doc__pre"><code>use fast
-
-classify Intent { support, sales, spam }
+          <pre class="doc__pre"><code>classify Intent { support, sales, spam }
   from "My account is locked and I need help"
   min_confidence 0.7
   -> intent
@@ -154,8 +146,8 @@ print es</code></pre>
           <p>
             <a href="/learn/function-catalog.html">Function Catalog</a> — full surface area
             beyond model, classify, extract, and pipeline. Then
-            <a href="/learn/build-model.html">Build a Model</a> for analyze, compare,
-            improve, and export.
+            <a href="/learn/build-model.html">Build a Model</a> to submit a train
+            job (or eval helpers + optional <code class="inline-code">model plan</code>).
           </p>
         </article>
       </main>
@@ -165,7 +157,7 @@ print es</code></pre>
       <div class="shell footer-inner">
         <div class="footer-brand">
           <span>SparkLang — the Spark programming language</span>
-          <span class="footer-meta">v0.6.2 · MIT</span>
+          <span class="footer-meta">v0.6.3 · MIT</span>
         </div>
         <nav class="footer-nav" aria-label="Footer">
           <a href="/about.html">About</a>

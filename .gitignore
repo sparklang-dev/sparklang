@@ -13,6 +13,7 @@ out/browser/ca/
 /spark-browser-host
 /spark-cuda-probe
 /spark-enc-gateway
+/spark-http
 /spark-lift
 /spark-mitm-ca
 /spark-mitm-h2
@@ -20,6 +21,7 @@ out/browser/ca/
 /spark-mitm-quic-divert
 /spark-net-capture
 /spark-pstn-dial
+/spark-rag-http
 /spark-section-dump
 /spark-stt-tts
 /spark-review-url
@@ -27,6 +29,7 @@ out/browser/ca/
 /spark-engine-paint
 /spark-engine-fetch-tls
 /spark-ide-paint
+/spark-train-http
 /spark-bootstrap
 /sparkc
 /spark-bc-pack-hello

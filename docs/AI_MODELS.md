@@ -9,7 +9,8 @@ plain `.spark` files you can diff, dry-run, and ship.
 **Default story:** dry-run / offline / no keys. Live `ask` / `embed` /
 `retrieve` via gateway env is **optional** (`./spark --live`).
 
-**Related:** [MODEL_ANALYSIS.md](MODEL_ANALYSIS.md) (methodology) ·
+**Related:** [MODEL_TRAINING.md](MODEL_TRAINING.md) (train jobs) ·
+[MODEL_ANALYSIS.md](MODEL_ANALYSIS.md) (eval methodology) ·
 [AI_PLAYBOOKS.md](AI_PLAYBOOKS.md) (coding playbooks) ·
 [LANGUAGE.md](LANGUAGE.md) (full statement reference) ·
 [ASK_LIVE.md](ASK_LIVE.md) (optional live gateway `ask`) ·
@@ -19,20 +20,28 @@ plain `.spark` files you can diff, dry-run, and ship.
 
 | Goal | Spark today | Honest limits |
 |------|-------------|---------------|
+| **Train / build** real jobs | `model train` / `model build` → job; `model status` | Dry fixtures; live `./spark-train-http` (`http` or allowlisted `local-yield`) — see [MODEL_TRAINING.md](MODEL_TRAINING.md) |
 | **Analyze** reachable models | `model analyze "alias" -> report` | Dry-run = fixtures under `examples/fixtures/models/`; not live leaderboards |
 | **Compare** on your suite | `model compare […] on suite "…" -> comparison` | Same fixture metrics; optional `make model-probe` for read-only discovery |
-| **Improve** toward a preference | `model improve from report prefer quality\|speed\|cost\|local -> blueprint` | Heuristic blueprint; you review before any training |
-| **Build** a blueprint file | `model build blueprint into "out/better-model.md"` | **Plan + config markdown only** — never starts `train@*` / **not weight training** |
+| **Improve** toward a preference | `model improve from report prefer quality\|speed\|cost\|local -> blueprint` | Heuristic; review before train |
+| **Plan** markdown export | `model plan blueprint into "out/better-model.md"` | Markdown only — not weights |
 | **Pick model alias** per task | `use auto` / `use code` / `use fast` | Bootstrap heuristics in dry-run; live uses prior `model` line |
 | **AI coding** with less boilerplate | `include "lib/playbooks.spark"`, `review` / `builder` / `implement` | Playbooks = bootstrap VM; GAS `./spark` catches up on self-host track |
-| **Call models live (optional)** | `ask "…" -> reply` with `./spark --live` | Needs `AI_GATEWAY_URL` + key; companion `./spark-ask-http` (`use auto` resolves before the HTTP call) |
-| **Embed / retrieve** | `embed "…" -> vec`, `retrieve "…" from project "docs" -> hits` | Dry fixtures; live `./spark-rag-http` (embeddings + rag-gateway) |
-| **Probe gateway creds** | `ask probe` / `gateway probe` | Dry gateway probe check; 401 → credential unavailable (no invented routing) |
+| **Call models live (optional)** | `ask "…" -> reply` with `./spark --live` | Needs `AI_GATEWAY_URL` + key; companion `./spark-ask-http` |
+| **Embed / retrieve** | `embed "…" -> vec`, `retrieve "…" from project "docs" -> hits` | Dry fixtures; live `./spark-rag-http` |
+| **Probe gateway creds** | `ask probe` / `gateway probe` | Dry gateway probe check; 401 → credential unavailable |
 
 **“All models”** = configured gateway aliases + discovered local vLLM listeners
 (read-only) — not every model on the internet. See [MODEL_ANALYSIS.md](MODEL_ANALYSIS.md).
 
-Example end-to-end (dry-run):
+Example train (dry-run):
+
+```spark
+model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" -> job
+model status "job-dry-001" -> status
+```
+
+Example eval helpers (dry-run):
 
 ```spark
 model code
@@ -44,7 +53,7 @@ model compare ["fast", "code", "best"]
 
 model improve from report prefer quality -> blueprint
 
-model build blueprint into "out/my-model.md"
+model plan blueprint into "out/my-model.md"
 ```
 
 ```bash
@@ -130,7 +139,7 @@ speech pipelines — it is an **optional** surface, not primary positioning. See
 - Not Apache Spark / AdaCore SPARK
 - Not a replacement narrative for “throw away Python + OpenAI SDK” — Spark
   complements gateways and existing stacks with a reviewable language surface
-- Not unauthorized GPU training — `model build` writes blueprints only
+- Train jobs need a configured backend — dry-run never starts GPU work
 - Not in-process CRAG — grade/retry stay on rag-gateway; Spark surfaces
   `crag` JSON from `retrieve` and composes with `ask`
 - Not a vendor voice-product codebase — Spark stays a general AI language

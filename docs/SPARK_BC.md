@@ -110,14 +110,26 @@ Mapped 1:1 to LANGUAGE.md statement starts. Voice merge keeps
 | `0x23` | `EMBED` | `embed` | text, bind | `[embed] <text>` / `  → <json>` |
 | `0x24` | `RETRIEVE` | `retrieve` | query, bind | `[retrieve] <query>` / `  → <json>` |
 
+`EMBED` / `RETRIEVE` dry replies come from `bootstrap/dry_rag.c`
+(same fixtures as `examples/fixtures/rag/`). Live GAS forks
+`./spark-rag-http`.
+
+**GAS-first (no opcode yet):** `http get` / `http post` — dry fixture
+files via `./spark-http --dry` (or bootstrap `dry_http.c`); live forks
+`./spark-http --live`. See LANGUAGE.md. Do **not** invent BC operands
+until an opcode lands.
+
+**GAS-first (no opcode yet):** `model analyze` / `compare` /
+`improve` / `train` / `status` / `plan` / `build` run in
+`asm/model_ops.s` (+ `asm/train_ops.s` live). Dry fixtures under
+`examples/fixtures/train/`; companion `./spark-train-http`. Do **not**
+invent `0x25+` train opcodes until bootstrap parses those forms.
+See [MODEL_TRAINING.md](MODEL_TRAINING.md).
+
 `LET` is in the table so the ISA is not hello-only
 (LANGUAGE.md `let` / `print` / `set`). hello.sparkbc does **not**
 emit `LET`. Handler matches `bootstrap/vm.c` `op_let` (print +
 bind + last). `set` is GAS-only in bootstrap — not an opcode here.
-
-`EMBED` / `RETRIEVE` dry replies come from `bootstrap/dry_rag.c`
-(same fixtures as `examples/fixtures/rag/`). Live GAS forks
-`./spark-rag-http`.
 
 `HALT` ends the program. Documented as VM-only; not a `.spark`
 keyword.

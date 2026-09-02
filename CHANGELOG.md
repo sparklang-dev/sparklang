@@ -4,9 +4,27 @@ All notable user-facing releases of **SparkLang** (the Spark programming
 language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
+## 0.6.4 — 2026-09-02
+
+- **`http get` / `http post`:** first-class ops with `timeout` and
+  dry-run **fixture files** (fail loud if missing). Live companion
+  `./spark-http` (curl). Auth / retries still next — not claimed.
+  Examples: `examples/http_get.spark`, `examples/http_post.spark`.
+  Gate: `make test-http`.
+
+## 0.6.3 — 2026-09-02
+
+- **Model training pillar:** `model train` / `model build` submit real
+  training jobs; `model status` polls artifacts. Dry-run fixtures under
+  `examples/fixtures/train/`. Live companion `./spark-train-http`
+  (`SPARK_TRAIN_BACKEND=http|local-yield`). Docs:
+  `docs/MODEL_TRAINING.md`.
+- **`model plan`** replaces blueprint-only `model build` markdown export.
+- Analyze / compare / improve stay eval helpers.
+
 ## 0.6.2 — 2026-09-02
 
-- **Rename:** public GitHub repo `sparklang-dev/sparklang` →
+- **Rename:** public GitHub repo `sparklang-dev/spark` →
   `sparklang-dev/sparklang` (OWNER-CONFIRM). Site remains
   https://sparklang.dev/. Docs/site/README/About/RELEASE/ADOPTION_BAR
   clone URLs updated.
@@ -25,8 +43,9 @@ language) are listed here. Site and installers track
 - Optional live `ask` via any OpenAI-compatible `AI_GATEWAY_URL` (not required
   for the default dry-run story).
 - Optional surfaces: voice/PSTN (gated), browser/MITM, network capture.
-- `model analyze` / `compare` / `improve` / `build` = blueprint and eval sugar
-  — not weight training.
+- `model analyze` / `compare` / `improve` = eval helpers;
+  `model train` / `build` / `status` = real jobs (see MODEL_TRAINING.md);
+  `model plan` = optional markdown.
 
 ## Earlier
 

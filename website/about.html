@@ -6,12 +6,12 @@
     <title>About — SparkLang</title>
     <meta
       name="description"
-      content="SparkLang — Spark programming language and runtime. Dry-run first. Not a Bifrost plugin. Not Apache Spark. Not AdaCore SPARK."
+      content="SparkLang — reviewable .spark programs for train→eval→ship with dry-run CI. MIT. Contact hello@sparklang.dev."
     />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
-    <link rel="stylesheet" href="/css/tokens.css?v=pos060" />
-    <link rel="stylesheet" href="/css/site.css?v=pos060" />
+    <link rel="stylesheet" href="/css/tokens.css?v=aboutw0902" />
+    <link rel="stylesheet" href="/css/site.css?v=aboutw0902" />
   </head>
   <body class="doc-page">
     <header class="site-header">
@@ -53,11 +53,11 @@
                 </button>
                 <ul class="nav-more__menu" hidden>
                   <li><a href="/about.html" aria-current="page">About</a></li>
+                  <li><a href="/docs/model-training.html">Model training</a></li>
                   <li><a href="/docs/ai-models.html">AI models</a></li>
-                  <li><a href="/docs/native-network-web.html">Network + web</a></li>
                   <li><a href="/docs/programming-guide.html">Programming guide</a></li>
                   <li><a href="/docs/ide.html">IDE</a></li>
-                  <li><a href="/docs/self-host.html">Contributor internals</a></li>
+                  <li><a href="/docs/native-network-web.html">Network + web</a></li>
                 </ul>
               </li>
             </ul>
@@ -68,30 +68,34 @@
     </header>
 
     <div class="shell doc-layout">
-      <main class="doc-main" style="max-width: 42rem; margin: 0 auto">
+      <main class="doc-main">
         <p class="doc-breadcrumb"><a href="/">Home</a> / About</p>
         <article class="doc__body">
           <h1 id="about-sparklang">About SparkLang</h1>
           <p>
             <strong>SparkLang</strong> is the public name for the
             <strong>Spark programming language</strong> at
-            <a href="https://sparklang.dev/">sparklang.dev</a> — a language and
-            runtime for plain <code class="inline-code">.spark</code> files.
+            <a href="https://sparklang.dev/">sparklang.dev</a>.
+            A language beats another Python SDK because one reviewable
+            <code class="inline-code">.spark</code> file covers train → eval →
+            ship, with dry-run fixtures for CI without API keys.
           </p>
 
           <h2 id="what-it-is">What it is</h2>
           <ul class="doc__ul">
             <li>
-              A <strong>language + runtime</strong>: compile/BC path, dry-run
-              fixtures, playbooks, and IDE language ops.
+              A <strong>language + runtime</strong> for plain
+              <code class="inline-code">.spark</code> files.
             </li>
             <li>
               <strong>Dry-run / offline by default</strong> — no API keys and no
-              network for the primary learning and CI loop.
+              network for learning and CI.
             </li>
             <li>
-              Optional language ops for network/web/voice when you opt in with
-              flags.
+              <strong>Real training</strong> via
+              <code class="inline-code">model train</code> /
+              <code class="inline-code">model build</code> (jobs + status).
+              <code class="inline-code">model plan</code> is plan-only markdown.
             </li>
             <li>
               Optional live <code class="inline-code">ask</code> against any
@@ -101,25 +105,11 @@
             </li>
           </ul>
 
-          <h2 id="what-it-is-not">What it is not</h2>
-          <ul class="doc__ul">
-            <li>
-              <strong>Not a Bifrost plugin</strong> and not “Spark = Bifrost.”
-              A gateway is an optional live backend for
-              <code class="inline-code">ask</code>, not the product identity.
-            </li>
-            <li>
-              <strong>Not Apache Spark</strong> (big-data) and
-              <strong>not AdaCore SPARK</strong> (formal methods).
-            </li>
-            <li>
-              <code class="inline-code">model analyze</code> /
-              <code class="inline-code">compare</code> /
-              <code class="inline-code">improve</code> /
-              <code class="inline-code">build</code> write
-              <strong>blueprints and eval sugar</strong> — not weight training.
-            </li>
-          </ul>
+          <h2 id="what-it-is-not">Name note</h2>
+          <p>
+            Unrelated to Apache Spark (big data) and AdaCore SPARK (formal
+            methods).
+          </p>
 
           <h2 id="core-vs-optional">Core vs optional</h2>
           <div class="doc__table-wrap">
@@ -134,15 +124,14 @@
                 <tr>
                   <td><strong>Core</strong></td>
                   <td>
-                    Language, dry-run, playbooks, embed/retrieve, escape
-                    hatch; prefer LSP over IDE chrome
+                    Language, dry-run fixtures, model train/build/status,
+                    ask/eval helpers, playbooks, IDE language ops
                   </td>
                 </tr>
                 <tr>
                   <td><strong>Optional</strong></td>
                   <td>
-                    Live gateway ask/embed; gated voice demo;
-                    browser/MITM/pcap de-emphasized
+                    Live ask/embed; voice (gated); browser / capture
                   </td>
                 </tr>
               </tbody>
@@ -155,14 +144,25 @@
               License: <a href="/LICENSE.txt">MIT</a>
             </li>
             <li>
-              Source: <a href="https://github.com/sparklang-dev/sparklang">github.com/sparklang-dev/sparklang</a> —
-              installers and docs ship from
+              Version: <strong>0.6.3</strong> —
+              <a href="/CHANGELOG.html">Changelog</a> ·
+              <a href="/downloads.html">Downloads</a>
+            </li>
+            <li>
+              Source:
+              <a href="https://github.com/sparklang-dev/sparklang"
+                >github.com/sparklang-dev/sparklang</a
+              >
+              (public MIT). Installers ship from
               <a href="https://sparklang.dev/">sparklang.dev</a>.
             </li>
             <li>
-              Version: <strong>0.6.2</strong> —
-              <a href="/CHANGELOG.html">Changelog</a> ·
-              <a href="/downloads.html">Downloads</a>
+              Contact:
+              <!--email_off-->
+              <a href="mailto:hello@sparklang.dev">hello@sparklang.dev</a>
+              ·
+              <a href="mailto:noreply@sparklang.dev">noreply@sparklang.dev</a>
+              <!--/email_off-->
             </li>
           </ul>
         </article>
@@ -173,14 +173,18 @@
       <div class="shell footer-inner">
         <div class="footer-brand">
           <span>SparkLang — the Spark programming language</span>
-          <span class="footer-meta">v0.6.2 · MIT</span>
+          <span class="footer-meta">v0.6.3 · <a href="/LICENSE.txt">MIT</a></span>
         </div>
         <nav class="footer-nav" aria-label="Footer">
           <a href="/about.html" aria-current="page">About</a>
-<a href="/LICENSE.txt">License</a>
+          <a href="/LICENSE.txt">License</a>
           <a href="/CHANGELOG.html">Changelog</a>
           <a href="/learn/">Learn</a>
           <a href="/downloads.html">Downloads</a>
+          <a href="https://github.com/sparklang-dev/sparklang">Source</a>
+          <!--email_off-->
+          <a href="mailto:hello@sparklang.dev">Contact</a>
+          <!--/email_off-->
         </nav>
       </div>
     </footer>

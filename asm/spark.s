@@ -58,6 +58,7 @@
 .extern ask_remember_model
 .extern embed_live_dispatch
 .extern retrieve_live_dispatch
+.extern http_dispatch
 .extern pcie_ops_dispatch
 .extern voice_ops_dispatch
 .extern voice_speak_model_dispatch
@@ -458,6 +459,7 @@ kw_shell:   .ascii "shell"
 kw_run:     .ascii "run"
 kw_embed_cli: .ascii "--embed\0"
 kw_retrieve:.ascii "retrieve"
+kw_http:    .ascii "http"
 kw_listen:  .ascii "listen"
 kw_speak:   .ascii "speak"
 kw_say:     .ascii "say"
@@ -929,6 +931,13 @@ il_kw:
     call    keyword_match
     test    rax, rax
     jnz     do_retrieve
+
+    mov     rsi, rbx
+    lea     rdi, [rip+kw_http]
+    mov     rdx, 4
+    call    keyword_match
+    test    rax, rax
+    jnz     do_http
 
     mov     rsi, rbx
     lea     rdi, [rip+kw_shell]
@@ -1500,6 +1509,10 @@ emb_noq:
     lea     rsi, [rip+msg_nl]
     mov     rdx, 1
     call    write_stdout
+    jmp     il_done
+
+do_http:
+    call    http_dispatch
     jmp     il_done
 
 do_retrieve:

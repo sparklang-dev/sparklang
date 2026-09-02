@@ -465,6 +465,74 @@ code {
   max-width: 52rem;
 }
 
+.hero__lede--tight {
+  margin-top: calc(-1 * var(--space-3));
+  font-size: 1rem;
+}
+
+.trust-strip {
+  padding: 0 0 var(--space-4);
+}
+
+.trust-strip__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  margin: 0;
+  padding: var(--space-3) 0;
+  list-style: none;
+  border-top: 1px solid var(--spark-border-light);
+  border-bottom: 1px solid var(--spark-border-light);
+  font-size: 0.875rem;
+  color: var(--spark-text-muted);
+}
+
+.trust-strip__list a {
+  color: var(--spark-link);
+}
+
+.compare-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: var(--space-3);
+}
+
+.compare-card {
+  border: 1px solid var(--spark-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  background: var(--spark-bg-subtle);
+}
+
+.compare-card--accent {
+  border-color: var(--spark-brand);
+  background: var(--spark-brand-light);
+}
+
+.compare-card__label {
+  margin: 0 0 var(--space-2);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--spark-text-muted);
+}
+
+.also-list {
+  margin: 0;
+  padding-left: 1.25rem;
+  max-width: 44rem;
+  color: var(--spark-text-muted);
+}
+
+.also-list li {
+  margin-bottom: var(--space-2);
+}
+
+.also-list strong {
+  color: var(--spark-text);
+}
+
 .cta-row {
   display: flex;
   flex-wrap: wrap;
@@ -965,6 +1033,17 @@ pre.code-block code {
   align-items: start;
 }
 
+/* Solo docs (About, Changelog): no TOC sidebar. Without this,
+   a lone .doc-main lands in the 14rem first track and crushes. */
+.doc-layout:not(:has(.doc-sidebar)) {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.doc-layout:not(:has(.doc-sidebar)) .doc-main {
+  margin-inline: auto;
+  width: 100%;
+}
+
 .doc-sidebar {
   position: sticky;
   top: calc(var(--header-height) + 1rem);
@@ -1018,7 +1097,7 @@ pre.code-block code {
 
 .doc-main {
   min-width: 0;
-  max-width: 48rem;
+  max-width: var(--doc-measure);
 }
 
 /* Wide data tables need the full shell (function catalog). */

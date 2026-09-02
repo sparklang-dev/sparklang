@@ -3,19 +3,19 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>SparkLang — the Spark programming language</title>
+    <title>SparkLang — train and evaluate models in one .spark file</title>
     <meta
       name="description"
-      content="SparkLang — the Spark programming language for .spark AI workflows. Dry-run first. embed/retrieve, escape hatch, optional live ask. Not Apache Spark. Not AdaCore SPARK. Not a Bifrost plugin."
+      content="SparkLang: reviewable .spark programs for train→eval→ship. Dry-run fixtures for CI without API keys. Real model train jobs; optional live ask."
     />
     <meta
       name="keywords"
-      content="SparkLang, Spark programming language, .spark, AI workflow language, dry-run, embed, retrieve, not Apache Spark"
+      content="SparkLang, Spark programming language, .spark, dry-run, model train, AI workflow language"
     />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
-    <link rel="stylesheet" href="/css/tokens.css?v=pos060" />
-    <link rel="stylesheet" href="/css/site.css?v=pos060" />
+    <link rel="stylesheet" href="/css/tokens.css?v=thesis0902" />
+    <link rel="stylesheet" href="/css/site.css?v=thesis0902" />
   </head>
   <body>
     <header class="site-header">
@@ -44,11 +44,11 @@
                 <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">More</button>
                 <ul class="nav-more__menu" hidden>
                   <li><a href="/about.html">About</a></li>
+                  <li><a href="/docs/model-training.html">Model training</a></li>
                   <li><a href="/docs/ai-models.html">AI models</a></li>
-                  <li><a href="/docs/native-network-web.html">Network + web</a></li>
                   <li><a href="/docs/programming-guide.html">Programming guide</a></li>
                   <li><a href="/docs/ide.html">IDE</a></li>
-                  <li><a href="/docs/self-host.html">Contributor internals</a></li>
+                  <li><a href="/docs/native-network-web.html">Network + web</a></li>
                 </ul>
               </li>
             </ul>
@@ -62,20 +62,18 @@
       <section class="hero shell">
         <p class="hero__eyebrow">SparkLang — the Spark programming language</p>
         <h1 class="hero__title">
-          A language and runtime for readable AI workflows
+          Train and evaluate models with dry-run CI
         </h1>
         <p class="hero__lede">
-          <strong>SparkLang</strong> programs are plain
-          <code class="inline-code">.spark</code> files — dry-run fixtures,
-          playbooks, <code class="inline-code">ask</code> /
-          <code class="inline-code">classify</code> /
-          <code class="inline-code">embed</code> /
-          <code class="inline-code">retrieve</code>, and a dry-run
-          <code class="inline-code">shell</code> escape hatch. Prefer an editor
-          LSP + highlighting over a homegrown IDE. Live gateway
-          <code class="inline-code">ask</code> is optional
-          (<code class="inline-code">--live</code>) — not a Bifrost plugin.
-          Not Apache Spark · not AdaCore SPARK.
+          A language beats another Python SDK because one reviewable
+          <code class="inline-code">.spark</code> file covers train → eval → ship,
+          with dry-run fixtures you can run in CI without API keys.
+        </p>
+        <p class="hero__lede hero__lede--tight">
+          Offline-first by default:
+          <code class="inline-code">./spark --dry-run</code>.
+          Real <code class="inline-code">model train</code> /
+          <code class="inline-code">model build</code> jobs when you go live.
         </p>
         <div class="cta-row">
           <a class="btn btn--primary" href="/downloads.html">Download Spark</a>
@@ -86,248 +84,171 @@
         </div>
       </section>
 
-      <section class="section shell" aria-labelledby="features-title">
-        <h2 id="features-title" class="section__title">What you can do</h2>
+      <section class="trust-strip shell" aria-label="Product facts">
+        <ul class="trust-strip__list">
+          <li><strong>SparkLang</strong> at sparklang.dev</li>
+          <li>
+            <a href="/LICENSE.txt">MIT license</a>
+          </li>
+          <li>
+            <a href="https://github.com/sparklang-dev/sparklang">Source on GitHub</a>
+          </li>
+          <li>v0.6.3 · <a href="/CHANGELOG.html">Changelog</a></li>
+          <li>Installers on this site</li>
+        </ul>
+      </section>
+
+      <section class="section shell" aria-labelledby="why-lang-title">
+        <h2 id="why-lang-title" class="section__title">Why a language?</h2>
+        <p class="section__lede">
+          Library glue scatters prompts, training scripts, and eval harnesses
+          across repos. A <code class="inline-code">.spark</code> program is one
+          reviewable surface — same file for dry-run CI and live ops.
+        </p>
+        <div class="compare-grid">
+          <article class="compare-card">
+            <h3 class="compare-card__label">Typical Python SDK soup</h3>
+            <pre class="card__code"><code>client = OpenAI(...)
+resp = client.chat.completions.create(...)
+# separate train script, eval notebook,
+# CI secrets, ad-hoc shell glue…</code></pre>
+          </article>
+          <article class="compare-card compare-card--accent">
+            <h3 class="compare-card__label">One .spark program</h3>
+            <pre class="card__code"><code>model train dataset "data.jsonl" base "base" out "out/job-1" backend "http" -&gt; job
+model status "job-1" -&gt; status
+ask "Score this adapter on the suite" -&gt; report
+print report
+
+# ./spark --dry-run train_eval.spark</code></pre>
+          </article>
+        </div>
+      </section>
+
+      <section class="section shell" aria-labelledby="wedge-title">
+        <h2 id="wedge-title" class="section__title">The wedge</h2>
         <div class="card-grid benefit-cards">
           <article class="card">
-            <h3 class="card__title">Model analyze → build <span class="prose-muted">(experimental)</span></h3>
+            <h3 class="card__title">Dry-run by default</h3>
             <p class="card__body">
-              Blueprint / eval sugar only — plan + config markdown,
-              <strong>not</strong> weight training. Not a hero workflow.
+              <code class="inline-code">./spark --dry-run</code> uses offline
+              fixtures — no keys, no network. Pass
+              <code class="inline-code">--live</code> only when you want real
+              calls.
             </p>
-            <pre class="card__code"><code>model compare ["fast", "code", "best"]
-  on suite "examples/eval_suite.json" -&gt; pick
-model build blueprint into "out/model.md"</code></pre>
+            <pre class="card__code"><code>./spark --dry-run examples/model_train.spark</code></pre>
           </article>
           <article class="card">
-            <h3 class="card__title">Dry-run first · optional live ask</h3>
+            <h3 class="card__title">Real training jobs</h3>
             <p class="card__body">
-              Default <code class="inline-code">--dry-run</code> uses offline
-              fixtures — no keys, no network. Live
-              <code class="inline-code">ask</code> is opt-in
-              (<code class="inline-code">./spark --live</code> + any
-              OpenAI-compatible <code class="inline-code">AI_GATEWAY_URL</code>).
-              Alias names like <code class="inline-code">fast</code> /
-              <code class="inline-code">code</code> /
-              <code class="inline-code">best</code> are language conventions —
-              not a required Bifrost install.
+              <code class="inline-code">model train</code> /
+              <code class="inline-code">model build</code> submit adapters /
+              checkpoints. Not a markdown plan sold as training.
             </p>
-            <pre class="card__code"><code>use auto
-ask "Summarize: {doc}" -&gt; text
-./spark --dry-run my_task.spark</code></pre>
+            <pre class="card__code"><code>model train dataset "…" base "…" out "…" backend "http" -&gt; job
+model status "job-id" -&gt; status</code></pre>
           </article>
           <article class="card">
-            <h3 class="card__title">Voice (gated demo)</h3>
+            <h3 class="card__title">Ask + eval in the same file</h3>
             <p class="card__body">
-              <code class="inline-code">listen</code> /
-              <code class="inline-code">speak</code> dry demos exist.
-              <strong>Not</strong> sold as production telephony (no barge-in /
-              EOU / transfer SM claim yet).
+              Bind model output, print it, chain classify / extract / pipeline
+              after train — one program for the loop.
             </p>
-            <pre class="card__code"><code>voice {
-  listen -&gt; user
-  classify Intent { support, sales } from user -&gt; intent
-  ask "Reply as {intent}: {user}" -&gt; reply
-  speak reply
-}</code></pre>
-          </article>
-          <article class="card">
-            <h3 class="card__title">AI coding playbooks</h3>
-            <p class="card__body">
-              Copy playbooks from <code class="inline-code">lib/playbooks.spark</code>
-              — fix tests, refactor, review paths — with
-              <code class="inline-code">use auto</code> picking fast vs code.
-            </p>
-            <pre class="card__code"><code>include "lib/ai.spark"
-ask "Fix this test failure: {msg}" -&gt; fix</code></pre>
-          </article>
-          <article class="card">
-            <h3 class="card__title">embed / retrieve</h3>
-            <p class="card__body">
-              First-class language ops with dry fixtures; live via
-              <code class="inline-code">spark-rag-http</code> (gateway embeddings +
-              rag-gateway). Escape hatch:
-              <code class="inline-code">shell "echo …"</code> (dry allowlist).
-            </p>
-            <pre class="card__code"><code>embed "SparkLang workflows" -> vec
-retrieve "dry-run" from project "docs" -> hits
-shell "echo hello" -> out</code></pre>
+            <pre class="card__code"><code>ask "Explain gravity in one sentence" -&gt; text
+print text</code></pre>
           </article>
         </div>
       </section>
 
       <section class="section shell" aria-labelledby="model-workflow-title">
         <h2 id="model-workflow-title" class="section__title">
-          Model blueprints <span class="prose-muted">(experimental)</span>
+          Train → status → eval
         </h2>
         <p class="section__lede">
-          Optional sugar: analyze / compare / improve / build write a
-          <strong>blueprint markdown</strong> you review — not weight training.
-          Prefer <code class="inline-code">ask</code> + playbooks for day-to-day work.
+          Dry-run writes fixture artifact paths (no GPU). Live uses a pluggable
+          backend (<code class="inline-code">http</code> or allowlisted
+          <code class="inline-code">local-yield</code>).
         </p>
 
         <ol class="workflow-pipeline" aria-label="Model workflow steps">
           <li class="workflow-pipeline__step">
             <span class="workflow-pipeline__num">1</span>
-            <strong>Analyze</strong>
-            <span>Read metrics for one model or your whole catalog</span>
+            <strong>Train</strong>
+            <span>Submit dataset, base, and output path</span>
           </li>
           <li class="workflow-pipeline__step">
             <span class="workflow-pipeline__num">2</span>
-            <strong>Compare</strong>
-            <span>Run fast, code, and best on your eval suite</span>
+            <strong>Status</strong>
+            <span>Poll the job and print artifact paths</span>
           </li>
           <li class="workflow-pipeline__step">
             <span class="workflow-pipeline__num">3</span>
-            <strong>Improve</strong>
-            <span>Pick quality, speed, cost, or local preference</span>
-          </li>
-          <li class="workflow-pipeline__step">
-            <span class="workflow-pipeline__num">4</span>
-            <strong>Build</strong>
-            <span>Write a blueprint markdown file — not weights</span>
+            <strong>Eval (optional)</strong>
+            <span>Ask / classify against the result when you want</span>
           </li>
         </ol>
 
-        <pre class="terminal code-block"><code><span class="comment"># tune-model.spark — copy, save, run</span>
-model code
-
-model analyze "fast" -&gt; report
-
-model compare ["fast", "code", "best"]
-  on suite "examples/eval_suite.json" -&gt; comparison
-
-model improve from report prefer quality -&gt; blueprint
-
-model build blueprint into "out/my-model.md"</code></pre>
+        <pre class="terminal code-block"><code><span class="comment"># model_train.spark — dry-run first</span>
+model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" -&gt; job
+model status "job-dry-001" -&gt; status</code></pre>
 
         <p class="prose-muted">
-          <code class="inline-code">model build</code> writes a plan and config
-          file only — never starts training jobs.
-          <code class="inline-code">./spark --dry-run</code> uses fixtures (no
-          keys, no network). Optional live
-          <code class="inline-code">ask</code> uses
-          <code class="inline-code">./spark --live</code> with any
-          OpenAI-compatible <code class="inline-code">AI_GATEWAY_URL</code>.
-          <a href="/learn/build-model.html">Open the model wizard</a> or
-          <a href="/docs/language.html">language reference</a>.
+          Analyze / compare / improve are eval helpers.
+          <code class="inline-code">model plan</code> writes an optional markdown
+          plan only — not training.
+          <a href="/docs/model-training.html">Model training docs</a> ·
+          <a href="/learn/build-model.html">Build a Model</a>.
         </p>
       </section>
 
-      <section class="section shell" aria-labelledby="voice-title">
-        <h2 id="voice-title" class="section__title">Voice (gated demo — not production telephony)</h2>
+      <section class="section shell" aria-labelledby="also-title">
+        <h2 id="also-title" class="section__title">Also available</h2>
         <p class="section__lede">
-          Dry-run stubs and gated live speech exist. Barge-in, EOU, transfer/hold
-          SM, and named telephony adapters are <strong>not</strong> claimed yet —
-          see the adoption bar.
+          Secondary language surfaces — useful, not the homepage thesis.
         </p>
-        <pre class="terminal code-block"><code>voice {
-  listen -> user
-  classify Intent { support, sales, billing } from user -> intent
-  ask "Reply helpfully to: {user}" -> reply
-  speak reply -> "out/turn.wav"
-}
-
-# PSTN off by default — placeholders only until you enable gates
-voice pstn status -> st
-voice pstn dial "+15555550100" -> call</code></pre>
-        <p class="prose-muted">
-          See <a href="/learn/ai-in-5-minutes.html#voice">AI in 5 Minutes — voice</a>,
-          <a href="/playground.html">Playground voice tab</a>, and
-          <a href="/docs/language.html">language reference</a> (listen/speak/pstn).
-        </p>
-      </section>
-
-      <section class="section shell" aria-labelledby="native-net-title">
-        <h2 id="native-net-title" class="section__title">Network &amp; web <span class="prose-muted">(not focus)</span></h2>
-        <p class="section__lede">
-          Packet capture, MITM, and browser automation are <strong>not</strong> the
-          product focus — prefer LSP + first-class
-          <code class="inline-code">http get</code>/<code class="inline-code">post</code>
-          (roadmap). Ops remain in the language for power users.
-        </p>
-        <pre class="terminal code-block"><code>network capture probe -&gt; info
-network open "examples/fixtures/sample.pcap" -&gt; pcap
-network analyze pcap -&gt; traffic_report
-
-engine fetch "file://examples/fixtures/engine/sample.html"
-browser run "examples/browser_main.spark"</code></pre>
-        <p class="prose-muted">
-          Not a Python stub driver — asm dispatch today. First-class
-          <code class="inline-code">http get</code> / <code class="inline-code">http post</code>
-          are <strong>[roadmap]</strong>; use <code class="inline-code">engine fetch</code>
-          for HTTP now.
-          <a href="/docs/native-network-web.html">Network + web guide</a> ·
-          <a href="/docs/language.html#network">Language reference</a> ·
-          <a href="/docs/language.html#browser-mitm">Browser / MITM</a>
-        </p>
-      </section>
-
-      <section class="section shell" aria-labelledby="adopt-title">
-        <h2 id="adopt-title" class="section__title">Adoption bar</h2>
-        <p class="section__lede">
-          Honest done / next / won't checklist — escape hatch, RAG ops,
-          voice gaps, and a receptionist <code class="inline-code">[goal]</code>
-          example (not a fake production claim).
-        </p>
-        <p class="prose-muted">
-          <a href="/docs/adoption-bar.html">Adoption bar</a> ·
-          <a href="/docs/roadmap.html">Roadmap</a> ·
-          <a href="/about.html">About SparkLang</a>
-        </p>
-      </section>
-
-      <section class="section shell" aria-labelledby="scope-title">
-        <h2 id="scope-title" class="section__title">Core vs optional</h2>
-        <p class="section__lede">
-          SparkLang is the language and runtime. Gateways, voice, and capture
-          are capabilities you turn on — not the product identity.
-        </p>
-        <div class="card-grid">
-          <article class="card">
-            <h3 class="card__title">Core</h3>
-            <p class="card__body">
-              Language + dry-run + playbooks +
-              <code class="inline-code">embed</code>/<code class="inline-code">retrieve</code>
-              + escape hatch. Prefer LSP; IDE language ops optional.
-            </p>
-          </article>
-          <article class="card">
-            <h3 class="card__title">Optional</h3>
-            <p class="card__body">
-              Live gateway <code class="inline-code">ask</code> /
-              <code class="inline-code">embed</code>
-              (<code class="inline-code">--live</code>); gated voice demo;
-              browser/MITM/pcap de-emphasized.
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <section class="section shell" aria-labelledby="ide-title">
-        <h2 id="ide-title" class="section__title">Editor + AI coding</h2>
-        <p class="section__lede">
-          Prefer LSP + syntax highlighting. Verified
-          <code class="inline-code">ide</code> language ops and playbooks
-          remain; homegrown Electron/PyQt chrome is not the product focus.
-        </p>
-        <pre class="terminal code-block"><code>include "lib/ai.spark"
-ide new "out/ide/task.spark"
-ide ask "Explain this buffer" -> reply
-./spark --dry-run examples/ide_ask_show.spark</code></pre>
-        <p class="prose-muted">
-          Terminal-first IDE today — not Electron product chrome.
-          <a href="/docs/ide.html">IDE status</a> ·
-          <a href="/docs/ai-models.html">AI models guide</a> ·
-          <a href="/docs/programming-guide.html">Programming guide</a>
-        </p>
+        <ul class="also-list">
+          <li>
+            <strong>IDE language ops</strong> —
+            <a href="/docs/ide.html">IDE docs</a>
+            (<code class="inline-code">ide ask</code>, playbooks, LSP-friendly
+            editing.
+          </li>
+          <li>
+            <strong>embed / retrieve</strong> —
+            dry fixtures; live via
+            <code class="inline-code">spark-rag-http</code> when configured.
+          </li>
+          <li>
+            <strong>Voice</strong> (demo / gated) —
+            <code class="inline-code">listen</code> /
+            <code class="inline-code">speak</code>; PSTN off by default
+            (<code class="inline-code">dial "+15555550100"</code> placeholder
+            only.
+            <a href="/docs/language.html">Language reference</a>.
+          </li>
+          <li>
+            <strong>HTTP</strong> —
+            <code class="inline-code">http get</code> /
+            <code class="inline-code">http post</code> with
+            <code class="inline-code">timeout</code>; dry-run reads fixture
+            files (no network); live via
+            <code class="inline-code">./spark-http</code>.
+            Auth / retries still next.
+            <a href="/docs/language.html">Language reference</a>.
+          </li>
+          <li>
+            <strong>Network / browser</strong> —
+            capture and browser ops (de-emphasized vs language HTTP).
+            <a href="/docs/native-network-web.html">Network + web</a>.
+          </li>
+        </ul>
       </section>
 
       <section class="section shell" aria-labelledby="learn-path-title">
         <h2 id="learn-path-title" class="section__title">Learn Spark</h2>
         <p class="section__lede">
-          Follow the tutorial path — same structure as official language docs for
-          Java or C++.
+          Follow the tutorial path — install, first program, AI primitives,
+          then train.
         </p>
         <div class="card-grid">
           <article class="card">
@@ -359,8 +280,7 @@ ide ask "Explain this buffer" -> reply
               <a href="/learn/ai-in-5-minutes.html">AI in 5 Minutes</a>
             </h3>
             <p class="card__body">
-              Classify, extract, pipeline, voice, and model workflow — the
-              primitives for AI programs in one file.
+              Train, classify, extract, pipeline — AI as language statements.
             </p>
             <a class="card__link" href="/learn/ai-in-5-minutes.html"
               >Quick tour →</a
@@ -371,8 +291,8 @@ ide ask "Explain this buffer" -> reply
               <a href="/learn/build-model.html">Build a Model</a>
             </h3>
             <p class="card__body">
-              Wizard for analyze → compare → improve → build — modify an
-              existing model or create a new blueprint from scratch.
+              Submit a dry-run train job, poll status, or start from eval
+              helpers and an optional <code class="inline-code">model plan</code>.
             </p>
             <a class="card__link" href="/learn/build-model.html"
               >Open wizard →</a
@@ -390,10 +310,8 @@ ide ask "Explain this buffer" -> reply
 <span class="cmd">export AI_GATEWAY_URL=http://127.0.0.1:4000</span>
 <span class="cmd">./spark --live examples/ask_live.spark</span></code></pre>
         <p class="prose-muted">
-          Sample program:
-          <code class="inline-code">use code</code> then
-          <code class="inline-code">ask "…" -&gt; text</code>. See
-          <a href="/docs/programming-guide.html">full programming guide</a> and
+          See
+          <a href="/docs/programming-guide.html">programming guide</a> and
           <a href="/docs/language.html">language reference</a>.
         </p>
       </section>
@@ -403,15 +321,17 @@ ide ask "Explain this buffer" -> reply
       <div class="shell footer-inner">
         <div class="footer-brand">
           <span>SparkLang — the Spark programming language</span>
-          <span class="footer-meta">v0.6.2 · MIT</span>
+          <span class="footer-meta">v0.6.3 · <a href="/LICENSE.txt">MIT</a></span>
         </div>
         <nav class="footer-nav" aria-label="Footer">
           <a href="/about.html">About</a>
-<a href="/LICENSE.txt">License</a>
+          <a href="/LICENSE.txt">License</a>
           <a href="/CHANGELOG.html">Changelog</a>
           <a href="/learn/">Learn</a>
           <a href="/downloads.html">Downloads</a>
           <a href="/playground.html">Playground</a>
+          <a href="https://github.com/sparklang-dev/sparklang">Source</a>
+          <a href="mailto:hello@sparklang.dev">Contact</a>
         </nav>
       </div>
     </footer>

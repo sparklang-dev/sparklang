@@ -5,12 +5,12 @@
     hello: {
       label: "Hello ask",
       source:
-        'use code\n\nask "Explain gravity in one sentence" -> text\n\nprint text',
+        'ask "Explain gravity in one sentence" -> text\n\nprint text',
     },
     classify: {
       label: "Classify intent",
       source:
-        'use fast\n\nclassify Intent { support, sales, spam }\n' +
+        'classify Intent { support, sales, spam }\n' +
         '  from "My account is locked and I need help"\n' +
         "  min_confidence 0.7\n" +
         "  -> intent\n\nprint intent",
@@ -18,7 +18,7 @@
     extract: {
       label: "Extract person",
       source:
-        'use fast\n\nextract Person {\n' +
+        "extract Person {\n" +
         "  name: string\n" +
         "  age: int\n" +
         '} from "Ada Lovelace was born in 1815" -> person\n\nprint person',
@@ -26,25 +26,22 @@
     pipeline: {
       label: "Pipeline translate",
       source:
-        'use fast\n\nlet doc "Office printers need regular cleaning."\n\n' +
+        'let doc "Office printers need regular cleaning."\n\n' +
         "pipeline {\n" +
         '  ask "Summarize: {doc}" -> summary\n' +
         '  | ask "Translate to Spanish: {summary}" -> es\n' +
         "}\n\nprint es",
     },
-    "model-tune": {
-      label: "Model tune chain",
+    train: {
+      label: "Model train (dry)",
       source:
-        'use code\n\nmodel analyze "fast" -> report\n\n' +
-        'model compare ["fast", "code", "best"]\n' +
-        '  on suite "examples/eval_suite.json" -> comparison\n\n' +
-        "model improve from report prefer quality -> blueprint\n\n" +
-        'model build blueprint into "out/my-model.md"',
+        'model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" -> job\n\n' +
+        'model status "job-dry-001" -> status',
     },
     voice: {
       label: "Voice session (listen/speak)",
       source:
-        "use fast\n\nvoice {\n" +
+        "voice {\n" +
         "  listen -> user_text\n" +
         '  ask "Reply briefly: {user_text}" -> reply\n' +
         '  say reply -> "out.wav"\n' +
@@ -57,24 +54,6 @@
   var playbooksLoaded = false;
   var playbooksMeta = null;
 
-  var MODEL_FIXTURES = {
-    analyze:
-      '{"op":"model.analyze","alias":"{alias}",' +
-      '"mode":"dry-run","fixture":true,' +
-      '"latency_p50_ms":142,"tokens_per_sec":38.2}',
-    compare:
-      '{"op":"model.compare","models":["fast","code","best"],' +
-      '"suite":"examples/eval_suite.json","winner":"code",' +
-      '"mode":"dry-run","scores":{"fast":0.81,"code":0.89,"best":0.87}}',
-    improve:
-      '{"op":"model.improve","prefer":"quality",' +
-      '"blueprint":"out/better-model.md","mode":"dry-run"}',
-    build:
-      '{"op":"model.build","path":"out/my-model.md","train":false,' +
-      '"mode":"dry-run"}\n' +
-      "written out/my-model.md (plan + config — review before live training)",
-  };
-
   var VOICE_FIXTURE = {
     transcript: "My login won't work — can you help?",
     reply:
@@ -84,25 +63,16 @@
       '{"op":"listen","mode":"dry-run",' +
       '"transcript":"My login won\'t work — can you help?"}',
     askJson:
-      '{"op":"ask","mode":"dry-run","model":"fast",' +
+      '{"op":"ask","mode":"dry-run",' +
       '"text":"Sure — try resetting your password, then sign in again. If it still fails, check that caps lock is off."}',
     speakJson:
       '{"op":"speak","mode":"dry-run","path":"out.wav","bytes":88244}',
   };
 
-  var WORKFLOW_SNIPPET =
-    'model analyze "{alias}" -> report\n\n' +
-    'model compare ["fast", "code", "best"]\n' +
-    '  on suite "examples/eval_suite.json" -> comparison\n\n' +
-    "model improve from report prefer quality -> blueprint\n\n" +
-    'model build blueprint into "out/my-model.md"';
-
   function wrapCatalogSource(entry) {
     var syntax = (entry.syntax || "").trim();
-    if (!syntax) return 'use fast\n\n# ' + entry.name;
-    var needsModel = !/^\s*(use|model)\s+/m.test(syntax);
-    var header = needsModel ? "use fast\n\n" : "";
-    return header + syntax;
+    if (!syntax) return "# " + entry.name;
+    return syntax;
   }
 
   function mergeCatalogPresets(data) {
@@ -563,42 +533,6 @@
     return { getSource: function () { return textarea.value; }, setSource: function (s) { textarea.value = s; }, runDry: runDry };
   }
 
-  function initModelsPanel(codeApi) {
-    var aliasSelect = qs("#pg-model-alias");
-    var preview = qs("#pg-model-preview");
-    var snippetPre = qs("#pg-workflow-snippet");
-    var copySnippet = qs("#pg-copy-workflow");
-    if (!aliasSelect || !preview) return;
-
-    function refresh() {
-      var alias = aliasSelect.value;
-      var lines = [
-        MODEL_FIXTURES.analyze.replace("{alias}", alias),
-        MODEL_FIXTURES.compare,
-        MODEL_FIXTURES.improve,
-        MODEL_FIXTURES.build,
-      ];
-      preview.textContent = lines.join("\n\n");
-      if (snippetPre) {
-        snippetPre.textContent = WORKFLOW_SNIPPET.replace(/\{alias\}/g, alias);
-      }
-      if (codeApi) {
-        codeApi.setSource(setUseLine(codeApi.getSource(), alias));
-      }
-    }
-
-    aliasSelect.addEventListener("change", refresh);
-    refresh();
-
-    if (copySnippet && snippetPre) {
-      copySnippet.addEventListener("click", function () {
-        copyText(snippetPre.textContent).then(function () {
-          flashCopy(copySnippet);
-        });
-      });
-    }
-  }
-
   function initVoicePanel(codeApi) {
     var micBtn = qs("#pg-voice-mic");
     var speakBtn = qs("#pg-voice-speak");
@@ -694,7 +628,6 @@
     if (!qs(".playground")) return;
     initTabs();
     var codeApi = initCodePanel();
-    initModelsPanel(codeApi);
     initVoicePanel(codeApi);
   }
 

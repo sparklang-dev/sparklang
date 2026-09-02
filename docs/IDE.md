@@ -397,7 +397,7 @@ It is **not** a substitute for the `ide` ops above.
 | `spark: live ask` | `./spark --live examples/ask_live.spark` |
 
 Agent card: [AGENTS.md](../AGENTS.md). Rules:
-`.cursor/rules/spark-ide-ai-coding.mdc`, `spark-language.mdc`.
+`.cursor/rules/spark-language.mdc`.
 
 ### AI coding (gateway)
 

@@ -1,0 +1,57 @@
+# Spark CUDA / GPU memory policy (Linux host)
+# Consumed by tools/cuda/* and documented for builder/implement.
+# Default ./spark ELF does not parse this file (dry-run stays offline).
+
+[host]
+# Fill from `nvidia-smi` on the developer host — placeholders only.
+driver_version = "0.0.0"
+cuda_driver_api = "12.0"
+cuda_toolkit = "12.0.0"
+toolkit_path = "/usr/local/cuda"
+persistence_mode = "enabled"
+
+[devices]
+# TWO numbering schemes (do not conflate):
+#
+# nvidia-smi / NVML / CUDA index (PCI_BUS_ID order):
+#   0 = preferred compute GPU
+#   1 = reserved voice-only (never Spark compute)
+#   2 = secondary / TEI only
+#
+# Device Minor / /dev/nvidiaN (Spark `cuda prefer gpu N`):
+#   0 = preferred compute
+#   1 = secondary — allowed
+#   2 = reserved voice-only — never prefer
+#
+# never_index below is NVML/smi. Asm prefer refuses never_minor=2.
+
+prefer_index = 0
+prefer_uuid = "GPU-00000000-0000-0000-0000-000000000000"
+never_index = [1]
+never_uuid = ["GPU-ffffffff-ffff-ffff-ffff-ffffffffffff"]
+never_minor = 2
+secondary_index = 2
+secondary_minor = 1
+
+[memory]
+# Guidance for future live CUDA companion (not applied by default ELF)
+prefer_explicit_cuda_malloc = true
+avoid_uvm_for_hot_path = true
+pinned_host_via = "cudaHostAlloc / mlock companion"
+pool_allocator = "cudaMemPool / torch caching — app-level; not kernel driver"
+hugepages_host = "HugePages_Total=0; do not allocate without owner token"
+thp = "madvise"
+
+[pcie]
+# Placeholders — measure on the developer host; agents must not reboot
+prefer_link_width_current = 16
+prefer_link_width_max = 16
+prefer_link_status = "ok"
+voice_link_width_current = 16
+secondary_link_width_current = 4
+
+[safety]
+no_host_reboot = true
+no_rmmod_under_vllm = true
+no_homemade_nvidia_ko = true
+no_spark_on_voice_gpu = true

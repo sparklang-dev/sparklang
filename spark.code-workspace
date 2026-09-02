@@ -1,0 +1,47 @@
+{
+  "folders": [
+    {
+      "name": "Spark (language)",
+      "path": "."
+    },
+    {
+      "name": "Spark Browser",
+      "path": "../spark-browser"
+    }
+  ],
+  "settings": {
+    "files.associations": {
+      "*.spark": "spark",
+      "spark.toml": "toml"
+    },
+    "files.exclude": {
+      "**/__pycache__": true,
+      "**/.pytest_cache": true,
+      "**/.ruff_cache": true
+    },
+    "search.exclude": {
+      "**/data/corpus-ledger.jsonl": true,
+      "**/out/decompile/**": true,
+      "**/.venv": true,
+      "**/node_modules": true
+    },
+    "terminal.integrated.env.linux": {
+      "AI_GATEWAY_URL": "http://127.0.0.1:4000",
+      "SPARK_IDE": "1"
+    },
+    "editor.tabSize": 2,
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+    "[spark]": {
+      "editor.tabSize": 2,
+      "editor.insertSpaces": true
+    }
+  },
+  "extensions": {
+    "recommendations": [
+      "ms-vscode.hexeditor",
+      "tamasfe.even-better-toml",
+      "ms-python.python"
+    ]
+  }
+}

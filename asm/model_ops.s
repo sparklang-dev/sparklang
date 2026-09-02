@@ -1,10 +1,11 @@
-# Spark model analyze / compare / improve / build — dry-run stubs
-# Linked with asm/spark.s (separate unit so CUDA edits stay isolated).
-# Live HTTP probe is optional (tools/model_probe); make test never needs net.
+# Spark model analyze / compare / improve / train / status / plan
+# Linked with asm/spark.s. Dry-run = fixtures; live forks spark-train-http.
+# make test never starts GPU jobs or dials the network.
 #
 # Exports: model_ops_dispatch
 # Imports from spark.s: linebuf, write_stdout, extract_quote, contains,
-#   strlen, write_bytes_path, sys_mkdir, msg_nl, msg_reply, outdir_name
+#   strlen, write_bytes_path, sys_mkdir, msg_nl, msg_reply, outdir_name,
+#   flag_live, fork_exec_wait
 
 .intel_syntax noprefix
 .global model_ops_dispatch
@@ -17,6 +18,10 @@
 .extern write_bytes_path
 .extern sys_mkdir
 .extern outdir_name
+.extern flag_live
+.extern fork_exec_wait
+.extern train_live_submit
+.extern train_live_status
 
 .section .data
 
@@ -38,6 +43,9 @@ needle_analyze: .ascii "analyze\0"
 needle_compare: .ascii "compare\0"
 needle_improve: .ascii "improve\0"
 needle_build:   .ascii "build\0"
+needle_train:   .ascii "train\0"
+needle_status:  .ascii "status\0"
+needle_plan:    .ascii "plan\0"
 needle_quality: .ascii "quality\0"
 needle_speed:   .ascii "speed\0"
 needle_cost:    .ascii "cost\0"
@@ -182,34 +190,67 @@ dry_improve_local:
     .ascii "\"weights train ONLY if owner issues train-grant\"]}}"
 dry_improve_local_len = . - dry_improve_local
 
-# Blueprint markdown written by model build (plan + config; train=false)
+# Optional plan markdown (model plan) — not a train job
 blueprint_md:
-    .ascii "# Better model blueprint (Spark dry-run)\n\n"
+    .ascii "# Model plan (Spark dry-run)\n\n"
     .ascii "## Exact why\n"
     .ascii "- code wins tool-call JSON validity **94% vs 71%** (fast)\n"
     .ascii "- best quality_proxy **0.93 vs code 0.91** on fixture suite\n"
     .ascii "- Prefer quality → primary `code`, fallback `best`,"
     .ascii " repair_once\n\n"
-    .ascii "## Architecture / suggestion\n"
-    .ascii "- Route hard tool-call turns to code/best\n"
-    .ascii "- Keep fast for short classify\n"
-    .ascii "- JSON-repair once on invalid tool args\n\n"
-    .ascii "## Config (no train@)\n"
+    .ascii "## Next step\n"
+    .ascii "- Use `model train` / `model build` to submit a real job\n"
+    .ascii "- This file is a plan only — not weights or adapters\n\n"
+    .ascii "## Config sketch\n"
     .ascii "```toml\n"
     .ascii "primary = \"code\"\n"
     .ascii "fallback = \"best\"\n"
     .ascii "repair_once = true\n"
-    .ascii "train = false\n"
-    .ascii "```\n\n"
-    .ascii "## Risks\n"
-    .ascii "- Cost up on best path\n"
-    .ascii "- Default build is blueprint/config — **not** GPU train\n"
-    .ascii "- Live public gateway probe needs a probe credential;"
-    .ascii " 401 = credential unavailable\n"
+    .ascii "```\n"
 blueprint_md_len = . - blueprint_md
 
 default_blueprint_path:
     .ascii "out/better-model.md\0"
+
+# Dry-run train job accept (examples/fixtures/train/accept.json)
+dry_train_accept:
+    .ascii "{\"op\":\"train\",\"mode\":\"dry-run\",\"job_id\":\"job-dry-001\","
+    .ascii "\"backend\":\"http\",\"status\":\"accepted\","
+    .ascii "\"dataset\":\"examples/fixtures/train/dataset.jsonl\","
+    .ascii "\"base\":\"fixture-base\",\"out\":\"out/train/job-dry-001\","
+    .ascii "\"artifacts\":{"
+    .ascii "\"adapter\":\"out/train/job-dry-001/adapter.bin\","
+    .ascii "\"checkpoint\":\"out/train/job-dry-001/checkpoint.json\","
+    .ascii "\"marker\":\"out/train/job-dry-001/ARTIFACT\"},"
+    .ascii "\"note\":\"dry-run — no GPU, no network; artifact paths are "
+    .ascii "planned stubs\"}"
+dry_train_accept_len = . - dry_train_accept
+
+dry_train_status:
+    .ascii "{\"op\":\"status\",\"mode\":\"dry-run\",\"job_id\":\"job-dry-001\","
+    .ascii "\"state\":\"succeeded\",\"backend\":\"http\","
+    .ascii "\"artifacts\":{"
+    .ascii "\"adapter\":\"out/train/job-dry-001/adapter.bin\","
+    .ascii "\"checkpoint\":\"out/train/job-dry-001/checkpoint.json\","
+    .ascii "\"marker\":\"out/train/job-dry-001/ARTIFACT\"},"
+    .ascii "\"note\":\"dry-run fixture — weights not trained on this host\"}"
+dry_train_status_len = . - dry_train_status
+
+train_dir_parent:
+    .ascii "out/train\0"
+train_dir_job:
+    .ascii "out/train/job-dry-001\0"
+train_artifact_path:
+    .ascii "out/train/job-dry-001/ARTIFACT\0"
+train_artifact_body:
+    .ascii "spark-train-dry job-dry-001\n"
+    .ascii "adapter=out/train/job-dry-001/adapter.bin\n"
+    .ascii "checkpoint=out/train/job-dry-001/checkpoint.json\n"
+train_artifact_body_len = . - train_artifact_body
+
+msg_train_why:
+    .ascii "  (dry-run train — fixtures only; no GPU / no network)\n"
+msg_train_why_len = . - msg_train_why
 
 .section .text
 
@@ -237,10 +278,28 @@ model_ops_dispatch:
     jnz     model_improve
 
     lea     rdi, [rip+linebuf]
+    lea     rsi, [rip+needle_status]
+    call    contains
+    test    rax, rax
+    jnz     model_status
+
+    lea     rdi, [rip+linebuf]
+    lea     rsi, [rip+needle_plan]
+    call    contains
+    test    rax, rax
+    jnz     model_plan
+
+    lea     rdi, [rip+linebuf]
+    lea     rsi, [rip+needle_train]
+    call    contains
+    test    rax, rax
+    jnz     model_train
+
+    lea     rdi, [rip+linebuf]
     lea     rsi, [rip+needle_build]
     call    contains
     test    rax, rax
-    jnz     model_build
+    jnz     model_train
 
     # plain alias: model fast|code|best or use fast — print remainder
     lea     rbx, [rip+linebuf]
@@ -423,8 +482,84 @@ pi_qual:
     mov     rcx, dry_improve_quality_len
     ret
 
-# --- model build ---
-model_build:
+# --- model train / build (real job; dry = fixtures) ---
+model_train:
+    cmp     qword ptr [rip+flag_live], 0
+    je      mt_dry
+    call    train_live_submit
+    pop     rbx
+    ret
+mt_dry:
+    lea     rdi, [rip+outdir_name]
+    mov     rsi, 493
+    call    sys_mkdir
+    lea     rdi, [rip+train_dir_parent]
+    mov     rsi, 493
+    call    sys_mkdir
+    lea     rdi, [rip+train_dir_job]
+    mov     rsi, 493
+    call    sys_mkdir
+    lea     rdi, [rip+train_artifact_path]
+    lea     rsi, [rip+train_artifact_body]
+    mov     rdx, train_artifact_body_len
+    call    write_bytes_path
+    lea     rsi, [rip+msg_nl_local]
+    mov     rdx, 1
+    call    write_stdout
+    lea     rsi, [rip+msg_train_why]
+    mov     rdx, msg_train_why_len
+    call    write_stdout
+    lea     rsi, [rip+msg_reply_local]
+    mov     rdx, msg_reply_local_len
+    call    write_stdout
+    lea     rsi, [rip+dry_train_accept]
+    mov     rdx, dry_train_accept_len
+    call    write_stdout
+    lea     rsi, [rip+msg_nl_local]
+    mov     rdx, 1
+    call    write_stdout
+    lea     rsi, [rip+msg_model_built]
+    mov     rdx, msg_model_built_len
+    call    write_stdout
+    lea     rsi, [rip+train_artifact_path]
+    call    strlen
+    mov     rdx, rax
+    lea     rsi, [rip+train_artifact_path]
+    call    write_stdout
+    lea     rsi, [rip+msg_nl_local]
+    mov     rdx, 1
+    call    write_stdout
+    pop     rbx
+    ret
+
+# --- model status ---
+model_status:
+    cmp     qword ptr [rip+flag_live], 0
+    je      ms_dry
+    call    train_live_status
+    pop     rbx
+    ret
+ms_dry:
+    lea     rsi, [rip+msg_nl_local]
+    mov     rdx, 1
+    call    write_stdout
+    lea     rsi, [rip+msg_train_why]
+    mov     rdx, msg_train_why_len
+    call    write_stdout
+    lea     rsi, [rip+msg_reply_local]
+    mov     rdx, msg_reply_local_len
+    call    write_stdout
+    lea     rsi, [rip+dry_train_status]
+    mov     rdx, dry_train_status_len
+    call    write_stdout
+    lea     rsi, [rip+msg_nl_local]
+    mov     rdx, 1
+    call    write_stdout
+    pop     rbx
+    ret
+
+# --- model plan (markdown only; former blueprint build) ---
+model_plan:
     lea     rdi, [rip+outdir_name]
     mov     rsi, 493            # 0755
     call    sys_mkdir

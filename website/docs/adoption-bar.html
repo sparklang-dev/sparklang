@@ -58,6 +58,7 @@
         <a href="/learn/">Learn</a>
         <a href="/docs/adoption-bar.html" aria-current="page">Adoption bar</a>
         <a href="/docs/ai-models.html">AI models</a>
+        <a href="/docs/model-training.html">Model training</a>
         <a href="/docs/native-network-web.html">Network + web</a>
         <a href="/docs/programming-guide.html">Programming guide</a>
         <a href="/docs/language.html">Language reference</a>
@@ -71,8 +72,7 @@
         workflow goal. <strong>Spark is not a Bifrost plugin</strong> — gateway is optional
         live I/O.</p>
         <p><strong>Public name:</strong> <strong>SparkLang</strong> (the Spark programming language).
-        Site: <a href="https://sparklang.dev/">https://sparklang.dev/</a>.
-        Source: <a href="https://github.com/sparklang-dev/sparklang">github.com/sparklang-dev/sparklang</a>.</p>
+        Site: https://sparklang.dev/ · Source: https://github.com/sparklang-dev/sparklang</p>
         <p>Not Apache Spark. Not AdaCore SPARK.</p>
         <h2 id="checklist">Checklist</h2>
         <div class="doc__table-wrap"><table class="doc__table">
@@ -85,24 +85,24 @@
         </thead>
         <tbody>
         <tr>
-        <td>MIT license on the public site</td>
+        <td>Public repo + MIT license</td>
         <td><strong>done</strong></td>
-        <td><code class="inline-code">/LICENSE.txt</code> · About trust section</td>
+        <td><code class="inline-code">LICENSE</code>, <code class="inline-code">/LICENSE.txt</code></td>
         </tr>
         <tr>
-        <td>Public cloneable source repo</td>
-        <td><strong>won't (yet)</strong></td>
-        <td>Site stays public; source not published for anonymous clone. No broken forge CTAs.</td>
+        <td>Maintainer identity</td>
+        <td><strong>done</strong></td>
+        <td>GitHub org <code class="inline-code">sparklang-dev</code>; About page</td>
         </tr>
         <tr>
         <td>Versioned releases + changelog</td>
         <td><strong>done</strong></td>
-        <td>Site <code class="inline-code">/CHANGELOG.html</code> · docs <strong>0.6.2</strong>. Installer kit artifacts remain <strong>0.6.0</strong> until next packaging. Prefer Pages downloads over forge releases.</td>
+        <td><code class="inline-code">CHANGELOG.md</code> + site <code class="inline-code">/CHANGELOG.html</code>; GitHub Release <strong>0.6.2</strong> (rename). Installer kit artifacts remain <strong>0.6.0</strong> until next packaging</td>
         </tr>
         <tr>
         <td>Searchable name (SparkLang)</td>
         <td><strong>done</strong></td>
-        <td>Hero / About / footers on sparklang.dev. CLI stays <code class="inline-code">spark</code> / <code class="inline-code">./spark-bootstrap</code></td>
+        <td>Hero / About / footers; public <code class="inline-code">sparklang-dev/sparklang</code> (private <code class="inline-code">sparklang-dev/sparklang</code> retained). CLI stays <code class="inline-code">spark</code> / <code class="inline-code">./spark-bootstrap</code></td>
         </tr>
         <tr>
         <td>Escape hatch (<code class="inline-code">.spark</code> → host)</td>
@@ -121,8 +121,8 @@
         </tr>
         <tr>
         <td>Real <code class="inline-code">http get</code> / <code class="inline-code">post</code></td>
-        <td><strong>next</strong></td>
-        <td>Auth/retries/timeouts — not <code class="inline-code">engine fetch</code> file://; design in ROADMAP</td>
+        <td><strong>done</strong></td>
+        <td>Dry fixture files + timeout; live <code class="inline-code">./spark-http</code> (curl). Auth/retries = <strong>next</strong></td>
         </tr>
         <tr>
         <td>Typed <code class="inline-code">extract</code> + JSON-mode validate/retry</td>
@@ -180,10 +180,11 @@
            real Python/JS embed API is <strong>next</strong>.</li>
         </ol>
         <h2 id="worth-using-over-script-gateway">Worth using over script + gateway</h2>
-        <p>Shipped enough to dry-demo RAG + ask + classify in one file. Still missing
-        for a clear “shorter than Python+gateway” win on production paths:
-        streaming, expectation evals, first-class HTTP, validate/retry <code class="inline-code">extract</code>,
-        and a dry-runnable receptionist that is more than a <code class="inline-code">[goal]</code> sketch.</p>
+        <p>Shipped enough to dry-demo RAG + ask + classify + http get/post in one
+        file. Still missing for a clear “shorter than Python+gateway” win on
+        production paths: streaming, expectation evals, HTTP auth/retries,
+        validate/retry <code class="inline-code">extract</code>, and a dry-runnable receptionist that is more
+        than a <code class="inline-code">[goal]</code> sketch.</p>
         <h2 id="voice-honest">Voice — honest</h2>
         <p>Optional <code class="inline-code">listen</code> / <code class="inline-code">speak</code> / <code class="inline-code">voice</code> / gated PSTN exist as language
         surface and dry demos. <strong>Not</strong> production barge-in / EOU / SM transfer

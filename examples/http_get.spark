@@ -1,0 +1,8 @@
+# First-class http get — dry-run reads a real fixture (no network).
+#   ./spark --dry-run examples/http_get.spark
+# Live (real HTTP): ./spark --live examples/http_get_live.spark
+
+model fast
+
+http get "https://example.com/" fixture "examples/fixtures/http/get_ok.json" timeout 5 -> resp
+print resp

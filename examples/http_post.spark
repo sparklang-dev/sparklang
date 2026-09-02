@@ -1,0 +1,7 @@
+# First-class http post — dry-run fixture only (no network).
+#   ./spark --dry-run examples/http_post.spark
+
+model fast
+
+http post "https://example.com/api" body "{\"ping\":true}" fixture "examples/fixtures/http/post_ok.json" timeout 5 -> resp
+print resp

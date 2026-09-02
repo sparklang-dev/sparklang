@@ -30,6 +30,8 @@ $CC "${CFLAGS[@]}" -o "$OUT/spark-bootstrap" \
   "$ROOT/bootstrap/dry_ask.c" \
   "$ROOT/bootstrap/dry_auto_model.c" \
   "$ROOT/bootstrap/dry_classify.c" \
+  "$ROOT/bootstrap/dry_rag.c" \
+  "$ROOT/bootstrap/dry_http.c" \
   "$ROOT/bootstrap/dry_engine.c" \
   "$ROOT/bootstrap/dry_ide.c" \
   "$ROOT/bootstrap/dry_ops.c" \
@@ -46,10 +48,13 @@ $CC "${CFLAGS[@]}" -std=c11 -I"$ROOT/sparkasm/include" \
   "$ROOT/sparkasm/src/main.c" \
   "$ROOT/sparkasm/src/sparkasm.c"
 
-echo "==> cross arm64: spark-ask-http spark-ask-probe spark-stt-tts spark-review-url"
+echo "==> cross arm64: spark-ask-http spark-http spark-ask-probe spark-stt-tts spark-review-url"
 $CC "${CFLAGS[@]}" -o "$OUT/spark-ask-http" \
   "$ROOT/tools/ask/spark_ask_http.c" \
   "$ROOT/bootstrap/dry_auto_model.c"
+$CC "${CFLAGS[@]}" -o "$OUT/spark-http" \
+  "$ROOT/tools/http/spark_http.c" \
+  "$ROOT/bootstrap/dry_http.c"
 $CC "${CFLAGS[@]}" -o "$OUT/spark-ask-probe" "$ROOT/tools/ask/spark_ask_probe.c"
 $CC "${CFLAGS[@]}" -o "$OUT/spark-stt-tts" "$ROOT/tools/voice/spark_stt_tts.c" -lm
 $CC "${CFLAGS[@]}" -o "$OUT/spark-review-url" "$ROOT/tools/review/spark_review_url.c"

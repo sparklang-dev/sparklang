@@ -14,24 +14,23 @@ never required for `make test`.
 | Source | Examples |
 |--------|----------|
 | `spark.toml` / env aliases | `fast`, `code`, `best`, `alias-code` |
-| Bifrost-style gateway aliases | when `AI_GATEWAY_URL` set |
-| Local listening vLLM (read-only) | e.g. `:8003` local coder |
+| Gateway aliases | when `AI_GATEWAY_URL` set |
+| Local listening vLLM (read-only) | e.g. local coder ports |
 
 **Explicitly out of scope / protected:**
 
 - Inventing live leaderboard numbers
-- Killing or loading compute on **:8010 / reserved voice GPU**
-- Public Bifrost tunnel without a gateway probe credential — on 401:
+- Killing or loading compute on reserved voice-only GPUs
+- Public gateway probes without a probe credential — on 401:
   report **credential unavailable**, continue with local/dry-run; **do not**
   invent routing conclusions
-- `train@*` GPU training — **build** writes blueprint/config only unless
-  an owner train-grant is explicit elsewhere (not Spark’s job)
 
 Catalog file: `data/model-catalog.jsonl` (fixture rows ship with the repo;
 live probe may append real listen results when `SPARK_ALLOW_NET=1`).
 
-Extension hooks: `[models]` in `spark.toml`, `SPARK_MODEL_*` env, provider
-plugins later — document new sources here when added.
+**Training** (weights / adapters / checkpoints) is a separate pillar —
+see [MODEL_TRAINING.md](MODEL_TRAINING.md). This file covers analyze /
+compare / improve / plan only.
 
 ## Metrics (definitions)
 
@@ -63,8 +62,9 @@ Every **compare** / **improve** result must include:
 | `model analyze "id" -> report` | Structured analyze JSON |
 | `model analyze all -> report` | Catalog-scope report |
 | `model compare […] on suite "…" -> comparison` | Side-by-side + reasons |
-| `model improve from report prefer quality\|speed\|cost\|local -> blueprint` | Blueprint w/ deltas |
-| `model build blueprint into "out/better-model.md"` | Plan + config markdown; `train=false` |
+| `model improve from report prefer quality\|speed\|cost\|local -> blueprint` | Heuristic blueprint |
+| `model plan blueprint into "out/better-model.md"` | Markdown plan only |
+| `model train` / `model build` / `model status` | **See [MODEL_TRAINING.md](MODEL_TRAINING.md)** |
 
 ## Live probe (optional)
 

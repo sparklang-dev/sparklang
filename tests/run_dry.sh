@@ -854,8 +854,12 @@ check model_compare_why examples/model_improve.spark "94% vs 71%"
 check model_improve examples/model_improve.spark '"op":"improve"'
 check model_improve_prefer examples/model_improve.spark '"prefer":"quality"'
 check model_improve_delta examples/model_improve.spark "metrics_delta"
-check model_build examples/model_improve.spark "out/better-model.md"
+check model_plan examples/model_improve.spark "out/better-model.md"
 check model_fixture_banner examples/model_improve.spark "not live leaderboard"
+check model_train examples/model_train.spark '"op":"train"'
+check model_train_job examples/model_train.spark "job-dry-001"
+check model_status examples/model_train.spark '"op":"status"'
+check model_status_ok examples/model_train.spark '"state":"succeeded"'
 
 check binary_open examples/binary_any.spark "\[binary\]"
 check binary_elf_ok examples/binary_any.spark '"class":"ELF64"'
@@ -976,9 +980,16 @@ test -f out/program.spark && grep -q "classify Intent" out/program.spark \
   fail=1
 }
 
-test -f out/better-model.md && grep -q "train = false" out/better-model.md \
-  && echo "PASS model-blueprint-artifact" || {
-  echo "FAIL model-blueprint-artifact"
+test -f out/better-model.md && grep -q "model train" out/better-model.md \
+  && echo "PASS model-plan-artifact" || {
+  echo "FAIL model-plan-artifact"
+  fail=1
+}
+
+test -f out/train/job-dry-001/ARTIFACT \
+  && grep -q job-dry-001 out/train/job-dry-001/ARTIFACT \
+  && echo "PASS model-train-artifact" || {
+  echo "FAIL model-train-artifact"
   fail=1
 }
 

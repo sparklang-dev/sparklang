@@ -58,6 +58,7 @@
         <a href="/learn/">Learn</a>
         <a href="/docs/adoption-bar.html">Adoption bar</a>
         <a href="/docs/ai-models.html">AI models</a>
+        <a href="/docs/model-training.html">Model training</a>
         <a href="/docs/native-network-web.html">Network + web</a>
         <a href="/docs/programming-guide.html">Programming guide</a>
         <a href="/docs/language.html">Language reference</a>
@@ -77,6 +78,8 @@
         <li><code class="inline-code">./spark --embed</code> FFI handshake stub</li>
         <li>Per-<code class="inline-code">ask</code> <code class="inline-code">[accounting]</code> line (dry zeros; live usage when present)</li>
         <li>Positioning: not a Bifrost plugin; dry-run first</li>
+        <li><code class="inline-code">http get</code> / <code class="inline-code">http post</code> + timeout + dry fixture files + live
+          <code class="inline-code">./spark-http</code> (auth/retries still <strong>next</strong>)</li>
         </ul>
         <h2 id="next">Next</h2>
         <div class="doc__table-wrap"><table class="doc__table">
@@ -89,7 +92,7 @@
         <tbody>
         <tr>
         <td>HTTP</td>
-        <td><code class="inline-code">http get</code> / <code class="inline-code">http post</code> with auth, retries, timeouts</td>
+        <td>Auth / bearer headers; retries</td>
         </tr>
         <tr>
         <td>Extract</td>
@@ -121,7 +124,7 @@
         </tr>
         <tr>
         <td>Releases</td>
-        <td>Cut version tags from CHANGELOG; ship installers on Pages (see release docs)</td>
+        <td>Cut GitHub Release tags from CHANGELOG (see RELEASE.md)</td>
         </tr>
         </tbody>
         </table></div>
@@ -136,7 +139,7 @@
         <tbody>
         <tr>
         <td>Rename</td>
-        <td>Public product identity is <strong>SparkLang</strong> at sparklang.dev. CLI remains <code class="inline-code">spark</code>.</td>
+        <td>Public <code class="inline-code">sparklang-dev/sparklang</code> live; private <code class="inline-code">sparklang-dev/sparklang</code> retained. Site sparklang.dev. CLI remains <code class="inline-code">spark</code>.</td>
         </tr>
         </tbody>
         </table></div>

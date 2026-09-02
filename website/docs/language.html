@@ -58,6 +58,7 @@
         <a href="/learn/">Learn</a>
         <a href="/docs/adoption-bar.html">Adoption bar</a>
         <a href="/docs/ai-models.html">AI models</a>
+        <a href="/docs/model-training.html">Model training</a>
         <a href="/docs/native-network-web.html">Network + web</a>
         <a href="/docs/programming-guide.html">Programming guide</a>
         <a href="/docs/language.html">Language reference</a>
@@ -109,11 +110,14 @@
         <p>Optional <strong><code class="inline-code">spark.toml</code></strong> (<code class="inline-code">model = "fast"</code>) is read by the <strong>bootstrap</strong>
         VM on startup; <code class="inline-code">./spark</code> (GAS) still needs a <code class="inline-code">model</code>/<code class="inline-code">use</code> line in the file.</p>
         <h2 id="statements">Statements</h2>
-        <h3 id="model-analyze-compare-improve-build-first-class"><code class="inline-code">model analyze</code> / <code class="inline-code">compare</code> / <code class="inline-code">improve</code> / <code class="inline-code">build</code> (first-class)</h3>
-        <p>Analyze reachable models, compare on a suite, propose a better config, and
-        write a blueprint. Dry-run uses <strong>fixtures only</strong> — never invents live
-        leaderboard numbers. <strong>Build does not start <code class="inline-code">train@*</code></strong> (plan + config).</p>
-        <p>Full methodology: <a href="/docs/ai-models.html">MODEL_ANALYSIS.md</a>.</p>
+        <h3 id="model-analyze-compare-improve-train-status-plan"><code class="inline-code">model analyze</code> / <code class="inline-code">compare</code> / <code class="inline-code">improve</code> / <code class="inline-code">train</code> / <code class="inline-code">status</code> / <code class="inline-code">plan</code></h3>
+        <p>Analyze and compare reachable models, propose improvements, <strong>train</strong>
+        real jobs (weights/adapters/checkpoints), poll <strong>status</strong>, or export an
+        optional markdown <strong>plan</strong>. Dry-run uses <strong>fixtures only</strong> — no GPU and
+        no network. <strong><code class="inline-code">model build</code> is an alias for <code class="inline-code">model train</code></strong> (not a
+        blueprint file).</p>
+        <p>Training methodology: <a href="/docs/model-training.html">MODEL_TRAINING.md</a>.
+        Eval helpers: <a href="/docs/ai-models.html">MODEL_ANALYSIS.md</a>.</p>
         <pre class="doc__pre"><code class="inline-code">model analyze &quot;alias-code&quot; -&gt; report
         model analyze all -&gt; catalog_report
 
@@ -122,14 +126,24 @@
         model improve from report prefer quality -&gt; blueprint
         # prefer: quality | speed | cost | local
 
-        model build blueprint into &quot;out/better-model.md&quot;
+        model plan blueprint into &quot;out/better-model.md&quot;   # markdown only
+
+        model train dataset &quot;examples/fixtures/train/dataset.jsonl&quot; base &quot;fixture-base&quot; out &quot;out/train/job-dry-001&quot; backend &quot;http&quot; -&gt; job
+        model build -&gt; job                               # same as train
+        model status &quot;job-dry-001&quot; -&gt; status
         </code></pre>
+        <p><strong>Backends:</strong> <code class="inline-code">http</code> (default MVP companion <code class="inline-code">./spark-train-http</code>),
+        <code class="inline-code">local-yield</code> (optional allowlisted <code class="inline-code">train@</code> unit), <code class="inline-code">huggingface</code>
+        (reserved — not wired). Env: <code class="inline-code">SPARK_TRAIN_BACKEND</code>, <code class="inline-code">SPARK_TRAIN_URL</code>,
+        optional <code class="inline-code">SPARK_TRAIN_TOKEN</code>. See <a href="/docs/model-training.html">MODEL_TRAINING.md</a>.</p>
         <p><strong>“All models”</strong> = all reachable configured aliases + discovered local
         vLLM endpoints (read-only) — <strong>not</strong> every model in existence. Catalog:
-        <code class="inline-code">data/model-catalog.jsonl</code>. Bifrost public probes need a probe credential; 401 → credential unavailable (no invented routing).</p>
-        <p><strong>Why shape (mandatory):</strong> metrics (latency, tokens/s, quality proxy,
-        tool JSON %), failure_modes, concrete <code class="inline-code">reasons[]</code>, risks on improve/build.</p>
-        <p>Example: <code class="inline-code">examples/model_improve.spark</code>.</p>
+        <code class="inline-code">data/model-catalog.jsonl</code>. Public gateway probes need a probe
+        credential; 401 → credential unavailable (no invented routing).</p>
+        <p><strong>Why shape (mandatory for analyze/compare/improve):</strong> metrics
+        (latency, tokens/s, quality proxy, tool JSON %), failure_modes,
+        concrete <code class="inline-code">reasons[]</code>, risks on improve/plan.</p>
+        <p>Examples: <code class="inline-code">examples/model_train.spark</code>, <code class="inline-code">examples/model_improve.spark</code>.</p>
         <h3 id="ask-generate"><code class="inline-code">ask</code> / <code class="inline-code">generate</code> / <code class="inline-code">?</code></h3>
         <p><strong>Bootstrap only:</strong> <code class="inline-code">{topic}</code> in the quoted prompt resolves <code class="inline-code">let topic "…"</code>
         bindings (fail loud if missing). GAS dry-run matches fixtures on prompt
@@ -204,10 +218,36 @@
         </tbody>
         </table></div>
         <p>See <a href="/docs/adoption-bar.html">ADOPTION_BAR.md</a>. Example: <code class="inline-code">examples/shell_escape.spark</code>.</p>
-        <h3 id="http-get-http-post-next-design"><code class="inline-code">http get</code> / <code class="inline-code">http post</code> ([next] — design)</h3>
-        <p>Auth, retries, timeouts as first-class ops (not <code class="inline-code">engine fetch</code> <code class="inline-code">file://</code>).
-        Until shipped: use companions or <code class="inline-code">shell</code> allowlist under dry-run only.
-        Tracked in <a href="/docs/roadmap.html">ROADMAP.md</a> / <a href="/docs/native-network-web.html">NATIVE_NETWORK_WEB.md</a>.</p>
+        <h3 id="http-get-http-post-shipped"><code class="inline-code">http get</code> / <code class="inline-code">http post</code> (shipped)</h3>
+        <p>Generic HTTP client ops — <strong>not</strong> Bifrost-specific and <strong>not</strong>
+        <code class="inline-code">engine fetch</code> <code class="inline-code">file://</code>. Dry-run never dials the network.</p>
+        <pre class="doc__pre"><code class="inline-code">http get &quot;https://example.com/&quot; fixture &quot;examples/fixtures/http/get_ok.json&quot; timeout 5 -&gt; resp
+        http post &quot;https://example.com/api&quot; body &quot;{\&quot;ping\&quot;:true}&quot; fixture &quot;examples/fixtures/http/post_ok.json&quot; timeout 5 -&gt; resp
+        </code></pre>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Mode</th>
+        <th>Behavior</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><strong>Dry-run</strong></td>
+        <td><strong>No network.</strong> Requires <code class="inline-code">fixture "…"</code> <strong>or</strong> a <code class="inline-code">file://…</code> / <code class="inline-code">examples/fixtures/http/…</code> URL. <strong>fopen</strong> that path; missing file → fail loud. Bound value = fixture bytes (no invented status). <code class="inline-code">timeout</code> is accepted and recorded by the companion; it does not dial.</td>
+        </tr>
+        <tr>
+        <td><strong>Live</strong> (<code class="inline-code">./spark --live</code>)</td>
+        <td>Real HTTP via companion <code class="inline-code">./spark-http</code> (curl). Needs <code class="inline-code">http://</code> or <code class="inline-code">https://</code>. <code class="inline-code">timeout</code> (default <strong>30</strong>, range 1–600) applies. <code class="inline-code">fixture</code> is ignored for the body.</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <p><strong>Shipped:</strong> get, post, timeout, dry fixture files, live curl.
+        <strong>Not shipped (still [next]):</strong> auth / bearer headers, retries.</p>
+        <p>Example (dry): <code class="inline-code">examples/http_get.spark</code>. Live opt-in:
+        <code class="inline-code">examples/http_get_live.spark</code> or
+        <code class="inline-code">./spark-http --live --get --url https://example.com/ --timeout 10</code>.
+        Gate: <code class="inline-code">make test-http</code> (live SKIP unless <code class="inline-code">SPARK_HTTP_LIVE=1</code>).</p>
         <h3 id="extract"><code class="inline-code">extract</code></h3>
         <p>Inline schema; language expects JSON matching fields.</p>
         <pre class="doc__pre"><code class="inline-code">extract Person {

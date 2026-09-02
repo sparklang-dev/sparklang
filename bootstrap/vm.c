@@ -8,6 +8,7 @@
 #include "dry_ask.h"
 #include "dry_auto_model.h"
 #include "dry_classify.h"
+#include "dry_http.h"
 #include "dry_rag.h"
 #include "dry_ops.h"
 #include "engine_css.h"
@@ -384,10 +385,12 @@ static int op_model(SparkVM *vm, char *line)
   else
     p = ltrim(line + 5);
   if (strncmp(p, "analyze", 7) == 0 || strncmp(p, "compare", 7) == 0 ||
-      strncmp(p, "improve", 7) == 0 || strncmp(p, "build", 5) == 0) {
+      strncmp(p, "improve", 7) == 0 || strncmp(p, "build", 5) == 0 ||
+      strncmp(p, "train", 5) == 0 || strncmp(p, "status", 6) == 0 ||
+      strncmp(p, "plan", 4) == 0) {
     fprintf(stderr,
-            "error: model analyze|compare|improve|build is GAS-only "
-            "(not in C bootstrap yet)\n");
+            "error: model analyze|compare|improve|train|status|plan|build "
+            "is GAS-only (not in C bootstrap yet)\n");
     return 1;
   }
   end = p;
@@ -663,6 +666,75 @@ static int op_shell(SparkVM *vm, char *line)
     return 1;
   }
   free(q);
+  return 0;
+}
+
+/* Quote after a keyword (fixture / body). */
+static char *extract_quote_after(const char *line, const char *kw)
+{
+  const char *p = strstr(line, kw);
+  if (!p)
+    return NULL;
+  return extract_quote(p);
+}
+
+static int op_http(SparkVM *vm, char *line)
+{
+  int is_post = 0;
+  char *url;
+  char *fx = NULL;
+  char path[1024];
+  char *body = NULL;
+  size_t blen = 0;
+  const char *rest;
+
+  rest = line + 4;
+  while (*rest == ' ' || *rest == '\t')
+    rest++;
+  if (strncmp(rest, "get", 3) == 0 &&
+      (rest[3] == ' ' || rest[3] == '\t' || rest[3] == '"')) {
+    is_post = 0;
+    printf("[http get] ");
+  } else if (strncmp(rest, "post", 4) == 0 &&
+             (rest[4] == ' ' || rest[4] == '\t' || rest[4] == '"')) {
+    is_post = 1;
+    printf("[http post] ");
+  } else {
+    fprintf(stderr,
+            "error: http requires get or post "
+            "(e.g. http get \"URL\" fixture \"path\")\n");
+    return 1;
+  }
+  url = extract_quote(line);
+  if (!url) {
+    fprintf(stderr, "error: http needs a quoted URL\n");
+    return 1;
+  }
+  printf("%s\n", url);
+  fx = extract_quote_after(line, "fixture");
+  if (spark_http_resolve_dry_fixture(url, fx, path, sizeof(path)) !=
+      0) {
+    free(url);
+    free(fx);
+    return 1;
+  }
+  if (spark_http_load_fixture(path, &body, &blen) != 0) {
+    free(url);
+    free(fx);
+    return 1;
+  }
+  (void)is_post;
+  printf("  → %s\n", body);
+  set_last(vm, body);
+  if (bind_arrow(vm, line) != 0) {
+    free(url);
+    free(fx);
+    free(body);
+    return 1;
+  }
+  free(url);
+  free(fx);
+  free(body);
   return 0;
 }
 
@@ -1430,6 +1502,8 @@ int spark_vm_run_line(SparkVM *vm, const char *raw)
     return op_retrieve(vm, line);
   if (kw_at(line, "shell") || kw_at(line, "run"))
     return op_shell(vm, line);
+  if (kw_at(line, "http"))
+    return op_http(vm, line);
   if (kw_at(line, "extract"))
     return op_extract(vm, line);
   if (kw_at(line, "tool"))
@@ -1480,8 +1554,8 @@ int spark_vm_run_line(SparkVM *vm, const char *raw)
   }
   fprintf(stderr,
           "error: unknown statement: %s\n"
-          "  hint: model|use|ask|?|classify|embed|retrieve|"
-          "pipeline|include (bootstrap)\n",
+          "  hint: model|use|ask|?|classify|embed|retrieve|http|"
+          "shell|pipeline|include (bootstrap)\n",
           line);
   return 1;
 }

@@ -6,7 +6,7 @@
     <title>Build a Model — Learn Spark</title>
     <meta
       name="description"
-      content="Interactive wizard to create or modify AI model configs with analyze, compare, improve, and build in Spark."
+      content="Submit a real Spark model train job (dry-run fixtures or live). Optional model plan is plan-only markdown."
     />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
@@ -90,103 +90,61 @@
         <article class="doc__body">
           <h1 id="build-a-model">Build a Model</h1>
           <p>
-            Use Spark to <strong>analyze</strong> what a model does today,
-            <strong>compare</strong> candidates on your eval suite,
-            <strong>improve</strong> toward quality / speed / cost / local, and
-            <strong>build</strong> a blueprint file you review before training.
-            This wizard generates a copy-paste
-            <code class="inline-code">.spark</code> program for either path.
+            Submit a real training job with
+            <code class="inline-code">model train</code> /
+            <code class="inline-code">model build</code>, then poll
+            <code class="inline-code">model status</code>. Dry-run writes
+            fixture artifact paths (no GPU, no network). Live uses
+            <code class="inline-code">spark-train-http</code> with
+            <code class="inline-code">SPARK_TRAIN_BACKEND</code>.
           </p>
 
           <ol class="wizard-steps" id="wizard-step-list">
             <li class="is-active">1. Choose path</li>
-            <li>2. Set options</li>
-            <li>3. Copy .spark snippet</li>
-            <li>4. Run locally</li>
+            <li>2. Copy .spark snippet</li>
+            <li>3. Run locally</li>
           </ol>
 
-          <h2 id="step-1">Step 1 — Modify existing or create new?</h2>
+          <h2 id="step-1">Step 1 — Path</h2>
           <div class="wizard-controls">
             <label for="wizard-path">Path:</label>
-            <select id="wizard-path" aria-label="Modify existing or create new">
-              <option value="modify">Modify existing model (from spark.toml)</option>
-              <option value="create">Create new model from scratch</option>
+            <select id="wizard-path" aria-label="Train new or improve plan">
+              <option value="create">Train a new job (dry-run)</option>
+              <option value="modify">Eval helpers + optional plan</option>
             </select>
           </div>
           <p id="wizard-path-hint" class="prose-muted"></p>
 
-          <h2 id="step-2">Step 2 — Options</h2>
-          <div class="wizard-controls">
-            <label for="wizard-base">Base model:</label>
-            <select id="wizard-base" aria-label="Base model alias">
-              <option value="fast">fast</option>
-              <option value="code">code</option>
-              <option value="best">best</option>
-            </select>
-          </div>
-          <div class="wizard-controls">
-            <label for="wizard-prefer">Improve toward:</label>
-            <select id="wizard-prefer" aria-label="Improve preference">
-              <option value="quality">quality</option>
-              <option value="speed">speed</option>
-              <option value="cost">cost</option>
-              <option value="local">local</option>
-            </select>
-          </div>
-          <div class="wizard-controls">
-            <label for="wizard-task">Also need app code?</label>
-            <select id="wizard-task" aria-label="Optional app task type">
-              <option value="model">Model workflow only</option>
-              <option value="ask">Ask / generate text</option>
-              <option value="classify">Classify labels</option>
-              <option value="pipeline">Multi-step pipeline</option>
-            </select>
-          </div>
-
-          <h2 id="step-3">Step 3 — Generated program</h2>
+          <h2 id="step-2">Step 2 — Generated program</h2>
           <p>
             Copy into
-            <code class="inline-code" id="wizard-filename">my-model.spark</code>:
+            <code class="inline-code" id="wizard-filename">model_train.spark</code>:
           </p>
           <pre class="doc__pre" id="wizard-snippet"><code></code></pre>
 
-          <h2 id="step-4">Step 4 — Run</h2>
+          <h2 id="step-3">Step 3 — Run</h2>
           <pre class="doc__pre"><code id="wizard-run-cmd"></code></pre>
           <p class="prose-muted">
-            Dry-run uses fixtures — no API key, no training jobs.
-            <code class="inline-code">model build</code> writes a plan and config
-            markdown file, not model weights. Live model calls need
-            <code class="inline-code">AI_GATEWAY_URL</code> and optional gateway key —
-            <code class="inline-code">./spark --live</code>.
+            Dry-run uses offline fixtures (no API key, no GPU). Configure
+            <code class="inline-code">SPARK_TRAIN_URL</code> only for live
+            HTTP training. Optional
+            <code class="inline-code">ask</code> after train still uses
+            <code class="inline-code">AI_GATEWAY_URL</code> when you want it.
           </p>
 
-          <h2 id="model-reference">Full model workflow reference</h2>
-          <pre class="doc__pre"><code>model analyze "fast" -> report
-model analyze all -> catalog_report
-
-model compare ["fast", "code", "best"]
-  on suite "examples/eval_suite.json" -> comparison
-
-model improve from report prefer quality -> blueprint
-# prefer: quality | speed | cost | local
-
-model build blueprint into "out/better-model.md"</code></pre>
+          <h2 id="model-reference">Train ops (dry fixtures)</h2>
+          <pre class="doc__pre"><code>model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" -> job
+model status "job-dry-001" -> status</code></pre>
           <p>
-            Sugar shortcuts:
-            <code class="inline-code">use fast</code>,
-            <code class="inline-code">? "…"</code> for ask, and
-            <code class="inline-code">spark.toml</code> for a default model.
-            Full spec:
-            <a href="/docs/language.html#model-analyze-compare-improve-build-first-class"
-              >Language reference § model</a
-            >.
+            Full docs:
+            <a href="/docs/model-training.html">Model training</a> ·
+            <a href="/docs/language.html">Language reference</a>.
           </p>
 
           <h2 id="preview">Preview in browser</h2>
           <p>
-            <a href="/playground.html">Playground</a> includes a
-            <strong>Model tune workflow</strong> example with simulated dry-run
-            output for the full analyze → compare → improve → build chain.
+            Try related snippets in the
+            <a href="/playground.html">Playground</a> dry-run preview.
           </p>
         </article>
       </main>
@@ -196,7 +154,7 @@ model build blueprint into "out/better-model.md"</code></pre>
       <div class="shell footer-inner">
         <div class="footer-brand">
           <span>SparkLang — the Spark programming language</span>
-          <span class="footer-meta">v0.6.2 · MIT</span>
+          <span class="footer-meta">v0.6.3 · MIT</span>
         </div>
         <nav class="footer-nav" aria-label="Footer">
           <a href="/about.html">About</a>

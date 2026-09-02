@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Model training — Spark</title>
+    <meta name="description" content="SparkLang model train / build — real jobs, dry fixtures, HTTP and local-yield backends." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/css/tokens.css?v=bb4433f" />
+    <link rel="stylesheet" href="/css/site.css?v=bb4433f" />
+  </head>
+  <body class="doc-page">
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="site-brand" href="/" aria-label="Spark home">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z" fill="currentColor" />
+          </svg>
+          Spark
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+        </button>
+        <div class="header-nav-wrap">
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <ul class="nav-primary">
+              <li><a href="/learn/">Learn</a></li>
+              <li><a href="/docs/language.html">Docs</a></li>
+              <li><a href="/downloads.html">Download</a></li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">More</button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/adoption-bar.html">Adoption bar</a></li>
+                  <li><a href="/docs/ai-models.html">AI models</a></li>
+                  <li><a href="/docs/native-network-web.html">Network + web</a></li>
+                  <li><a href="/docs/programming-guide.html">Programming guide</a></li>
+                  <li><a href="/docs/ide.html">IDE</a></li>
+                  <li><a href="/docs/self-host.html">Contributor internals</a></li>
+                </ul>
+              </li>
+            </ul>
+            <a href="/playground.html" class="nav-cta">Try</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <div class="shell doc-layout">
+      <aside class="doc-sidebar" aria-label="Table of contents">
+        <p class="doc-sidebar__title">On this page</p>
+        <nav id="doc-toc-list"></nav>
+      </aside>
+      <main class="doc-main">
+      <nav class="doc__nav" aria-label="Docs">
+        <a href="/learn/">Learn</a>
+        <a href="/docs/adoption-bar.html">Adoption bar</a>
+        <a href="/docs/ai-models.html" aria-current="page">AI models</a>
+        <a href="/docs/model-training.html" aria-current="page">Model training</a>
+        <a href="/docs/native-network-web.html">Network + web</a>
+        <a href="/docs/programming-guide.html">Programming guide</a>
+        <a href="/docs/language.html">Language reference</a>
+        <a href="/docs/ide.html">IDE</a>
+        <a href="/docs/self-host.html">Contributor internals</a>
+        <a href="/downloads.html">Downloads</a>
+      </nav>      <article class="doc__body">
+        <h1 id="model-training-sparklang">Model training (SparkLang)</h1>
+        <p><strong>Real training is a first-class pillar.</strong> <code class="inline-code">model train</code> / <code class="inline-code">model build</code>
+        submit a training <strong>job</strong> that produces weights, adapters, or
+        checkpoints — not a markdown blueprint.</p>
+        <p>Eval helpers (<code class="inline-code">model analyze</code> / <code class="inline-code">compare</code> / <code class="inline-code">improve</code>) stay offline
+        sugar. Optional plan export is <code class="inline-code">model plan</code> (markdown). Live gateway
+        <code class="inline-code">ask</code> is <strong>optional</strong> for post-train inference checks — SparkLang is
+        not a Bifrost plugin.</p>
+        <p>Full language forms: <a href="/docs/language.html">LANGUAGE.md</a>.</p>
+        <h2 id="verbs">Verbs</h2>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Statement</th>
+        <th>Meaning</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><code class="inline-code">model train … -&gt; job</code></td>
+        <td>Submit a train job (dry fixtures or live backend)</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">model build …</code></td>
+        <td><strong>Same as train</strong> (rehabilitated; not blueprint)</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">model status ["job-id"] -&gt; status</code></td>
+        <td>Poll job state + artifact paths</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">model plan blueprint into "path"</code></td>
+        <td>Optional markdown plan only</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">model analyze</code> / <code class="inline-code">compare</code> / <code class="inline-code">improve</code></td>
+        <td>Eval / heuristic helpers (unchanged)</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <p>Minimal train form (fields optional in dry-run; fixtures fill gaps):</p>
+        <pre class="doc__pre"><code class="inline-code">model train dataset &quot;data/train.jsonl&quot; base &quot;base-id&quot; out &quot;out/train/demo&quot; backend &quot;http&quot; -&gt; job
+
+        model status &quot;job-dry-001&quot; -&gt; status
+        </code></pre>
+        <h2 id="job-lifecycle">Job lifecycle</h2>
+        <pre class="doc__pre"><code class="inline-code">submit  →  accepted (job_id)
+                →  running
+                →  succeeded | failed | cancelled
+        artifact paths appear on accept (planned) and again on success
+        </code></pre>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Phase</th>
+        <th>Dry-run</th>
+        <th>Live</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td>Submit</td>
+        <td>Fixture accept JSON; write marker under <code class="inline-code">out/train/&lt;job_id&gt;/</code></td>
+        <td>Backend adapter</td>
+        </tr>
+        <tr>
+        <td>Status</td>
+        <td>Fixture <code class="inline-code">succeeded</code> + same paths</td>
+        <td>Poll backend</td>
+        </tr>
+        <tr>
+        <td>GPU / net</td>
+        <td><strong>Never</strong></td>
+        <td>Only when configured</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <h2 id="backends-trainbackend-spark-train-backend">Backends (<code class="inline-code">train.backend</code> / <code class="inline-code">SPARK_TRAIN_BACKEND</code>)</h2>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Id</th>
+        <th>Role</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><code class="inline-code">http</code></td>
+        <td><strong>Default MVP.</strong> POST job JSON to <code class="inline-code">SPARK_TRAIN_URL</code>; poll status</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">local-yield</code></td>
+        <td>Optional host adapter: <code class="inline-code">systemctl start train@&lt;unit&gt;</code> when allowlisted</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">huggingface</code></td>
+        <td>Reserved id — not wired in MVP (do not claim Hub publish)</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <p>Generic interface — SparkLang is not hard-wired to one machine.</p>
+        <h3 id="http-shipped-companion">HTTP (shipped companion)</h3>
+        <pre class="doc__pre"><code class="language-bash"># Offline (CI / make test)
+        ./spark-train-http --dry --submit
+        ./spark-train-http --dry --status job-dry-001
+
+        # Live
+        export SPARK_TRAIN_BACKEND=http
+        export SPARK_TRAIN_URL=https://train.example/v1   # your API
+        # optional: SPARK_TRAIN_TOKEN=…   (never commit)
+        ./spark --live examples/model_train.spark
+        # or:
+        ./spark-train-http --live --submit \
+          --dataset data/train.jsonl --base base-id --out out/train/demo
+        ./spark-train-http --live --status &lt;job_id&gt;
+        </code></pre>
+        <p>Expected HTTP shape (adapter contract):</p>
+        <ul class="doc__ul">
+        <li><code class="inline-code">POST {SPARK_TRAIN_URL}/jobs</code> — body JSON
+          <code class="inline-code">{dataset,base,out,backend}</code> → <code class="inline-code">{job_id,status,artifacts}</code></li>
+        <li><code class="inline-code">GET {SPARK_TRAIN_URL}/jobs/{id}</code> →
+          <code class="inline-code">{job_id,state,artifacts}</code></li>
+        </ul>
+        <h3 id="local-yield-optional-gated">local-yield (optional; gated)</h3>
+        <p>Only when <strong>all</strong> hold:</p>
+        <ol class="doc__ol">
+        <li><code class="inline-code">SPARK_TRAIN_BACKEND=local-yield</code></li>
+        <li>Unit name is in <code class="inline-code">SPARK_TRAIN_UNIT_ALLOWLIST</code> (comma-separated)</li>
+        <li>Operator has a real owner train-grant for that unit elsewhere —
+           Spark <strong>does not</strong> invent train-grant tokens</li>
+        </ol>
+        <p>Then the companion may run <code class="inline-code">systemctl start train@&lt;unit&gt;</code>. Training
+        compute policy on shared hosts: coding GPU only via the yield unit;
+        never place Spark training on a voice-only GPU.</p>
+        <h2 id="what-model-build-means-now">What <code class="inline-code">model build</code> means now</h2>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Old (removed)</th>
+        <th>New</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td>Write <code class="inline-code">out/*.md</code> blueprint, <code class="inline-code">train=false</code></td>
+        <td>Submit train job / print artifacts</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <p>Blueprint markdown → <strong><code class="inline-code">model plan</code></strong>.</p>
+        <h2 id="dry-proof">Dry proof</h2>
+        <pre class="doc__pre"><code class="language-bash">./spark --dry-run examples/model_train.spark
+        # expect: &quot;op&quot;:&quot;train&quot;, job-dry-001, out/train/job-dry-001
+        test -f out/train/job-dry-001/ARTIFACT
+        ./spark-train-http --dry --submit | grep job-dry-001
+        </code></pre>
+        <p><code class="inline-code">make test</code> never starts GPU jobs or dials the network.</p>
+        <h2 id="not-in-mvp">Not in MVP</h2>
+        <ul class="doc__ul">
+        <li>Auto dataset curation / labeling UI</li>
+        <li>Hugging Face Hub publish</li>
+        <li>Full LoRA studio / multi-node scheduler UI</li>
+        <li>Invented owner train-grant strings</li>
+        <li>Bifrost alias pickers as “Step 2” of building a model</li>
+        </ul>
+      </article>
+      </main>
+    </div>
+
+    <footer class="site-footer">
+      <div class="shell footer-inner">
+        <span>Spark programming language</span>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="/learn/">Learn</a>
+          <a href="/docs/language.html">Reference</a>
+          <a href="/downloads.html">Downloads</a>
+          <a href="/playground.html">Playground</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="/js/site.js"></script>
+  </body>
+</html>

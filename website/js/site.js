@@ -5,14 +5,14 @@
     hello: {
       cmd: "./spark --dry-run hello.spark",
       out:
-        '{"op":"ask","mode":"dry-run","model":"code",' +
+        '{"op":"ask","mode":"dry-run",' +
         '"text":"Gravity is the mutual attraction between masses."}\n' +
         "Gravity is the mutual attraction between masses.",
     },
     sugar: {
       cmd: "./spark --dry-run hello_sugar.spark",
       out:
-        '{"op":"ask","mode":"dry-run","model":"code",' +
+        '{"op":"ask","mode":"dry-run",' +
         '"text":"Gravity pulls masses together."}\n' +
         "Gravity pulls masses together.",
     },
@@ -32,43 +32,40 @@
         '"text":"Las máquinas necesitan limpieza y equilibrio."}',
     },
     model: {
-      cmd: "./spark --dry-run model_improve.spark",
+      cmd: "./spark --dry-run my-model.spark",
       out:
-        '{"op":"model.analyze","alias":"alias-code",' +
-        '"mode":"dry-run","fixture":true}\n' +
-        '{"op":"model.improve","prefer":"quality",' +
-        '"blueprint":"out/better-model.md"}',
+        '{"op":"ask","mode":"dry-run",' +
+        '"text":"Gravity is the mutual attraction between masses."}\n' +
+        '{"op":"model.analyze","mode":"dry-run","fixture":true}\n' +
+        '{"op":"model.train","job_id":"job-dry-001","mode":"dry-run"}\n' +
+        "wrote out/train/job-dry-001/ARTIFACT",
     },
     "model-tune": {
-      cmd: "./spark --dry-run tune-model.spark",
+      cmd: "./spark --dry-run model_train.spark",
       out:
-        '{"op":"model.analyze","alias":"fast","mode":"dry-run","fixture":true}\n' +
-        '{"op":"model.compare","models":["fast","code","best"],' +
-        '"suite":"examples/eval_suite.json","winner":"code","mode":"dry-run"}\n' +
-        '{"op":"model.improve","prefer":"quality","mode":"dry-run"}\n' +
-        '{"op":"model.build","path":"out/my-model.md","train":false,' +
-        '"mode":"dry-run"}\n' +
-        "written out/my-model.md (plan + config — review before live training)",
+        '{"op":"train","job_id":"job-dry-001","mode":"dry-run"}\n' +
+        '{"op":"status","state":"succeeded","mode":"dry-run"}\n' +
+        "wrote out/train/job-dry-001/ARTIFACT",
     },
   };
 
   var MODEL_WORKFLOW_CHAIN =
-    'model analyze "{base}" -> report\n\n' +
-    'model compare ["fast", "code", "best"]\n' +
-    '  on suite "examples/eval_suite.json" -> comparison\n\n' +
-    'model improve from report prefer {prefer} -> blueprint\n\n' +
-    'model build blueprint into "{out}"';
+    'model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" -> job\n\n' +
+    'model status "job-dry-001" -> status';
 
   var MODEL_TEMPLATES = {
     ask:
-      'use fast\n\nask "Explain {topic} in one sentence" {\n  topic: "gravity"\n} -> text\n\nprint text',
+      'ask "Explain gravity in one sentence" -> text\n\nprint text',
     classify:
-      'use fast\n\nclassify Intent { support, sales, spam }\n  from "My account is locked and I need help"\n  min_confidence 0.7\n  -> intent\n\nprint intent',
+      'classify Intent { support, sales, spam }\n' +
+      '  from "My account is locked and I need help"\n' +
+      '  min_confidence 0.7\n' +
+      '  -> intent\n\nprint intent',
     pipeline:
       'let doc "Your document text here."\n\npipeline {\n  ask "Summarize: {doc}" -> summary\n  | ask "Translate to Spanish: {summary}" -> es\n}\n\nprint es',
     model: MODEL_WORKFLOW_CHAIN,
     voice:
-      'use fast\n\nvoice {\n  listen -> user\n  classify Intent { support, sales } from user -> intent\n  ask "Reply helpfully to: {user}" -> reply\n  speak reply -> "out.wav"\n}',
+      'voice {\n  listen -> user\n  ask "Reply briefly: {user}" -> reply\n  speak reply -> "out.wav"\n}',
   };
 
   function qs(sel, root) {
@@ -228,17 +225,15 @@
 
     var examples = {
       hello:
-        'use code\n\nask "Explain gravity in one sentence" -> text\n\nprint text',
+        'ask "Explain gravity in one sentence" -> text\n\nprint text',
       sugar:
-        'use code\n\n? "Explain gravity in one sentence" -> text\n\nprint text',
+        '? "Explain gravity in one sentence" -> text\n\nprint text',
       classify:
-        'use fast\n\nclassify Intent { support, sales, spam }\n  from "My account is locked and I need help"\n  min_confidence 0.7\n  -> intent\n\nprint intent',
+        'classify Intent { support, sales, spam }\n  from "My account is locked and I need help"\n  min_confidence 0.7\n  -> intent\n\nprint intent',
       pipeline:
         'let doc "Office printers need regular cleaning."\n\npipeline {\n  ask "Summarize: {doc}" -> summary\n  | ask "Translate to Spanish: {summary}" -> es\n}\n\nprint es',
-      model:
-        'model code\n\nmodel analyze "fast" -> report\n\nmodel compare ["fast", "code", "best"]\n  on suite "examples/eval_suite.json" -> comparison\n\nmodel improve from report prefer quality -> blueprint\n\nmodel build blueprint into "out/my-model.md"',
-      "model-tune":
-        'model code\n\nmodel analyze "fast" -> report\n\nmodel compare ["fast", "code", "best"]\n  on suite "examples/eval_suite.json" -> comparison\n\nmodel improve from report prefer quality -> blueprint\n\nmodel build blueprint into "out/my-model.md"',
+      model: MODEL_WORKFLOW_CHAIN,
+      "model-tune": MODEL_WORKFLOW_CHAIN,
     };
 
     function syncExample() {
@@ -262,27 +257,21 @@
 
   function buildModelWorkflow(opts) {
     var path = opts.path || "create";
-    var base = opts.base || "fast";
-    var prefer = opts.prefer || "quality";
-    var out =
-      path === "modify"
-        ? "out/improved-" + base + ".md"
-        : "out/my-model.md";
-    var header =
-      path === "modify"
-        ? "# spark.toml: model = \"" + base + "\"\nuse " + base + "\n"
-        : "model code\n";
-    var chain = MODEL_WORKFLOW_CHAIN.replace(/\{base\}/g, base)
-      .replace(/\{prefer\}/g, prefer)
-      .replace(/\{out\}/g, out);
-    return header + "\n" + chain;
+    if (path === "modify") {
+      return (
+        "model analyze all -> report\n\n" +
+        "model improve from report prefer quality -> blueprint\n\n" +
+        'model plan blueprint into "out/better-model.md"'
+      );
+    }
+    return (
+      'model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" -> job\n\n' +
+      'model status "job-dry-001" -> status'
+    );
   }
 
   function initModelWizard() {
     var pathSelect = qs("#wizard-path");
-    var baseSelect = qs("#wizard-base");
-    var preferSelect = qs("#wizard-prefer");
-    var taskSelect = qs("#wizard-task");
     var snippet = qs("#wizard-snippet");
     var runCmd = qs("#wizard-run-cmd");
     var filename = qs("#wizard-filename");
@@ -300,46 +289,37 @@
 
     function update() {
       var path = pathSelect ? pathSelect.value : "create";
-      var base = baseSelect ? baseSelect.value : "fast";
-      var prefer = preferSelect ? preferSelect.value : "quality";
-      var task = taskSelect ? taskSelect.value : "model";
-      var code = buildModelWorkflow({ path: path, base: base, prefer: prefer });
-      var fname = path === "modify" ? "improve-" + base + ".spark" : "my-model.spark";
-
-      if (task !== "model") {
-        var appCode = MODEL_TEMPLATES[task] || MODEL_TEMPLATES.ask;
-        code = appCode + "\n\n# --- model tune ---\n\n" + code;
-      }
+      var code = buildModelWorkflow({ path: path });
+      var fname =
+        path === "modify" ? "model_improve.spark" : "model_train.spark";
 
       snippet.querySelector("code").textContent = code;
       if (filename) filename.textContent = fname;
       if (pathHint) {
         pathHint.textContent =
           path === "modify"
-            ? "Starts from your spark.toml default (model = \"" +
-              base +
-              "\"). Compares against other aliases, then writes an improved blueprint."
-            : "Starts fresh with model code, analyzes the catalog, compares on your eval suite, and writes a new blueprint.";
+            ? "Eval helpers plus optional model plan markdown under out/."
+            : "Dry-run train job — fixtures only; no GPU and no network.";
       }
       if (runCmd) {
         runCmd.textContent =
           "./spark --dry-run " +
           fname +
-          "   # offline fixtures, no API key\n" +
-          "export AI_GATEWAY_URL=http://127.0.0.1:4000\n" +
-          "./spark --live " +
-          fname +
-          "        # live model API calls";
+          "\n" +
+          "# Live train (HTTP backend):\n" +
+          "# export SPARK_TRAIN_BACKEND=http\n" +
+          "# export SPARK_TRAIN_URL=https://train.example/v1\n" +
+          "# ./spark --live " +
+          fname;
       }
     }
 
-    [pathSelect, baseSelect, preferSelect, taskSelect].forEach(function (el) {
-      if (!el) return;
-      el.addEventListener("change", function () {
+    if (pathSelect) {
+      pathSelect.addEventListener("change", function () {
         update();
         setWizardStep(1);
       });
-    });
+    }
 
     var copyPre = snippet.closest("pre");
     if (copyPre) {

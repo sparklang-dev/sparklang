@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Release process — Spark</title>
-    <meta name="description" content="How SparkLang versions and site releases are cut." />
+    <meta name="description" content="How SparkLang versions and GitHub Releases are cut." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
     <link rel="stylesheet" href="/css/tokens.css?v=bb4433f" />
@@ -58,6 +58,7 @@
         <a href="/learn/">Learn</a>
         <a href="/docs/adoption-bar.html">Adoption bar</a>
         <a href="/docs/ai-models.html">AI models</a>
+        <a href="/docs/model-training.html">Model training</a>
         <a href="/docs/native-network-web.html">Network + web</a>
         <a href="/docs/programming-guide.html">Programming guide</a>
         <a href="/docs/language.html">Language reference</a>
@@ -78,19 +79,23 @@
         <li>Bump <code class="inline-code">manifest.json</code> version when shipping installers (keep CHANGELOG in sync).</li>
         <li>Add a <code class="inline-code">## X.Y.Z — YYYY-MM-DD</code> section to <code class="inline-code">CHANGELOG.md</code>.</li>
         <li>Commit + merge to <code class="inline-code">main</code>.</li>
-        <li>Tag the release commit for internal tracking (source may stay private).</li>
+        <li>Tag and publish a <strong>GitHub Release</strong> from that commit:</li>
         </ol>
         <pre class="doc__pre"><code class="language-bash">git tag -a vX.Y.Z -m &quot;SparkLang X.Y.Z&quot;
-git push origin vX.Y.Z
-# Prefer Pages-hosted installers — do not point visitors at private forge releases.
-</code></pre>
+        git push origin vX.Y.Z
+        gh release create vX.Y.Z --title &quot;SparkLang X.Y.Z&quot; --notes-file - &lt;&lt;'EOF'
+        See CHANGELOG.md for X.Y.Z.
+        Installers: https://sparklang.dev/downloads.html
+        EOF
+        </code></pre>
         <ol start="5">
         <li>Deploy Pages (<code class="inline-code">website/</code>) so Changelog + Downloads match the tag.</li>
         </ol>
-        <h2 id="public-identity">Public identity</h2>
-        <p>Public framing is product-only: <strong>SparkLang · MIT · version from the
-        site changelog</strong>. No personal maintainer name and no public clone CTA
-        while the source repository is private.</p>
+        <h2 id="maintainer">Maintainer</h2>
+        <p>Public source: GitHub org <strong>sparklang-dev</strong> /
+        https://github.com/sparklang-dev/sparklang
+        — no private store or personal ops data on the public site.
+        Private development remains <code class="inline-code">sparklang-dev/sparklang</code>.</p>
         <p><strong>CLI names:</strong> <code class="inline-code">spark</code> / <code class="inline-code">./spark-bootstrap</code> remain the UX entrypoints.
         Product name in docs/site is <strong>SparkLang</strong>.</p>
         <h2 id="notes">Notes</h2>

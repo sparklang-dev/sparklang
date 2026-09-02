@@ -1,0 +1,6 @@
+{
+  "ok": true,
+  "source": "fixture",
+  "note": "dry-run http get — no network",
+  "path": "examples/fixtures/http/get_ok.json"
+}

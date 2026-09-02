@@ -17,11 +17,11 @@ Not Apache Spark. Not AdaCore SPARK.
 | Public repo + MIT license | **done** | `LICENSE`, `/LICENSE.txt` |
 | Maintainer identity | **done** | GitHub org `sparklang-dev`; About page |
 | Versioned releases + changelog | **done** | `CHANGELOG.md` + site `/CHANGELOG.html`; GitHub Release **0.6.2** (rename). Installer kit artifacts remain **0.6.0** until next packaging |
-| Searchable name (SparkLang) | **done** | Hero / About / footers; **GitHub repo rename** `sparklang-dev/sparklang` → `sparklang-dev/sparklang` (OWNER-CONFIRM **yes** 2026-09-02). CLI stays `spark` / `./spark-bootstrap` |
+| Searchable name (SparkLang) | **done** | Hero / About / footers; public `sparklang-dev/sparklang` (private `sparklang-dev/sparklang` retained). CLI stays `spark` / `./spark-bootstrap` |
 | Escape hatch (`.spark` → host) | **done (dry)** | `shell` / `run` allowlist dry-run fixtures; live gated exec = **next** |
 | Escape hatch (host → `.spark`) | **next** | `./spark --embed` stub JSON handshake; `import spark` FFI = **next** |
 | `retrieve` / `embed` language ops | **done** | Dry fixtures + live `./spark-rag-http`; see LANGUAGE.md |
-| Real `http get` / `post` | **next** | Auth/retries/timeouts — not `engine fetch` file://; design in ROADMAP |
+| Real `http get` / `post` | **done** | Dry fixture files + timeout; live `./spark-http` (curl). Auth/retries = **next** |
 | Typed `extract` + JSON-mode validate/retry | **partial** | Schema + dry fixture today; validate/retry loop = **next** |
 | Cost/latency/token accounting | **done (hooks)** | Dry zeros; live prints `usage` when gateway returns it — never invents tokens |
 | Streaming `ask` | **next** | Not shipped |
@@ -43,10 +43,11 @@ Without both directions, a DSL dies:
 
 ## Worth using over script + gateway
 
-Shipped enough to dry-demo RAG + ask + classify in one file. Still missing
-for a clear “shorter than Python+gateway” win on production paths:
-streaming, expectation evals, first-class HTTP, validate/retry `extract`,
-and a dry-runnable receptionist that is more than a `[goal]` sketch.
+Shipped enough to dry-demo RAG + ask + classify + http get/post in one
+file. Still missing for a clear “shorter than Python+gateway” win on
+production paths: streaming, expectation evals, HTTP auth/retries,
+validate/retry `extract`, and a dry-runnable receptionist that is more
+than a `[goal]` sketch.
 
 ## Voice — honest
 

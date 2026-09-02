@@ -53,13 +53,16 @@ VM on startup; `./spark` (GAS) still needs a `model`/`use` line in the file.
 
 ## Statements
 
-### `model analyze` / `compare` / `improve` / `build` (first-class)
+### `model analyze` / `compare` / `improve` / `train` / `status` / `plan`
 
-Analyze reachable models, compare on a suite, propose a better config, and
-write a blueprint. Dry-run uses **fixtures only** — never invents live
-leaderboard numbers. **Build does not start `train@*`** (plan + config).
+Analyze and compare reachable models, propose improvements, **train**
+real jobs (weights/adapters/checkpoints), poll **status**, or export an
+optional markdown **plan**. Dry-run uses **fixtures only** — no GPU and
+no network. **`model build` is an alias for `model train`** (not a
+blueprint file).
 
-Full methodology: [MODEL_ANALYSIS.md](MODEL_ANALYSIS.md).
+Training methodology: [MODEL_TRAINING.md](MODEL_TRAINING.md).
+Eval helpers: [MODEL_ANALYSIS.md](MODEL_ANALYSIS.md).
 
 ```
 model analyze "alias-code" -> report
@@ -70,17 +73,28 @@ model compare ["fast", "code", "best"] on suite "examples/eval_suite.json" -> co
 model improve from report prefer quality -> blueprint
 # prefer: quality | speed | cost | local
 
-model build blueprint into "out/better-model.md"
+model plan blueprint into "out/better-model.md"   # markdown only
+
+model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" -> job
+model build -> job                               # same as train
+model status "job-dry-001" -> status
 ```
+
+**Backends:** `http` (default MVP companion `./spark-train-http`),
+`local-yield` (optional allowlisted `train@` unit), `huggingface`
+(reserved — not wired). Env: `SPARK_TRAIN_BACKEND`, `SPARK_TRAIN_URL`,
+optional `SPARK_TRAIN_TOKEN`. See [MODEL_TRAINING.md](MODEL_TRAINING.md).
 
 **“All models”** = all reachable configured aliases + discovered local
 vLLM endpoints (read-only) — **not** every model in existence. Catalog:
-`data/model-catalog.jsonl`. Bifrost public probes need a probe credential; 401 → credential unavailable (no invented routing).
+`data/model-catalog.jsonl`. Public gateway probes need a probe
+credential; 401 → credential unavailable (no invented routing).
 
-**Why shape (mandatory):** metrics (latency, tokens/s, quality proxy,
-tool JSON %), failure_modes, concrete `reasons[]`, risks on improve/build.
+**Why shape (mandatory for analyze/compare/improve):** metrics
+(latency, tokens/s, quality proxy, tool JSON %), failure_modes,
+concrete `reasons[]`, risks on improve/plan.
 
-Example: `examples/model_improve.spark`.
+Examples: `examples/model_train.spark`, `examples/model_improve.spark`.
 
 ### `ask` / `generate` / `?`
 
@@ -163,11 +177,28 @@ run "python" "-c" "print(1)" -> out
 
 See [ADOPTION_BAR.md](ADOPTION_BAR.md). Example: `examples/shell_escape.spark`.
 
-### `http get` / `http post` ([next] — design)
+### `http get` / `http post` (shipped)
 
-Auth, retries, timeouts as first-class ops (not `engine fetch` `file://`).
-Until shipped: use companions or `shell` allowlist under dry-run only.
-Tracked in [ROADMAP.md](ROADMAP.md) / [NATIVE_NETWORK_WEB.md](NATIVE_NETWORK_WEB.md).
+Generic HTTP client ops — **not** Bifrost-specific and **not**
+`engine fetch` `file://`. Dry-run never dials the network.
+
+```
+http get "https://example.com/" fixture "examples/fixtures/http/get_ok.json" timeout 5 -> resp
+http post "https://example.com/api" body "{\"ping\":true}" fixture "examples/fixtures/http/post_ok.json" timeout 5 -> resp
+```
+
+| Mode | Behavior |
+|------|----------|
+| **Dry-run** | **No network.** Requires `fixture "…"` **or** a `file://…` / `examples/fixtures/http/…` URL. **fopen** that path; missing file → fail loud. Bound value = fixture bytes (no invented status). `timeout` is accepted and recorded by the companion; it does not dial. |
+| **Live** (`./spark --live`) | Real HTTP via companion `./spark-http` (curl). Needs `http://` or `https://`. `timeout` (default **30**, range 1–600) applies. `fixture` is ignored for the body. |
+
+**Shipped:** get, post, timeout, dry fixture files, live curl.
+**Not shipped (still [next]):** auth / bearer headers, retries.
+
+Example (dry): `examples/http_get.spark`. Live opt-in:
+`examples/http_get_live.spark` or
+`./spark-http --live --get --url https://example.com/ --timeout 10`.
+Gate: `make test-http` (live SKIP unless `SPARK_HTTP_LIVE=1`).
 
 ### `extract`
 
