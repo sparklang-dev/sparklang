@@ -33,7 +33,7 @@ Prioritized against the adoption bar. Status: **done** / **next** / **won't**
 
 | Track | What |
 |-------|------|
-| Rename | Public `sparklang-dev/sparklang` live; private `sparklang-dev/sparklang` retained. Site sparklang.dev. CLI remains `spark`. |
+| Rename | Public `sparklang-dev/sparklang` live. Site sparklang.dev. CLI remains `spark`. |
 
 ## Won't (near-term focus)
 

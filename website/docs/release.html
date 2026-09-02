@@ -90,7 +90,58 @@
         </code></pre>
         <ol start="5">
         <li>Deploy Pages (<code class="inline-code">website/</code>) so Changelog + Downloads match the tag.</li>
+        <li>Sync the public mirror (below) so <code class="inline-code">sparklang-dev/sparklang</code> matches
+           the tagged tree.</li>
         </ol>
+        <h2 id="public-mirror-sync">Public mirror sync</h2>
+        <p>Development happens in the private repo. The public repo
+        <code class="inline-code">sparklang-dev/sparklang</code> is a <strong>generated mirror</strong> with its own
+        history: each sync adds one normal commit, so every push
+        fast-forwards. There is no force-push and no history rewrite.</p>
+        <pre class="doc__pre"><code class="language-bash">scripts/sync-public-mirror.sh --check   # stage + scrub + gate, no writes
+        scripts/sync-public-mirror.sh           # also commit in the mirror clone
+        scripts/sync-public-mirror.sh --push    # also push to sparklang-dev
+        </code></pre>
+        <p>Defaults: source ref <code class="inline-code">origin/main</code>, mirror clone
+        <code class="inline-code">$HOME/workspaces/sparklang-public</code>, branch <code class="inline-code">main</code>. Override with
+        <code class="inline-code">--ref</code> / <code class="inline-code">--public-dir</code> or <code class="inline-code">SPARK_MIRROR_REF</code> / <code class="inline-code">SPARK_PUBLIC_DIR</code>.
+        Merges and pushes take <code class="inline-code">/tmp/spark-bc-merge.lock</code>.</p>
+        <p>Rules are data, not code, and live next to the script:</p>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>File</th>
+        <th>Purpose</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><code class="inline-code">scripts/public-mirror/exclude.txt</code></td>
+        <td>Paths never mirrored (private reports, host-specific agent rules)</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">scripts/public-mirror/scrub.sed</code></td>
+        <td>Text substitutions (repo slug, MIT copyright holder)</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">scripts/public-mirror/forbid.txt</code></td>
+        <td>Patterns that must have <strong>zero</strong> matches</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">scripts/public-mirror/overrides/</code></td>
+        <td>Public variants of files that need different content</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <p><code class="inline-code">forbid.txt</code> is a hard gate: it runs on the staged tree <strong>before</strong> any
+        commit or push, and any match aborts the sync. Add a pattern there
+        whenever you add an exclusion or substitution, so an accidental
+        un-exclude fails loudly instead of shipping.</p>
+        <p>To verify a push without credentials:</p>
+        <pre class="doc__pre"><code class="language-bash">curl -sI https://github.com/sparklang-dev/sparklang | head -1   # 200
+        git clone --depth 1 https://github.com/sparklang-dev/sparklang.git /tmp/pubverify
+        grep -rIlE --exclude-dir=.git 'PATTERN' /tmp/pubverify | wc -l   # 0
+        </code></pre>
         <h2 id="maintainer">Maintainer</h2>
         <p>Public source: GitHub org <strong>sparklang-dev</strong> /
         https://github.com/sparklang-dev/sparklang

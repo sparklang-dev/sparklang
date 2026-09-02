@@ -24,13 +24,14 @@ EOF
 ```
 
 5. Deploy Pages (`website/`) so Changelog + Downloads match the tag.
+6. Sync the public mirror so `sparklang-dev/sparklang` matches the
+   tagged tree.
 
 ## Maintainer
 
 Public source: GitHub org **sparklang-dev** /
 https://github.com/sparklang-dev/sparklang
 — no private store or personal ops data on the public site.
-Private development remains `sparklang-dev/sparklang`.
 
 **CLI names:** `spark` / `./spark-bootstrap` remain the UX entrypoints.
 Product name in docs/site is **SparkLang**.

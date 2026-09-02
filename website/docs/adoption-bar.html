@@ -90,6 +90,11 @@
         <td><code class="inline-code">LICENSE</code>, <code class="inline-code">/LICENSE.txt</code></td>
         </tr>
         <tr>
+        <td>Public mirror stays current</td>
+        <td><strong>done</strong></td>
+        <td>One command: <code class="inline-code">scripts/sync-public-mirror.sh --push</code>. Regenerates the public tree from <code class="inline-code">main</code>, gates it against <code class="inline-code">scripts/public-mirror/forbid.txt</code>, and adds one fast-forward commit — no force-push. See <a href="/docs/release.html">RELEASE.md</a></td>
+        </tr>
+        <tr>
         <td>Maintainer identity</td>
         <td><strong>done</strong></td>
         <td>GitHub org <code class="inline-code">sparklang-dev</code>; About page</td>

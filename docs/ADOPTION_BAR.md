@@ -15,9 +15,10 @@ Not Apache Spark. Not AdaCore SPARK.
 | Item | Status | Notes |
 |------|--------|-------|
 | Public repo + MIT license | **done** | `LICENSE`, `/LICENSE.txt` |
+| Public mirror stays current | **done** | One command: `scripts/sync-public-mirror.sh --push`. Regenerates the public tree from `main`, gates it against `scripts/public-mirror/forbid.txt`, and adds one fast-forward commit — no force-push. See [RELEASE.md](RELEASE.md) |
 | Maintainer identity | **done** | GitHub org `sparklang-dev`; About page |
 | Versioned releases + changelog | **done** | `CHANGELOG.md` + site `/CHANGELOG.html`; GitHub Release **0.6.2** (rename). Installer kit artifacts remain **0.6.0** until next packaging |
-| Searchable name (SparkLang) | **done** | Hero / About / footers; public `sparklang-dev/sparklang` (private `sparklang-dev/sparklang` retained). CLI stays `spark` / `./spark-bootstrap` |
+| Searchable name (SparkLang) | **done** | Hero / About / footers; public `sparklang-dev/sparklang`. CLI stays `spark` / `./spark-bootstrap` |
 | Escape hatch (`.spark` → host) | **done (dry)** | `shell` / `run` allowlist dry-run fixtures; live gated exec = **next** |
 | Escape hatch (host → `.spark`) | **next** | `./spark --embed` stub JSON handshake; `import spark` FFI = **next** |
 | `retrieve` / `embed` language ops | **done** | Dry fixtures + live `./spark-rag-http`; see LANGUAGE.md |
