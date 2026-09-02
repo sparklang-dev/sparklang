@@ -35,7 +35,7 @@ build, dry vs live, syntax with real `examples/`, layout, debug, tests.
 |-----|------|
 | **[AI models](docs/AI_MODELS.md)** | Model create/modify; dry-run first; optional live gateway |
 | **[Program with Spark](docs/PROGRAMMING_GUIDE.md)** | Canonical how-to |
-| **[AI playbooks](docs/AI_PLAYBOOKS.md)** | Coding playbooks + `use auto` |
+| **[AI playbooks](docs/AI_PLAYBOOKS.md)** | Coding playbooks + explicit model line |
 | **[IDE](docs/IDE.md)** | Verified `ide` ops + interim Cursor editor |
 | [LANGUAGE.md](docs/LANGUAGE.md) | Full statement reference |
 | [ASK_LIVE.md](docs/ASK_LIVE.md) | Optional live gateway `ask` |
@@ -80,8 +80,9 @@ Status: **[docs/IDE.md](docs/IDE.md)**. No `./spark ide` ELF subcommand.
 Flags: `--dry-run`, `--live`, `--allow-net`, `--allow-net-capture`,
 `--pstn-live`, `--version`.
 
-Optional interim: `make ide` → Cursor host (not product). Aliases:
-`fast` / `code` / `code-max` / `best`. See [AGENTS.md](AGENTS.md).
+Optional interim: `make ide` → Cursor host (not product). Cursor Override
+model routing is separate from SparkLang — see [AGENTS.md](AGENTS.md).
+Spark `.spark` files use explicit model ids only (no alias pick).
 
 **Marketing site (live):** https://sparklang.dev/ → 200 (CF Pages;
 `website/` HTML only — Start here at `/docs/*.html`. Developer SoT stays
@@ -153,8 +154,8 @@ make test-e2e-browser   # browser dry E2E (no display)
   `voice review|code|copy|model|pstn` ([docs/VOICE.md](docs/VOICE.md))
 - **`review` / `builder` / `implement`** — static review (path/url/text),
   level pick (lower/mid/higher), codegen into `out/`
-- **`model`** — switch aliases (`fast`, `code`, `best`) **or**
-  `train` / `build` / `status` (real jobs; dry fixtures) plus
+- **`model`** — set an explicit model id (HF / path / configured name)
+  **or** `train` / `build` / `status` (real jobs; dry fixtures) plus
   `analyze` / `compare` / `improve` / `plan` (eval helpers)
   sugar; see [docs/MODEL_ANALYSIS.md](docs/MODEL_ANALYSIS.md))
 - **`cuda` / `memory` / `pcie`** — asm `/dev/nvidia*` + `NV_ESC_*`
@@ -238,7 +239,7 @@ export OPENAI_API_KEY=…         # gateway Bearer; never commit
 ```
 
 - `AI_GATEWAY_URL` / `OPENAI_API_KEY` (or `SPARK_GATEWAY_KEY`)
-- Prefer gateway **aliases**, not vendor model strings
+- Pass an **explicit** model id (HF / path / configured name)
 - Public gateway tunnel probes: dedicated probe credential via
   `tools/ask/probe_public.sh` — 401 → credential unavailable
 - `SPARK_STT_URL` / `SPARK_TTS_URL` — optional speech endpoints

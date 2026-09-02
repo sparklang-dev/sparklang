@@ -13,9 +13,11 @@ never required for `make test`.
 
 | Source | Examples |
 |--------|----------|
-| `spark.toml` / env aliases | `fast`, `code`, `best`, `alias-code` |
-| Gateway aliases | when `AI_GATEWAY_URL` set |
+| `spark.toml` / explicit ids | HF ids, checkpoint paths, configured names |
+| Gateway model strings | when `AI_GATEWAY_URL` set (you name them) |
 | Local listening vLLM (read-only) | e.g. local coder ports |
+
+**Not:** Bifrost-style alias roulette (inventing gateway aliases from task text).
 
 **Explicitly out of scope / protected:**
 

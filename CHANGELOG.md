@@ -4,6 +4,15 @@ All notable user-facing releases of **SparkLang** (the Spark programming
 language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
+## 0.6.13 — 2026-09-02
+
+- **No Bifrost-style model alias pick:** dry-run / `use auto` no longer
+  invents `fast`|`code` from task text. `use auto` keeps the prior
+  configured model (`spark.toml` / earlier `model` line). Live
+  `./spark-ask-http --model auto` is refused — pass an explicit HF id /
+  path / configured name. Docs and catalogs scrubbed of “Pick model
+  alias per task” / bootstrap alias roulette copy.
+
 ## 0.6.12 — 2026-09-02
 
 - **Abstain HF hooks:** live `head ask` SELECT-before-SAMPLE with real

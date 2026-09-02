@@ -33,22 +33,25 @@ not as a Python/Rust/C interpreter.
 
 See [LANGUAGE_IMPROVEMENTS.md](LANGUAGE_IMPROVEMENTS.md) for the full DX changelog.
 
-### `use <alias>` / `model <alias>`
+### `use <id>` / `model <id>`
 
-Set default model/alias for following calls (`fast`, `code`, `best`, …).
-Prefer gateway aliases, not vendor strings.
+Set the default model for following calls. Pass an **explicit** HF id,
+checkpoint path, or configured gateway model string. SparkLang is **not**
+a Bifrost plugin — there is no per-task alias roulette.
 
 ```
-use fast          # same as: model fast
-model code        # long form still works
-use auto          # pick fast or code from task text (bootstrap dry-run)
+model "fixtures/tiny-lm"
+model "org/local-lm"
+use auto          # keeps prior spark.toml / model line (no pick)
 ```
 
-**`use auto`** — bootstrap picks **`fast`** or **`code`** from task text.
-Include `lib/ai.spark` for `use auto`. Dry-run prints `[model] auto→fast|code`.
+**`use auto`** — keeps the **prior** configured model (`spark.toml` or an
+earlier `model` / `use` line). Dry-run prints
+`[model] prior <id> (no alias pick)`. It does **not** invent `fast` /
+`code` from task text. Prefer an explicit `model "…"` line.
 See [AI_PLAYBOOKS.md](AI_PLAYBOOKS.md); goldens: `make test-ai-playbooks`.
 
-Optional **`spark.toml`** (`model = "fast"`) is read by the **bootstrap**
+Optional **`spark.toml`** (`model = "…"`) is read by the **bootstrap**
 VM on startup; `./spark` (GAS) still needs a `model`/`use` line in the file.
 
 ## Statements
@@ -65,10 +68,10 @@ Training methodology: [MODEL_TRAINING.md](MODEL_TRAINING.md).
 Eval helpers: [MODEL_ANALYSIS.md](MODEL_ANALYSIS.md).
 
 ```
-model analyze "alias-code" -> report
+model analyze "fixtures/tiny-lm" -> report
 model analyze all -> catalog_report
 
-model compare ["fast", "code", "best"] on suite "examples/eval_suite.json" -> comparison
+model compare ["fixtures/tiny-lm"] on suite "examples/eval_suite.json" -> comparison
 
 model improve from report prefer quality -> blueprint
 # prefer: quality | speed | cost | local
@@ -112,7 +115,7 @@ trip) → emit `idk` and halt. Internal = probe registered with a frozen
 backbone; external = sidecar on exported hiddens/logprobs. Not LoRA.
 Dry-run = fixtures only.
 
-**“All models”** = all reachable configured aliases + discovered local
+**“All models”** = all reachable configured model ids + discovered local
 vLLM endpoints (read-only) — **not** every model in existence. Catalog:
 `data/model-catalog.jsonl`. Public gateway probes need a probe
 credential; 401 → credential unavailable (no invented routing).
@@ -132,10 +135,10 @@ substrings (e.g. `Summarize:` still hits the summary stub even with `{doc}`).
 **Dry-run** (`--dry-run`): offline heuristic replies (no network).
 
 **Live** (`--live`): OpenAI-compatible `POST /v1/chat/completions` via
-companion `./spark-ask-http` → `AI_GATEWAY_URL` (Bifrost). See
-[ASK_LIVE.md](ASK_LIVE.md). Alias from prior `model`/`use`
-`fast|code|best|auto` (`auto` resolves inside the companion to
-`fast`|`code` — never sent literally). Prefer `SPARK_GATEWAY_KEY`;
+companion `./spark-ask-http` → `AI_GATEWAY_URL`. See
+[ASK_LIVE.md](ASK_LIVE.md). Model id comes from the prior explicit
+`model` / `use` line (HF id / path / configured name). `--model auto`
+is rejected. Prefer `SPARK_GATEWAY_KEY`;
 `OPENAI_API_KEY` is wire-compat only. Public tunnel uses a probe credential; HTTP 401 → credential unavailable (no invented routing).
 `make test` never hits the network; `make test-ask-gateway` is offline
 `--dry` on the companion.

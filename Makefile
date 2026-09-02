@@ -219,12 +219,10 @@ spark-section-dump: tools/binary/spark_section_dump.c
 spark-lift: tools/binary/spark_lift.c
 	$(CC) -O2 -Wall -Wextra -o $@ $<
 
-# Live OpenAI-compatible ask (AI_GATEWAY_URL / Bifrost).
+# Live OpenAI-compatible ask (AI_GATEWAY_URL).
 # Offline dry gate: make test-ask-gateway (no network).
-spark-ask-http: tools/ask/spark_ask_http.c bootstrap/dry_auto_model.c \
-	bootstrap/dry_auto_model.h
-	$(CC) -O2 -Wall -Wextra -o $@ tools/ask/spark_ask_http.c \
-		bootstrap/dry_auto_model.c
+spark-ask-http: tools/ask/spark_ask_http.c
+	$(CC) -O2 -Wall -Wextra -o $@ tools/ask/spark_ask_http.c
 
 # Embed (Bifrost /v1/embeddings) + retrieve (rag-gateway /v1/retrieve).
 spark-rag-http: tools/rag/spark_rag_http.c bootstrap/dry_rag.c \

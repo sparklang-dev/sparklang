@@ -33,7 +33,7 @@ plain `.spark` files you can diff, dry-run, and ship.
 | **Embed / retrieve** | `embed "…" -> vec`, `retrieve "…" from project "docs" -> hits` | Dry fixtures; live `./spark-rag-http` |
 | **Probe gateway creds** | `ask probe` / `gateway probe` | Dry gateway probe check; 401 → credential unavailable |
 
-**“All models”** = configured gateway aliases + discovered local vLLM listeners
+**“All models”** = configured model ids + discovered local vLLM listeners
 (read-only) — not every model on the internet. See [MODEL_ANALYSIS.md](MODEL_ANALYSIS.md).
 
 Example train (dry-run):
@@ -46,11 +46,11 @@ model status "job-dry-001" -> status
 Example eval helpers (dry-run):
 
 ```spark
-model code
+model "fixtures/tiny-lm"
 
-model analyze "fast" -> report
+model analyze "fixtures/tiny-lm" -> report
 
-model compare ["fast", "code", "best"]
+model compare ["fixtures/tiny-lm", "fixtures/other-lm"]
   on suite "examples/eval_suite.json" -> comparison
 
 model improve from report prefer quality -> blueprint
@@ -70,7 +70,8 @@ Default `./spark --dry-run` and `make test` stay **offline**:
   `examples/eval_suite.json`; banner says numbers are not live Elo scores
 - **`ask` / `classify` / `extract` / `embed` / `retrieve`** — heuristic
   stubs / fixtures (`examples/fixtures/rag/` for RAG)
-- **`use auto`** — prints `[model] auto→fast|code` from task text (bootstrap)
+- **`use auto`** — keeps prior configured model; prints
+  `[model] prior … (no alias pick)` — never invents gateway aliases
 - **Playbooks** — goldens under `bootstrap/fixtures/playbooks/`;
   `make test-ai-playbooks`
 - **IDE** — `ide new|open|save|run|buffer|ask|show` + keymap traces under
@@ -86,19 +87,21 @@ OpenAI-compatible base URL (and rag-gateway for retrieve):
 
 | Integration | Role | Env / companion |
 |-------------|------|-----------------|
-| **OpenAI-compatible gateway** (`AI_GATEWAY_URL`) | Chat + embeddings; alias routing (`fast`, `code`, `best`, `auto`→fast\|code, `embed-rag`, `embed`, …). Bifrost is one example backend, not a Spark requirement. | **`SPARK_GATEWAY_KEY`** preferred; `OPENAI_API_KEY` wire-compat only; `./spark-ask-http` / `./spark-rag-http --embed` |
+| **OpenAI-compatible gateway** (`AI_GATEWAY_URL`) | Chat + embeddings with an **explicit** model id (HF / path / configured string). Bifrost is one optional backend, not a Spark requirement. | **`SPARK_GATEWAY_KEY`** preferred; `OPENAI_API_KEY` wire-compat only; `./spark-ask-http` / `./spark-rag-http --embed` |
 | **rag-gateway** (`RAG_GATEWAY_URL`) | `POST /v1/retrieve` (project + audience; CRAG on operator/cursor) | Default `:4620`; `RAG_GATEWAY_API_KEY` or `SPARK_GATEWAY_KEY`; `./spark-rag-http --retrieve` |
-| **Model probe** (optional) | Read-only alias + local vLLM port discovery | `make model-probe`; `SPARK_ALLOW_NET=1` |
+| **Model probe** (optional) | Read-only configured models + local vLLM port discovery | `make model-probe`; `SPARK_ALLOW_NET=1` |
 | **Encrypt-to-model** | Seal prompt; gateway decrypts at model boundary | [ENCRYPT_GATEWAY.md](ENCRYPT_GATEWAY.md); `./spark-enc-gateway` |
 | **Public gateway probe** | Credential check only | a gateway probe credential; HTTP 401 → stop, no routing verdict |
 
-Prefer **gateway aliases**, never hardcoded vendor model strings in `.spark`.
+Pass an **explicit** model id in `.spark` / `--model` — never invent one
+from task-text heuristics, and do not treat Spark as a Bifrost alias
+picker.
 
 ```bash
 export AI_GATEWAY_URL=http://127.0.0.1:4000
 export SPARK_GATEWAY_KEY=sk-…   # never commit; preferred over OPENAI_API_KEY
 ./spark --live examples/ask_live.spark
-./spark --live examples/ask_live_use_auto.spark
+./spark --live examples/ask_live_explicit.spark
 ./spark --live examples/retrieve_embed_live.spark
 # Offline proof (no key / no network):
 make test-ask-gateway
@@ -121,7 +124,8 @@ examples — use generic `project "docs"` in docs and fixtures.
 
 ## AI coding + Spark IDE
 
-**Less code:** `include "lib/ai.spark"` sets `use auto`; copy a playbook from
+**Less code:** set an explicit `model "…"` (or `include "lib/ai.spark"`
+and add one); copy a playbook from
 [AI_PLAYBOOKS.md](AI_PLAYBOOKS.md) instead of hand-rolling SDK loops.
 
 **Readable diffs:** one `.spark` file per workflow — `pipeline`, `classify`,

@@ -1,4 +1,4 @@
-# BC use auto -> fast (dry_auto_model; gravity prompt).
+# BC use auto keeps prior configured model (no alias pick).
 use auto
 ask "Explain gravity in one sentence" -> text
 print text

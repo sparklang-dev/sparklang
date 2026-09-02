@@ -6,7 +6,6 @@
  * Unknown ops fail loud. Does not wrap ./spark. */
 #include "vm.h"
 #include "dry_ask.h"
-#include "dry_auto_model.h"
 #include "dry_classify.h"
 #include "dry_extract.h"
 #include "dry_expect.h"
@@ -252,6 +251,8 @@ static void load_spark_toml_model(SparkVM *vm)
       continue;
     memcpy(vm->model_alias, p + 1, n);
     vm->model_alias[n] = '\0';
+    memcpy(vm->prior_model, p + 1, n);
+    vm->prior_model[n] = '\0';
     break;
   }
   fclose(f);
@@ -398,22 +399,24 @@ static int op_model(SparkVM *vm, char *line)
   *end = '\0';
   if (!p[0]) {
     fprintf(stderr,
-            "error: model/use requires alias "
-            "(e.g. model code or use fast)\n");
+            "error: model/use requires an explicit model id "
+            "(HF id, path, or configured name)\n");
     return 1;
   }
+  if (strcmp(p, "auto") == 0) {
+    const char *prior = vm->prior_model[0] ? vm->prior_model
+                                           : vm->model_alias;
+    if (!prior[0])
+      prior = "(none)";
+    printf("[model] prior %s (no alias pick)\n", prior);
+    return 0;
+  }
+  strncpy(vm->prior_model, p, SPARK_VM_NAME_MAX - 1);
+  vm->prior_model[SPARK_VM_NAME_MAX - 1] = '\0';
   strncpy(vm->model_alias, p, SPARK_VM_NAME_MAX - 1);
   vm->model_alias[SPARK_VM_NAME_MAX - 1] = '\0';
   printf("[model] %s\n", vm->model_alias);
   return 0;
-}
-
-static void vm_log_auto_pick(SparkVM *vm, const char *stmt, const char *prompt)
-{
-  const char *picked;
-  if (strcmp(vm->model_alias, "auto") != 0) return;
-  picked = spark_resolve_auto_model(stmt, prompt);
-  printf("[model] auto→%s\n", picked);
 }
 
 static int op_ask(SparkVM *vm, char *line)
@@ -440,7 +443,6 @@ static int op_ask(SparkVM *vm, char *line)
     free(prompt);
     return 1;
   }
-  vm_log_auto_pick(vm, line, expanded);
   printf("[ask] %s\n", expanded);
   if (vm->tools_active && vm->tool_reg_len > 0) {
     snprintf(tool_buf, sizeof(tool_buf), "[tool:%s] stub:local",
@@ -537,7 +539,6 @@ static int op_classify(SparkVM *vm, char *line)
   char *q;
   const char *reply;
 
-  vm_log_auto_pick(vm, line, line);
   printf("[classify] ");
   q = extract_quote(line);
   if (!q) {
@@ -1486,7 +1487,7 @@ void spark_vm_init(SparkVM *vm)
 {
   memset(vm, 0, sizeof(*vm));
   vm->dry_run = 1;
-  strncpy(vm->model_alias, "auto", SPARK_VM_NAME_MAX - 1);
+  /* Prior line from spark.toml only — no Bifrost alias roulette. */
   load_spark_toml_model(vm);
 }
 

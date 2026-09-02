@@ -4,7 +4,8 @@ Describe the task, pick a playbook, write almost no code.
 
 ## Quick start
 
-1. Start your script with `include "lib/ai.spark"` (sets `use auto`).
+1. Start with an **explicit** model line (`model "…"` HF id / path /
+   configured name) or `include "lib/ai.spark"` (docs only — set model).
 2. Copy a block from `lib/playbooks.spark` or a fixture under
    `bootstrap/fixtures/playbooks/`.
 3. Or pick one in the **website playground** (Preset → AI playbooks) or
@@ -20,16 +21,16 @@ and does not invent output. Catalog JSON:
 Live gateway wiring is unchanged — see [ASK_LIVE.md](ASK_LIVE.md).
 Model-focused overview: [AI_MODELS.md](AI_MODELS.md).
 
-## Auto model selection
+## Model line (explicit)
 
-With `use auto` (or `include "lib/ai.spark"`), the bootstrap VM picks:
+SparkLang is **not** a Bifrost plugin. There is **no** per-task alias
+roulette (`auto` inventing gateway aliases from task text).
 
-- **`fast`** — explain, summarize, classify+reply, general chat
-- **`code`** — fix tests, add APIs, refactor/rename, write tests, debug errors,
-  review/builder/tool lines, or prompts that mention files and patches
-
-Dry-run prints `[model] auto→fast` or `[model] auto→code` before each AI call.
-Override anytime: `use code` or `use fast`.
+- Set `model "hf-org/name"` / `model "path/to/checkpoint"` / your
+  configured gateway model string.
+- `use auto` keeps the **prior** configured line (`spark.toml` /
+  earlier `model`) and prints `[model] prior … (no alias pick)`.
+- Dry-run never invents a model id from prompt text.
 
 ## Playbook catalog
 
@@ -48,7 +49,7 @@ Override anytime: `use code` or `use fast`.
 ## Example — fix a failing test
 
 ```spark
-include "lib/ai.spark"
+model "fixtures/tiny-lm"
 let failure "AssertionError: expected 3 got 2 in test_add"
 ask "Fix this test failure: {failure}" -> fix
 print fix
@@ -57,11 +58,9 @@ print fix
 ## Deferred
 
 - Training / fine-tune pipeline (not this slice)
-- SPARK_BC / bytecode vm.c migration for auto pick (Phase 4–6 track)
 - First-class `retrieve` / `embed` language ops — **shipped** (see
   [AI_MODELS.md](AI_MODELS.md) + [LANGUAGE.md](LANGUAGE.md));
   dry fixtures + `make test-rag-gateway`
 
-Optional live gateway: `./spark-ask-http` resolves `use auto` / `--model auto` to
-`fast`\|`code` before the request (same heuristics as bootstrap dry-run).
+Optional live gateway: `./spark-ask-http --model <explicit-id> …`.
 Gate: `make test-ask-gateway`.

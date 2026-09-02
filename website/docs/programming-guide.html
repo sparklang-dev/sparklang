@@ -311,7 +311,7 @@
         <h2 id="5-syntax-verified-examples">5. Syntax (verified examples)</h2>
         <h3 id="50-dx-sugar-use-say">5.0 DX sugar (<code class="inline-code">use</code>, <code class="inline-code">?</code>, <code class="inline-code">say</code>)</h3>
         <p><code class="inline-code">examples/hello_sugar.spark</code>, <code class="inline-code">examples/dx_showcase.spark</code></p>
-        <pre class="doc__pre"><code class="inline-code">use code                    # alias for: model code
+        <pre class="doc__pre"><code class="inline-code">model "fixtures/tiny-lm"    # explicit HF id / path / configured name
 
         ? &quot;Explain gravity in one sentence&quot; -&gt; text   # alias for ask
 
@@ -321,7 +321,7 @@
         in ask/<code class="inline-code">?</code> prompts — see <code class="inline-code">LANGUAGE_IMPROVEMENTS.md</code>.</p>
         <h3 id="51-model-ask">5.1 <code class="inline-code">model</code> + <code class="inline-code">ask</code></h3>
         <p><code class="inline-code">examples/hello.spark</code>, <code class="inline-code">examples/ask_live.spark</code></p>
-        <pre class="doc__pre"><code class="inline-code">model code          # or fast | best (gateway aliases)
+        <pre class="doc__pre"><code class="inline-code">model "fixtures/tiny-lm"
 
         ask &quot;Explain gravity in one sentence&quot; -&gt; text
         print text

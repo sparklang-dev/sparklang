@@ -6,28 +6,30 @@ Shippable DX wins — syntax, bootstrap VM, dry-run fixtures, stdlib includes.
 
 | Metric | Before | After |
 |--------|--------|-------|
-| Model line chars | `model code` (10) | `use code` (8) — **20% shorter** |
+| Model line | longer `model …` | shorter `use …` sugar (same explicit id) |
 | Ask line chars | `ask "…"` (4+quote) | `? "…"` — **3 chars saved** |
-| Default model source | hard-coded `fast` in VM | `spark.toml` + statement |
+| Default model source | empty until set | `spark.toml` + explicit statement |
 | Stdlib reuse | copy-paste patterns | `include "lib/*.spark"` (bootstrap) |
 | Prompt `{var}` binding | docs only | **bootstrap interpolates** |
 | Dry fixture keywords | 5 needles | **12+ needles** (intent, json, weather, …) |
 | Speak alias | `speak` only | `say` alias (GAS + bootstrap) |
 
-## 1. `use` — alias for `model`
+## 1. `use` — sugar for `model`
 
-**Why:** Shorter programs; reads like “use the fast alias.”
+**Why:** Shorter programs; same explicit model id (HF / path / configured
+name). Not a Bifrost alias picker.
 
 ```
 # before
-model code
+model "fixtures/tiny-lm"
 
 # after
-use code
+use "fixtures/tiny-lm"
 ```
 
 Works in `./spark` (GAS) and `./spark-bootstrap` (C VM).
-
+`use auto` keeps the prior configured line — it does **not** invent
+`fast`/`code` from task text.
 ## 2. `?` — alias for `ask`
 
 **Why:** Questions visually match intent; fewer keystrokes in scripts.

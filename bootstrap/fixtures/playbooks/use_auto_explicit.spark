@@ -1,3 +1,4 @@
+# use auto keeps prior spark.toml / model line (no alias pick).
 use auto
 ask "Explain gravity in one sentence" -> text
 print text

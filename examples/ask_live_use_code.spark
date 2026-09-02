@@ -1,7 +1,0 @@
-# Live ask with use code — ./spark --live (needs AI_GATEWAY_URL + key)
-# Offline: ./spark-ask-http --dry --model code --prompt "…"
-use code
-
-ask "Fix this test failure: AssertionError expected 3 got 2" -> fix
-
-print fix

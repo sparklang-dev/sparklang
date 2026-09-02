@@ -1,5 +1,6 @@
 # Optional defaults (documented; dry-run asm VM does not parse TOML yet)
-model = "fast"
+# Explicit configured model id (HF / path / name) — not an alias picker.
+model = "fixtures/tiny-lm"
 temperature = 0.2
 timeout_secs = 60
 repair_once = true
@@ -7,7 +8,7 @@ repair_once = true
 # Reachable model catalog seeds (analyze all / model-probe)
 # Live discovery may append to data/model-catalog.jsonl
 [models]
-aliases = ["fast", "code", "best", "alias-code"]
+ids = ["fixtures/tiny-lm"]
 # local_vllm discovery is read-only; never use :8010 for Spark compute
 never_compute_ports = [8010]
 

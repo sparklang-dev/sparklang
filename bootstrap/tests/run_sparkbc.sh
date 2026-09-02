@@ -421,13 +421,12 @@ else
 fi
 
 
-# use auto on compile → bc_vm (parity with tree-walk dry_auto_model).
-for auto_pair in "use_auto_fast:auto→fast:Gravity pulls" \
-                 "use_auto_code:auto→code:Fix: update"; do
-  auto_tag="${auto_pair%%:*}"
-  rest="${auto_pair#*:}"
-  auto_needle="${rest%%:*}"
-  auto_ask="${rest#*:}"
+# use auto keeps prior model (no Bifrost-style alias pick).
+for auto_tag in use_auto_fast use_auto_code; do
+  case "$auto_tag" in
+    use_auto_fast) auto_ask='Gravity pulls' ;;
+    use_auto_code) auto_ask='Fix: update' ;;
+  esac
   auto_src="selfhost/fixtures/${auto_tag}.spark"
   auto_bc="selfhost/fixtures/${auto_tag}.sparkbc"
   ./spark-bootstrap --compile "$auto_src" -o "$auto_bc" || {
@@ -446,10 +445,11 @@ for auto_pair in "use_auto_fast:auto→fast:Gravity pulls" \
     continue
   }
   if echo "$auto_run" | grep -q 'dry-run via bytecode VM' &&
-     echo "$auto_run" | grep -qF "$auto_needle" &&
+     echo "$auto_run" | grep -q 'prior .* (no alias pick)' &&
+     echo "$auto_run" | grep -qvE 'auto→(fast|code)' &&
      echo "$auto_run" | grep -qE "$auto_ask" &&
      echo "$auto_dry" | grep -q 'dry-run via bytecode VM' &&
-     echo "$auto_dry" | grep -qF "$auto_needle"; then
+     echo "$auto_dry" | grep -q 'prior .* (no alias pick)'; then
     echo "PASS sparkbc_${auto_tag}"
   else
     echo "FAIL sparkbc_${auto_tag}"

@@ -17,11 +17,11 @@ OpenAI-compatible gateway) is one optional backend when you set
 | `AI_GATEWAY_URL` | OpenAI-compatible base (common local default `http://127.0.0.1:4000`) |
 | `SPARK_GATEWAY_KEY` | **Preferred** gateway Bearer (`sk-*` / `sk-bf-*`) |
 | `OPENAI_API_KEY` | Wire-compat Bearer name only — not an OpenAI.com primary CTA |
+| `SPARK_MODEL` | Optional fallback when `--model` omitted |
 
-Prefer gateway **aliases** (`fast`, `code`, `best`, `auto`, …) — not vendor
-model strings. `use auto` / `--model auto` resolves to `fast` or `code`
-inside `./spark-ask-http` (same heuristics as bootstrap dry-run) before
-the request — never sends literal `auto` to the gateway.
+Pass an **explicit** model id (HF id / path / configured gateway model
+string). `--model auto` is **rejected** — Spark does not pick Bifrost-style
+aliases from task text.
 
 Never route Spark compute to voice / `:8010` / reserved voice GPU.
 
@@ -29,12 +29,11 @@ Never route Spark compute to voice / `:8010` / reserved voice GPU.
 
 ```bash
 make spark-ask-http
-./spark-ask-http --dry --model fast --prompt "Reply with one word: pong"
-./spark-ask-http --dry --model auto --prompt "Fix this test failure: …"
+./spark-ask-http --dry --model fixtures/tiny-lm --prompt "Reply with one word: pong"
 make test-ask-gateway   # required dry checks; live opt-in below
 ```
 
-`--dry` prints the resolved alias and exits 0 with **no network** and
+`--dry` prints the model line and exits 0 with **no network** and
 **no key**.
 
 ## Run (optional local gateway)
@@ -44,10 +43,7 @@ make                                    # builds spark + spark-ask-http
 export AI_GATEWAY_URL=http://127.0.0.1:4000
 export SPARK_GATEWAY_KEY=…              # never commit
 ./spark --live examples/ask_live.spark
-./spark --live examples/ask_live_use_fast.spark
-./spark --live examples/ask_live_use_code.spark
-./spark --live examples/ask_live_use_best.spark
-./spark --live examples/ask_live_use_auto.spark
+./spark --live examples/ask_live_explicit.spark
 ```
 
 Optional live companion proof (skipped when gateway/key missing):

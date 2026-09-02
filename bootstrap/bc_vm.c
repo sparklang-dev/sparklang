@@ -3,7 +3,6 @@
 #include "bc_opcodes.h"
 #include "bc_read.h"
 #include "dry_ask.h"
-#include "dry_auto_model.h"
 #include "dry_classify.h"
 #include "dry_extract.h"
 #include "dry_expect.h"
@@ -32,6 +31,7 @@ typedef struct {
   BcVar vars[BC_MAX_VARS];
   char last[BC_VAL_MAX];
   char model_alias[BC_NAME_MAX];
+  char prior_model[BC_NAME_MAX];
   char tool_reg_name[BC_NAME_MAX];
   size_t tool_reg_len;
   char tools_scope[SPARK_VM_TOOL_SCOPE];
@@ -74,7 +74,8 @@ static int contains_ci(const char *hay, const char *needle)
 static void frame_init(BcFrame *fr)
 {
   memset(fr, 0, sizeof(*fr));
-  strncpy(fr->model_alias, "fast", BC_NAME_MAX - 1);
+  strncpy(fr->model_alias, "fixtures/tiny-lm", BC_NAME_MAX - 1);
+  strncpy(fr->prior_model, "fixtures/tiny-lm", BC_NAME_MAX - 1);
 }
 
 static void set_last(BcFrame *fr, const char *val)
@@ -241,17 +242,6 @@ static int const_str(const SparkBc *bc, uint16_t idx, const char **out)
   return 0;
 }
 
-static void bc_log_auto_pick(BcFrame *fr, const char *stmt,
-                             const char *prompt)
-{
-  const char *picked;
-
-  if (strcmp(fr->model_alias, "auto") != 0)
-    return;
-  picked = spark_resolve_auto_model(stmt, prompt);
-  printf("[model] auto→%s\n", picked);
-}
-
 static int op_model(BcFrame *fr, const SparkBc *bc, uint32_t *ip)
 {
   uint16_t ci;
@@ -261,10 +251,20 @@ static int op_model(BcFrame *fr, const SparkBc *bc, uint32_t *ip)
   if (const_str(bc, ci, &alias) != 0)
     return 1;
   if (!alias[0]) {
-    fprintf(stderr, "error: model/use requires alias "
-                    "(e.g. model code or use fast)\n");
+    fprintf(stderr, "error: model/use requires an explicit model id "
+                    "(HF id, path, or configured name)\n");
     return 1;
   }
+  if (strcmp(alias, "auto") == 0) {
+    const char *prior = fr->prior_model[0] ? fr->prior_model
+                                           : fr->model_alias;
+    if (!prior[0])
+      prior = "(none)";
+    printf("[model] prior %s (no alias pick)\n", prior);
+    return 0;
+  }
+  strncpy(fr->prior_model, alias, BC_NAME_MAX - 1);
+  fr->prior_model[BC_NAME_MAX - 1] = '\0';
   strncpy(fr->model_alias, alias, BC_NAME_MAX - 1);
   fr->model_alias[BC_NAME_MAX - 1] = '\0';
   printf("[model] %s\n", fr->model_alias);
@@ -288,7 +288,6 @@ static int op_ask(BcFrame *fr, const SparkBc *bc, uint32_t *ip)
   expanded = interpolate_prompt(fr, prompt);
   if (!expanded)
     return 1;
-  bc_log_auto_pick(fr, prompt, expanded);
   printf("[ask] %s\n", expanded);
   if (fr->tools_active && fr->tool_reg_len > 0) {
     static char tbuf[BC_VAL_MAX];

@@ -1,8 +1,0 @@
-# Live ask with use auto — companion resolves auto→fast|code
-# before Bifrost (never sends literal "auto" as model id).
-# Offline: ./spark-ask-http --dry --model auto --prompt "…"
-use auto
-
-ask "Fix this test failure: AssertionError expected 3 got 2" -> fix
-
-print fix

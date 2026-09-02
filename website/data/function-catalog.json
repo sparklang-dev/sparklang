@@ -76,7 +76,7 @@
       "name": "ai_use_best",
       "category": "AI",
       "description": "Default best alias for quality",
-      "syntax": "use best",
+      "syntax": "model \"fixtures/tiny-lm\"",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/ai.spark"
@@ -86,7 +86,7 @@
       "name": "ai_use_code",
       "category": "AI",
       "description": "Default code alias for heavier reasoning",
-      "syntax": "use code",
+      "syntax": "model \"fixtures/tiny-lm\"",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/ai.spark"
@@ -96,7 +96,7 @@
       "name": "ai_use_fast",
       "category": "AI",
       "description": "Default fast alias for lightweight tasks",
-      "syntax": "use fast",
+      "syntax": "model \"fixtures/tiny-lm\"",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/ai.spark"
@@ -109,7 +109,7 @@
       "syntax": "ask probe -> info\ngateway probe -> info",
       "mode": "bootstrap-only",
       "source": "language",
-      "example": "examples/ask_live_use_code.spark",
+      "example": "examples/ask_live_explicit.spark",
       "popular": true
     },
     {
@@ -1114,7 +1114,7 @@
       "name": "use <alias>",
       "category": "Core",
       "description": "Set default model/alias for following calls (`fast`, `code`, `best`, \u2026).",
-      "syntax": "use fast          # same as: model fast\nmodel code        # long form still works\nuse auto          # pick fast or code from task text (bootstrap dry-run)",
+      "syntax": "model \"fixtures/tiny-lm\"\nmodel \"org/local-lm\"\nuse auto          # keeps prior line (no alias pick)",
       "mode": "dry-run",
       "source": "language"
     },
@@ -1375,7 +1375,7 @@
       "name": "model analyze",
       "category": "Model",
       "description": "Analyze and compare reachable models, propose improvements, **train**",
-      "syntax": "model analyze \"alias-code\" -> report\nmodel analyze all -> catalog_report\n\nmodel compare [\"fast\", \"code\", \"best\"] on suite \"examples/eval_suite.json\" -> comparison\n\nmodel improve from report prefer quality -> blueprint\n# prefer: quality | speed | cost | local\n\nmodel plan blueprint into \"out/better-model.md\"   # markdown only\n\nmodel train dataset \"examples/fixtures/train/dataset.jsonl\" base \"fixture-base\" out \"out/train/job-dry-001\" backend \"http\" -> job\nmodel build -> job                         ",
+      "syntax": "model analyze \"fixtures/tiny-lm\" -> report\nmodel analyze all -> catalog_report\n\nmodel compare [\"fixtures/tiny-lm\"] on suite \"examples/eval_suite.json\" -> comparison\n\nmodel improve from report prefer quality -> blueprint\n# prefer: quality | speed | cost | local\n\nmodel plan blueprint into \"out/better-model.md\"   # markdown only\n\nmodel train dataset \"examples/fixtures/train/dataset.jsonl\" base \"fixture-base\" out \"out/train/job-dry-001\" backend \"http\" -> job\nmodel build -> job                         ",
       "mode": "bootstrap-only",
       "source": "language",
       "example": "examples/model_train.spark",
@@ -1447,7 +1447,7 @@
       "name": "model_set_alias",
       "category": "Model",
       "description": "Set default model for following ops",
-      "syntax": "use best",
+      "syntax": "model \"fixtures/tiny-lm\"",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/model.spark"
@@ -1689,7 +1689,7 @@
       "name": "http_model_fast",
       "category": "Network",
       "description": "Set fast alias before HTTP-backed ask",
-      "syntax": "use fast\nask \"One sentence about HTTP\" -> text",
+      "syntax": "model \"fixtures/tiny-lm\"\nask \"One sentence about HTTP\" -> text",
       "mode": "live",
       "source": "stdlib",
       "libFile": "lib/http.spark"
@@ -2205,7 +2205,7 @@
       "syntax": "ask probe -> info\ngateway probe -> info",
       "mode": "bootstrap-only",
       "source": "language",
-      "example": "examples/ask_live_use_code.spark",
+      "example": "examples/ask_live_explicit.spark",
       "popular": true
     },
     {
@@ -2304,7 +2304,7 @@
       "name": "model analyze",
       "category": "Model",
       "description": "Analyze and compare reachable models, propose improvements, **train**",
-      "syntax": "model analyze \"alias-code\" -> report\nmodel analyze all -> catalog_report\n\nmodel compare [\"fast\", \"code\", \"best\"] on suite \"examples/eval_suite.json\" -> comparison\n\nmodel improve from report prefer quality -> blueprint\n# prefer: quality | speed | cost | local\n\nmodel plan blueprint into \"out/better-model.md\"   # markdown only\n\nmodel train dataset \"examples/fixtures/train/dataset.jsonl\" base \"fixture-base\" out \"out/train/job-dry-001\" backend \"http\" -> job\nmodel build -> job                         ",
+      "syntax": "model analyze \"fixtures/tiny-lm\" -> report\nmodel analyze all -> catalog_report\n\nmodel compare [\"fixtures/tiny-lm\"] on suite \"examples/eval_suite.json\" -> comparison\n\nmodel improve from report prefer quality -> blueprint\n# prefer: quality | speed | cost | local\n\nmodel plan blueprint into \"out/better-model.md\"   # markdown only\n\nmodel train dataset \"examples/fixtures/train/dataset.jsonl\" base \"fixture-base\" out \"out/train/job-dry-001\" backend \"http\" -> job\nmodel build -> job                         ",
       "mode": "bootstrap-only",
       "source": "language",
       "example": "examples/model_train.spark",

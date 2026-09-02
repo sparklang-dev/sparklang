@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Offline dry gate for spark-ask-http (Bifrost aliases).
+# Offline dry gate for spark-ask-http (explicit model ids).
 # Optional --live probe skipped when gateway/key unavailable.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
@@ -34,15 +34,28 @@ run_dry() {
   echo "PASS $name"
 }
 
-run_dry dry_fast fast "Reply with exactly one word: pong" fast
-run_dry dry_code code "Fix this test failure: AssertionError" code
-run_dry dry_best best "Explain gravity in one sentence" best
-run_dry dry_auto_fast auto "Summarize this paragraph briefly" fast
-run_dry dry_auto_code auto "Fix this test failure: expected 3 got 2" code
+run_refuse_auto() {
+  local out rc=0
+  out="$(./spark-ask-http --dry --model auto --prompt "ping" 2>&1)" || rc=$?
+  if [[ "$rc" -ne 0 ]] && echo "$out" | grep -qiE 'refuse|auto'; then
+    echo "PASS dry_refuse_auto"
+  else
+    echo "FAIL dry_refuse_auto (rc=$rc)"
+    echo "$out" | head -20
+    fail=1
+  fi
+}
+
+run_dry dry_explicit fixtures/tiny-lm "Reply with exactly one word: pong" fixtures/tiny-lm
+run_dry dry_path org/local-lm "Explain gravity in one sentence" org/local-lm
+# Explicit gateway route names remain allowed when the user names them —
+# only the picker token "auto" is refused.
+run_dry dry_named_fast fast "Reply with exactly one word: pong" fast
+run_refuse_auto
 
 # Refuse inventing OpenAI.com as primary — dry never needs a key.
 if unset SPARK_GATEWAY_KEY OPENAI_API_KEY; \
-  ./spark-ask-http --dry --model fast --prompt "ping" >/dev/null 2>&1; then
+  ./spark-ask-http --dry --model fixtures/tiny-lm --prompt "ping" >/dev/null 2>&1; then
   echo "PASS dry_no_key"
 else
   echo "FAIL dry_no_key"
@@ -63,20 +76,19 @@ if [[ "${SPARK_ASK_GATEWAY_LIVE:-0}" == "1" ]]; then
     "${base%/}/v1/models" 2>/dev/null | grep -qE '^[0-9]+$'; then
     live_skip "gateway unreachable at $base"
   else
-    out="$(./spark-ask-http --model fast --prompt \
+    out="$(./spark-ask-http --model fixtures/tiny-lm --prompt \
       "Reply with exactly one word: pong" 2>&1)" || {
-      echo "FAIL live_fast"
+      echo "FAIL live_explicit"
       echo "$out" | head -20
       fail=1
       out=""
     }
     if [[ -n "$out" ]]; then
       echo "$out" | grep -qiE 'pong|ok|yes|here' && \
-        echo "PASS live_fast" || {
-        # Accept any non-empty model reply as live path proof
+        echo "PASS live_explicit" || {
         [[ -n "$(echo "$out" | tr -d '[:space:]')" ]] && \
-          echo "PASS live_fast (nonempty reply)" || {
-          echo "FAIL live_fast (empty)"
+          echo "PASS live_explicit (nonempty reply)" || {
+          echo "FAIL live_explicit (empty)"
           fail=1
         }
       }

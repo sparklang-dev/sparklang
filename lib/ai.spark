@@ -1,16 +1,11 @@
 # Spark stdlib — AI defaults (bootstrap: include "lib/ai.spark")
-# Auto-picks fast vs code; override with use fast
+# Set an explicit model id (HF id / path / configured name).
+# `use auto` keeps the prior spark.toml / model line — it does NOT
+# pick Bifrost-style aliases from task text.
 
-use auto
-
-# @helper ai_use_fast: Default fast alias for lightweight tasks
-# use fast
-
-# @helper ai_use_code: Default code alias for heavier reasoning
-# use code
-
-# @helper ai_use_best: Default best alias for quality
-# use best
+# Example — uncomment and set your model:
+# model "fixtures/tiny-lm"
+# model "org/local-lm"
 
 # @helper ai_classify_then_ask: Classify message then generate reply
 # let message "Need refund for broken item"

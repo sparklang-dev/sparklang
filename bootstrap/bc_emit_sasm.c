@@ -6,7 +6,6 @@
 #include "bc_opcodes.h"
 #include "bc_read.h"
 #include "dry_ask.h"
-#include "dry_auto_model.h"
 #include "dry_classify.h"
 #include "dry_ops.h"
 
@@ -540,31 +539,6 @@ static int emit_review_pool(FILE *out, const SparkBc *bc)
 }
 
 
-static const char *model_alias_before_ip(const SparkBc *bc,
-                                         uint32_t target_ip)
-{
-  uint32_t ip = 0;
-  const char *alias = "fast";
-
-  while (ip < bc->ncode && ip < target_ip) {
-    uint8_t op = bc->code[ip];
-
-    if (op == SPBC_OP_HALT)
-      break;
-    if (op == SPBC_OP_MODEL) {
-      uint16_t ci = read_u16le(bc, ip + 1);
-      const char *a;
-
-      if (const_str(bc, ci, &a) == 0 && a[0])
-        alias = a;
-    }
-    if (!opcode_size(op))
-      break;
-    ip += (uint32_t)opcode_size(op);
-  }
-  return alias;
-}
-
 static const char *ask_reply_at_ip(const SparkBc *bc, uint32_t target_ip,
                                    char *tbuf, size_t tbuf_sz)
 {
@@ -743,71 +717,10 @@ static void emit_handlers(FILE *out, const SparkBc *bc)
   fprintf(out, "\tadd\tr15, 3\n");
   fprintf(out, "\tjmp\tvm_loop\n");
 
-  fprintf(out, "op_ask:\n");
-  {
-    uint32_t scan = 0;
-    int ask_i = 0;
-    int any_auto = 0;
-
-    while (scan < bc->ncode) {
-      uint8_t op = bc->code[scan];
-
-      if (op == SPBC_OP_ASK) {
-        const char *alias = model_alias_before_ip(bc, scan);
-        const char *prompt;
-        uint16_t tidx = read_u16le(bc, scan + 1);
-
-        if (strcmp(alias, "auto") == 0 &&
-            const_str(bc, tidx, &prompt) == 0) {
-          fprintf(out, "\tcmp\tr15, %u\n", scan);
-          fprintf(out, "\tje\task_auto_%d\n", ask_i);
-          any_auto = 1;
-        }
-        ask_i++;
-        scan += 5;
-        continue;
-      }
-      if (!opcode_size(op))
-        break;
-      scan += (uint32_t)opcode_size(op);
-    }
-    if (any_auto) {
-      fprintf(out, "\tjmp\task_auto_done\n");
-      scan = 0;
-      ask_i = 0;
-      while (scan < bc->ncode) {
-        uint8_t op = bc->code[scan];
-
-        if (op == SPBC_OP_ASK) {
-          const char *alias = model_alias_before_ip(bc, scan);
-          const char *prompt;
-          uint16_t tidx = read_u16le(bc, scan + 1);
-
-          if (strcmp(alias, "auto") == 0 &&
-              const_str(bc, tidx, &prompt) == 0) {
-            const char *picked =
-                spark_resolve_auto_model(prompt, prompt);
-            int is_code = (strcmp(picked, "code") == 0);
-
-            fprintf(out, "ask_auto_%d:\n", ask_i);
-            fprintf(out, "\tlea\trsi, %s\n",
-                    is_code ? "txt_auto_code" : "txt_auto_fast");
-            fprintf(out, "\tmov\trdx, 20\n");
-            fprintf(out, "\tcall\twritestr\n");
-            fprintf(out, "\tjmp\task_auto_done\n");
-          }
-          ask_i++;
-          scan += 5;
-          continue;
-        }
-        if (!opcode_size(op))
-          break;
-        scan += (uint32_t)opcode_size(op);
-      }
-      fprintf(out, "ask_auto_done:\n");
-    }
-  }
-  fprintf(out, "\tlea\trax, [r14 + r15]\n");
+  fprintf(out, "op_ask:
+");
+  fprintf(out, "	lea	rax, [r14 + r15]
+");
   fprintf(out, "\tmovzx\trcx, word [rax + 1]\n");
   fprintf(out, "\tcall\tresolve_const\n");
   fprintf(out, "\tpush\trsi\n");
@@ -1397,8 +1310,6 @@ static int emit_sasm(FILE *out, const SparkBc *bc, const char *bc_path)
   fprintf(out, ".global _start\n.text\n");
 
   emit_cstring(out, "txt_model_banner", "[model] ");
-  emit_cstring(out, "txt_auto_fast", "[model] auto→fast\n");
-  emit_cstring(out, "txt_auto_code", "[model] auto→code\n");
   emit_cstring(out, "txt_ask_banner", "[ask] ");
   emit_cstring(out, "txt_accounting",
                "[accounting] latency_ms=0 prompt_tokens=0 "

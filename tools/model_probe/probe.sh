@@ -10,9 +10,9 @@ TS="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
 echo "[model-probe] read-only; SPARK_ALLOW_NET=${SPARK_ALLOW_NET:-0}"
 
-# Configured aliases from spark.toml (documented defaults)
-for id in fast code best; do
-  echo "{\"ts\":\"$TS\",\"id\":\"$id\",\"kind\":\"alias\",\"probe\":\"config-listed\",\"source\":\"spark.toml\"}" \
+# Configured model ids from spark.toml (documented defaults)
+for id in fixtures/tiny-lm; do
+  echo "{\"ts\":\"$TS\",\"id\":\"$id\",\"kind\":\"configured\",\"probe\":\"config-listed\",\"source\":\"spark.toml\"}" \
     >> "$CATALOG"
 done
 

@@ -116,9 +116,9 @@
         <td>Markdown only — not weights</td>
         </tr>
         <tr>
-        <td><strong>Pick model alias</strong> per task</td>
-        <td><code class="inline-code">use auto</code> / <code class="inline-code">use code</code> / <code class="inline-code">use fast</code></td>
-        <td>Bootstrap heuristics in dry-run; live uses prior <code class="inline-code">model</code> line</td>
+        <td><strong>Name a concrete model</strong></td>
+        <td><code class="inline-code">model "/path/or/org/name"</code></td>
+        <td>Explicit path or hub id only — <strong>no</strong> auto/code/fast alias pick</td>
         </tr>
         <tr>
         <td><strong>AI coding</strong> with less boilerplate</td>
@@ -142,7 +142,7 @@
         </tr>
         </tbody>
         </table></div>
-        <p><strong>“All models”</strong> = configured gateway aliases + discovered local vLLM listeners
+        <p><strong>“All models”</strong> = configured model ids + discovered local vLLM listeners
         (read-only) — not every model on the internet. See <a href="/docs/ai-models.html">MODEL_ANALYSIS.md</a>.</p>
         <p>Example train (dry-run):</p>
         <pre class="doc__pre"><code class="language-spark">model train dataset &quot;examples/fixtures/train/dataset.jsonl&quot; base &quot;fixture-base&quot; out &quot;out/train/job-dry-001&quot; backend &quot;http&quot; -&gt; job
@@ -169,7 +169,7 @@
           <code class="inline-code">examples/eval_suite.json</code>; banner says numbers are not live Elo scores</li>
         <li><strong><code class="inline-code">ask</code> / <code class="inline-code">classify</code> / <code class="inline-code">extract</code> / <code class="inline-code">embed</code> / <code class="inline-code">retrieve</code></strong> — heuristic
           stubs / fixtures (<code class="inline-code">examples/fixtures/rag/</code> for RAG)</li>
-        <li><strong><code class="inline-code">use auto</code></strong> — prints <code class="inline-code">[model] auto→fast|code</code> from task text (bootstrap)</li>
+        <li><strong><code class="inline-code">use auto</code></strong> — keeps prior configured model; prints <code class="inline-code">[model] prior … (no alias pick)</code></li>
         <li><strong>Playbooks</strong> — goldens under <code class="inline-code">bootstrap/fixtures/playbooks/</code>;
           <code class="inline-code">make test-ai-playbooks</code></li>
         <li><strong>IDE</strong> — <code class="inline-code">ide new|open|save|run|buffer|ask|show</code> + keymap traces under
@@ -216,11 +216,11 @@
         </tr>
         </tbody>
         </table></div>
-        <p>Prefer <strong>gateway aliases</strong>, never hardcoded vendor model strings in <code class="inline-code">.spark</code>.</p>
+        <p>Pass an <strong>explicit</strong> model id (HF / path / configured name). No Bifrost-style alias pick.</p>
         <pre class="doc__pre"><code class="language-bash">export AI_GATEWAY_URL=http://127.0.0.1:4000
         export SPARK_GATEWAY_KEY=sk-…   # never commit; preferred over OPENAI_API_KEY
         ./spark --live examples/ask_live.spark
-        ./spark --live examples/ask_live_use_auto.spark
+        ./spark --live examples/ask_live_explicit.spark
         ./spark --live examples/retrieve_embed_live.spark
         # Offline proof (no key / no network):
         make test-ask-gateway
@@ -262,7 +262,7 @@
         <p>Governed ledger / product-specific projects stay outside public Spark
         examples — use generic <code class="inline-code">project "docs"</code> in docs and fixtures.</p>
         <h2 id="ai-coding-spark-ide">AI coding + Spark IDE</h2>
-        <p><strong>Less code:</strong> <code class="inline-code">include "lib/ai.spark"</code> sets <code class="inline-code">use auto</code>; copy a playbook from
+        <p><strong>Less code:</strong> set an explicit <code class="inline-code">model "…"</code>; copy a playbook from
         <a href="/learn/build-model.html">AI_PLAYBOOKS.md</a> instead of hand-rolling SDK loops.</p>
         <p><strong>Readable diffs:</strong> one <code class="inline-code">.spark</code> file per workflow — <code class="inline-code">pipeline</code>, <code class="inline-code">classify</code>,
         <code class="inline-code">extract</code>, <code class="inline-code">review</code>, <code class="inline-code">builder</code>, <code class="inline-code">implement</code> — not scattered Python modules.</p>

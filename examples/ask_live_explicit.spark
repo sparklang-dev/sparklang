@@ -1,0 +1,7 @@
+# Live ask with an explicit model id (HF / path / configured name).
+# Offline: ./spark-ask-http --dry --model fixtures/tiny-lm --prompt "…"
+model "fixtures/tiny-lm"
+
+ask "Fix this test failure: AssertionError expected 3 got 2" -> fix
+
+print fix

@@ -97,17 +97,19 @@
         <li><strong><code class="inline-code">{name}</code></strong> in ask/<code class="inline-code">?</code> prompts — bootstrap interpolates <code class="inline-code">let</code> bindings</li>
         </ul>
         <p>See <code class="inline-code">LANGUAGE_IMPROVEMENTS.md</code> for the full DX changelog.</p>
-        <h3 id="use-alias-model-alias"><code class="inline-code">use &lt;alias&gt;</code> / <code class="inline-code">model &lt;alias&gt;</code></h3>
-        <p>Set default model/alias for following calls (<code class="inline-code">fast</code>, <code class="inline-code">code</code>, <code class="inline-code">best</code>, …).
-        Prefer gateway aliases, not vendor strings.</p>
-        <pre class="doc__pre"><code class="inline-code">use fast          # same as: model fast
-        model code        # long form still works
-        use auto          # pick fast or code from task text (bootstrap dry-run)
+        <h3 id="use-id-model-id"><code class="inline-code">use &lt;id&gt;</code> / <code class="inline-code">model &lt;id&gt;</code></h3>
+        <p>Set the default model for following calls. Pass an <strong>explicit</strong> HF id,
+        checkpoint path, or configured gateway model string. SparkLang is <strong>not</strong>
+        a Bifrost plugin — there is no per-task alias roulette.</p>
+        <pre class="doc__pre"><code class="inline-code">model "fixtures/tiny-lm"
+        model "org/local-lm"
+        use auto          # keeps prior spark.toml / model line (no pick)
         </code></pre>
-        <p><strong><code class="inline-code">use auto</code></strong> — bootstrap picks <strong><code class="inline-code">fast</code></strong> or <strong><code class="inline-code">code</code></strong> from task text.
-        Include <code class="inline-code">lib/ai.spark</code> for <code class="inline-code">use auto</code>. Dry-run prints <code class="inline-code">[model] auto→fast|code</code>.
+        <p><strong><code class="inline-code">use auto</code></strong> — keeps the <strong>prior</strong> configured model.
+        Dry-run prints <code class="inline-code">[model] prior &lt;id&gt; (no alias pick)</code>.
+        Prefer an explicit <code class="inline-code">model "…"</code> line.
         See <a href="/learn/build-model.html">AI_PLAYBOOKS.md</a>; goldens: <code class="inline-code">make test-ai-playbooks</code>.</p>
-        <p>Optional <strong><code class="inline-code">spark.toml</code></strong> (<code class="inline-code">model = "fast"</code>) is read by the <strong>bootstrap</strong>
+        <p>Optional <strong><code class="inline-code">spark.toml</code></strong> (<code class="inline-code">model = "…"</code>) is read by the <strong>bootstrap</strong>
         VM on startup; <code class="inline-code">./spark</code> (GAS) still needs a <code class="inline-code">model</code>/<code class="inline-code">use</code> line in the file.</p>
         <h2 id="statements">Statements</h2>
         <h3 id="model-analyze-compare-improve-train-status-plan"><code class="inline-code">model analyze</code> / <code class="inline-code">compare</code> / <code class="inline-code">improve</code> / <code class="inline-code">train</code> / <code class="inline-code">status</code> / <code class="inline-code">plan</code></h3>
@@ -118,10 +120,10 @@
         blueprint file).</p>
         <p>Training methodology: <a href="/docs/model-training.html">MODEL_TRAINING.md</a>.
         Eval helpers: <a href="/docs/ai-models.html">MODEL_ANALYSIS.md</a>.</p>
-        <pre class="doc__pre"><code class="inline-code">model analyze &quot;alias-code&quot; -&gt; report
+        <pre class="doc__pre"><code class="inline-code">model analyze &quot;fixtures/tiny-lm&quot; -&gt; report
         model analyze all -&gt; catalog_report
 
-        model compare [&quot;fast&quot;, &quot;code&quot;, &quot;best&quot;] on suite &quot;examples/eval_suite.json&quot; -&gt; comparison
+        model compare [&quot;fixtures/tiny-lm&quot;] on suite &quot;examples/eval_suite.json&quot; -&gt; comparison
 
         model improve from report prefer quality -&gt; blueprint
         # prefer: quality | speed | cost | local
@@ -144,7 +146,7 @@
         <code class="inline-code">local-yield</code> (optional allowlisted <code class="inline-code">train@</code> unit), <code class="inline-code">huggingface</code>
         (reserved — not wired). Env: <code class="inline-code">SPARK_TRAIN_BACKEND</code>, <code class="inline-code">SPARK_TRAIN_URL</code>,
         optional <code class="inline-code">SPARK_TRAIN_TOKEN</code>. See <a href="/docs/model-training.html">MODEL_TRAINING.md</a>.</p>
-        <p><strong>“All models”</strong> = all reachable configured aliases + discovered local
+        <p><strong>“All models”</strong> = all reachable configured model ids + discovered local
         vLLM endpoints (read-only) — <strong>not</strong> every model in existence. Catalog:
         <code class="inline-code">data/model-catalog.jsonl</code>. Public gateway probes need a probe
         credential; 401 → credential unavailable (no invented routing).</p>
@@ -159,9 +161,7 @@
         <p><strong>Dry-run</strong> (<code class="inline-code">--dry-run</code>): offline heuristic replies (no network).</p>
         <p><strong>Live</strong> (<code class="inline-code">--live</code>): OpenAI-compatible <code class="inline-code">POST /v1/chat/completions</code> via
         companion <code class="inline-code">./spark-ask-http</code> → <code class="inline-code">AI_GATEWAY_URL</code> (Bifrost). See
-        <a href="/docs/ai-models.html#live-gateway-integration-wired-today">ASK_LIVE.md</a>. Alias from prior <code class="inline-code">model</code>/<code class="inline-code">use</code>
-        <code class="inline-code">fast|code|best|auto</code> (<code class="inline-code">auto</code> resolves inside the companion to
-        <code class="inline-code">fast</code>|<code class="inline-code">code</code> — never sent literally). Prefer <code class="inline-code">SPARK_GATEWAY_KEY</code>;
+        <a href="/docs/ai-models.html#live-gateway-integration-wired-today">ASK_LIVE.md</a>. Model id comes from the prior explicit <code class="inline-code">model</code> / <code class="inline-code">use</code> line. <code class="inline-code">--model auto</code> is rejected. Prefer <code class="inline-code">SPARK_GATEWAY_KEY</code>;
         <code class="inline-code">OPENAI_API_KEY</code> is wire-compat only. Public tunnel uses a probe credential; HTTP 401 → credential unavailable (no invented routing).
         <code class="inline-code">make test</code> never hits the network; <code class="inline-code">make test-ask-gateway</code> is offline
         <code class="inline-code">--dry</code> on the companion.</p>

@@ -1,4 +1,4 @@
-# Bootstrap-only: include pulls lib/ai.spark (sets model fast)
+# Bootstrap-only: include pulls lib/ai.spark (docs helpers; set model explicitly)
 include "lib/ai.spark"
 
 ? "Explain gravity in one sentence" -> text

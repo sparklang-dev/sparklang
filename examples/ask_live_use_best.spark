@@ -1,7 +1,0 @@
-# Live ask with use best — ./spark --live (needs AI_GATEWAY_URL + key)
-# Offline: ./spark-ask-http --dry --model best --prompt "…"
-use best
-
-ask "Explain gravity in one short sentence" -> text
-
-print text

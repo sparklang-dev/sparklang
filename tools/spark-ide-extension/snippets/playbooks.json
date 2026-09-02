@@ -3,7 +3,7 @@
     "prefix": "spark-playbook-explain_code",
     "description": "AI coding playbook from lib/playbooks.spark (explain_code)",
     "body": [
-      "include \"lib/ai.spark\"",
+      "model \"fixtures/tiny-lm\"",
       "let snippet \"function add(a,b){ return a+b; }\"",
       "ask \"Explain this code in one sentence: {snippet}\" -> answer",
       "print answer"
@@ -13,7 +13,7 @@
     "prefix": "spark-playbook-fix_test_failure",
     "description": "AI coding playbook from lib/playbooks.spark (fix_test_failure)",
     "body": [
-      "include \"lib/ai.spark\"",
+      "model \"fixtures/tiny-lm\"",
       "let failure \"AssertionError: expected 3 got 2 in test_add\"",
       "ask \"Fix this test failure: {failure}\" -> fix",
       "print fix"
@@ -23,7 +23,7 @@
     "prefix": "spark-playbook-add_api_endpoint",
     "description": "AI coding playbook from lib/playbooks.spark (add_api_endpoint)",
     "body": [
-      "include \"lib/ai.spark\"",
+      "model \"fixtures/tiny-lm\"",
       "ask \"Add a GET /health API endpoint returning JSON status\" -> plan",
       "print plan"
     ]
@@ -32,7 +32,7 @@
     "prefix": "spark-playbook-refactor_rename",
     "description": "AI coding playbook from lib/playbooks.spark (refactor_rename)",
     "body": [
-      "include \"lib/ai.spark\"",
+      "model \"fixtures/tiny-lm\"",
       "ask \"Refactor: rename foo to bar across the module\" -> steps",
       "print steps"
     ]
@@ -41,7 +41,7 @@
     "prefix": "spark-playbook-write_unit_test",
     "description": "AI coding playbook from lib/playbooks.spark (write_unit_test)",
     "body": [
-      "include \"lib/ai.spark\"",
+      "model \"fixtures/tiny-lm\"",
       "ask \"Write a unit test for function add(a,b)\" -> test_code",
       "print test_code"
     ]
@@ -50,7 +50,7 @@
     "prefix": "spark-playbook-debug_error_message",
     "description": "AI coding playbook from lib/playbooks.spark (debug_error_message)",
     "body": [
-      "include \"lib/ai.spark\"",
+      "model \"fixtures/tiny-lm\"",
       "let err \"TypeError: undefined is not a function at line 42\"",
       "ask \"Debug this error message: {err}\" -> hint",
       "print hint"
@@ -60,7 +60,7 @@
     "prefix": "spark-playbook-classify_and_reply",
     "description": "AI coding playbook from lib/playbooks.spark (classify_and_reply)",
     "body": [
-      "include \"lib/ai.spark\"",
+      "model \"fixtures/tiny-lm\"",
       "classify Intent { support, sales } from \"My account is locked and I need help\" -> intent",
       "ask \"Reply helpfully to: My account is locked and I need help\" -> reply",
       "print reply"
@@ -70,7 +70,7 @@
     "prefix": "spark-playbook-review_and_suggest",
     "description": "AI coding playbook from lib/playbooks.spark (review_and_suggest)",
     "body": [
-      "use auto",
+      "model \"fixtures/tiny-lm\"",
       "let report \"{\\\"issues\\\":[\\\"possible eval\\\",\\\"ai-authored patterns\\\"],\\\"complexity\\\":\\\"mid\\\"}\"",
       "ask \"Fix this test failure shown in the review report: {report}\" -> suggestion",
       "print suggestion"
@@ -80,7 +80,7 @@
     "prefix": "spark-playbook-pipeline_summarize_explain",
     "description": "AI coding playbook from lib/playbooks.spark (pipeline_summarize_explain)",
     "body": [
-      "include \"lib/ai.spark\"",
+      "model \"fixtures/tiny-lm\"",
       "let doc \"Spark is a small language where AI is a first-class primitive.\"",
       "pipeline {",
       "  ask \"Summarize: {doc}\" -> summary",

@@ -173,11 +173,11 @@ Optional `spark.toml` documents defaults; the **bootstrap** VM reads
 `examples/hello_sugar.spark`, `examples/dx_showcase.spark`
 
 ```
-use code                    # alias for: model code
+model "fixtures/tiny-lm"    # explicit HF id / path / configured name
 
-? "Explain gravity in one sentence" -> text   # alias for ask
+? "Explain gravity in one sentence" -> text   # sugar for ask
 
-say "Hello" -> "out.wav"    # alias for speak
+say "Hello" -> "out.wav"    # sugar for speak
 ```
 
 Bootstrap also supports `include "lib/ai.spark"` and `{var}` interpolation
@@ -188,7 +188,7 @@ in ask/`?` prompts — see [LANGUAGE_IMPROVEMENTS.md](LANGUAGE_IMPROVEMENTS.md).
 `examples/hello.spark`, `examples/ask_live.spark`
 
 ```
-model code          # or fast | best (gateway aliases)
+model "fixtures/tiny-lm"
 
 ask "Explain gravity in one sentence" -> text
 print text

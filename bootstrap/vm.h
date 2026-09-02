@@ -22,6 +22,7 @@ typedef struct {
   char last_val[SPARK_VM_VAL_MAX];
   size_t last_val_len;
   char model_alias[SPARK_VM_NAME_MAX];
+  char prior_model[SPARK_VM_NAME_MAX];
   int dry_run; /* always 1 in bootstrap MVP */
   /* tool / with tools — matches asm tools_active + tool_reg_* */
   int tools_active;

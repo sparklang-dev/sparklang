@@ -1,25 +1,8 @@
 /*
- * spark-ask-http — OpenAI-compatible chat via AI_GATEWAY_URL (Bifrost).
- *
- * Companion for Spark live `ask` (fork/exec from asm). Not linked into
- * the default dry-run ELF. Offline CI uses --dry (no network).
- *
- * Env:
- *   AI_GATEWAY_URL     default http://127.0.0.1:4000
- *   SPARK_GATEWAY_KEY  preferred Bifrost virtual key (sk-bf-*)
- *   OPENAI_API_KEY     wire-compat Bearer name only (not OpenAI.com CTA)
- *
- * Aliases: fast | code | best | … | auto
- *   auto → resolve to fast|code via bootstrap heuristics (same as
- *   dry_auto_model.c / use auto). Never send literal "auto" to Bifrost.
- *
- * --dry: resolve model, print plan, exit 0 — no network, no key required.
- *
- * Public gateway URL: wrap with a probe credential
- * (tools/ask/probe_public.sh). HTTP 401 → "credential unavailable",
- * exit 4 — no routing conclusion.
- *
- * http:// → POSIX sockets. https:// → real curl(1) subprocess.
+ * spark-ask-http — OpenAI-compatible ask companion.
+ * Requires an explicit --model id (HF / path / configured name).
+ * --model auto is rejected (no Bifrost-style alias pick).
+ * --dry: print model plan, exit 0 — no network, no key required.
  */
 
 #define _GNU_SOURCE
@@ -34,7 +17,6 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-#include "../../bootstrap/dry_auto_model.h"
 
 #define MAX_BODY (1 << 20)
 #define MAX_PROMPT (1 << 18)
@@ -384,12 +366,13 @@ static int https_post_curl(const char *base_url, const char *auth,
 static void usage(void)
 {
 	fprintf(stderr,
-		"Usage: spark-ask-http [--dry] --model ALIAS "
+		"Usage: spark-ask-http [--dry] --model MODEL "
 		"[--prompt TEXT | --prompt-file PATH] [--out PATH]\n"
-		"Aliases: fast|code|best|auto (auto→fast|code)\n"
-		"Env: AI_GATEWAY_URL SPARK_GATEWAY_KEY "
+		"MODEL: explicit HF id / path / configured model string\n"
+		"(--model auto is rejected; no alias pick)\n"
+		"Env: AI_GATEWAY_URL SPARK_GATEWAY_KEY SPARK_MODEL "
 		"(OPENAI_API_KEY = wire-compat only)\n"
-		"--dry: no network; print resolved model; no key\n");
+		"--dry: no network; print model; no key\n");
 	exit(2);
 }
 
@@ -429,20 +412,22 @@ static void print_accounting(const char *json, int dry, long latency_ms)
 
 static const char *resolve_model(const char *model, const char *prompt)
 {
-	const char *picked;
-
-	if (!model || !*model)
-		return "fast";
-	if (strcmp(model, "auto") != 0)
-		return model;
-	picked = spark_resolve_auto_model("ask", prompt);
-	fprintf(stderr, "[ask-http] auto→%s\n", picked);
-	return picked;
+	(void)prompt;
+	if (!model || !*model) {
+		const char *env = getenv("SPARK_MODEL");
+		if (env && *env)
+			return env;
+		die("missing --model <explicit-id> (or SPARK_MODEL)");
+	}
+	if (strcmp(model, "auto") == 0)
+		die("refuse --model auto — pass an explicit model id "
+		    "(no Bifrost-style alias pick from task text)");
+	return model;
 }
 
 int main(int argc, char **argv)
 {
-	const char *model = "fast";
+	const char *model = "";
 	const char *prompt = NULL;
 	const char *prompt_file = NULL;
 	const char *out_path = NULL;
@@ -487,8 +472,6 @@ int main(int argc, char **argv)
 
 	if (dry) {
 		printf("[ask-http] dry model=%s", resolved);
-		if (strcmp(model, "auto") == 0)
-			printf(" (from auto)");
 		printf(" gateway=%s\n",
 		       (getenv("AI_GATEWAY_URL") &&
 			*getenv("AI_GATEWAY_URL"))
