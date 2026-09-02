@@ -24,6 +24,7 @@ if _PY.is_dir() and str(_PY) not in sys.path:
     sys.path.insert(0, str(_PY))
 
 from sparklang.abstain.attach import attach_head
+from sparklang.abstain.corpus import validate_corpus
 from sparklang.abstain.dry import dry_result, dumps_compact
 from sparklang.abstain.export import export_hiddens
 from sparklang.abstain.gate import GateConfig, select_before_sample
@@ -137,7 +138,14 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument(
         "cmd",
         nargs="?",
-        choices=("train", "attach", "gate", "ask", "export"),
+        choices=(
+            "train",
+            "attach",
+            "gate",
+            "ask",
+            "export",
+            "validate-corpus",
+        ),
     )
     ap.add_argument("--dataset")
     ap.add_argument("--model")
@@ -147,6 +155,15 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--prompt")
     ap.add_argument("--kind", default="internal")
     ap.add_argument("--hidden-dim", type=int)
+    ap.add_argument(
+        "--source",
+        default="auto",
+        choices=("auto", "toy", "synthetic", "hf"),
+        help=(
+            "export feature source: toy (CI), synthetic "
+            "(dim-matched wide), hf (--model), auto"
+        ),
+    )
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--threshold", type=float, default=0.7)
     ap.add_argument("--idk", default="I don't know.")
@@ -154,6 +171,13 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--max-new-tokens", type=int, default=32)
     args = ap.parse_args(argv)
     live = bool(args.live)
+
+    if args.cmd == "validate-corpus":
+        if not args.dataset:
+            raise SystemExit("validate-corpus needs --dataset")
+        result = validate_corpus(args.dataset)
+        _write_out(dumps_compact(result), args.out)
+        return 0
 
     if args.cmd == "export":
         if not live:
@@ -167,6 +191,7 @@ def main(argv: list[str] | None = None) -> int:
             hidden_dim=args.hidden_dim,
             seed=int(args.seed),
             kind=str(args.kind or "internal"),
+            source=str(args.source or "auto"),
         )
         _write_out(dumps_compact(result), None)
         return 0
@@ -265,7 +290,7 @@ def main(argv: list[str] | None = None) -> int:
     if not args.stmt_file:
         raise SystemExit(
             "need --stmt-file or "
-            "train|export|attach|gate|ask"
+            "train|export|attach|gate|ask|validate-corpus"
         )
     stmt = Path(args.stmt_file).read_text(encoding="utf-8")
     # First non-comment line

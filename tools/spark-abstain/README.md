@@ -8,7 +8,18 @@ See [docs/ABSTAIN_HEADS.md](../../docs/ABSTAIN_HEADS.md).
 ```bash
 ./spark-abstain --dry --stmt-file stmt.txt --out out.json
 
-# Prefer: export dim-matched hiddens, then train
+# Prefer: curated corpus → synthetic (or HF) export → train
+./spark-abstain --live validate-corpus \
+  --dataset examples/fixtures/abstain/corpus_seed.jsonl
+./spark-abstain --live export \
+  --dataset examples/fixtures/abstain/corpus_seed.jsonl \
+  --source synthetic --hidden-dim 768 \
+  --out out/heads/synth768.jsonl
+./spark-abstain --live train \
+  --dataset out/heads/synth768.jsonl \
+  --out out/heads/abstain768.pt --hidden-dim 768
+
+# Toy dim-16 (CI contract)
 ./spark-abstain --live export \
   --dataset examples/fixtures/abstain/labels_text.jsonl \
   --out out/heads/exported.jsonl --hidden-dim 16
@@ -33,6 +44,10 @@ See [docs/ABSTAIN_HEADS.md](../../docs/ABSTAIN_HEADS.md).
   --hidden /tmp/hidden.pt
 SPARK_ABSTAIN_STUB=1 ./spark-abstain --live ask \
   --prompt "Who is the mayor of Springfield?"
+
+# Optional HF export→train→ask (skips unless env+local model)
+# SPARK_ABSTAIN_HF=1 SPARK_ABSTAIN_MODEL=/path/to/hf \
+#   ./tools/spark-abstain/hf_export_train_smoke.sh
 
 # HF /spark_hidden sidecar (beside stock vLLM chat)
 pip install -e 'python/[sidecar]'

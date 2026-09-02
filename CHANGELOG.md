@@ -4,6 +4,19 @@ All notable user-facing releases of **SparkLang** (the Spark programming
 language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
+## 0.6.16 — 2026-09-02
+
+- **Abstain real-dim corpus path:** curated
+  `examples/fixtures/abstain/corpus_seed.jsonl` (answer vs abstain
+  + reasons), schema/`validate-corpus`, synthetic backbone export
+  at LM widths (default 768) for dim-matched train/ask without
+  claiming HF quality. Optional env-gated HF smoke
+  (`tools/spark-abstain/hf_export_train_smoke.sh`,
+  `SPARK_ABSTAIN_HF=1` + local model, `local_files_only` /
+  offline — no CI downloads). Docs:
+  [docs/ABSTAIN_HEADS.md](docs/ABSTAIN_HEADS.md),
+  `examples/fixtures/abstain/README.md`. Gate: `make test-abstain`.
+
 ## 0.6.15 — 2026-09-02
 
 - **Abstain `/spark_hidden` sidecar:** real HF FastAPI/uvicorn

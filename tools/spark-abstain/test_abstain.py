@@ -446,8 +446,6 @@ class ExportTrainTests(unittest.TestCase):
             self.assertEqual(train["state"], "succeeded")
             self.assertEqual(train["hidden_dim"], 16)
             # Ask with matching toy hidden for inventable prompt.
-            head = AbstainHead(16)
-            # Reload trained weights.
             from sparklang.abstain.head import load_head
 
             head = load_head(out)
@@ -473,6 +471,170 @@ class ExportTrainTests(unittest.TestCase):
             )
             self.assertEqual(info["hidden_dim"], 16)
             self.assertTrue(out.is_file())
+
+    def test_synthetic_768_export_train_ask(self) -> None:
+        """Wide dim-matched path — not toy-16 / bag-hash-64."""
+        from sparklang.abstain.export import (
+            export_hiddens,
+            synthetic_backbone_hidden,
+        )
+        from sparklang.abstain.head import load_head
+
+        seed_ds = ROOT / "examples/fixtures/abstain/corpus_seed.jsonl"
+        with tempfile.TemporaryDirectory() as td:
+            td_p = Path(td)
+            exported = td_p / "s768.jsonl"
+            info = export_hiddens(
+                seed_ds,
+                exported,
+                source="synthetic",
+                hidden_dim=768,
+                seed=7,
+            )
+            self.assertEqual(info["source"], "synthetic_backbone")
+            self.assertEqual(info["hidden_dim"], 768)
+            self.assertEqual(
+                info["quality"], "synthetic_backbone_dim_match"
+            )
+            out = td_p / "h768.pt"
+            train = train_abstain_head(
+                exported,
+                out,
+                steps=120,
+                hidden_dim=768,
+                seed=7,
+            )
+            self.assertEqual(train["hidden_dim"], 768)
+            self.assertEqual(
+                train["quality"], "synthetic_backbone_dim_match"
+            )
+            head = load_head(out)
+            # Abstain-labeled synthetic vector should score high.
+            hid_abs = torch.tensor(
+                synthetic_backbone_hidden(
+                    "Who is the mayor of Springfield?",
+                    768,
+                    1,
+                    seed=7,
+                ),
+                dtype=torch.float32,
+            )
+            hid_ans = torch.tensor(
+                synthetic_backbone_hidden(
+                    "What is gravity?",
+                    768,
+                    0,
+                    seed=7,
+                ),
+                dtype=torch.float32,
+            )
+            p_abs = score_hidden(head, hid_abs)
+            p_ans = score_hidden(head, hid_ans)
+            self.assertGreater(p_abs, p_ans)
+            torch.save(hid_abs, td_p / "h.pt")
+            r = live_ask(
+                "Who is the mayor of Springfield?",
+                weights=str(out),
+                hidden_path=str(td_p / "h.pt"),
+                threshold=0.5,
+            )
+            self.assertEqual(r["mode"], "live")
+            self.assertTrue(r["abstain"])
+
+    def test_hf_mock_export_train_dim_match(self) -> None:
+        """Mock HF hidden → train → dim matches ask gate."""
+        from sparklang.abstain.export import export_hiddens
+        from sparklang.abstain.head import load_head
+
+        text_ds = ROOT / "examples/fixtures/abstain/labels_text.jsonl"
+        fake_tok = MagicMock()
+        fake_tok.pad_token = None
+        fake_tok.eos_token = "</s>"
+
+        def _tok_call(prompt: str, **_kw: object) -> dict:
+            n = max(1, len(str(prompt).split()))
+            return {
+                "input_ids": torch.ones(1, n, dtype=torch.long),
+                "attention_mask": torch.ones(1, n, dtype=torch.long),
+            }
+
+        fake_tok.side_effect = _tok_call
+
+        class _Out:
+            def __init__(self, t: int) -> None:
+                layer = torch.zeros(1, t, 32)
+                # Encode a simple signal in last token.
+                layer[0, -1, 0] = 1.0
+                self.hidden_states = (layer,)
+
+        fake_model = MagicMock()
+
+        def _fwd(**kw: object) -> _Out:
+            ids = kw["input_ids"]  # type: ignore[index]
+            return _Out(int(ids.shape[-1]))
+
+        fake_model.side_effect = _fwd
+        fake_model.eval = MagicMock()
+
+        with tempfile.TemporaryDirectory() as td:
+            td_p = Path(td)
+            exported = td_p / "hf.jsonl"
+            with patch.dict(os.environ, {"SPARK_ABSTAIN_HF": "1"}):
+                with patch.dict(
+                    "sys.modules",
+                    {
+                        "transformers": MagicMock(
+                            AutoTokenizer=MagicMock(
+                                from_pretrained=MagicMock(
+                                    return_value=fake_tok
+                                )
+                            ),
+                            AutoModelForCausalLM=MagicMock(
+                                from_pretrained=MagicMock(
+                                    return_value=fake_model
+                                )
+                            ),
+                        )
+                    },
+                ):
+                    info = export_hiddens(
+                        text_ds,
+                        exported,
+                        model="org/tiny-mock",
+                        source="hf",
+                    )
+            self.assertEqual(info["source"], "hf")
+            self.assertEqual(info["hidden_dim"], 32)
+            out = td_p / "h.pt"
+            train = train_abstain_head(
+                exported, out, steps=40, hidden_dim=32
+            )
+            self.assertEqual(train["hidden_dim"], 32)
+            self.assertEqual(
+                train["quality"], "hf_exported_unverified"
+            )
+            head = load_head(out)
+            self.assertEqual(head.hidden_dim, 32)
+
+
+class CorpusTests(unittest.TestCase):
+    """Labeled corpus schema / validate."""
+
+    def test_seed_corpus_valid(self) -> None:
+        from sparklang.abstain.corpus import validate_corpus
+
+        path = ROOT / "examples/fixtures/abstain/corpus_seed.jsonl"
+        info = validate_corpus(path)
+        self.assertEqual(info["state"], "ok")
+        self.assertGreaterEqual(info["n_answer"], 1)
+        self.assertGreaterEqual(info["n_abstain"], 1)
+        self.assertEqual(info["quality"], "fixture_seed")
+
+    def test_bad_label_raises(self) -> None:
+        from sparklang.abstain.corpus import normalize_row
+
+        with self.assertRaises(ValueError):
+            normalize_row({"text": "x", "label": 2})
 
 
 if __name__ == "__main__":

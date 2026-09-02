@@ -112,18 +112,22 @@
         </table></div>
 
         <h2 id="commands">Commands</h2>
-        <pre><code class="language-bash"># Preferred: export dim-matched hiddens, then train
+        <pre><code class="language-bash"># Curated seed + synthetic wide dim (CI-shaped, not a real LM)
+./spark-abstain --live validate-corpus \
+  --dataset examples/fixtures/abstain/corpus_seed.jsonl
 ./spark-abstain --live export \
-  --dataset examples/fixtures/abstain/labels_text.jsonl \
-  --out out/heads/exported.jsonl --hidden-dim 16
+  --dataset examples/fixtures/abstain/corpus_seed.jsonl \
+  --source synthetic --hidden-dim 768 \
+  --out out/heads/synth768.jsonl
 ./spark-abstain --live train \
-  --dataset out/heads/exported.jsonl \
-  --out out/heads/abstain.pt --hidden-dim 16
+  --dataset out/heads/synth768.jsonl \
+  --out out/heads/abstain768.pt --hidden-dim 768
 
-# Real HF export (optional transformers extra)
-SPARK_ABSTAIN_HF=1 ./spark-abstain --live export \
-  --dataset examples/fixtures/abstain/labels_text.jsonl \
-  --model /path/to/local-hf-model \
+# Real HF export (optional transformers extra; local weights)
+SPARK_ABSTAIN_HF=1 SPARK_ABSTAIN_HF_LOCAL_ONLY=1 \
+./spark-abstain --live export \
+  --dataset examples/fixtures/abstain/corpus_seed.jsonl \
+  --model /path/to/local-hf-model --source hf \
   --out out/heads/from-hf.jsonl
 
 ./spark-abstain --live attach \
@@ -138,6 +142,16 @@ SPARK_ABSTAIN_HF=1 ./spark-abstain --live ask \
 
 make test-abstain
 </code></pre>
+
+        <h2 id="corpus">Labeled corpus</h2>
+        <p>Seed file
+        <code class="inline-code">examples/fixtures/abstain/corpus_seed.jsonl</code>:
+        <code class="inline-code">label</code> <strong>0 = answer</strong>,
+        <strong>1 = abstain</strong>, plus human
+        <code class="inline-code">reason</code> tags. Tiny curated seed —
+        <strong>not</strong> a production accuracy corpus. Grow it by appending
+        JSONL rows (no PII); see
+        <code class="inline-code">examples/fixtures/abstain/README.md</code>.</p>
 
         <h2 id="spark_hidden">vLLM <code class="inline-code">/spark_hidden</code> contract</h2>
         <p>Stock OpenAI-compat servers do not export last-layer states.
@@ -161,11 +175,13 @@ make test-abstain
 
         <h2 id="gaps">Honest gaps</h2>
         <ul>
-          <li>CI never loads a 27B — toy / bag-hash fixtures only.</li>
+          <li>CI never loads a 27B — toy / synthetic / bag-hash fixtures only.</li>
+          <li>Synthetic 768 proves dim-match, not production accuracy.</li>
           <li>Retrain on real backbone hiddens before claiming gate quality.</li>
           <li>Stock vLLM still needs the HF sidecar (or a future plugin)
             for <code class="inline-code">/spark_hidden</code>.</li>
-          <li>Labeled corpus is user-supplied; fixtures are tiny.</li>
+          <li>Labeled corpus is a tiny curated seed — grow it; never invent
+            a fake large production dataset.</li>
           <li>llama.cpp / GGUF hidden hooks — out of scope.</li>
         </ul>
 

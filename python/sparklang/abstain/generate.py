@@ -136,17 +136,19 @@ def load_hidden_tensor(path: PathLike) -> torch.Tensor:
     return t.detach().cpu()
 
 
-def try_hf_last_hidden(
-    model_id: str,
-    prompt: str,
-    *,
-    max_length: int = 512,
-) -> Optional[torch.Tensor]:
-    """HF causal-LM prefill → last-token last-layer hidden.
+def _hf_local_files_only(model_id: str) -> bool:
+    """Prefer on-disk / offline — never surprise-download in CI."""
+    if Path(model_id).exists():
+        return True
+    if os.environ.get("SPARK_ABSTAIN_HF_LOCAL_ONLY", "") == "1":
+        return True
+    if os.environ.get("TRANSFORMERS_OFFLINE", "") == "1":
+        return True
+    return False
 
-    Returns None if transformers / weights unavailable.
-    """
-    model_id = require_explicit_model(model_id)
+
+def _load_hf_causal(model_id: str) -> Optional[tuple[Any, Any]]:
+    """Load tokenizer + causal LM, or None if unavailable."""
     try:
         from transformers import (  # type: ignore
             AutoModelForCausalLM,
@@ -161,17 +163,39 @@ def try_hf_last_hidden(
             return None
         if "/" not in model_id:
             return None
+    load_kw: dict[str, Any] = {}
+    if _hf_local_files_only(model_id):
+        load_kw["local_files_only"] = True
     try:
-        tok = AutoTokenizer.from_pretrained(model_id)
+        tok = AutoTokenizer.from_pretrained(model_id, **load_kw)
         if tok.pad_token is None:
             tok.pad_token = tok.eos_token
         model = AutoModelForCausalLM.from_pretrained(
             model_id,
             torch_dtype=torch.float32,
+            **load_kw,
         )
     except Exception:
         return None
     model.eval()
+    return tok, model
+
+
+def try_hf_last_hidden(
+    model_id: str,
+    prompt: str,
+    *,
+    max_length: int = 512,
+) -> Optional[torch.Tensor]:
+    """HF causal-LM prefill → last-token last-layer hidden.
+
+    Returns None if transformers / weights unavailable.
+    """
+    model_id = require_explicit_model(model_id)
+    loaded = _load_hf_causal(model_id)
+    if loaded is None:
+        return None
+    tok, model = loaded
     inputs = tok(
         prompt,
         return_tensors="pt",
@@ -202,30 +226,10 @@ def try_hf_select_then_sample(
     Returns None if transformers / model load fails.
     """
     model_id = require_explicit_model(model_id)
-    try:
-        from transformers import (  # type: ignore
-            AutoModelForCausalLM,
-            AutoTokenizer,
-        )
-    except ImportError:
+    loaded = _load_hf_causal(model_id)
+    if loaded is None:
         return None
-    path = Path(model_id)
-    if not path.exists():
-        if os.environ.get("SPARK_ABSTAIN_HF", "") != "1":
-            return None
-        if "/" not in model_id:
-            return None
-    try:
-        tok = AutoTokenizer.from_pretrained(model_id)
-        if tok.pad_token is None:
-            tok.pad_token = tok.eos_token
-        model = AutoModelForCausalLM.from_pretrained(
-            model_id,
-            torch_dtype=torch.float32,
-        )
-    except Exception:
-        return None
-    model.eval()
+    tok, model = loaded
     inputs = tok(
         prompt,
         return_tensors="pt",

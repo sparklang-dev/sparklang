@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 import os
 from pathlib import Path
 from typing import Any, Optional, Union
@@ -12,34 +11,16 @@ os.environ.setdefault("CUDA_VISIBLE_DEVICES", "")
 import torch
 from torch import nn
 
+from sparklang.abstain.corpus import (
+    SOURCE_BAG_HASH,
+    SOURCE_HF,
+    SOURCE_SYNTHETIC,
+    SOURCE_TOY,
+    load_corpus,
+)
 from sparklang.abstain.head import AbstainHead, save_head
 
 PathLike = Union[str, Path]
-
-
-def _load_rows(dataset: Path) -> list[dict[str, Any]]:
-    """JSONL rows: hidden|[float]|features + label 0/1."""
-    rows: list[dict[str, Any]] = []
-    for line in dataset.read_text(encoding="utf-8").splitlines():
-        line = line.strip()
-        if not line:
-            continue
-        row = json.loads(line)
-        label = row.get("label")
-        if label is None:
-            label = row.get("abstain")
-        feats = row.get("hidden") or row.get("features")
-        if feats is None and "text" in row:
-            # Bag-of-hashes stub features for text-only fixtures.
-            feats = _hash_feats(str(row["text"]), int(row.get("dim") or 64))
-        if feats is None or label is None:
-            raise ValueError(
-                f"row needs hidden/features + label: {row!r}"
-            )
-        rows.append({"features": [float(x) for x in feats], "label": int(label)})
-    if not rows:
-        raise ValueError(f"empty dataset: {dataset}")
-    return rows
 
 
 def _hash_feats(text: str, dim: int) -> list[float]:
@@ -50,6 +31,46 @@ def _hash_feats(text: str, dim: int) -> list[float]:
         v[h] += 1.0
     n = sum(abs(x) for x in v) or 1.0
     return [x / n for x in v]
+
+
+def _load_rows(dataset: Path) -> list[dict[str, Any]]:
+    """JSONL rows: hidden|[float]|features + label 0/1."""
+    raw_rows = load_corpus(dataset)
+    rows: list[dict[str, Any]] = []
+    feature_source = "unknown"
+    for row in raw_rows:
+        feats = row.get("hidden")
+        src = str(row.get("source") or "")
+        if feats is None:
+            # Bag-of-hashes stub — legacy text-only fixtures.
+            dim = int(row.get("dim") or 64)
+            feats = _hash_feats(str(row["text"]), dim)
+            src = SOURCE_BAG_HASH
+        if feature_source == "unknown":
+            feature_source = src or SOURCE_BAG_HASH
+        rows.append(
+            {
+                "features": [float(x) for x in feats],
+                "label": int(row["label"]),
+                "source": src or feature_source,
+            }
+        )
+    if not rows:
+        raise ValueError(f"empty dataset: {dataset}")
+    return rows
+
+
+def _quality_for_source(source: str) -> str:
+    """Honest quality stamp — never claim production accuracy."""
+    if source in (SOURCE_HF, "hf_prefill"):
+        return "hf_exported_unverified"
+    if source == SOURCE_SYNTHETIC:
+        return "synthetic_backbone_dim_match"
+    if source in (SOURCE_TOY, "toy_stub"):
+        return "toy_backbone"
+    if source == SOURCE_BAG_HASH:
+        return "bag_hash_fixture"
+    return "fixture_unverified"
 
 
 def train_abstain_head(
@@ -66,12 +87,15 @@ def train_abstain_head(
     """Fit linear/MLP head; write real ``.pt`` weights."""
     rows = _load_rows(Path(dataset))
     dim = hidden_dim or len(rows[0]["features"])
+    sources = sorted({str(r.get("source") or "") for r in rows})
+    feature_source = sources[0] if len(sources) == 1 else "mixed"
     for r in rows:
         if len(r["features"]) != dim:
             raise ValueError(
                 f"feature dim mismatch: want {dim} "
                 f"got {len(r['features'])}"
             )
+    quality = _quality_for_source(feature_source)
     torch.manual_seed(seed)
     head = AbstainHead(dim, mlp=mlp)
     opt = torch.optim.Adam(head.parameters(), lr=lr)
@@ -100,6 +124,12 @@ def train_abstain_head(
             "steps": steps,
             "loss": last_loss,
             "n": len(rows),
+            "feature_source": feature_source,
+            "quality": quality,
+            "note": (
+                "not production accuracy — match target "
+                "backbone hidden_dim before gate claims"
+            ),
         },
     )
     return {
@@ -110,5 +140,11 @@ def train_abstain_head(
         "steps": steps,
         "loss": last_loss,
         "n": len(rows),
+        "feature_source": feature_source,
+        "quality": quality,
+        "note": (
+            "not production accuracy — retrain on "
+            "target-backbone hiddens before claims"
+        ),
         "state": "succeeded",
     }

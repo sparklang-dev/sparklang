@@ -61,6 +61,49 @@ grep -q '"state":"succeeded"' /tmp/spark-ab-train16.txt
   --hidden-dim 16 >/tmp/spark-ab-shipped.txt
 grep -q '"state":"succeeded"' /tmp/spark-ab-shipped.txt
 
+# Curated corpus validate + synthetic 768 export→train→ask
+./spark-abstain --live validate-corpus \
+  --dataset examples/fixtures/abstain/corpus_seed.jsonl \
+  >/tmp/spark-ab-corpus.txt
+grep -q '"state":"ok"' /tmp/spark-ab-corpus.txt
+grep -q '"n_abstain"' /tmp/spark-ab-corpus.txt
+./spark-abstain --live export \
+  --dataset examples/fixtures/abstain/corpus_seed.jsonl \
+  --source synthetic --hidden-dim 768 \
+  --out out/heads-test/synth768.jsonl \
+  >/tmp/spark-ab-synth-export.txt
+grep -q '"source":"synthetic_backbone"' /tmp/spark-ab-synth-export.txt
+grep -q '"hidden_dim":768' /tmp/spark-ab-synth-export.txt
+grep -q '"quality":"synthetic_backbone_dim_match"' \
+  /tmp/spark-ab-synth-export.txt
+./spark-abstain --live train \
+  --dataset out/heads-test/synth768.jsonl \
+  --out out/heads-test/abstain768.pt \
+  --hidden-dim 768 >/tmp/spark-ab-train768.txt
+grep -q '"state":"succeeded"' /tmp/spark-ab-train768.txt
+grep -q '"hidden_dim":768' /tmp/spark-ab-train768.txt
+grep -q '"quality":"synthetic_backbone_dim_match"' \
+  /tmp/spark-ab-train768.txt
+PYTHONPATH=python python3 - <<'PY'
+import torch
+from pathlib import Path
+from sparklang.abstain.export import synthetic_backbone_hidden
+h = synthetic_backbone_hidden(
+    "Who is the mayor of Springfield?", 768, 1, seed=42
+)
+torch.save(torch.tensor(h), Path("out/heads-test/h768.pt"))
+print("ok")
+PY
+./spark-abstain --live ask \
+  --prompt "Who is the mayor of Springfield?" \
+  --weights out/heads-test/abstain768.pt \
+  --hidden out/heads-test/h768.pt \
+  --threshold 0.5 \
+  >/tmp/spark-ab-ask768.txt
+grep -q '"mode":"live"' /tmp/spark-ab-ask768.txt
+grep -q '"hidden_source":"file"' /tmp/spark-ab-ask768.txt
+grep -q '"abstain":true' /tmp/spark-ab-ask768.txt
+
 ./spark-abstain --live attach \
   --model out/heads-test \
   --weights out/heads-test/abstain.pt \

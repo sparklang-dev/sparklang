@@ -1,8 +1,14 @@
 """Export last-token hiddens for abstain head train (CPU).
 
 Dim-matched JSONL for ``head train``. Prefer a real HF backbone when
-``model`` is set. Without HF / model, a seeded **toy backbone** stands
-in for CI — same dim contract, not a production LoRA or real LM.
+``model`` is set. Without HF / model:
+
+* ``source=toy`` — seeded toy vectors (CI dim 16 default)
+* ``source=synthetic`` — dim-matched **synthetic** backbone vectors
+  with a learnable abstain/answer signal (proves wide-dim train/ask;
+  **not** a real LM and **not** production accuracy)
+
+Never claim Llama-70B / production gate quality from fixtures.
 """
 
 from __future__ import annotations
@@ -16,6 +22,13 @@ os.environ.setdefault("CUDA_VISIBLE_DEVICES", "")
 
 import torch
 
+from sparklang.abstain.corpus import (
+    SOURCE_HF,
+    SOURCE_SYNTHETIC,
+    SOURCE_TOY,
+    load_corpus,
+    normalize_row,
+)
 from sparklang.abstain.generate import (
     require_explicit_model,
     try_hf_last_hidden,
@@ -23,6 +36,10 @@ from sparklang.abstain.generate import (
 from sparklang.abstain.train import _hash_feats
 
 PathLike = Union[str, Path]
+
+_VALID_EXPORT_SOURCES = frozenset(
+    {"auto", "toy", "synthetic", "hf"}
+)
 
 
 def toy_backbone_hidden(
@@ -52,17 +69,47 @@ def toy_backbone_hidden(
     return (v / n).tolist()
 
 
-def _row_text_label(row: dict[str, Any]) -> tuple[str, int]:
-    """Pull text + 0/1 label from a JSONL row."""
-    text = row.get("text") or row.get("prompt")
-    if text is None:
-        raise ValueError(f"row needs text/prompt: {row!r}")
-    label = row.get("label")
-    if label is None:
-        label = row.get("abstain")
-    if label is None:
-        raise ValueError(f"row needs label/abstain: {row!r}")
-    return str(text), int(label)
+def synthetic_backbone_hidden(
+    text: str,
+    dim: int,
+    label: int,
+    *,
+    seed: int = 42,
+) -> list[float]:
+    """Dim-matched synthetic 'backbone' vector for wide-head CI.
+
+    Uses a reserved head-slice for the abstain/answer signal so a
+    linear probe can learn on CPU at real LM widths (e.g. 768)
+    without HF weights. Remaining dims carry text bag-hash noise.
+
+    Honest: ``source=synthetic_backbone`` — **not** HF prefill,
+    **not** production accuracy, **not** a 27B/70B claim.
+    """
+    if dim < 8:
+        raise ValueError(
+            f"synthetic backbone needs dim >= 8, got {dim}"
+        )
+    label_i = int(label)
+    if label_i not in (0, 1):
+        raise ValueError(f"label must be 0 or 1, got {label_i}")
+    # Text diversity (normalized bag).
+    bag = _hash_feats(text, dim)
+    g = torch.Generator()
+    g.manual_seed(int(seed) + 17 * dim + label_i)
+    noise = torch.randn(dim, generator=g, dtype=torch.float32)
+    noise = noise * 0.05
+    v = torch.tensor(bag, dtype=torch.float32) + noise
+    # Reserved slice: first 4 dims carry a strong class signal.
+    # answer → +1 on even indices; abstain → +1 on odd.
+    v[0:4] = 0.0
+    if label_i == 0:
+        v[0] = 1.0
+        v[2] = 1.0
+    else:
+        v[1] = 1.0
+        v[3] = 1.0
+    n = float(torch.linalg.vector_norm(v).item()) or 1.0
+    return (v / n).tolist()
 
 
 def export_hiddens(
@@ -73,44 +120,68 @@ def export_hiddens(
     hidden_dim: Optional[int] = None,
     seed: int = 42,
     kind: str = "internal",
+    source: str = "auto",
 ) -> dict[str, Any]:
     """Write JSONL rows with ``hidden`` + ``label`` (+ text).
 
-    * ``model`` set → HF last-token hidden (refuses gateway aliases).
+    * ``model`` set (or ``source=hf``) → HF last-token hidden.
       ``hidden_dim`` must match the model width or be omitted.
-    * ``model`` unset → toy backbone at ``hidden_dim`` (default 16).
+    * ``source=synthetic`` → synthetic_backbone at ``hidden_dim``
+      (default **768** — common LM width; not a real LM).
+    * ``source=toy`` / unset model → toy backbone (default dim 16).
     """
-    ds = Path(dataset)
+    src_arg = (source or "auto").strip().lower()
+    if src_arg not in _VALID_EXPORT_SOURCES:
+        raise ValueError(
+            f"source must be one of {sorted(_VALID_EXPORT_SOURCES)}, "
+            f"got {source!r}"
+        )
+
+    rows_in = load_corpus(dataset)
     out_p = Path(out)
     out_p.parent.mkdir(parents=True, exist_ok=True)
-    rows_in: list[dict[str, Any]] = []
-    for line in ds.read_text(encoding="utf-8").splitlines():
-        line = line.strip()
-        if not line:
-            continue
-        rows_in.append(json.loads(line))
-    if not rows_in:
-        raise ValueError(f"empty dataset: {ds}")
 
-    source = "toy"
-    dim: Optional[int] = hidden_dim
     model_id: Optional[str] = None
     if model:
         model_id = require_explicit_model(model)
-        source = "hf"
+        if src_arg == "auto":
+            src_arg = "hf"
+        elif src_arg != "hf":
+            raise ValueError(
+                f"--model requires source=hf/auto, got {source!r}"
+            )
+    elif src_arg == "hf":
+        raise ValueError("source=hf needs --model")
+    elif src_arg == "auto":
+        src_arg = "toy"
+
+    if src_arg == "hf":
+        export_source = SOURCE_HF
+    elif src_arg == "synthetic":
+        export_source = SOURCE_SYNTHETIC
+    else:
+        export_source = SOURCE_TOY
+
+    dim: Optional[int] = hidden_dim
+    if export_source == SOURCE_SYNTHETIC and dim is None:
+        dim = 768
+    if export_source == SOURCE_TOY and dim is None:
+        dim = 16
 
     exported: list[dict[str, Any]] = []
     for row in rows_in:
-        text, label = _row_text_label(row)
-        if source == "hf":
+        text = str(row["text"])
+        label = int(row["label"])
+        if export_source == SOURCE_HF:
             assert model_id is not None
             tens = try_hf_last_hidden(model_id, text)
             if tens is None:
                 raise SystemExit(
                     "export: HF hidden unavailable "
                     f"(model={model_id!r}; install "
-                    "python/[hf] + weights, or omit --model "
-                    "for toy backbone)"
+                    "python/[hf] + local weights, set "
+                    "SPARK_ABSTAIN_HF=1 for hub ids, or use "
+                    "--source toy|synthetic)"
                 )
             feats = tens.tolist()
             if dim is None:
@@ -120,36 +191,57 @@ def export_hiddens(
                     f"hidden_dim mismatch: want {dim} "
                     f"got {len(feats)} for {text!r}"
                 )
-        else:
-            if dim is None:
-                dim = 16
-            feats = toy_backbone_hidden(
-                text, dim, seed=seed
+        elif export_source == SOURCE_SYNTHETIC:
+            assert dim is not None
+            feats = synthetic_backbone_hidden(
+                text, dim, label, seed=seed
             )
-        exported.append(
-            {
-                "text": text,
-                "label": label,
-                "hidden": feats,
-                "dim": dim,
-                "source": source,
-                "kind": kind,
-            }
-        )
+        else:
+            assert dim is not None
+            feats = toy_backbone_hidden(text, dim, seed=seed)
+
+        out_row: dict[str, Any] = {
+            "text": text,
+            "label": label,
+            "label_name": row.get("label_name")
+            or ("abstain" if label else "answer"),
+            "hidden": feats,
+            "dim": dim,
+            "source": export_source,
+            "kind": kind,
+        }
+        if row.get("reason"):
+            out_row["reason"] = row["reason"]
+        if row.get("id"):
+            out_row["id"] = row["id"]
+        if row.get("tags"):
+            out_row["tags"] = row["tags"]
+        exported.append(normalize_row(out_row))
 
     assert dim is not None
     with out_p.open("w", encoding="utf-8") as fh:
         for r in exported:
             fh.write(json.dumps(r, separators=(",", ":")) + "\n")
 
+    quality = {
+        SOURCE_HF: "hf_exported_unverified",
+        SOURCE_SYNTHETIC: "synthetic_backbone_dim_match",
+        SOURCE_TOY: "toy_backbone",
+    }.get(export_source, "unknown")
+
     return {
         "op": "head_export",
-        "dataset": str(ds),
+        "dataset": str(dataset),
         "out": str(out_p),
         "n": len(exported),
         "hidden_dim": dim,
-        "source": source,
+        "source": export_source,
         "model": model_id or "",
         "kind": kind,
+        "quality": quality,
+        "note": (
+            "not production accuracy — retrain on target "
+            "backbone before gate-quality claims"
+        ),
         "state": "succeeded",
     }

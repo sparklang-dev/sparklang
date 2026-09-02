@@ -502,6 +502,12 @@ test-abstain: spark spark-abstain
 	chmod +x tools/spark-abstain/run_abstain_gate.sh
 	./tools/spark-abstain/run_abstain_gate.sh
 
+# Optional: SPARK_ABSTAIN_HF=1 SPARK_ABSTAIN_MODEL=/path ./make …
+.PHONY: smoke-abstain-hf
+smoke-abstain-hf: spark spark-abstain
+	chmod +x tools/spark-abstain/hf_export_train_smoke.sh
+	./tools/spark-abstain/hf_export_train_smoke.sh
+
 .PHONY: test-train-http
 test-train-http: spark-train-http spark
 	./spark-train-http --dry --submit | grep -q job-dry-001

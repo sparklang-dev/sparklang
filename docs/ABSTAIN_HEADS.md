@@ -124,18 +124,23 @@ make test-abstain
 
 Shipped fixtures:
 
+- `examples/fixtures/abstain/corpus_seed.jsonl` — curated seed
+  (text + `label` 0/1 + `reason` / tags). Preferred labeled corpus.
 - `examples/fixtures/abstain/labels.jsonl` — bag-hash dim **64** (legacy CI)
 - `examples/fixtures/abstain/labels_text.jsonl` — text + label only
 - `examples/fixtures/abstain/labels_exported.jsonl` — toy-backbone
-  dim **16** (export→train contract; retrain on real HF hiddens
-  before claiming gate quality on a live LM)
+  dim **16** (export→train contract)
+- `examples/fixtures/abstain/README.md` — schema + how to grow
+
+Validate: `./spark-abstain --live validate-corpus --dataset …`
 
 ## Train from exported backbone hiddens (preferred)
 
 Head `hidden_dim` **must** equal the backbone last-layer width.
 Pipeline:
 
-1. Label prompts (`text` + `label` 0/1) in JSONL.
+1. Label prompts (`text` + `label` 0/1) in JSONL — start from
+   `corpus_seed.jsonl`.
 2. **Export** last-token hiddens at that width.
 3. **Train** the probe on those rows.
 4. **Attach** + **ask** with the same backbone (or matching
@@ -143,10 +148,11 @@ Pipeline:
 
 ```bash
 # A) Real HF backbone (needs pip install -e 'python/[hf]' + weights)
-SPARK_ABSTAIN_HF=1 \
+SPARK_ABSTAIN_HF=1 SPARK_ABSTAIN_HF_LOCAL_ONLY=1 \
 ./spark-abstain --live export \
-  --dataset examples/fixtures/abstain/labels_text.jsonl \
+  --dataset examples/fixtures/abstain/corpus_seed.jsonl \
   --model /path/to/local-hf-model \
+  --source hf \
   --out out/heads/from-hf.jsonl
 # hidden_dim inferred from the model; do not pass a mismatched --hidden-dim
 
@@ -154,7 +160,20 @@ SPARK_ABSTAIN_HF=1 \
   --dataset out/heads/from-hf.jsonl \
   --out out/heads/abstain.pt
 
-# B) CI / offline — toy backbone (same CLI, honest source=toy)
+# Optional one-shot smoke (skips if env/model missing):
+#   SPARK_ABSTAIN_HF=1 SPARK_ABSTAIN_MODEL=/path/to/local-hf-model \
+#     ./tools/spark-abstain/hf_export_train_smoke.sh
+
+# B) Synthetic dim-matched (wide CI — not a real LM)
+./spark-abstain --live export \
+  --dataset examples/fixtures/abstain/corpus_seed.jsonl \
+  --source synthetic --hidden-dim 768 \
+  --out out/heads/synth768.jsonl
+./spark-abstain --live train \
+  --dataset out/heads/synth768.jsonl \
+  --out out/heads/abstain768.pt --hidden-dim 768
+
+# C) CI / offline — toy backbone (same CLI, honest source=toy)
 ./spark-abstain --live export \
   --dataset examples/fixtures/abstain/labels_text.jsonl \
   --out out/heads/exported.jsonl --hidden-dim 16
@@ -163,8 +182,19 @@ SPARK_ABSTAIN_HF=1 \
   --out out/heads/abstain16.pt --hidden-dim 16
 ```
 
-Toy export is **not** production LoRA and **not** a 27B. It only
-proves the dim-matched file contract on CPU.
+Quality stamps (`quality` in export/train JSON):
+
+| Stamp | Meaning |
+|-------|---------|
+| `fixture_seed` | Text labels only |
+| `bag_hash_fixture` | Legacy hash features (dim 64) |
+| `toy_backbone` | Seeded toy vectors |
+| `synthetic_backbone_dim_match` | Wide synthetic — dim contract only |
+| `hf_exported_unverified` | Real HF hiddens — still not a published accuracy claim |
+
+Toy / synthetic export is **not** production LoRA and **not** a
+27B/70B. HF export is opt-in and still **unverified** until you
+evaluate on held-out prompts for **your** backbone.
 
 ## Live generate path (HF / hidden file / vLLM)
 
@@ -322,6 +352,8 @@ PYTHONPATH=python python3 \
 | `SPARK_ABSTAIN_MANIFEST` | Attach manifest JSON |
 | `SPARK_ABSTAIN_MODEL` | Local HF dir or hub id |
 | `SPARK_ABSTAIN_HF=1` | Allow hub id + HF forward / generate |
+| `SPARK_ABSTAIN_HF_LOCAL_ONLY=1` | `local_files_only` — no hub download |
+| `TRANSFORMERS_OFFLINE=1` | Same offline preference for HF loads |
 | `SPARK_ABSTAIN_HIDDEN` | Pre-exported last-token hidden |
 | `SPARK_ABSTAIN_VLLM_URL` | `/spark_hidden` sidecar base URL |
 | `SPARK_ABSTAIN_VLLM_TIMEOUT` | Client timeout seconds (default 30) |
@@ -338,20 +370,24 @@ CI does **not** install them; unit tests mock HTTP / HF tensors.
 
 ## Honest gaps
 
-- Dry-run / CI never loads a 27B. Fixtures + stub / synthetic
-  hidden only. Live HF is opt-in via env + local weights.
-- Head trained on fixture bag-hash (dim 64) or toy export (dim 16)
-  is **not** compatible with a real LM hidden size — retrain on
+- Dry-run / CI never loads a 27B. Fixtures + stub / synthetic /
+  toy hidden only. Live HF is opt-in via env + **local** weights
+  (`SPARK_ABSTAIN_HF_LOCAL_ONLY` / `TRANSFORMERS_OFFLINE` preferred).
+- Head trained on fixture bag-hash (dim 64), toy export (dim 16),
+  or synthetic backbone (e.g. 768) is **not** compatible with a
+  real LM hidden size unless that size matches — retrain on
   exported hiddens from the **target** backbone before claiming
-  gate quality.
+  gate quality. Synthetic proves the **dim contract**, not accuracy.
 - Stock vLLM still lacks native hidden export; use the HF
   sidecar (or a future in-process plugin speaking
   `/spark_hidden`). The stub is for contract/CI only.
 - llama.cpp / GGUF hidden hooks are still out of scope.
-- Labeled abstain data is **user-supplied** — we ship a tiny
-  fixture, not a production corpus.
+- Labeled abstain data starts from a **tiny curated seed**
+  (`corpus_seed.jsonl`) — grow it yourself; we do **not** ship a
+  production corpus and do **not** invent large fake datasets.
 - Cloud verify-or-refuse is documented + composable (orchestrator);
   not a second gateway plugin and not Bifrost aliases.
 - Do **not** call this production-ready without real head weights
   matched to the live backbone. Not production LoRA.
 - Never resolve `auto`/`code`/`fast` (or similar) as the live model.
+- Never claim “we trained on Llama-70B” from fixtures or smoke.
