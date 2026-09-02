@@ -19,6 +19,9 @@ See [docs/ABSTAIN_HEADS.md](../../docs/ABSTAIN_HEADS.md).
   --dataset out/heads/synth768.jsonl \
   --out out/heads/abstain768.pt --hidden-dim 768
 
+# Flagship: SoT + abstain head + inventable/open ask (no invent)
+./spark --dry-run examples/no_invent.spark
+
 # Outer inventable verify (no weights when refuse fires)
 ./spark-abstain --dry outer-verify \
   --prompt "What is the dryer start price at that store right now?"

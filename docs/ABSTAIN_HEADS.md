@@ -78,14 +78,25 @@ head attach model "path/or/hf-id" \
 head ask "Who is the mayor of Springfield?" -> answer
 ```
 
-Inventable outer playbook (SoT before ask):
+**Flagship — no inventable open-decode:**
+
+```bash
+./spark --dry-run examples/no_invent.spark
+```
+
+`examples/no_invent.spark` is the shippable product pattern: declare
+`head abstain` (threshold + IDK) → HTTP/SoT + `expect` first for
+inventable facts → inventable / open `head ask` HALTs to IDK when
+there is no SoT on the generate path. Honest scope: architecture
+prevents inventable open-decode; it does not eliminate all
+hallucination forever. Companion playbook (SoT-only slice):
 
 ```bash
 ./spark --dry-run examples/head_ask_inventable_verify.spark
 ```
 
-See that file: HTTP fixture SoT → `expect` → gated ask refuses
-inventing a live dryer price without evidence.
+That file: HTTP fixture SoT → `expect` → gated ask refuses inventing
+a live dryer price without evidence.
 
 Gate params: `threshold` (τ), optional `entropy` / `margin`
 (`SPARK_ABSTAIN_ENTROPY_MAX` / `SPARK_ABSTAIN_MARGIN_MIN`).
@@ -113,6 +124,7 @@ Dry never invents trained weights. Live refuse gateway short names.
 ```bash
 # CI / offline (no GPU)
 make test-abstain
+./spark --dry-run examples/no_invent.spark
 ./spark --dry-run examples/head_abstain.spark
 ./spark --dry-run examples/head_ask.spark
 ./spark --dry-run examples/head_ask_inventable_verify.spark
@@ -349,6 +361,7 @@ Extras: `pip install -e 'python/[hf]'` · `python/[sidecar]`.
 ## Discovery
 
 - README table → this doc
+- Flagship program: `examples/no_invent.spark`
 - `docs/LANGUAGE.md` → `head abstain` / train / attach / ask
 - `make test-abstain` · `make smoke-abstain-hf`
 

@@ -118,7 +118,8 @@ trip) → emit `idk` and halt. Internal = probe registered with a frozen
 backbone; external = sidecar on exported hiddens/logprobs. Prefer
 `./spark-abstain --live export` then train so `hidden_dim` matches the
 backbone. Inventable prices/IDs: SoT / HTTP / `expect` **before** free
-generate (`examples/head_ask_inventable_verify.spark`). Not LoRA.
+generate. Flagship: `examples/no_invent.spark` (also
+`examples/head_ask_inventable_verify.spark`). Not LoRA.
 Dry-run = fixtures only. Never `auto`/`code`/`fast`. Full runbook:
 [ABSTAIN_HEADS.md](ABSTAIN_HEADS.md).
 

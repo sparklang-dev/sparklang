@@ -29,6 +29,14 @@ grep -q '"abstain":true' /tmp/spark-ab-ex2.txt
   >/tmp/spark-ab-ex3.txt
 grep -q head_train /tmp/spark-ab-ex3.txt
 
+# Flagship: no inventable open-decode (SoT + abstain + open ask)
+./spark --dry-run examples/no_invent.spark \
+  >/tmp/spark-ab-no-invent.txt
+grep -q head_abstain /tmp/spark-ab-no-invent.txt
+grep -q price_usd /tmp/spark-ab-no-invent.txt
+grep -q '"abstain":true' /tmp/spark-ab-no-invent.txt
+grep -q "I don't know." /tmp/spark-ab-no-invent.txt
+
 # Inventable outer verify-or-refuse playbook (SoT before ask)
 ./spark --dry-run examples/head_ask_inventable_verify.spark \
   >/tmp/spark-ab-invent.txt

@@ -1,0 +1,52 @@
+# Flagship: prevent inventable open-decode ("don't make things up")
+#
+# Honest scope — this program shows the product pattern that keeps
+# inventable facts (prices, IDs, live counts) from being open-decoded
+# by the LM alone. SoT / tool / expect first; abstain gate for
+# free-form ask. It does not claim to eliminate all hallucination.
+#
+# Dry (CI / offline):
+#   ./spark --dry-run examples/no_invent.spark
+#
+# Live shape (owner host): real SoT URL → expect → gated ask with
+# trained weights + matching hidden. Never Bifrost aliases
+# (auto / code / fast). Missing SoT must fail loud (expect / refuse),
+# not silent-fallback invent.
+#
+# Layers in this file:
+#   1) Declare abstain head (threshold + configured IDK)
+#   2) Inventable path: HTTP fixture SoT + expect (refuse if miss)
+#   3) Inventable ask without SoT text → IDK + HALT
+#   4) Open free-form ask → IDK + HALT
+
+# --- 1) Abstain / IDK head (SELECT-before-SAMPLE) -----------------
+head abstain internal model "fixture-model" weights "out/heads/abstain.pt" threshold 0.7 idk "I don't know." -> gate
+
+expect contains gate "head_abstain"
+expect contains gate "0.7"
+
+# --- 2) Inventable facts: SoT / HTTP first, then expect -----------
+# If the fixture (or live SoT) lacks required fields, expect fails
+# and the program exits — loud miss, never invent the number.
+http get "https://example.invalid/sot/dryer-start" fixture "examples/fixtures/abstain/sot_dryer_price.json" timeout 5 -> sot
+
+expect contains sot "price_usd"
+expect contains sot "2.50"
+expect contains sot "fixture_sot"
+
+# Quote inventable values from SoT / tools only. Do not open-decode
+# price / ID / count from a free generate after a SoT miss.
+
+# --- 3) Inventable ask without attaching SoT → IDK + HALT --------
+head ask "What is the dryer start price at that store right now?" -> inventable
+
+expect contains inventable fixture "examples/fixtures/abstain/want_abstain_true.txt"
+expect contains inventable fixture "examples/fixtures/abstain/want_halted_true.txt"
+expect contains inventable "I don't know."
+
+# --- 4) Open free-form ask → gate can HALT to IDK ----------------
+head ask "Who is the mayor of Springfield?" -> open_ask
+
+expect contains open_ask fixture "examples/fixtures/abstain/want_abstain_true.txt"
+expect contains open_ask fixture "examples/fixtures/abstain/want_halted_true.txt"
+expect contains open_ask "I don't know."

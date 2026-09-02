@@ -9,7 +9,7 @@ corpus or claim Llama-70B / live LM gate quality from these rows.
 | File | Role |
 |------|------|
 | `corpus_seed.jsonl` | Curated text + `label` 0/1 + `reason` (preferred; dozens of rows) |
-| `sot_dryer_price.json` | Dry SoT fixture for inventable outer verify playbook |
+| `sot_dryer_price.json` | Dry SoT for `no_invent.spark` / inventable playbook |
 | `labels_text.jsonl` | Minimal text+label (legacy / CI export input) |
 | `labels.jsonl` | Legacy bag-hash dim **64** features |
 | `labels_exported.jsonl` | Toy-backbone dim **16** export→train contract |

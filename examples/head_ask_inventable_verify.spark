@@ -1,6 +1,7 @@
 # Inventable facts — outer verify-or-refuse (dry playbook)
 # Abstain head alone is NOT enough for prices / IDs / live ledger.
 # Pattern: SoT / HTTP / expect FIRST, then gated ask.
+# Flagship (full product pattern): examples/no_invent.spark
 #
 #   ./spark --dry-run examples/head_ask_inventable_verify.spark
 #

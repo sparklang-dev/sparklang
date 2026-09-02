@@ -78,6 +78,12 @@
         <p><strong>Not</strong> a Bifrost plugin. <strong>Not</strong> production LoRA.
         Live model = explicit HF path or <code class="inline-code">org/name</code> only —
         never <code class="inline-code">auto</code> / <code class="inline-code">code</code> / <code class="inline-code">fast</code>.</p>
+        <p><strong>Flagship program:</strong>
+        <code class="inline-code">examples/no_invent.spark</code> —
+        SoT / <code class="inline-code">expect</code> first for inventable facts,
+        then gated ask (architecture prevents inventable open-decode;
+        not a claim that all hallucination is gone).</p>
+        <pre><code class="language-bash">./spark --dry-run examples/no_invent.spark</code></pre>
 
         <h2 id="architecture">Architecture</h2>
         <ul>

@@ -4,6 +4,16 @@ All notable user-facing releases of **SparkLang** (the Spark programming
 language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
+## 0.6.18 — 2026-09-02
+
+- **Flagship no-invent example:** `examples/no_invent.spark` —
+  SoT/`expect` first for inventable facts, `head abstain` +
+  gated `head ask` for open asks (IDK + HALT). Honest scope:
+  architecture prevents inventable open-decode, not “all
+  hallucination forever.” Docs:
+  [docs/ABSTAIN_HEADS.md](docs/ABSTAIN_HEADS.md),
+  PROGRAMMING_GUIDE / LANGUAGE. Gate: `make test-abstain`.
+
 ## 0.6.17 — 2026-09-02
 
 - **Abstain held-out eval + continue-SAMPLE:**

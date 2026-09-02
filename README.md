@@ -34,7 +34,7 @@ build, dry vs live, syntax with real `examples/`, layout, debug, tests.
 | Doc | Role |
 |-----|------|
 | **[AI models](docs/AI_MODELS.md)** | Model create/modify; dry-run first; optional live gateway |
-| **[Abstain / IDK heads](docs/ABSTAIN_HEADS.md)** | SELECT-before-SAMPLE; `./spark-abstain` |
+| **[Abstain / IDK heads](docs/ABSTAIN_HEADS.md)** | SELECT-before-SAMPLE; flagship `examples/no_invent.spark` |
 | **[Program with Spark](docs/PROGRAMMING_GUIDE.md)** | Canonical how-to |
 | **[AI playbooks](docs/AI_PLAYBOOKS.md)** | Coding playbooks + explicit model line |
 | **[IDE](docs/IDE.md)** | Verified `ide` ops + interim Cursor editor |
