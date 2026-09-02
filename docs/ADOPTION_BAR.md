@@ -70,9 +70,13 @@ Keep these off the hero; they belong here and in docs:
 - **HTTP auth / retries** for language `http get`/`post` = **next**.
 - **Packet capture / MITM / browser** stay in LANGUAGE but are secondary vs
   train→eval (see “Also available” one-liner on the homepage).
-- **Live train** requires a trainer you operate at `SPARK_TRAIN_URL`
-  (`backend "http"`). Dry-run fixtures demonstrate the job path; do not claim
-  a live GPU completion on sparklang.dev without a real run.
+- **Live train** — reference trainer ships **three** CPU methods:
+  **`spark_distill_cpu`** (`weights.pt`), **`spark_pref_pack`**
+  (`pref_pack.json` + `ranker.pt`), **`spark_playbook_fit`**
+  (`playbooks.json` + `router.pt`). Same HTTP contract; select with
+  POST `method` / `SPARK_TRAIN_METHOD`. Captures under
+  `website/docs/examples/live-train-*.txt`.
+  Do not claim LoRA or voice-GPU training on sparklang.dev.
 - **Expectation pass/fail** is shipped (`expect equal` / `expect contains`).
   Homepage flagship is train → status → expect (`examples/train_eval.spark`).
   `model compare` remains an eval helper, not the hero loop.

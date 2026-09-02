@@ -1,1 +1,12 @@
 {"messages":[{"role":"user","content":"hi"},{"role":"assistant","content":"hello"}]}
+{"messages":[{"role":"user","content":"hello"},{"role":"assistant","content":"hello"}]}
+{"messages":[{"role":"user","content":"hey there"},{"role":"assistant","content":"hello"}]}
+{"messages":[{"role":"user","content":"thanks"},{"role":"assistant","content":"you are welcome"}]}
+{"messages":[{"role":"user","content":"thank you"},{"role":"assistant","content":"you are welcome"}]}
+{"messages":[{"role":"user","content":"help"},{"role":"assistant","content":"how can i help"}]}
+{"messages":[{"role":"user","content":"i need help"},{"role":"assistant","content":"how can i help"}]}
+{"messages":[{"role":"user","content":"what can you do"},{"role":"assistant","content":"how can i help"}]}
+{"messages":[{"role":"user","content":"bye"},{"role":"assistant","content":"goodbye"}]}
+{"messages":[{"role":"user","content":"goodbye"},{"role":"assistant","content":"goodbye"}]}
+{"messages":[{"role":"user","content":"see you"},{"role":"assistant","content":"goodbye"}]}
+{"messages":[{"role":"user","content":"ping"},{"role":"assistant","content":"pong"}]}

@@ -73,12 +73,35 @@
 <p>All notable user-facing releases of <strong>SparkLang</strong> (the Spark programming
 language) are listed here. Site and installers track
 <code>website/downloads/manifest.json</code>.</p>
+<h2>0.6.6 — 2026-09-02</h2>
+<ul>
+<li><strong>Three CPU train methods</strong> (not LoRA) behind the same HTTP contract:
+  <strong><code class="inline-code">spark_distill_cpu</code></strong> →
+  <code class="inline-code">weights.pt</code>;
+  <strong><code class="inline-code">spark_pref_pack</code></strong> →
+  <code class="inline-code">pref_pack.json</code> +
+  <code class="inline-code">ranker.pt</code>;
+  <strong><code class="inline-code">spark_playbook_fit</code></strong> →
+  <code class="inline-code">playbooks.json</code> +
+  <code class="inline-code">router.pt</code>.</li>
+<li>Select via POST <code class="inline-code">method</code>, companion
+  <code class="inline-code">--method</code>, or
+  <code class="inline-code">SPARK_TRAIN_METHOD</code>.</li>
+<li>Live captures:
+  <code class="inline-code">live-train-capture.txt</code>,
+  <code class="inline-code">live-train-methods-capture.txt</code>.</li>
+<li>Hero / What's real today list the three methods honestly.</li>
+</ul>
 <h2>0.6.5 — 2026-09-02</h2>
 <ul>
-<li><strong>Hero honesty:</strong> homepage leads with
-  <strong>orchestrate and gate model training jobs</strong>
-  (train→status→expect / dry-run CI / HTTP trainer contract).
-  Reference trainer writes a marker artifact — not claimed LoRA/weights.</li>
+<li><strong>Custom train proof:</strong> reference trainer runs
+  <strong><code class="inline-code">spark_distill_cpu</code></strong>
+  — tiny PyTorch student on CPU that mimics teacher replies from chat
+  JSONL. Writes real <code class="inline-code">weights.pt</code>.
+  Not LoRA / not HF PEFT / no voice GPU. Live capture via
+  <code class="inline-code">./spark --live examples/model_train.spark</code>.</li>
+<li><strong>Hero:</strong> “Train specialists — CPU distill, not LoRA”
+  (honest about what the reference path trains).</li>
 <li><strong>One expect form</strong> on homepage / Learn / flagship examples:
   <code class="inline-code">expect contains NAME fixture "PATH"</code>.</li>
 <li><strong><code class="inline-code">expect equal</code> / <code class="inline-code">expect contains</code>:</strong>
@@ -93,12 +116,11 @@ language) are listed here. Site and installers track
   <code class="inline-code">expect</code> can assert. Homepage / Learn use
   <code class="inline-code">examples/train_eval.spark</code> (exit 0);
   fail path <code class="inline-code">examples/train_eval_fail.spark</code>
-  (exit 1). Live train still needs your trainer at
-  <code class="inline-code">SPARK_TRAIN_URL</code>.</li>
+  (exit 1).</li>
 <li><strong>Reference trainer:</strong>
-  <code class="inline-code">tools/spark-train-ref</code> + live capture via
-  <code class="inline-code">./spark --live examples/model_train.spark</code> →
-  <code class="inline-code">docs/examples/live-train-capture.txt</code>.</li>
+  <code class="inline-code">tools/spark-train-ref</code>
+  (<code class="inline-code">server.py</code> +
+  <code class="inline-code">distill_cpu.py</code>).</li>
 </ul>
 <h2>0.6.4 — 2026-09-02</h2>
 <ul>

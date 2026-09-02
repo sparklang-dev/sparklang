@@ -8,6 +8,9 @@
  * Env: SPARK_TRAIN_BACKEND=http|local-yield|huggingface
  *      SPARK_TRAIN_URL, SPARK_TRAIN_TOKEN (optional),
  *      SPARK_TRAIN_UNIT_ALLOWLIST (local-yield only)
+ *      SPARK_TRAIN_METHOD=spark_distill_cpu|spark_pref_pack|
+ *                          spark_playbook_fit
+ *      SPARK_TRAIN_OUT (optional live out dir override)
  */
 
 #define _GNU_SOURCE
@@ -43,6 +46,8 @@ static void usage(void)
 		"--submit|--status <job_id>\n"
 		"  [--dataset PATH] [--base ID] [--out DIR]\n"
 		"  [--backend http|local-yield|huggingface]\n"
+		"  [--method spark_distill_cpu|spark_pref_pack|"
+		"spark_playbook_fit]\n"
 		"  [--unit NAME]  (local-yield only)\n");
 	exit(1);
 }
@@ -254,10 +259,10 @@ static int http_exchange(const char *method, const char *url,
 }
 
 static void do_submit_http(const char *dataset, const char *base,
-			   const char *out_dir)
+			   const char *out_dir, const char *method)
 {
 	char url[768];
-	char body[1024];
+	char body[1280];
 	char resp[1 << 16];
 	const char *root = env_or("SPARK_TRAIN_URL", "");
 
@@ -267,8 +272,9 @@ static void do_submit_http(const char *dataset, const char *base,
 		die("url too long");
 	if (snprintf(body, sizeof(body),
 		     "{\"dataset\": \"%s\", \"base\": \"%s\", "
-		     "\"out\": \"%s\", \"backend\": \"http\"}",
-		     dataset, base, out_dir) >= (int)sizeof(body))
+		     "\"out\": \"%s\", \"backend\": \"http\", "
+		     "\"method\": \"%s\"}",
+		     dataset, base, out_dir, method) >= (int)sizeof(body))
 		die("body too long");
 	if (http_exchange("POST", url, body, resp, sizeof(resp)) != 0)
 		die("http submit failed");
@@ -317,6 +323,7 @@ int main(int argc, char **argv)
 	const char *base = "fixture-base";
 	const char *out_dir = "out/train/job-dry-001";
 	const char *backend = NULL;
+	const char *method = NULL;
 	const char *unit = NULL;
 	int i;
 
@@ -341,6 +348,8 @@ int main(int argc, char **argv)
 			out_dir = argv[++i];
 		else if (strcmp(argv[i], "--backend") == 0 && i + 1 < argc)
 			backend = argv[++i];
+		else if (strcmp(argv[i], "--method") == 0 && i + 1 < argc)
+			method = argv[++i];
 		else if (strcmp(argv[i], "--unit") == 0 && i + 1 < argc)
 			unit = argv[++i];
 		else
@@ -352,10 +361,30 @@ int main(int argc, char **argv)
 		usage();
 	if (!backend)
 		backend = env_or("SPARK_TRAIN_BACKEND", "http");
+	if (!method)
+		method = env_or("SPARK_TRAIN_METHOD", "spark_distill_cpu");
+	{
+		const char *out_env = getenv("SPARK_TRAIN_OUT");
+
+		if (out_env && out_env[0])
+			out_dir = out_env;
+	}
+	if (strcmp(method, "spark_distill_cpu") != 0 &&
+	    strcmp(method, "spark_pref_pack") != 0 &&
+	    strcmp(method, "spark_playbook_fit") != 0)
+		die_cfg("unknown SPARK_TRAIN_METHOD");
 
 	if (dry) {
 		if (submit)
-			puts(spark_pick_train_accept());
+			printf("{\"op\":\"train\",\"mode\":\"dry-run\","
+			       "\"job_id\":\"job-dry-001\","
+			       "\"backend\":\"http\",\"method\":\"%s\","
+			       "\"status\":\"accepted\","
+			       "\"dataset\":\"%s\",\"base\":\"%s\","
+			       "\"out\":\"%s\","
+			       "\"note\":\"dry-run — method planned; "
+			       "no train on this host\"}\n",
+			       method, dataset, base, out_dir);
 		else
 			puts(spark_pick_train_status(job_id));
 		return 0;
@@ -373,7 +402,7 @@ int main(int argc, char **argv)
 	if (strcmp(backend, "http") != 0)
 		die_cfg("unknown SPARK_TRAIN_BACKEND");
 	if (submit)
-		do_submit_http(dataset, base, out_dir);
+		do_submit_http(dataset, base, out_dir, method);
 	else
 		do_status_http(job_id);
 	return 0;

@@ -33,7 +33,7 @@
               <li class="nav-more">
                 <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">More</button>
                 <ul class="nav-more__menu" hidden>
-                  <li><a href="/docs/adoption-bar.html">What's real today</a></li>
+                  <li><a href="/docs/adoption-bar.html">Adoption bar</a></li>
                   <li><a href="/docs/ai-models.html">AI models</a></li>
                   <li><a href="/docs/native-network-web.html">Network + web</a></li>
                   <li><a href="/docs/programming-guide.html">Programming guide</a></li>
@@ -56,7 +56,7 @@
       <main class="doc-main">
       <nav class="doc__nav" aria-label="Docs">
         <a href="/learn/">Learn</a>
-        <a href="/docs/adoption-bar.html">What's real today</a>
+        <a href="/docs/adoption-bar.html">Adoption bar</a>
         <a href="/docs/ai-models.html" aria-current="page">AI models</a>
         <a href="/docs/model-training.html" aria-current="page">Model training</a>
         <a href="/docs/native-network-web.html">Network + web</a>
@@ -171,57 +171,116 @@
         <h3 id="http-shipped-companion">HTTP (shipped companion)</h3>
         <pre class="doc__pre"><code class="language-bash"># Offline (CI / make test)
         ./spark-train-http --dry --submit
+        ./spark-train-http --dry --submit --method spark_pref_pack
         ./spark-train-http --dry --status job-dry-001
 
         # Live
         export SPARK_TRAIN_BACKEND=http
         export SPARK_TRAIN_URL=https://train.example/v1   # your API
         # optional: SPARK_TRAIN_TOKEN=…   (never commit)
+        # optional: SPARK_TRAIN_METHOD=spark_distill_cpu|spark_pref_pack|spark_playbook_fit
+        # optional: SPARK_TRAIN_OUT=out/train/job-…   (live out override)
         ./spark --live examples/model_train.spark
         # or:
         ./spark-train-http --live --submit \
-          --dataset data/train.jsonl --base base-id --out out/train/demo
+          --method spark_pref_pack \
+          --dataset data/train.jsonl --base spark_pref_pack \
+          --out out/train/demo
         ./spark-train-http --live --status &lt;job_id&gt;
         </code></pre>
-        <p>Expected HTTP shape (adapter contract):</p>
-        <ul class="doc__ul">
-        <li><code class="inline-code">POST {SPARK_TRAIN_URL}/jobs</code> — body JSON
-          <code class="inline-code">{dataset,base,out,backend}</code> → <code class="inline-code">{job_id,status,artifacts}</code></li>
-        <li><code class="inline-code">GET {SPARK_TRAIN_URL}/jobs/{id}</code> →
-          <code class="inline-code">{job_id,state,artifacts}</code></li>
-        </ul>
         <h2 id="trainer-http-contract">Trainer HTTP contract</h2>
-        <p>Exact shapes <code class="inline-code">./spark-train-http</code> sends and prints
-        (no other endpoints):</p>
+        <p>Exact shapes <code class="inline-code">./spark-train-http</code> sends and prints (no other endpoints):</p>
         <h3 id="submit">Submit</h3>
-        <pre class="doc__pre"><code>POST {SPARK_TRAIN_URL}/jobs
-Content-Type: application/json
-Authorization: Bearer {SPARK_TRAIN_TOKEN}   # optional
+        <pre class="doc__pre"><code class="inline-code">POST {SPARK_TRAIN_URL}/jobs
+        Content-Type: application/json
+        Authorization: Bearer {SPARK_TRAIN_TOKEN}   # optional
 
-{"dataset":"…","base":"…","out":"…","backend":"http"}
+        {&quot;dataset&quot;:&quot;…&quot;,&quot;base&quot;:&quot;…&quot;,&quot;out&quot;:&quot;…&quot;,&quot;backend&quot;:&quot;http&quot;,&quot;method&quot;:&quot;spark_distill_cpu&quot;}
+        </code></pre>
+        <p>Response body (printed to stdout as-is):</p>
+        <pre class="doc__pre"><code class="inline-code">{&quot;job_id&quot;:&quot;…&quot;,&quot;status&quot;:&quot;accepted&quot;,&quot;artifacts&quot;:{…},&quot;method&quot;:&quot;…&quot;, …}
+        </code></pre>
+        <p><code class="inline-code">status</code> is the submit ack (<code class="inline-code">accepted</code>). Extra fields are allowed.
+        <code class="inline-code">method</code> selects the training algorithm (see below). If omitted, the
+        reference trainer may also treat a matching <code class="inline-code">base</code> as the method id.</p>
+        <h3 id="status">Status</h3>
+        <pre class="doc__pre"><code class="inline-code">GET {SPARK_TRAIN_URL}/jobs/{job_id}
+        Authorization: Bearer {SPARK_TRAIN_TOKEN}   # optional
+        </code></pre>
+        <p>Response body:</p>
+        <pre class="doc__pre"><code class="inline-code">{&quot;job_id&quot;:&quot;…&quot;,&quot;state&quot;:&quot;succeeded|failed|running|…&quot;,&quot;artifacts&quot;:{…},&quot;method&quot;:&quot;…&quot;, …}
+        </code></pre>
+        <p><code class="inline-code">state</code> is the poll field (not <code class="inline-code">status</code>). Companion uses plain HTTP
+        (TLS must terminate upstream for <code class="inline-code">https://</code> — MVP dies with a clear
+        config error).</p>
+        <h2 id="reference-methods-in-repo-not-lora">Reference methods (in-repo) — not LoRA</h2>
+        <p><code class="inline-code">tools/spark-train-ref/</code> implements the HTTP contract with <strong>three</strong>
+        SparkLang-native CPU methods. None are LoRA / HF PEFT. None use a
+        voice-reserved GPU. None invent <code class="inline-code">train@</code> grants.</p>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Method</th>
+        <th>One sentence</th>
+        <th>Primary artifacts</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><code class="inline-code">spark_distill_cpu</code></td>
+        <td>Tiny student learns which teacher reply class matches each user turn</td>
+        <td><code class="inline-code">weights.pt</code> (+ <code class="inline-code">checkpoint.json</code>)</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">spark_pref_pack</code></td>
+        <td>Build chosen/rejected preference pairs and train a tiny ranker</td>
+        <td><code class="inline-code">pref_pack.json</code> + <code class="inline-code">ranker.pt</code></td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">spark_playbook_fit</code></td>
+        <td>Fit an intent→playbook router from reply templates</td>
+        <td><code class="inline-code">playbooks.json</code> + <code class="inline-code">router.pt</code></td>
+        </tr>
+        </tbody>
+        </table></div>
+        <p>Select via:</p>
+        <ol class="doc__ol">
+        <li>POST body <code class="inline-code">method</code> (companion <code class="inline-code">--method</code> / env <code class="inline-code">SPARK_TRAIN_METHOD</code>)</li>
+        <li>Or <code class="inline-code">base</code> equal to a method id (reference trainer only)</li>
+        <li>Default: <code class="inline-code">spark_distill_cpu</code></li>
+        </ol>
+        <p><strong>Live <code class="inline-code">.spark</code> note:</strong> GAS still forks <code class="inline-code">./spark-train-http --live
+        --submit</code> without parsing method/out from the statement. Pass method
+        and out with env (<code class="inline-code">SPARK_TRAIN_METHOD</code>, <code class="inline-code">SPARK_TRAIN_OUT</code>) or call the
+        companion directly. Live <code class="inline-code">model status</code> still polls hardcoded
+        <code class="inline-code">job-dry-001</code> in GAS — use <code class="inline-code">./spark-train-http --live --status &lt;id&gt;</code>
+        for other job ids. Language-level <code class="inline-code">method</code> keyword = <strong>[next]</strong>.</p>
+        <p>HTTP <code class="inline-code">artifacts.adapter</code> remains a <strong>compat alias</strong> to the method’s
+        primary weight file (not a LoRA adapter).</p>
+        <p>When <code class="inline-code">out</code> basename matches <code class="inline-code">job-*</code>, that basename is the <code class="inline-code">job_id</code>.</p>
+        <p>Live captures:</p>
+        <ul class="doc__ul">
+        <li>Distill: <code class="inline-code">../website/docs/examples/live-train-capture.txt</code></li>
+        <li>All three: <code class="inline-code">../website/docs/examples/live-train-methods-capture.txt</code></li>
+        </ul>
+        <pre class="doc__pre"><code class="language-bash">python3 tools/spark-train-ref/server.py --host 127.0.0.1 --port 8090
+        export SPARK_TRAIN_BACKEND=http
+        export SPARK_TRAIN_URL=http://127.0.0.1:8090/v1
 
-→ {"job_id":"…","status":"accepted","artifacts":{"adapter":"…","checkpoint":"…","marker":"…"}, …}</code></pre>
-        <h3 id="status-poll">Status</h3>
-        <pre class="doc__pre"><code>GET {SPARK_TRAIN_URL}/jobs/{job_id}
+        # distill via .spark
+        ./spark --live examples/model_train.spark
 
-→ {"job_id":"…","state":"succeeded|failed|running|…","artifacts":{…}, …}</code></pre>
-        <p><code class="inline-code">status</code> is the submit ack;
-        <code class="inline-code">state</code> is the poll field. Companion uses plain HTTP
-        (TLS must terminate upstream for <code class="inline-code">https://</code>).</p>
-        <h3 id="reference-trainer">Reference trainer (in-repo)</h3>
-        <p><code class="inline-code">tools/spark-train-ref/server.py</code> implements this contract and
-        writes a <strong>marker</strong> <code class="inline-code">adapter.bin</code> under
-        <code class="inline-code">out</code> (plumbing proof — not real weights).
-        When <code class="inline-code">out</code> basename matches
-        <code class="inline-code">job-*</code>, that basename is the
-        <code class="inline-code">job_id</code>. Recorded capture via
-        <code class="inline-code">./spark --live</code> on a
-        <code class="inline-code">.spark</code> file:
-        <a href="/docs/examples/live-train-capture.txt"><code class="inline-code">docs/examples/live-train-capture.txt</code></a>.</p>
-        <pre class="doc__pre"><code>python3 tools/spark-train-ref/server.py --host 127.0.0.1 --port 8090
-export SPARK_TRAIN_BACKEND=http
-export SPARK_TRAIN_URL=http://127.0.0.1:8090/v1
-./spark --live examples/model_train.spark</code></pre>
+        # preference pack
+        ./spark-train-http --live --submit --method spark_pref_pack \
+          --dataset examples/fixtures/train/dataset.jsonl \
+          --base spark_pref_pack --out out/train/job-pref-001
+
+        # playbook fit
+        ./spark-train-http --live --submit --method spark_playbook_fit \
+          --dataset examples/fixtures/train/dataset.jsonl \
+          --base spark_playbook_fit --out out/train/job-play-001
+        </code></pre>
+        <p>Dry-run fixtures still plan stub paths without training.</p>
         <h3 id="local-yield-optional-gated">local-yield (optional; gated)</h3>
         <p>Only when <strong>all</strong> hold:</p>
         <ol class="doc__ol">
@@ -254,8 +313,14 @@ export SPARK_TRAIN_URL=http://127.0.0.1:8090/v1
         # expect: &quot;op&quot;:&quot;train&quot;, job-dry-001, out/train/job-dry-001
         test -f out/train/job-dry-001/ARTIFACT
         ./spark-train-http --dry --submit | grep job-dry-001
+        ./spark-train-http --dry --submit --method spark_pref_pack | grep spark_pref_pack
         </code></pre>
         <p><code class="inline-code">make test</code> never starts GPU jobs or dials the network.</p>
+        <h2 id="product-story">Product story</h2>
+        <p>Spark ships <strong>multiple</strong> CPU training methods behind one HTTP contract —
+        distill, preference pack, playbook fit. That is the product story: not
+        LoRA-by-default, not a marker file pretending to be weights. Larger
+        full-SFT / multi-node remain operator backends behind the same contract.</p>
         <h2 id="not-in-mvp">Not in MVP</h2>
         <ul class="doc__ul">
         <li>Auto dataset curation / labeling UI</li>
@@ -263,6 +328,7 @@ export SPARK_TRAIN_URL=http://127.0.0.1:8090/v1
         <li>Full LoRA studio / multi-node scheduler UI</li>
         <li>Invented owner train-grant strings</li>
         <li>Bifrost alias pickers as “Step 2” of building a model</li>
+        <li>Language-level <code class="inline-code">method "…"</code> keyword on <code class="inline-code">model train</code> (use env / companion)</li>
         </ul>
       </article>
       </main>

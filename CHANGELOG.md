@@ -4,12 +4,34 @@ All notable user-facing releases of **SparkLang** (the Spark programming
 language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
+## 0.6.6 — 2026-09-02
+
+- **Three CPU train methods** (not LoRA) behind the same HTTP contract:
+  - **`spark_distill_cpu`** — reply-class student → `weights.pt`
+  - **`spark_pref_pack`** — preference pairs + ranker →
+    `pref_pack.json` + `ranker.pt`
+  - **`spark_playbook_fit`** — intent→playbook router →
+    `playbooks.json` + `router.pt`
+- Select via POST `method`, companion `--method`, or
+  `SPARK_TRAIN_METHOD` (default `spark_distill_cpu`). Reference trainer
+  `tools/spark-train-ref/` dispatches all three on CPU.
+- Live captures:
+  `website/docs/examples/live-train-capture.txt`,
+  `website/docs/examples/live-train-methods-capture.txt`.
+- Hero / What's real today list the three methods honestly.
+- Examples: `examples/model_train_pref.spark`,
+  `examples/model_train_playbook.spark`.
+
 ## 0.6.5 — 2026-09-02
 
-- **Hero honesty:** homepage leads with **orchestrate and gate model
-  training jobs** (train→status→expect / dry-run CI / HTTP trainer
-  contract). Does not claim invented LoRA/weights; reference trainer
-  writes a marker artifact.
+- **Custom train proof:** reference trainer runs **`spark_distill_cpu`**
+  — tiny PyTorch student on CPU that mimics teacher replies from chat
+  JSONL. Writes real `weights.pt` (+ checkpoint). Not LoRA / not HF PEFT
+  / no voice GPU. Live capture:
+  `website/docs/examples/live-train-capture.txt` via
+  `./spark --live examples/model_train.spark`.
+- **Hero:** “Train specialists — CPU distill, not LoRA” (honest about
+  what the reference path trains).
 - **`expect` form on homepage / Learn / examples:** prefer
   `expect contains NAME fixture "PATH"` (fail-loud fixtures) — one form
   for the flagship snippets.
@@ -22,12 +44,9 @@ language) are listed here. Site and installers track
 - **Flagship train→status→expect:** `model train` / `model status` now
   bind `->` names in GAS dry-run so `expect` can assert against job and
   status JSON. Homepage / Learn use `examples/train_eval.spark` (exit 0);
-  fail path `examples/train_eval_fail.spark` (exit 1). Live train still
-  needs your trainer at `SPARK_TRAIN_URL` — dry-run only proves the path.
-- **Reference trainer:** `tools/spark-train-ref/server.py` implements the
-  companion HTTP contract; live capture via
-  `./spark --live examples/model_train.spark` at
-  `website/docs/examples/live-train-capture.txt`.
+  fail path `examples/train_eval_fail.spark` (exit 1).
+- **Reference trainer:** `tools/spark-train-ref/` (`server.py` +
+  `distill_cpu.py`) implements the companion HTTP contract.
 
 ## 0.6.4 — 2026-09-02
 

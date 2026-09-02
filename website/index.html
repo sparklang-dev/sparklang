@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>SparkLang — orchestrate and gate model training jobs</title>
+    <title>SparkLang — three CPU train methods, not LoRA</title>
     <meta
       name="description"
-      content="SparkLang: reviewable .spark programs that orchestrate and gate training jobs — train→status→expect, dry-run CI, HTTP trainer contract. Marker plumbing via your trainer; not invented weights."
+      content="SparkLang: reviewable .spark programs with three CPU train methods (distill, preference pack, playbook fit) — not LoRA — then status→expect. Dry-run CI + HTTP trainer contract."
     />
     <meta
       name="keywords"
@@ -14,8 +14,8 @@
     />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
-    <link rel="stylesheet" href="/css/tokens.css?v=orchestrate0902" />
-    <link rel="stylesheet" href="/css/site.css?v=orchestrate0902" />
+    <link rel="stylesheet" href="/css/tokens.css?v=methods0902" />
+    <link rel="stylesheet" href="/css/site.css?v=methods0902" />
   </head>
   <body>
     <header class="site-header">
@@ -62,7 +62,7 @@
       <section class="hero shell">
         <p class="hero__eyebrow">SparkLang</p>
         <h1 class="hero__title">
-          Orchestrate and gate model training jobs
+          Three CPU train methods — not LoRA
         </h1>
         <p class="hero__lede">
           A language beats another Python SDK because one reviewable
@@ -78,9 +78,12 @@
           Offline-first by default:
           <code class="inline-code">./spark --dry-run</code>.
           Live submit POSTs to a trainer you run —
-          <code class="inline-code">SPARK_TRAIN_URL</code>
-          (HTTP contract; reference trainer writes a marker artifact, not
-          claimed weights).
+          <code class="inline-code">SPARK_TRAIN_URL</code>.
+          Reference methods (CPU only):
+          <code class="inline-code">spark_distill_cpu</code>,
+          <code class="inline-code">spark_pref_pack</code>,
+          <code class="inline-code">spark_playbook_fit</code>
+          — real weights / packs, not LoRA, not a voice GPU.
         </p>
         <div class="cta-row">
           <a class="btn btn--primary" href="/downloads.html">Download Spark</a>
@@ -160,10 +163,19 @@ expect contains status fixture "…/want_succeeded.txt"
               >
               — in-repo reference:
               <code class="inline-code">tools/spark-train-ref</code>
-              (marker artifact only). Live
-              <code class="inline-code">.spark</code> capture:
+              ships three CPU methods:
+              <code class="inline-code">spark_distill_cpu</code>,
+              <code class="inline-code">spark_pref_pack</code>,
+              <code class="inline-code">spark_playbook_fit</code>
+              (real <code class="inline-code">weights.pt</code> /
+              <code class="inline-code">pref_pack.json</code>+ranker /
+              <code class="inline-code">playbooks.json</code>+router —
+              not LoRA). Captures:
               <a href="/docs/examples/live-train-capture.txt"
                 >live-train-capture.txt</a
+              >,
+              <a href="/docs/examples/live-train-methods-capture.txt"
+                >live-train-methods-capture.txt</a
               >.
             </p>
             <pre class="card__code"><code>model train dataset "…" base "…" out "…" backend "http" -&gt; job
@@ -222,9 +234,12 @@ expect contains status fixture "examples/fixtures/train/want_succeeded.txt"</cod
         <p class="prose-muted">
           Fail path:
           <code class="inline-code">examples/train_eval_fail.spark</code>
-          (exit 1). Live HTTP proof (marker, via
-          <code class="inline-code">./spark --live</code>):
-          <a href="/docs/examples/live-train-capture.txt">live-train-capture.txt</a>.
+          (exit 1). Live HTTP proof (three CPU methods, via
+          <code class="inline-code">./spark --live</code> /
+          <code class="inline-code">./spark-train-http --method</code>):
+          <a href="/docs/examples/live-train-methods-capture.txt"
+            >live-train-methods-capture.txt</a
+          >.
           <a href="/docs/model-training.html">Model training docs</a> ·
           <a href="/learn/build-model.html">Build a Model</a> ·
           <a href="/docs/adoption-bar.html">What's real today</a>.

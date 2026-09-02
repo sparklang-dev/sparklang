@@ -60,25 +60,23 @@ Generic interface — SparkLang is not hard-wired to one machine.
 ```bash
 # Offline (CI / make test)
 ./spark-train-http --dry --submit
+./spark-train-http --dry --submit --method spark_pref_pack
 ./spark-train-http --dry --status job-dry-001
 
 # Live
 export SPARK_TRAIN_BACKEND=http
 export SPARK_TRAIN_URL=https://train.example/v1   # your API
 # optional: SPARK_TRAIN_TOKEN=…   (never commit)
+# optional: SPARK_TRAIN_METHOD=spark_distill_cpu|spark_pref_pack|spark_playbook_fit
+# optional: SPARK_TRAIN_OUT=out/train/job-…   (live out override)
 ./spark --live examples/model_train.spark
 # or:
 ./spark-train-http --live --submit \
-  --dataset data/train.jsonl --base base-id --out out/train/demo
+  --method spark_pref_pack \
+  --dataset data/train.jsonl --base spark_pref_pack \
+  --out out/train/demo
 ./spark-train-http --live --status <job_id>
 ```
-
-Expected HTTP shape (adapter contract):
-
-- `POST {SPARK_TRAIN_URL}/jobs` — body JSON
-  `{dataset,base,out,backend}` → `{job_id,status,artifacts}`
-- `GET {SPARK_TRAIN_URL}/jobs/{id}` →
-  `{job_id,state,artifacts}`
 
 ## Trainer HTTP contract
 
@@ -91,16 +89,18 @@ POST {SPARK_TRAIN_URL}/jobs
 Content-Type: application/json
 Authorization: Bearer {SPARK_TRAIN_TOKEN}   # optional
 
-{"dataset":"…","base":"…","out":"…","backend":"http"}
+{"dataset":"…","base":"…","out":"…","backend":"http","method":"spark_distill_cpu"}
 ```
 
 Response body (printed to stdout as-is):
 
 ```
-{"job_id":"…","status":"accepted","artifacts":{"adapter":"…","checkpoint":"…","marker":"…"}, …}
+{"job_id":"…","status":"accepted","artifacts":{…},"method":"…", …}
 ```
 
 `status` is the submit ack (`accepted`). Extra fields are allowed.
+`method` selects the training algorithm (see below). If omitted, the
+reference trainer may also treat a matching `base` as the method id.
 
 ### Status
 
@@ -112,31 +112,69 @@ Authorization: Bearer {SPARK_TRAIN_TOKEN}   # optional
 Response body:
 
 ```
-{"job_id":"…","state":"succeeded|failed|running|…","artifacts":{…}, …}
+{"job_id":"…","state":"succeeded|failed|running|…","artifacts":{…},"method":"…", …}
 ```
 
 `state` is the poll field (not `status`). Companion uses plain HTTP
 (TLS must terminate upstream for `https://` — MVP dies with a clear
 config error).
 
-### Reference trainer (in-repo)
+## Reference methods (in-repo) — not LoRA
 
-`tools/spark-train-ref/server.py` implements this contract and writes a
-**marker** `adapter.bin` under `--out` (plumbing proof — not real
-weights). When `out` basename matches `job-*`, that basename is the
-`job_id` (so live `model status` for `job-dry-001` succeeds). Live
-capture via `./spark --live` on a `.spark` file (recorded):
+`tools/spark-train-ref/` implements the HTTP contract with **three**
+SparkLang-native CPU methods. None are LoRA / HF PEFT. None use a
+voice-reserved GPU. None invent `train@` grants.
 
-[website/docs/examples/live-train-capture.txt](../website/docs/examples/live-train-capture.txt)
+| Method | One sentence | Primary artifacts |
+|--------|--------------|-------------------|
+| `spark_distill_cpu` | Tiny student learns which teacher reply class matches each user turn | `weights.pt` (+ `checkpoint.json`) |
+| `spark_pref_pack` | Build chosen/rejected preference pairs and train a tiny ranker | `pref_pack.json` + `ranker.pt` |
+| `spark_playbook_fit` | Fit an intent→playbook router from reply templates | `playbooks.json` + `router.pt` |
+
+Select via:
+
+1. POST body `method` (companion `--method` / env `SPARK_TRAIN_METHOD`)
+2. Or `base` equal to a method id (reference trainer only)
+3. Default: `spark_distill_cpu`
+
+**Live `.spark` note:** GAS still forks `./spark-train-http --live
+--submit` without parsing method/out from the statement. Pass method
+and out with env (`SPARK_TRAIN_METHOD`, `SPARK_TRAIN_OUT`) or call the
+companion directly. Live `model status` still polls hardcoded
+`job-dry-001` in GAS — use `./spark-train-http --live --status <id>`
+for other job ids. Language-level `method` keyword = **[next]**.
+
+HTTP `artifacts.adapter` remains a **compat alias** to the method’s
+primary weight file (not a LoRA adapter).
+
+When `out` basename matches `job-*`, that basename is the `job_id`.
+
+Live captures:
+
+- Distill: [website/docs/examples/live-train-capture.txt](../website/docs/examples/live-train-capture.txt)
+- All three: [website/docs/examples/live-train-methods-capture.txt](../website/docs/examples/live-train-methods-capture.txt)
 
 ```bash
 python3 tools/spark-train-ref/server.py --host 127.0.0.1 --port 8090
 export SPARK_TRAIN_BACKEND=http
 export SPARK_TRAIN_URL=http://127.0.0.1:8090/v1
+
+# distill via .spark
 ./spark --live examples/model_train.spark
+
+# preference pack
+./spark-train-http --live --submit --method spark_pref_pack \
+  --dataset examples/fixtures/train/dataset.jsonl \
+  --base spark_pref_pack --out out/train/job-pref-001
+
+# playbook fit
+./spark-train-http --live --submit --method spark_playbook_fit \
+  --dataset examples/fixtures/train/dataset.jsonl \
+  --base spark_playbook_fit --out out/train/job-play-001
 ```
 
-Not a GPU train — filesystem marker artifacts only.
+Dry-run fixtures still plan stub paths without training.
+
 ### local-yield (optional; gated)
 
 Only when **all** hold:
@@ -165,9 +203,17 @@ Blueprint markdown → **`model plan`**.
 # expect: "op":"train", job-dry-001, out/train/job-dry-001
 test -f out/train/job-dry-001/ARTIFACT
 ./spark-train-http --dry --submit | grep job-dry-001
+./spark-train-http --dry --submit --method spark_pref_pack | grep spark_pref_pack
 ```
 
 `make test` never starts GPU jobs or dials the network.
+
+## Product story
+
+Spark ships **multiple** CPU training methods behind one HTTP contract —
+distill, preference pack, playbook fit. That is the product story: not
+LoRA-by-default, not a marker file pretending to be weights. Larger
+full-SFT / multi-node remain operator backends behind the same contract.
 
 ## Not in MVP
 
@@ -176,3 +222,4 @@ test -f out/train/job-dry-001/ARTIFACT
 - Full LoRA studio / multi-node scheduler UI
 - Invented owner train-grant strings
 - Bifrost alias pickers as “Step 2” of building a model
+- Language-level `method "…"` keyword on `model train` (use env / companion)

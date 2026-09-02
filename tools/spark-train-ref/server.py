@@ -1,39 +1,52 @@
 #!/usr/bin/env python3
-"""Minimal reference trainer for SparkLang's HTTP train contract.
+"""Reference trainer: Spark multi-method CPU train (not LoRA).
 
-Implements only what spark-train-http actually calls:
+Methods (POST body ``method`` field, default spark_distill_cpu):
+
+  spark_distill_cpu   — reply-class student → weights.pt
+  spark_pref_pack     — preference pairs + ranker → pref_pack.json + ranker.pt
+  spark_playbook_fit  — intent→playbook router → playbooks.json + router.pt
+
+HTTP contract:
 
   POST {SPARK_TRAIN_URL}/jobs
-    body: {"dataset","base","out","backend"}
-    → {"job_id","status","artifacts"}
-
+    {"dataset","base","out","backend","method"?}
   GET {SPARK_TRAIN_URL}/jobs/{id}
-    → {"job_id","state","artifacts"}
 
-Writes a real adapter file under the requested out dir (not a dry-run
-fixture path). No GPU. No invented weights - bytes are a marker.
-
-  python3 tools/spark-train-ref/server.py --host 127.0.0.1 --port 8090
-  export SPARK_TRAIN_URL=http://127.0.0.1:8090/v1
-  ./spark-train-http --live --submit ...
+CPU only. No LoRA / HF PEFT / voice GPU.
 """
 from __future__ import annotations
 
 import argparse
 import json
-import os
 import re
+import sys
 import threading
 import time
 import uuid
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 from urllib.parse import urlparse
+
+_REF_DIR = Path(__file__).resolve().parent
+if str(_REF_DIR) not in sys.path:
+    sys.path.insert(0, str(_REF_DIR))
+
+from common import METHODS  # noqa: E402
+from distill_cpu import train_distill  # noqa: E402
+from playbook_fit import train_playbook_fit  # noqa: E402
+from pref_pack import train_pref_pack  # noqa: E402
 
 JOBS: dict[str, dict[str, Any]] = {}
 LOCK = threading.Lock()
 PREFIX = "/v1"
+
+_TRAINERS: dict[str, Callable[..., dict[str, Any]]] = {
+    "spark_distill_cpu": train_distill,
+    "spark_pref_pack": train_pref_pack,
+    "spark_playbook_fit": train_playbook_fit,
+}
 
 
 def _json_body(handler: BaseHTTPRequestHandler) -> dict[str, Any]:
@@ -51,41 +64,31 @@ def _send(handler: BaseHTTPRequestHandler, code: int, obj: dict[str, Any]) -> No
     handler.wfile.write(body)
 
 
-def _artifacts(out_dir: str) -> dict[str, str]:
-    return {
-        "adapter": f"{out_dir}/adapter.bin",
-        "checkpoint": f"{out_dir}/checkpoint.json",
-        "marker": f"{out_dir}/ARTIFACT",
+def _resolve_method(req: dict[str, Any]) -> str:
+    method = str(req.get("method") or "").strip()
+    if method in _TRAINERS:
+        return method
+    base = str(req.get("base") or "").strip()
+    if base in _TRAINERS:
+        return base
+    return "spark_distill_cpu"
+
+
+def _artifact_paths(result: dict[str, Any]) -> dict[str, str]:
+    arts = {
+        "checkpoint": result["checkpoint"],
+        "marker": result["marker"],
+        "adapter": result.get("adapter") or result.get("weights", ""),
     }
-
-
-def _write_artifacts(out_dir: str, job_id: str, base: str, dataset: str) -> dict[str, str]:
-    root = Path(out_dir)
-    root.mkdir(parents=True, exist_ok=True)
-    arts = _artifacts(out_dir)
-    adapter = Path(arts["adapter"])
-    # Real file created by the server - not a dry-run stub path in copy.
-    adapter.write_bytes(
-        b"spark-train-ref adapter marker\n"
-        + f"job_id={job_id}\nbase={base}\ndataset={dataset}\n".encode()
-    )
-    Path(arts["checkpoint"]).write_text(
-        json.dumps(
-            {
-                "job_id": job_id,
-                "base": base,
-                "dataset": dataset,
-                "note": "reference trainer - no real weights",
-            },
-            indent=2,
-        )
-        + "\n",
-        encoding="utf-8",
-    )
-    Path(arts["marker"]).write_text(
-        f"spark-train-ref {job_id}\nadapter={arts['adapter']}\n",
-        encoding="utf-8",
-    )
+    for key in (
+        "weights",
+        "pref_pack",
+        "ranker",
+        "playbooks",
+        "router",
+    ):
+        if key in result and isinstance(result[key], str):
+            arts[key] = result[key]
     return arts
 
 
@@ -103,16 +106,39 @@ class Handler(BaseHTTPRequestHandler):
         req = _json_body(self)
         dataset = str(req.get("dataset") or "")
         base = str(req.get("base") or "")
-        out_dir = str(req.get("out") or f"out/train/ref-{int(time.time())}")
+        out_dir = str(
+            req.get("out") or f"out/train/ref-{int(time.time())}"
+        )
         backend = str(req.get("backend") or "http")
-        # Match spark-train-http live status (hardcoded job-dry-001) and
-        # ./spark --live examples/model_train.spark out basename.
+        method = _resolve_method(req)
         out_name = Path(out_dir).name
         if re.fullmatch(r"job-[A-Za-z0-9._-]+", out_name):
             job_id = out_name
         else:
             job_id = f"job-ref-{uuid.uuid4().hex[:8]}"
-        arts = _write_artifacts(out_dir, job_id, base, dataset)
+        trainer = _TRAINERS[method]
+        try:
+            if not Path(dataset).is_file():
+                raise FileNotFoundError(f"dataset not found: {dataset}")
+            result = trainer(dataset, base, out_dir, job_id)
+        except (OSError, ValueError, FileNotFoundError) as exc:
+            _send(
+                self,
+                400,
+                {
+                    "error": "train_failed",
+                    "job_id": job_id,
+                    "method": method,
+                    "detail": str(exc),
+                },
+            )
+            return
+        arts = _artifact_paths(result)
+        meta = result["meta"]
+        note = (
+            f"{method} — CPU train "
+            f"(loss={meta.get('final_loss')}; not LoRA)"
+        )
         rec = {
             "job_id": job_id,
             "status": "accepted",
@@ -121,8 +147,10 @@ class Handler(BaseHTTPRequestHandler):
             "base": base,
             "out": out_dir,
             "backend": backend,
+            "method": method,
             "artifacts": arts,
-            "note": "spark-train-ref - filesystem marker only, no GPU",
+            "note": note,
+            "final_loss": meta.get("final_loss"),
         }
         with LOCK:
             JOBS[job_id] = rec
@@ -137,7 +165,10 @@ class Handler(BaseHTTPRequestHandler):
                 "base": base,
                 "dataset": dataset,
                 "backend": backend,
-                "note": rec["note"],
+                "method": method,
+                "note": note,
+                "final_loss": meta.get("final_loss"),
+                "methods": list(METHODS),
             },
         )
 
@@ -146,7 +177,15 @@ class Handler(BaseHTTPRequestHandler):
         m = re.fullmatch(rf"{PREFIX}/jobs/([^/]+)", path)
         if not m:
             if path in (PREFIX, f"{PREFIX}/"):
-                _send(self, 200, {"ok": True, "service": "spark-train-ref"})
+                _send(
+                    self,
+                    200,
+                    {
+                        "ok": True,
+                        "service": "spark-train-ref",
+                        "methods": list(METHODS),
+                    },
+                )
                 return
             _send(self, 404, {"error": "not_found", "path": path})
             return
@@ -167,20 +206,24 @@ class Handler(BaseHTTPRequestHandler):
                 "base": rec["base"],
                 "dataset": rec["dataset"],
                 "backend": rec["backend"],
+                "method": rec["method"],
                 "note": rec["note"],
+                "final_loss": rec.get("final_loss"),
             },
         )
 
 
 def main() -> None:
+    """Listen for SparkLang multi-method train jobs."""
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--host", default="127.0.0.1")
     ap.add_argument("--port", type=int, default=8090)
     args = ap.parse_args()
     httpd = ThreadingHTTPServer((args.host, args.port), Handler)
     print(
-        f"[spark-train-ref] listening http://{args.host}:{args.port}{PREFIX}"
-        f"  (SPARK_TRAIN_URL=http://{args.host}:{args.port}{PREFIX})",
+        "[spark-train-ref] methods="
+        + ",".join(METHODS)
+        + f" listening http://{args.host}:{args.port}{PREFIX}",
         flush=True,
     )
     try:

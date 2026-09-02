@@ -489,6 +489,10 @@ test-expect: spark-expect spark
 .PHONY: test-train-http
 test-train-http: spark-train-http spark
 	./spark-train-http --dry --submit | grep -q job-dry-001
+	./spark-train-http --dry --submit --method spark_pref_pack | \
+		grep -q spark_pref_pack
+	./spark-train-http --dry --submit --method spark_playbook_fit | \
+		grep -q spark_playbook_fit
 	./spark-train-http --dry --status job-dry-001 | grep -q '"state":"succeeded"'
 	./spark --dry-run examples/model_train.spark | grep -q '"op":"train"'
 	test -f out/train/job-dry-001/ARTIFACT
