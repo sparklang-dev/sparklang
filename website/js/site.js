@@ -3,18 +3,18 @@
 
   var DRY_RUN_OUTPUTS = {
     hello: {
-      cmd: "./spark --dry-run hello.spark",
+      cmd: "./spark --dry-run examples/train_eval.spark",
       out:
-        '{"op":"ask","mode":"dry-run",' +
-        '"text":"Gravity is the mutual attraction between masses."}\n' +
-        "Gravity is the mutual attraction between masses.",
+        '{"op":"train","job_id":"job-dry-001","mode":"dry-run"}\n' +
+        '{"op":"status","state":"succeeded","mode":"dry-run"}\n' +
+        '{"op":"compare","mode":"dry-run","winner_by":{"balanced":"code"}}\n' +
+        "wrote out/train/job-dry-001/ARTIFACT",
     },
     sugar: {
-      cmd: "./spark --dry-run hello_sugar.spark",
+      cmd: "./spark --dry-run examples/train_eval.spark",
       out:
-        '{"op":"ask","mode":"dry-run",' +
-        '"text":"Gravity pulls masses together."}\n' +
-        "Gravity pulls masses together.",
+        '{"op":"train","job_id":"job-dry-001","mode":"dry-run"}\n' +
+        '{"op":"compare","mode":"dry-run","winner_by":{"balanced":"code"}}',
     },
     classify: {
       cmd: "./spark --dry-run classify_intent.spark",
@@ -32,30 +32,34 @@
         '"text":"Las máquinas necesitan limpieza y equilibrio."}',
     },
     model: {
-      cmd: "./spark --dry-run my-model.spark",
-      out:
-        '{"op":"ask","mode":"dry-run",' +
-        '"text":"Gravity is the mutual attraction between masses."}\n' +
-        '{"op":"model.analyze","mode":"dry-run","fixture":true}\n' +
-        '{"op":"model.train","job_id":"job-dry-001","mode":"dry-run"}\n' +
-        "wrote out/train/job-dry-001/ARTIFACT",
-    },
-    "model-tune": {
-      cmd: "./spark --dry-run model_train.spark",
+      cmd: "./spark --dry-run examples/train_eval.spark",
       out:
         '{"op":"train","job_id":"job-dry-001","mode":"dry-run"}\n' +
         '{"op":"status","state":"succeeded","mode":"dry-run"}\n' +
+        '{"op":"compare","mode":"dry-run","winner_by":{"balanced":"code"}}\n' +
+        "wrote out/train/job-dry-001/ARTIFACT",
+    },
+    "model-tune": {
+      cmd: "./spark --dry-run examples/train_eval.spark",
+      out:
+        '{"op":"train","job_id":"job-dry-001","mode":"dry-run"}\n' +
+        '{"op":"status","state":"succeeded","mode":"dry-run"}\n' +
+        '{"op":"compare","mode":"dry-run","winner_by":{"balanced":"code"}}\n' +
         "wrote out/train/job-dry-001/ARTIFACT",
     },
   };
 
   var MODEL_WORKFLOW_CHAIN =
     'model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" -> job\n\n' +
-    'model status "job-dry-001" -> status';
+    'model status "job-dry-001" -> status\n\n' +
+    'model compare ["fast", "code", "best"] on suite "examples/eval_suite.json" -> comparison\n\n' +
+    "print comparison";
 
   var MODEL_TEMPLATES = {
     ask:
-      'ask "Explain gravity in one sentence" -> text\n\nprint text',
+      'model compare ["fast", "code", "best"]\n' +
+      '  on suite "examples/eval_suite.json" -> comparison\n\n' +
+      "print comparison",
     classify:
       'classify Intent { support, sales, spam }\n' +
       '  from "My account is locked and I need help"\n' +
@@ -224,10 +228,8 @@
     if (!textarea || !output || !runBtn) return;
 
     var examples = {
-      hello:
-        'ask "Explain gravity in one sentence" -> text\n\nprint text',
-      sugar:
-        '? "Explain gravity in one sentence" -> text\n\nprint text',
+      hello: MODEL_WORKFLOW_CHAIN,
+      sugar: MODEL_WORKFLOW_CHAIN,
       classify:
         'classify Intent { support, sales, spam }\n  from "My account is locked and I need help"\n  min_confidence 0.7\n  -> intent\n\nprint intent',
       pipeline:
@@ -266,7 +268,9 @@
     }
     return (
       'model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" -> job\n\n' +
-      'model status "job-dry-001" -> status'
+      'model status "job-dry-001" -> status\n\n' +
+      'model compare ["fast", "code", "best"] on suite "examples/eval_suite.json" -> comparison\n\n' +
+      "print comparison"
     );
   }
 

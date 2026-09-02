@@ -6,7 +6,7 @@
     <title>SparkLang — train and evaluate models in one .spark file</title>
     <meta
       name="description"
-      content="SparkLang: reviewable .spark programs for train→eval→ship. Dry-run fixtures for CI without API keys. Real model train jobs; optional live ask."
+      content="SparkLang: reviewable .spark programs for train→eval→ship. Dry-run fixtures for CI without API keys. HTTP train backends you run; model compare for eval."
     />
     <meta
       name="keywords"
@@ -14,8 +14,8 @@
     />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
-    <link rel="stylesheet" href="/css/tokens.css?v=thesis0902" />
-    <link rel="stylesheet" href="/css/site.css?v=thesis0902" />
+    <link rel="stylesheet" href="/css/tokens.css?v=critique0902" />
+    <link rel="stylesheet" href="/css/site.css?v=critique0902" />
   </head>
   <body>
     <header class="site-header">
@@ -60,7 +60,7 @@
 
     <main>
       <section class="hero shell">
-        <p class="hero__eyebrow">SparkLang — the Spark programming language</p>
+        <p class="hero__eyebrow">SparkLang</p>
         <h1 class="hero__title">
           Train and evaluate models with dry-run CI
         </h1>
@@ -70,10 +70,16 @@
           with dry-run fixtures you can run in CI without API keys.
         </p>
         <p class="hero__lede hero__lede--tight">
+          For solo and small teams who want reviewable AI train→eval pipelines
+          in PRs — without maintaining SDK glue.
+        </p>
+        <p class="hero__lede hero__lede--tight">
           Offline-first by default:
           <code class="inline-code">./spark --dry-run</code>.
-          Real <code class="inline-code">model train</code> /
-          <code class="inline-code">model build</code> jobs when you go live.
+          <code class="inline-code">backend "http"</code> means Spark POSTs to a
+          trainer service you run at
+          <code class="inline-code">SPARK_TRAIN_URL</code> — not a magic cloud.
+          Dry-run shows the job path; live needs your trainer.
         </p>
         <div class="cta-row">
           <a class="btn btn--primary" href="/downloads.html">Download Spark</a>
@@ -117,8 +123,8 @@ resp = client.chat.completions.create(...)
             <h3 class="compare-card__label">One .spark program</h3>
             <pre class="card__code"><code>model train dataset "data.jsonl" base "base" out "out/job-1" backend "http" -&gt; job
 model status "job-1" -&gt; status
-ask "Score this adapter on the suite" -&gt; report
-print report
+model compare ["fast", "code", "best"] on suite "examples/eval_suite.json" -&gt; comparison
+print comparison
 
 # ./spark --dry-run train_eval.spark</code></pre>
           </article>
@@ -139,23 +145,28 @@ print report
             <pre class="card__code"><code>./spark --dry-run examples/model_train.spark</code></pre>
           </article>
           <article class="card">
-            <h3 class="card__title">Real training jobs</h3>
+            <h3 class="card__title">Train backends wired</h3>
             <p class="card__body">
               <code class="inline-code">model train</code> /
-              <code class="inline-code">model build</code> submit adapters /
-              checkpoints. Not a markdown plan sold as training.
+              <code class="inline-code">model build</code> submit via
+              <code class="inline-code">backend "http"</code> to your trainer at
+              <code class="inline-code">SPARK_TRAIN_URL</code>. Dry-run shown
+              below; live requires that service.
             </p>
             <pre class="card__code"><code>model train dataset "…" base "…" out "…" backend "http" -&gt; job
 model status "job-id" -&gt; status</code></pre>
           </article>
           <article class="card">
-            <h3 class="card__title">Ask + eval in the same file</h3>
+            <h3 class="card__title">Eval in the same file</h3>
             <p class="card__body">
-              Bind model output, print it, chain classify / extract / pipeline
-              after train — one program for the loop.
+              After train, score aliases on a suite with
+              <code class="inline-code">model compare</code> — or
+              <code class="inline-code">classify</code> labels with a confidence
+              floor. One program for the loop.
             </p>
-            <pre class="card__code"><code>ask "Explain gravity in one sentence" -&gt; text
-print text</code></pre>
+            <pre class="card__code"><code>model compare ["fast", "code", "best"]
+  on suite "examples/eval_suite.json" -&gt; comparison
+print comparison</code></pre>
           </article>
         </div>
       </section>
@@ -165,9 +176,11 @@ print text</code></pre>
           Train → status → eval
         </h2>
         <p class="section__lede">
-          Dry-run writes fixture artifact paths (no GPU). Live uses a pluggable
-          backend (<code class="inline-code">http</code> or allowlisted
-          <code class="inline-code">local-yield</code>).
+          Dry-run writes fixture artifact paths (no GPU). Live POSTs to the
+          trainer you point at with
+          <code class="inline-code">SPARK_TRAIN_URL</code>
+          (<code class="inline-code">backend "http"</code>, or an allowlisted
+          <code class="inline-code">local-yield</code> unit.
         </p>
 
         <ol class="workflow-pipeline" aria-label="Model workflow steps">
@@ -183,72 +196,40 @@ print text</code></pre>
           </li>
           <li class="workflow-pipeline__step">
             <span class="workflow-pipeline__num">3</span>
-            <strong>Eval (optional)</strong>
-            <span>Ask / classify against the result when you want</span>
+            <strong>Eval</strong>
+            <span>model compare on a suite (or classify)</span>
           </li>
         </ol>
 
-        <pre class="terminal code-block"><code><span class="comment"># model_train.spark — dry-run first</span>
+        <pre class="terminal code-block"><code><span class="comment"># examples/train_eval.spark — dry-run first</span>
 model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" -&gt; job
-model status "job-dry-001" -&gt; status</code></pre>
+model status "job-dry-001" -&gt; status
+model compare ["fast", "code", "best"] on suite "examples/eval_suite.json" -&gt; comparison
+print comparison</code></pre>
 
         <p class="prose-muted">
-          Analyze / compare / improve are eval helpers.
-          <code class="inline-code">model plan</code> writes an optional markdown
-          plan only — not training.
+          Analyze / improve are additional eval helpers.
           <a href="/docs/model-training.html">Model training docs</a> ·
-          <a href="/learn/build-model.html">Build a Model</a>.
+          <a href="/learn/build-model.html">Build a Model</a> ·
+          honesty checklist in
+          <a href="/docs/adoption-bar.html">Adoption bar</a>.
         </p>
       </section>
 
       <section class="section shell" aria-labelledby="also-title">
         <h2 id="also-title" class="section__title">Also available</h2>
         <p class="section__lede">
-          Secondary language surfaces — useful, not the homepage thesis.
+          IDE ops, embed/retrieve, voice demos, HTTP get/post, and network/browser
+          surfaces live in the
+          <a href="/docs/language.html">language reference</a> and
+          <a href="/docs/adoption-bar.html">adoption bar</a> — not the homepage thesis.
         </p>
-        <ul class="also-list">
-          <li>
-            <strong>IDE language ops</strong> —
-            <a href="/docs/ide.html">IDE docs</a>
-            (<code class="inline-code">ide ask</code>, playbooks, LSP-friendly
-            editing.
-          </li>
-          <li>
-            <strong>embed / retrieve</strong> —
-            dry fixtures; live via
-            <code class="inline-code">spark-rag-http</code> when configured.
-          </li>
-          <li>
-            <strong>Voice</strong> (demo / gated) —
-            <code class="inline-code">listen</code> /
-            <code class="inline-code">speak</code>; PSTN off by default
-            (<code class="inline-code">dial "+15555550100"</code> placeholder
-            only.
-            <a href="/docs/language.html">Language reference</a>.
-          </li>
-          <li>
-            <strong>HTTP</strong> —
-            <code class="inline-code">http get</code> /
-            <code class="inline-code">http post</code> with
-            <code class="inline-code">timeout</code>; dry-run reads fixture
-            files (no network); live via
-            <code class="inline-code">./spark-http</code>.
-            Auth / retries still next.
-            <a href="/docs/language.html">Language reference</a>.
-          </li>
-          <li>
-            <strong>Network / browser</strong> —
-            capture and browser ops (de-emphasized vs language HTTP).
-            <a href="/docs/native-network-web.html">Network + web</a>.
-          </li>
-        </ul>
       </section>
 
       <section class="section shell" aria-labelledby="learn-path-title">
         <h2 id="learn-path-title" class="section__title">Learn Spark</h2>
         <p class="section__lede">
-          Follow the tutorial path — install, first program, AI primitives,
-          then train.
+          Follow the trail: install → first dry-run → train→eval loop → ship a job.
         </p>
         <div class="card-grid">
           <article class="card">
@@ -256,7 +237,8 @@ model status "job-dry-001" -&gt; status</code></pre>
               <a href="/learn/getting-started.html">Getting Started</a>
             </h3>
             <p class="card__body">
-              Install the runtime, run your first dry-run, and set up live ask.
+              Install the runtime and verify with
+              <code class="inline-code">./spark --dry-run</code>.
             </p>
             <a class="card__link" href="/learn/getting-started.html"
               >Start here →</a
@@ -267,12 +249,10 @@ model status "job-dry-001" -&gt; status</code></pre>
               <a href="/learn/first-program.html">Your First Program</a>
             </h3>
             <p class="card__body">
-              Hello world with <code class="inline-code">use</code>,
-              <code class="inline-code">ask</code>, and
-              <code class="inline-code">print</code>.
+              A minimal train → status → compare loop you can dry-run in CI.
             </p>
             <a class="card__link" href="/learn/first-program.html"
-              >Write hello.spark →</a
+              >Write train_eval.spark →</a
             >
           </article>
           <article class="card">
@@ -280,7 +260,7 @@ model status "job-dry-001" -&gt; status</code></pre>
               <a href="/learn/ai-in-5-minutes.html">AI in 5 Minutes</a>
             </h3>
             <p class="card__body">
-              Train, classify, extract, pipeline — AI as language statements.
+              Train, compare, classify, extract — the train→eval→ship primitives.
             </p>
             <a class="card__link" href="/learn/ai-in-5-minutes.html"
               >Quick tour →</a
@@ -291,8 +271,7 @@ model status "job-dry-001" -&gt; status</code></pre>
               <a href="/learn/build-model.html">Build a Model</a>
             </h3>
             <p class="card__body">
-              Submit a dry-run train job, poll status, or start from eval
-              helpers and an optional <code class="inline-code">model plan</code>.
+              Submit a dry-run train job, poll status, then compare on a suite.
             </p>
             <a class="card__link" href="/learn/build-model.html"
               >Open wizard →</a
@@ -302,13 +281,13 @@ model status "job-dry-001" -&gt; status</code></pre>
       </section>
 
       <section class="section shell" aria-labelledby="hello-title">
-        <h2 id="hello-title" class="section__title">Hello world</h2>
-        <pre class="terminal code-block"><code><span class="comment"># Dry-run — no network, no API key</span>
-<span class="cmd">./spark --dry-run examples/hello.spark</span>
+        <h2 id="hello-title" class="section__title">Try it</h2>
+        <pre class="terminal code-block"><code><span class="comment"># Dry-run train → eval — no network, no API key</span>
+<span class="cmd">./spark --dry-run examples/train_eval.spark</span>
 
-<span class="comment"># Optional live ask — any OpenAI-compatible gateway</span>
-<span class="cmd">export AI_GATEWAY_URL=http://127.0.0.1:4000</span>
-<span class="cmd">./spark --live examples/ask_live.spark</span></code></pre>
+<span class="comment"># Optional live train — your trainer at SPARK_TRAIN_URL</span>
+<span class="cmd">export SPARK_TRAIN_URL=http://127.0.0.1:8090/v1</span>
+<span class="cmd">./spark --live examples/model_train.spark</span></code></pre>
         <p class="prose-muted">
           See
           <a href="/docs/programming-guide.html">programming guide</a> and
@@ -320,7 +299,7 @@ model status "job-dry-001" -&gt; status</code></pre>
     <footer class="site-footer">
       <div class="shell footer-inner">
         <div class="footer-brand">
-          <span>SparkLang — the Spark programming language</span>
+          <span>SparkLang</span>
           <span class="footer-meta">v0.6.3 · <a href="/LICENSE.txt">MIT</a></span>
         </div>
         <nav class="footer-nav" aria-label="Footer">

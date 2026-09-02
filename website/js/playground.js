@@ -3,9 +3,12 @@
 
   var BASE_PRESETS = {
     hello: {
-      label: "Hello ask",
+      label: "Train → eval (dry)",
       source:
-        'ask "Explain gravity in one sentence" -> text\n\nprint text',
+        'model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" -> job\n\n' +
+        'model status "job-dry-001" -> status\n\n' +
+        'model compare ["fast", "code", "best"] on suite "examples/eval_suite.json" -> comparison\n\n' +
+        "print comparison",
     },
     classify: {
       label: "Classify intent",
@@ -39,7 +42,9 @@
       label: "Model train (dry)",
       source:
         'model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" -> job\n\n' +
-        'model status "job-dry-001" -> status',
+        'model status "job-dry-001" -> status\n\n' +
+        'model compare ["fast", "code", "best"] on suite "examples/eval_suite.json" -> comparison\n\n' +
+        "print comparison",
     },
     voice: {
       label: "Voice session (listen/speak)",

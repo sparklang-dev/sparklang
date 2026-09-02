@@ -199,6 +199,14 @@
         IDE <em>chrome as hero</em>, model-build-as-training. Prefer: language + dry-run +
         playbooks + LSP / syntax highlighting + optional live gateway I/O.
         <strong>IDE tree stays in-repo</strong> (delete revoked).</p>
+        <h3 id="homepage-honesty">Homepage honesty (critique v0.6.3)</h3>
+        <ul>
+          <li><strong><code class="inline-code">model plan</code> is not training</strong> — markdown plan only; train/build submit jobs.</li>
+          <li><strong>HTTP auth / retries</strong> for language <code class="inline-code">http get</code>/<code class="inline-code">post</code> = <strong>next</strong>.</li>
+          <li><strong>Packet capture / MITM / browser</strong> stay in LANGUAGE but are secondary vs train→eval (homepage “Also available” is one line to docs).</li>
+          <li><strong>Live train</strong> requires a trainer you operate at <code class="inline-code">SPARK_TRAIN_URL</code> (<code class="inline-code">backend "http"</code>). Dry-run fixtures demonstrate the job path; do not claim a live GPU completion on sparklang.dev without a real run.</li>
+          <li><strong>Expectation pass/fail harness</strong> (<code class="inline-code">expect</code> / <code class="inline-code">assert</code>) = <strong>next</strong> until merged; homepage flagship uses shipped <code class="inline-code">model compare</code> (+ <code class="inline-code">classify</code>).</li>
+        </ul>
         <h2 id="the-real-bar-goal-not-claim">The real bar (goal, not claim)</h2>
         <p>One generic receptionist-style workflow (fallback + transfer), shorter
         and easier to dry-test than Python+gateway — <strong>no store/PII examples</strong>.</p>

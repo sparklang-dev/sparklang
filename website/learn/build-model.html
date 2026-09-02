@@ -90,13 +90,16 @@
         <article class="doc__body">
           <h1 id="build-a-model">Build a Model</h1>
           <p>
-            Submit a real training job with
+            Submit a training job with
             <code class="inline-code">model train</code> /
-            <code class="inline-code">model build</code>, then poll
+            <code class="inline-code">model build</code>
+            (<code class="inline-code">backend "http"</code>, then poll
             <code class="inline-code">model status</code>. Dry-run writes
-            fixture artifact paths (no GPU, no network). Live uses
-            <code class="inline-code">spark-train-http</code> with
-            <code class="inline-code">SPARK_TRAIN_BACKEND</code>.
+            fixture artifact paths (no GPU, no network). Live POSTs to your
+            trainer at
+            <code class="inline-code">SPARK_TRAIN_URL</code>
+            via
+            <code class="inline-code">spark-train-http</code>.
           </p>
 
           <ol class="wizard-steps" id="wizard-step-list">

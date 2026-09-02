@@ -1,8 +1,9 @@
 # Model training (SparkLang)
 
-**Real training is a first-class pillar.** `model train` / `model build`
-submit a training **job** that produces weights, adapters, or
-checkpoints — not a markdown blueprint.
+**Training is a first-class language pillar.** `model train` / `model build`
+submit jobs via `backend "http"` to a trainer you run at
+`SPARK_TRAIN_URL` — not a magic cloud. Dry-run fixtures demonstrate the
+path; live requires that service. Optional `model plan` is markdown only.
 
 Eval helpers (`model analyze` / `compare` / `improve`) stay offline
 sugar. Optional plan export is `model plan` (markdown). Live gateway

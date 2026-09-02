@@ -63,6 +63,20 @@ IDE *chrome as hero*, model-build-as-training. Prefer: language + dry-run +
 playbooks + LSP / syntax highlighting + optional live gateway I/O.
 **IDE tree stays in-repo** (delete revoked).
 
+### Homepage honesty (critique v0.6.3)
+
+Keep these off the hero; they belong here and in docs:
+
+- **`model plan` is not training** — markdown plan only; train/build submit jobs.
+- **HTTP auth / retries** for language `http get`/`post` = **next**.
+- **Packet capture / MITM / browser** stay in LANGUAGE but are secondary vs
+  train→eval (see “Also available” one-liner on the homepage).
+- **Live train** requires a trainer you operate at `SPARK_TRAIN_URL`
+  (`backend "http"`). Dry-run fixtures demonstrate the job path; do not claim
+  a live GPU completion on sparklang.dev without a real run.
+- **Expectation pass/fail harness** (`expect` / `assert`) = **next** until
+  merged; homepage flagship uses shipped `model compare` (+ `classify`).
+
 ## The real bar (goal, not claim)
 
 One generic receptionist-style workflow (fallback + transfer), shorter

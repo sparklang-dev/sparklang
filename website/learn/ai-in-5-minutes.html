@@ -4,11 +4,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>AI in 5 Minutes — Learn Spark</title>
-    <meta name="description" content="Learn Spark AI primitives: model analyze/compare, classify, extract, pipeline, and gateway ask in five minutes." />
+    <meta name="description" content="Learn Spark train→eval→ship: model train/compare, classify, extract, pipeline." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
-    <link rel="stylesheet" href="/css/tokens.css?v=pos060" />
-    <link rel="stylesheet" href="/css/site.css?v=pos060" />
+    <link rel="stylesheet" href="/css/tokens.css?v=critique0902" />
+    <link rel="stylesheet" href="/css/site.css?v=critique0902" />
   </head>
   <body class="doc-page">
     <header class="site-header">
@@ -65,23 +65,25 @@
         <article class="doc__body">
           <h1 id="ai-in-5-minutes">AI in 5 Minutes</h1>
           <p>
-            Spark treats AI and model operations as language statements — not
-            library calls. Start with model workflow, then classify, extract,
-            and pipeline.
+            Spark treats train→eval→ship as language statements — not SDK glue.
+            Start with train + compare, then classify, extract, and pipeline.
           </p>
 
-          <h2 id="model-workflow">Train a model</h2>
+          <h2 id="model-workflow">Train → eval</h2>
           <p>
             <code class="inline-code">model train</code> /
-            <code class="inline-code">model build</code> submit a real training
-            job (adapters / checkpoints) — not a markdown blueprint.
-            <code class="inline-code">model plan</code> is plan-only.
-            Dry-run uses fixtures (no GPU). Poll with
-            <code class="inline-code">model status</code>:
+            <code class="inline-code">model build</code> submit via
+            <code class="inline-code">backend "http"</code> to a trainer you run
+            at <code class="inline-code">SPARK_TRAIN_URL</code>. Dry-run shows
+            the job path with fixtures (no GPU). Live needs that service.
+            Score aliases with
+            <code class="inline-code">model compare</code>:
           </p>
           <pre class="doc__pre"><code>model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" -> job
-model status "job-dry-001" -> status</code></pre>
-          <pre class="doc__pre"><code class="language-bash">./spark --dry-run examples/model_train.spark</code></pre>
+model status "job-dry-001" -> status
+model compare ["fast", "code", "best"] on suite "examples/eval_suite.json" -> comparison
+print comparison</code></pre>
+          <pre class="doc__pre"><code class="language-bash">./spark --dry-run examples/train_eval.spark</code></pre>
           <p>
             See
             <a href="/docs/model-training.html">Model training</a>,

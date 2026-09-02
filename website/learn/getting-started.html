@@ -66,14 +66,16 @@
           <h1 id="getting-started">Getting Started</h1>
           <p>
             <strong>SparkLang</strong> is a language and runtime for plain
-            <code class="inline-code">.spark</code> files. Start with
+            <code class="inline-code">.spark</code> files aimed at solo/small
+            teams who want reviewable train→eval pipelines in PRs. Start with
             <strong>dry-run</strong> (no keys, no network).
             <code class="inline-code">model train</code> /
-            <code class="inline-code">model build</code> submit real training
-            jobs (dry fixtures first). Live
+            <code class="inline-code">model build</code> are wired to
+            <code class="inline-code">backend "http"</code>
+            (<code class="inline-code">SPARK_TRAIN_URL</code>): dry-run fixtures
+            first; live needs your trainer. Optional
             <code class="inline-code">ask</code> against any OpenAI-compatible
-            gateway is <strong>optional</strong> — Spark is not a Bifrost
-            plugin.
+            gateway is not the product identity.
           </p>
 
           <h2 id="install">Install the runtime</h2>
