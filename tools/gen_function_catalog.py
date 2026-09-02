@@ -177,15 +177,26 @@ def parse_lib_helpers() -> list[CatalogEntry]:
             desc = match.group(2).strip()
             after = text[match.end() :]
             syntax_lines: list[str] = []
+            # Keep the snippet's own indentation: the catalog publishes
+            # these verbatim and a de-indented block reads wrong.
+            comment_re = re.compile(r"^(\s*)#[ ]?(.*)$")
+            depth = 0
             for line in after.splitlines():
                 stripped = line.strip()
                 if stripped.startswith("# @helper"):
                     break
-                if stripped.startswith("# ") and not stripped.startswith("# @"):
-                    body = stripped[2:].strip()
-                    if body:
+                m_c = comment_re.match(line)
+                if m_c and not stripped.startswith("# @"):
+                    body = (m_c.group(2)).rstrip()
+                    if body.strip():
                         syntax_lines.append(body)
-                    if len(syntax_lines) >= 6:
+                        depth += body.count("{") - body.count("}")
+                    # Never stop mid-block: a snippet cut before its
+                    # closing brace would be published unrunnable. The
+                    # hard cap bounds an unbalanced brace inside a string.
+                    if len(syntax_lines) >= 6 and depth <= 0:
+                        break
+                    if len(syntax_lines) >= 16:
                         break
                     continue
                 if stripped and not stripped.startswith("#"):

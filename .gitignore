@@ -13,6 +13,7 @@ out/browser/ca/
 /spark-browser-host
 /spark-cuda-probe
 /spark-enc-gateway
+/spark-extract
 /spark-http
 /spark-lift
 /spark-mitm-ca

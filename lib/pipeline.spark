@@ -18,7 +18,8 @@
 # @helper pipeline_extract_summarize: Extract struct then summarize
 # let text "Ada Lovelace, age 36, London"
 # pipeline {
-#   extract Person { name: string, age: int } from text -> person
+#   extract Person { name: string, age: int } from text
+#     fixture "examples/fixtures/extract/lib/person.json" -> person
 #   | ask "Bio blurb for: {person}" -> blurb
 # }
 

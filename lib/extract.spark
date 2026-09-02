@@ -1,104 +1,106 @@
 # Spark stdlib — extract helpers (bootstrap: include "lib/extract.spark")
-# Inline schema; language expects JSON matching fields. mode: dry-run | live
+# Typed schema validated against JSON. mode: dry-run
+#
+# Every snippet below is copy-paste runnable. Dry-run reads the named
+# fixture from disk and checks it against the schema; there is no
+# built-in value, so the `fixture` clause is required. A field is
+# required unless its name ends in `?`.
+#
+# `make test-extract` runs every snippet the website publishes from these
+# comments (tools/extract/run_lib_gate.sh), so a snippet that stops
+# parsing fails the build instead of shipping to the docs.
 
 model fast
 
 # @helper extract_person: Name and age from prose
-# extract Person {
-#   name: string
-#   age: int
-# } from "Ada Lovelace was born in 1815" -> person
+# extract Person { name: string, age: int }
+#   from "Ada Lovelace was born in 1815"
+#   fixture "examples/fixtures/extract/lib/person.json" -> person
 
 # @helper extract_contact: Email and phone from text
-# extract Contact {
-#   email: string
-#   phone: string
-# } from "Reach me at ada@example.com or 555-0100" -> contact
+# extract Contact { email: string, phone: string }
+#   from "Reach me at ada@example.com or 555-0100"
+#   fixture "examples/fixtures/extract/lib/contact.json" -> contact
 
 # @helper extract_date_event: Event with ISO date
-# extract Event {
-#   title: string
-#   date: string
-# } from "Team standup on 2026-09-15" -> event
+# extract Event { title: string, date: string }
+#   from "Team standup on 2026-09-15"
+#   fixture "examples/fixtures/extract/lib/event.json" -> event
 
 # @helper extract_money: Currency amount from sentence
-# extract Money {
-#   amount: float
-#   currency: string
-# } from "Total due is $42.50 USD" -> money
+# extract Money { amount: float, currency: string }
+#   from "Total due is $42.50 USD"
+#   fixture "examples/fixtures/extract/lib/money.json" -> money
 
 # @helper extract_address: Mailing address fields
-# extract Address {
-#   street: string
-#   city: string
-#   state: string
-#   zip: string
-# } from "123 Main St, Springfield, IL 62701" -> addr
+# extract Address { street: string, city: string, state: string, zip: string }
+#   from "123 Main St, Springfield, IL 62701"
+#   fixture "examples/fixtures/extract/lib/address.json" -> addr
 
 # @helper extract_order: Simple order line
-# extract Order {
-#   sku: string
-#   qty: int
-# } from "Order SKU-WASH-9 qty 3" -> order
+# extract Order { sku: string, qty: int }
+#   from "Order SKU-WASH-9 qty 3"
+#   fixture "examples/fixtures/extract/lib/order.json" -> order
 
 # @helper extract_invoice: Invoice id and total
-# extract Invoice {
-#   id: string
-#   total: float
-# } from "Invoice INV-991 total 1200.00" -> invoice
+# extract Invoice { id: string, total: float }
+#   from "Invoice INV-991 total 1200.00"
+#   fixture "examples/fixtures/extract/lib/invoice.json" -> invoice
 
 # @helper extract_rating: Star rating from review text
-# extract Rating {
-#   stars: int
-#   summary: string
-# } from "Five stars — machines were clean" -> rating
+# extract Rating { stars: int, summary: string }
+#   from "Five stars — machines were clean"
+#   fixture "examples/fixtures/extract/lib/rating.json" -> rating
 
 # @helper extract_machine_error: Error code from guest report
-# extract MachineError {
-#   code: string
-#   machine: string
-# } from "Device D12 shows error E42" -> err
+# extract MachineError { code: string, machine: string }
+#   from "Device D12 shows error E42"
+#   fixture "examples/fixtures/extract/lib/machine_error.json" -> err
 
 # @helper extract_hours: Open/close times
-# extract Hours {
-#   open: string
-#   close: string
-# } from "Open 6am close 10pm daily" -> hours
+# extract Hours { open: string, close: string }
+#   from "Open 6am close 10pm daily"
+#   fixture "examples/fixtures/extract/lib/hours.json" -> hours
 
 # @helper extract_entities_org: Organization name extraction
-# extract Org {
-#   name: string
-# } from "Acme Services LLC called about service" -> org
+# extract Org { name: string }
+#   from "Acme Services LLC called about service"
+#   fixture "examples/fixtures/extract/lib/org.json" -> org
 
 # @helper extract_location: Store or city mention
-# extract Location {
-#   store: string
-#   city: string
-# } from "Example Store near Riverside Plaza" -> loc
+# extract Location { store: string, city: string }
+#   from "Example Store near Riverside Plaza"
+#   fixture "examples/fixtures/extract/lib/location.json" -> loc
+
+# @helper extract_optional_field: Optional field may be absent
+# extract Person { name: string, age: int, email?: string }
+#   from "Ada Lovelace was born in 1815"
+#   fixture "examples/fixtures/extract/lib/person.json" -> person
 
 # @helper extract_then_classify: Extract struct then classify intent
-# extract Person { name: string } from "Jane Doe needs help" -> person
+# extract Person { name: string }
+#   from "Jane Doe needs help"
+#   fixture "examples/fixtures/extract/lib/person.json" -> person
 # classify Intent { support, sales } from "Jane Doe needs help" -> intent
 
 # @helper extract_pipeline: Extract as pipeline step
-# let text "Payment $19.99 on card ending 4242"
 # pipeline {
-#   extract Payment { amount: float, last4: string } from text -> pay
+#   extract Payment { amount: float, last4: string } from "Payment $19.99"
+#     fixture "examples/fixtures/extract/lib/payment.json" -> pay
 #   | ask "Confirm payment JSON: {pay}" -> confirm
 # }
 
 # @helper extract_bool_flag: Single boolean field
-# extract Flags {
-#   urgent: bool
-# } from "This is urgent — water leak" -> flags
+# extract Flags { urgent: bool }
+#   from "This is urgent — water leak"
+#   fixture "examples/fixtures/extract/lib/flags.json" -> flags
 
 # @helper extract_list_items: Comma-separated items as string
-# extract Items {
-#   list: string
-# } from "Buy detergent, coins, signs" -> items
+# extract Items { list: string }
+#   from "Buy detergent, coins, signs"
+#   fixture "examples/fixtures/extract/lib/items.json" -> items
 
 # @helper extract_appointment: Appointment slot
-# extract Appointment {
-#   when: string
-#   who: string
-# } from "Jane at 3pm Tuesday" -> appt
+# extract Appointment { when: string, who: string }
+#   from "Jane at 3pm Tuesday"
+#   fixture "examples/fixtures/extract/lib/appointment.json" -> appt

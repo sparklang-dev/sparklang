@@ -1,11 +1,12 @@
-# Extract dry person stub — selfhost golden.
-# Stage 1 lex subset; schema/from tokens parsed and discarded (vm.c).
+# Typed extract — selfhost golden.
+# The schema and the fixture path are both encoded into the bytecode, so
+# --run-bc validates the same fixture the interpreters do.
 # Avoid `let` (GAS scaffold pads dumps). Form from examples/extract_person.spark.
 model fast
 
 extract Person {
   name: string
   age: int
-} from "Ada Lovelace was born in 1815" -> person
+} from "Ada Lovelace was born in 1815" fixture "examples/fixtures/extract/person.json" -> person
 
 print person

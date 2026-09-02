@@ -23,7 +23,7 @@ Not Apache Spark. Not AdaCore SPARK.
 | Escape hatch (host → `.spark`) | **next** | `./spark --embed` stub JSON handshake; `import spark` FFI = **next** |
 | `retrieve` / `embed` language ops | **done** | Dry fixtures + live `./spark-rag-http`; see LANGUAGE.md |
 | Real `http get` / `post` | **done** | Dry fixture files + timeout; live `./spark-http` (curl). Auth/retries = **next** |
-| Typed `extract` + JSON-mode validate/retry | **partial** | Schema + dry fixture today; validate/retry loop = **next** |
+| Typed `extract` + JSON-mode validate/retry | **partial** | Validation shipped: required vs `?` optional fields, `string`/`int`/`float`/`bool` types, top-level only, non-zero exit on a miss. Dry-run reads a real `fixture "PATH"`. Live extract and retry-on-miss = **next** |
 | Cost/latency/token accounting | **done (hooks)** | Dry zeros; live prints `usage` when gateway returns it — never invents tokens |
 | Streaming `ask` | **next** | Not shipped |
 | Eval vs expectations (pass/fail) | **next** | `model compare` picks aliases; expectation harness = **next** |
@@ -47,8 +47,8 @@ Without both directions, a DSL dies:
 Shipped enough to dry-demo RAG + ask + classify + http get/post in one
 file. Still missing for a clear “shorter than Python+gateway” win on
 production paths: streaming, expectation evals, HTTP auth/retries,
-validate/retry `extract`, and a dry-runnable receptionist that is more
-than a `[goal]` sketch.
+live `extract` against a model, and a dry-runnable receptionist that is
+more than a `[goal]` sketch.
 
 ## Voice — honest
 

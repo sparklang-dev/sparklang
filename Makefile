@@ -36,7 +36,8 @@ playbooks-catalog:
 
 SPARK_OBJS = asm/spark.o asm/model_ops.o asm/train_ops.o asm/binary_ops.o \
 	asm/network_ops.o asm/os_ops.o asm/bind_ops.o asm/cuda_ops.o \
-	asm/ask_ops.o asm/rag_ops.o asm/http_ops.o asm/browser_ops.o \
+	asm/ask_ops.o asm/rag_ops.o asm/http_ops.o asm/extract_ops.o \
+	asm/browser_ops.o \
 	asm/voice_ops.o asm/pcie_ops.o \
 	asm/crypto_ops.o asm/gateway_ops.o asm/engine_js.o asm/engine_html.o \
 	asm/engine_window.o asm/engine_paint.o asm/engine_paint_ops.o \
@@ -87,6 +88,9 @@ asm/rag_ops.o: asm/rag_ops.s
 	$(AS) $(ASFLAGS) -o $@ $<
 
 asm/http_ops.o: asm/http_ops.s
+	$(AS) $(ASFLAGS) -o $@ $<
+
+asm/extract_ops.o: asm/extract_ops.s
 	$(AS) $(ASFLAGS) -o $@ $<
 
 asm/browser_ops.o: asm/browser_ops.s
@@ -182,7 +186,7 @@ asm/engine_js.o: asm/engine_js.s
 
 companions: spark-cuda-probe spark-net-capture \
 	spark-binary-probe spark-section-dump spark-lift spark-ask-http \
-	spark-ask-probe spark-rag-http spark-http spark-train-http \
+	spark-ask-probe spark-rag-http spark-http spark-extract spark-train-http \
 	spark-browser-host spark-mitm-quic \
 	spark-mitm-quic-divert spark-mitm-ca spark-mitm-h2 spark-browser-cdp spark-pstn-dial \
 	spark-enc-gateway spark-stt-tts spark-review-url spark-engine-show \
@@ -225,6 +229,12 @@ spark-http: tools/http/spark_http.c bootstrap/dry_http.c \
 	bootstrap/dry_http.h
 	$(CC) -O2 -Wall -Wextra -o $@ tools/http/spark_http.c \
 		bootstrap/dry_http.c
+
+# Typed extract (dry fixture files + schema validation).
+spark-extract: tools/extract/spark_extract.c bootstrap/dry_extract.c \
+	bootstrap/dry_extract.h
+	$(CC) -O2 -Wall -Wextra -o $@ tools/extract/spark_extract.c \
+		bootstrap/dry_extract.c
 
 # Model train submit/status (HTTP or allowlisted local-yield).
 spark-train-http: tools/train/spark_train_http.c bootstrap/dry_train.c \
@@ -312,7 +322,8 @@ machine-proof: spark
 	@echo "=== _start disassembly (first instructions) ==="
 	$(OBJDUMP) -d ./spark | sed -n '/<_start>:/,/^$$/p' | head -20
 
-test: spark companions spark-bootstrap test-sparkbc test-ai-playbooks
+test: spark companions spark-bootstrap test-sparkbc test-ai-playbooks \
+	test-extract
 	./tests/run_dry.sh
 	./tests/hdl_check.sh
 	./bootstrap/tests/run_bootstrap.sh
@@ -330,7 +341,7 @@ test-e2e-browser: spark companions
 # Every examples/*.spark under --dry-run. Fail-loud IDE demos expect rc!=0.
 test-examples: spark companions
 	@fail=0; \
-	fail_loud='ide_open_miss|ide_open_nopath|ide_run_nobuf|ide_save_nopath|ide_show_miss|ide_show_notppm|ide_ask_nobuf|ide_key_bad|ide_keys_miss|http_get_live'; \
+	fail_loud='ide_open_miss|ide_open_nopath|ide_run_nobuf|ide_save_nopath|ide_show_miss|ide_show_notppm|ide_ask_nobuf|ide_key_bad|ide_keys_miss|http_get_live|extract_bad'; \
 	for f in examples/*.spark; do \
 	  to=""; \
 	  base="$$(basename "$$f")"; \
@@ -401,13 +412,15 @@ SPARKC_SRCS = bootstrap/main.c bootstrap/vm.c bootstrap/engine_parse.c \
 	bootstrap/engine_paint.c bootstrap/engine_show.c \
 	bootstrap/engine_render.c bootstrap/dry_ask.c bootstrap/dry_auto_model.c \
 	bootstrap/dry_classify.c bootstrap/dry_rag.c bootstrap/dry_http.c \
+	bootstrap/dry_extract.c \
 	bootstrap/dry_engine.c \
 	bootstrap/dry_ide.c bootstrap/dry_ops.c \
 	bootstrap/bc_read.c bootstrap/bc_vm.c bootstrap/bc_write.c \
 	bootstrap/spark_parse.c selfhost/lex.c
 spark-bootstrap sparkc: $(SPARKC_SRCS) bootstrap/vm.h \
 	bootstrap/dry_ask.h bootstrap/dry_auto_model.h bootstrap/dry_classify.h \
-	bootstrap/dry_rag.h bootstrap/dry_http.h bootstrap/dry_engine.h \
+	bootstrap/dry_rag.h bootstrap/dry_http.h bootstrap/dry_extract.h \
+	bootstrap/dry_engine.h \
 	bootstrap/dry_ide.h \
 	bootstrap/dry_ops.h \
 	bootstrap/bc_opcodes.h \
@@ -447,6 +460,13 @@ test-rag-gateway: spark-rag-http spark
 test-http: spark-http spark
 	chmod +x tools/http/run_http_gate.sh
 	./tools/http/run_http_gate.sh
+
+.PHONY: test-extract
+test-extract: spark-extract spark
+	chmod +x tools/extract/run_extract_gate.sh
+	./tools/extract/run_extract_gate.sh
+	chmod +x tools/extract/run_lib_gate.sh
+	./tools/extract/run_lib_gate.sh
 
 .PHONY: test-train-http
 test-train-http: spark-train-http spark

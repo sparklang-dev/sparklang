@@ -344,6 +344,18 @@ static void emit_op(uint8_t op, uint16_t a, uint16_t b, int two)
   }
 }
 
+/* Three string operands (EXTRACT: schema, fixture, bind). */
+static void emit_op3(uint8_t op, uint16_t a, uint16_t b, uint16_t c)
+{
+  code[ncode++] = op;
+  code[ncode++] = (uint8_t)(a & 0xff);
+  code[ncode++] = (uint8_t)((a >> 8) & 0xff);
+  code[ncode++] = (uint8_t)(b & 0xff);
+  code[ncode++] = (uint8_t)((b >> 8) & 0xff);
+  code[ncode++] = (uint8_t)(c & 0xff);
+  code[ncode++] = (uint8_t)((c >> 8) & 0xff);
+}
+
 static int strip_quotes(const char *lex, char *out, size_t cap)
 {
   if (lex[0] == '"') {
@@ -832,16 +844,29 @@ static int compile_browser_goto(long line)
   return 0;
 }
 
+/* Rebuild the schema block as a single normalised line so the bytecode
+ * carries the declaration itself, e.g. `extract Person { name: string,
+ * age?: int }`. The tokens are what the compiler has; the exact source
+ * spacing is not needed because dry_extract's parser accepts commas and
+ * arbitrary whitespace. Carrying the text (rather than a packed field
+ * table) keeps one validator shared by all three engines. */
 static int compile_extract(long line)
 {
   Tok *t;
   char bbuf[128];
+  char sbuf[1024];
   char fbuf[512];
-  int depth = 0;
+  size_t sn = 0;
+  int first = 1;
 
   t = take();
   if (!t || strcmp(t->kind, "IDENT") != 0) {
     fprintf(stderr, "error:%ld: compile extract needs schema\n", line);
+    return 1;
+  }
+  sn = (size_t)snprintf(sbuf, sizeof(sbuf), "extract %s { ", t->lexeme);
+  if (sn >= sizeof(sbuf)) {
+    fprintf(stderr, "error:%ld: compile extract schema too long\n", line);
     return 1;
   }
   t = take();
@@ -849,18 +874,99 @@ static int compile_extract(long line)
     fprintf(stderr, "error:%ld: compile extract needs {\n", line);
     return 1;
   }
-  depth = 1;
-  while (depth > 0) {
+  /* Walk `name [?] : type` triples. An explicit state beats gluing
+   * tokens by look-back: the type after ':' is also an IDENT, so a
+   * look-back rule reads it as the next field name. */
+  enum { S_NAME, S_MARK, S_TYPE } st = S_NAME;
+
+  for (;;) {
+    const char *lx;
+    size_t lxn;
+    int is_punct;
+
     t = take();
     if (!t) {
       fprintf(stderr, "error:%ld: compile extract unclosed {\n", line);
       return 1;
     }
-    if (strcmp(t->kind, "PUNCT") == 0 && strcmp(t->lexeme, "{") == 0)
-      depth++;
-    if (strcmp(t->kind, "PUNCT") == 0 && strcmp(t->lexeme, "}") == 0)
-      depth--;
+    lx = t->lexeme;
+    lxn = strlen(lx);
+    is_punct = strcmp(t->kind, "PUNCT") == 0;
+
+    if (is_punct && strcmp(lx, "}") == 0) {
+      if (st != S_NAME) {
+        fprintf(stderr,
+                "error:%ld: compile extract field is missing its "
+                "type before }\n", line);
+        return 1;
+      }
+      break;
+    }
+    /* Commas and newlines both separate fields in the source; one
+     * comma per field is re-inserted below, so drop the originals. */
+    if (is_punct && strcmp(lx, ",") == 0) {
+      if (st != S_NAME) {
+        fprintf(stderr,
+                "error:%ld: compile extract unexpected , in "
+                "field\n", line);
+        return 1;
+      }
+      continue;
+    }
+    if (sn + lxn + 4 >= sizeof(sbuf))
+      goto too_long;
+
+    switch (st) {
+    case S_NAME:
+      if (is_punct) {
+        fprintf(stderr,
+                "error:%ld: compile extract expected a field name, "
+                "got \"%s\"\n", line, lx);
+        return 1;
+      }
+      if (!first) {
+        memcpy(sbuf + sn, ", ", 2);
+        sn += 2;
+      }
+      first = 0;
+      memcpy(sbuf + sn, lx, lxn);
+      sn += lxn;
+      st = S_MARK;
+      break;
+    case S_MARK:
+      if (is_punct && strcmp(lx, "?") == 0) {
+        sbuf[sn++] = '?';
+        break;              /* stay in S_MARK, ':' comes next */
+      }
+      if (!is_punct || strcmp(lx, ":") != 0) {
+        fprintf(stderr,
+                "error:%ld: compile extract expected \": type\", "
+                "got \"%s\"\n", line, lx);
+        return 1;
+      }
+      memcpy(sbuf + sn, ": ", 2);
+      sn += 2;
+      st = S_TYPE;
+      break;
+    case S_TYPE:
+      if (is_punct) {
+        fprintf(stderr,
+                "error:%ld: compile extract expected a type, got "
+                "\"%s\"\n", line, lx);
+        return 1;
+      }
+      memcpy(sbuf + sn, lx, lxn);
+      sn += lxn;
+      st = S_NAME;
+      break;
+    }
+    sbuf[sn] = '\0';
   }
+  if (sn + 3 >= sizeof(sbuf))
+    goto too_long;
+  memcpy(sbuf + sn, " }", 3);
+  sn += 2;
+
   t = take();
   if (!t || strcmp(t->kind, "IDENT") != 0 ||
       strcmp(t->lexeme, "from") != 0) {
@@ -872,12 +978,39 @@ static int compile_extract(long line)
     fprintf(stderr, "error:%ld: compile extract needs from string\n", line);
     return 1;
   }
+  /* The from-text is the live prompt. Dry-run validates a fixture, so a
+   * compiled extract needs the fixture clause: without it the bytecode
+   * would have no field values and nothing to check. */
+  t = peek();
+  if (!t || strcmp(t->kind, "IDENT") != 0 ||
+      strcmp(t->lexeme, "fixture") != 0) {
+    fprintf(stderr,
+            "error:%ld: compile extract needs fixture \"PATH\" "
+            "(dry-run validates a fixture; no model call)\n", line);
+    return 1;
+  }
+  (void)take();
+  t = take();
+  if (!t || strcmp(t->kind, "STRING") != 0) {
+    fprintf(stderr,
+            "error:%ld: compile extract needs fixture string\n", line);
+    return 1;
+  }
   strip_quotes(t->lexeme, fbuf, sizeof(fbuf));
-  (void)fbuf;
   if (take_arrow_bind(bbuf, sizeof(bbuf), line, 0) != 0)
     return 1;
-  emit_op(SPBC_OP_EXTRACT, add_str_const(bbuf), 0, 0);
+  {
+    uint16_t si = add_str_const(sbuf);
+    uint16_t fi = add_str_const(fbuf);
+    uint16_t bi = add_str_const(bbuf);
+
+    emit_op3(SPBC_OP_EXTRACT, si, fi, bi);
+  }
   return 0;
+
+too_long:
+  fprintf(stderr, "error:%ld: compile extract schema too long\n", line);
+  return 1;
 }
 
 static int compile_pipeline_inner(void)

@@ -8,6 +8,7 @@
 #include "dry_ask.h"
 #include "dry_auto_model.h"
 #include "dry_classify.h"
+#include "dry_extract.h"
 #include "dry_http.h"
 #include "dry_rag.h"
 #include "dry_ops.h"
@@ -25,9 +26,6 @@
 #include <string.h>
 #include <sys/stat.h>
 
-/* Exact dry fixtures from asm/spark.s .data */
-static const char DRY_PERSON[] =
-    "{\"name\":\"Ada Lovelace\",\"age\":36}";
 /* Exact dry JSON from asm/browser_ops.s j_flags. */
 static const char BR_FLAGS_DRY[] =
     "{\"op\":\"flags\",\"disable_quic\":false,"
@@ -738,13 +736,94 @@ static int op_http(SparkVM *vm, char *line)
   return 0;
 }
 
+/* Typed extract.
+ *
+ * The schema block may span lines, so lines accumulate into xt_stmt
+ * until both the block has closed ('}') and the binding has arrived
+ * ('->'). extract_pending() lets spark_vm_run_line route continuation
+ * lines here instead of treating a lone '}' as a with-tools close.
+ *
+ * There is no hardcoded reply: the fixture named in the statement is the
+ * only source of field values, and a missing fixture or a field that
+ * does not match the schema is an error.
+ */
+static char xt_stmt[SPARK_VM_MAX_LINE * 8];
+static size_t xt_len;
+static int xt_open;
+
+int spark_vm_extract_pending(void) { return xt_open; }
+
+static int xt_complete(void)
+{
+  return strchr(xt_stmt, '}') != NULL && strstr(xt_stmt, "->") != NULL;
+}
+
+static int xt_run(SparkVM *vm, char *line)
+{
+  struct spark_extract_schema schema;
+  char path[1024];
+  char *body = NULL;
+
+  xt_open = 0;
+  if (spark_extract_parse_schema(xt_stmt, &schema) != 0)
+    return 1;
+  if (spark_extract_resolve_fixture(xt_stmt, path, sizeof(path)) != 0)
+    return 1;
+  if (spark_extract_load_fixture(path, &body, NULL) != 0)
+    return 1;
+  if (spark_extract_validate(&schema, body) != 0) {
+    fprintf(stderr,
+            "error: extract %s did not validate against %s\n",
+            schema.name, path);
+    free(body);
+    return 1;
+  }
+  printf("[extract] %s\n", body);
+  set_last(vm, body);
+  /* The arrow is on the final line, which is what bind_arrow reads. */
+  if (bind_arrow(vm, line) != 0) {
+    free(body);
+    return 1;
+  }
+  free(body);
+  return 0;
+}
+
+static int xt_append(char *line)
+{
+  size_t n = strlen(line);
+
+  if (xt_len + n + 2 > sizeof(xt_stmt)) {
+    fprintf(stderr, "error: extract statement too long\n");
+    xt_open = 0;
+    return 1;
+  }
+  memcpy(xt_stmt + xt_len, line, n);
+  xt_len += n;
+  xt_stmt[xt_len++] = '\n';
+  xt_stmt[xt_len] = '\0';
+  return 0;
+}
+
 static int op_extract(SparkVM *vm, char *line)
 {
-  /* GAS always emits dry_person; bind only if -> on this line. */
-  printf("[extract] %s\n", DRY_PERSON);
-  set_last(vm, DRY_PERSON);
-  if (bind_arrow(vm, line) != 0)
+  xt_len = 0;
+  xt_stmt[0] = '\0';
+  xt_open = 0;
+  if (xt_append(line) != 0)
     return 1;
+  if (xt_complete())
+    return xt_run(vm, line);
+  xt_open = 1;
+  return 0;
+}
+
+static int op_extract_cont(SparkVM *vm, char *line)
+{
+  if (xt_append(line) != 0)
+    return 1;
+  if (xt_complete())
+    return xt_run(vm, line);
   return 0;
 }
 
@@ -1467,6 +1546,10 @@ int spark_vm_run_line(SparkVM *vm, const char *raw)
   line = ltrim(buf);
   if (line[0] == '\0' || line[0] == '#')
     return 0;
+  /* An open extract schema block claims every line, including a lone
+   * '}', so it is tested before the with-tools close below. */
+  if (spark_vm_extract_pending())
+    return op_extract_cont(vm, line);
   /* ? "prompt" -> ask sugar */
   if (line[0] == '?') {
     char tmp[SPARK_VM_MAX_LINE];

@@ -59,6 +59,9 @@
 .extern embed_live_dispatch
 .extern retrieve_live_dispatch
 .extern http_dispatch
+.extern extract_dispatch
+.extern extract_feed
+.extern extract_pending
 .extern pcie_ops_dispatch
 .extern voice_ops_dispatch
 .extern voice_speak_model_dispatch
@@ -229,8 +232,6 @@ msg_model:  .ascii "[model] "
 msg_model_len = . - msg_model
 msg_print:  .ascii "[print] "
 msg_print_len = . - msg_print
-msg_extract:.ascii "[extract] "
-msg_extract_len = . - msg_extract
 msg_tool:   .ascii "[tool] registered "
 msg_tool_len = . - msg_tool
 msg_tool_call:
@@ -319,9 +320,6 @@ dry_json_len = . - dry_json
 dry_weather:
     .ascii "Dry-run: partly cloudy, 72°F in Springfield."
 dry_weather_len = . - dry_weather
-dry_person:
-    .ascii "{\"name\":\"Ada Lovelace\",\"age\":36}"
-dry_person_len = . - dry_person
 dry_support:
     .ascii "{\"label\":\"support\",\"confidence\":0.91,\"reasons\":[\"dry-run\"]}"
 dry_support_len = . - dry_support
@@ -863,6 +861,13 @@ interpret_line:
     lea     rbx, [rip+linebuf]
     call    skip_ws
     mov     rbx, rax
+    # An open extract schema block claims every line, including a
+    # lone '}', so it must be tested before the scope-close below.
+    cmp     qword ptr [rip+extract_pending], 0
+    je      il_not_extract_cont
+    call    extract_feed
+    jmp     il_done
+il_not_extract_cont:
     # empty / comment
     cmp     byte ptr [rbx], 0
     je      il_done
@@ -1843,19 +1848,7 @@ print_nl:
     jmp     il_done
 
 do_extract:
-    lea     rsi, [rip+msg_extract]
-    mov     rdx, msg_extract_len
-    call    write_stdout
-    lea     rsi, [rip+dry_person]
-    mov     rdx, dry_person_len
-    call    write_stdout
-    lea     rax, [rip+dry_person]
-    mov     rcx, dry_person_len
-    call    set_last_from_rcx
-    call    bind_arrow_from_line
-    lea     rsi, [rip+msg_nl]
-    mov     rdx, 1
-    call    write_stdout
+    call    extract_dispatch
     jmp     il_done
 
 do_tool:

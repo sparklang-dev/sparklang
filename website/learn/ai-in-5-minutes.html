@@ -102,9 +102,19 @@ print intent</code></pre>
           <pre class="doc__pre"><code>extract Person {
   name: string
   age: int
-} from "Ada Lovelace was born in 1815" -> person
+  email?: string
+} from "Ada Lovelace was born in 1815"
+  fixture "examples/fixtures/extract/person.json" -> person
 
 print person</code></pre>
+          <p>
+            A field is required unless its name ends in
+            <code class="inline-code">?</code>. Dry-run validates the
+            JSON in <code class="inline-code">fixture</code> against the
+            schema — a missing required field or a wrong type stops the
+            run with a non-zero exit.
+          </p>
+          <pre class="doc__pre"><code class="language-bash">./spark --dry-run examples/extract_person.spark</code></pre>
 
           <h2 id="pipeline">pipeline — compose steps</h2>
           <pre class="doc__pre"><code>let doc "Office printers need regular cleaning."

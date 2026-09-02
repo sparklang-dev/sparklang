@@ -202,14 +202,48 @@ Gate: `make test-http` (live SKIP unless `SPARK_HTTP_LIVE=1`).
 
 ### `extract`
 
-Inline schema; language expects JSON matching fields.
+Pulls typed fields out of text into JSON, validated on dry-run.
+The inline schema declares the fields: a field is required unless its
+name ends in `?`. Types are `string`, `int`, `float`, `bool`.
 
 ```
 extract Person {
   name: string
   age: int
-} from "Ada Lovelace was born in 1815" -> person
+  email?: string
+} from "Ada Lovelace was born in 1815"
+  fixture "examples/fixtures/extract/person.json" -> person
 ```
+
+Run it: `./spark --dry-run examples/extract_person.spark`.
+
+`fixture "PATH"` names the JSON file that dry-run reads. Dry-run never
+calls a model and never invents a value, so the clause is required:
+without it, or with a path that does not exist, the run stops with a
+non-zero exit.
+
+Validation checks that every required field is present and that every
+present field — required or optional — has its declared type. `float`
+accepts an int (`3` is a valid float); `int` does not accept `3.5`, and
+`bool` does not accept `0`/`1`. Only top-level keys count, so a nested
+`{"address": {"age": 36}}` does not satisfy a top-level `age`. Extra
+keys the schema does not mention are allowed and passed through.
+
+A violation prints each problem and exits non-zero — nothing is bound
+and nothing is printed:
+
+```
+$ ./spark --dry-run examples/extract_bad.spark ; echo $?
+error: extract Person: field age expected int, fixture has string
+error: extract Person did not validate against .../person_bad_type.json
+1
+```
+
+**Not shipped (still [next]):** live model-backed extract, and retry on
+a schema miss. `./spark-extract --live` refuses rather than guessing.
+
+Examples: `examples/extract_person.spark` (valid),
+`examples/extract_bad.spark` (type mismatch). Gate: `make test-extract`.
 
 ### `classify` (first-class)
 

@@ -249,12 +249,36 @@
         <code class="inline-code">./spark-http --live --get --url https://example.com/ --timeout 10</code>.
         Gate: <code class="inline-code">make test-http</code> (live SKIP unless <code class="inline-code">SPARK_HTTP_LIVE=1</code>).</p>
         <h3 id="extract"><code class="inline-code">extract</code></h3>
-        <p>Inline schema; language expects JSON matching fields.</p>
+        <p>Inline schema, validated against JSON. A field is required unless its
+        name ends in <code class="inline-code">?</code>. Types are <code class="inline-code">string</code>, <code class="inline-code">int</code>, <code class="inline-code">float</code>, <code class="inline-code">bool</code>.</p>
         <pre class="doc__pre"><code class="inline-code">extract Person {
           name: string
           age: int
-        } from &quot;Ada Lovelace was born in 1815&quot; -&gt; person
+          email?: string
+        } from &quot;Ada Lovelace was born in 1815&quot;
+          fixture &quot;examples/fixtures/extract/person.json&quot; -&gt; person
         </code></pre>
+        <p><code class="inline-code">fixture "PATH"</code> names the JSON file that dry-run reads. Dry-run never
+        calls a model and never invents a value, so the clause is required:
+        without it, or with a path that does not exist, the run stops with a
+        non-zero exit.</p>
+        <p>Validation checks that every required field is present and that every
+        present field — required or optional — has its declared type. <code class="inline-code">float</code>
+        accepts an int (<code class="inline-code">3</code> is a valid float); <code class="inline-code">int</code> does not accept <code class="inline-code">3.5</code>, and
+        <code class="inline-code">bool</code> does not accept <code class="inline-code">0</code>/<code class="inline-code">1</code>. Only top-level keys count, so a nested
+        <code class="inline-code">{"address": {"age": 36}}</code> does not satisfy a top-level <code class="inline-code">age</code>. Extra
+        keys the schema does not mention are allowed and passed through.</p>
+        <p>A violation prints each problem and exits non-zero — nothing is bound
+        and nothing is printed:</p>
+        <pre class="doc__pre"><code class="inline-code">$ ./spark --dry-run examples/extract_bad.spark ; echo $?
+        error: extract Person: field age expected int, fixture has string
+        error: extract Person did not validate against .../person_bad_type.json
+        1
+        </code></pre>
+        <p><strong>Not shipped (still [next]):</strong> live model-backed extract, and retry on
+        a schema miss. <code class="inline-code">./spark-extract --live</code> refuses rather than guessing.</p>
+        <p>Examples: <code class="inline-code">examples/extract_person.spark</code> (valid),
+        <code class="inline-code">examples/extract_bad.spark</code> (type mismatch). Gate: <code class="inline-code">make test-extract</code>.</p>
         <h3 id="classify-first-class"><code class="inline-code">classify</code> (first-class)</h3>
         <p>Single-label (default) or <code class="inline-code">multi</code>:</p>
         <pre class="doc__pre"><code class="inline-code">classify Intent { support, sales, spam }

@@ -185,7 +185,9 @@ int spark_lex_file(const char *path, FILE *out)
     }
 
     /* single-byte punct */
-    if (strchr("{}[]():,.=<>!", c)) {
+    /* '?' is punct: it marks an optional extract field (`email?: string`).
+     * Statement-leading `?` ask-sugar is rewritten before the lexer. */
+    if (strchr("{}[]():,.=<>!?", c)) {
       emit_to(out,"PUNCT", buf + i, 1, tline, tcol);
       i++;
       col++;

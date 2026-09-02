@@ -97,7 +97,7 @@ Mapped 1:1 to LANGUAGE.md statement starts. Voice merge keeps
 | `0x03` | `PRINT` | `print` | ident | `[print] <value>` |
 | `0x04` | `LET` | `let` | name, value | `[let] <name> = <value>` |
 | `0x05` | `CLASSIFY` | `classify` | from-text, bind | `[classify] <text>` / `  → <json>` |
-| `0x06` | `EXTRACT` | `extract` | bind | `[extract] <json>` |
+| `0x06` | `EXTRACT` | `extract` | schema, fixture, bind | `[extract] <json>` |
 | `0x07` | `PIPELINE` | `pipeline` | none | `[pipeline] step` |
 | `0x09` | `LISTEN` | `listen` | path, bind | `[listen] <transcript>` |
 | `0x0a` | `SPEAK` | `speak` / `say` | text, path | `[speak] wrote <path>` |
@@ -173,6 +173,40 @@ GAS classify_dry body (compare SoT; banner may differ):
 [print] {"label":"sales","confidence":0.88,"reasons":["dry-run"]}
 [spark] ok
 ```
+
+### EXTRACT
+
+LANGUAGE form in `selfhost/fixtures/extract_dry.spark`:
+
+```
+extract Person { name: string, age: int }
+  from "…" fixture "examples/fixtures/extract/person.json" -> person
+```
+
+**Encoded operands:** three `u16` const indices.
+
+1. **schema** — the declaration re-serialized to one line,
+   `extract NAME { f: type, g?: type }`. The compiler joins the
+   block's tokens; source newlines and commas both separate fields,
+   so the encoded text is canonical regardless of layout.
+2. **fixture** — the `fixture` STRING. Required: a compile without
+   one is an error, because dry-run has no other source of values.
+3. **bind** — IDENT after `->`.
+
+The schema travels as text, not a packed field table, so
+`bootstrap/dry_extract.c` is the single validator shared by the GAS
+VM, the bootstrap interpreter, and this VM. All three therefore
+accept and reject exactly the same inputs — `run_sparkbc.sh` compares
+bodies byte-for-byte.
+
+**Not encoded:** the `from` STRING. It is the prompt a live model
+would receive, and live extract is not wired; encoding it would imply
+a capability that does not exist.
+
+`op_extract` (`bc_vm.c`) parses the schema, loads the fixture from
+disk, validates, then prints `[extract] <json>` and binds. A missing
+fixture or a failed field check returns non-zero — it does not fall
+back to a built-in value.
 
 ### TOOL / WITH / WITH_END (Phase 4 second family)
 

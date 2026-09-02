@@ -26,7 +26,8 @@ model fast
 # print intent
 
 # @helper print_extract_result: Print extracted struct
-# extract Person { name: string } from "Ada Lovelace" -> person
+# extract Person { name: string } from "Ada Lovelace"
+#   fixture "examples/fixtures/extract/lib/person.json" -> person
 # print person
 
 # @helper print_pipeline_final: Print last pipeline bind

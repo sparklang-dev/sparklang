@@ -5,6 +5,7 @@
 #include "dry_ask.h"
 #include "dry_auto_model.h"
 #include "dry_classify.h"
+#include "dry_extract.h"
 #include "dry_rag.h"
 #include "dry_ops.h"
 #include "dry_engine.h"
@@ -711,19 +712,49 @@ static int bind_if_any(BcFrame *fr, const char *bind)
   return 0;
 }
 
+/* EXTRACT carries the schema declaration, the fixture path, and the bind
+ * name. The fixture on disk is the only source of field values, and the
+ * same validator runs here as in the GAS and bootstrap interpreters, so
+ * all three engines accept and reject exactly the same inputs. */
 static int op_extract(BcFrame *fr, const SparkBc *bc, uint32_t *ip)
 {
-  uint16_t bidx;
+  struct spark_extract_schema schema;
+  uint16_t sidx, fidx, bidx;
+  const char *schema_text;
+  const char *fixture;
   const char *bind;
-  const char *person = spark_dry_person();
+  char *body = NULL;
+
+  if (take_u16(bc, ip, &sidx) != 0)
+    return 1;
+  if (take_u16(bc, ip, &fidx) != 0)
+    return 1;
   if (take_u16(bc, ip, &bidx) != 0)
+    return 1;
+  if (const_str(bc, sidx, &schema_text) != 0)
+    return 1;
+  if (const_str(bc, fidx, &fixture) != 0)
     return 1;
   if (const_str(bc, bidx, &bind) != 0)
     return 1;
-  printf("[extract] %s\n", person);
-  set_last(fr, person);
-  if (bind[0] && vars_put(fr, bind, person) != 0)
+  if (spark_extract_parse_schema(schema_text, &schema) != 0)
     return 1;
+  if (spark_extract_load_fixture(fixture, &body, NULL) != 0)
+    return 1;
+  if (spark_extract_validate(&schema, body) != 0) {
+    fprintf(stderr,
+            "error: extract %s did not validate against %s\n",
+            schema.name, fixture);
+    free(body);
+    return 1;
+  }
+  printf("[extract] %s\n", body);
+  set_last(fr, body);
+  if (bind[0] && vars_put(fr, bind, body) != 0) {
+    free(body);
+    return 1;
+  }
+  free(body);
   return 0;
 }
 

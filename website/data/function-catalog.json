@@ -1,8 +1,8 @@
 {
   "generated": true,
   "version": 1,
-  "helperCount": 151,
-  "totalEntries": 196,
+  "helperCount": 152,
+  "totalEntries": 197,
   "categoryCount": 13,
   "categories": [
     "AI",
@@ -35,7 +35,7 @@
       "name": "ai_extract_then_ask",
       "category": "AI",
       "description": "Extract fields then summarize",
-      "syntax": "extract Person { name: string } from \"Jane called\" -> person\nask \"Draft greeting for {person}\" -> greeting",
+      "syntax": "extract Person { name: string } from \"Jane called\"\n  fixture \"examples/fixtures/extract/lib/person.json\" -> person\nask \"Draft greeting for {person}\" -> greeting",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/ai.spark"
@@ -209,7 +209,7 @@
       "name": "ask_pipeline_step",
       "category": "AI",
       "description": "Ask as first pipeline step",
-      "syntax": "let doc \"Notes.\"\npipeline {\nask \"Summarize: {doc}\" -> summary\n}",
+      "syntax": "let doc \"Notes.\"\npipeline {\n  ask \"Summarize: {doc}\" -> summary\n}",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/ask.spark"
@@ -291,7 +291,7 @@
       "name": "ask_with_tools",
       "category": "AI",
       "description": "Ask inside tool scope (dry-run returns stub)",
-      "syntax": "tool weather(city: string) -> string { \"stub:local\" }\nwith tools [weather] {\nask \"Weather in Springfield?\" -> answer\n}",
+      "syntax": "tool weather(city: string) -> string { \"stub:local\" }\nwith tools [weather] {\n  ask \"Weather in Springfield?\" -> answer\n}",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/ask.spark"
@@ -322,7 +322,7 @@
       "name": "classify_channel",
       "category": "AI",
       "description": "Channel source",
-      "syntax": "classify Channel { phone, sms, email, chat }\nfrom \"Text me the hours\"\n-> channel",
+      "syntax": "classify Channel { phone, sms, email, chat }\n  from \"Text me the hours\"\n  -> channel",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/classify.spark"
@@ -332,7 +332,7 @@
       "name": "classify_compliance",
       "category": "AI",
       "description": "Policy bucket",
-      "syntax": "classify Policy { allowed, review, block }\nfrom \"Share customer card numbers\"\n-> policy",
+      "syntax": "classify Policy { allowed, review, block }\n  from \"Share customer card numbers\"\n  -> policy",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/classify.spark"
@@ -342,7 +342,7 @@
       "name": "classify_email_type",
       "category": "AI",
       "description": "Inbox routing template",
-      "syntax": "classify MailType { customer, vendor, internal, spam }\nfrom \"Invoice attached for Q3\"\n-> mail_type",
+      "syntax": "classify MailType { customer, vendor, internal, spam }\n  from \"Invoice attached for Q3\"\n  -> mail_type",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/classify.spark"
@@ -352,7 +352,7 @@
       "name": "classify_fraud_risk",
       "category": "AI",
       "description": "Coarse fraud screening",
-      "syntax": "classify Risk { low, medium, high }\nfrom \"Send gift cards to this address\"\n-> risk",
+      "syntax": "classify Risk { low, medium, high }\n  from \"Send gift cards to this address\"\n  -> risk",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/classify.spark"
@@ -362,7 +362,7 @@
       "name": "classify_intent_multi",
       "category": "AI",
       "description": "Multi-label tags",
-      "syntax": "let message \"Billing question about late fees\"\nclassify multi Tags { support, sales, billing, spam }\nfrom message\n-> tags",
+      "syntax": "let message \"Billing question about late fees\"\nclassify multi Tags { support, sales, billing, spam }\n  from message\n  -> tags",
       "mode": "dry-run",
       "source": "stdlib",
       "example": "examples/classify_intent.spark",
@@ -373,7 +373,7 @@
       "name": "classify_intent_support_sales",
       "category": "AI",
       "description": "Route customer messages by intent",
-      "syntax": "classify Intent { support, sales, spam }\nfrom \"My account is locked\"\nmin_confidence 0.7\n-> intent",
+      "syntax": "classify Intent { support, sales, spam }\n  from \"My account is locked\"\n  min_confidence 0.7\n  -> intent",
       "mode": "dry-run",
       "source": "stdlib",
       "example": "examples/classify_intent.spark",
@@ -385,7 +385,7 @@
       "name": "classify_language",
       "category": "AI",
       "description": "Detect language bucket",
-      "syntax": "classify Lang { en, es, other }\nfrom \"Necesito ayuda con el pedido\"\n-> lang",
+      "syntax": "classify Lang { en, es, other }\n  from \"Necesito ayuda con el pedido\"\n  -> lang",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/classify.spark"
@@ -395,7 +395,7 @@
       "name": "classify_min_conf_high",
       "category": "AI",
       "description": "Strict confidence gate",
-      "syntax": "classify Intent { support, sales, spam }\nfrom \"maybe sales?\"\nmin_confidence 0.9\n-> intent",
+      "syntax": "classify Intent { support, sales, spam }\n  from \"maybe sales?\"\n  min_confidence 0.9\n  -> intent",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/classify.spark"
@@ -405,7 +405,7 @@
       "name": "classify_min_conf_low",
       "category": "AI",
       "description": "Permissive routing",
-      "syntax": "classify Intent { support, sales, spam }\nfrom \"hello\"\nmin_confidence 0.5\n-> intent",
+      "syntax": "classify Intent { support, sales, spam }\n  from \"hello\"\n  min_confidence 0.5\n  -> intent",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/classify.spark"
@@ -415,7 +415,7 @@
       "name": "classify_pipeline",
       "category": "AI",
       "description": "Classify inside pipeline block",
-      "syntax": "let message \"Refund request\"\npipeline {\nclassify Intent { support, sales, billing } from message -> intent\n| ask \"Draft reply for {intent}: {message}\" -> reply\n}",
+      "syntax": "let message \"Refund request\"\npipeline {\n  classify Intent { support, sales, billing } from message -> intent\n  | ask \"Draft reply for {intent}: {message}\" -> reply\n}",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/classify.spark"
@@ -425,7 +425,7 @@
       "name": "classify_product_line",
       "category": "AI",
       "description": "Product category",
-      "syntax": "classify Product { wash, dry, fold, vending }\nfrom \"Snack machine ate my dollar\"\n-> product",
+      "syntax": "classify Product { wash, dry, fold, vending }\n  from \"Snack machine ate my dollar\"\n  -> product",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/classify.spark"
@@ -435,7 +435,7 @@
       "name": "classify_routing_table",
       "category": "AI",
       "description": "Map label to action name",
-      "syntax": "classify Route { queue_support, queue_sales, discard }\nfrom \"I want to buy 10 machines\"\n-> route",
+      "syntax": "classify Route { queue_support, queue_sales, discard }\n  from \"I want to buy 10 machines\"\n  -> route",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/classify.spark"
@@ -445,7 +445,7 @@
       "name": "classify_sentiment",
       "category": "AI",
       "description": "Positive / neutral / negative",
-      "syntax": "classify Sentiment { positive, neutral, negative }\nfrom \"Thanks, that fixed it!\"\n-> sentiment",
+      "syntax": "classify Sentiment { positive, neutral, negative }\n  from \"Thanks, that fixed it!\"\n  -> sentiment",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/classify.spark"
@@ -465,7 +465,7 @@
       "name": "classify_topic_store",
       "category": "AI",
       "description": "Generic store topic routing",
-      "syntax": "classify Topic { machines, payment, hours, other }\nfrom \"What time do you close?\"\n-> topic",
+      "syntax": "classify Topic { machines, payment, hours, other }\n  from \"What time do you close?\"\n  -> topic",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/classify.spark"
@@ -475,7 +475,7 @@
       "name": "classify_urgency",
       "category": "AI",
       "description": "Triage by urgency",
-      "syntax": "classify Urgency { low, medium, high, emergency }\nfrom \"Water is flooding the floor\"\nmin_confidence 0.8\n-> urgency",
+      "syntax": "classify Urgency { low, medium, high, emergency }\n  from \"Water is flooding the floor\"\n  min_confidence 0.8\n  -> urgency",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/classify.spark"
@@ -494,9 +494,9 @@
       "id": "lang-extract",
       "name": "extract",
       "category": "AI",
-      "description": "Inline schema; language expects JSON matching fields.",
-      "syntax": "extract Person {\n  name: string\n  age: int\n} from \"Ada Lovelace was born in 1815\" -> person",
-      "mode": "gas-only",
+      "description": "Pulls typed fields out of text into JSON, validated on dry-run.",
+      "syntax": "extract Person {\n  name: string\n  age: int\n  email?: string\n} from \"Ada Lovelace was born in 1815\"\n  fixture \"examples/fixtures/extract/person.json\" -> person",
+      "mode": "dry-run",
       "source": "language",
       "example": "examples/extract_person.spark",
       "popular": true
@@ -506,7 +506,7 @@
       "name": "extract_address",
       "category": "AI",
       "description": "Mailing address fields",
-      "syntax": "extract Address {\nstreet: string\ncity: string\nstate: string\nzip: string\n} from \"123 Main St, Springfield, IL 62701\" -> addr",
+      "syntax": "extract Address { street: string, city: string, state: string, zip: string }\n  from \"123 Main St, Springfield, IL 62701\"\n  fixture \"examples/fixtures/extract/lib/address.json\" -> addr",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/extract.spark"
@@ -516,7 +516,7 @@
       "name": "extract_appointment",
       "category": "AI",
       "description": "Appointment slot",
-      "syntax": "extract Appointment {\nwhen: string\nwho: string\n} from \"Jane at 3pm Tuesday\" -> appt",
+      "syntax": "extract Appointment { when: string, who: string }\n  from \"Jane at 3pm Tuesday\"\n  fixture \"examples/fixtures/extract/lib/appointment.json\" -> appt",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/extract.spark"
@@ -526,7 +526,7 @@
       "name": "extract_bool_flag",
       "category": "AI",
       "description": "Single boolean field",
-      "syntax": "extract Flags {\nurgent: bool\n} from \"This is urgent \u2014 water leak\" -> flags",
+      "syntax": "extract Flags { urgent: bool }\n  from \"This is urgent \u2014 water leak\"\n  fixture \"examples/fixtures/extract/lib/flags.json\" -> flags",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/extract.spark"
@@ -536,7 +536,7 @@
       "name": "extract_contact",
       "category": "AI",
       "description": "Email and phone from text",
-      "syntax": "extract Contact {\nemail: string\nphone: string\n} from \"Reach me at ada@example.com or 555-0100\" -> contact",
+      "syntax": "extract Contact { email: string, phone: string }\n  from \"Reach me at ada@example.com or 555-0100\"\n  fixture \"examples/fixtures/extract/lib/contact.json\" -> contact",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/extract.spark"
@@ -546,7 +546,7 @@
       "name": "extract_date_event",
       "category": "AI",
       "description": "Event with ISO date",
-      "syntax": "extract Event {\ntitle: string\ndate: string\n} from \"Team standup on 2026-09-15\" -> event",
+      "syntax": "extract Event { title: string, date: string }\n  from \"Team standup on 2026-09-15\"\n  fixture \"examples/fixtures/extract/lib/event.json\" -> event",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/extract.spark"
@@ -556,7 +556,7 @@
       "name": "extract_entities_org",
       "category": "AI",
       "description": "Organization name extraction",
-      "syntax": "extract Org {\nname: string\n} from \"Acme Services LLC called about service\" -> org",
+      "syntax": "extract Org { name: string }\n  from \"Acme Services LLC called about service\"\n  fixture \"examples/fixtures/extract/lib/org.json\" -> org",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/extract.spark"
@@ -566,7 +566,7 @@
       "name": "extract_hours",
       "category": "AI",
       "description": "Open/close times",
-      "syntax": "extract Hours {\nopen: string\nclose: string\n} from \"Open 6am close 10pm daily\" -> hours",
+      "syntax": "extract Hours { open: string, close: string }\n  from \"Open 6am close 10pm daily\"\n  fixture \"examples/fixtures/extract/lib/hours.json\" -> hours",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/extract.spark"
@@ -576,7 +576,7 @@
       "name": "extract_invoice",
       "category": "AI",
       "description": "Invoice id and total",
-      "syntax": "extract Invoice {\nid: string\ntotal: float\n} from \"Invoice INV-991 total 1200.00\" -> invoice",
+      "syntax": "extract Invoice { id: string, total: float }\n  from \"Invoice INV-991 total 1200.00\"\n  fixture \"examples/fixtures/extract/lib/invoice.json\" -> invoice",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/extract.spark"
@@ -586,7 +586,7 @@
       "name": "extract_list_items",
       "category": "AI",
       "description": "Comma-separated items as string",
-      "syntax": "extract Items {\nlist: string\n} from \"Buy detergent, coins, signs\" -> items",
+      "syntax": "extract Items { list: string }\n  from \"Buy detergent, coins, signs\"\n  fixture \"examples/fixtures/extract/lib/items.json\" -> items",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/extract.spark"
@@ -596,7 +596,7 @@
       "name": "extract_location",
       "category": "AI",
       "description": "Store or city mention",
-      "syntax": "extract Location {\nstore: string\ncity: string\n} from \"Example Store near Riverside Plaza\" -> loc",
+      "syntax": "extract Location { store: string, city: string }\n  from \"Example Store near Riverside Plaza\"\n  fixture \"examples/fixtures/extract/lib/location.json\" -> loc",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/extract.spark"
@@ -606,7 +606,7 @@
       "name": "extract_machine_error",
       "category": "AI",
       "description": "Error code from guest report",
-      "syntax": "extract MachineError {\ncode: string\nmachine: string\n} from \"Device D12 shows error E42\" -> err",
+      "syntax": "extract MachineError { code: string, machine: string }\n  from \"Device D12 shows error E42\"\n  fixture \"examples/fixtures/extract/lib/machine_error.json\" -> err",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/extract.spark"
@@ -616,7 +616,17 @@
       "name": "extract_money",
       "category": "AI",
       "description": "Currency amount from sentence",
-      "syntax": "extract Money {\namount: float\ncurrency: string\n} from \"Total due is $42.50 USD\" -> money",
+      "syntax": "extract Money { amount: float, currency: string }\n  from \"Total due is $42.50 USD\"\n  fixture \"examples/fixtures/extract/lib/money.json\" -> money",
+      "mode": "dry-run",
+      "source": "stdlib",
+      "libFile": "lib/extract.spark"
+    },
+    {
+      "id": "lib-extract-optional-field",
+      "name": "extract_optional_field",
+      "category": "AI",
+      "description": "Optional field may be absent",
+      "syntax": "extract Person { name: string, age: int, email?: string }\n  from \"Ada Lovelace was born in 1815\"\n  fixture \"examples/fixtures/extract/lib/person.json\" -> person",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/extract.spark"
@@ -626,7 +636,7 @@
       "name": "extract_order",
       "category": "AI",
       "description": "Simple order line",
-      "syntax": "extract Order {\nsku: string\nqty: int\n} from \"Order SKU-WASH-9 qty 3\" -> order",
+      "syntax": "extract Order { sku: string, qty: int }\n  from \"Order SKU-WASH-9 qty 3\"\n  fixture \"examples/fixtures/extract/lib/order.json\" -> order",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/extract.spark"
@@ -636,7 +646,7 @@
       "name": "extract_person",
       "category": "AI",
       "description": "Name and age from prose",
-      "syntax": "extract Person {\nname: string\nage: int\n} from \"Ada Lovelace was born in 1815\" -> person",
+      "syntax": "extract Person { name: string, age: int }\n  from \"Ada Lovelace was born in 1815\"\n  fixture \"examples/fixtures/extract/lib/person.json\" -> person",
       "mode": "dry-run",
       "source": "stdlib",
       "example": "examples/extract_person.spark",
@@ -648,7 +658,7 @@
       "name": "extract_pipeline",
       "category": "AI",
       "description": "Extract as pipeline step",
-      "syntax": "let text \"Payment $19.99 on card ending 4242\"\npipeline {\nextract Payment { amount: float, last4: string } from text -> pay\n| ask \"Confirm payment JSON: {pay}\" -> confirm\n}",
+      "syntax": "pipeline {\n  extract Payment { amount: float, last4: string } from \"Payment $19.99\"\n    fixture \"examples/fixtures/extract/lib/payment.json\" -> pay\n  | ask \"Confirm payment JSON: {pay}\" -> confirm\n}",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/extract.spark"
@@ -658,7 +668,7 @@
       "name": "extract_rating",
       "category": "AI",
       "description": "Star rating from review text",
-      "syntax": "extract Rating {\nstars: int\nsummary: string\n} from \"Five stars \u2014 machines were clean\" -> rating",
+      "syntax": "extract Rating { stars: int, summary: string }\n  from \"Five stars \u2014 machines were clean\"\n  fixture \"examples/fixtures/extract/lib/rating.json\" -> rating",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/extract.spark"
@@ -668,7 +678,7 @@
       "name": "extract_then_classify",
       "category": "AI",
       "description": "Extract struct then classify intent",
-      "syntax": "extract Person { name: string } from \"Jane Doe needs help\" -> person\nclassify Intent { support, sales } from \"Jane Doe needs help\" -> intent",
+      "syntax": "extract Person { name: string }\n  from \"Jane Doe needs help\"\n  fixture \"examples/fixtures/extract/lib/person.json\" -> person\nclassify Intent { support, sales } from \"Jane Doe needs help\" -> intent",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/extract.spark"
@@ -689,7 +699,7 @@
       "name": "pipeline_bullet_translate",
       "category": "AI",
       "description": "Bullets then translate",
-      "syntax": "let doc \"Meeting notes.\"\npipeline {\nask \"Bullet points: {doc}\" -> bullets\n| ask \"Translate to French: {bullets}\" -> fr\n}",
+      "syntax": "let doc \"Meeting notes.\"\npipeline {\n  ask \"Bullet points: {doc}\" -> bullets\n  | ask \"Translate to French: {bullets}\" -> fr\n}",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/pipeline.spark"
@@ -699,7 +709,7 @@
       "name": "pipeline_classify_reply",
       "category": "AI",
       "description": "Classify then draft reply",
-      "syntax": "let message \"Billing question\"\npipeline {\nclassify Intent { support, sales, billing } from message -> intent\n| ask \"Reply as {intent}: {message}\" -> reply\n}",
+      "syntax": "let message \"Billing question\"\npipeline {\n  classify Intent { support, sales, billing } from message -> intent\n  | ask \"Reply as {intent}: {message}\" -> reply\n}",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/pipeline.spark"
@@ -709,7 +719,7 @@
       "name": "pipeline_extract_summarize",
       "category": "AI",
       "description": "Extract struct then summarize",
-      "syntax": "let text \"Ada Lovelace, age 36, London\"\npipeline {\nextract Person { name: string, age: int } from text -> person\n| ask \"Bio blurb for: {person}\" -> blurb\n}",
+      "syntax": "let text \"Ada Lovelace, age 36, London\"\npipeline {\n  extract Person { name: string, age: int } from text\n    fixture \"examples/fixtures/extract/lib/person.json\" -> person\n  | ask \"Bio blurb for: {person}\" -> blurb\n}",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/pipeline.spark"
@@ -719,7 +729,7 @@
       "name": "pipeline_minimal",
       "category": "AI",
       "description": "Single ask inside pipeline block",
-      "syntax": "let doc \"Short note.\"\npipeline {\nask \"One line summary: {doc}\" -> line\n}",
+      "syntax": "let doc \"Short note.\"\npipeline {\n  ask \"One line summary: {doc}\" -> line\n}",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/pipeline.spark"
@@ -729,7 +739,7 @@
       "name": "pipeline_model_tune",
       "category": "AI",
       "description": "Model analyze then improve",
-      "syntax": "pipeline {\nmodel analyze \"fast\" -> report\n| model improve from report prefer quality -> blueprint\n}",
+      "syntax": "pipeline {\n  model analyze \"fast\" -> report\n  | model improve from report prefer quality -> blueprint\n}",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/pipeline.spark"
@@ -739,7 +749,7 @@
       "name": "pipeline_review_build",
       "category": "AI",
       "description": "Review path then builder lower",
-      "syntax": "pipeline {\nreview path \"examples/fixtures/sample.js\" -> report\n| builder prefer lower request \"fix eval\" -> patch\n}",
+      "syntax": "pipeline {\n  review path \"examples/fixtures/sample.js\" -> report\n  | builder prefer lower request \"fix eval\" -> patch\n}",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/pipeline.spark"
@@ -749,7 +759,7 @@
       "name": "pipeline_sentiment_reply",
       "category": "AI",
       "description": "Sentiment then empathetic reply",
-      "syntax": "let message \"This place is amazing!\"\npipeline {\nclassify Sentiment { positive, neutral, negative } from message -> mood\n| ask \"Reply matching {mood} tone: {message}\" -> reply\n}",
+      "syntax": "let message \"This place is amazing!\"\npipeline {\n  classify Sentiment { positive, neutral, negative } from message -> mood\n  | ask \"Reply matching {mood} tone: {message}\" -> reply\n}",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/pipeline.spark"
@@ -759,7 +769,7 @@
       "name": "pipeline_summarize_translate",
       "category": "AI",
       "description": "Summarize then translate to Spanish",
-      "syntax": "let doc \"Your document text here.\"\npipeline {\nask \"Summarize: {doc}\" -> summary\n| ask \"Translate to Spanish: {summary}\" -> es\n}",
+      "syntax": "let doc \"Your document text here.\"\npipeline {\n  ask \"Summarize: {doc}\" -> summary\n  | ask \"Translate to Spanish: {summary}\" -> es\n}",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/pipeline.spark"
@@ -769,7 +779,7 @@
       "name": "pipeline_three_step",
       "category": "AI",
       "description": "Title from summary chain",
-      "syntax": "let doc \"Long article.\"\npipeline {\nask \"Summarize: {doc}\" -> summary\n| ask \"Keywords: {summary}\" -> keywords\n| ask \"Title from keywords: {keywords}\" -> title\n}",
+      "syntax": "let doc \"Long article.\"\npipeline {\n  ask \"Summarize: {doc}\" -> summary\n  | ask \"Keywords: {summary}\" -> keywords\n  | ask \"Title from keywords: {keywords}\" -> title\n}",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/pipeline.spark"
@@ -779,7 +789,7 @@
       "name": "pipeline_voice_prep",
       "category": "AI",
       "description": "Text steps before speak (outside voice block)",
-      "syntax": "let user \"Guest question about hours\"\npipeline {\nclassify Intent { support, sales } from user -> intent\n| ask \"Short spoken answer for {intent}: {user}\" -> reply\n}\nspeak reply",
+      "syntax": "let user \"Guest question about hours\"\npipeline {\n  classify Intent { support, sales } from user -> intent\n  | ask \"Short spoken answer for {intent}: {user}\" -> reply\n}\nspeak reply",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/pipeline.spark"
@@ -1194,7 +1204,7 @@
       "name": "print_extract_result",
       "category": "Data",
       "description": "Print extracted struct",
-      "syntax": "extract Person { name: string } from \"Ada Lovelace\" -> person\nprint person",
+      "syntax": "extract Person { name: string } from \"Ada Lovelace\"\n  fixture \"examples/fixtures/extract/lib/person.json\" -> person\nprint person",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/data.spark"
@@ -1204,7 +1214,7 @@
       "name": "print_pipeline_final",
       "category": "Data",
       "description": "Print last pipeline bind",
-      "syntax": "pipeline {\nask \"Summarize: {doc}\" -> summary\n| ask \"Title for: {summary}\" -> title\n}\nprint title",
+      "syntax": "pipeline {\n  ask \"Summarize: {doc}\" -> summary\n  | ask \"Title for: {summary}\" -> title\n}\nprint title",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/data.spark"
@@ -1315,7 +1325,7 @@
       "name": "model_compare_suite",
       "category": "Model",
       "description": "Compare models on eval suite",
-      "syntax": "model compare [\"fast\", \"code\", \"best\"]\non suite \"examples/eval_suite.json\" -> comparison",
+      "syntax": "model compare [\"fast\", \"code\", \"best\"]\n  on suite \"examples/eval_suite.json\" -> comparison",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/model.spark"
@@ -1366,7 +1376,7 @@
       "name": "model_train_job",
       "category": "Model",
       "description": "Submit training job (dry fixtures or live)",
-      "syntax": "model train dataset \"examples/fixtures/train/dataset.jsonl\" \\\nbase \"fixture-base\" out \"out/train/job-dry-001\" backend \"http\" -> job",
+      "syntax": "model train dataset \"examples/fixtures/train/dataset.jsonl\" \\\n  base \"fixture-base\" out \"out/train/job-dry-001\" backend \"http\" -> job",
       "mode": "dry-run",
       "source": "stdlib",
       "example": "examples/model_train.spark",
@@ -1878,7 +1888,7 @@
       "name": "voice_brief_reply",
       "category": "Voice",
       "description": "Short spoken answers only",
-      "syntax": "voice {\nlisten -> user\nask \"One sentence answer: {user}\" -> reply\nspeak reply -> \"out/brief.wav\"\n}",
+      "syntax": "voice {\n  listen -> user\n  ask \"One sentence answer: {user}\" -> reply\n  speak reply -> \"out/brief.wav\"\n}",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/voice.spark"
@@ -1888,7 +1898,7 @@
       "name": "voice_classify_route",
       "category": "Voice",
       "description": "Classify transcript then reply",
-      "syntax": "voice {\nlisten -> user\nclassify Intent { support, sales } from user -> intent\nask \"Reply as {intent}: {user}\" -> reply\nspeak reply\n}",
+      "syntax": "voice {\n  listen -> user\n  classify Intent { support, sales } from user -> intent\n  ask \"Reply as {intent}: {user}\" -> reply\n  speak reply\n}",
       "mode": "live",
       "source": "stdlib",
       "libFile": "lib/voice.spark"
@@ -1919,7 +1929,7 @@
       "name": "voice_min_conf_classify",
       "category": "Voice",
       "description": "Strict classify in voice loop",
-      "syntax": "voice {\nlisten -> user\nclassify Intent { support, sales, spam } from user min_confidence 0.8 -> intent\nspeak \"Routing to {intent}\"\n}",
+      "syntax": "voice {\n  listen -> user\n  classify Intent { support, sales, spam } from user min_confidence 0.8 -> intent\n  speak \"Routing to {intent}\"\n}",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/voice.spark"
@@ -1951,7 +1961,7 @@
       "name": "voice_multilingual",
       "category": "Voice",
       "description": "Classify language then reply",
-      "syntax": "voice {\nlisten -> user\nclassify Lang { en, es } from user -> lang\nask \"Reply in {lang}: {user}\" -> reply\nspeak reply\n}",
+      "syntax": "voice {\n  listen -> user\n  classify Lang { en, es } from user -> lang\n  ask \"Reply in {lang}: {user}\" -> reply\n  speak reply\n}",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/voice.spark"
@@ -1961,7 +1971,7 @@
       "name": "voice_pipeline_extract",
       "category": "Voice",
       "description": "Voice block with extract step",
-      "syntax": "voice {\nlisten -> user\nextract Person { name: string } from user -> person\nask \"Greet {person}\" -> reply\nspeak reply\n}",
+      "syntax": "voice {\n  listen -> user\n  extract Person { name: string } from user\n    fixture \"examples/fixtures/extract/lib/person.json\" -> person\n  ask \"Greet {person}\" -> reply\n  speak reply\n}",
       "mode": "dry-run",
       "source": "stdlib",
       "libFile": "lib/voice.spark"
@@ -2003,7 +2013,7 @@
       "name": "voice_turn_basic",
       "category": "Voice",
       "description": "Listen, ask, speak loop",
-      "syntax": "voice {\nlisten -> user\nask \"Reply helpfully to: {user}\" -> reply\nspeak reply -> \"out.wav\"\n}",
+      "syntax": "voice {\n  listen -> user\n  ask \"Reply helpfully to: {user}\" -> reply\n  speak reply -> \"out.wav\"\n}",
       "mode": "dry-run",
       "source": "stdlib",
       "example": "examples/voice_turn.spark",
@@ -2061,7 +2071,7 @@
       "name": "classify_intent_support_sales",
       "category": "AI",
       "description": "Route customer messages by intent",
-      "syntax": "classify Intent { support, sales, spam }\nfrom \"My account is locked\"\nmin_confidence 0.7\n-> intent",
+      "syntax": "classify Intent { support, sales, spam }\n  from \"My account is locked\"\n  min_confidence 0.7\n  -> intent",
       "mode": "dry-run",
       "source": "stdlib",
       "example": "examples/classify_intent.spark",
@@ -2072,9 +2082,9 @@
       "id": "lang-extract",
       "name": "extract",
       "category": "AI",
-      "description": "Inline schema; language expects JSON matching fields.",
-      "syntax": "extract Person {\n  name: string\n  age: int\n} from \"Ada Lovelace was born in 1815\" -> person",
-      "mode": "gas-only",
+      "description": "Pulls typed fields out of text into JSON, validated on dry-run.",
+      "syntax": "extract Person {\n  name: string\n  age: int\n  email?: string\n} from \"Ada Lovelace was born in 1815\"\n  fixture \"examples/fixtures/extract/person.json\" -> person",
+      "mode": "dry-run",
       "source": "language",
       "example": "examples/extract_person.spark",
       "popular": true
@@ -2084,7 +2094,7 @@
       "name": "extract_person",
       "category": "AI",
       "description": "Name and age from prose",
-      "syntax": "extract Person {\nname: string\nage: int\n} from \"Ada Lovelace was born in 1815\" -> person",
+      "syntax": "extract Person { name: string, age: int }\n  from \"Ada Lovelace was born in 1815\"\n  fixture \"examples/fixtures/extract/lib/person.json\" -> person",
       "mode": "dry-run",
       "source": "stdlib",
       "example": "examples/extract_person.spark",
@@ -2174,7 +2184,7 @@
       "name": "voice_turn_basic",
       "category": "Voice",
       "description": "Listen, ask, speak loop",
-      "syntax": "voice {\nlisten -> user\nask \"Reply helpfully to: {user}\" -> reply\nspeak reply -> \"out.wav\"\n}",
+      "syntax": "voice {\n  listen -> user\n  ask \"Reply helpfully to: {user}\" -> reply\n  speak reply -> \"out.wav\"\n}",
       "mode": "dry-run",
       "source": "stdlib",
       "example": "examples/voice_turn.spark",

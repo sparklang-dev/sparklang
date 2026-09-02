@@ -18,7 +18,8 @@ use auto
 # ask "Reply as {intent}: {message}" -> reply
 
 # @helper ai_extract_then_ask: Extract fields then summarize
-# extract Person { name: string } from "Jane called" -> person
+# extract Person { name: string } from "Jane called"
+#   fixture "examples/fixtures/extract/lib/person.json" -> person
 # ask "Draft greeting for {person}" -> greeting
 
 # @helper ai_question_sugar: Shorthand ? for ask

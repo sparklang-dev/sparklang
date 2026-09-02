@@ -55,7 +55,8 @@ model fast
 # @helper voice_pipeline_extract: Voice block with extract step
 # voice {
 #   listen -> user
-#   extract Person { name: string } from user -> person
+#   extract Person { name: string } from user
+#     fixture "examples/fixtures/extract/lib/person.json" -> person
 #   ask "Greet {person}" -> reply
 #   speak reply
 # }

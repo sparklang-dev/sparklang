@@ -21,7 +21,10 @@
         "extract Person {\n" +
         "  name: string\n" +
         "  age: int\n" +
-        '} from "Ada Lovelace was born in 1815" -> person\n\nprint person',
+        "  email?: string\n" +
+        '} from "Ada Lovelace was born in 1815"\n' +
+        '  fixture "examples/fixtures/extract/person.json" -> person\n' +
+        "\nprint person",
     },
     pipeline: {
       label: "Pipeline translate",

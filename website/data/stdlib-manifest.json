@@ -1,6 +1,6 @@
 {
-  "helperCount": 151,
-  "totalEntries": 196,
+  "helperCount": 152,
+  "totalEntries": 197,
   "categoryCount": 13,
   "libFiles": [
     "ai.spark",
@@ -20,7 +20,7 @@
     "ask.spark": 18,
     "classify.spark": 17,
     "data.spark": 17,
-    "extract.spark": 17,
+    "extract.spark": 18,
     "http.spark": 21,
     "model.spark": 10,
     "pipeline.spark": 10,

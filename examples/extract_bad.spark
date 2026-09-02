@@ -1,0 +1,13 @@
+# Type mismatch: the fixture has age as a string, the schema wants int.
+# This exits 1 and does not print a result.
+#   ./spark --dry-run examples/extract_bad.spark ; echo $?
+
+model fast
+
+extract Person {
+  name: string
+  age: int
+} from "Ada Lovelace was born in 1815"
+  fixture "examples/fixtures/extract/person_bad_type.json" -> person
+
+print person

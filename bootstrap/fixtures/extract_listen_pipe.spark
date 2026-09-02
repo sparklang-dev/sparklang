@@ -1,10 +1,12 @@
-# Extract dry person stub + listen/speak/pipeline subset
+# Typed extract + listen/speak/pipeline subset.
+# Dry-run reads the fixture from disk; there is no built-in person.
 model fast
 
 extract Person {
   name: string
   age: int
-} from "Ada Lovelace was born in 1815" -> person
+} from "Ada Lovelace was born in 1815"
+  fixture "examples/fixtures/extract/person.json" -> person
 
 print person
 
