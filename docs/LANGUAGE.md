@@ -185,18 +185,36 @@ Generic HTTP client ops — **not** Bifrost-specific and **not**
 ```
 http get "https://example.com/" fixture "examples/fixtures/http/get_ok.json" timeout 5 -> resp
 http post "https://example.com/api" body "{\"ping\":true}" fixture "examples/fixtures/http/post_ok.json" timeout 5 -> resp
+http get "https://example.com/" bearer "TOKEN" retries 2 backoff 100 fixture "examples/fixtures/http/get_ok.json" timeout 5 -> resp
+http get "https://httpbin.org/headers" header "X-Spark-Test: auth-retries" timeout 15 -> resp
 ```
+
+| Clause | Meaning |
+|--------|---------|
+| `timeout N` | Seconds (default **30**, range 1–600). Live curl `-m`. |
+| `bearer "TOKEN"` | Live: `Authorization: Bearer TOKEN`. Dry: logged as `auth=bearer` (token never printed). |
+| `header "Name: value"` | Live: one extra curl `-H`. Conflict with `bearer` if Name is `Authorization` → fail loud. |
+| `retries N` | Extra attempts after the first (0–8, default **0**). |
+| `backoff MS` | Base delay ms between retries (0–60000). Default **100** when `retries > 0` and backoff omitted. Doubles each retry. |
+
+**Live retries only on:**
+
+- curl exit **7**, **28**, **35**, **52**, **56** (connect / timeout / SSL / empty / recv)
+- HTTP **408**, **429**, **500**, **502**, **503**, **504**
+
+No retry on 401/403/404 or other 4xx. Final non-2xx/3xx → exit **1**.
 
 | Mode | Behavior |
 |------|----------|
-| **Dry-run** | **No network.** Requires `fixture "…"` **or** a `file://…` / `examples/fixtures/http/…` URL. **fopen** that path; missing file → fail loud. Bound value = fixture bytes (no invented status). `timeout` is accepted and recorded by the companion; it does not dial. |
-| **Live** (`./spark --live`) | Real HTTP via companion `./spark-http` (curl). Needs `http://` or `https://`. `timeout` (default **30**, range 1–600) applies. `fixture` is ignored for the body. |
+| **Dry-run** | **No network.** Requires `fixture "…"` **or** a `file://…` / `examples/fixtures/http/…` URL. **fopen** that path; missing file → fail loud. Bound value = fixture bytes (no invented status). `timeout` / `bearer` / `header` / `retries` / `backoff` are accepted and recorded; they do not dial. |
+| **Live** (`./spark --live`) | Real HTTP via companion `./spark-http` (curl). Needs `http://` or `https://`. Auth headers and retries apply. `fixture` is ignored for the body. |
 
-**Shipped:** get, post, timeout, dry fixture files, live curl.
-**Not shipped (still [next]):** auth / bearer headers, retries.
+**Shipped:** get, post, timeout, bearer, header, retries, backoff, dry fixture files, live curl.
 
-Example (dry): `examples/http_get.spark`. Live opt-in:
-`examples/http_get_live.spark` or
+Example (dry): `examples/http_get.spark`, `examples/http_get_auth.spark`.
+Live opt-in: `examples/http_get_live.spark`,
+`examples/http_get_auth_live.spark`,
+`examples/http_get_retries_live.spark`, or
 `./spark-http --live --get --url https://example.com/ --timeout 10`.
 Gate: `make test-http` (live SKIP unless `SPARK_HTTP_LIVE=1`).
 

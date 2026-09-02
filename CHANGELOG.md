@@ -4,6 +4,18 @@ All notable user-facing releases of **SparkLang** (the Spark programming
 language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
+## 0.6.7 — 2026-09-02
+
+- **`http get` / `http post` auth + retries:** `bearer "TOKEN"`,
+  `header "Name: value"`, `retries N`, `backoff MS` (keep existing
+  `timeout`). Live curl sends real headers; retries only on documented
+  transport exits (7/28/35/52/56) and HTTP 408/429/5xx subset. Dry-run
+  still fixtures-only (missing fixture → exit 1; no fake network).
+- Examples: `examples/http_get_auth.spark`,
+  `http_get_auth_live.spark`, `http_get_retries_live.spark`.
+- Gate: `make test-http` / `SPARK_HTTP_LIVE=1` covers bearer + 503
+  retry proof.
+
 ## 0.6.6 — 2026-09-02
 
 - **Three CPU train methods** (not LoRA) behind the same HTTP contract:

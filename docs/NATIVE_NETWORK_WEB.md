@@ -17,7 +17,7 @@ and browser automation — not only AI `ask`. This doc states what works **today
 | **Browser driver** | `browser run\|goto\|flags\|cdp`, `browser show\|engine render` | Session JSON + mocks; dry E2E | `browser gui` + `--live`; CDP dials only under `--live` |
 | **MITM / HAR** | `mitm ca-*`, `enable`, `har export`, QUIC lane | Synthetic HAR markers | `--live` forks `./spark-mitm-h2` / `./spark-mitm-quic` |
 | **Engine B render** | `engine parse\|css attach\|layout\|paint boxes\|show` | PPM + JSON under `out/engine/`, `out/browser/` | `--live` → `./spark-engine-show` (X11) |
-| **First-class `http get` / `http post`** | **done** (timeout + dry fixtures) | Fixture files; no network | `./spark --live` → `./spark-http` (curl). Auth/retries = [next] |
+| **First-class `http get` / `http post`** | **done** (timeout, auth, retries, dry fixtures) | Fixture files; no network | `./spark --live` → `./spark-http` (curl). `bearer`/`header` + `retries`/`backoff` |
 
 Dry-run and `make test` stay **offline** unless you opt into `--allow-net` or
 `--allow-net-capture`. No vendor API keys required for develop/test.

@@ -22,7 +22,7 @@ Not Apache Spark. Not AdaCore SPARK.
 | Escape hatch (`.spark` → host) | **done (dry)** | `shell` / `run` allowlist dry-run fixtures; live gated exec = **next** |
 | Escape hatch (host → `.spark`) | **next** | `./spark --embed` stub JSON handshake; `import spark` FFI = **next** |
 | `retrieve` / `embed` language ops | **done** | Dry fixtures + live `./spark-rag-http`; see LANGUAGE.md |
-| Real `http get` / `post` | **done** | Dry fixture files + timeout; live `./spark-http` (curl). Auth/retries = **next** |
+| Real `http get` / `post` | **done** | Dry fixture files + timeout; live `./spark-http` (curl). `bearer` / `header` + `retries` / `backoff` on documented failure classes |
 | Typed `extract` + JSON-mode validate/retry | **partial** | Validation shipped: required vs `?` optional fields, `string`/`int`/`float`/`bool` types, top-level only, non-zero exit on a miss. Dry-run reads a real `fixture "PATH"`. Live extract and retry-on-miss = **next** |
 | Cost/latency/token accounting | **done (hooks)** | Dry zeros; live prints `usage` when gateway returns it — never invents tokens |
 | Streaming `ask` | **next** | Not shipped |
@@ -44,10 +44,11 @@ Without both directions, a DSL dies:
 
 ## Worth using over script + gateway
 
-Shipped enough to dry-demo RAG + ask + classify + http get/post in one
-file. Still missing for a clear “shorter than Python+gateway” win on
-production paths: streaming, HTTP auth/retries, live `extract` against a
-model, and a dry-runnable receptionist that is more than a `[goal]` sketch.
+Shipped enough to dry-demo RAG + ask + classify + http get/post (with
+auth/retries) in one file. Still missing for a clear “shorter than
+Python+gateway” win on production paths: streaming, live `extract`
+against a model, and a dry-runnable receptionist that is more than a
+`[goal]` sketch.
 
 ## Voice — honest
 
@@ -67,7 +68,8 @@ playbooks + LSP / syntax highlighting + optional live gateway I/O.
 Keep these off the hero; they belong here and in docs:
 
 - **`model plan` is not training** — markdown plan only; train/build submit jobs.
-- **HTTP auth / retries** for language `http get`/`post` = **next**.
+- **HTTP auth / retries** for language `http get`/`post` = **done**
+  (`bearer` / `header`, `retries` / `backoff`; see LANGUAGE.md).
 - **Packet capture / MITM / browser** stay in LANGUAGE but are secondary vs
   train→eval (see “Also available” one-liner on the homepage).
 - **Live train** — reference trainer ships **three** CPU methods:

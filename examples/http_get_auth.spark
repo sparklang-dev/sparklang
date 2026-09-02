@@ -1,0 +1,5 @@
+# Dry-run: bearer + retries accepted; fixture bytes only (no network).
+
+http get "https://example.com/" bearer "dry-token-not-sent" retries 2 backoff 100 fixture "examples/fixtures/http/get_ok.json" timeout 5 -> resp
+
+print resp

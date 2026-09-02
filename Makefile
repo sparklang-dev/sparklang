@@ -229,7 +229,7 @@ spark-rag-http: tools/rag/spark_rag_http.c bootstrap/dry_rag.c \
 	$(CC) -O2 -Wall -Wextra -o $@ tools/rag/spark_rag_http.c \
 		bootstrap/dry_rag.c
 
-# Generic http get/post (dry fixture files; live curl).
+# Generic http get/post (dry fixtures; live curl + auth/retries).
 spark-http: tools/http/spark_http.c bootstrap/dry_http.c \
 	bootstrap/dry_http.h
 	$(CC) -O2 -Wall -Wextra -o $@ tools/http/spark_http.c \

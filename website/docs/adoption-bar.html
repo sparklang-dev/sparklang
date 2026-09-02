@@ -127,7 +127,7 @@
         <tr>
         <td>Real <code class="inline-code">http get</code> / <code class="inline-code">post</code></td>
         <td><strong>done</strong></td>
-        <td>Dry fixture files + timeout; live <code class="inline-code">./spark-http</code> (curl). Auth/retries = <strong>next</strong></td>
+        <td>Dry fixture files + timeout; live <code class="inline-code">./spark-http</code> (curl). <code class="inline-code">bearer</code> / <code class="inline-code">header</code> + <code class="inline-code">retries</code> / <code class="inline-code">backoff</code> on documented failure classes</td>
         </tr>
         <tr>
         <td>Typed <code class="inline-code">extract</code> + JSON-mode validate/retry</td>
@@ -185,10 +185,11 @@
            real Python/JS embed API is <strong>next</strong>.</li>
         </ol>
         <h2 id="worth-using-over-script-gateway">Worth using over script + gateway</h2>
-        <p>Shipped enough to dry-demo RAG + ask + classify + http get/post in one
-        file. Still missing for a clear “shorter than Python+gateway” win on
-        production paths: streaming, HTTP auth/retries, live <code class="inline-code">extract</code> against a
-        model, and a dry-runnable receptionist that is more than a <code class="inline-code">[goal]</code> sketch.</p>
+        <p>Shipped enough to dry-demo RAG + ask + classify + http get/post (with
+        auth/retries) in one file. Still missing for a clear “shorter than
+        Python+gateway” win on production paths: streaming, live <code class="inline-code">extract</code>
+        against a model, and a dry-runnable receptionist that is more than a
+        <code class="inline-code">[goal]</code> sketch.</p>
         <h2 id="voice-honest">Voice — honest</h2>
         <p>Optional <code class="inline-code">listen</code> / <code class="inline-code">speak</code> / <code class="inline-code">voice</code> / gated PSTN exist as language
         surface and dry demos. <strong>Not</strong> production barge-in / EOU / SM transfer
@@ -202,7 +203,8 @@
         <p>Keep these off the hero; they belong here and in docs:</p>
         <ul class="doc__ul">
         <li><strong><code class="inline-code">model plan</code> is not training</strong> — markdown plan only; train/build submit jobs.</li>
-        <li><strong>HTTP auth / retries</strong> for language <code class="inline-code">http get</code>/<code class="inline-code">post</code> = <strong>next</strong>.</li>
+        <li><strong>HTTP auth / retries</strong> for language <code class="inline-code">http get</code>/<code class="inline-code">post</code> = <strong>done</strong>
+          (<code class="inline-code">bearer</code> / <code class="inline-code">header</code>, <code class="inline-code">retries</code> / <code class="inline-code">backoff</code>; see LANGUAGE.md).</li>
         <li><strong>Packet capture / MITM / browser</strong> stay in LANGUAGE but are secondary vs
           train→eval (see “Also available” one-liner on the homepage).</li>
         <li><strong>Live train</strong> — reference trainer ships <strong>three</strong> CPU methods:

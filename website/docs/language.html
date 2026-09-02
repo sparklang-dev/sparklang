@@ -223,7 +223,45 @@
         <code class="inline-code">engine fetch</code> <code class="inline-code">file://</code>. Dry-run never dials the network.</p>
         <pre class="doc__pre"><code class="inline-code">http get &quot;https://example.com/&quot; fixture &quot;examples/fixtures/http/get_ok.json&quot; timeout 5 -&gt; resp
         http post &quot;https://example.com/api&quot; body &quot;{\&quot;ping\&quot;:true}&quot; fixture &quot;examples/fixtures/http/post_ok.json&quot; timeout 5 -&gt; resp
+        http get &quot;https://example.com/&quot; bearer &quot;TOKEN&quot; retries 2 backoff 100 fixture &quot;examples/fixtures/http/get_ok.json&quot; timeout 5 -&gt; resp
+        http get &quot;https://httpbin.org/headers&quot; header &quot;X-Spark-Test: auth-retries&quot; timeout 15 -&gt; resp
         </code></pre>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Clause</th>
+        <th>Meaning</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><code class="inline-code">timeout N</code></td>
+        <td>Seconds (default <strong>30</strong>, range 1–600). Live curl <code class="inline-code">-m</code>.</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">bearer "TOKEN"</code></td>
+        <td>Live: <code class="inline-code">Authorization: Bearer TOKEN</code>. Dry: logged as <code class="inline-code">auth=bearer</code> (token never printed).</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">header "Name: value"</code></td>
+        <td>Live: one extra curl <code class="inline-code">-H</code>. Conflict with <code class="inline-code">bearer</code> if Name is <code class="inline-code">Authorization</code> → fail loud.</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">retries N</code></td>
+        <td>Extra attempts after the first (0–8, default <strong>0</strong>).</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">backoff MS</code></td>
+        <td>Base delay ms between retries (0–60000). Default <strong>100</strong> when <code class="inline-code">retries &gt; 0</code> and backoff omitted. Doubles each retry.</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <p><strong>Live retries only on:</strong></p>
+        <ul class="doc__ul">
+        <li>curl exit <strong>7</strong>, <strong>28</strong>, <strong>35</strong>, <strong>52</strong>, <strong>56</strong> (connect / timeout / SSL / empty / recv)</li>
+        <li>HTTP <strong>408</strong>, <strong>429</strong>, <strong>500</strong>, <strong>502</strong>, <strong>503</strong>, <strong>504</strong></li>
+        </ul>
+        <p>No retry on 401/403/404 or other 4xx. Final non-2xx/3xx → exit <strong>1</strong>.</p>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
@@ -234,18 +272,19 @@
         <tbody>
         <tr>
         <td><strong>Dry-run</strong></td>
-        <td><strong>No network.</strong> Requires <code class="inline-code">fixture "…"</code> <strong>or</strong> a <code class="inline-code">file://…</code> / <code class="inline-code">examples/fixtures/http/…</code> URL. <strong>fopen</strong> that path; missing file → fail loud. Bound value = fixture bytes (no invented status). <code class="inline-code">timeout</code> is accepted and recorded by the companion; it does not dial.</td>
+        <td><strong>No network.</strong> Requires <code class="inline-code">fixture "…"</code> <strong>or</strong> a <code class="inline-code">file://…</code> / <code class="inline-code">examples/fixtures/http/…</code> URL. <strong>fopen</strong> that path; missing file → fail loud. Bound value = fixture bytes (no invented status). <code class="inline-code">timeout</code> / <code class="inline-code">bearer</code> / <code class="inline-code">header</code> / <code class="inline-code">retries</code> / <code class="inline-code">backoff</code> are accepted and recorded; they do not dial.</td>
         </tr>
         <tr>
         <td><strong>Live</strong> (<code class="inline-code">./spark --live</code>)</td>
-        <td>Real HTTP via companion <code class="inline-code">./spark-http</code> (curl). Needs <code class="inline-code">http://</code> or <code class="inline-code">https://</code>. <code class="inline-code">timeout</code> (default <strong>30</strong>, range 1–600) applies. <code class="inline-code">fixture</code> is ignored for the body.</td>
+        <td>Real HTTP via companion <code class="inline-code">./spark-http</code> (curl). Needs <code class="inline-code">http://</code> or <code class="inline-code">https://</code>. Auth headers and retries apply. <code class="inline-code">fixture</code> is ignored for the body.</td>
         </tr>
         </tbody>
         </table></div>
-        <p><strong>Shipped:</strong> get, post, timeout, dry fixture files, live curl.
-        <strong>Not shipped (still [next]):</strong> auth / bearer headers, retries.</p>
-        <p>Example (dry): <code class="inline-code">examples/http_get.spark</code>. Live opt-in:
-        <code class="inline-code">examples/http_get_live.spark</code> or
+        <p><strong>Shipped:</strong> get, post, timeout, bearer, header, retries, backoff, dry fixture files, live curl.</p>
+        <p>Example (dry): <code class="inline-code">examples/http_get.spark</code>, <code class="inline-code">examples/http_get_auth.spark</code>.
+        Live opt-in: <code class="inline-code">examples/http_get_live.spark</code>,
+        <code class="inline-code">examples/http_get_auth_live.spark</code>,
+        <code class="inline-code">examples/http_get_retries_live.spark</code>, or
         <code class="inline-code">./spark-http --live --get --url https://example.com/ --timeout 10</code>.
         Gate: <code class="inline-code">make test-http</code> (live SKIP unless <code class="inline-code">SPARK_HTTP_LIVE=1</code>).</p>
         <h3 id="extract"><code class="inline-code">extract</code></h3>

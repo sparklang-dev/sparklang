@@ -12,6 +12,18 @@ model fast
 # @helper http_get_live: Live GET (needs ./spark --live + curl)
 # http get "https://example.com/" timeout 10 -> resp
 
+# @helper http_get_auth_dry: Dry GET with bearer + retries (fixture only)
+# http get "https://example.com/" bearer "tok" retries 2 backoff 100 fixture "examples/fixtures/http/get_ok.json" timeout 5 -> resp
+
+# @helper http_get_auth_live: Live GET with bearer (curl Authorization)
+# http get "https://httpbin.org/bearer" bearer "spark-live-token" timeout 15 -> resp
+
+# @helper http_get_header_live: Live GET with custom header
+# http get "https://httpbin.org/headers" header "X-Spark-Test: auth-retries" timeout 15 -> resp
+
+# @helper http_get_retries_live: Live GET retries on 503 (expect fail)
+# http get "https://httpbin.org/status/503" retries 2 backoff 50 timeout 15 -> resp
+
 # @helper http_ask_probe: gateway probe credential check (dry-run)
 # ask probe -> info
 

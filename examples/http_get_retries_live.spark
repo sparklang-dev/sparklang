@@ -1,0 +1,6 @@
+# Live GET with retries on 503 (needs ./spark --live + curl).
+# Expect fail after 3 attempts (retries 2).
+
+http get "https://httpbin.org/status/503" retries 2 backoff 50 timeout 15 -> resp
+
+print resp

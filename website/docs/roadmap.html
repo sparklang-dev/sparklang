@@ -79,7 +79,7 @@
         <li>Per-<code class="inline-code">ask</code> <code class="inline-code">[accounting]</code> line (dry zeros; live usage when present)</li>
         <li>Positioning: not a Bifrost plugin; dry-run first</li>
         <li><code class="inline-code">http get</code> / <code class="inline-code">http post</code> + timeout + dry fixture files + live
-          <code class="inline-code">./spark-http</code> (auth/retries still <strong>next</strong>)</li>
+          <code class="inline-code">./spark-http</code> with <code class="inline-code">bearer</code> / <code class="inline-code">header</code> + <code class="inline-code">retries</code> / <code class="inline-code">backoff</code></li>
         </ul>
         <h2 id="next">Next</h2>
         <div class="doc__table-wrap"><table class="doc__table">
@@ -90,10 +90,6 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
-        <td>HTTP</td>
-        <td>Auth / bearer headers; retries</td>
-        </tr>
         <tr>
         <td>Extract</td>
         <td>Schema validation + JSON-mode + retry on miss</td>

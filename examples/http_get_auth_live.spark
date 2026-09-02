@@ -1,0 +1,5 @@
+# Live GET with bearer (needs ./spark --live + curl).
+
+http get "https://httpbin.org/bearer" bearer "spark-live-token" timeout 15 -> resp
+
+print resp

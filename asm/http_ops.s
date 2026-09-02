@@ -39,7 +39,7 @@ msg_http:
 msg_http_len = . - msg_http
 msg_fail:
     .ascii "error: spark-http failed "
-    .ascii "(dry: missing fixture; live: curl/URL/timeout)\n"
+    .ascii "(dry: missing fixture; live: curl/URL/timeout/auth/retries)\n"
 msg_fail_len = . - msg_fail
 
 .section .text

@@ -116,9 +116,9 @@
         </tr>
         <tr>
         <td><strong>First-class <code class="inline-code">http get</code> / <code class="inline-code">http post</code></strong></td>
-        <td><strong>done</strong> (timeout + dry fixtures)</td>
+        <td><strong>done</strong> (timeout, auth, retries, dry fixtures)</td>
         <td>Fixture files; no network</td>
-        <td><code class="inline-code">./spark --live</code> → <code class="inline-code">./spark-http</code> (curl). Auth/retries = [next]</td>
+        <td><code class="inline-code">./spark --live</code> → <code class="inline-code">./spark-http</code> (curl). <code class="inline-code">bearer</code>/<code class="inline-code">header</code> + <code class="inline-code">retries</code>/<code class="inline-code">backoff</code></td>
         </tr>
         </tbody>
         </table></div>

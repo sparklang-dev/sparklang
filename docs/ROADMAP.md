@@ -13,13 +13,12 @@ Prioritized against the adoption bar. Status: **done** / **next** / **won't**
 - Per-`ask` `[accounting]` line (dry zeros; live usage when present)
 - Positioning: not a Bifrost plugin; dry-run first
 - `http get` / `http post` + timeout + dry fixture files + live
-  `./spark-http` (auth/retries still **next**)
+  `./spark-http` with `bearer` / `header` + `retries` / `backoff`
 
 ## Next
 
 | Track | What |
 |-------|------|
-| HTTP | Auth / bearer headers; retries |
 | Extract | Schema validation + JSON-mode + retry on miss |
 | Ask | Streaming token/SSE path |
 | Eval | Expectation pass/fail harness (not only alias compare) |
