@@ -85,7 +85,6 @@
 
 model status "job-dry-001" -> status
 
-expect contains job "job-dry-001"
 expect contains job fixture "examples/fixtures/train/want_accepted.txt"
 expect contains status fixture "examples/fixtures/train/want_succeeded.txt"</code></pre>
           <p>
@@ -119,7 +118,8 @@ expect contains status fixture "examples/fixtures/train/want_succeeded.txt"</cod
             <code class="inline-code">ask</code>
             still works — see
             <code class="inline-code">examples/hello.spark</code>
-            — but the product thesis is train→eval→ship.
+            — but the product thesis is orchestrate and gate
+            train jobs (train→status→expect).
           </p>
 
           <p class="doc-next">

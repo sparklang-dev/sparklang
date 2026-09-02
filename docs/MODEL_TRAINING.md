@@ -122,7 +122,10 @@ config error).
 ### Reference trainer (in-repo)
 
 `tools/spark-train-ref/server.py` implements this contract and writes a
-real `adapter.bin` marker under `--out`. Live capture (recorded):
+**marker** `adapter.bin` under `--out` (plumbing proof — not real
+weights). When `out` basename matches `job-*`, that basename is the
+`job_id` (so live `model status` for `job-dry-001` succeeds). Live
+capture via `./spark --live` on a `.spark` file (recorded):
 
 [website/docs/examples/live-train-capture.txt](../website/docs/examples/live-train-capture.txt)
 
@@ -130,13 +133,10 @@ real `adapter.bin` marker under `--out`. Live capture (recorded):
 python3 tools/spark-train-ref/server.py --host 127.0.0.1 --port 8090
 export SPARK_TRAIN_BACKEND=http
 export SPARK_TRAIN_URL=http://127.0.0.1:8090/v1
-./spark-train-http --live --submit \
-  --dataset examples/fixtures/train/dataset.jsonl \
-  --base fixture-base \
-  --out out/train/job-live-ref-001
+./spark --live examples/model_train.spark
 ```
 
-Not a GPU train — filesystem artifacts only.
+Not a GPU train — filesystem marker artifacts only.
 ### local-yield (optional; gated)
 
 Only when **all** hold:

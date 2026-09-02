@@ -165,12 +165,16 @@ vm_train_eval() {
     return 0
   fi
   n="$(echo "$out" | grep -c '\[expect\] pass' || true)"
-  if [[ "$n" -lt 4 ]]; then
-    echo "FAIL vm_train_eval (want ≥4 pass lines, got $n)"
+  if [[ "$n" -lt 2 ]]; then
+    echo "FAIL vm_train_eval (want ≥2 pass lines, got $n)"
     echo "$out" | head -40
     fail=1
     return 0
   fi
+  echo "$out" | grep -qF 'pass contains job' || {
+    echo "FAIL vm_train_eval (job fixture)"; fail=1; return 0; }
+  echo "$out" | grep -qF 'pass contains status' || {
+    echo "FAIL vm_train_eval (status fixture)"; fail=1; return 0; }
   echo "PASS vm_train_eval"
 }
 vm_train_eval

@@ -105,7 +105,13 @@ class Handler(BaseHTTPRequestHandler):
         base = str(req.get("base") or "")
         out_dir = str(req.get("out") or f"out/train/ref-{int(time.time())}")
         backend = str(req.get("backend") or "http")
-        job_id = f"job-ref-{uuid.uuid4().hex[:8]}"
+        # Match spark-train-http live status (hardcoded job-dry-001) and
+        # ./spark --live examples/model_train.spark out basename.
+        out_name = Path(out_dir).name
+        if re.fullmatch(r"job-[A-Za-z0-9._-]+", out_name):
+            job_id = out_name
+        else:
+            job_id = f"job-ref-{uuid.uuid4().hex[:8]}"
         arts = _write_artifacts(out_dir, job_id, base, dataset)
         rec = {
             "job_id": job_id,

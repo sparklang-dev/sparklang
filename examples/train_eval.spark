@@ -1,13 +1,11 @@
 # Train → status → expect (dry-run fixtures; no GPU)
 # Live train needs SPARK_TRAIN_URL (backend "http" → your trainer).
-# Eval: expect equal / expect contains on bound job + status (exit 0/1).
+# Eval: expect contains … fixture "PATH" on bound job + status (exit 0/1).
 model code
 
 model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" -> job
 
 model status "job-dry-001" -> status
 
-expect contains job "job-dry-001"
 expect contains job fixture "examples/fixtures/train/want_accepted.txt"
-expect contains status "job-dry-001"
 expect contains status fixture "examples/fixtures/train/want_succeeded.txt"

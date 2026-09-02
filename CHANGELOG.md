@@ -6,6 +6,13 @@ language) are listed here. Site and installers track
 
 ## 0.6.5 — 2026-09-02
 
+- **Hero honesty:** homepage leads with **orchestrate and gate model
+  training jobs** (train→status→expect / dry-run CI / HTTP trainer
+  contract). Does not claim invented LoRA/weights; reference trainer
+  writes a marker artifact.
+- **`expect` form on homepage / Learn / examples:** prefer
+  `expect contains NAME fixture "PATH"` (fail-loud fixtures) — one form
+  for the flagship snippets.
 - **`expect equal` / `expect contains`:** assert a bound name against a
   literal or `fixture "PATH"`. Pass exits **0**; fail exits **1** with
   the reason (missing fixture / unknown name / mismatch). Wired in GAS
@@ -18,7 +25,8 @@ language) are listed here. Site and installers track
   fail path `examples/train_eval_fail.spark` (exit 1). Live train still
   needs your trainer at `SPARK_TRAIN_URL` — dry-run only proves the path.
 - **Reference trainer:** `tools/spark-train-ref/server.py` implements the
-  companion HTTP contract; live capture at
+  companion HTTP contract; live capture via
+  `./spark --live examples/model_train.spark` at
   `website/docs/examples/live-train-capture.txt`.
 
 ## 0.6.4 — 2026-09-02

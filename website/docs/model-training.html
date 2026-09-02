@@ -210,17 +210,18 @@ Authorization: Bearer {SPARK_TRAIN_TOKEN}   # optional
         (TLS must terminate upstream for <code class="inline-code">https://</code>).</p>
         <h3 id="reference-trainer">Reference trainer (in-repo)</h3>
         <p><code class="inline-code">tools/spark-train-ref/server.py</code> implements this contract and
-        writes a real <code class="inline-code">adapter.bin</code> marker under
-        <code class="inline-code">out</code>. Genuine recorded capture:
-        <a href="/docs/examples/live-train-capture.txt"><code class="inline-code">docs/examples/live-train-capture.txt</code></a>
-        (not a GPU train — filesystem artifacts only).</p>
+        writes a <strong>marker</strong> <code class="inline-code">adapter.bin</code> under
+        <code class="inline-code">out</code> (plumbing proof — not real weights).
+        When <code class="inline-code">out</code> basename matches
+        <code class="inline-code">job-*</code>, that basename is the
+        <code class="inline-code">job_id</code>. Recorded capture via
+        <code class="inline-code">./spark --live</code> on a
+        <code class="inline-code">.spark</code> file:
+        <a href="/docs/examples/live-train-capture.txt"><code class="inline-code">docs/examples/live-train-capture.txt</code></a>.</p>
         <pre class="doc__pre"><code>python3 tools/spark-train-ref/server.py --host 127.0.0.1 --port 8090
 export SPARK_TRAIN_BACKEND=http
 export SPARK_TRAIN_URL=http://127.0.0.1:8090/v1
-./spark-train-http --live --submit \
-  --dataset examples/fixtures/train/dataset.jsonl \
-  --base fixture-base \
-  --out out/train/job-live-ref-001</code></pre>
+./spark --live examples/model_train.spark</code></pre>
         <h3 id="local-yield-optional-gated">local-yield (optional; gated)</h3>
         <p>Only when <strong>all</strong> hold:</p>
         <ol class="doc__ol">

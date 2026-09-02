@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>SparkLang — train and evaluate models in one .spark file</title>
+    <title>SparkLang — orchestrate and gate model training jobs</title>
     <meta
       name="description"
-      content="SparkLang: reviewable .spark programs for train→eval→ship. Dry-run fixtures for CI without API keys. HTTP train backends you run; expect pass/fail for eval."
+      content="SparkLang: reviewable .spark programs that orchestrate and gate training jobs — train→status→expect, dry-run CI, HTTP trainer contract. Marker plumbing via your trainer; not invented weights."
     />
     <meta
       name="keywords"
@@ -14,8 +14,8 @@
     />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
-    <link rel="stylesheet" href="/css/tokens.css?v=expect0902" />
-    <link rel="stylesheet" href="/css/site.css?v=expect0902" />
+    <link rel="stylesheet" href="/css/tokens.css?v=orchestrate0902" />
+    <link rel="stylesheet" href="/css/site.css?v=orchestrate0902" />
   </head>
   <body>
     <header class="site-header">
@@ -62,22 +62,25 @@
       <section class="hero shell">
         <p class="hero__eyebrow">SparkLang</p>
         <h1 class="hero__title">
-          Train and evaluate models with dry-run CI
+          Orchestrate and gate model training jobs
         </h1>
         <p class="hero__lede">
           A language beats another Python SDK because one reviewable
-          <code class="inline-code">.spark</code> file covers train → eval → ship,
-          with dry-run fixtures you can run in CI without API keys.
+          <code class="inline-code">.spark</code> file covers
+          train → status → expect, with dry-run fixtures you can run in CI
+          without API keys.
         </p>
         <p class="hero__lede hero__lede--tight">
-          For solo and small teams who want reviewable AI train→eval pipelines
+          For solo and small teams who want reviewable train-job pipelines
           in PRs — without maintaining SDK glue.
         </p>
         <p class="hero__lede hero__lede--tight">
           Offline-first by default:
           <code class="inline-code">./spark --dry-run</code>.
-          Live training POSTs to a trainer you run —
-          <code class="inline-code">SPARK_TRAIN_URL</code>.
+          Live submit POSTs to a trainer you run —
+          <code class="inline-code">SPARK_TRAIN_URL</code>
+          (HTTP contract; reference trainer writes a marker artifact, not
+          claimed weights).
         </p>
         <div class="cta-row">
           <a class="btn btn--primary" href="/downloads.html">Download Spark</a>
@@ -121,8 +124,8 @@ resp = client.chat.completions.create(...)
             <h3 class="compare-card__label">One .spark program</h3>
             <pre class="card__code"><code>model train dataset "data.jsonl" base "base" out "out/job-1" backend "http" -&gt; job
 model status "job-1" -&gt; status
-expect contains job "accepted"
-expect contains status "succeeded"
+expect contains job fixture "…/want_accepted.txt"
+expect contains status fixture "…/want_succeeded.txt"
 
 # ./spark --dry-run train_eval.spark</code></pre>
           </article>
@@ -156,8 +159,9 @@ expect contains status "succeeded"
                 >Trainer HTTP contract</a
               >
               — in-repo reference:
-              <code class="inline-code">tools/spark-train-ref</code>.
-              Genuine live capture:
+              <code class="inline-code">tools/spark-train-ref</code>
+              (marker artifact only). Live
+              <code class="inline-code">.spark</code> capture:
               <a href="/docs/examples/live-train-capture.txt"
                 >live-train-capture.txt</a
               >.
@@ -169,8 +173,9 @@ model status "job-id" -&gt; status</code></pre>
             <h3 class="card__title">Eval in the same file</h3>
             <p class="card__body">
               After train, assert bound job and status fields with
-              <code class="inline-code">expect</code> (exit 0/1) — eval of
-              <em>this</em> job, not unrelated gateway aliases.
+              <code class="inline-code">expect contains … fixture</code>
+              (exit 0/1) — gate of <em>this</em> job, not unrelated gateway
+              aliases.
             </p>
             <pre class="card__code"><code>expect contains job fixture "…/want_accepted.txt"
 expect contains status fixture "…/want_succeeded.txt"</code></pre>
@@ -211,14 +216,14 @@ expect contains status fixture "…/want_succeeded.txt"</code></pre>
         <pre class="terminal code-block"><code><span class="comment"># examples/train_eval.spark — dry-run first</span>
 model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" -&gt; job
 model status "job-dry-001" -&gt; status
-expect contains job "job-dry-001"
 expect contains job fixture "examples/fixtures/train/want_accepted.txt"
 expect contains status fixture "examples/fixtures/train/want_succeeded.txt"</code></pre>
 
         <p class="prose-muted">
           Fail path:
           <code class="inline-code">examples/train_eval_fail.spark</code>
-          (exit 1). Live HTTP proof:
+          (exit 1). Live HTTP proof (marker, via
+          <code class="inline-code">./spark --live</code>):
           <a href="/docs/examples/live-train-capture.txt">live-train-capture.txt</a>.
           <a href="/docs/model-training.html">Model training docs</a> ·
           <a href="/learn/build-model.html">Build a Model</a> ·
@@ -239,7 +244,8 @@ expect contains status fixture "examples/fixtures/train/want_succeeded.txt"</cod
       <section class="section shell" aria-labelledby="learn-path-title">
         <h2 id="learn-path-title" class="section__title">Learn Spark</h2>
         <p class="section__lede">
-          Follow the trail: install → first dry-run → train→eval loop → ship a job.
+          Follow the trail: install → first dry-run → train→status→expect →
+          gate a job.
         </p>
         <div class="card-grid">
           <article class="card">
@@ -259,7 +265,7 @@ expect contains status fixture "examples/fixtures/train/want_succeeded.txt"</cod
               <a href="/learn/first-program.html">Your First Program</a>
             </h3>
             <p class="card__body">
-              A minimal train → status → compare loop you can dry-run in CI.
+              A minimal train → status → expect loop you can dry-run in CI.
             </p>
             <a class="card__link" href="/learn/first-program.html"
               >Write train_eval.spark →</a
@@ -270,7 +276,8 @@ expect contains status fixture "examples/fixtures/train/want_succeeded.txt"</cod
               <a href="/learn/ai-in-5-minutes.html">AI in 5 Minutes</a>
             </h3>
             <p class="card__body">
-              Train, compare, classify, extract — the train→eval→ship primitives.
+              Orchestrate jobs, expect gates, classify, extract — the
+              train→status→expect primitives.
             </p>
             <a class="card__link" href="/learn/ai-in-5-minutes.html"
               >Quick tour →</a
@@ -295,7 +302,7 @@ expect contains status fixture "examples/fixtures/train/want_succeeded.txt"</cod
         <pre class="terminal code-block"><code><span class="comment"># Dry-run train → status → expect — no network, no API key</span>
 <span class="cmd">./spark --dry-run examples/train_eval.spark</span>
 
-<span class="comment"># Optional live train — your trainer at SPARK_TRAIN_URL</span>
+<span class="comment"># Optional live submit — your trainer at SPARK_TRAIN_URL</span>
 <span class="cmd">export SPARK_TRAIN_URL=http://127.0.0.1:8090/v1</span>
 <span class="cmd">./spark --live examples/model_train.spark</span></code></pre>
         <p class="prose-muted">

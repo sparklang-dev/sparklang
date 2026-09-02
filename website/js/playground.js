@@ -7,7 +7,6 @@
       source:
         'model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" -> job\n\n' +
         'model status "job-dry-001" -> status\n\n' +
-        'expect contains job "job-dry-001"\n' +
         'expect contains job fixture "examples/fixtures/train/want_accepted.txt"\n' +
         'expect contains status fixture "examples/fixtures/train/want_succeeded.txt"',
     },
