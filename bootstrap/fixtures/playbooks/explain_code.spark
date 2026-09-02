@@ -1,0 +1,4 @@
+include "lib/ai.spark"
+let snippet "function add(a,b){ return a+b; }"
+ask "Explain this code in one sentence: {snippet}" -> answer
+print answer

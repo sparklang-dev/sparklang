@@ -1,0 +1,12 @@
+# Spark IDE keymap — proven keys, save (`s`) focus.
+# After save-reopen (11ab006) + status strip (b029a4a).
+# Dry: script `s` → {"cmd":"save"} trace (no write); open still reads.
+# Also proves single `ide key save` after open.
+# Run: ./spark --dry-run examples/ide_keys_save.spark
+# No Electron. No new asm — documents proven keys only.
+
+ide keys "examples/fixtures/ide/cmds_save.txt"
+
+ide key open "examples/hello.spark"
+
+ide key save

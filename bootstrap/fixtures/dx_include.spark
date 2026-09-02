@@ -1,0 +1,5 @@
+# Bootstrap-only: include pulls lib/ai.spark (sets model fast)
+include "lib/ai.spark"
+
+? "Explain gravity in one sentence" -> text
+print text

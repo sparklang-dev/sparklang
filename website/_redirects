@@ -1,0 +1,10 @@
+# Raw markdown is not published on the public site.
+/docs/*.md  /docs/programming-guide  301
+
+# Only for paths Pages does not already pretty-serve. Do NOT add /learn/*
+# rewrites — Pages serves those natively; 200 + .html→pretty 308 loops
+# (ERR_TOO_MANY_REDIRECTS on /learn/function-catalog).
+
+# Try Spark → Playground
+/try       /playground.html  301
+/try.html  /playground.html  301

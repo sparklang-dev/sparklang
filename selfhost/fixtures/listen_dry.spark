@@ -1,0 +1,8 @@
+# Listen dry stub — selfhost golden.
+# Stage 1 lex subset; path token parsed and discarded (spark_parse.c).
+# Avoid `let` (GAS scaffold pads dumps). Form from
+# bootstrap/fixtures/extract_listen_pipe.spark listen block.
+model fast
+
+listen "x.wav" -> t
+print t

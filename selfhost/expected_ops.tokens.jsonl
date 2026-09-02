@@ -1,0 +1,42 @@
+{"kind":"COMMENT","lexeme":"# Richer lex fixture — PIPE, review path, NUMBER via classify.","line":1,"col":1}
+{"kind":"COMMENT","lexeme":"# Stage 0 dry-run + spark-lex golden (expected_ops.tokens.jsonl).","line":2,"col":1}
+{"kind":"COMMENT","lexeme":"# Avoid `let` (GAS scaffold pads dumps). Classify must be one line","line":3,"col":1}
+{"kind":"COMMENT","lexeme":"# (GAS treats indented `from` as a new statement).","line":4,"col":1}
+{"kind":"KEYWORD","lexeme":"model","line":5,"col":1}
+{"kind":"IDENT","lexeme":"code","line":5,"col":7}
+{"kind":"KEYWORD","lexeme":"review","line":7,"col":1}
+{"kind":"IDENT","lexeme":"path","line":7,"col":8}
+{"kind":"STRING","lexeme":"\"selfhost/fixtures/mini.spark\"","line":7,"col":13}
+{"kind":"ARROW","lexeme":"->","line":7,"col":44}
+{"kind":"IDENT","lexeme":"body","line":7,"col":47}
+{"kind":"KEYWORD","lexeme":"ask","line":9,"col":1}
+{"kind":"STRING","lexeme":"\"hello\"","line":9,"col":5}
+{"kind":"ARROW","lexeme":"->","line":9,"col":13}
+{"kind":"IDENT","lexeme":"a","line":9,"col":16}
+{"kind":"PIPE","lexeme":"|","line":10,"col":1}
+{"kind":"KEYWORD","lexeme":"ask","line":10,"col":3}
+{"kind":"STRING","lexeme":"\"world\"","line":10,"col":7}
+{"kind":"ARROW","lexeme":"->","line":10,"col":15}
+{"kind":"IDENT","lexeme":"b","line":10,"col":18}
+{"kind":"KEYWORD","lexeme":"classify","line":12,"col":1}
+{"kind":"IDENT","lexeme":"Intent","line":12,"col":10}
+{"kind":"PUNCT","lexeme":"{","line":12,"col":17}
+{"kind":"IDENT","lexeme":"support","line":12,"col":19}
+{"kind":"PUNCT","lexeme":",","line":12,"col":26}
+{"kind":"IDENT","lexeme":"sales","line":12,"col":28}
+{"kind":"PUNCT","lexeme":",","line":12,"col":33}
+{"kind":"IDENT","lexeme":"spam","line":12,"col":35}
+{"kind":"PUNCT","lexeme":"}","line":12,"col":40}
+{"kind":"IDENT","lexeme":"from","line":12,"col":42}
+{"kind":"STRING","lexeme":"\"My account is locked\"","line":12,"col":47}
+{"kind":"IDENT","lexeme":"min_confidence","line":12,"col":70}
+{"kind":"NUMBER","lexeme":"0.7","line":12,"col":85}
+{"kind":"ARROW","lexeme":"->","line":12,"col":89}
+{"kind":"IDENT","lexeme":"intent","line":12,"col":92}
+{"kind":"KEYWORD","lexeme":"print","line":14,"col":1}
+{"kind":"IDENT","lexeme":"body","line":14,"col":7}
+{"kind":"KEYWORD","lexeme":"print","line":15,"col":1}
+{"kind":"IDENT","lexeme":"b","line":15,"col":7}
+{"kind":"KEYWORD","lexeme":"print","line":16,"col":1}
+{"kind":"IDENT","lexeme":"intent","line":16,"col":7}
+{"kind":"EOF","lexeme":"","line":17,"col":1}

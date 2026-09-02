@@ -1,0 +1,9 @@
+# Spark IDE AI strip — ask on current buffer via real ask path.
+# Dry: fixture reply (Gravity…). Live: spark-ask-http companion.
+# Run: ./spark --dry-run examples/ide_ask.spark
+
+ide open "examples/hello.spark" -> opened
+
+ide ask -> reply
+
+print reply

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Welcome to Spark</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 13px;
+      line-height: 1.45;
+      color: #1a1a1a;
+      margin: 12px 16px;
+    }
+    h1 { font-size: 18px; margin: 0 0 8px; color: #0c0e12; }
+    p { margin: 0 0 10px; }
+    ul { margin: 0 0 10px; padding-left: 20px; }
+    .mark { color: #e85d04; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <h1>Welcome to <span class="mark">Spark</span></h1>
+  <p>
+    Spark is an <strong>AI-first language runtime</strong>: one reviewable
+    <code>.spark</code> file per workflow — ask, classify, extract, pipeline,
+    review, model analyze, and voice.
+  </p>
+  <p>This installer will:</p>
+  <ul>
+    <li>Place the Spark runtime under <code>/usr/local/spark</code></li>
+    <li>Compile bootstrap + sparkasm on first install (<code>build.sh</code>)</li>
+    <li>Include nine AI example programs and a quick-start guide</li>
+  </ul>
+  <p>
+    Dry-run offline with fixtures; go live with any OpenAI-compatible API and
+    <code>OPENAI_API_KEY</code>.
+  </p>
+</body>
+</html>

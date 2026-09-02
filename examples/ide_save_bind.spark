@@ -1,0 +1,11 @@
+# Spark IDE - proven ide save bind (-> saved) + print op JSON.
+# After open-bind. Save bind stores op JSON; print saved shows it.
+# Path avoids substring "open" (dispatch hygiene).
+# Run: ./spark --dry-run examples/ide_save_bind.spark
+# No Electron. No keymap n. No new asm - documents proven bind only.
+
+ide open "examples/hello.spark"
+
+ide save "out/ide/ide_save_bind_rt.spark" -> saved
+
+print saved

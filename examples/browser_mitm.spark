@@ -1,0 +1,32 @@
+# Spark → debug browser with owner-local HTTPS MITM
+# Language SoT: browser/mitm ops in asm (browser_ops.s).
+# Dry-run: browser scaffold + network analyze; never installs CA.
+# CA: mitm ca-init (examples/browser_ca.spark) — language SoT.
+# Live GUI: browser gui --live → ./spark-browser-host (Python Qt helper).
+# QUIC: mitm quic smoke → ./spark-mitm-quic (aioquic helper).
+# os generate emits templates/os/browser/ → out/os/browser_mitm/
+
+os design name "browser_mitm" kind browser features [net, mitm, webview] -> blueprint
+
+os specify blueprint {
+  target: x86_64
+  memory_model: host_process
+  ai: { agent_runtime: false, tool_bus: false, mitm_inspector: true }
+  drivers: [webview_host, virtio_net_stub]
+} -> spec
+
+os generate spec into "out/os/browser_mitm" -> tree
+
+os explain blueprint browser_mitm -> text
+
+browser flags -> flags
+mitm disable_quic on -> dq
+
+builder prefer higher request "scaffold Qt WebEngine MITM browser for AI ops" -> patch
+
+implement patch into "out/program.py.txt"
+
+# Captured traffic hooks (fixture pcap in dry-run; HAR via spark-browser)
+network open "examples/fixtures/sample.pcap" -> pcap
+network analyze pcap -> traffic_report
+network explain traffic_report -> text

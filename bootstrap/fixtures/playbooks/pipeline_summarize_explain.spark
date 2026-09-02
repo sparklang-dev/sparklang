@@ -1,0 +1,7 @@
+include "lib/ai.spark"
+let doc "Spark is a small language where AI is a first-class primitive."
+pipeline {
+  ask "Summarize: {doc}" -> summary
+  | ask "Explain in one sentence: {summary}" -> plain
+}
+print plain

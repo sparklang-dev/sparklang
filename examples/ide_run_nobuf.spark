@@ -1,0 +1,7 @@
+# Spark IDE - proven ide run empty-buffer fail-loud.
+# After save-nopath. Bare run with empty buffer / no path
+# exits non-zero (open or write first).
+# Run: ./spark --dry-run examples/ide_run_nobuf.spark  (expect rc!=0)
+# No Electron. No new asm - documents proven fail-loud only.
+
+ide run

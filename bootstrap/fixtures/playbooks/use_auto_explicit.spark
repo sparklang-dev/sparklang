@@ -1,0 +1,3 @@
+use auto
+ask "Explain gravity in one sentence" -> text
+print text

@@ -1,0 +1,7 @@
+# Spark IDE - proven status.txt trailing * after ide new.
+# After save-bind d008588. Complements status_path (clean) and
+# dirty_status e2e: after new with path, status.txt ends with *.
+# Run: ./spark --dry-run examples/ide_status_new_star.spark
+# No Electron. No keymap n. No new asm - documents proven status only.
+
+ide new "out/ide/status_new_star.spark"

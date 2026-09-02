@@ -1,0 +1,12 @@
+# and/or/xor reg,imm + reg,reg — logic to exit 42
+.global _start
+.text
+_start:
+	mov	rdi, 40
+	or	rdi, 2
+	mov	rsi, 255
+	and	rdi, rsi
+	xor	rcx, rcx
+	xor	rdi, rcx
+	mov	rax, 60
+	syscall

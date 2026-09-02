@@ -1,0 +1,473 @@
+# Spark — build assembly → machine code (x86_64 Linux)
+AS      ?= as
+LD      ?= ld
+ASFLAGS ?= --64
+LDFLAGS ?=
+OBJDUMP ?= objdump
+CC      ?= cc
+CUDA_INC ?= /usr/local/cuda-12.8/include
+NVML_LIB ?= /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1
+
+.PHONY: all clean test test-hdl test-e2e-browser test-examples machine-proof \
+	examples-run corpus corpus-agg spark-cuda spark-net spark-binary \
+	spark-lift spark-section-dump companions browser-scaffold \
+	browser-mitm-analyze ide test-engine-paint test-engine-css \
+	test-engine-layout test-ide-paint spark-bootstrap sparkc \
+	test-bootstrap test-sparkbc spark-bc spark-bc-pack-hello sparkasm \
+	test-sparkasm docs-docx function-catalog playbooks-catalog
+
+all: spark companions
+
+# Open Spark IDE (Cursor + Bifrost workspace). Not an ELF subcommand.
+ide:
+	./tools/open-spark-ide.sh
+
+# Professional .docx from on-disk markdown (pandoc + reference.docx).
+# No invented content — TOC/headers/ops-index from existing MD only.
+docs-docx:
+	python3 tools/docs_docx.py --rebuild-reference
+
+function-catalog:
+	python3 tools/gen_function_catalog.py
+
+.PHONY: playbooks-catalog
+playbooks-catalog:
+	python3 tools/gen_playbooks_catalog.py
+
+SPARK_OBJS = asm/spark.o asm/model_ops.o asm/binary_ops.o \
+	asm/network_ops.o asm/os_ops.o asm/bind_ops.o asm/cuda_ops.o \
+	asm/ask_ops.o asm/rag_ops.o asm/browser_ops.o asm/voice_ops.o asm/pcie_ops.o \
+	asm/crypto_ops.o asm/gateway_ops.o asm/engine_js.o asm/engine_html.o \
+	asm/engine_window.o asm/engine_paint.o asm/engine_paint_ops.o \
+	asm/engine_css.o asm/engine_fetch.o asm/engine_layout.o \
+	asm/engine_pipeline.o \
+	asm/ide_ops.o asm/ide_keys.o asm/ide_paint.o
+
+
+
+spark: $(SPARK_OBJS)
+	$(LD) $(LDFLAGS) -o $@ $^
+
+asm/spark.o: asm/spark.s
+	$(AS) $(ASFLAGS) -o $@ $<
+
+asm/binary_ops.o: asm/binary_ops.s
+	$(AS) $(ASFLAGS) -o $@ $<
+
+# Engine B HTML fetch (file:// + http asm + https OpenSSL BIO companion)
+asm/engine_fetch.o: asm/engine_fetch.s
+	$(AS) $(ASFLAGS) -o $@ $<
+
+asm/network_ops.o: asm/network_ops.s
+	$(AS) $(ASFLAGS) -o $@ $<
+
+asm/os_ops.o: asm/os_ops.s
+	$(AS) $(ASFLAGS) -o $@ $<
+
+asm/bind_ops.o: asm/bind_ops.s
+	$(AS) $(ASFLAGS) -o $@ $<
+
+asm/cuda_ops.o: asm/cuda_ops.s
+	$(AS) $(ASFLAGS) -o $@ $<
+
+asm/pcie_ops.o: asm/pcie_ops.s
+	$(AS) $(ASFLAGS) -o $@ $<
+
+asm/crypto_ops.o: asm/crypto_ops.s
+	$(AS) $(ASFLAGS) -o $@ $<
+
+asm/gateway_ops.o: asm/gateway_ops.s
+	$(AS) $(ASFLAGS) -o $@ $<
+
+asm/ask_ops.o: asm/ask_ops.s
+	$(AS) $(ASFLAGS) -o $@ $<
+
+asm/rag_ops.o: asm/rag_ops.s
+	$(AS) $(ASFLAGS) -o $@ $<
+
+asm/browser_ops.o: asm/browser_ops.s
+	$(AS) $(ASFLAGS) -o $@ $<
+
+asm/engine_html.o: asm/engine_html.s
+	$(AS) $(ASFLAGS) -o $@ $<
+
+asm/engine_css.o: asm/engine_css.s asm/engine_style.inc
+	$(AS) $(ASFLAGS) -o $@ $<
+
+
+asm/engine_window.o: asm/engine_window.s
+	$(AS) $(ASFLAGS) -o $@ $<
+
+
+asm/engine_paint.o: asm/engine_paint.s
+	$(AS) $(ASFLAGS) -o $@ $<
+
+asm/engine_paint_main.o: asm/engine_paint_main.s
+	$(AS) $(ASFLAGS) -o $@ $<
+
+asm/engine_paint_ops.o: asm/engine_paint_ops.s
+	$(AS) $(ASFLAGS) -o $@ $<
+
+asm/engine_layout.o: asm/engine_layout.s asm/engine_style.inc
+	$(AS) $(ASFLAGS) -I. -o $@ $<
+
+asm/engine_layout_test.o: asm/engine_layout_test.s
+	$(AS) $(ASFLAGS) -o $@ $<
+
+spark-engine-layout-test: asm/engine_layout.o asm/engine_layout_test.o
+	$(LD) $(LDFLAGS) -o $@ $^
+
+.PHONY: test-engine-layout test-engine-pipeline-table test-engine-fetch-parse-layout
+test-engine-layout: spark-engine-layout-test
+	chmod +x engine/tests/test_layout_boxes.sh
+	./engine/tests/test_layout_boxes.sh
+
+test-engine-pipeline-table: spark spark-engine-layout-test
+	chmod +x engine/tests/test_pipeline_table.sh
+	./engine/tests/test_pipeline_table.sh
+
+test-engine-fetch-parse-layout: spark
+	chmod +x engine/tests/test_fetch_parse_layout.sh
+	./engine/tests/test_fetch_parse_layout.sh
+
+
+asm/engine_pipeline.o: asm/engine_pipeline.s
+	$(AS) $(ASFLAGS) -o $@ $<
+
+# IDE core — buffer open/save/run (asm); no Electron/Qt product
+asm/ide_ops.o: asm/ide_ops.s
+	$(AS) $(ASFLAGS) -o $@ $<
+
+# IDE keymap / command loop (quit|save|run|open from script)
+asm/ide_keys.o: asm/ide_keys.s
+	$(AS) $(ASFLAGS) -o $@ $<
+
+# Software paint fixture ELF (rects + glyphs → PPM). No Qt.
+spark-engine-paint: asm/engine_paint.o asm/engine_paint_main.o
+	$(LD) $(LDFLAGS) -o $@ $^
+
+test-engine-paint: spark-engine-paint
+	./engine/tests/test_paint.sh
+
+asm/ide_paint.o: asm/ide_paint.s
+	$(AS) $(ASFLAGS) -o $@ $<
+
+asm/ide_paint_main.o: asm/ide_paint_main.s
+	$(AS) $(ASFLAGS) -o $@ $<
+
+# IDE editor presentation ELF (gutter + glyphs + cursor → PPM).
+spark-ide-paint: asm/ide_paint.o asm/ide_paint_main.o asm/engine_paint.o
+	$(LD) $(LDFLAGS) -o $@ $^
+
+test-ide-paint: spark-ide-paint
+	./engine/tests/test_ide_paint.sh
+
+.PHONY: test-engine-css
+test-engine-css: spark
+	chmod +x engine/tests/test_css.sh
+	./engine/tests/test_css.sh
+
+asm/voice_ops.o: asm/voice_ops.s
+	$(AS) $(ASFLAGS) -o $@ $<
+
+asm/model_ops.o: asm/model_ops.s
+	$(AS) $(ASFLAGS) -o $@ $<
+
+asm/engine_js.o: asm/engine_js.s
+	$(AS) $(ASFLAGS) -o $@ $<
+
+companions: spark-cuda-probe spark-net-capture \
+	spark-binary-probe spark-section-dump spark-lift spark-ask-http \
+	spark-ask-probe spark-rag-http spark-browser-host spark-mitm-quic \
+	spark-mitm-quic-divert spark-mitm-ca spark-mitm-h2 spark-browser-cdp spark-pstn-dial \
+	spark-enc-gateway spark-stt-tts spark-review-url spark-engine-show \
+	spark-engine-paint spark-ide-paint spark-engine-fetch-tls
+
+spark-cuda: spark-cuda-probe
+spark-cuda-probe: tools/cuda/spark_cuda_probe.c
+	$(CC) -O2 -Wall -Wextra -o $@ $< -I$(CUDA_INC) $(NVML_LIB)
+
+spark-net: spark-net-capture
+spark-net-capture: tools/network/spark_net_capture.c
+	$(CC) -O2 -Wall -Wextra -o $@ $<
+
+spark-binary: spark-binary-probe spark-section-dump spark-lift
+
+spark-binary-probe: tools/binary/spark_binary_probe.c
+	$(CC) -O2 -Wall -Wextra -o $@ $<
+
+spark-section-dump: tools/binary/spark_section_dump.c
+	$(CC) -O2 -Wall -Wextra -o $@ $<
+
+spark-lift: tools/binary/spark_lift.c
+	$(CC) -O2 -Wall -Wextra -o $@ $<
+
+# Live OpenAI-compatible ask (AI_GATEWAY_URL / Bifrost).
+# Offline dry gate: make test-ask-gateway (no network).
+spark-ask-http: tools/ask/spark_ask_http.c bootstrap/dry_auto_model.c \
+	bootstrap/dry_auto_model.h
+	$(CC) -O2 -Wall -Wextra -o $@ tools/ask/spark_ask_http.c \
+		bootstrap/dry_auto_model.c
+
+# Embed (Bifrost /v1/embeddings) + retrieve (rag-gateway /v1/retrieve).
+spark-rag-http: tools/rag/spark_rag_http.c bootstrap/dry_rag.c \
+	bootstrap/dry_rag.h
+	$(CC) -O2 -Wall -Wextra -o $@ tools/rag/spark_rag_http.c \
+		bootstrap/dry_rag.c
+
+# Gateway probe credential dry/live check (public AI gateway).
+spark-ask-probe: tools/ask/spark_ask_probe.c
+	$(CC) -O2 -Wall -Wextra -o $@ $<
+
+# Encrypt-to-model gateway (AES-256-GCM). Offline self-test in make test.
+spark-enc-gateway: tools/crypto/spark_enc_gateway.c
+	$(CC) -O2 -Wall -Wextra -o $@ $< -lcrypto
+
+# Optional Qt GUI helper — only forked by `browser gui --live`.
+spark-browser-host: tools/browser/spark_browser_host.c
+	$(CC) -O2 -Wall -Wextra -o $@ $<
+
+# Engine B display — PPM/RGB → X11 PutImage (forked by browser show --live).
+spark-engine-show: tools/browser/spark_engine_show.c
+	$(CC) -O2 -Wall -Wextra -o $@ $< -lX11
+
+# PSTN companion — OFF by default; requires --pstn-live + SPARK_PSTN=1
+spark-pstn-dial: tools/voice/spark_pstn_dial.c
+	$(CC) -O2 -Wall -Wextra -o $@ $<
+
+# Live STT/TTS — dry-run never forks; net vendors OFF without SPARK_*_NET
+spark-stt-tts: tools/voice/spark_stt_tts.c
+	$(CC) -O2 -Wall -Wextra -o $@ $< -lm
+
+# review url — file:// offline; http(s) needs --allow-net (A+B)
+spark-review-url: tools/review/spark_review_url.c
+	$(CC) -O2 -Wall -Wextra -o $@ $<
+
+# engine fetch https — OpenSSL BIO companion (forked with --allow-net)
+spark-engine-fetch-tls: tools/engine/spark_engine_fetch_tls.c
+	$(CC) -O2 -Wall -Wextra -o $@ $< -lssl -lcrypto
+
+.PHONY: voice-test
+voice-test: spark spark-pstn-dial spark-stt-tts
+	./spark --dry-run examples/voice_reviewer.spark
+	./spark --dry-run examples/voice_coder.spark
+	./spark --dry-run examples/voice_copy.spark
+	./spark --dry-run examples/voice_model.spark
+	./spark --dry-run examples/voice_pstn.spark
+	./spark-pstn-dial --to +15555550100 >/dev/null 2>&1; \
+	  test $$? -ne 0
+	./spark-stt-tts status | grep -q local_synth
+	./spark-stt-tts speak --text "hi" --out /tmp/spark-voice-test.wav
+	test -f /tmp/spark-voice-test.wav
+	./spark-stt-tts listen --in examples/fixtures/audio/sample_review.wav \
+	  --out /tmp/spark-voice-test.txt
+	grep -q washer /tmp/spark-voice-test.txt
+	./spark --live examples/voice_live.spark >/dev/null
+	test -f out/voice_live.wav
+	@echo "voice-test OK (PSTN gated; STT/TTS local+live)"
+
+# QUIC/H3 MITM smoke — forked by `mitm quic smoke` (Python aioquic helper).
+spark-mitm-quic: tools/browser/spark_mitm_quic.sh
+	install -m 755 tools/browser/spark_mitm_quic.sh $@
+
+# QUIC UDP divert — forked by `mitm quic divert` (gated apply).
+spark-mitm-quic-divert: tools/browser/spark_mitm_quic_divert.sh
+	install -m 755 tools/browser/spark_mitm_quic_divert.sh $@
+
+# CA init/install/status — forked by `mitm ca-*` (Python ensure_ca helper).
+spark-mitm-ca: tools/browser/spark_mitm_ca.sh
+	install -m 755 tools/browser/spark_mitm_ca.sh $@
+
+# HTTPS CONNECT MITM (h2/h1) — forked by `mitm enable|smoke` (Spark-owned).
+spark-mitm-h2: tools/browser/spark_mitm_h2.sh
+	install -m 755 tools/browser/spark_mitm_h2.sh $@
+
+# CDP client — forked by `browser cdp` (Python helper in spark-browser).
+spark-browser-cdp: tools/browser/spark_browser_cdp.sh
+	install -m 755 tools/browser/spark_browser_cdp.sh $@
+
+# Show that the shipped binary is assembled machine code
+machine-proof: spark
+	@echo "=== file(1) ==="
+	file ./spark
+	@echo "=== ELF header (hex) ==="
+	xxd ./spark | head -4
+	@echo "=== _start disassembly (first instructions) ==="
+	$(OBJDUMP) -d ./spark | sed -n '/<_start>:/,/^$$/p' | head -20
+
+test: spark companions spark-bootstrap test-sparkbc test-ai-playbooks
+	./tests/run_dry.sh
+	./tests/hdl_check.sh
+	./bootstrap/tests/run_bootstrap.sh
+
+# HDL: real iverilog compile of hdl/*.v, or honest SKIP with reason
+.PHONY: test-hdl
+test-hdl:
+	./tests/hdl_check.sh
+
+# Dry browser E2E — no display, no --live GUI. Live entry is
+# spark-browser: make run → ./spark --live browser/run.spark
+test-e2e-browser: spark companions
+	./tests/e2e_browser_dry.sh
+
+# Every examples/*.spark under --dry-run. Fail-loud IDE demos expect rc!=0.
+test-examples: spark companions
+	@fail=0; \
+	fail_loud='ide_open_miss|ide_open_nopath|ide_run_nobuf|ide_save_nopath|ide_show_miss|ide_show_notppm|ide_ask_nobuf|ide_key_bad|ide_keys_miss'; \
+	for f in examples/*.spark; do \
+	  to=""; \
+	  base="$$(basename "$$f")"; \
+	  case "$$f" in examples/binary_cuda_drivers.spark) to="timeout 120";; esac; \
+	  if echo "$$base" | grep -qE "$$fail_loud"; then \
+	    if $$to ./spark --dry-run "$$f" >/dev/null 2>&1; then \
+	      echo "FAIL (fail-loud) $$f"; fail=1; \
+	    else \
+	      echo "PASS (fail-loud) $$f"; \
+	    fi; \
+	  elif $$to ./spark --dry-run "$$f" >/dev/null 2>&1; then \
+	    echo "PASS $$f"; \
+	  else \
+	    echo "FAIL $$f"; fail=1; \
+	  fi; \
+	done; \
+	if [ "$$fail" -ne 0 ]; then exit 1; fi; \
+	echo "test-examples OK"
+
+examples-run: test-examples
+
+.PHONY: browser-scaffold
+browser-scaffold:
+	# Refresh out/os/browser_mitm from templates/os/browser
+	# (same tree os generate emits). Does not overwrite spark-browser
+	# Python MITM/CA packages.
+	python3 tools/browser/scaffold_spark_browser.py
+
+.PHONY: browser-mitm-analyze
+browser-mitm-analyze:
+	@test -n "$(HAR)" || (echo "usage: make browser-mitm-analyze HAR=…"; exit 2)
+	cd ../spark-browser && PYTHONPATH=. \
+	  python3 -m spark_browser mitm analyze "$(HAR)" \
+	  --spark "$(CURDIR)/spark"
+
+.PHONY: model-probe
+model-probe:
+	bash tools/model_probe/probe.sh
+
+corpus:
+	mkdir -p data
+	python3 tools/corpus_million/run_corpus.py --checkpoint-every 2000
+
+corpus-agg:
+	python3 tools/corpus_million/aggregate.py \
+	  --report reports/spark-corpus-1m-20260831.md
+
+clean:
+	rm -f spark $(SPARK_OBJS) spark-out.wav out.wav
+	rm -f spark-cuda-probe spark-net-capture
+	rm -f spark-binary-probe spark-section-dump spark-lift
+	rm -f spark-ask-http spark-ask-probe spark-rag-http spark-browser-host spark-pstn-dial spark-mitm-quic
+	rm -f spark-mitm-quic-divert spark-mitm-ca spark-mitm-h2 spark-browser-cdp spark-enc-gateway
+	rm -f spark-stt-tts spark-review-url spark-engine-show spark-engine-paint
+	rm -f spark-ide-paint spark-engine-fetch-tls
+	rm -f spark-bootstrap sparkc spark-bc-pack-hello spark-bc-emit
+	rm -f selfhost/spark-lex
+	rm -f asm/engine_paint_main.o asm/engine_paint_ops.o
+	rm -f asm/ide_paint.o asm/ide_paint_main.o
+	rm -f out/program.spark out/program.py.txt out/better-model.md
+	rm -rf out/os out/browser out/voice_models out/voice_codegen.spark
+	rm -rf out/encrypt out/engine
+
+# --- B: C bootstrap VM (isolated; not linked into ./spark ELF) ---
+SPARKC_SRCS = bootstrap/main.c bootstrap/vm.c bootstrap/engine_parse.c \
+	bootstrap/engine_css.c bootstrap/engine_layout.c \
+	bootstrap/engine_paint.c bootstrap/engine_show.c \
+	bootstrap/engine_render.c bootstrap/dry_ask.c bootstrap/dry_auto_model.c \
+	bootstrap/dry_classify.c bootstrap/dry_rag.c bootstrap/dry_engine.c \
+	bootstrap/dry_ide.c bootstrap/dry_ops.c \
+	bootstrap/bc_read.c bootstrap/bc_vm.c bootstrap/bc_write.c \
+	bootstrap/spark_parse.c selfhost/lex.c
+spark-bootstrap sparkc: $(SPARKC_SRCS) bootstrap/vm.h \
+	bootstrap/dry_ask.h bootstrap/dry_auto_model.h bootstrap/dry_classify.h \
+	bootstrap/dry_rag.h bootstrap/dry_engine.h bootstrap/dry_ide.h \
+	bootstrap/dry_ops.h \
+	bootstrap/bc_opcodes.h \
+	bootstrap/bc_read.h bootstrap/bc_vm.h bootstrap/bc_write.h \
+	bootstrap/spark_parse.h selfhost/lex.h \
+	bootstrap/engine_parse.h bootstrap/engine_css.h \
+	bootstrap/engine_layout.h bootstrap/engine_paint.h \
+	bootstrap/engine_show.h bootstrap/engine_render.h \
+	asm/engine_layout.o asm/engine_paint.o asm/ide_paint.o
+	$(CC) -O2 -Wall -Wextra -I. -o spark-bootstrap $(SPARKC_SRCS) \
+		asm/engine_layout.o asm/engine_paint.o asm/ide_paint.o
+	ln -sfn spark-bootstrap sparkc
+
+test-bootstrap: spark-bootstrap
+	chmod +x bootstrap/tests/run_bootstrap.sh
+	./bootstrap/tests/run_bootstrap.sh
+
+.PHONY: test-ai-playbooks
+test-ai-playbooks: spark-bootstrap playbooks-catalog
+	chmod +x bootstrap/tests/run_ai_playbooks.sh
+	./bootstrap/tests/run_ai_playbooks.sh
+	chmod +x bootstrap/tests/run_playbooks_catalog.sh
+	./bootstrap/tests/run_playbooks_catalog.sh
+
+# Offline Bifrost ask companion gate (+ optional SPARK_ASK_GATEWAY_LIVE=1).
+.PHONY: test-ask-gateway
+test-ask-gateway: spark-ask-http
+	chmod +x tools/ask/run_ask_gateway_gate.sh
+	./tools/ask/run_ask_gateway_gate.sh
+
+.PHONY: test-rag-gateway
+test-rag-gateway: spark-rag-http spark
+	chmod +x tools/rag/run_rag_gateway_gate.sh
+	./tools/rag/run_rag_gateway_gate.sh
+
+# Packer for goldens (encoding, not a .spark compiler).
+spark-bc-pack-hello: bootstrap/bc_pack_hello.c bootstrap/bc_write.c \
+	bootstrap/bc_read.h bootstrap/bc_write.h bootstrap/bc_opcodes.h
+	$(CC) -O2 -Wall -Wextra -o spark-bc-pack-hello \
+		bootstrap/bc_pack_hello.c bootstrap/bc_write.c
+
+.PHONY: test-sparkbc spark-bc-emit test-bc-emit spark-bc
+test-sparkbc: spark-bootstrap spark
+	chmod +x bootstrap/tests/run_sparkbc.sh
+	./bootstrap/tests/run_sparkbc.sh
+
+spark-bc-emit: bootstrap/bc_emit_sasm.c bootstrap/bc_read.c \
+	bootstrap/dry_ask.c bootstrap/dry_auto_model.c \
+	bootstrap/dry_classify.c bootstrap/dry_ops.c \
+	bootstrap/bc_read.h bootstrap/bc_opcodes.h bootstrap/dry_ask.h \
+	bootstrap/dry_auto_model.h bootstrap/dry_classify.h bootstrap/dry_ops.h
+	$(CC) -O2 -Wall -Wextra -I. -o spark-bc-emit \
+		bootstrap/bc_emit_sasm.c bootstrap/bc_read.c \
+		bootstrap/dry_ask.c bootstrap/dry_auto_model.c \
+		bootstrap/dry_classify.c bootstrap/dry_ops.c
+
+test-bc-emit: spark-bc-emit spark-bc-pack-hello sparkasm
+	chmod +x bootstrap/tests/run_bc_emit.sh
+	./bootstrap/tests/run_bc_emit.sh
+
+# Phase 6 product wrapper (compile → bc_vm when supported); not GAS ./spark.
+spark-bc: spark-bootstrap
+	chmod +x scripts/spark-bc
+
+# --- C: Spark-native assembler (isolated; not GAS SoT) ---
+.PHONY: sparkasm test-sparkasm
+sparkasm:
+	$(MAKE) -C sparkasm
+
+test-sparkasm:
+	$(MAKE) -C sparkasm test
+
+# --- A: self-host seed (lexer aid; not B VM, not C assembler) ---
+.PHONY: selfhost-lex test-selfhost-lex
+selfhost-lex: selfhost/lex.c selfhost/lex.h
+	$(CC) -O2 -Wall -Wextra -DSPARK_LEX_STANDALONE_MAIN \
+	  -I. -o selfhost/spark-lex selfhost/lex.c
+
+# Golden diff: spark-lex and spark-bootstrap --lex (17 fixtures).
+test-selfhost-lex: selfhost-lex spark-bootstrap
+	chmod +x bootstrap/tests/run_selfhost_lex.sh
+	./bootstrap/tests/run_selfhost_lex.sh
+

@@ -1,0 +1,13 @@
+# Spark IDE e2e — open → save → reopen (buffer round-trip).
+# Dry: write out/ide/ide_saved_rt.spark; reopen + buffer dump.
+# Proof: sha256/size of saved == examples/hello.spark (tests/run_dry.sh).
+# Path must not contain substring "open" (dispatch contains-match).
+# No Electron.
+
+ide open "examples/hello.spark" -> opened
+
+ide save "out/ide/ide_saved_rt.spark" -> saved
+
+ide open "out/ide/ide_saved_rt.spark" -> opened
+
+ide buffer -> shown

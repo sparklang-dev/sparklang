@@ -1,0 +1,2 @@
+# Must fail loud — engine css attach needs prior engine parse
+engine css attach

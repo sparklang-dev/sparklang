@@ -1,0 +1,7 @@
+# Spark IDE - proven ide key bad-token fail-loud.
+# After ask-quote-bind e83ab00. Singular `ide key x` exits non-zero
+# (want quit|save|run|open|show). Not keymap n. Not keys-script unknown.
+# Run: ./spark --dry-run examples/ide_key_bad.spark  (expect rc!=0)
+# No Electron. No new asm - documents proven fail-loud only.
+
+ide key x

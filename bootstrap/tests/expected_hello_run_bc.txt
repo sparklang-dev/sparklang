@@ -1,0 +1,7 @@
+[spark] dry-run via bytecode VM
+[model] code
+[ask] Explain gravity in one sentence
+  → Gravity pulls masses together.
+[accounting] latency_ms=0 prompt_tokens=0 completion_tokens=0 total_tokens=0 note=dry-run
+[print] Gravity pulls masses together.
+[spark] ok

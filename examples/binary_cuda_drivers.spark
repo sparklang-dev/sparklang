@@ -1,0 +1,21 @@
+# Review real NVIDIA/CUDA driver binaries on this host when present.
+# Never invents symbols. Never rmmod/rewrites drivers.
+#
+# Full understand = ALL ELF sections (objdump -s/-D, section .raw via
+# spark-section-dump --resume, C-like lift). Files >32MiB stream with
+# checkpoint; re-run skips objdump/lift when artifacts already exist.
+# Dynsym exports use spark-binary-probe --exports (mmap) — never the
+# 64KiB asm peek buffer (that SIGSEGV'd on libcuda e_shoff≈96MiB).
+
+binary open "/lib/x86_64-linux-gnu/libcuda.so.1" -> cuda
+binary elf cuda -> cuda_elf
+binary understand cuda -> cuda_report
+
+binary open "/lib/x86_64-linux-gnu/libnvidia-ml.so.1" -> nvml
+binary elf nvml -> nvml_elf
+
+binary open "/usr/local/cuda/targets/x86_64-linux/lib/libcudart.so" -> cudart
+binary elf cudart -> cudart_elf
+
+# UVM kernel module is zstd-compressed on disk — expect not-ELF until decompress
+binary kernelmod "/lib/modules/6.17.0-40-generic/updates/dkms/nvidia-uvm.ko.zst" -> uvm

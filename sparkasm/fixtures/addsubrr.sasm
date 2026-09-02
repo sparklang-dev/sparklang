@@ -1,0 +1,11 @@
+# add/sub reg,reg — 40+5-3 via regs → exit 42
+.global _start
+.text
+_start:
+	mov	rdi, 40
+	mov	rsi, 5
+	add	rdi, rsi
+	mov	rsi, 3
+	sub	rdi, rsi
+	mov	rax, 60
+	syscall

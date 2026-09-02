@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Spark installed</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 13px;
+      line-height: 1.45;
+      color: #1a1a1a;
+      margin: 12px 16px;
+    }
+    h1 { font-size: 18px; margin: 0 0 8px; color: #0c0e12; }
+    p { margin: 0 0 10px; }
+    code {
+      background: #f4f4f5;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-size: 12px;
+    }
+    .mark { color: #e85d04; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <h1><span class="mark">Spark</span> is ready</h1>
+  <p>
+    The runtime is installed at <code>/usr/local/spark</code>. Bootstrap and
+    sparkasm were built during install.
+  </p>
+  <p><strong>Try a dry-run (no network):</strong></p>
+  <p>
+    <code>/usr/local/spark/bin/spark-bootstrap --dry-run /usr/local/spark/examples/hello.spark</code>
+  </p>
+  <p>
+    Docs: <strong>https://sparklang.dev/docs/programming-guide.html</strong>
+  </p>
+</body>
+</html>

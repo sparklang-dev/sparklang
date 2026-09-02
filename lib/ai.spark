@@ -1,0 +1,33 @@
+# Spark stdlib — AI defaults (bootstrap: include "lib/ai.spark")
+# Auto-picks fast vs code; override with use fast
+
+use auto
+
+# @helper ai_use_fast: Default fast alias for lightweight tasks
+# use fast
+
+# @helper ai_use_code: Default code alias for heavier reasoning
+# use code
+
+# @helper ai_use_best: Default best alias for quality
+# use best
+
+# @helper ai_classify_then_ask: Classify message then generate reply
+# let message "Need refund for broken item"
+# classify Intent { support, sales } from message -> intent
+# ask "Reply as {intent}: {message}" -> reply
+
+# @helper ai_extract_then_ask: Extract fields then summarize
+# extract Person { name: string } from "Jane called" -> person
+# ask "Draft greeting for {person}" -> greeting
+
+# @helper ai_question_sugar: Shorthand ? for ask
+# let topic "Spark language"
+# ? "What is {topic}?" -> answer
+
+# @helper ai_say_sugar: Shorthand say for speak
+# say "Welcome to our store"
+
+# @helper ai_include_pipeline: Compose with pipeline stdlib
+# include "lib/pipeline.spark"
+# let doc "Notes here."

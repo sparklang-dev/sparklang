@@ -1,0 +1,11 @@
+# idiv — 84 / 2 → exit 42
+.global _start
+.text
+_start:
+	mov	rax, 84
+	cqo
+	mov	rsi, 2
+	idiv	rsi
+	mov	rdi, rax
+	mov	rax, 60
+	syscall

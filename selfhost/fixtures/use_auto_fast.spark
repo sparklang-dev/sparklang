@@ -1,0 +1,4 @@
+# BC use auto -> fast (dry_auto_model; gravity prompt).
+use auto
+ask "Explain gravity in one sentence" -> text
+print text

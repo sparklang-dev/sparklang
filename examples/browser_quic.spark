@@ -1,0 +1,11 @@
+# Spark-first browser + MITM — language ops (asm), not Python-first.
+# Entrypoint: ./spark --dry-run examples/browser_quic.spark
+# GUI helper only via: browser gui --live (forks spark-browser-host).
+
+browser flags -> flags
+browser run "examples/browser_main.spark" -> session
+mitm enable -> mitm_on
+mitm disable_quic on -> dq
+mitm quic status -> quic_status
+mitm quic smoke -> quic_smoke
+mitm quic divert enable -> divert_plan

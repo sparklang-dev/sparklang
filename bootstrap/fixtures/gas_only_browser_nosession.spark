@@ -1,0 +1,2 @@
+# Must fail loud — goto requires browser run|open first
+browser goto "https://x.test/"

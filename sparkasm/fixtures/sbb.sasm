@@ -1,0 +1,9 @@
+# sbb — 43 - 1 - CF0 → exit 42
+.global _start
+.text
+_start:
+	mov	rdi, 43
+	mov	rsi, 1
+	sbb	rdi, rsi
+	mov	rax, 60
+	syscall

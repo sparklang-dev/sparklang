@@ -1,0 +1,13 @@
+# Ask/generate + print dry keywords lex fixture.
+# Stage 1 golden (expected_ask_dry.tokens.jsonl).
+# Keywords: model, ask, generate, print. Forms from LANGUAGE.md /
+# examples/hello.spark + ask_live.spark (generate aliases ask).
+# Not a full compiler. Avoid `let` (GAS scaffold pads dumps).
+model code
+
+ask "Explain gravity in one sentence" -> text
+
+generate "Reply with exactly one word: pong" -> pong
+
+print text
+print pong

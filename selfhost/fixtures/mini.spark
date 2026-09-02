@@ -1,0 +1,7 @@
+# Mini fixture for self-host lexer golden.
+# Keep small - Stage 0 dry-run + spark-lex input.
+model code
+
+ask "Explain gravity in one sentence" -> text
+
+print text

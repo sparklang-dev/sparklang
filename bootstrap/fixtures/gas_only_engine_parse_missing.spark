@@ -1,0 +1,2 @@
+# Must fail loud — missing HTML path
+engine parse "no/such/bootstrap-missing.html"

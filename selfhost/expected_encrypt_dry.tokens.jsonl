@@ -1,0 +1,35 @@
+{"kind":"COMMENT","lexeme":"# Encrypt gateway dry keywords lex fixture.","line":1,"col":1}
+{"kind":"COMMENT","lexeme":"# Stage 1 golden (expected_encrypt_dry.tokens.jsonl).","line":2,"col":1}
+{"kind":"COMMENT","lexeme":"# Keywords: crypto, encrypt, gateway (keygen/enable/on/off/seal/open/text stay IDENT).","line":3,"col":1}
+{"kind":"COMMENT","lexeme":"# Forms from LANGUAGE.md / examples/encrypt_gateway.spark.","line":4,"col":1}
+{"kind":"COMMENT","lexeme":"# Not a full compiler. Avoid `let` (GAS scaffold pads dumps).","line":5,"col":1}
+{"kind":"KEYWORD","lexeme":"model","line":6,"col":1}
+{"kind":"IDENT","lexeme":"code","line":6,"col":7}
+{"kind":"KEYWORD","lexeme":"crypto","line":8,"col":1}
+{"kind":"IDENT","lexeme":"keygen","line":8,"col":8}
+{"kind":"ARROW","lexeme":"->","line":8,"col":15}
+{"kind":"IDENT","lexeme":"key","line":8,"col":18}
+{"kind":"KEYWORD","lexeme":"encrypt","line":9,"col":1}
+{"kind":"KEYWORD","lexeme":"gateway","line":9,"col":9}
+{"kind":"IDENT","lexeme":"enable","line":9,"col":17}
+{"kind":"IDENT","lexeme":"key","line":9,"col":24}
+{"kind":"KEYWORD","lexeme":"gateway","line":10,"col":1}
+{"kind":"KEYWORD","lexeme":"encrypt","line":10,"col":9}
+{"kind":"IDENT","lexeme":"on","line":10,"col":17}
+{"kind":"KEYWORD","lexeme":"encrypt","line":11,"col":1}
+{"kind":"IDENT","lexeme":"seal","line":11,"col":9}
+{"kind":"IDENT","lexeme":"text","line":11,"col":14}
+{"kind":"STRING","lexeme":"\"secret\"","line":11,"col":19}
+{"kind":"ARROW","lexeme":"->","line":11,"col":28}
+{"kind":"IDENT","lexeme":"blob","line":11,"col":31}
+{"kind":"KEYWORD","lexeme":"encrypt","line":12,"col":1}
+{"kind":"IDENT","lexeme":"open","line":12,"col":9}
+{"kind":"IDENT","lexeme":"blob","line":12,"col":14}
+{"kind":"ARROW","lexeme":"->","line":12,"col":19}
+{"kind":"IDENT","lexeme":"plain","line":12,"col":22}
+{"kind":"KEYWORD","lexeme":"gateway","line":13,"col":1}
+{"kind":"KEYWORD","lexeme":"encrypt","line":13,"col":9}
+{"kind":"IDENT","lexeme":"off","line":13,"col":17}
+{"kind":"KEYWORD","lexeme":"print","line":15,"col":1}
+{"kind":"IDENT","lexeme":"plain","line":15,"col":7}
+{"kind":"EOF","lexeme":"","line":16,"col":1}

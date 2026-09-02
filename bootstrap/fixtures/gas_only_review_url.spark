@@ -1,0 +1,2 @@
+# Must fail loud on C bootstrap (review url needs spark-review-url companion)
+review url "https://example.com/app.js" -> report

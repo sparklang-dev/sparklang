@@ -1,0 +1,11 @@
+# cmovae — 2 >= 1 unsigned → move 42 into rdi
+.global _start
+.text
+_start:
+	mov	rdi, 0
+	mov	rsi, 42
+	mov	rax, 2
+	cmp	rax, 1
+	cmovae	rdi, rsi
+	mov	rax, 60
+	syscall

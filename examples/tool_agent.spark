@@ -1,0 +1,12 @@
+# Tool-using agent (tools registered; ask may call them)
+model code
+
+tool weather(city: string) -> string {
+  "stub:local"
+}
+
+with tools [weather] {
+  ask "What's the weather hint for Springfield?" -> answer
+}
+
+print answer

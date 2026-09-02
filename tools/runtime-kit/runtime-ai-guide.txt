@@ -1,0 +1,60 @@
+Spark runtime — AI quick guide
+==============================
+
+Spark treats AI as first-class language statements: ask, classify, extract,
+pipeline, model analyze, review, voice, and encrypt-to-model gateway ops.
+
+Dry-run (offline, no API key)
+-----------------------------
+  ./bin/spark --dry-run examples/hello.spark
+  ./bin/spark --dry-run examples/classify_intent.spark
+  ./bin/spark --dry-run examples/extract_person.spark
+  ./bin/spark --dry-run examples/pipeline_translate.spark
+  ./bin/spark --dry-run examples/voice_turn.spark
+
+Dry-run uses fixtures and memo paths — safe for CI and local iteration.
+
+Live ask (Bifrost / AI_GATEWAY_URL)
+----------------------------------
+  export AI_GATEWAY_URL=http://127.0.0.1:4000
+  export SPARK_GATEWAY_KEY=sk-bf-...   # preferred Bifrost virtual key
+  # OPENAI_API_KEY is wire-compat Bearer name only — not OpenAI.com CTA
+
+  ./bin/spark --live examples/ask_live.spark
+  ./bin/spark --live examples/ask_live_use_auto.spark
+  # Offline companion dry (no key / no network):
+  ./bin/spark-ask-http --dry --model auto --prompt "Fix this test failure: …"
+
+Credential check without dialing a model:
+  ./bin/spark --dry-run examples/ask_probe.spark
+
+Model aliases
+-------------
+In a .spark file, pick a tier with model / use:
+
+  use fast      # quick / cheap
+  use code      # coding tasks
+  use best      # highest quality
+  use auto      # companion resolves → fast|code before Bifrost
+
+See spark.toml.example for documented defaults (the dry VM does not parse TOML
+for aliases — use `model`/`use` in the program).
+
+Companions in this package
+----------------------------
+  spark-bootstrap     primary VM on arm64 / source-kit builds (C portable)
+  spark               full asm VM (Linux x86_64 prebuilt packages only)
+  spark-ask-http      live HTTP ask to your API
+  spark-enc-gateway   encrypt-to-model gateway (seal/open + ask)
+  spark-stt-tts       speech listen/speak (live only; dry-run is fixture)
+  spark-review-url    static URL review (needs --allow-net for remote fetch)
+  sparkasm            Spark-native assembler
+
+Linux arm64 (hybrid packages)
+-----------------------------
+  Prebuilt aarch64 ELF: spark-bootstrap + sparkasm + C companions.
+  Use spark-bootstrap (or the spark symlink) for --dry-run and --live.
+  The x86_64 GAS ./spark VM is not shipped on arm64 — honest milestone until
+  an arm64 asm port lands. Source-kit tarballs still include build.sh.
+
+More: https://sparklang.dev/docs/programming-guide.html

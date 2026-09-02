@@ -1,0 +1,7 @@
+# Live ask — requires ./spark --live + AI_GATEWAY_URL + Bearer key
+# Dry-run stays offline: ./spark --dry-run examples/hello.spark
+model fast
+
+ask "Reply with exactly one word: pong" -> text
+
+print text

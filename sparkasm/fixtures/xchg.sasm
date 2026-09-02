@@ -1,0 +1,9 @@
+# xchg reg,reg — swap rsi=42 into rdi → exit 42
+.global _start
+.text
+_start:
+	mov	rsi, 42
+	mov	rdi, 0
+	xchg	rsi, rdi
+	mov	rax, 60
+	syscall

@@ -1,0 +1,14 @@
+# Engine B pipeline — real ops only (no Google.com / no full CSS).
+# fetch → parse → css → layout → paint boxes → show
+# Dry:  ./spark --dry-run examples/engine_pipeline.spark
+#       → out/engine/pipeline.ppm + show.json (display:false, no X11)
+# Live: ./spark --live examples/engine_pipeline.spark
+#       → forks ./spark-engine-show --ppm out/engine/pipeline.ppm
+#       (X11 PutImage; needs DISPLAY). file:// always; http/https --allow-net.
+
+engine fetch "file://engine/fixtures/style_basic.html" -> body
+engine parse "out/engine/body.bin" -> dom
+engine css attach -> styles
+engine layout -> boxes
+engine paint boxes -> ppm
+engine show "out/engine/pipeline.ppm" -> shown

@@ -1,0 +1,11 @@
+# Spark CUDA / memory — asm syscalls to /dev/nvidia* + ioctl
+# Prefer GPU minor 0 (compute). Never prefer minor 2 (voice-only).
+# memory pin uses mmap + mlock (fail loud on errno).
+
+cuda probe -> info
+cuda memstat -> stats
+cuda prefer gpu 0
+
+memory pin "buffer" size 1M -> buf
+
+builder prefer lower request "keep cuda on asm device ioctl path" -> patch

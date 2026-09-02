@@ -1,0 +1,83 @@
+# Spark stdlib — voice / listen / speak helpers (bootstrap: include "lib/voice.spark")
+# mode: dry-run (stub WAV/transcript) | live (--live + spark-stt-tts)
+
+model fast
+
+# @helper voice_turn_basic: Listen, ask, speak loop
+# voice {
+#   listen -> user
+#   ask "Reply helpfully to: {user}" -> reply
+#   speak reply -> "out.wav"
+# }
+
+# @helper voice_classify_route: Classify transcript then reply
+# voice {
+#   listen -> user
+#   classify Intent { support, sales } from user -> intent
+#   ask "Reply as {intent}: {user}" -> reply
+#   speak reply
+# }
+
+# @helper listen_file: STT from WAV path
+# listen "input.wav" -> transcript
+
+# @helper speak_text: TTS to WAV path
+# speak "Hello from Spark" -> "out/hello.wav"
+
+# @helper speak_with_model: TTS with voice model alias
+# speak with model brand_voice
+# speak "Welcome" -> "out/welcome.wav"
+
+# @helper say_sugar: say sugar for speak shorthand
+# say "Hours are 6am to 10pm"
+
+# @helper voice_review_clip: Analyze recording quality
+# voice review "clip.wav" -> report
+
+# @helper voice_code_request: Generate voice pipeline artifact
+# voice code request "listen classify speak" -> artifact
+
+# @helper voice_copy_sample: Clone voice from source WAV
+# voice copy from "src.wav" to my_voice -> model_path
+
+# @helper voice_model_write: Write voice model spec
+# voice model write my_voice spec { rate: 1.0, pitch: 0 } -> path
+
+# @helper voice_model_load: Load voice model for speak
+# voice model load my_voice -> model
+
+# @helper voice_pstn_status: PSTN lane status (never dials in dry-run)
+# voice pstn status
+
+# @helper voice_pstn_dial: Outbound dial (OFF by default; live gated)
+# voice pstn dial "+15555550100" -> call
+
+# @helper voice_pipeline_extract: Voice block with extract step
+# voice {
+#   listen -> user
+#   extract Person { name: string } from user -> person
+#   ask "Greet {person}" -> reply
+#   speak reply
+# }
+
+# @helper voice_min_conf_classify: Strict classify in voice loop
+# voice {
+#   listen -> user
+#   classify Intent { support, sales, spam } from user min_confidence 0.8 -> intent
+#   speak "Routing to {intent}"
+# }
+
+# @helper voice_brief_reply: Short spoken answers only
+# voice {
+#   listen -> user
+#   ask "One sentence answer: {user}" -> reply
+#   speak reply -> "out/brief.wav"
+# }
+
+# @helper voice_multilingual: Classify language then reply
+# voice {
+#   listen -> user
+#   classify Lang { en, es } from user -> lang
+#   ask "Reply in {lang}: {user}" -> reply
+#   speak reply
+# }

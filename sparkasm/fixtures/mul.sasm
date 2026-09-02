@@ -1,0 +1,10 @@
+# mul — 21 * 2 → exit 42
+.global _start
+.text
+_start:
+	mov	rax, 21
+	mov	rsi, 2
+	mul	rsi
+	mov	rdi, rax
+	mov	rax, 60
+	syscall

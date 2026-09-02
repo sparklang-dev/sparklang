@@ -1,0 +1,11 @@
+# clc — stc then clc; 42 + 0 + CF0 → exit 42
+.global _start
+.text
+_start:
+	mov	rdi, 42
+	mov	rsi, 0
+	stc
+	clc
+	adc	rdi, rsi
+	mov	rax, 60
+	syscall

@@ -1,0 +1,10 @@
+# btr — clear bit 0 of 43 → exit 42
+.global _start
+.text
+_start:
+	mov	rsi, 43
+	mov	rcx, 0
+	btr	rsi, rcx
+	mov	rdi, rsi
+	mov	rax, 60
+	syscall

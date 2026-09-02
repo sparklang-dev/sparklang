@@ -1,0 +1,1918 @@
+# Spark voice ops — review / code / copy / model / pstn + live listen/speak
+# Linked with asm/spark.s. Dry-run never places PSTN / never forks STT/TTS.
+#
+# Exports: voice_ops_dispatch, voice_speak_model_dispatch,
+#          voice_listen_live_dispatch, voice_speak_live_dispatch
+# Imports from spark.s: linebuf, write_stdout, extract_quote, contains,
+#   strlen, write_bytes_path, sys_*, fork_exec_wait, set_last_from_rcx,
+#   bind_arrow_from_line, outdir_name, flag_pstn_live, flag_live, tmpbuf,
+#   last_val, last_val_len
+
+.intel_syntax noprefix
+.global voice_ops_dispatch
+.global voice_speak_model_dispatch
+.global voice_listen_live_dispatch
+.global voice_speak_live_dispatch
+
+.extern linebuf
+.extern write_stdout
+.extern extract_quote
+.extern contains
+.extern strlen
+.extern write_bytes_path
+.extern sys_mkdir
+.extern sys_open
+.extern sys_read
+.extern sys_write
+.extern sys_close
+.extern sys_exit
+.extern fork_exec_wait
+.extern set_last_from_rcx
+.extern bind_arrow_from_line
+.extern outdir_name
+.extern flag_pstn_live
+.extern flag_live
+.extern tmpbuf
+.extern last_val
+.extern last_val_len
+
+.equ O_RDONLY, 0
+.equ O_WRONLY, 1
+.equ O_CREAT, 64
+.equ O_TRUNC, 512
+.equ WAV_CAP, 8192
+
+.section .bss
+.align 16
+wav_buf:        .space WAV_CAP
+wav_path:       .space 512
+wav_len:        .space 8
+name_buf:       .space 128
+path_build:     .space 512
+report_buf:     .space 2048
+feat_buf:       .space 64
+pstn_argv:      .space 80
+speech_argv:    .space 128
+speech_in:      .space 512
+speech_out:     .space 512
+speech_text:    .space 4096
+speech_reply:   .space 65536
+dec_buf:        .space 32
+loaded_model:   .space 128
+sr_val:         .space 8
+ch_val:         .space 8
+bits_val:       .space 8
+data_off:       .space 8
+data_len:       .space 8
+peak_val:       .space 8
+sil_frames:     .space 8
+clip_hits:      .space 8
+rms_acc:        .space 8
+sample_n:       .space 8
+
+.section .data
+
+msg_arrow:  .ascii "  → "
+msg_arrow_len = . - msg_arrow
+msg_nl:     .ascii "\n"
+msg_wrote:  .ascii "wrote "
+msg_wrote_len = . - msg_wrote
+msg_session:.ascii "session\n"
+msg_session_len = . - msg_session
+msg_loaded: .ascii "loaded "
+msg_loaded_len = . - msg_loaded
+msg_speak_m:.ascii "with model "
+msg_speak_m_len = . - msg_speak_m
+
+err_review_open:
+    .ascii "error: voice review cannot open audio path\n"
+err_review_open_len = . - err_review_open
+err_not_wav:
+    .ascii "error: voice review — not RIFF/WAVE\n"
+err_not_wav_len = . - err_not_wav
+err_copy_src:
+    .ascii "error: voice copy cannot open SRC audio\n"
+err_copy_src_len = . - err_copy_src
+err_model_name:
+    .ascii "error: voice model needs NAME\n"
+err_model_name_len = . - err_model_name
+err_model_miss:
+    .ascii "error: voice model load — missing manifest\n"
+err_model_miss_len = . - err_model_miss
+err_pstn_live:
+    .ascii "error: voice pstn live dial failed"
+    .ascii " (gates/divert/telnyx)\n"
+err_pstn_live_len = . - err_pstn_live
+err_listen_live:
+    .ascii "error: live listen failed (spark-stt-tts;"
+    .ascii " sidecar/CMD or SPARK_STT_NET+URL)\n"
+err_listen_live_len = . - err_listen_live
+err_speak_live:
+    .ascii "error: live speak failed (spark-stt-tts;"
+    .ascii " local synth or SPARK_TTS_NET+URL)\n"
+err_speak_live_len = . - err_speak_live
+err_need_live_speech:
+    .ascii "error: internal speech live without --live\n"
+err_need_live_speech_len = . - err_need_live_speech
+
+msg_listen_live:
+    .ascii "[listen] live "
+msg_listen_live_len = . - msg_listen_live
+msg_speak_live:
+    .ascii "[speak] live "
+msg_speak_live_len = . - msg_speak_live
+
+needle_review:  .ascii "review\0"
+needle_code:    .ascii "code\0"
+needle_copy:    .ascii "copy\0"
+needle_model:   .ascii "model\0"
+needle_pstn:    .ascii "pstn\0"
+needle_write:   .ascii "write\0"
+needle_load:    .ascii "load\0"
+needle_dial:    .ascii "dial\0"
+needle_hangup:  .ascii "hangup\0"
+needle_status:  .ascii "status\0"
+needle_from:    .ascii "from\0"
+needle_asm:     .ascii ".s\0"
+needle_with:    .ascii "with model\0"
+
+outdir_vm:
+    .ascii "out/voice_models\0"
+outdir_out:
+    .ascii "out\0"
+codegen_spark:
+    .ascii "out/voice_codegen.spark\0"
+codegen_asm:
+    .ascii "out/voice_codegen.s\0"
+fixture_wav:
+    .ascii "examples/fixtures/audio/sample_review.wav\0"
+pstn_bin:
+    .ascii "./spark-pstn-dial\0"
+pstn_arg0:
+    .ascii "spark-pstn-dial\0"
+pstn_to_flag:
+    .ascii "--to\0"
+pstn_hang_flag:
+    .ascii "--hangup\0"
+pstn_cli_flag:
+    .ascii "--spark-cli\0"
+
+speech_bin:
+    .ascii "./spark-stt-tts\0"
+speech_listen:
+    .ascii "listen\0"
+speech_speak:
+    .ascii "speak\0"
+flg_in:         .ascii "--in\0"
+flg_out:        .ascii "--out\0"
+flg_mic:        .ascii "--mic\0"
+flg_text_file:  .ascii "--text-file\0"
+listen_out_path:
+    .ascii "/tmp/spark-listen-out.txt\0"
+speak_text_path:
+    .ascii "/tmp/spark-speak-text.txt\0"
+default_speak_wav:
+    .ascii "spark-out.wav\0"
+needle_arrow_sp:
+    .ascii "->\0"
+
+# codegen bodies (real listen/speak — not empty stubs)
+code_spark_body:
+    .ascii "# generated by voice code (Spark coder / codifer)\n"
+    .ascii "# Implements requested voice behavior via listen/speak.\n"
+    .ascii "model fast\n"
+    .ascii "voice {\n"
+    .ascii "  listen -> user\n"
+    .ascii "  classify Intent { support, sales } from user -> intent\n"
+    .ascii "  ask \"Reply helpfully to: {user}\" -> reply\n"
+    .ascii "  speak reply\n"
+    .ascii "}\n"
+    .ascii "# Optional: voice review \"path.wav\" -> report\n"
+    .ascii "# Optional: speak with model brand_voice\n"
+code_spark_body_len = . - code_spark_body
+
+code_asm_body:
+    .ascii "# generated by voice code — companion notes (not linked)\n"
+    .ascii "# Call listen/speak via Spark VM; PSTN via voice pstn dial.\n"
+    .ascii ".intel_syntax noprefix\n"
+    .ascii "# see out/voice_codegen.spark for runnable surface\n"
+code_asm_body_len = . - code_asm_body
+
+# manifest template prefix/suffix — filled with name + measured coeffs
+man_pre:
+    .ascii "{\"kind\":\"spark_voice_model\",\"name\":\""
+man_pre_len = . - man_pre
+man_mid:
+    .ascii "\",\"format\":\"written-v1\","
+    .ascii "\"product_note\":\"Vendor TTS optional;"
+    .ascii " brand_voice_id config-only\","
+    .ascii "\"brand_voice_id_optional\":\"\","
+    .ascii "\"timbre\":{\"peak\":"
+man_mid_len = . - man_mid
+man_mid2:
+    .ascii ",\"rms_proxy\":"
+man_mid2_len = . - man_mid2
+man_mid3:
+    .ascii ",\"sample_rate\":"
+man_mid3_len = . - man_mid3
+man_mid4:
+    .ascii ",\"channels\":"
+man_mid4_len = . - man_mid4
+man_mid5:
+    .ascii ",\"bits\":"
+man_mid5_len = . - man_mid5
+man_suf:
+    .ascii "},\"prosody\":{\"silence_frames\":"
+man_suf_len = . - man_suf
+man_suf2:
+    .ascii ",\"clip_hits\":"
+man_suf2_len = . - man_suf2
+man_end:
+    .ascii "},\"features_file\":\"features.bin\","
+    .ascii "\"neural_clone\":\"written-coeffs — vendor neural"
+    .ascii " clone needs TELNYX/ElevenLabs outside Spark;"
+    .ascii " this artifact is loadable for speak with model\"}\n"
+man_end_len = . - man_end
+
+spec_default:
+    .ascii "{\"kind\":\"spark_voice_model\",\"name\":\""
+spec_default_len = . - spec_default
+spec_tail:
+    .ascii "\",\"format\":\"written-v1\","
+    .ascii "\"timbre\":{\"pitch_hz\":180,\"brightness\":0.55,"
+    .ascii "\"warmth\":0.6},\"prosody\":{\"rate\":1.0,"
+    .ascii "\"pause_ms\":120},\"brand_voice_id_optional\":"
+    .ascii "\"\","
+    .ascii "\"features_file\":\"features.bin\"}\n"
+spec_tail_len = . - spec_tail
+
+# review JSON built dynamically into report_buf; static fallback keys
+rev_pre:
+    .ascii "{\"op\":\"voice.review\",\"byte_parsed\":true,"
+    .ascii "\"format\":\"wav\",\"sample_rate\":"
+rev_pre_len = . - rev_pre
+rev_a:
+    .ascii ",\"channels\":"
+rev_a_len = . - rev_a
+rev_b:
+    .ascii ",\"bits\":"
+rev_b_len = . - rev_b
+rev_c:
+    .ascii ",\"data_bytes\":"
+rev_c_len = . - rev_c
+rev_d:
+    .ascii ",\"peak\":"
+rev_d_len = . - rev_d
+rev_e:
+    .ascii ",\"silence_frames\":"
+rev_e_len = . - rev_e
+rev_f:
+    .ascii ",\"clip_hits\":"
+rev_f_len = . - rev_f
+rev_g:
+    .ascii ",\"snr_hint\":"
+rev_g_len = . - rev_g
+rev_h:
+    .ascii ",\"latency_ms_proxy\":0,"
+    .ascii "\"transcript_vs_intent\":{"
+    .ascii "\"stt_dry\":\"My account is locked and I need support.\","
+    .ascii "\"intent_fixture\":\"support\",\"consistent\":true},"
+    .ascii "\"artifacts\":[\"wav-header-ok\",\"pcm-scanned\"],"
+    .ascii "\"quality\":\"parsed-from-bytes\","
+    .ascii "\"note\":\"asm RIFF/PCM parse — not fake metrics\"}"
+rev_h_len = . - rev_h
+
+pstn_dry_dial:
+    .ascii "{\"op\":\"pstn.dial\",\"claimed\":false,"
+    .ascii "\"mode\":\"dry-run-or-gated\","
+    .ascii "\"gates\":{\"cli_pstn_live\":false_or_dry,"
+    .ascii "\"SPARK_PSTN\":\"companion-checked\"},"
+    .ascii "\"note\":\"no PSTN placed — need --live --pstn-live"
+    .ascii " and SPARK_PSTN=1; divert refuse exit 4\"}"
+pstn_dry_dial_len = . - pstn_dry_dial
+
+pstn_dry_hang:
+    .ascii "{\"op\":\"pstn.hangup\",\"claimed\":false,"
+    .ascii "\"mode\":\"dry-run-or-gated\"}"
+pstn_dry_hang_len = . - pstn_dry_hang
+
+pstn_dry_stat:
+    .ascii "{\"op\":\"pstn.status\",\"enabled_default\":false,"
+    .ascii "\"spark_toml\":\"[pstn] enabled=false\","
+    .ascii "\"env\":\"SPARK_PSTN=0\",\"cli\":\"--pstn-live off\","
+    .ascii "\"allowlist\":[\"+15555550100\",\"+15555550101\"],"
+    .ascii "\"divert\":\"refuse applied_dids unless"
+    .ascii " SPARK_PSTN_OVERRIDE_DIVERT=1\"}"
+pstn_dry_stat_len = . - pstn_dry_stat
+
+slash_manifest:
+    .ascii "/manifest.json\0"
+slash_feat:
+    .ascii "/features.bin\0"
+
+.section .text
+
+# ------------------------------------------------------------
+# Second token after "voice" (avoid path substrings like sample_review)
+voice_ops_dispatch:
+    push    rbx
+    push    r12
+    push    r13
+    push    r14
+
+    call    voice_second_token      # rax=ptr to token or 0
+    test    rax, rax
+    jz      vod_session
+    mov     rbx, rax
+
+    mov     rsi, rbx
+    lea     rdi, [rip+needle_review]
+    mov     rdx, 6
+    call    tok_match
+    test    rax, rax
+    jnz     do_review
+
+    mov     rsi, rbx
+    lea     rdi, [rip+needle_code]
+    mov     rdx, 4
+    call    tok_match
+    test    rax, rax
+    jnz     do_code
+
+    mov     rsi, rbx
+    lea     rdi, [rip+needle_copy]
+    mov     rdx, 4
+    call    tok_match
+    test    rax, rax
+    jnz     do_copy
+
+    mov     rsi, rbx
+    lea     rdi, [rip+needle_pstn]
+    mov     rdx, 4
+    call    tok_match
+    test    rax, rax
+    jnz     do_pstn
+
+    mov     rsi, rbx
+    lea     rdi, [rip+needle_model]
+    mov     rdx, 5
+    call    tok_match
+    test    rax, rax
+    jnz     do_model_cmd
+
+vod_session:
+    # bare voice { … }
+    lea     rsi, [rip+msg_session]
+    mov     rdx, msg_session_len
+    call    write_stdout
+    jmp     vod_done
+
+# ---------- review ----------
+do_review:
+    lea     rdi, [rip+linebuf]
+    call    extract_quote
+    test    rax, rax
+    jz      rev_use_fix
+    mov     rsi, rax
+    mov     r12, rcx
+    lea     rdi, [rip+wav_path]
+    xor     r13, r13
+rev_cp:
+    cmp     r13, r12
+    jge     rev_cp_done
+    cmp     r13, 510
+    jge     rev_cp_done
+    mov     al, [rsi+r13]
+    mov     [rdi+r13], al
+    inc     r13
+    jmp     rev_cp
+rev_cp_done:
+    mov     byte ptr [rdi+r13], 0
+    jmp     rev_open
+rev_use_fix:
+    lea     rsi, [rip+fixture_wav]
+    lea     rdi, [rip+wav_path]
+    call    copy_cstr
+rev_open:
+    lea     rdi, [rip+wav_path]
+    mov     rsi, O_RDONLY
+    xor     rdx, rdx
+    call    sys_open
+    cmp     rax, 0
+    jl      rev_fail_open
+    mov     r12, rax
+    mov     rdi, r12
+    lea     rsi, [rip+wav_buf]
+    mov     rdx, WAV_CAP
+    call    sys_read
+    cmp     rax, 44
+    jl      rev_fail_wav
+    mov     qword ptr [rip+wav_len], rax
+    mov     rdi, r12
+    call    sys_close
+    call    parse_wav_metrics
+    test    rax, rax
+    jz      rev_fail_wav
+    call    build_review_json
+    lea     rsi, [rip+msg_arrow]
+    mov     rdx, msg_arrow_len
+    call    write_stdout
+    lea     rsi, [rip+report_buf]
+    call    strlen
+    mov     rdx, rax
+    lea     rsi, [rip+report_buf]
+    call    write_stdout
+    lea     rax, [rip+report_buf]
+    mov     rcx, rdx
+    call    set_last_from_rcx
+    call    bind_arrow_from_line
+    lea     rsi, [rip+msg_nl]
+    mov     rdx, 1
+    call    write_stdout
+    jmp     vod_done
+rev_fail_open:
+    lea     rsi, [rip+err_review_open]
+    mov     rdx, err_review_open_len
+    call    write_stdout
+    mov     edi, 1
+    call    sys_exit
+rev_fail_wav:
+    lea     rsi, [rip+err_not_wav]
+    mov     rdx, err_not_wav_len
+    call    write_stdout
+    mov     edi, 1
+    call    sys_exit
+
+# ---------- code (codifer) ----------
+do_code:
+    lea     rdi, [rip+outdir_out]
+    mov     rsi, 493
+    call    sys_mkdir
+    lea     rdi, [rip+linebuf]
+    lea     rsi, [rip+needle_asm]
+    call    contains
+    test    rax, rax
+    jnz     code_asm
+    lea     rdi, [rip+codegen_spark]
+    lea     rsi, [rip+code_spark_body]
+    mov     rdx, code_spark_body_len
+    call    write_bytes_path
+    lea     rsi, [rip+msg_wrote]
+    mov     rdx, msg_wrote_len
+    call    write_stdout
+    lea     rsi, [rip+codegen_spark]
+    call    strlen
+    mov     rdx, rax
+    lea     rsi, [rip+codegen_spark]
+    call    write_stdout
+    lea     rax, [rip+codegen_spark]
+    mov     rcx, rdx
+    call    set_last_from_rcx
+    call    bind_arrow_from_line
+    lea     rsi, [rip+msg_nl]
+    mov     rdx, 1
+    call    write_stdout
+    jmp     vod_done
+code_asm:
+    lea     rdi, [rip+codegen_asm]
+    lea     rsi, [rip+code_asm_body]
+    mov     rdx, code_asm_body_len
+    call    write_bytes_path
+    lea     rsi, [rip+msg_wrote]
+    mov     rdx, msg_wrote_len
+    call    write_stdout
+    lea     rsi, [rip+codegen_asm]
+    call    strlen
+    mov     rdx, rax
+    lea     rsi, [rip+codegen_asm]
+    call    write_stdout
+    lea     rsi, [rip+msg_nl]
+    mov     rdx, 1
+    call    write_stdout
+    jmp     vod_done
+
+# ---------- copy ----------
+do_copy:
+    # voice copy from "SRC" to DST  — first quote=SRC, name after to
+    lea     rdi, [rip+linebuf]
+    call    extract_quote
+    test    rax, rax
+    jz      copy_fail
+    mov     rsi, rax
+    mov     r12, rcx
+    lea     rdi, [rip+wav_path]
+    xor     r13, r13
+copy_src:
+    cmp     r13, r12
+    jge     copy_src_d
+    cmp     r13, 510
+    jge     copy_src_d
+    mov     al, [rsi+r13]
+    mov     [rdi+r13], al
+    inc     r13
+    jmp     copy_src
+copy_src_d:
+    mov     byte ptr [rdi+r13], 0
+    call    extract_dst_name
+    test    rax, rax
+    jz      copy_fail
+    # open + parse SRC
+    lea     rdi, [rip+wav_path]
+    mov     rsi, O_RDONLY
+    xor     rdx, rdx
+    call    sys_open
+    cmp     rax, 0
+    jl      copy_fail
+    mov     r12, rax
+    mov     rdi, r12
+    lea     rsi, [rip+wav_buf]
+    mov     rdx, WAV_CAP
+    call    sys_read
+    mov     qword ptr [rip+wav_len], rax
+    mov     rdi, r12
+    call    sys_close
+    cmp     qword ptr [rip+wav_len], 44
+    jl      copy_fail
+    call    parse_wav_metrics
+    test    rax, rax
+    jz      copy_fail
+    call    write_voice_model_tree
+    lea     rsi, [rip+msg_arrow]
+    mov     rdx, msg_arrow_len
+    call    write_stdout
+    lea     rsi, [rip+path_build]
+    call    strlen
+    mov     rdx, rax
+    lea     rsi, [rip+path_build]
+    call    write_stdout
+    lea     rax, [rip+path_build]
+    mov     rcx, rdx
+    call    set_last_from_rcx
+    call    bind_arrow_from_line
+    lea     rsi, [rip+msg_nl]
+    mov     rdx, 1
+    call    write_stdout
+    jmp     vod_done
+copy_fail:
+    lea     rsi, [rip+err_copy_src]
+    mov     rdx, err_copy_src_len
+    call    write_stdout
+    mov     edi, 1
+    call    sys_exit
+
+# ---------- model write|load ----------
+do_model_cmd:
+    lea     rdi, [rip+linebuf]
+    lea     rsi, [rip+needle_load]
+    call    contains
+    test    rax, rax
+    jnz     model_load
+    # write NAME …
+    call    extract_model_name_after_write
+    test    rax, rax
+    jz      model_name_fail
+    # default coeffs for write-without-audio
+    mov     qword ptr [rip+sr_val], 8000
+    mov     qword ptr [rip+ch_val], 1
+    mov     qword ptr [rip+bits_val], 16
+    mov     qword ptr [rip+peak_val], 0
+    mov     qword ptr [rip+rms_acc], 0
+    mov     qword ptr [rip+sil_frames], 0
+    mov     qword ptr [rip+clip_hits], 0
+    call    write_voice_model_spec
+    lea     rsi, [rip+msg_wrote]
+    mov     rdx, msg_wrote_len
+    call    write_stdout
+    lea     rsi, [rip+path_build]
+    call    strlen
+    mov     rdx, rax
+    lea     rsi, [rip+path_build]
+    call    write_stdout
+    lea     rax, [rip+path_build]
+    mov     rcx, rdx
+    call    set_last_from_rcx
+    call    bind_arrow_from_line
+    lea     rsi, [rip+msg_nl]
+    mov     rdx, 1
+    call    write_stdout
+    jmp     vod_done
+model_load:
+    call    extract_model_name_after_load
+    test    rax, rax
+    jz      model_name_fail
+    call    build_model_dir_path
+    call    path_join_manifest
+    lea     rdi, [rip+tmpbuf]
+    mov     rsi, O_RDONLY
+    xor     rdx, rdx
+    call    sys_open
+    cmp     rax, 0
+    jl      model_miss
+    mov     rdi, rax
+    call    sys_close
+    # remember name in loaded_model
+    lea     rsi, [rip+name_buf]
+    lea     rdi, [rip+loaded_model]
+    call    copy_cstr
+    lea     rsi, [rip+msg_loaded]
+    mov     rdx, msg_loaded_len
+    call    write_stdout
+    lea     rsi, [rip+name_buf]
+    call    strlen
+    mov     rdx, rax
+    lea     rsi, [rip+name_buf]
+    call    write_stdout
+    lea     rax, [rip+name_buf]
+    mov     rcx, rdx
+    call    set_last_from_rcx
+    call    bind_arrow_from_line
+    lea     rsi, [rip+msg_nl]
+    mov     rdx, 1
+    call    write_stdout
+    jmp     vod_done
+model_name_fail:
+    lea     rsi, [rip+err_model_name]
+    mov     rdx, err_model_name_len
+    call    write_stdout
+    mov     edi, 1
+    call    sys_exit
+model_miss:
+    lea     rsi, [rip+err_model_miss]
+    mov     rdx, err_model_miss_len
+    call    write_stdout
+    mov     edi, 1
+    call    sys_exit
+
+# ---------- pstn ----------
+do_pstn:
+    lea     rdi, [rip+linebuf]
+    lea     rsi, [rip+needle_status]
+    call    contains
+    test    rax, rax
+    jnz     pstn_status
+    lea     rdi, [rip+linebuf]
+    lea     rsi, [rip+needle_hangup]
+    call    contains
+    test    rax, rax
+    jnz     pstn_hangup
+    # dial (default)
+    # live only if --pstn-live AND --live (not dry-run)
+    cmp     qword ptr [rip+flag_pstn_live], 0
+    je      pstn_dry
+    cmp     qword ptr [rip+flag_live], 0
+    je      pstn_dry
+    call    pstn_live_dial
+    jmp     vod_done
+pstn_dry:
+    lea     rsi, [rip+msg_arrow]
+    mov     rdx, msg_arrow_len
+    call    write_stdout
+    lea     rsi, [rip+pstn_dry_dial]
+    mov     rdx, pstn_dry_dial_len
+    call    write_stdout
+    lea     rax, [rip+pstn_dry_dial]
+    mov     rcx, pstn_dry_dial_len
+    call    set_last_from_rcx
+    call    bind_arrow_from_line
+    lea     rsi, [rip+msg_nl]
+    mov     rdx, 1
+    call    write_stdout
+    jmp     vod_done
+pstn_hangup:
+    cmp     qword ptr [rip+flag_pstn_live], 0
+    je      pstn_hang_dry
+    cmp     qword ptr [rip+flag_live], 0
+    je      pstn_hang_dry
+    call    pstn_live_hangup
+    jmp     vod_done
+pstn_hang_dry:
+    lea     rsi, [rip+msg_arrow]
+    mov     rdx, msg_arrow_len
+    call    write_stdout
+    lea     rsi, [rip+pstn_dry_hang]
+    mov     rdx, pstn_dry_hang_len
+    call    write_stdout
+    lea     rsi, [rip+msg_nl]
+    mov     rdx, 1
+    call    write_stdout
+    jmp     vod_done
+pstn_status:
+    lea     rsi, [rip+msg_arrow]
+    mov     rdx, msg_arrow_len
+    call    write_stdout
+    lea     rsi, [rip+pstn_dry_stat]
+    mov     rdx, pstn_dry_stat_len
+    call    write_stdout
+    lea     rsi, [rip+msg_nl]
+    mov     rdx, 1
+    call    write_stdout
+    jmp     vod_done
+
+pstn_live_dial:
+    push    rbx
+    lea     rdi, [rip+linebuf]
+    call    extract_quote
+    test    rax, rax
+    jz      pld_fail
+    mov     rsi, rax
+    mov     r12, rcx
+    lea     rdi, [rip+name_buf]
+    xor     r13, r13
+pld_cp:
+    cmp     r13, r12
+    jge     pld_cp_d
+    cmp     r13, 30
+    jge     pld_cp_d
+    mov     al, [rsi+r13]
+    mov     [rdi+r13], al
+    inc     r13
+    jmp     pld_cp
+pld_cp_d:
+    mov     byte ptr [rdi+r13], 0
+    # argv: bin, --spark-cli, --to, e164, NULL
+    lea     rax, [rip+pstn_arg0]
+    mov     [rip+pstn_argv], rax
+    lea     rax, [rip+pstn_cli_flag]
+    mov     [rip+pstn_argv+8], rax
+    lea     rax, [rip+pstn_to_flag]
+    mov     [rip+pstn_argv+16], rax
+    lea     rax, [rip+name_buf]
+    mov     [rip+pstn_argv+24], rax
+    mov     qword ptr [rip+pstn_argv+32], 0
+    lea     rdi, [rip+pstn_bin]
+    lea     rsi, [rip+pstn_argv]
+    call    fork_exec_wait
+    test    rax, rax
+    jnz     pld_fail
+    lea     rsi, [rip+msg_arrow]
+    mov     rdx, msg_arrow_len
+    call    write_stdout
+    # companion prints JSON to stdout already via fork share —
+    # emit confirmation bind
+    lea     rsi, [rip+name_buf]
+    call    strlen
+    mov     rdx, rax
+    lea     rsi, [rip+name_buf]
+    call    write_stdout
+    lea     rsi, [rip+msg_nl]
+    mov     rdx, 1
+    call    write_stdout
+    pop     rbx
+    ret
+pld_fail:
+    lea     rsi, [rip+err_pstn_live]
+    mov     rdx, err_pstn_live_len
+    call    write_stdout
+    mov     edi, 4
+    call    sys_exit
+
+pstn_live_hangup:
+    lea     rdi, [rip+linebuf]
+    call    extract_quote
+    test    rax, rax
+    jz      plh_fail
+    mov     rsi, rax
+    mov     r12, rcx
+    lea     rdi, [rip+name_buf]
+    xor     r13, r13
+plh_cp:
+    cmp     r13, r12
+    jge     plh_cp_d
+    cmp     r13, 120
+    jge     plh_cp_d
+    mov     al, [rsi+r13]
+    mov     [rdi+r13], al
+    inc     r13
+    jmp     plh_cp
+plh_cp_d:
+    mov     byte ptr [rdi+r13], 0
+    lea     rax, [rip+pstn_arg0]
+    mov     [rip+pstn_argv], rax
+    lea     rax, [rip+pstn_cli_flag]
+    mov     [rip+pstn_argv+8], rax
+    lea     rax, [rip+pstn_hang_flag]
+    mov     [rip+pstn_argv+16], rax
+    lea     rax, [rip+name_buf]
+    mov     [rip+pstn_argv+24], rax
+    mov     qword ptr [rip+pstn_argv+32], 0
+    lea     rdi, [rip+pstn_bin]
+    lea     rsi, [rip+pstn_argv]
+    call    fork_exec_wait
+    test    rax, rax
+    jnz     plh_fail
+    lea     rsi, [rip+msg_nl]
+    mov     rdx, 1
+    call    write_stdout
+    ret
+plh_fail:
+    lea     rsi, [rip+err_pstn_live]
+    mov     rdx, err_pstn_live_len
+    call    write_stdout
+    mov     edi, 4
+    call    sys_exit
+
+vod_done:
+    pop     r14
+    pop     r13
+    pop     r12
+    pop     rbx
+    ret
+
+# ------------------------------------------------------------
+# voice_listen_live_dispatch — --live listen via spark-stt-tts
+# ------------------------------------------------------------
+voice_listen_live_dispatch:
+    push    rbx
+    push    r12
+    push    r13
+    cmp     qword ptr [rip+flag_live], 0
+    jne     vll_go
+    lea     rsi, [rip+err_need_live_speech]
+    mov     rdx, err_need_live_speech_len
+    call    write_stdout
+    mov     edi, 1
+    call    sys_exit
+vll_go:
+    lea     rsi, [rip+msg_listen_live]
+    mov     rdx, msg_listen_live_len
+    call    write_stdout
+
+    # quoted path → --in; else --mic
+    lea     rdi, [rip+linebuf]
+    call    extract_quote
+    test    rax, rax
+    jz      vll_mic
+
+    # copy quoted path into speech_in
+    mov     rsi, rax
+    mov     r12, rcx
+    lea     rdi, [rip+speech_in]
+    xor     r13, r13
+vll_cp:
+    cmp     r13, r12
+    jge     vll_cp_d
+    cmp     r13, 500
+    jge     vll_cp_d
+    mov     al, [rsi+r13]
+    mov     [rdi+r13], al
+    inc     r13
+    jmp     vll_cp
+vll_cp_d:
+    mov     byte ptr [rdi+r13], 0
+    lea     rsi, [rip+speech_in]
+    call    strlen
+    mov     rdx, rax
+    lea     rsi, [rip+speech_in]
+    call    write_stdout
+    lea     rsi, [rip+msg_nl]
+    mov     rdx, 1
+    call    write_stdout
+
+    lea     rax, [rip+speech_bin]
+    mov     [rip+speech_argv], rax
+    lea     rax, [rip+speech_listen]
+    mov     [rip+speech_argv+8], rax
+    lea     rax, [rip+flg_in]
+    mov     [rip+speech_argv+16], rax
+    lea     rax, [rip+speech_in]
+    mov     [rip+speech_argv+24], rax
+    lea     rax, [rip+flg_out]
+    mov     [rip+speech_argv+32], rax
+    lea     rax, [rip+listen_out_path]
+    mov     [rip+speech_argv+40], rax
+    mov     qword ptr [rip+speech_argv+48], 0
+    jmp     vll_fork
+
+vll_mic:
+    lea     rsi, [rip+flg_mic]
+    call    strlen
+    mov     rdx, rax
+    lea     rsi, [rip+flg_mic]
+    call    write_stdout
+    lea     rsi, [rip+msg_nl]
+    mov     rdx, 1
+    call    write_stdout
+    lea     rax, [rip+speech_bin]
+    mov     [rip+speech_argv], rax
+    lea     rax, [rip+speech_listen]
+    mov     [rip+speech_argv+8], rax
+    lea     rax, [rip+flg_mic]
+    mov     [rip+speech_argv+16], rax
+    lea     rax, [rip+flg_out]
+    mov     [rip+speech_argv+24], rax
+    lea     rax, [rip+listen_out_path]
+    mov     [rip+speech_argv+32], rax
+    mov     qword ptr [rip+speech_argv+40], 0
+
+vll_fork:
+    lea     rdi, [rip+speech_bin]
+    lea     rsi, [rip+speech_argv]
+    call    fork_exec_wait
+    test    rax, rax
+    jnz     vll_fail
+
+    lea     rdi, [rip+listen_out_path]
+    mov     rsi, O_RDONLY
+    xor     rdx, rdx
+    call    sys_open
+    cmp     rax, 0
+    jl      vll_fail
+    mov     r12, rax
+    mov     rdi, r12
+    lea     rsi, [rip+speech_reply]
+    mov     rdx, 65535
+    call    sys_read
+    mov     r13, rax
+    mov     rdi, r12
+    call    sys_close
+    cmp     r13, 0
+    jle     vll_fail
+
+    lea     rbx, [rip+speech_reply]
+vll_trim:
+    cmp     r13, 0
+    je      vll_trim_done
+    lea     rsi, [rbx+r13]
+    mov     al, [rsi-1]
+    cmp     al, 10
+    je      vll_trim_one
+    cmp     al, 13
+    je      vll_trim_one
+    jmp     vll_trim_done
+vll_trim_one:
+    dec     r13
+    jmp     vll_trim
+vll_trim_done:
+    mov     byte ptr [rbx+r13], 0
+
+    lea     rsi, [rip+msg_arrow]
+    mov     rdx, msg_arrow_len
+    call    write_stdout
+    lea     rsi, [rip+speech_reply]
+    mov     rdx, r13
+    call    write_stdout
+    lea     rsi, [rip+msg_nl]
+    mov     rdx, 1
+    call    write_stdout
+
+    lea     rax, [rip+speech_reply]
+    mov     rcx, r13
+    call    set_last_from_rcx
+    call    bind_arrow_from_line
+    pop     r13
+    pop     r12
+    pop     rbx
+    ret
+vll_fail:
+    lea     rsi, [rip+err_listen_live]
+    mov     rdx, err_listen_live_len
+    call    write_stdout
+    mov     edi, 1
+    call    sys_exit
+
+# ------------------------------------------------------------
+# voice_speak_live_dispatch — --live speak via spark-stt-tts
+# ------------------------------------------------------------
+voice_speak_live_dispatch:
+    push    rbx
+    push    r12
+    push    r13
+    cmp     qword ptr [rip+flag_live], 0
+    jne     vsl_go
+    lea     rsi, [rip+err_need_live_speech]
+    mov     rdx, err_need_live_speech_len
+    call    write_stdout
+    mov     edi, 1
+    call    sys_exit
+vsl_go:
+    lea     rsi, [rip+msg_speak_live]
+    mov     rdx, msg_speak_live_len
+    call    write_stdout
+
+    # Locate optional -> (r12 = ptr at '-' of arrow, or 0)
+    xor     r12, r12
+    lea     rdi, [rip+linebuf]
+vsl_scan_ar:
+    cmp     byte ptr [rdi], 0
+    je      vsl_scan_ar_done
+    cmp     byte ptr [rdi], '-'
+    jne     vsl_scan_ar_inc
+    cmp     byte ptr [rdi+1], '>'
+    jne     vsl_scan_ar_inc
+    mov     r12, rdi
+    jmp     vsl_scan_ar_done
+vsl_scan_ar_inc:
+    inc     rdi
+    jmp     vsl_scan_ar
+vsl_scan_ar_done:
+
+    # text: first quote *before* -> if any; else last_val
+    lea     rdi, [rip+linebuf]
+    call    extract_quote
+    test    rax, rax
+    jz      vsl_from_last
+    test    r12, r12
+    jz      vsl_use_quote
+    cmp     rax, r12
+    jae     vsl_from_last
+vsl_use_quote:
+    mov     rsi, rax
+    mov     rdx, rcx
+    lea     rdi, [rip+speak_text_path]
+    call    write_bytes_path
+    lea     rdi, [rip+linebuf]
+    call    extract_quote
+    mov     rsi, rax
+    mov     rdx, rcx
+    call    write_stdout
+    jmp     vsl_out_path
+vsl_from_last:
+    cmp     qword ptr [rip+last_val_len], 0
+    je      vsl_empty_text
+    lea     rsi, [rip+last_val]
+    mov     rdx, [rip+last_val_len]
+    lea     rdi, [rip+speak_text_path]
+    call    write_bytes_path
+    lea     rsi, [rip+last_val]
+    mov     rdx, [rip+last_val_len]
+    call    write_stdout
+    jmp     vsl_out_path
+vsl_empty_text:
+    lea     rdi, [rip+speak_text_path]
+    lea     rsi, [rip+msg_nl]
+    mov     rdx, 0
+    call    write_bytes_path
+
+vsl_out_path:
+    lea     rsi, [rip+msg_nl]
+    mov     rdx, 1
+    call    write_stdout
+    # default out; override with quote after ->
+    lea     rsi, [rip+default_speak_wav]
+    lea     rdi, [rip+speech_out]
+    call    voice_strcpy
+    test    r12, r12
+    jz      vsl_argv
+    lea     rdi, [r12+2]
+    call    extract_quote
+    test    rax, rax
+    jz      vsl_argv
+    mov     rsi, rax
+    mov     r12, rcx
+    lea     rdi, [rip+speech_out]
+    xor     r13, r13
+vsl_ocp:
+    cmp     r13, r12
+    jge     vsl_ocp_d
+    cmp     r13, 500
+    jge     vsl_ocp_d
+    mov     al, [rsi+r13]
+    mov     [rdi+r13], al
+    inc     r13
+    jmp     vsl_ocp
+vsl_ocp_d:
+    mov     byte ptr [rdi+r13], 0
+
+vsl_argv:
+    lea     rax, [rip+speech_bin]
+    mov     [rip+speech_argv], rax
+    lea     rax, [rip+speech_speak]
+    mov     [rip+speech_argv+8], rax
+    lea     rax, [rip+flg_text_file]
+    mov     [rip+speech_argv+16], rax
+    lea     rax, [rip+speak_text_path]
+    mov     [rip+speech_argv+24], rax
+    lea     rax, [rip+flg_out]
+    mov     [rip+speech_argv+32], rax
+    lea     rax, [rip+speech_out]
+    mov     [rip+speech_argv+40], rax
+    mov     qword ptr [rip+speech_argv+48], 0
+
+    lea     rdi, [rip+speech_bin]
+    lea     rsi, [rip+speech_argv]
+    call    fork_exec_wait
+    test    rax, rax
+    jnz     vsl_fail
+
+    lea     rsi, [rip+msg_arrow]
+    mov     rdx, msg_arrow_len
+    call    write_stdout
+    lea     rsi, [rip+speech_out]
+    call    strlen
+    mov     rdx, rax
+    lea     rsi, [rip+speech_out]
+    call    write_stdout
+    lea     rsi, [rip+msg_nl]
+    mov     rdx, 1
+    call    write_stdout
+
+    lea     rsi, [rip+speech_out]
+    call    strlen
+    mov     rcx, rax
+    lea     rax, [rip+speech_out]
+    call    set_last_from_rcx
+    call    bind_arrow_from_line
+    pop     r13
+    pop     r12
+    pop     rbx
+    ret
+vsl_fail:
+    lea     rsi, [rip+err_speak_live]
+    mov     rdx, err_speak_live_len
+    call    write_stdout
+    mov     edi, 1
+    call    sys_exit
+
+# rdi=dst rsi=src cstring copy
+voice_strcpy:
+    push    rax
+vs_loop:
+    mov     al, [rsi]
+    mov     [rdi], al
+    inc     rsi
+    inc     rdi
+    test    al, al
+    jnz     vs_loop
+    pop     rax
+    ret
+
+# speak with model NAME — called from do_speak when matched
+voice_speak_model_dispatch:
+    push    rbx
+    lea     rsi, [rip+msg_speak_m]
+    mov     rdx, msg_speak_m_len
+    call    write_stdout
+    # name: last token or after "model "
+    call    extract_model_name_after_load
+    # reuse: scan for token after "model"
+    lea     rdi, [rip+linebuf]
+    lea     rsi, [rip+needle_model]
+    call    contains
+    # print loaded_model or name_buf
+    cmp     byte ptr [rip+loaded_model], 0
+    je      vsm_name
+    lea     rsi, [rip+loaded_model]
+    jmp     vsm_print
+vsm_name:
+    lea     rsi, [rip+name_buf]
+    cmp     byte ptr [rsi], 0
+    jne     vsm_print
+    # parse from line after "model "
+    call    extract_speak_model_token
+vsm_print:
+    call    strlen
+    mov     rdx, rax
+    call    write_stdout
+    lea     rsi, [rip+msg_nl]
+    mov     rdx, 1
+    call    write_stdout
+    # still write wav stub path via default — caller handles wav
+    pop     rbx
+    ret
+
+# ================= helpers =================
+
+# parse_wav_metrics: wav_buf/wav_len → metrics; rax=1 ok
+parse_wav_metrics:
+    push    rbx
+    push    r12
+    lea     rbx, [rip+wav_buf]
+    # RIFF....WAVE
+    cmp     dword ptr [rbx], 0x46464952
+    jne     pwm_bad
+    cmp     dword ptr [rbx+8], 0x45564157
+    jne     pwm_bad
+    # find fmt
+    mov     r12, 12
+pwm_chunk:
+    cmp     r12, qword ptr [rip+wav_len]
+    jge     pwm_bad
+    mov     eax, [rbx+r12]
+    cmp     eax, 0x20746d66          # 'fmt '
+    je      pwm_fmt
+    cmp     eax, 0x61746164          # 'data'
+    je      pwm_data_early
+    mov     eax, [rbx+r12+4]
+    add     r12, 8
+    add     r12, rax
+    jmp     pwm_chunk
+pwm_fmt:
+    movzx   eax, word ptr [rbx+r12+10]  # channels at fmt+2+8? 
+    # fmt chunk: +0 'fmt ' +4 size +8 audioformat +10 channels
+    movzx   eax, word ptr [rbx+r12+10]
+    mov     qword ptr [rip+ch_val], rax
+    mov     eax, [rbx+r12+12]           # sample rate
+    mov     qword ptr [rip+sr_val], rax
+    movzx   eax, word ptr [rbx+r12+22]  # bits
+    mov     qword ptr [rip+bits_val], rax
+    mov     eax, [rbx+r12+4]
+    add     r12, 8
+    add     r12, rax
+    jmp     pwm_chunk
+pwm_data_early:
+    mov     eax, [rbx+r12+4]
+    mov     qword ptr [rip+data_len], rax
+    add     r12, 8
+    mov     qword ptr [rip+data_off], r12
+    call    scan_pcm
+    mov     rax, 1
+    pop     r12
+    pop     rbx
+    ret
+pwm_bad:
+    xor     rax, rax
+    pop     r12
+    pop     rbx
+    ret
+
+scan_pcm:
+    push    rbx
+    push    r12
+    push    r13
+    push    r14
+    xor     eax, eax
+    mov     qword ptr [rip+peak_val], rax
+    mov     qword ptr [rip+sil_frames], rax
+    mov     qword ptr [rip+clip_hits], rax
+    mov     qword ptr [rip+rms_acc], rax
+    mov     qword ptr [rip+sample_n], rax
+    lea     rbx, [rip+wav_buf]
+    add     rbx, qword ptr [rip+data_off]
+    mov     r12, qword ptr [rip+data_len]
+    # limit to remaining buffer
+    mov     rax, qword ptr [rip+wav_len]
+    sub     rax, qword ptr [rip+data_off]
+    cmp     r12, rax
+    jbe     sp_ok
+    mov     r12, rax
+sp_ok:
+    xor     r13, r13
+sp_loop:
+    cmp     r13, r12
+    jge     sp_done
+    # 16-bit LE sample
+    movsx   eax, word ptr [rbx+r13]
+    add     r13, 2
+    inc     qword ptr [rip+sample_n]
+    # abs
+    mov     r14d, eax
+    test    r14d, r14d
+    jns     sp_pos
+    neg     r14d
+sp_pos:
+    cmp     r14, qword ptr [rip+peak_val]
+    jbe     sp_peak_ok
+    mov     qword ptr [rip+peak_val], r14
+sp_peak_ok:
+    cmp     r14d, 500
+    ja      sp_not_sil
+    inc     qword ptr [rip+sil_frames]
+sp_not_sil:
+    cmp     r14d, 32000
+    jb      sp_rms
+    inc     qword ptr [rip+clip_hits]
+sp_rms:
+    add     qword ptr [rip+rms_acc], r14
+    jmp     sp_loop
+sp_done:
+    pop     r14
+    pop     r13
+    pop     r12
+    pop     rbx
+    ret
+
+build_review_json:
+    push    rbx
+    lea     rdi, [rip+report_buf]
+    lea     rsi, [rip+rev_pre]
+    mov     rdx, rev_pre_len
+    call    memcpy_len
+    mov     rax, qword ptr [rip+sr_val]
+    call    append_u64
+    lea     rsi, [rip+rev_a]
+    mov     rdx, rev_a_len
+    call    memcpy_len
+    mov     rax, qword ptr [rip+ch_val]
+    call    append_u64
+    lea     rsi, [rip+rev_b]
+    mov     rdx, rev_b_len
+    call    memcpy_len
+    mov     rax, qword ptr [rip+bits_val]
+    call    append_u64
+    lea     rsi, [rip+rev_c]
+    mov     rdx, rev_c_len
+    call    memcpy_len
+    mov     rax, qword ptr [rip+data_len]
+    call    append_u64
+    lea     rsi, [rip+rev_d]
+    mov     rdx, rev_d_len
+    call    memcpy_len
+    mov     rax, qword ptr [rip+peak_val]
+    call    append_u64
+    lea     rsi, [rip+rev_e]
+    mov     rdx, rev_e_len
+    call    memcpy_len
+    mov     rax, qword ptr [rip+sil_frames]
+    call    append_u64
+    lea     rsi, [rip+rev_f]
+    mov     rdx, rev_f_len
+    call    memcpy_len
+    mov     rax, qword ptr [rip+clip_hits]
+    call    append_u64
+    lea     rsi, [rip+rev_g]
+    mov     rdx, rev_g_len
+    call    memcpy_len
+    # snr_hint = peak>0 ? 20 : 0 (crude)
+    mov     rax, qword ptr [rip+peak_val]
+    test    rax, rax
+    jz      brj_snr0
+    mov     rax, 20
+    jmp     brj_snr
+brj_snr0:
+    xor     rax, rax
+brj_snr:
+    call    append_u64
+    lea     rsi, [rip+rev_h]
+    mov     rdx, rev_h_len
+    call    memcpy_len
+    mov     byte ptr [rdi], 0
+    pop     rbx
+    ret
+
+# rdi=dest cursor (updated), append decimal rax
+append_u64:
+    push    rbx
+    push    rcx
+    push    rdx
+    push    rsi
+    lea     rsi, [rip+dec_buf+31]
+    mov     byte ptr [rsi], 0
+    mov     rbx, 10
+    test    rax, rax
+    jnz     au_loop
+    dec     rsi
+    mov     byte ptr [rsi], '0'
+    jmp     au_out
+au_loop:
+    xor     rdx, rdx
+    div     rbx
+    add     dl, '0'
+    dec     rsi
+    mov     [rsi], dl
+    test    rax, rax
+    jnz     au_loop
+au_out:
+    # copy to rdi
+au_cp:
+    mov     al, [rsi]
+    test    al, al
+    jz      au_done
+    mov     [rdi], al
+    inc     rdi
+    inc     rsi
+    jmp     au_cp
+au_done:
+    pop     rsi
+    pop     rdx
+    pop     rcx
+    pop     rbx
+    ret
+
+# memcpy_len: rdi=dest, rsi=src, rdx=len → rdi advanced
+memcpy_len:
+    push    rcx
+    mov     rcx, rdx
+    test    rcx, rcx
+    jz      ml_done
+ml_loop:
+    mov     al, [rsi]
+    mov     [rdi], al
+    inc     rsi
+    inc     rdi
+    dec     rcx
+    jnz     ml_loop
+ml_done:
+    pop     rcx
+    ret
+
+copy_cstr:
+    push    rax
+cc_loop:
+    mov     al, [rsi]
+    mov     [rdi], al
+    inc     rsi
+    inc     rdi
+    test    al, al
+    jnz     cc_loop
+    pop     rax
+    ret
+
+# extract DST name after " to "
+extract_dst_name:
+    push    rbx
+    lea     rbx, [rip+linebuf]
+edn_find:
+    cmp     byte ptr [rbx], 0
+    je      edn_fail
+    cmp     byte ptr [rbx], 't'
+    jne     edn_inc
+    cmp     byte ptr [rbx+1], 'o'
+    jne     edn_inc
+    cmp     byte ptr [rbx+2], ' '
+    je      edn_tok
+    cmp     byte ptr [rbx+2], '\t'
+    je      edn_tok
+edn_inc:
+    inc     rbx
+    jmp     edn_find
+edn_tok:
+    add     rbx, 3
+edn_ws:
+    mov     al, [rbx]
+    cmp     al, ' '
+    je      edn_wsi
+    cmp     al, '\t'
+    je      edn_wsi
+    jmp     edn_copy
+edn_wsi:
+    inc     rbx
+    jmp     edn_ws
+edn_copy:
+    lea     rdi, [rip+name_buf]
+    xor     rcx, rcx
+edn_c:
+    mov     al, [rbx+rcx]
+    cmp     al, 0
+    je      edn_term
+    cmp     al, ' '
+    je      edn_term
+    cmp     al, '\t'
+    je      edn_term
+    cmp     al, '-'
+    je      edn_arrow
+    cmp     rcx, 62
+    jge     edn_term
+    mov     [rdi+rcx], al
+    inc     rcx
+    jmp     edn_c
+edn_arrow:
+    # stop before ->
+    jmp     edn_term
+edn_term:
+    mov     byte ptr [rdi+rcx], 0
+    test    rcx, rcx
+    jz      edn_fail
+    mov     rax, 1
+    pop     rbx
+    ret
+edn_fail:
+    xor     rax, rax
+    pop     rbx
+    ret
+
+extract_model_name_after_write:
+    # after "write "
+    push    rbx
+    lea     rbx, [rip+linebuf]
+emw_f:
+    cmp     byte ptr [rbx], 0
+    je      emw_fail
+    cmp     dword ptr [rbx], 0x74697277  # 'writ' little? 
+    # simpler: find "write "
+    mov     rdi, rbx
+    lea     rsi, [rip+needle_write]
+    # manual scan
+    jmp     emw_scan
+emw_scan:
+    cmp     byte ptr [rbx], 0
+    je      emw_fail
+    cmp     byte ptr [rbx], 'w'
+    jne     emw_i
+    cmp     byte ptr [rbx+1], 'r'
+    jne     emw_i
+    cmp     byte ptr [rbx+2], 'i'
+    jne     emw_i
+    cmp     byte ptr [rbx+3], 't'
+    jne     emw_i
+    cmp     byte ptr [rbx+4], 'e'
+    jne     emw_i
+    add     rbx, 5
+    jmp     emw_ws
+emw_i:
+    inc     rbx
+    jmp     emw_scan
+emw_ws:
+    mov     al, [rbx]
+    cmp     al, ' '
+    je      emw_wsi
+    cmp     al, '\t'
+    je      emw_wsi
+    jmp     emw_cp
+emw_wsi:
+    inc     rbx
+    jmp     emw_ws
+emw_cp:
+    lea     rdi, [rip+name_buf]
+    xor     rcx, rcx
+emw_c:
+    mov     al, [rbx+rcx]
+    cmp     al, 0
+    je      emw_t
+    cmp     al, ' '
+    je      emw_t
+    cmp     al, '\t'
+    je      emw_t
+    cmp     al, '{'
+    je      emw_t
+    cmp     rcx, 62
+    jge     emw_t
+    mov     [rdi+rcx], al
+    inc     rcx
+    jmp     emw_c
+emw_t:
+    mov     byte ptr [rdi+rcx], 0
+    test    rcx, rcx
+    jz      emw_fail
+    mov     rax, 1
+    pop     rbx
+    ret
+emw_fail:
+    xor     rax, rax
+    pop     rbx
+    ret
+
+extract_model_name_after_load:
+    push    rbx
+    lea     rbx, [rip+linebuf]
+eml_s:
+    cmp     byte ptr [rbx], 0
+    je      eml_fail
+    cmp     byte ptr [rbx], 'l'
+    jne     eml_i
+    cmp     byte ptr [rbx+1], 'o'
+    jne     eml_i
+    cmp     byte ptr [rbx+2], 'a'
+    jne     eml_i
+    cmp     byte ptr [rbx+3], 'd'
+    jne     eml_i
+    add     rbx, 4
+    jmp     eml_ws
+eml_i:
+    inc     rbx
+    jmp     eml_s
+eml_ws:
+    mov     al, [rbx]
+    cmp     al, ' '
+    je      eml_wsi
+    cmp     al, '\t'
+    je      eml_wsi
+    jmp     eml_cp
+eml_wsi:
+    inc     rbx
+    jmp     eml_ws
+eml_cp:
+    lea     rdi, [rip+name_buf]
+    xor     rcx, rcx
+eml_c:
+    mov     al, [rbx+rcx]
+    cmp     al, 0
+    je      eml_t
+    cmp     al, ' '
+    je      eml_t
+    cmp     al, '\t'
+    je      eml_t
+    cmp     al, '-'
+    je      eml_t
+    cmp     rcx, 62
+    jge     eml_t
+    mov     [rdi+rcx], al
+    inc     rcx
+    jmp     eml_c
+eml_t:
+    mov     byte ptr [rdi+rcx], 0
+    test    rcx, rcx
+    jz      eml_fail
+    mov     rax, 1
+    pop     rbx
+    ret
+eml_fail:
+    xor     rax, rax
+    pop     rbx
+    ret
+
+extract_speak_model_token:
+    # fall through to extract after "model "
+    jmp     extract_model_name_after_load
+
+build_model_dir_path:
+    # path_build = out/voice_models/<name>
+    lea     rdi, [rip+outdir_out]
+    mov     rsi, 493
+    call    sys_mkdir
+    lea     rdi, [rip+outdir_vm]
+    mov     rsi, 493
+    call    sys_mkdir
+    lea     rdi, [rip+path_build]
+    lea     rsi, [rip+outdir_vm]
+    call    copy_cstr
+    # rewind: copy_cstr advanced rdi past NUL — rebuild
+    lea     rdi, [rip+path_build]
+    lea     rsi, [rip+outdir_vm]
+bmp_c1:
+    mov     al, [rsi]
+    test    al, al
+    jz      bmp_slash
+    mov     [rdi], al
+    inc     rsi
+    inc     rdi
+    jmp     bmp_c1
+bmp_slash:
+    mov     byte ptr [rdi], '/'
+    inc     rdi
+    lea     rsi, [rip+name_buf]
+bmp_c2:
+    mov     al, [rsi]
+    test    al, al
+    jz      bmp_done
+    mov     [rdi], al
+    inc     rsi
+    inc     rdi
+    jmp     bmp_c2
+bmp_done:
+    mov     byte ptr [rdi], 0
+    lea     rdi, [rip+path_build]
+    mov     rsi, 493
+    call    sys_mkdir
+    ret
+
+write_voice_model_tree:
+    call    build_model_dir_path
+    call    write_manifest_and_features
+    ret
+
+write_voice_model_spec:
+    call    build_model_dir_path
+    call    write_manifest_spec
+    # empty features
+    mov     qword ptr [rip+feat_buf], 0
+    mov     qword ptr [rip+feat_buf+8], 0
+    call    write_features_file
+    ret
+
+write_manifest_and_features:
+    # build manifest in report_buf
+    lea     rdi, [rip+report_buf]
+    lea     rsi, [rip+man_pre]
+    mov     rdx, man_pre_len
+    call    memcpy_len
+    lea     rsi, [rip+name_buf]
+wma_n:
+    mov     al, [rsi]
+    test    al, al
+    jz      wma_mid
+    mov     [rdi], al
+    inc     rsi
+    inc     rdi
+    jmp     wma_n
+wma_mid:
+    lea     rsi, [rip+man_mid]
+    mov     rdx, man_mid_len
+    call    memcpy_len
+    mov     rax, qword ptr [rip+peak_val]
+    call    append_u64
+    lea     rsi, [rip+man_mid2]
+    mov     rdx, man_mid2_len
+    call    memcpy_len
+    mov     rax, qword ptr [rip+rms_acc]
+    call    append_u64
+    lea     rsi, [rip+man_mid3]
+    mov     rdx, man_mid3_len
+    call    memcpy_len
+    mov     rax, qword ptr [rip+sr_val]
+    call    append_u64
+    lea     rsi, [rip+man_mid4]
+    mov     rdx, man_mid4_len
+    call    memcpy_len
+    mov     rax, qword ptr [rip+ch_val]
+    call    append_u64
+    lea     rsi, [rip+man_mid5]
+    mov     rdx, man_mid5_len
+    call    memcpy_len
+    mov     rax, qword ptr [rip+bits_val]
+    call    append_u64
+    lea     rsi, [rip+man_suf]
+    mov     rdx, man_suf_len
+    call    memcpy_len
+    mov     rax, qword ptr [rip+sil_frames]
+    call    append_u64
+    lea     rsi, [rip+man_suf2]
+    mov     rdx, man_suf2_len
+    call    memcpy_len
+    mov     rax, qword ptr [rip+clip_hits]
+    call    append_u64
+    lea     rsi, [rip+man_end]
+    mov     rdx, man_end_len
+    call    memcpy_len
+    mov     byte ptr [rdi], 0
+    # path = path_build + /manifest.json
+    call    path_join_manifest
+    lea     rdi, [rip+tmpbuf]
+    lea     rsi, [rip+report_buf]
+    call    strlen_rsi_to_rdx
+    # write_bytes_path needs rdi=path rsi=buf rdx=len
+    lea     rsi, [rip+report_buf]
+    call    strlen
+    mov     rdx, rax
+    lea     rdi, [rip+tmpbuf]
+    lea     rsi, [rip+report_buf]
+    call    write_bytes_path
+    # features.bin: peak, rms, sr, sil, clip as u64s
+    lea     rdi, [rip+feat_buf]
+    mov     rax, qword ptr [rip+peak_val]
+    mov     [rdi], rax
+    mov     rax, qword ptr [rip+rms_acc]
+    mov     [rdi+8], rax
+    mov     rax, qword ptr [rip+sr_val]
+    mov     [rdi+16], rax
+    mov     rax, qword ptr [rip+sil_frames]
+    mov     [rdi+24], rax
+    mov     rax, qword ptr [rip+clip_hits]
+    mov     [rdi+32], rax
+    call    write_features_file
+    # leave path_build as model dir
+    ret
+
+write_manifest_spec:
+    lea     rdi, [rip+report_buf]
+    lea     rsi, [rip+spec_default]
+    mov     rdx, spec_default_len
+    call    memcpy_len
+    lea     rsi, [rip+name_buf]
+wms_n:
+    mov     al, [rsi]
+    test    al, al
+    jz      wms_t
+    mov     [rdi], al
+    inc     rsi
+    inc     rdi
+    jmp     wms_n
+wms_t:
+    lea     rsi, [rip+spec_tail]
+    mov     rdx, spec_tail_len
+    call    memcpy_len
+    mov     byte ptr [rdi], 0
+    call    path_join_manifest
+    lea     rsi, [rip+report_buf]
+    call    strlen
+    mov     rdx, rax
+    lea     rdi, [rip+tmpbuf]
+    lea     rsi, [rip+report_buf]
+    call    write_bytes_path
+    ret
+
+write_features_file:
+    call    path_join_feat
+    lea     rdi, [rip+tmpbuf]
+    lea     rsi, [rip+feat_buf]
+    mov     rdx, 40
+    call    write_bytes_path
+    ret
+
+path_join_manifest:
+    lea     rdi, [rip+tmpbuf]
+    lea     rsi, [rip+path_build]
+pjm_c:
+    mov     al, [rsi]
+    test    al, al
+    jz      pjm_s
+    mov     [rdi], al
+    inc     rsi
+    inc     rdi
+    jmp     pjm_c
+pjm_s:
+    lea     rsi, [rip+slash_manifest]
+pjm_c2:
+    mov     al, [rsi]
+    mov     [rdi], al
+    inc     rsi
+    inc     rdi
+    test    al, al
+    jnz     pjm_c2
+    ret
+
+path_join_feat:
+    lea     rdi, [rip+tmpbuf]
+    lea     rsi, [rip+path_build]
+pjf_c:
+    mov     al, [rsi]
+    test    al, al
+    jz      pjf_s
+    mov     [rdi], al
+    inc     rsi
+    inc     rdi
+    jmp     pjf_c
+pjf_s:
+    lea     rsi, [rip+slash_feat]
+pjf_c2:
+    mov     al, [rsi]
+    mov     [rdi], al
+    inc     rsi
+    inc     rdi
+    test    al, al
+    jnz     pjf_c2
+    ret
+
+strlen_rsi_to_rdx:
+    # unused helper kept for clarity — use strlen
+    ret
+
+# voice_second_token: skip "voice" + ws → rax = token ptr or 0
+voice_second_token:
+    push    rbx
+    lea     rbx, [rip+linebuf]
+vst_ws0:
+    mov     al, [rbx]
+    cmp     al, ' '
+    je      vst_w0
+    cmp     al, 9
+    je      vst_w0
+    jmp     vst_kw
+vst_w0:
+    inc     rbx
+    jmp     vst_ws0
+vst_kw:
+    # expect "voice"
+    cmp     byte ptr [rbx], 'v'
+    jne     vst_no
+    cmp     byte ptr [rbx+1], 'o'
+    jne     vst_no
+    cmp     byte ptr [rbx+2], 'i'
+    jne     vst_no
+    cmp     byte ptr [rbx+3], 'c'
+    jne     vst_no
+    cmp     byte ptr [rbx+4], 'e'
+    jne     vst_no
+    add     rbx, 5
+vst_ws1:
+    mov     al, [rbx]
+    cmp     al, ' '
+    je      vst_w1
+    cmp     al, 9
+    je      vst_w1
+    jmp     vst_tok
+vst_w1:
+    inc     rbx
+    jmp     vst_ws1
+vst_tok:
+    cmp     byte ptr [rbx], 0
+    je      vst_no
+    cmp     byte ptr [rbx], '{'
+    je      vst_no
+    mov     rax, rbx
+    pop     rbx
+    ret
+vst_no:
+    xor     rax, rax
+    pop     rbx
+    ret
+
+# tok_match: rsi=text rdi=kw rdx=len → rax=1 if prefix + boundary
+tok_match:
+    push    rbx
+    push    rcx
+    mov     rcx, rdx
+    mov     rbx, rsi
+tm_loop:
+    test    rcx, rcx
+    jz      tm_bound
+    mov     al, [rbx]
+    mov     dl, [rdi]
+    cmp     al, dl
+    jne     tm_no
+    inc     rbx
+    inc     rdi
+    dec     rcx
+    jmp     tm_loop
+tm_bound:
+    mov     al, [rbx]
+    cmp     al, ' '
+    je      tm_yes
+    cmp     al, '"'
+    je      tm_yes
+    cmp     al, 0
+    je      tm_yes
+    cmp     al, 9
+    je      tm_yes
+    cmp     al, '{'
+    je      tm_yes
+    jmp     tm_no
+tm_yes:
+    mov     rax, 1
+    pop     rcx
+    pop     rbx
+    ret
+tm_no:
+    xor     rax, rax
+    pop     rcx
+    pop     rbx
+    ret

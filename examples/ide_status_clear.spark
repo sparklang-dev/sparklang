@@ -1,0 +1,9 @@
+# Spark IDE - proven status.txt clears * after save.
+# After key-quit-alone 6aab469. Complements status_new_star: new
+# with path then save => status.txt path without trailing *.
+# Run: ./spark --dry-run examples/ide_status_clear.spark
+# No Electron. No keymap n. No new asm - documents proven status only.
+
+ide new "out/ide/status_clear.spark"
+
+ide save

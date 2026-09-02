@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# spark-bc — Phase 6 product CLI: .spark → --compile → bc_vm (when supported).
+#
+# Primary runtime for packaged downloads. Uses spark-bootstrap (path B):
+#   hello / mini / classify_dry  → compile to .sparkbc and run on bc_vm
+#   other fixtures               → C tree-walk dry-run (same as bootstrap)
+#
+# Legacy GAS assembly VM (x86_64 only): bin/spark-gas-legacy or `make spark`.
+# Compare harness: spark-bootstrap --compare (needs ./spark GAS in repo root).
+#
+# Examples:
+#   spark-bc examples/hello.spark
+#   spark-bc --dry-run examples/classify_intent.spark
+#   spark-bootstrap --compile examples/hello.spark -o /tmp/h.sparkbc
+#   spark-bootstrap --run-bc selfhost/fixtures/hello.sparkbc
+#
+# Env:
+#   SPARK_BOOTSTRAP  override bootstrap binary
+set -euo pipefail
+HERE="$(cd "$(dirname "$0")" && pwd)"
+ROOT="$(cd "$HERE/.." && pwd)"
+BOOT="${SPARK_BOOTSTRAP:-}"
+if [[ -z "$BOOT" ]]; then
+  if [[ -x "$HERE/spark-bootstrap" ]]; then
+    BOOT="$HERE/spark-bootstrap"
+  elif [[ -x "$ROOT/spark-bootstrap" ]]; then
+    BOOT="$ROOT/spark-bootstrap"
+  else
+    echo "error: spark-bootstrap missing (make spark-bootstrap spark-bc)" >&2
+    exit 1
+  fi
+fi
+exec "$BOOT" "$@"

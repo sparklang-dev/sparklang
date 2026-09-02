@@ -1,0 +1,7 @@
+# Spark IDE - proven ide key open without path (soft fail).
+# After keys-bare. Singular open with empty path emits
+# open path failed + ok:false but process rc=0 (not check_fail).
+# Run: ./spark --dry-run examples/ide_key_open_nopath.spark
+# No Electron. No keymap n. No new asm - documents proven soft-fail only.
+
+ide key open

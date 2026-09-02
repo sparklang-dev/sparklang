@@ -1,0 +1,31 @@
+{
+  "helperCount": 155,
+  "totalEntries": 197,
+  "categoryCount": 13,
+  "libFiles": [
+    "ai.spark",
+    "ask.spark",
+    "classify.spark",
+    "data.spark",
+    "extract.spark",
+    "http.spark",
+    "model.spark",
+    "pipeline.spark",
+    "playbooks.spark",
+    "review.spark",
+    "voice.spark"
+  ],
+  "helpersByFile": {
+    "ai.spark": 8,
+    "ask.spark": 18,
+    "classify.spark": 17,
+    "data.spark": 17,
+    "extract.spark": 17,
+    "http.spark": 18,
+    "model.spark": 17,
+    "pipeline.spark": 10,
+    "playbooks.spark": 0,
+    "review.spark": 16,
+    "voice.spark": 17
+  }
+}

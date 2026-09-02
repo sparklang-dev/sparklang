@@ -1,0 +1,104 @@
+# Spark stdlib — extract helpers (bootstrap: include "lib/extract.spark")
+# Inline schema; language expects JSON matching fields. mode: dry-run | live
+
+model fast
+
+# @helper extract_person: Name and age from prose
+# extract Person {
+#   name: string
+#   age: int
+# } from "Ada Lovelace was born in 1815" -> person
+
+# @helper extract_contact: Email and phone from text
+# extract Contact {
+#   email: string
+#   phone: string
+# } from "Reach me at ada@example.com or 555-0100" -> contact
+
+# @helper extract_date_event: Event with ISO date
+# extract Event {
+#   title: string
+#   date: string
+# } from "Team standup on 2026-09-15" -> event
+
+# @helper extract_money: Currency amount from sentence
+# extract Money {
+#   amount: float
+#   currency: string
+# } from "Total due is $42.50 USD" -> money
+
+# @helper extract_address: Mailing address fields
+# extract Address {
+#   street: string
+#   city: string
+#   state: string
+#   zip: string
+# } from "123 Main St, Springfield, IL 62701" -> addr
+
+# @helper extract_order: Simple order line
+# extract Order {
+#   sku: string
+#   qty: int
+# } from "Order SKU-WASH-9 qty 3" -> order
+
+# @helper extract_invoice: Invoice id and total
+# extract Invoice {
+#   id: string
+#   total: float
+# } from "Invoice INV-991 total 1200.00" -> invoice
+
+# @helper extract_rating: Star rating from review text
+# extract Rating {
+#   stars: int
+#   summary: string
+# } from "Five stars — machines were clean" -> rating
+
+# @helper extract_machine_error: Error code from guest report
+# extract MachineError {
+#   code: string
+#   machine: string
+# } from "Device D12 shows error E42" -> err
+
+# @helper extract_hours: Open/close times
+# extract Hours {
+#   open: string
+#   close: string
+# } from "Open 6am close 10pm daily" -> hours
+
+# @helper extract_entities_org: Organization name extraction
+# extract Org {
+#   name: string
+# } from "Acme Services LLC called about service" -> org
+
+# @helper extract_location: Store or city mention
+# extract Location {
+#   store: string
+#   city: string
+# } from "Example Store near Riverside Plaza" -> loc
+
+# @helper extract_then_classify: Extract struct then classify intent
+# extract Person { name: string } from "Jane Doe needs help" -> person
+# classify Intent { support, sales } from "Jane Doe needs help" -> intent
+
+# @helper extract_pipeline: Extract as pipeline step
+# let text "Payment $19.99 on card ending 4242"
+# pipeline {
+#   extract Payment { amount: float, last4: string } from text -> pay
+#   | ask "Confirm payment JSON: {pay}" -> confirm
+# }
+
+# @helper extract_bool_flag: Single boolean field
+# extract Flags {
+#   urgent: bool
+# } from "This is urgent — water leak" -> flags
+
+# @helper extract_list_items: Comma-separated items as string
+# extract Items {
+#   list: string
+# } from "Buy detergent, coins, signs" -> items
+
+# @helper extract_appointment: Appointment slot
+# extract Appointment {
+#   when: string
+#   who: string
+# } from "Jane at 3pm Tuesday" -> appt

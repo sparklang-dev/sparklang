@@ -1,0 +1,7 @@
+# Proven keymap show slice — script token `w` → show.
+# Consumed by: ide keys "examples/fixtures/ide/cmds_show.txt"
+# o=open w=show q=quit (dry: show validates PPM + show.json)
+
+o examples/hello.spark
+w
+q

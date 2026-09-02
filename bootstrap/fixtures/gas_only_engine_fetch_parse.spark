@@ -1,0 +1,2 @@
+# Must fail loud — engine fetch parse still blocks remote https
+engine fetch parse "https://example.com/"

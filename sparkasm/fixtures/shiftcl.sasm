@@ -1,0 +1,9 @@
+# shl/shr by cl — 21<<1 → 42
+.global _start
+.text
+_start:
+	mov	rdi, 21
+	mov	rcx, 1
+	shl	rdi, cl
+	mov	rax, 60
+	syscall

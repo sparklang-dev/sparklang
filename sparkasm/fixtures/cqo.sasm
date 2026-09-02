@@ -1,0 +1,9 @@
+# cqo — sign-extend rax; exit 42 via rdi
+.global _start
+.text
+_start:
+	mov	rax, 42
+	cqo
+	mov	rdi, rax
+	mov	rax, 60
+	syscall

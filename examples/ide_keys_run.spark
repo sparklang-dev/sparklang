@@ -1,0 +1,12 @@
+# Spark IDE keymap — proven keys, run (`r`) focus.
+# After keys-save (9d86f91). Dirty status indicator not wired — path only.
+# Dry: script `r` → {"cmd":"run"} trace (no fork); open still reads.
+# Also proves single `ide key run` after open.
+# Run: ./spark --dry-run examples/ide_keys_run.spark
+# No Electron. No new asm — documents proven keys only.
+
+ide keys "examples/fixtures/ide/cmds_run.txt"
+
+ide key open "examples/hello.spark"
+
+ide key run

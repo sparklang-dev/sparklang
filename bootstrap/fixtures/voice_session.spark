@@ -1,0 +1,11 @@
+# Voice session block — C bootstrap dry stub (inner ops already in VM)
+model fast
+
+voice {
+  listen -> user
+  classify Intent { support, sales } from user -> intent
+  ask "Reply helpfully to: {user}" -> reply
+  speak reply -> "out/bootstrap_voice.wav"
+}
+
+print reply

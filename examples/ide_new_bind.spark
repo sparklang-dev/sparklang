@@ -1,0 +1,9 @@
+# Spark IDE - proven ide new bind (-> created) + print op JSON.
+# After run-bind 27d841c. Like run bind, new bind stores op JSON;
+# print created shows that JSON (not a path-only string).
+# Run: ./spark --dry-run examples/ide_new_bind.spark
+# No Electron. No new asm - documents proven bind only.
+
+ide new "out/ide/ide_new_bind_blank.spark" -> created
+
+print created

@@ -1,0 +1,18 @@
+# Network dry keywords lex fixture.
+# Stage 1 golden (expected_network_dry.tokens.jsonl).
+# Keywords: network (capture/probe/interface/duration/open/analyze/explain stay IDENT).
+# Forms from LANGUAGE.md / examples/network_*.spark.
+# Not a full compiler. Avoid `let` (GAS scaffold pads dumps).
+model code
+
+network capture probe -> info
+network capture interface "lo" duration 5s -> pcap_cap
+network open "examples/fixtures/sample.pcap" -> pcap
+network analyze pcap -> traffic_report
+network explain traffic_report -> text
+
+print info
+print pcap_cap
+print pcap
+print traffic_report
+print text

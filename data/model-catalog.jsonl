@@ -1,0 +1,7 @@
+{"ts":"2026-08-31T00:00:00Z","id":"fast","kind":"alias","endpoint":"gateway:alias-fast","probe":"fixture","latency_ms_p50":95,"tokens_per_s":72.0,"quality_proxy":0.78,"tool_call_json_valid_pct":71,"source":"examples/fixtures/models/fast-analyze.json"}
+{"ts":"2026-08-31T00:00:00Z","id":"code","kind":"alias","endpoint":"gateway:alias-code","probe":"fixture","latency_ms_p50":420,"tokens_per_s":38.2,"quality_proxy":0.91,"tool_call_json_valid_pct":94,"source":"examples/fixtures/models/alias-code-analyze.json"}
+{"ts":"2026-08-31T00:00:00Z","id":"best","kind":"alias","endpoint":"gateway:alias-best","probe":"fixture","latency_ms_p50":610,"tokens_per_s":28.0,"quality_proxy":0.93,"tool_call_json_valid_pct":96,"source":"examples/eval_suite.json"}
+{"ts":"2026-08-31T00:00:00Z","id":"alias-code","kind":"alias","endpoint":"gateway:alias-code","probe":"fixture","note":"same chain as code in dry-run"}
+{"ts":"2026-08-31T00:00:00Z","id":"local:vllm-coder","kind":"local_vllm","endpoint":"127.0.0.1:8003","probe":"fixture-listed","note":"local coder — read-only discovery in live probe"}
+{"ts":"2026-08-31T00:00:00Z","id":"local:vllm-voice","kind":"local_vllm","endpoint":"127.0.0.1:8010","probe":"listed-readonly","skipped_reason":"reserved voice-only GPU — never kill / never Spark compute"}
+{"ts":"2026-08-31T00:00:00Z","id":"public-ai-gateway.example","kind":"public_gateway","probe":"skipped","skipped_reason":"needs gateway probe credential; on 401 report credential unavailable — no routing conclusion"}

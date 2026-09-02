@@ -1,0 +1,51 @@
+{"kind":"COMMENT","lexeme":"# OS blueprint dry keywords lex fixture.","line":1,"col":1}
+{"kind":"COMMENT","lexeme":"# Stage 1 golden (expected_os_dry.tokens.jsonl).","line":2,"col":1}
+{"kind":"COMMENT","lexeme":"# Keywords: os, generate (design/specify/build/explain/name/kind stay IDENT).","line":3,"col":1}
+{"kind":"COMMENT","lexeme":"# Forms from LANGUAGE.md / examples/os_agentos.spark.","line":4,"col":1}
+{"kind":"COMMENT","lexeme":"# Not a full compiler. Avoid `let` (GAS scaffold pads dumps).","line":5,"col":1}
+{"kind":"COMMENT","lexeme":"# Never installs/reboots — blueprint stubs only.","line":6,"col":1}
+{"kind":"KEYWORD","lexeme":"model","line":7,"col":1}
+{"kind":"IDENT","lexeme":"code","line":7,"col":7}
+{"kind":"KEYWORD","lexeme":"os","line":9,"col":1}
+{"kind":"IDENT","lexeme":"design","line":9,"col":4}
+{"kind":"IDENT","lexeme":"name","line":9,"col":11}
+{"kind":"STRING","lexeme":"\"agentos\"","line":9,"col":16}
+{"kind":"IDENT","lexeme":"kind","line":9,"col":26}
+{"kind":"IDENT","lexeme":"ai_agent","line":9,"col":31}
+{"kind":"ARROW","lexeme":"->","line":9,"col":40}
+{"kind":"IDENT","lexeme":"blueprint","line":9,"col":43}
+{"kind":"KEYWORD","lexeme":"os","line":10,"col":1}
+{"kind":"IDENT","lexeme":"specify","line":10,"col":4}
+{"kind":"IDENT","lexeme":"blueprint","line":10,"col":12}
+{"kind":"PUNCT","lexeme":"{","line":10,"col":22}
+{"kind":"IDENT","lexeme":"target","line":11,"col":3}
+{"kind":"PUNCT","lexeme":":","line":11,"col":9}
+{"kind":"IDENT","lexeme":"x86_64","line":11,"col":11}
+{"kind":"IDENT","lexeme":"memory_model","line":12,"col":3}
+{"kind":"PUNCT","lexeme":":","line":12,"col":15}
+{"kind":"IDENT","lexeme":"flat","line":12,"col":17}
+{"kind":"PUNCT","lexeme":"}","line":13,"col":1}
+{"kind":"ARROW","lexeme":"->","line":13,"col":3}
+{"kind":"IDENT","lexeme":"spec","line":13,"col":6}
+{"kind":"KEYWORD","lexeme":"os","line":14,"col":1}
+{"kind":"KEYWORD","lexeme":"generate","line":14,"col":4}
+{"kind":"IDENT","lexeme":"spec","line":14,"col":13}
+{"kind":"IDENT","lexeme":"into","line":14,"col":18}
+{"kind":"STRING","lexeme":"\"out/os/agentos\"","line":14,"col":23}
+{"kind":"ARROW","lexeme":"->","line":14,"col":40}
+{"kind":"IDENT","lexeme":"tree","line":14,"col":43}
+{"kind":"KEYWORD","lexeme":"os","line":15,"col":1}
+{"kind":"IDENT","lexeme":"build","line":15,"col":4}
+{"kind":"IDENT","lexeme":"tree","line":15,"col":10}
+{"kind":"ARROW","lexeme":"->","line":15,"col":15}
+{"kind":"IDENT","lexeme":"image","line":15,"col":18}
+{"kind":"KEYWORD","lexeme":"os","line":16,"col":1}
+{"kind":"IDENT","lexeme":"explain","line":16,"col":4}
+{"kind":"IDENT","lexeme":"blueprint","line":16,"col":12}
+{"kind":"ARROW","lexeme":"->","line":16,"col":22}
+{"kind":"IDENT","lexeme":"text","line":16,"col":25}
+{"kind":"KEYWORD","lexeme":"print","line":18,"col":1}
+{"kind":"IDENT","lexeme":"blueprint","line":18,"col":7}
+{"kind":"KEYWORD","lexeme":"print","line":19,"col":1}
+{"kind":"IDENT","lexeme":"text","line":19,"col":7}
+{"kind":"EOF","lexeme":"","line":20,"col":1}

@@ -1,0 +1,2 @@
+# Must fail loud — gui needs --live (bootstrap is always dry)
+browser gui

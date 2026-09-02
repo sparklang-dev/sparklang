@@ -1,0 +1,4 @@
+# Browser run + goto — C bootstrap dry parity with GAS browser_ops
+browser run "examples/browser_main.spark" -> session
+browser goto "https://example.com/" -> page
+print page

@@ -1,0 +1,6 @@
+# Proven keymap quit slice — script token `q` → quit.
+# Consumed by: ide keys "examples/fixtures/ide/cmds_quit.txt"
+# o=open q=quit (ends loop; dry: JSON trace)
+
+o examples/hello.spark
+q

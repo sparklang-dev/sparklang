@@ -1,0 +1,8 @@
+# Spark IDE show — after open/paint, display via spark-engine-show.
+# Dry: validates out/ide/editor.ppm + out/browser/show.json (no X11).
+# Live: ./spark --live examples/ide_show.spark → ./spark-engine-show.
+# No Electron.
+
+ide open "examples/hello.spark" -> opened
+
+ide show -> shown

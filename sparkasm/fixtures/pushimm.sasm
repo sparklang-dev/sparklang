@@ -1,0 +1,8 @@
+# push imm — push 42; pop rdi; exit 42
+.global _start
+.text
+_start:
+	push	42
+	pop	rdi
+	mov	rax, 60
+	syscall

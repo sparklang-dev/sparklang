@@ -1,0 +1,4 @@
+include "lib/ai.spark"
+let err "TypeError: undefined is not a function at line 42"
+ask "Debug this error message: {err}" -> hint
+print hint

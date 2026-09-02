@@ -1,0 +1,13 @@
+# Spark IDE keymap - proven long-form tokens (open / quit).
+# After ask forms. Short o/q already proven - this slice documents
+# full-word script aliases open/quit (same cmds, not new tokens).
+# Dry: script open -> {"cmd":"open"} + paint; quit ends loop.
+# Also proves single ide key open + ide key quit.
+# Run: ./spark --dry-run examples/ide_keys_long.spark
+# No Electron. No new asm - documents proven keys only.
+
+ide keys "examples/fixtures/ide/cmds_long.txt"
+
+ide key open "examples/hello.spark"
+
+ide key quit

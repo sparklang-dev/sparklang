@@ -1,0 +1,10 @@
+# .byte pool + lea label + movzx load → exit 7
+.global _start
+.text
+pool:
+	.byte 0x07
+_start:
+	lea	rax, pool
+	movzx	rdi, byte [rax]
+	mov	rax, 60
+	syscall

@@ -1,0 +1,9 @@
+# Spark IDE keymap command script (one cmd per line).
+# Consumed by: ide keys "examples/fixtures/ide/cmds.txt"
+# q=quit s=save r=run o=open w=show (window / spark-engine-show)
+
+o examples/hello.spark
+w
+s
+r
+q

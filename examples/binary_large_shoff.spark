@@ -1,0 +1,6 @@
+# Regression: ELF with e_shoff > 64KiB (old asm dynsym walk SIGSEGV).
+# Full understand must stream exports via spark-binary-probe --exports.
+
+binary open "examples/fixtures/binary/large_shoff_stub.so" -> big
+binary elf big -> big_elf
+binary understand big -> report

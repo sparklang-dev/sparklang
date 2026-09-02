@@ -1,0 +1,7 @@
+# Proven keymap save slice — script token `s` → save.
+# Consumed by: ide keys "examples/fixtures/ide/cmds_save.txt"
+# o=open s=save q=quit (dry: save is JSON trace only; no write)
+
+o examples/hello.spark
+s
+q

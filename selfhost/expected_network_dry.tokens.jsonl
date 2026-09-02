@@ -1,0 +1,47 @@
+{"kind":"COMMENT","lexeme":"# Network dry keywords lex fixture.","line":1,"col":1}
+{"kind":"COMMENT","lexeme":"# Stage 1 golden (expected_network_dry.tokens.jsonl).","line":2,"col":1}
+{"kind":"COMMENT","lexeme":"# Keywords: network (capture/probe/interface/duration/open/analyze/explain stay IDENT).","line":3,"col":1}
+{"kind":"COMMENT","lexeme":"# Forms from LANGUAGE.md / examples/network_*.spark.","line":4,"col":1}
+{"kind":"COMMENT","lexeme":"# Not a full compiler. Avoid `let` (GAS scaffold pads dumps).","line":5,"col":1}
+{"kind":"KEYWORD","lexeme":"model","line":6,"col":1}
+{"kind":"IDENT","lexeme":"code","line":6,"col":7}
+{"kind":"KEYWORD","lexeme":"network","line":8,"col":1}
+{"kind":"IDENT","lexeme":"capture","line":8,"col":9}
+{"kind":"IDENT","lexeme":"probe","line":8,"col":17}
+{"kind":"ARROW","lexeme":"->","line":8,"col":23}
+{"kind":"IDENT","lexeme":"info","line":8,"col":26}
+{"kind":"KEYWORD","lexeme":"network","line":9,"col":1}
+{"kind":"IDENT","lexeme":"capture","line":9,"col":9}
+{"kind":"IDENT","lexeme":"interface","line":9,"col":17}
+{"kind":"STRING","lexeme":"\"lo\"","line":9,"col":27}
+{"kind":"IDENT","lexeme":"duration","line":9,"col":32}
+{"kind":"NUMBER","lexeme":"5","line":9,"col":41}
+{"kind":"IDENT","lexeme":"s","line":9,"col":42}
+{"kind":"ARROW","lexeme":"->","line":9,"col":44}
+{"kind":"IDENT","lexeme":"pcap_cap","line":9,"col":47}
+{"kind":"KEYWORD","lexeme":"network","line":10,"col":1}
+{"kind":"IDENT","lexeme":"open","line":10,"col":9}
+{"kind":"STRING","lexeme":"\"examples/fixtures/sample.pcap\"","line":10,"col":14}
+{"kind":"ARROW","lexeme":"->","line":10,"col":46}
+{"kind":"IDENT","lexeme":"pcap","line":10,"col":49}
+{"kind":"KEYWORD","lexeme":"network","line":11,"col":1}
+{"kind":"IDENT","lexeme":"analyze","line":11,"col":9}
+{"kind":"IDENT","lexeme":"pcap","line":11,"col":17}
+{"kind":"ARROW","lexeme":"->","line":11,"col":22}
+{"kind":"IDENT","lexeme":"traffic_report","line":11,"col":25}
+{"kind":"KEYWORD","lexeme":"network","line":12,"col":1}
+{"kind":"IDENT","lexeme":"explain","line":12,"col":9}
+{"kind":"IDENT","lexeme":"traffic_report","line":12,"col":17}
+{"kind":"ARROW","lexeme":"->","line":12,"col":32}
+{"kind":"IDENT","lexeme":"text","line":12,"col":35}
+{"kind":"KEYWORD","lexeme":"print","line":14,"col":1}
+{"kind":"IDENT","lexeme":"info","line":14,"col":7}
+{"kind":"KEYWORD","lexeme":"print","line":15,"col":1}
+{"kind":"IDENT","lexeme":"pcap_cap","line":15,"col":7}
+{"kind":"KEYWORD","lexeme":"print","line":16,"col":1}
+{"kind":"IDENT","lexeme":"pcap","line":16,"col":7}
+{"kind":"KEYWORD","lexeme":"print","line":17,"col":1}
+{"kind":"IDENT","lexeme":"traffic_report","line":17,"col":7}
+{"kind":"KEYWORD","lexeme":"print","line":18,"col":1}
+{"kind":"IDENT","lexeme":"text","line":18,"col":7}
+{"kind":"EOF","lexeme":"","line":19,"col":1}

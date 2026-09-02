@@ -1,0 +1,13 @@
+# Spark IDE keymap — proven keys, quit (`q`) focus.
+# After ide new chain (9ed6112). Quit already in asm — this slice
+# documents+tests the `q` token like save (`s`) / run (`r`).
+# Dry: script `q` → {"cmd":"quit"} + ends loop; open still reads.
+# Also proves single `ide key quit` after open.
+# Run: ./spark --dry-run examples/ide_keys_quit.spark
+# No Electron. No new asm — documents proven keys only.
+
+ide keys "examples/fixtures/ide/cmds_quit.txt"
+
+ide key open "examples/hello.spark"
+
+ide key quit

@@ -1,0 +1,14 @@
+# Spark IDE - proven open/save bind forms (-> opened / -> saved).
+# After open-nopath 5b55c44. Binds already used in ide_hello -
+# this slice documents+tests both with print of bound JSON.
+# Proof: print opened / print saved show ide.open / ide.save ok JSON.
+# Run: ./spark --dry-run examples/ide_bind_forms.spark
+# No Electron. No new asm - documents proven forms only.
+
+ide open "examples/hello.spark" -> opened
+
+print opened
+
+ide save "out/ide/ide_bind_forms_rt.spark" -> saved
+
+print saved

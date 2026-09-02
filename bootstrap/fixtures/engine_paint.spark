@@ -1,0 +1,6 @@
+# engine paint boxes — C bootstrap dry parity with GAS pipeline.ppm
+engine parse "engine/fixtures/style_basic.html" -> dom
+engine css attach -> styles
+engine layout -> boxes
+engine paint boxes -> ppm
+print ppm

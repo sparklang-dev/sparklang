@@ -1,0 +1,7 @@
+# Speak dry stub — selfhost golden.
+# Stage 1 lex subset; text token parsed and discarded (spark_parse.c).
+# Avoid `let` (GAS scaffold pads dumps). Form from
+# bootstrap/fixtures/extract_listen_pipe.spark speak block.
+model fast
+
+speak "Hello" -> "out/bootstrap_speak.wav"

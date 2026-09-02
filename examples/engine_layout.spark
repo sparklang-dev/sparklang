@@ -1,0 +1,5 @@
+# Engine B — layout fixture selftest only (no DOM).
+# engine layout without parse fail-closes; use this for selftest.
+# Full dry chain: examples/engine_pipeline.spark
+
+engine layout fixture -> boxes

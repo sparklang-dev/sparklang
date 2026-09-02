@@ -1,0 +1,31 @@
+# Bootstrap B op subset — tool/with, extract, listen, speak, pipeline.
+# Stage 1 lex golden (expected_bootstrap_ops.tokens.jsonl).
+# Avoid `let` (GAS scaffold pads dumps). Classify lives in ops.spark.
+model fast
+
+tool weather(city: string) -> string {
+  "stub:local"
+}
+
+with tools [weather] {
+  ask "Weather in Springfield?" -> wx
+}
+
+extract Person {
+  name: string
+  age: int
+} from "Ada Lovelace was 36" -> person
+
+listen "in.wav" -> transcript
+
+speak "Hello" -> "out/hello.wav"
+
+pipeline {
+  ask "One" -> a
+  | ask "Two" -> b
+}
+
+print wx
+print person
+print transcript
+print b

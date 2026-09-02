@@ -1,0 +1,11 @@
+# Spark IDE - proven ide buffer bind (-> dump) + print op JSON.
+# After key-bad. Like run/new bind, buffer bind stores op JSON;
+# print dump shows that JSON (body dumps to arrow, not the bind).
+# Run: ./spark --dry-run examples/ide_buffer_bind.spark
+# No Electron. No new asm - documents proven bind only.
+
+ide open "examples/hello.spark"
+
+ide buffer -> dump
+
+print dump

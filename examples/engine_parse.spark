@@ -1,0 +1,6 @@
+# Engine B — HTML parse → DOM (asm tokenizer/parser).
+# After parse: <script> text → phase-1 engine_js_eval (tiny only;
+# hello.html has <script>1+1</script> → out/engine/js_result.txt).
+# Artifact: out/browser/engine/dom.json
+
+engine parse "engine/fixtures/hello.html" -> dom

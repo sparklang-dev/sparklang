@@ -1,0 +1,9 @@
+# cld — std then cld; exit 42
+.global _start
+.text
+_start:
+	mov	rdi, 42
+	std
+	cld
+	mov	rax, 60
+	syscall

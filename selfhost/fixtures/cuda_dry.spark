@@ -1,0 +1,15 @@
+# CUDA / memory dry keywords lex fixture.
+# Stage 1 golden (expected_cuda_dry.tokens.jsonl).
+# Keywords: cuda, memory (probe/memstat/prefer/gpu/pin/size stay IDENT).
+# Forms from LANGUAGE.md / examples/cuda_mem.spark.
+# Not a full compiler. Avoid `let` (GAS scaffold pads dumps).
+model code
+
+cuda probe -> info
+cuda memstat -> stats
+cuda prefer gpu 0
+memory pin "buffer" size 1M -> buf
+
+print info
+print stats
+print buf

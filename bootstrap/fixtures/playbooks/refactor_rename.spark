@@ -1,0 +1,3 @@
+include "lib/ai.spark"
+ask "Refactor: rename foo to bar across the module" -> steps
+print steps

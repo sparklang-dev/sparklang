@@ -1,0 +1,20 @@
+# Binary dry keywords lex fixture.
+# Stage 1 golden (expected_binary_dry.tokens.jsonl).
+# Keywords: binary (open/elf/disasm/understand/kernelmod/firmware stay IDENT).
+# Forms from LANGUAGE.md / examples/binary_any.spark.
+# Not a full compiler. Avoid `let` (GAS scaffold pads dumps).
+model code
+
+binary open "examples/fixtures/binary/tiny_cuda_stub.so" -> bin
+binary elf bin -> elf
+binary disasm bin -> ops
+binary understand bin -> report
+binary kernelmod "examples/fixtures/binary/tiny_mod.ko" -> kmod
+binary firmware "examples/fixtures/binary/tiny_fw.bin" -> fw
+
+print bin
+print elf
+print ops
+print report
+print kmod
+print fw

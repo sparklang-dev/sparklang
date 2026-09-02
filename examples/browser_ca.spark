@@ -1,0 +1,10 @@
+# Spark-language MITM CA — SoT is asm mitm ca-* (not Python-first).
+# Dry-run: mitm ca-init forks ./spark-mitm-ca --init (real PEM under
+# out/browser/ca/ + product data/ca/). ca-install plans only (never
+# auto-trust). Live trust: ./spark --live + mitm ca-install.
+
+mitm ca-init -> ca
+mitm ca-status -> ca_st
+mitm ca-install -> ca_plan
+browser flags -> flags
+mitm enable -> mitm_on

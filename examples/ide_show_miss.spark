@@ -1,0 +1,9 @@
+# Spark IDE - proven ide show missing-PPM fail-loud.
+# After open-miss c4e379a. Show of a non-existent .ppm exits
+# non-zero (engine validate cannot open image).
+# Run: ./spark --dry-run examples/ide_show_miss.spark  (expect rc!=0)
+# No Electron. No new asm - documents proven fail-loud only.
+
+ide open "examples/hello.spark"
+
+ide show "out/ide/no_such_show.ppm"

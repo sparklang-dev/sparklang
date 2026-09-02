@@ -1,0 +1,4 @@
+# with tools without prior tool registration — must fail loud
+with tools [weather] {
+  ask "hi" -> a
+}

@@ -1,0 +1,13 @@
+# IDE keys dry keywords lex fixture.
+# Stage 1 golden (expected_ide_keys_dry.tokens.jsonl).
+# Keywords: ide (keys/key/open/show/save/run/quit stay IDENT).
+# Forms from LANGUAGE.md / examples/ide_keys.spark.
+# Not a full compiler. Avoid `let` (GAS scaffold pads dumps).
+model code
+
+ide keys "examples/fixtures/ide/cmds.txt"
+ide key open "examples/hello.spark"
+ide key show
+ide key save
+ide key run
+ide key quit

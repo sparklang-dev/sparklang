@@ -1,0 +1,3 @@
+# bootstrap spark.toml default — no use/model line in file
+? "Explain gravity in one sentence" -> text
+print text

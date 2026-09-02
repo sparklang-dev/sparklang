@@ -1,0 +1,9 @@
+# Spark browser CDP — dry language mocks (never dials :9222).
+# Live: ./spark --live examples/browser_cdp.spark → forks spark-browser-cdp.
+# Helper: cd ../spark-browser && python -m spark_browser.cdp.cli --dry-run status
+
+browser run "examples/browser_cdp.spark" -> session
+browser cdp status -> cdp_status
+browser cdp navigate "https://example.com/" -> page
+browser cdp evaluate "document.title" -> title
+browser cdp screenshot "out/browser/cdp-shot.png" -> shot

@@ -1,0 +1,5 @@
+# Written AI voice model write + load + speak
+voice model write brand_voice spec { pitch: mid, warmth: 0.6 } -> path
+print path
+voice model load brand_voice -> model
+speak with model brand_voice

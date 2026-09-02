@@ -1,0 +1,3 @@
+# AI voice reviewer — quality / artifacts / latency / intent
+voice review "examples/fixtures/audio/sample_review.wav" -> report
+print report

@@ -1,0 +1,11 @@
+# Spark IDE - proven ide ask bind (-> reply) + print.
+# After status-path 97a3993. Ask bind stores reply text (not JSON) -
+# print reply shows dry fixture Gravity.
+# Run: ./spark --dry-run examples/ide_ask_bind.spark
+# No Electron. No new asm - documents proven bind only.
+
+ide open "examples/hello.spark" -> opened
+
+ide ask -> reply
+
+print reply

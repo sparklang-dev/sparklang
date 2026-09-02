@@ -1,0 +1,14 @@
+# Review → builder → implement (codegen into out/)
+# Dry-run: file:// url review is real static scan; never eval web JS.
+# Remote http(s): B default blocks dial; A = pass --allow-net to fetch.
+model code
+
+review path "examples/fixtures/sample.js" -> report
+
+review url "file://examples/fixtures/sample.js" -> report_url
+
+review text "function x(){ eval(y); }" -> report_text
+
+builder prefer lower request "add classify Intent and wire voice turn" -> patch
+
+implement patch into "out/program.spark"

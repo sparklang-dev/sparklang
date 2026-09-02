@@ -1,0 +1,30 @@
+{
+  "scopeName": "source.spark",
+  "name": "Spark",
+  "fileTypes": ["spark"],
+  "patterns": [
+    { "name": "comment.line.number-sign.spark", "match": "#.*$" },
+    {
+      "name": "keyword.control.spark",
+      "match": "\\b(ask|generate|classify|extract|pipeline|tool|with|tools|listen|speak|voice|review|builder|implement|model|cuda|memory|pcie|binary|network|os|browser|mitm|crypto|encrypt|gateway|print|let|multi|min_confidence)\\b"
+    },
+    {
+      "name": "keyword.other.model-alias.spark",
+      "match": "\\b(fast|code|best|code-max|code-bulk|alias-code)\\b"
+    },
+    {
+      "name": "string.quoted.double.spark",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [{ "name": "constant.character.escape.spark", "match": "\\\\." }]
+    },
+    {
+      "name": "keyword.operator.binding.spark",
+      "match": "->"
+    },
+    {
+      "name": "keyword.operator.pipe.spark",
+      "match": "\\|"
+    }
+  ]
+}

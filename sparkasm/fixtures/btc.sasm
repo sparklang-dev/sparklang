@@ -1,0 +1,11 @@
+# btc — toggle bit 0 of 0 → 1; +41 → exit 42
+.global _start
+.text
+_start:
+	mov	rsi, 0
+	mov	rcx, 0
+	btc	rsi, rcx
+	add	rsi, 41
+	mov	rdi, rsi
+	mov	rax, 60
+	syscall

@@ -1,0 +1,15 @@
+# Spark IDE — proven ide save forms (bare + quoted path).
+# After buffer forms 96b484c. Forms already live in hello / save_reopen /
+# new_chain — this slice documents+tests both in one example.
+# Bare save after open of hello would overwrite the fixture — so quote
+# first (sets path), then bare rewrite of the same out/ path.
+# Proof: both emit {"op":"ide.save","ok":true,"dirty":false};
+#        out/ide/ide_save_forms_rt.spark sha256/size == hello.spark.
+# Run: ./spark --dry-run examples/ide_save_forms.spark
+# No Electron. No new asm — documents proven forms only.
+
+ide open "examples/hello.spark" -> opened
+
+ide save "out/ide/ide_save_forms_rt.spark" -> saved
+
+ide save

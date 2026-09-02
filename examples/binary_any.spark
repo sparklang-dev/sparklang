@@ -1,0 +1,10 @@
+# Binary open / elf / full machine disasm / understand
+# understand + disasm write complete objdump -d listing under out/decompile/
+
+binary open "examples/fixtures/binary/tiny_cuda_stub.so" -> bin
+binary elf bin -> elf
+binary disasm bin -> ops
+binary understand bin -> report
+
+binary kernelmod "examples/fixtures/binary/tiny_mod.ko" -> kmod
+binary firmware "examples/fixtures/binary/tiny_fw.bin" -> fw

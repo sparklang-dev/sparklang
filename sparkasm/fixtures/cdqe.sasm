@@ -1,0 +1,9 @@
+# cdqe — sign-extend eax→rax; exit 42
+.global _start
+.text
+_start:
+	mov	rax, 42
+	cdqe
+	mov	rdi, rax
+	mov	rax, 60
+	syscall

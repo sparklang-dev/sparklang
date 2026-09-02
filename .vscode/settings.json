@@ -1,0 +1,13 @@
+{
+  "files.associations": {
+    "*.spark": "spark",
+    "spark.toml": "toml"
+  },
+  "terminal.integrated.env.linux": {
+    "AI_GATEWAY_URL": "http://127.0.0.1:4000",
+    "SPARK_IDE": "1"
+  },
+  "editor.tabSize": 2,
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true
+}

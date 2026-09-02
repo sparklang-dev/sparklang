@@ -1,0 +1,4 @@
+use auto
+let report "{\"issues\":[\"possible eval\",\"ai-authored patterns\"],\"complexity\":\"mid\"}"
+ask "Fix this test failure shown in the review report: {report}" -> suggestion
+print suggestion

@@ -1,0 +1,2 @@
+# Must fail loud — https needs --allow-net / live (C bootstrap never dials)
+engine fetch "https://example.com/"

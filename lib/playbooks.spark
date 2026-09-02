@@ -1,0 +1,57 @@
+# Copy-paste AI playbooks — include "lib/ai.spark" first (use auto).
+# Catalog rows; run goldens: make test-ai-playbooks
+
+# @playbook explain_code
+# include "lib/ai.spark"
+# let snippet "function add(a,b){ return a+b; }"
+# ask "Explain this code in one sentence: {snippet}" -> answer
+# print answer
+
+# @playbook fix_test_failure
+# include "lib/ai.spark"
+# let failure "AssertionError: expected 3 got 2 in test_add"
+# ask "Fix this test failure: {failure}" -> fix
+# print fix
+
+# @playbook add_api_endpoint
+# include "lib/ai.spark"
+# ask "Add a GET /health API endpoint returning JSON status" -> plan
+# print plan
+
+# @playbook refactor_rename
+# include "lib/ai.spark"
+# ask "Refactor: rename foo to bar across the module" -> steps
+# print steps
+
+# @playbook write_unit_test
+# include "lib/ai.spark"
+# ask "Write a unit test for function add(a,b)" -> test_code
+# print test_code
+
+# @playbook debug_error_message
+# include "lib/ai.spark"
+# let err "TypeError: undefined is not a function at line 42"
+# ask "Debug this error message: {err}" -> hint
+# print hint
+
+# @playbook classify_and_reply
+# include "lib/ai.spark"
+# let message "My account is locked and I need help"
+# classify Intent { support, sales } from message -> intent
+# ask "Reply helpfully to: {message}" -> reply
+# print reply
+
+# @playbook review_and_suggest
+# include "lib/ai.spark"
+# review path "examples/fixtures/sample.js" -> report
+# ask "Fix this test failure shown in the review report" -> suggestion
+# print suggestion
+
+# @playbook pipeline_summarize_explain
+# include "lib/ai.spark"
+# let doc "Spark is a small language where AI is a first-class primitive."
+# pipeline {
+#   ask "Summarize: {doc}" -> summary
+#   | ask "Explain in one sentence: {summary}" -> plain
+# }
+# print plain

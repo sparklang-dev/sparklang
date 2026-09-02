@@ -1,0 +1,2 @@
+# Must fail loud — http without --allow-net (C bootstrap never dials)
+engine fetch "http://127.0.0.1:9/nope.html"

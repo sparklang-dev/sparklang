@@ -1,0 +1,42 @@
+{"kind":"COMMENT","lexeme":"# Classify dry keywords lex fixture.","line":1,"col":1}
+{"kind":"COMMENT","lexeme":"# Stage 1 golden (expected_classify_dry.tokens.jsonl).","line":2,"col":1}
+{"kind":"COMMENT","lexeme":"# Keywords: model, classify, print. Labels/from/multi stay IDENT.","line":3,"col":1}
+{"kind":"COMMENT","lexeme":"# Not a full compiler. Avoid `let` (GAS scaffold pads dumps).","line":4,"col":1}
+{"kind":"COMMENT","lexeme":"# Classify must be one line (GAS treats indented `from` as new stmt).","line":5,"col":1}
+{"kind":"COMMENT","lexeme":"# Forms from docs/LANGUAGE.md / examples/classify_intent.spark.","line":6,"col":1}
+{"kind":"KEYWORD","lexeme":"model","line":7,"col":1}
+{"kind":"IDENT","lexeme":"fast","line":7,"col":7}
+{"kind":"KEYWORD","lexeme":"classify","line":9,"col":1}
+{"kind":"IDENT","lexeme":"Intent","line":9,"col":10}
+{"kind":"PUNCT","lexeme":"{","line":9,"col":17}
+{"kind":"IDENT","lexeme":"support","line":9,"col":19}
+{"kind":"PUNCT","lexeme":",","line":9,"col":26}
+{"kind":"IDENT","lexeme":"sales","line":9,"col":28}
+{"kind":"PUNCT","lexeme":",","line":9,"col":33}
+{"kind":"IDENT","lexeme":"spam","line":9,"col":35}
+{"kind":"PUNCT","lexeme":"}","line":9,"col":40}
+{"kind":"IDENT","lexeme":"from","line":9,"col":42}
+{"kind":"STRING","lexeme":"\"My account is locked\"","line":9,"col":47}
+{"kind":"IDENT","lexeme":"min_confidence","line":9,"col":70}
+{"kind":"NUMBER","lexeme":"0.7","line":9,"col":85}
+{"kind":"ARROW","lexeme":"->","line":9,"col":89}
+{"kind":"IDENT","lexeme":"intent","line":9,"col":92}
+{"kind":"KEYWORD","lexeme":"classify","line":11,"col":1}
+{"kind":"IDENT","lexeme":"multi","line":11,"col":10}
+{"kind":"IDENT","lexeme":"Tags","line":11,"col":16}
+{"kind":"PUNCT","lexeme":"{","line":11,"col":21}
+{"kind":"IDENT","lexeme":"support","line":11,"col":23}
+{"kind":"PUNCT","lexeme":",","line":11,"col":30}
+{"kind":"IDENT","lexeme":"sales","line":11,"col":32}
+{"kind":"PUNCT","lexeme":",","line":11,"col":37}
+{"kind":"IDENT","lexeme":"spam","line":11,"col":39}
+{"kind":"PUNCT","lexeme":"}","line":11,"col":44}
+{"kind":"IDENT","lexeme":"from","line":11,"col":46}
+{"kind":"STRING","lexeme":"\"Please help me place an order\"","line":11,"col":51}
+{"kind":"ARROW","lexeme":"->","line":11,"col":83}
+{"kind":"IDENT","lexeme":"tags","line":11,"col":86}
+{"kind":"KEYWORD","lexeme":"print","line":13,"col":1}
+{"kind":"IDENT","lexeme":"intent","line":13,"col":7}
+{"kind":"KEYWORD","lexeme":"print","line":14,"col":1}
+{"kind":"IDENT","lexeme":"tags","line":14,"col":7}
+{"kind":"EOF","lexeme":"","line":15,"col":1}

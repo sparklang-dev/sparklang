@@ -1,0 +1,6 @@
+# Proven keymap long-form tokens - open/quit (not o/q short).
+# Consumed by: ide keys "examples/fixtures/ide/cmds_long.txt"
+# open=open quit=quit (dry: real read + paint; quit ends loop)
+
+open examples/hello.spark
+quit

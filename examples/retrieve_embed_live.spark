@@ -1,0 +1,9 @@
+# Live RAG — requires ./spark --live + gateway env (see docs/AI_MODELS.md)
+# Dry-run stays offline: ./spark --dry-run examples/retrieve_embed.spark
+model embed-rag
+
+embed "Spark language reference" model embed-rag -> vec
+print vec
+
+retrieve "embed and retrieve statements" from project "docs" audience "operator" top_k 4 -> hits
+print hits

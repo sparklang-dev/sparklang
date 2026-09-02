@@ -1,0 +1,17 @@
+# Engine dry keywords lex fixture.
+# Stage 1 golden (expected_engine_dry.tokens.jsonl).
+# Keywords: engine (fetch/parse/css/layout/attach stay IDENT).
+# Forms from LANGUAGE.md / examples/engine_fetch_parse_layout.spark
+# (B subset: file:// fetch + parse + css attach + layout).
+# Not a full compiler. Avoid `let` (GAS scaffold pads dumps).
+model code
+
+engine fetch "file://engine/fixtures/table_demo.html" -> body
+engine parse "out/engine/body.bin" -> dom
+engine css attach -> styles
+engine layout -> boxes
+
+print body
+print dom
+print styles
+print boxes

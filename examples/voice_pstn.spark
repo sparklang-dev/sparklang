@@ -1,0 +1,4 @@
+# PSTN — dry-run never places; live needs --live --pstn-live + SPARK_PSTN=1
+voice pstn status -> st
+voice pstn dial "+15555550100" -> call
+print call

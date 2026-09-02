@@ -1,0 +1,8 @@
+# First-class embed + retrieve (dry-run offline; --live → gateways)
+model fast
+
+embed "Spark is a language for AI workflows" -> vec
+print vec
+
+retrieve "how does dry-run embed work" from project "docs" -> hits
+print hits

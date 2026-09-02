@@ -1,0 +1,12 @@
+# bt — bit 1 of 2 → CF; 41+0+CF → exit 42
+.global _start
+.text
+_start:
+	mov	rdi, 41
+	mov	rax, 0
+	mov	rsi, 2
+	mov	rcx, 1
+	bt	rsi, rcx
+	adc	rdi, rax
+	mov	rax, 60
+	syscall

@@ -1,0 +1,13 @@
+# Browser + mitm dry keywords lex fixture.
+# Stage 1 golden (expected_browser_dry.tokens.jsonl).
+# Keywords: browser, mitm (run/goto/enable stay IDENT). Not a full compiler.
+# Avoid `let` (GAS scaffold pads dumps).
+model code
+
+browser run "examples/browser_main.spark" -> session
+browser goto "https://example.com/" -> page
+mitm enable -> mitm_session
+
+print session
+print page
+print mitm_session

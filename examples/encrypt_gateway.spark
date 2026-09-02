@@ -1,0 +1,23 @@
+# Encrypt-to-model gateway (offline)
+# Agent seals → gateway decrypts at model boundary → Bifrost when --live
+# Off by default until gateway encrypt on + key.
+
+crypto keygen -> key
+
+encrypt gateway enable key
+
+gateway encrypt on
+
+encrypt seal text "SSN 123-45-6789 stays ciphertext on the wire" -> blob
+
+encrypt open blob -> plain
+
+print plain
+
+model fast
+
+ask "Reply with exactly: gateway-ok" -> reply
+
+print reply
+
+gateway encrypt off

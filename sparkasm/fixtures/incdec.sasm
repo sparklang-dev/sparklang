@@ -1,0 +1,9 @@
+# inc/dec reg — 42→inc→dec back to exit 42
+.global _start
+.text
+_start:
+	mov	rdi, 42
+	inc	rdi
+	dec	rdi
+	mov	rax, 60
+	syscall

@@ -1,0 +1,3 @@
+# browser show — C bootstrap dry parity with GAS show.json
+browser show "examples/fixtures/browser/engine_show.ppm" -> shown
+print shown

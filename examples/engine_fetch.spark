@@ -1,0 +1,5 @@
+# Engine B — fetch HTML bytes (asm).
+# file:// / bare path always; http:// needs --allow-net (asm socket).
+# https:// refused (no TLS in asm yet). Prefer localhost fixtures.
+
+engine fetch "file://examples/fixtures/engine/sample.html" -> body

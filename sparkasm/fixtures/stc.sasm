@@ -1,0 +1,10 @@
+# stc — 41 + 0 + CF1 → exit 42
+.global _start
+.text
+_start:
+	mov	rdi, 41
+	mov	rsi, 0
+	stc
+	adc	rdi, rsi
+	mov	rax, 60
+	syscall

@@ -1,0 +1,60 @@
+# Spark stdlib — review / builder / implement helpers
+# bootstrap: include "lib/review.spark"
+# mode: dry-run (static scan) | live (url fetch needs --allow-net)
+
+model code
+
+# @helper review_path_js: Static review of local JS file
+# review path "examples/fixtures/sample.js" -> report
+
+# @helper review_url_file: Review via file:// URL
+# review url "file://examples/fixtures/sample.js" -> report
+
+# @helper review_url_https: Remote fetch review (needs --allow-net)
+# review url "https://example.com/app.js" -> report
+
+# @helper review_text_inline: Review inline source string
+# review text "function x(){ eval(y); }" -> report
+
+# @helper review_then_builder_lower: Review issues → lower-level Spark patch
+# review path "examples/fixtures/sample.js" -> report
+# builder prefer lower request "fix eval usage" -> patch
+
+# @helper review_then_builder_higher: Suggest higher-level Python layer
+# review path "examples/fixtures/sample.js" -> report
+# builder prefer higher request "add tests" -> patch
+
+# @helper review_then_builder_auto: Let builder pick level
+# review text "var x = 1" -> report
+# builder prefer auto request "harden for production" -> patch
+
+# @helper implement_spark: Write patch into Spark program path
+# implement patch into "out/program.spark"
+
+# @helper implement_python_suggestion: Higher layer suggestion file
+# implement patch into "out/program.py.txt"
+
+# @helper review_builder_chain: Full review → builder → implement
+# review path "examples/fixtures/sample.js" -> report
+# builder prefer lower request "add classify Intent" -> patch
+# implement patch into "out/program.spark"
+
+# @helper review_complexity_check: Use report complexity field
+# review text "while(true){ fork(); }" -> report
+# print report
+
+# @helper review_voice_integration: Builder request for voice wiring
+# builder prefer lower request "add voice turn with classify" -> patch
+
+# @helper review_no_eval_policy: Scan for eval patterns
+# review text "eval(userInput)" -> report
+
+# @helper review_url_blocked_dry: Remote URL without --allow-net fails loud
+# review url "https://example.com/app.js" -> report
+
+# @helper review_fixture_sample: Known fixture for CI
+# review path "examples/fixtures/sample.js" -> report
+
+# @helper builder_implement_only: Skip review when patch already known
+# builder prefer mid request "wire pipeline translate" -> patch
+# implement patch into "out/pipeline.spark"

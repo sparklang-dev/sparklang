@@ -1,0 +1,6 @@
+# Spark-owned HTTPS MITM smoke — language forks ./spark-mitm-h2.
+# ./spark --dry-run examples/browser_h2.spark
+
+browser run "examples/browser_h2.spark" -> session
+mitm enable -> mitm_on
+mitm smoke -> smoke

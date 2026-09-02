@@ -1,0 +1,13 @@
+# setl — 3 < 5 → setl al → exit 42
+.global _start
+.text
+_start:
+	xor	rax, rax
+	mov	rdi, 3
+	mov	rsi, 5
+	cmp	rdi, rsi
+	setl	al
+	add	rax, 41
+	mov	rdi, rax
+	mov	rax, 60
+	syscall

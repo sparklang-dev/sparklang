@@ -1,0 +1,5 @@
+# Engine B — fetch then parse (real ops only).
+# file:// always; http needs --allow-net; https = OpenSSL BIO companion.
+# Body → out/engine/body.bin → engine parse that path.
+
+engine fetch parse "file://examples/fixtures/engine/sample.html" -> dom

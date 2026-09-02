@@ -1,0 +1,2 @@
+# Must fail loud on C bootstrap (voice review needs wav companion)
+voice review "examples/fixtures/audio/sample_review.wav" -> report

@@ -1,0 +1,3 @@
+# engine fetch — C bootstrap dry parity with GAS engine_fetch.s
+engine fetch "file://examples/fixtures/engine/sample.html" -> body
+print body

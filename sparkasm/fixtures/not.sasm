@@ -1,0 +1,8 @@
+# not reg — bitwise not of -43 → exit 42
+.global _start
+.text
+_start:
+	mov	rdi, -43
+	not	rdi
+	mov	rax, 60
+	syscall

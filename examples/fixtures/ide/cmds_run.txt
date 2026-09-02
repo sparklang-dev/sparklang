@@ -1,0 +1,7 @@
+# Proven keymap run slice — script token `r` → run.
+# Consumed by: ide keys "examples/fixtures/ide/cmds_run.txt"
+# o=open r=run q=quit (dry: run is JSON trace only; no fork)
+
+o examples/hello.spark
+r
+q

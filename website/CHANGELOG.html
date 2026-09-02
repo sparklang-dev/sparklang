@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Changelog — SparkLang</title>
+    <meta
+      name="description"
+      content="SparkLang release notes. Current public docs version 0.6.2 (installer kit 0.6.0)."
+    />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/css/tokens.css?v=pos060" />
+    <link rel="stylesheet" href="/css/site.css?v=pos060" />
+  </head>
+  <body class="doc-page">
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="site-brand" href="/" aria-label="SparkLang home">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+            <path
+              d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z"
+              fill="currentColor"
+            />
+          </svg>
+          Spark
+        </a>
+        <button
+          class="nav-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="site-nav"
+          aria-label="Open menu"
+        >
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+        </button>
+        <div class="header-nav-wrap">
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <ul class="nav-primary">
+              <li><a href="/learn/">Learn</a></li>
+              <li><a href="/docs/language.html">Docs</a></li>
+              <li><a href="/downloads.html">Download</a></li>
+              <li class="nav-more">
+                <button
+                  type="button"
+                  class="nav-more__toggle"
+                  aria-expanded="false"
+                  aria-haspopup="true"
+                >
+                  More
+                </button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/about.html">About</a></li>
+                  <li><a href="/docs/ai-models.html">AI models</a></li>
+                  <li><a href="/docs/programming-guide.html">Programming guide</a></li>
+                  <li><a href="/docs/ide.html">IDE</a></li>
+                </ul>
+              </li>
+            </ul>
+            <a href="/playground.html" class="nav-cta">Try</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <div class="shell doc-layout">
+      <main class="doc-main" style="max-width: 42rem; margin: 0 auto">
+        <p class="doc-breadcrumb"><a href="/">Home</a> / Changelog</p>
+        <article class="doc__body">
+<h1>Changelog</h1>
+<p>All notable user-facing releases of <strong>SparkLang</strong> (the Spark programming
+language) are listed here. Site and installers track
+<code>website/downloads/manifest.json</code>.</p>
+<h2>0.6.1 — 2026-09-02</h2>
+<p>Adoption-bar pass (honest checklist — see <code>docs/ADOPTION_BAR.md</code>):</p>
+<ul>
+<li>First-class <code>embed</code> / <code>retrieve</code> + dry fixtures + <code>spark-rag-http</code> (also #21).</li>
+<li>Escape hatch dry-run: <code>shell</code> / <code>run</code> allowlist; <code>./spark --embed</code> stub.</li>
+<li>Per-<code>ask</code> <code>[accounting]</code> (dry zeros; live prints gateway <code>usage</code> when present).</li>
+<li>Docs: ADOPTION_BAR, ROADMAP, RELEASE; receptionist <code>[goal]</code> example.</li>
+<li>Site: SparkLang searchability; de-emphasize MITM/pcap/IDE/voice-as-prod.</li>
+</ul>
+
+<h2>0.6.2 — 2026-09-02</h2>
+<ul>
+<li><strong>Product rename:</strong> public identity is <strong>SparkLang</strong> at
+  <a href="https://sparklang.dev/">https://sparklang.dev/</a>
+  (site, docs, About, adoption bar). Source: github.com/sparklang-dev/sparklang.</li>
+<li><strong>CLI:</strong> binary / bootstrap names stay <code class="inline-code">spark</code> and
+  <code class="inline-code">./spark-bootstrap</code> (no overnight break).</li>
+<li><strong>IDE:</strong> language <code class="inline-code">ide</code> ops kept; editor story prefers
+  LSP + highlighting.</li>
+<li>Installer kit filenames / hashes remain <strong>0.6.0</strong> until the next
+  packaging pass.</li>
+</ul>
+<h2>0.6.0 — 2026-09-02</h2>
+<ul>
+<li>Runtime / installer kit <strong>0.6.0</strong> (see Downloads manifest).</li>
+<li>Language + dry-run runtime: <code>.spark</code> programs, fixtures, compile/BC path,
+  IDE language ops, playbooks.</li>
+<li>Optional live <code>ask</code> via any OpenAI-compatible <code>AI_GATEWAY_URL</code> (not required
+  for the default dry-run story).</li>
+<li>Optional surfaces: voice/PSTN (gated), browser/MITM, network capture.</li>
+<li><code>model analyze</code> / <code>compare</code> / <code>improve</code> / <code>build</code> = blueprint and eval sugar
+  — not weight training.</li>
+</ul>
+<h2>Earlier</h2>
+<p>Prior notes stay on this page and in the installer
+<code class="inline-code">manifest.json</code> history. Binary downloads remain on
+<a href="/downloads.html">Downloads</a> (Pages-hosted), not a public git forge.</p>
+      </article>
+      </main>
+    </div>
+
+    <footer class="site-footer">
+      <div class="shell footer-inner">
+        <div class="footer-brand">
+          <span>SparkLang — the Spark programming language</span>
+          <span class="footer-meta">v0.6.2 · MIT</span>
+        </div>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="/about.html">About</a>
+<a href="/LICENSE.txt">License</a>
+          <a href="/CHANGELOG.html" aria-current="page">Changelog</a>
+          <a href="/learn/">Learn</a>
+          <a href="/downloads.html">Downloads</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="/js/site.js"></script>
+  </body>
+</html>

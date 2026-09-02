@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Adoption bar — Spark</title>
+    <meta name="description" content="SparkLang adoption checklist — done, next, won&#x27;t." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/css/tokens.css?v=bb4433f" />
+    <link rel="stylesheet" href="/css/site.css?v=bb4433f" />
+  </head>
+  <body class="doc-page">
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="site-brand" href="/" aria-label="Spark home">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z" fill="currentColor" />
+          </svg>
+          Spark
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+        </button>
+        <div class="header-nav-wrap">
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <ul class="nav-primary">
+              <li><a href="/learn/">Learn</a></li>
+              <li><a href="/docs/language.html">Docs</a></li>
+              <li><a href="/downloads.html">Download</a></li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">More</button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/adoption-bar.html">Adoption bar</a></li>
+                  <li><a href="/docs/ai-models.html">AI models</a></li>
+                  <li><a href="/docs/native-network-web.html">Network + web</a></li>
+                  <li><a href="/docs/programming-guide.html">Programming guide</a></li>
+                  <li><a href="/docs/ide.html">IDE</a></li>
+                  <li><a href="/docs/self-host.html">Contributor internals</a></li>
+                </ul>
+              </li>
+            </ul>
+            <a href="/playground.html" class="nav-cta">Try</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <div class="shell doc-layout">
+      <aside class="doc-sidebar" aria-label="Table of contents">
+        <p class="doc-sidebar__title">On this page</p>
+        <nav id="doc-toc-list"></nav>
+      </aside>
+      <main class="doc-main">
+      <nav class="doc__nav" aria-label="Docs">
+        <a href="/learn/">Learn</a>
+        <a href="/docs/adoption-bar.html" aria-current="page">Adoption bar</a>
+        <a href="/docs/ai-models.html">AI models</a>
+        <a href="/docs/native-network-web.html">Network + web</a>
+        <a href="/docs/programming-guide.html">Programming guide</a>
+        <a href="/docs/language.html">Language reference</a>
+        <a href="/docs/ide.html">IDE</a>
+        <a href="/docs/self-host.html">Contributor internals</a>
+        <a href="/downloads.html">Downloads</a>
+      </nav>      <article class="doc__body">
+        <h1 id="sparklang-adoption-bar">SparkLang adoption bar</h1>
+        <p>Honest checklist against the critique: table stakes, escape hatch,
+        worth-using ops, voice honesty, what we drop, and the production-style
+        workflow goal. <strong>Spark is not a Bifrost plugin</strong> — gateway is optional
+        live I/O.</p>
+        <p><strong>Public name:</strong> <strong>SparkLang</strong> (the Spark programming language).
+        Site: <a href="https://sparklang.dev/">https://sparklang.dev/</a>.
+        Source: <a href="https://github.com/sparklang-dev/sparklang">github.com/sparklang-dev/sparklang</a>.</p>
+        <p>Not Apache Spark. Not AdaCore SPARK.</p>
+        <h2 id="checklist">Checklist</h2>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Item</th>
+        <th>Status</th>
+        <th>Notes</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td>MIT license on the public site</td>
+        <td><strong>done</strong></td>
+        <td><code class="inline-code">/LICENSE.txt</code> · About trust section</td>
+        </tr>
+        <tr>
+        <td>Public cloneable source repo</td>
+        <td><strong>won't (yet)</strong></td>
+        <td>Site stays public; source not published for anonymous clone. No broken forge CTAs.</td>
+        </tr>
+        <tr>
+        <td>Versioned releases + changelog</td>
+        <td><strong>done</strong></td>
+        <td>Site <code class="inline-code">/CHANGELOG.html</code> · docs <strong>0.6.2</strong>. Installer kit artifacts remain <strong>0.6.0</strong> until next packaging. Prefer Pages downloads over forge releases.</td>
+        </tr>
+        <tr>
+        <td>Searchable name (SparkLang)</td>
+        <td><strong>done</strong></td>
+        <td>Hero / About / footers on sparklang.dev. CLI stays <code class="inline-code">spark</code> / <code class="inline-code">./spark-bootstrap</code></td>
+        </tr>
+        <tr>
+        <td>Escape hatch (<code class="inline-code">.spark</code> → host)</td>
+        <td><strong>done (dry)</strong></td>
+        <td><code class="inline-code">shell</code> / <code class="inline-code">run</code> allowlist dry-run fixtures; live gated exec = <strong>next</strong></td>
+        </tr>
+        <tr>
+        <td>Escape hatch (host → <code class="inline-code">.spark</code>)</td>
+        <td><strong>next</strong></td>
+        <td><code class="inline-code">./spark --embed</code> stub JSON handshake; <code class="inline-code">import spark</code> FFI = <strong>next</strong></td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">retrieve</code> / <code class="inline-code">embed</code> language ops</td>
+        <td><strong>done</strong></td>
+        <td>Dry fixtures + live <code class="inline-code">./spark-rag-http</code>; see LANGUAGE.md</td>
+        </tr>
+        <tr>
+        <td>Real <code class="inline-code">http get</code> / <code class="inline-code">post</code></td>
+        <td><strong>next</strong></td>
+        <td>Auth/retries/timeouts — not <code class="inline-code">engine fetch</code> file://; design in ROADMAP</td>
+        </tr>
+        <tr>
+        <td>Typed <code class="inline-code">extract</code> + JSON-mode validate/retry</td>
+        <td><strong>partial</strong></td>
+        <td>Schema + dry fixture today; validate/retry loop = <strong>next</strong></td>
+        </tr>
+        <tr>
+        <td>Cost/latency/token accounting</td>
+        <td><strong>done (hooks)</strong></td>
+        <td>Dry zeros; live prints <code class="inline-code">usage</code> when gateway returns it — never invents tokens</td>
+        </tr>
+        <tr>
+        <td>Streaming <code class="inline-code">ask</code></td>
+        <td><strong>next</strong></td>
+        <td>Not shipped</td>
+        </tr>
+        <tr>
+        <td>Eval vs expectations (pass/fail)</td>
+        <td><strong>next</strong></td>
+        <td><code class="inline-code">model compare</code> picks aliases; expectation harness = <strong>next</strong></td>
+        </tr>
+        <tr>
+        <td>Voice production telephony</td>
+        <td><strong>won't (soon)</strong></td>
+        <td>Gated demo + honest gaps in VOICE.md / ROADMAP — not sold as production</td>
+        </tr>
+        <tr>
+        <td>Packet capture / MITM / browser automation</td>
+        <td><strong>won't (focus)</strong></td>
+        <td>Still in LANGUAGE; de-emphasized on landing — prefer LSP + highlighting</td>
+        </tr>
+        <tr>
+        <td>Homegrown IDE as product chrome</td>
+        <td><strong>won't (focus) / keep tree</strong></td>
+        <td>Prefer LSP for editor story; language <code class="inline-code">ide</code> ops + IDE tree <strong>kept</strong>. Hard-delete OWNER-CONFIRM <strong>revoked</strong> 2026-09-02 (rename yes; delete no)</td>
+        </tr>
+        <tr>
+        <td>Model-build as training claim</td>
+        <td><strong>won't</strong></td>
+        <td>Blueprint / eval sugar only; demoted on landing</td>
+        </tr>
+        <tr>
+        <td>Production receptionist workflow</td>
+        <td><strong>goal</strong></td>
+        <td><code class="inline-code">examples/receptionist_goal.spark</code> marked <code class="inline-code">[goal]</code> — dry sketch, not a live claim</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <h2 id="escape-hatch-p0-design">Escape hatch (P0 design)</h2>
+        <p>Without both directions, a DSL dies:</p>
+        <ol class="doc__ol">
+        <li><strong>From <code class="inline-code">.spark</code>:</strong> <code class="inline-code">shell "echo …"</code> / <code class="inline-code">run "…"</code> — dry-run allowlist only
+           (<code class="inline-code">echo</code> / <code class="inline-code">true</code> / <code class="inline-code">false</code>). Arbitrary exec refused offline.</li>
+        <li><strong>Into <code class="inline-code">.spark</code>:</strong> <code class="inline-code">./spark --embed</code> prints a stub handshake today;
+           real Python/JS embed API is <strong>next</strong>.</li>
+        </ol>
+        <h2 id="worth-using-over-script-gateway">Worth using over script + gateway</h2>
+        <p>Shipped enough to dry-demo RAG + ask + classify in one file. Still missing
+        for a clear “shorter than Python+gateway” win on production paths:
+        streaming, expectation evals, first-class HTTP, validate/retry <code class="inline-code">extract</code>,
+        and a dry-runnable receptionist that is more than a <code class="inline-code">[goal]</code> sketch.</p>
+        <h2 id="voice-honest">Voice — honest</h2>
+        <p>Optional <code class="inline-code">listen</code> / <code class="inline-code">speak</code> / <code class="inline-code">voice</code> / gated PSTN exist as language
+        surface and dry demos. <strong>Not</strong> production barge-in / EOU / SM transfer
+        / named telephony adapters. See <a href="/docs/language.html">VOICE.md</a> gaps.</p>
+        <h2 id="drops-product-focus">Drops (product focus)</h2>
+        <p>Landing and About de-emphasize: MITM, pcap, browser automation, homegrown
+        IDE <em>chrome as hero</em>, model-build-as-training. Prefer: language + dry-run +
+        playbooks + LSP / syntax highlighting + optional live gateway I/O.
+        <strong>IDE tree stays in-repo</strong> (delete revoked).</p>
+        <h2 id="the-real-bar-goal-not-claim">The real bar (goal, not claim)</h2>
+        <p>One generic receptionist-style workflow (fallback + transfer), shorter
+        and easier to dry-test than Python+gateway — <strong>no store/PII examples</strong>.</p>
+        <p>→ <code class="inline-code">examples/receptionist_goal.spark</code> (<code class="inline-code">[goal]</code>). When syntax for transfer /
+        expectation eval lands, promote off the goal tag.</p>
+        <h2 id="related">Related</h2>
+        <ul class="doc__ul">
+        <li><a href="/docs/roadmap.html">ROADMAP.md</a></li>
+        <li><a href="/docs/language.html">LANGUAGE.md</a></li>
+        <li><a href="/docs/release.html">RELEASE.md</a></li>
+        <li><a href="/docs/language.html">VOICE.md</a></li>
+        </ul>
+      </article>
+      </main>
+    </div>
+
+    <footer class="site-footer">
+      <div class="shell footer-inner">
+        <span>Spark programming language</span>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="/learn/">Learn</a>
+          <a href="/docs/language.html">Reference</a>
+          <a href="/downloads.html">Downloads</a>
+          <a href="/playground.html">Playground</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="/js/site.js"></script>
+  </body>
+</html>

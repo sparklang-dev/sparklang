@@ -1,0 +1,2 @@
+# Must fail loud — browser render needs prior engine parse (no fixture)
+browser render

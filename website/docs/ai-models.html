@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI models — Spark</title>
+    <meta name="description" content="What SparkLang means for model analyze, compare, improve, build, live ask, and embed/retrieve." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/css/tokens.css?v=bb4433f" />
+    <link rel="stylesheet" href="/css/site.css?v=bb4433f" />
+  </head>
+  <body class="doc-page">
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="site-brand" href="/" aria-label="Spark home">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z" fill="currentColor" />
+          </svg>
+          Spark
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+        </button>
+        <div class="header-nav-wrap">
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <ul class="nav-primary">
+              <li><a href="/learn/">Learn</a></li>
+              <li><a href="/docs/language.html">Docs</a></li>
+              <li><a href="/downloads.html">Download</a></li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">More</button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/adoption-bar.html">Adoption bar</a></li>
+                  <li><a href="/docs/ai-models.html">AI models</a></li>
+                  <li><a href="/docs/native-network-web.html">Network + web</a></li>
+                  <li><a href="/docs/programming-guide.html">Programming guide</a></li>
+                  <li><a href="/docs/ide.html">IDE</a></li>
+                  <li><a href="/docs/self-host.html">Contributor internals</a></li>
+                </ul>
+              </li>
+            </ul>
+            <a href="/playground.html" class="nav-cta">Try</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <div class="shell doc-layout">
+      <aside class="doc-sidebar" aria-label="Table of contents">
+        <p class="doc-sidebar__title">On this page</p>
+        <nav id="doc-toc-list"></nav>
+      </aside>
+      <main class="doc-main">
+      <nav class="doc__nav" aria-label="Docs">
+        <a href="/learn/">Learn</a>
+        <a href="/docs/adoption-bar.html">Adoption bar</a>
+        <a href="/docs/ai-models.html" aria-current="page">AI models</a>
+        <a href="/docs/native-network-web.html">Network + web</a>
+        <a href="/docs/programming-guide.html">Programming guide</a>
+        <a href="/docs/language.html">Language reference</a>
+        <a href="/docs/ide.html">IDE</a>
+        <a href="/docs/self-host.html">Contributor internals</a>
+        <a href="/downloads.html">Downloads</a>
+      </nav>      <article class="doc__body">
+        <h1 id="sparklang-and-ai-models">SparkLang and AI models</h1>
+        <p><strong>SparkLang</strong> (the Spark programming language) is a <strong>language and runtime</strong>
+        for creating and modifying AI workflows efficiently — not a pile of training
+        scripts and SDK glue, and <strong>not</strong> a Bifrost plugin. Model work, optional live
+        gateway routing, retrieval (<code class="inline-code">embed</code> / <code class="inline-code">retrieve</code>), and AI coding live in
+        plain <code class="inline-code">.spark</code> files you can diff, dry-run, and ship.</p>
+        <p><strong>Default story:</strong> dry-run / offline / no keys. Live <code class="inline-code">ask</code> / <code class="inline-code">embed</code> /
+        <code class="inline-code">retrieve</code> via gateway env is <strong>optional</strong> (<code class="inline-code">./spark --live</code>).</p>
+        <p><strong>Related:</strong> <a href="/docs/ai-models.html">MODEL_ANALYSIS.md</a> (methodology) ·
+        <a href="/learn/build-model.html">AI_PLAYBOOKS.md</a> (coding playbooks) ·
+        <a href="/docs/language.html">LANGUAGE.md</a> (full statement reference) ·
+        <a href="/docs/ai-models.html#live-gateway-integration-wired-today">ASK_LIVE.md</a> (optional live gateway <code class="inline-code">ask</code>) ·
+        <a href="/docs/adoption-bar.html">ADOPTION_BAR.md</a> (done/next/won't)</p>
+        <h2 id="what-spark-means-for-model-create-modify">What Spark means for model create / modify</h2>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Goal</th>
+        <th>Spark today</th>
+        <th>Honest limits</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><strong>Analyze</strong> reachable models</td>
+        <td><code class="inline-code">model analyze "alias" -&gt; report</code></td>
+        <td>Dry-run = fixtures under <code class="inline-code">examples/fixtures/models/</code>; not live leaderboards</td>
+        </tr>
+        <tr>
+        <td><strong>Compare</strong> on your suite</td>
+        <td><code class="inline-code">model compare […] on suite "…" -&gt; comparison</code></td>
+        <td>Same fixture metrics; optional <code class="inline-code">make model-probe</code> for read-only discovery</td>
+        </tr>
+        <tr>
+        <td><strong>Improve</strong> toward a preference</td>
+        <td><code class="inline-code">model improve from report prefer quality\|speed\|cost\|local -&gt; blueprint</code></td>
+        <td>Heuristic blueprint; you review before any training</td>
+        </tr>
+        <tr>
+        <td><strong>Build</strong> a blueprint file</td>
+        <td><code class="inline-code">model build blueprint into "out/better-model.md"</code></td>
+        <td><strong>Plan + config markdown only</strong> — never starts <code class="inline-code">train@*</code> / <strong>not weight training</strong></td>
+        </tr>
+        <tr>
+        <td><strong>Pick model alias</strong> per task</td>
+        <td><code class="inline-code">use auto</code> / <code class="inline-code">use code</code> / <code class="inline-code">use fast</code></td>
+        <td>Bootstrap heuristics in dry-run; live uses prior <code class="inline-code">model</code> line</td>
+        </tr>
+        <tr>
+        <td><strong>AI coding</strong> with less boilerplate</td>
+        <td><code class="inline-code">include "lib/playbooks.spark"</code>, <code class="inline-code">review</code> / <code class="inline-code">builder</code> / <code class="inline-code">implement</code></td>
+        <td>Playbooks = bootstrap VM; GAS <code class="inline-code">./spark</code> catches up on self-host track</td>
+        </tr>
+        <tr>
+        <td><strong>Call models live (optional)</strong></td>
+        <td><code class="inline-code">ask "…" -&gt; reply</code> with <code class="inline-code">./spark --live</code></td>
+        <td>Needs <code class="inline-code">AI_GATEWAY_URL</code> + key; companion <code class="inline-code">./spark-ask-http</code> (<code class="inline-code">use auto</code> resolves before the HTTP call)</td>
+        </tr>
+        <tr>
+        <td><strong>Embed / retrieve</strong></td>
+        <td><code class="inline-code">embed "…" -&gt; vec</code>, <code class="inline-code">retrieve "…" from project "docs" -&gt; hits</code></td>
+        <td>Dry fixtures; live <code class="inline-code">./spark-rag-http</code> (embeddings + rag-gateway)</td>
+        </tr>
+        <tr>
+        <td><strong>Probe gateway creds</strong></td>
+        <td><code class="inline-code">ask probe</code> / <code class="inline-code">gateway probe</code></td>
+        <td>Dry gateway probe check; 401 → credential unavailable (no invented routing)</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <p><strong>“All models”</strong> = configured gateway aliases + discovered local vLLM listeners
+        (read-only) — not every model on the internet. See <a href="/docs/ai-models.html">MODEL_ANALYSIS.md</a>.</p>
+        <p>Example end-to-end (dry-run):</p>
+        <pre class="doc__pre"><code class="language-spark">model code
+
+        model analyze &quot;fast&quot; -&gt; report
+
+        model compare [&quot;fast&quot;, &quot;code&quot;, &quot;best&quot;]
+          on suite &quot;examples/eval_suite.json&quot; -&gt; comparison
+
+        model improve from report prefer quality -&gt; blueprint
+
+        model build blueprint into &quot;out/my-model.md&quot;
+        </code></pre>
+        <pre class="doc__pre"><code class="language-bash">./spark --dry-run examples/model_improve.spark
+        </code></pre>
+        <h2 id="dry-run-today-no-keys-no-network-default">Dry-run today (no keys, no network) — default</h2>
+        <p>Default <code class="inline-code">./spark --dry-run</code> and <code class="inline-code">make test</code> stay <strong>offline</strong>:</p>
+        <ul class="doc__ul">
+        <li><strong>Model ops</strong> — fixture JSON from <code class="inline-code">examples/fixtures/models/</code> and
+          <code class="inline-code">examples/eval_suite.json</code>; banner says numbers are not live Elo scores</li>
+        <li><strong><code class="inline-code">ask</code> / <code class="inline-code">classify</code> / <code class="inline-code">extract</code> / <code class="inline-code">embed</code> / <code class="inline-code">retrieve</code></strong> — heuristic
+          stubs / fixtures (<code class="inline-code">examples/fixtures/rag/</code> for RAG)</li>
+        <li><strong><code class="inline-code">use auto</code></strong> — prints <code class="inline-code">[model] auto→fast|code</code> from task text (bootstrap)</li>
+        <li><strong>Playbooks</strong> — goldens under <code class="inline-code">bootstrap/fixtures/playbooks/</code>;
+          <code class="inline-code">make test-ai-playbooks</code></li>
+        <li><strong>IDE</strong> — <code class="inline-code">ide new|open|save|run|buffer|ask|show</code> + keymap traces under
+          <code class="inline-code">out/ide/</code> (PPM paint wire, not product Electron)</li>
+        </ul>
+        <p>Dry-run is the primary loop for CI, learning, and readable diffs <strong>before</strong>
+        you spend on live inference.</p>
+        <h2 id="optional-live-gateway-spark---live">Optional live gateway (<code class="inline-code">./spark --live</code>)</h2>
+        <p>When you opt in with <code class="inline-code">./spark --live</code>, Spark forks companions against an
+        OpenAI-compatible base URL (and rag-gateway for retrieve):</p>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Integration</th>
+        <th>Role</th>
+        <th>Env / companion</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><strong>OpenAI-compatible gateway</strong> (<code class="inline-code">AI_GATEWAY_URL</code>)</td>
+        <td>Chat + embeddings; alias routing (<code class="inline-code">fast</code>, <code class="inline-code">code</code>, <code class="inline-code">best</code>, <code class="inline-code">auto</code>→fast|code, <code class="inline-code">embed-rag</code>, <code class="inline-code">embed</code>, …). Bifrost is one example backend, not a Spark requirement.</td>
+        <td><strong><code class="inline-code">SPARK_GATEWAY_KEY</code></strong> preferred; <code class="inline-code">OPENAI_API_KEY</code> wire-compat only; <code class="inline-code">./spark-ask-http</code> / <code class="inline-code">./spark-rag-http --embed</code></td>
+        </tr>
+        <tr>
+        <td><strong>rag-gateway</strong> (<code class="inline-code">RAG_GATEWAY_URL</code>)</td>
+        <td><code class="inline-code">POST /v1/retrieve</code> (project + audience; CRAG on operator/cursor)</td>
+        <td>Default <code class="inline-code">:4620</code>; <code class="inline-code">RAG_GATEWAY_API_KEY</code> or <code class="inline-code">SPARK_GATEWAY_KEY</code>; <code class="inline-code">./spark-rag-http --retrieve</code></td>
+        </tr>
+        <tr>
+        <td><strong>Model probe</strong> (optional)</td>
+        <td>Read-only alias + local vLLM port discovery</td>
+        <td><code class="inline-code">make model-probe</code>; <code class="inline-code">SPARK_ALLOW_NET=1</code></td>
+        </tr>
+        <tr>
+        <td><strong>Encrypt-to-model</strong></td>
+        <td>Seal prompt; gateway decrypts at model boundary</td>
+        <td><a href="/docs/ai-models.html">ENCRYPT_GATEWAY.md</a>; <code class="inline-code">./spark-enc-gateway</code></td>
+        </tr>
+        <tr>
+        <td><strong>Public gateway probe</strong></td>
+        <td>Credential check only</td>
+        <td>a gateway probe credential; HTTP 401 → stop, no routing verdict</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <p>Prefer <strong>gateway aliases</strong>, never hardcoded vendor model strings in <code class="inline-code">.spark</code>.</p>
+        <pre class="doc__pre"><code class="language-bash">export AI_GATEWAY_URL=http://127.0.0.1:4000
+        export SPARK_GATEWAY_KEY=sk-…   # never commit; preferred over OPENAI_API_KEY
+        ./spark --live examples/ask_live.spark
+        ./spark --live examples/ask_live_use_auto.spark
+        ./spark --live examples/retrieve_embed_live.spark
+        # Offline proof (no key / no network):
+        make test-ask-gateway
+        make test-rag-gateway
+        </code></pre>
+        <h2 id="retrieval-stack-shipped">Retrieval stack (shipped)</h2>
+        <p>First-class language ops — not a fake roadmap:</p>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Layer</th>
+        <th>Integration</th>
+        <th>Spark statement</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><strong>Embeddings</strong></td>
+        <td>Gateway <code class="inline-code">embed</code> / <code class="inline-code">embed-rag</code> → <code class="inline-code">POST /v1/embeddings</code></td>
+        <td><code class="inline-code">embed "…" [model embed-rag\|embed] -&gt; vec</code></td>
+        </tr>
+        <tr>
+        <td><strong>RAG</strong></td>
+        <td>rag-gateway <code class="inline-code">POST /v1/retrieve</code></td>
+        <td><code class="inline-code">retrieve "…" from project "…" [audience …] [top_k N] -&gt; hits</code></td>
+        </tr>
+        <tr>
+        <td><strong>CRAG</strong></td>
+        <td>Gateway-side for <code class="inline-code">operator</code> / <code class="inline-code">cursor</code> audiences</td>
+        <td>Present in retrieve JSON <code class="inline-code">crag</code>; compose with <code class="inline-code">ask</code> for answers</td>
+        </tr>
+        <tr>
+        <td><strong>Dry fixtures</strong></td>
+        <td><code class="inline-code">examples/fixtures/rag/</code> + <code class="inline-code">bootstrap/dry_rag.c</code></td>
+        <td><code class="inline-code">make test-rag-gateway</code> offline</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <p>Governed ledger / product-specific projects stay outside public Spark
+        examples — use generic <code class="inline-code">project "docs"</code> in docs and fixtures.</p>
+        <h2 id="ai-coding-spark-ide">AI coding + Spark IDE</h2>
+        <p><strong>Less code:</strong> <code class="inline-code">include "lib/ai.spark"</code> sets <code class="inline-code">use auto</code>; copy a playbook from
+        <a href="/learn/build-model.html">AI_PLAYBOOKS.md</a> instead of hand-rolling SDK loops.</p>
+        <p><strong>Readable diffs:</strong> one <code class="inline-code">.spark</code> file per workflow — <code class="inline-code">pipeline</code>, <code class="inline-code">classify</code>,
+        <code class="inline-code">extract</code>, <code class="inline-code">review</code>, <code class="inline-code">builder</code>, <code class="inline-code">implement</code> — not scattered Python modules.</p>
+        <p><strong>Verified IDE surface</strong> (<a href="/docs/ide.html">IDE.md</a>): terminal-first <code class="inline-code">ide</code> ops + optional
+        interim Cursor workspace (<code class="inline-code">make ide</code>). Not Electron / not PyQt product chrome.</p>
+        <p>Voice (<code class="inline-code">listen</code> / <code class="inline-code">speak</code> / <code class="inline-code">voice { … }</code>) remains in the language for
+        speech pipelines — it is an <strong>optional</strong> surface, not primary positioning. See
+        <a href="/docs/language.html">VOICE.md</a>.</p>
+        <h2 id="what-spark-is-not">What Spark is not</h2>
+        <ul class="doc__ul">
+        <li>Not a Bifrost plugin — gateway is optional live backend for <code class="inline-code">ask</code> /
+          <code class="inline-code">embed</code> / <code class="inline-code">retrieve</code></li>
+        <li>Not Apache Spark / AdaCore SPARK</li>
+        <li>Not a replacement narrative for “throw away Python + OpenAI SDK” — Spark
+          complements gateways and existing stacks with a reviewable language surface</li>
+        <li>Not unauthorized GPU training — <code class="inline-code">model build</code> writes blueprints only</li>
+        <li>Not in-process CRAG — grade/retry stay on rag-gateway; Spark surfaces
+          <code class="inline-code">crag</code> JSON from <code class="inline-code">retrieve</code> and composes with <code class="inline-code">ask</code></li>
+        <li>Not a vendor voice-product codebase — Spark stays a general AI language</li>
+        </ul>
+        <h2 id="contributor-internals">Contributor internals</h2>
+        <p>Bytecode VM, self-host, and assembler tiers are <strong>contributor-facing</strong> only:
+        <a href="/docs/self-host.html">SELF_HOST.md</a>, <a href="/docs/self-host.html">SPARK_BC.md</a>, <code class="inline-code">website/docs/self-host.html</code>.
+        User-facing model docs stay in this file and <a href="/docs/ai-models.html">MODEL_ANALYSIS.md</a>.</p>
+      </article>
+      </main>
+    </div>
+
+    <footer class="site-footer">
+      <div class="shell footer-inner">
+        <span>Spark programming language</span>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="/learn/">Learn</a>
+          <a href="/docs/language.html">Reference</a>
+          <a href="/downloads.html">Downloads</a>
+          <a href="/playground.html">Playground</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="/js/site.js"></script>
+  </body>
+</html>

@@ -1,0 +1,6 @@
+# Spark IDE - proven bare ide key quit (no prior open).
+# After status-new-star. Singular quit alone ok:true + keys_trace.
+# Run: ./spark --dry-run examples/ide_key_quit_alone.spark
+# No Electron. No keymap n. No new asm - documents proven quit only.
+
+ide key quit

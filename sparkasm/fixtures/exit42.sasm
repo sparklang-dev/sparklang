@@ -1,0 +1,8 @@
+# Spark-asm IR — tiny _start + Linux exit(42)
+# Not GAS. Assemble with: sparkasm -o exit42.o exit42.sasm
+.global _start
+.text
+_start:
+	mov	rax, 60
+	mov	rdi, 42
+	syscall

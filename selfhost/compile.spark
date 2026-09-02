@@ -1,0 +1,12 @@
+# selfhost/compile.spark — compiler seed catalog (lane A).
+# Not the compiler. C spark_compile_file lowers hello/mini to SPARK_BC.
+# Gate: spark-bootstrap --compile file.spark -o file.sparkbc
+#
+# Planned lowering (no inventing — LANGUAGE.md hello forms first):
+#   Program → MODEL ASK* PRINT* HALT
+#   Ask → ASK prompt_idx bind_idx
+#   Print → PRINT ident_idx
+#
+model code
+ask "Compile seed: emit SPARK_BC from AST; fail loud on unknown Stmt" -> compile_job
+print compile_job

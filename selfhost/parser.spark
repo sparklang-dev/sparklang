@@ -1,0 +1,71 @@
+# Self-host parser seed (lane A).
+# Destination: parse token stream → AST on bootstrap B.
+# Today: dry-run program + review fixture (no parse op invented).
+# Real tokens today: ./selfhost/spark-lex (C aid).
+#
+# Planned AST nodes (grow into Spark once B can run real parse):
+#   Program = Stmt*
+#   Stmt = Model | Ask | Print | ReviewPath | Pipeline | ...
+#   Ask = string + optional block + optional -> Ident
+#   Pipeline = { Ask (| Ask)* }
+# Input SoT for golden: selfhost/expected_*.tokens.jsonl
+# GAS pads `let` dumps; Stage 1 golden: fixtures/let_dry.spark.
+
+model code
+
+review path "selfhost/fixtures/ops.spark" -> ops_src
+print ops_src
+
+review path "selfhost/fixtures/bootstrap_ops.spark" -> bootstrap_src
+print bootstrap_src
+
+ask "Parser seed: consume spark-lex JSONL; emit Program AST; fail loud on unexpected kind" -> parse_job
+print parse_job
+
+ask "Bootstrap AST: ToolDecl, WithBlock, ExtractDecl, Listen, Speak, Pipeline{|PipeStep*}" -> bootstrap_ast
+print bootstrap_ast
+
+ask "Review/voice AST: ReviewPath, ReviewText, VoiceBlock{Listen,Speak}" -> review_voice_ast
+print review_voice_ast
+
+ask "Browser/mitm AST: BrowserRun, BrowserGoto, MitmEnable" -> browser_dry_ast
+print browser_dry_ast
+
+ask "IDE AST: IdeOpen, IdeRun, IdeAsk, IdeShow" -> ide_dry_ast
+print ide_dry_ast
+
+ask "Classify AST: ClassifyDecl, ClassifyMulti" -> classify_dry_ast
+print classify_dry_ast
+
+ask "Let AST: LetDecl name string" -> let_dry_ast
+print let_dry_ast
+
+ask "Ask/generate AST: Ask string -> Ident | Generate string -> Ident" -> ask_dry_ast
+print ask_dry_ast
+
+ask "Engine AST: EngineFetch, EngineParse, EngineCssAttach, EngineLayout" -> engine_dry_ast
+print engine_dry_ast
+
+ask "IDE keys AST: IdeKeys, IdeKeyOpen, IdeKeyShow, IdeKeySave, IdeKeyRun, IdeKeyQuit" -> ide_keys_dry_ast
+print ide_keys_dry_ast
+
+ask "Binary AST: BinaryOpen, BinaryElf, BinaryDisasm, BinaryUnderstand, BinaryKernelmod, BinaryFirmware" -> binary_dry_ast
+print binary_dry_ast
+
+ask "Network AST: NetworkCaptureProbe, NetworkCaptureIface, NetworkOpen, NetworkAnalyze, NetworkExplain" -> network_dry_ast
+print network_dry_ast
+
+ask "Encrypt AST: CryptoKeygen, EncryptGatewayEnable, GatewayEncryptOnOff, EncryptSeal, EncryptOpen" -> encrypt_dry_ast
+print encrypt_dry_ast
+
+ask "CUDA AST: CudaProbe, CudaMemstat, CudaPreferGpu, MemoryPin" -> cuda_dry_ast
+print cuda_dry_ast
+
+ask "OS AST: OsDesign, OsSpecify, OsGenerate, OsBuild, OsExplain" -> os_dry_ast
+print os_dry_ast
+
+ask "PCIe AST: CudaPcie, PcieProbeGpu, CudaPcieExplain" -> pcie_dry_ast
+print pcie_dry_ast
+
+ask "Next A gate after seeds: wait Stage 1 B subset; then Stage 3 run lexer.spark on B vs golden" -> next_gate
+print next_gate

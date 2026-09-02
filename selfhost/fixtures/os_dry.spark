@@ -1,0 +1,19 @@
+# OS blueprint dry keywords lex fixture.
+# Stage 1 golden (expected_os_dry.tokens.jsonl).
+# Keywords: os, generate (design/specify/build/explain/name/kind stay IDENT).
+# Forms from LANGUAGE.md / examples/os_agentos.spark.
+# Not a full compiler. Avoid `let` (GAS scaffold pads dumps).
+# Never installs/reboots — blueprint stubs only.
+model code
+
+os design name "agentos" kind ai_agent -> blueprint
+os specify blueprint {
+  target: x86_64
+  memory_model: flat
+} -> spec
+os generate spec into "out/os/agentos" -> tree
+os build tree -> image
+os explain blueprint -> text
+
+print blueprint
+print text

@@ -1,0 +1,14 @@
+# Classify dry keywords lex fixture.
+# Stage 1 golden (expected_classify_dry.tokens.jsonl).
+# Keywords: model, classify, print. Labels/from/multi stay IDENT.
+# Not a full compiler. Avoid `let` (GAS scaffold pads dumps).
+# Classify must be one line (GAS treats indented `from` as new stmt).
+# Forms from docs/LANGUAGE.md / examples/classify_intent.spark.
+model fast
+
+classify Intent { support, sales, spam } from "My account is locked" min_confidence 0.7 -> intent
+
+classify multi Tags { support, sales, spam } from "Please help me place an order" -> tags
+
+print intent
+print tags

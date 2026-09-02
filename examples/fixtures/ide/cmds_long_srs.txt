@@ -1,0 +1,9 @@
+# Proven keymap long-form save/run/show (aliases of s/r/w).
+# Consumed by: ide keys "examples/fixtures/ide/cmds_long_srs.txt"
+# open + save + run + show + quit (dry: save/run trace only)
+
+open examples/hello.spark
+save
+run
+show
+quit

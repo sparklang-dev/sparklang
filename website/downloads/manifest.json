@@ -1,0 +1,348 @@
+{
+  "version": "0.6.0",
+  "updated": "2026-09-02T06:25Z",
+  "build_host": {
+    "arch": "x86_64",
+    "spark_prebuilt_linux": "yes",
+    "aarch64_linux_gcc": "yes",
+    "x86_64_mingw_gcc": "no",
+    "aarch64_mingw_gcc": "no"
+  },
+  "skipped": [
+    {
+      "os": "linux",
+      "arch": "i686",
+      "reason": "32-bit Linux (i686) is not offered — Spark core targets 64-bit x86. Use x86_64 or build from source."
+    }
+  ],
+  "platforms": [
+    {
+      "os": "linux",
+      "arch": "x86_64",
+      "id": "linux-x86_64",
+      "label": "Linux x86_64",
+      "kind": "installer",
+      "format": "deb",
+      "file": "spark-runtime-linux-x86_64-0.6.0.deb",
+      "sha256": "4deb76c5eaebf5b09cde5b7f56eb5c843e0c869008c7cc716656df908c5a2d5a",
+      "primary": true,
+      "graphical": true,
+      "notes": "Graphical: .deb — spark-bc primary; spark-gas-legacy secondary", "includes": [
+        "spark-bc",
+        "spark-bootstrap",
+        "spark-gas-legacy",
+        "spark-ask-http",
+        "spark-ask-probe",
+        "spark-enc-gateway",
+        "spark-stt-tts",
+        "spark-review-url",
+        "sparkasm",
+        "ai-examples",
+        "spark-run.sh",
+        "runtime-ai-guide.txt",
+        "spark.toml.example"
+      ]
+    },    {
+      "os": "linux",
+      "arch": "x86_64",
+      "id": "linux-x86_64",
+      "label": "Linux x86_64",
+      "kind": "installer",
+      "format": "gui-script",
+      "file": "spark-install-linux-gui.sh",
+      "sha256": "ea7cbb973db0888f790f7b08cdf48a9587b19e9ab568276d7d0b41a825ceea98",
+      "primary": false,
+      "graphical": true,
+      "notes": "zenity/yad wizard — download + install .deb with progress bar"
+    },    {
+      "os": "linux",
+      "arch": "x86_64",
+      "id": "linux-x86_64",
+      "label": "Linux x86_64",
+      "kind": "installer",
+      "format": "curl-bash",
+      "file": "spark-install-linux.sh",
+      "sha256": "7e8b04ace42453ac16ce92ced5d080c5d828ed1ad79bb4902ade7a04112d9c23",
+      "primary": false,
+      "graphical": false,
+      "notes": "CLI fallback — auto-detects CPU; prefers .deb with root"
+    },    {
+      "os": "linux",
+      "arch": "x86_64",
+      "id": "linux-x86_64",
+      "label": "Linux x86_64",
+      "kind": "binary",
+      "format": "tar.gz",
+      "file": "spark-runtime-linux-x86_64-0.6.0.tar.gz",
+      "sha256": "31bd7edb7b787d24b8961c389b0a0f0eadb6185b424ea740f79dc43d2c76521f",
+      "primary": false,
+      "graphical": false,
+      "notes": "Prebuilt tarball — spark-bc primary, spark-gas-legacy secondary", "includes": [
+        "spark-bc",
+        "spark-bootstrap",
+        "spark-gas-legacy",
+        "spark-ask-http",
+        "spark-ask-probe",
+        "spark-enc-gateway",
+        "spark-stt-tts",
+        "spark-review-url",
+        "sparkasm",
+        "ai-examples",
+        "spark-run.sh",
+        "runtime-ai-guide.txt",
+        "spark.toml.example"
+      ]
+    },    {
+      "os": "linux",
+      "arch": "arm64",
+      "id": "linux-arm64",
+      "label": "Linux arm64 (aarch64)",
+      "kind": "installer",
+      "format": "deb",
+      "file": "spark-runtime-linux-arm64-0.6.0.deb",
+      "sha256": "96091d8ec39488c5cf611bc0da8bca284cde616acc742e65ab9e6d30bf536b42",
+      "primary": true,
+      "graphical": true,
+      "notes": "Graphical .deb — hybrid prebuilt bootstrap+companions; spark asm VM pending arm64 port", "includes": [
+        "spark-bc",
+        "spark-bootstrap",
+        "spark-ask-http",
+        "spark-ask-probe",
+        "spark-stt-tts",
+        "spark-review-url",
+        "sparkasm",
+        "ai-examples",
+        "spark-run.sh",
+        "runtime-ai-guide.txt",
+        "spark.toml.example",
+        "ARCH-NOTES.txt"
+      ]
+    },    {
+      "os": "linux",
+      "arch": "arm64",
+      "id": "linux-arm64",
+      "label": "Linux arm64 (aarch64)",
+      "kind": "hybrid",
+      "format": "tar.gz",
+      "file": "spark-runtime-linux-arm64-0.6.0.tar.gz",
+      "sha256": "b90f0425f12181265fa9aeee11a9751effa0837cf77601dfb7ce2e704435a06d",
+      "primary": false,
+      "graphical": false,
+      "notes": "Hybrid prebuilt tarball (spark-bc / spark-bootstrap primary)", "includes": [
+        "spark-bc",
+        "spark-bootstrap",
+        "spark-ask-http",
+        "spark-ask-probe",
+        "spark-stt-tts",
+        "spark-review-url",
+        "sparkasm",
+        "ai-examples",
+        "spark-run.sh",
+        "runtime-ai-guide.txt",
+        "spark.toml.example",
+        "ARCH-NOTES.txt"
+      ]
+    },    {
+      "os": "linux",
+      "arch": "arm64",
+      "id": "linux-arm64",
+      "label": "Linux arm64 (aarch64)",
+      "kind": "source-kit",
+      "format": "tar.gz",
+      "file": "spark-runtime-linux-arm64-0.6.0-source.tar.gz",
+      "sha256": "38d151e4fd30308962d89dd27e569d07d334699a0cf7044a9dcf4afd847f9c59",
+      "primary": false,
+      "graphical": false,
+      "notes": "Full source kit — compile bootstrap+sparkasm locally", "includes": [
+        "spark-bootstrap",
+        "sparkasm",
+        "scripts/spark-bc",
+        "ai-examples",
+        "build.sh",
+        "spark-run.sh",
+        "runtime-ai-guide.txt",
+        "spark.toml.example"
+      ]
+    },    {
+      "os": "macos",
+      "arch": "arm64",
+      "id": "macos-arm64",
+      "label": "macOS Apple Silicon (arm64)",
+      "kind": "installer",
+      "format": "pkg",
+      "file": "spark-runtime-macos-arm64-0.6.0.pkg",
+      "sha256": "0b46c59b14e3041858c3b1ed60bbfe9d583354fa060232a5d5102f18e5e42c22",
+      "primary": true,
+      "graphical": true,
+      "notes": "Graphical .pkg — double-click in Finder; welcome + conclusion pages", "includes": [
+        "spark-bootstrap",
+        "sparkasm",
+        "scripts/spark-bc",
+        "ai-examples",
+        "build.sh",
+        "spark-run.sh",
+        "runtime-ai-guide.txt",
+        "spark.toml.example"
+      ]
+    },    {
+      "os": "macos",
+      "arch": "arm64",
+      "id": "macos-arm64",
+      "label": "macOS Apple Silicon (arm64)",
+      "kind": "source-kit",
+      "format": "tar.gz",
+      "file": "spark-runtime-macos-arm64-0.6.0.tar.gz",
+      "sha256": "92f94885d3ac400c0526e2558be16b07fe6ef75cd3f657c54762752c6c7d1166",
+      "primary": false,
+      "graphical": false,
+      "notes": "Portable source kit tarball (manual)", "includes": [
+        "spark-bootstrap",
+        "sparkasm",
+        "scripts/spark-bc",
+        "ai-examples",
+        "build.sh",
+        "spark-run.sh",
+        "runtime-ai-guide.txt",
+        "spark.toml.example"
+      ]
+    },    {
+      "os": "macos",
+      "arch": "x86_64",
+      "id": "macos-x86_64",
+      "label": "macOS Intel (x86_64)",
+      "kind": "installer",
+      "format": "pkg",
+      "file": "spark-runtime-macos-x86_64-0.6.0.pkg",
+      "sha256": "f565b8da2b9e1223b2f84bc89c9d8c6ff5c55e203051fcfaae3f7a5daa0228a4",
+      "primary": false,
+      "graphical": true,
+      "notes": "Graphical .pkg — double-click in Finder; welcome + conclusion pages", "includes": [
+        "spark-bootstrap",
+        "sparkasm",
+        "scripts/spark-bc",
+        "ai-examples",
+        "build.sh",
+        "spark-run.sh",
+        "runtime-ai-guide.txt",
+        "spark.toml.example"
+      ]
+    },    {
+      "os": "macos",
+      "arch": "x86_64",
+      "id": "macos-x86_64",
+      "label": "macOS Intel (x86_64)",
+      "kind": "source-kit",
+      "format": "tar.gz",
+      "file": "spark-runtime-macos-x86_64-0.6.0.tar.gz",
+      "sha256": "80c4701a76002acb918558a04c595c880b4739eb5b83b99d8f30daeb19554cef",
+      "primary": false,
+      "graphical": false,
+      "notes": "Portable source kit tarball (manual)", "includes": [
+        "spark-bootstrap",
+        "sparkasm",
+        "scripts/spark-bc",
+        "ai-examples",
+        "build.sh",
+        "spark-run.sh",
+        "runtime-ai-guide.txt",
+        "spark.toml.example"
+      ]
+    },    {
+      "os": "macos",
+      "arch": "arm64",
+      "id": "macos-arm64",
+      "label": "macOS (auto)",
+      "kind": "installer",
+      "format": "curl-bash",
+      "file": "spark-install-macos.sh",
+      "sha256": "20d72207a019f896514481fff9fb0cfdd2638ee90804ea0234982fd7ca77be19",
+      "primary": false,
+      "graphical": false,
+      "notes": "CLI fallback — picks arm64 or x86_64 .pkg from uname -m"
+    },    {
+      "os": "windows",
+      "arch": "x86_64",
+      "id": "windows-x86_64",
+      "label": "Windows x64",
+      "kind": "installer",
+      "format": "inno-exe",
+      "file": "spark-runtime-windows-x86_64-0.6.0-setup.exe",
+      "sha256": "da6f2f73d3d1a5ff76ace8d279dc7594b003b029c2f3cb83e3235c5976f1a0de",
+      "primary": true,
+      "graphical": true,
+      "notes": "Graphical Inno Setup wizard — install dir, PATH option, first-run build", "includes": [
+        "spark-bootstrap",
+        "sparkasm",
+        "scripts/spark-bc",
+        "ai-examples",
+        "build.sh",
+        "spark-run.sh",
+        "runtime-ai-guide.txt",
+        "spark.toml.example"
+      ]
+    },    {
+      "os": "windows",
+      "arch": "x86_64",
+      "id": "windows-x86_64",
+      "label": "Windows x64",
+      "kind": "installer",
+      "format": "zip",
+      "file": "spark-runtime-windows-x86_64-0.6.0-setup.zip",
+      "sha256": "5e5e693d8cdc92c1883d0fb568a48bd2fb8fb0473b829865549218b0d46bcafe",
+      "primary": false,
+      "graphical": false,
+      "notes": "CLI fallback — extract zip, run Setup.bat (needs Git Bash + gcc)", "includes": [
+        "spark-bootstrap",
+        "sparkasm",
+        "scripts/spark-bc",
+        "ai-examples",
+        "build.sh",
+        "spark-run.sh",
+        "runtime-ai-guide.txt",
+        "spark.toml.example"
+      ]
+    },    {
+      "os": "windows",
+      "arch": "arm64",
+      "id": "windows-arm64",
+      "label": "Windows arm64",
+      "kind": "installer",
+      "format": "inno-exe",
+      "file": "spark-runtime-windows-arm64-0.6.0-setup.exe",
+      "sha256": "1681f70e1ab9186bff89c365851736144363b43e5337cf6d3205d775640420d1",
+      "primary": false,
+      "graphical": true,
+      "notes": "Graphical Inno Setup wizard — install dir, PATH option, first-run build", "includes": [
+        "spark-bootstrap",
+        "sparkasm",
+        "scripts/spark-bc",
+        "ai-examples",
+        "build.sh",
+        "spark-run.sh",
+        "runtime-ai-guide.txt",
+        "spark.toml.example"
+      ]
+    },    {
+      "os": "windows",
+      "arch": "arm64",
+      "id": "windows-arm64",
+      "label": "Windows arm64",
+      "kind": "installer",
+      "format": "zip",
+      "file": "spark-runtime-windows-arm64-0.6.0-setup.zip",
+      "sha256": "3dd5b32853411a3b0ff0b0cc1196d81b6d2e9c23f2cb8eb19c8617b30eda4085",
+      "primary": false,
+      "graphical": false,
+      "notes": "CLI fallback — extract zip, run Setup.bat (needs Git Bash + gcc)", "includes": [
+        "spark-bootstrap",
+        "sparkasm",
+        "scripts/spark-bc",
+        "ai-examples",
+        "build.sh",
+        "spark-run.sh",
+        "runtime-ai-guide.txt",
+        "spark.toml.example"
+      ]
+    }
+  ]
+}

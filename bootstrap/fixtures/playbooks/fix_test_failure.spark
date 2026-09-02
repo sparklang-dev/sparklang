@@ -1,0 +1,4 @@
+include "lib/ai.spark"
+let failure "AssertionError: expected 3 got 2 in test_add"
+ask "Fix this test failure: {failure}" -> fix
+print fix

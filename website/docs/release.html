@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Release process — Spark</title>
+    <meta name="description" content="How SparkLang versions and site releases are cut." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/css/tokens.css?v=bb4433f" />
+    <link rel="stylesheet" href="/css/site.css?v=bb4433f" />
+  </head>
+  <body class="doc-page">
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="site-brand" href="/" aria-label="Spark home">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z" fill="currentColor" />
+          </svg>
+          Spark
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+        </button>
+        <div class="header-nav-wrap">
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <ul class="nav-primary">
+              <li><a href="/learn/">Learn</a></li>
+              <li><a href="/docs/language.html">Docs</a></li>
+              <li><a href="/downloads.html">Download</a></li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">More</button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/adoption-bar.html">Adoption bar</a></li>
+                  <li><a href="/docs/ai-models.html">AI models</a></li>
+                  <li><a href="/docs/native-network-web.html">Network + web</a></li>
+                  <li><a href="/docs/programming-guide.html">Programming guide</a></li>
+                  <li><a href="/docs/ide.html">IDE</a></li>
+                  <li><a href="/docs/self-host.html">Contributor internals</a></li>
+                </ul>
+              </li>
+            </ul>
+            <a href="/playground.html" class="nav-cta">Try</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <div class="shell doc-layout">
+      <aside class="doc-sidebar" aria-label="Table of contents">
+        <p class="doc-sidebar__title">On this page</p>
+        <nav id="doc-toc-list"></nav>
+      </aside>
+      <main class="doc-main">
+      <nav class="doc__nav" aria-label="Docs">
+        <a href="/learn/">Learn</a>
+        <a href="/docs/adoption-bar.html">Adoption bar</a>
+        <a href="/docs/ai-models.html">AI models</a>
+        <a href="/docs/native-network-web.html">Network + web</a>
+        <a href="/docs/programming-guide.html">Programming guide</a>
+        <a href="/docs/language.html">Language reference</a>
+        <a href="/docs/ide.html">IDE</a>
+        <a href="/docs/self-host.html">Contributor internals</a>
+        <a href="/downloads.html">Downloads</a>
+      </nav>      <article class="doc__body">
+        <h1 id="sparklang-release-process">SparkLang release process</h1>
+        <h2 id="version-source">Version source</h2>
+        <ul class="doc__ul">
+        <li>Runtime / installer kit version: <code class="inline-code">website/downloads/manifest.json</code>
+          → <code class="inline-code">"version"</code></li>
+        <li>User-facing notes: <code class="inline-code">CHANGELOG.md</code> (mirrored at <code class="inline-code">/CHANGELOG.html</code>)</li>
+        <li>CLI: <code class="inline-code">./spark --version</code></li>
+        </ul>
+        <h2 id="cutting-a-release">Cutting a release</h2>
+        <ol class="doc__ol">
+        <li>Bump <code class="inline-code">manifest.json</code> version when shipping installers (keep CHANGELOG in sync).</li>
+        <li>Add a <code class="inline-code">## X.Y.Z — YYYY-MM-DD</code> section to <code class="inline-code">CHANGELOG.md</code>.</li>
+        <li>Commit + merge to <code class="inline-code">main</code>.</li>
+        <li>Tag the release commit for internal tracking (source may stay private).</li>
+        </ol>
+        <pre class="doc__pre"><code class="language-bash">git tag -a vX.Y.Z -m &quot;SparkLang X.Y.Z&quot;
+git push origin vX.Y.Z
+# Prefer Pages-hosted installers — do not point visitors at private forge releases.
+</code></pre>
+        <ol start="5">
+        <li>Deploy Pages (<code class="inline-code">website/</code>) so Changelog + Downloads match the tag.</li>
+        </ol>
+        <h2 id="public-identity">Public identity</h2>
+        <p>Public framing is product-only: <strong>SparkLang · MIT · version from the
+        site changelog</strong>. No personal maintainer name and no public clone CTA
+        while the source repository is private.</p>
+        <p><strong>CLI names:</strong> <code class="inline-code">spark</code> / <code class="inline-code">./spark-bootstrap</code> remain the UX entrypoints.
+        Product name in docs/site is <strong>SparkLang</strong>.</p>
+        <h2 id="notes">Notes</h2>
+        <ul class="doc__ul">
+        <li>Do not invent token/cost numbers in release notes.</li>
+        <li>Dry-run remains the default story; live gateway is optional.</li>
+        </ul>
+      </article>
+      </main>
+    </div>
+
+    <footer class="site-footer">
+      <div class="shell footer-inner">
+        <span>Spark programming language</span>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="/learn/">Learn</a>
+          <a href="/docs/language.html">Reference</a>
+          <a href="/downloads.html">Downloads</a>
+          <a href="/playground.html">Playground</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="/js/site.js"></script>
+  </body>
+</html>

@@ -1,0 +1,6 @@
+# Spark IDE - proven ide open missing-path fail-loud.
+# After ask-bind. Open of a non-existent path exits non-zero.
+# Run: ./spark --dry-run examples/ide_open_miss.spark  (expect rc!=0)
+# No Electron. No new asm - documents proven fail-loud only.
+
+ide open "examples/no_such_ide_file.spark"

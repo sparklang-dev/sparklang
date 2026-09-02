@@ -1,0 +1,4 @@
+# DX sugar: say (alias for speak) — dry-run writes stub WAV
+use fast
+
+say "Hello from Spark say sugar" -> "spark-out.wav"

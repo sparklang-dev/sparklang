@@ -1,0 +1,11 @@
+# Spark IDE keymap — proven keys, open (`o`) focus.
+# After keys-show `06aae20`. Open already in asm — this slice
+# documents+tests the `o path` token like save/run/quit/show.
+# Dry: script `o` → {"cmd":"open"} + real read + editor.ppm paint.
+# Also proves single `ide key open` after script.
+# Run: ./spark --dry-run examples/ide_keys_open.spark
+# No Electron. No new asm — documents proven keys only.
+
+ide keys "examples/fixtures/ide/cmds_open.txt"
+
+ide key open "examples/hello.spark"

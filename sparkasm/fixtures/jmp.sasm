@@ -1,0 +1,12 @@
+# near jmp (forward) — skip a wrong exit status
+.global _start
+.text
+_start:
+	jmp	ok
+	mov	rax, 60
+	mov	rdi, 1
+	syscall
+ok:
+	mov	rax, 60
+	mov	rdi, 42
+	syscall

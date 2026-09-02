@@ -1,0 +1,24 @@
+# Spark engine B — minimal JS phase-1 (asm interpreter).
+# Numbers, strings, +, unary -, var num, console.log → buffer.
+# Not full ES. Prefer single-quoted JS strings inside Spark "…".
+# DOM hook: engine parse runs <script> text via engine_js_eval.
+
+js selftest -> ok
+
+js eval "1+1" -> sum
+print sum
+
+js eval "-1" -> neg
+print neg
+
+js eval "var x = 1; x+2" -> vsum
+print vsum
+
+js eval "'hi'+' '+'there'" -> greeting
+print greeting
+
+js run "console.log(1+1);console.log('a'+'b')" -> log
+print log
+
+js console -> buf
+print buf

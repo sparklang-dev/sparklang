@@ -1,0 +1,42 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "spark: make",
+      "type": "shell",
+      "command": "make",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "spark: test",
+      "type": "shell",
+      "command": "make test",
+      "options": { "cwd": "${workspaceFolder}" },
+      "group": { "kind": "test", "isDefault": true },
+      "problemMatcher": []
+    },
+    {
+      "label": "spark: dry-run hello",
+      "type": "shell",
+      "command": "./spark --dry-run examples/hello.spark",
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "spark: machine-proof",
+      "type": "shell",
+      "command": "make machine-proof",
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "spark: live ask (needs gateway key in env)",
+      "type": "shell",
+      "command": "./spark --live examples/ask_live.spark",
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{"kind":"COMMENT","lexeme":"# Mini fixture for self-host lexer golden.","line":1,"col":1}
+{"kind":"COMMENT","lexeme":"# Keep small - Stage 0 dry-run + spark-lex input.","line":2,"col":1}
+{"kind":"KEYWORD","lexeme":"model","line":3,"col":1}
+{"kind":"IDENT","lexeme":"code","line":3,"col":7}
+{"kind":"KEYWORD","lexeme":"ask","line":5,"col":1}
+{"kind":"STRING","lexeme":"\"Explain gravity in one sentence\"","line":5,"col":5}
+{"kind":"ARROW","lexeme":"->","line":5,"col":39}
+{"kind":"IDENT","lexeme":"text","line":5,"col":42}
+{"kind":"KEYWORD","lexeme":"print","line":7,"col":1}
+{"kind":"IDENT","lexeme":"text","line":7,"col":7}
+{"kind":"EOF","lexeme":"","line":8,"col":1}

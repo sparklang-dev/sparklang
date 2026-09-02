@@ -1,0 +1,13 @@
+# call / ret / push / pop — self-host vertical
+.global _start
+.text
+_start:
+	call	set_exit
+	mov	rax, 60
+	syscall
+
+set_exit:
+	push	rax
+	mov	rdi, 42
+	pop	rax
+	ret

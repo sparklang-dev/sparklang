@@ -1,0 +1,3 @@
+# engine parse — C bootstrap dry parity with GAS engine_html.s
+engine parse "engine/fixtures/hello.html" -> dom
+print dom

@@ -1,0 +1,14 @@
+# test reg,imm — bit test then jz → exit 42
+.global _start
+.text
+_start:
+	mov	rdi, 0
+	test	rdi, 1
+	jz	exit42
+	mov	rdi, 1
+	jmp	done
+exit42:
+	mov	rdi, 42
+done:
+	mov	rax, 60
+	syscall

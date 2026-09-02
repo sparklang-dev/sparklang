@@ -1,0 +1,9 @@
+# Spark IDE - proven ide open bind (-> opened) + print op JSON.
+# After key-open-nopath 4b7f791. Like run/new/buffer binds, open
+# bind stores op JSON; print opened shows that JSON.
+# Run: ./spark --dry-run examples/ide_open_bind.spark
+# No Electron. No keymap n. No new asm - documents proven bind only.
+
+ide open "examples/hello.spark" -> opened
+
+print opened

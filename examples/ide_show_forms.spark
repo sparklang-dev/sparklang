@@ -1,0 +1,13 @@
+# Spark IDE — proven ide show forms (bare + quoted .ppm path).
+# After keys-open. Forms already live in ide_show / keys show -
+# this slice documents+tests both in one example.
+# Proof: both emit {"op":"ide.show","ok":true}; engine show.json
+# path out/ide/editor.ppm; no Electron.
+# Run: ./spark --dry-run examples/ide_show_forms.spark
+# No Electron. No new asm - documents proven forms only.
+
+ide open "examples/hello.spark" -> opened
+
+ide show -> shown
+
+ide show "out/ide/editor.ppm" -> shown

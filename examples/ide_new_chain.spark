@@ -1,0 +1,18 @@
+# Spark IDE — proven ide new example chain.
+# After dirty * (2d1854c). Core ide new only — keymap n→new NOT proven.
+# Flow: new with path (empty dirty *) → buffer → save (0-byte, clean)
+#       → open same path (clean) → buffer.
+# Proof: JSON dirty true/false; out/ide/ide_new_blank.spark size 0;
+#        status.txt after save/open has no trailing *.
+# Run: ./spark --dry-run examples/ide_new_chain.spark
+# No Electron. No new asm — documents proven core op only.
+
+ide new "out/ide/ide_new_blank.spark"
+
+ide buffer
+
+ide save
+
+ide open "out/ide/ide_new_blank.spark"
+
+ide buffer

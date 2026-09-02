@@ -1,0 +1,9 @@
+# bsf — bit 8 of 0x100 → 8; +34 → exit 42
+.global _start
+.text
+_start:
+	mov	rsi, 256
+	bsf	rdi, rsi
+	add	rdi, 34
+	mov	rax, 60
+	syscall

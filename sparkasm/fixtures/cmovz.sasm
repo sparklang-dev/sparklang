@@ -1,0 +1,10 @@
+# cmovz — ZF; move 42 into rdi
+.global _start
+.text
+_start:
+	mov	rdi, 0
+	mov	rsi, 42
+	cmp	rdi, rdi
+	cmove	rdi, rsi
+	mov	rax, 60
+	syscall

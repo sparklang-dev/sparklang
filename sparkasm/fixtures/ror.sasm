@@ -1,0 +1,8 @@
+# ror — 84 ror 1 → exit 42
+.global _start
+.text
+_start:
+	mov	rdi, 84
+	ror	rdi, 1
+	mov	rax, 60
+	syscall

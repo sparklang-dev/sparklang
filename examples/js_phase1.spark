@@ -1,0 +1,13 @@
+# Engine B JS phase-1 — numbers, strings, +, unary -, var num,
+# console.log (not full ES). Binary - / var string / full ES → fail loud.
+# Also: browser/engine/js.spark (includes js console dump).
+# After parse: <script> text → engine_js_eval (see engine_parse.spark /
+# engine/fixtures/hello.html). Still not full ES.
+js eval "1+1" -> sum
+js eval "'a'+'b'" -> cat
+js eval "-1" -> neg
+js eval "-1+3" -> negadd
+js eval "var x = 1; x+2" -> vsum
+js run "console.log(1+1)" -> log
+js console -> buf
+js selftest -> ok

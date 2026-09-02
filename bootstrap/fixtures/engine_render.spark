@@ -1,0 +1,5 @@
+# engine render — C bootstrap dry parity with GAS render.json
+engine parse "engine/fixtures/style_basic.html" -> dom
+engine css attach -> styles
+engine render -> frame
+print frame

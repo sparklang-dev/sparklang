@@ -1,0 +1,11 @@
+# Spark Browser — sole dry language entry (no host GUI / no display).
+# Live product: ../spark-browser/browser/run.spark via
+#   cd ../spark-browser && make run → ./spark --live …
+# GUI only: browser gui + --live → ./spark-browser-host (Qt).
+# Product default: QUIC ON (--enable-quic); optional mitm disable_quic on.
+
+browser run "examples/browser_main.spark" -> session
+browser goto "https://example.com/" -> page
+mitm enable -> mitm_session
+mitm filter "example\\.com" -> filt
+mitm har export -> har

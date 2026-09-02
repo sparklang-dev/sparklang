@@ -1,0 +1,9 @@
+# add/sub reg, imm — arithmetic to exit 42
+.global _start
+.text
+_start:
+	mov	rdi, 40
+	add	rdi, 5
+	sub	rdi, 3
+	mov	rax, 60
+	syscall

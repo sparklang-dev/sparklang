@@ -1,0 +1,2 @@
+# Must fail loud — engine render needs prior engine parse (no fixture)
+engine render

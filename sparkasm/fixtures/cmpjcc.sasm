@@ -1,0 +1,20 @@
+# cmp/test + jcc (forward refs) — branch to exit 42
+.global _start
+.text
+_start:
+	mov	rdi, 5
+	cmp	rdi, 10
+	jne	not_ten
+	mov	rdi, 99
+	jmp	done
+not_ten:
+	mov	rdi, 0
+	test	rdi, rdi
+	jz	exit42
+	mov	rdi, 1
+	jmp	done
+exit42:
+	mov	rdi, 42
+done:
+	mov	rax, 60
+	syscall

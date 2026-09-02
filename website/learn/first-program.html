@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Your First Program — Learn Spark</title>
+    <meta name="description" content="Write your first Spark program with use, ask, and print." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/css/tokens.css?v=pos060" />
+    <link rel="stylesheet" href="/css/site.css?v=pos060" />
+  </head>
+  <body class="doc-page">
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="site-brand" href="/" aria-label="SparkLang home">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z" fill="currentColor" />
+          </svg>
+          Spark
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+        </button>
+        <div class="header-nav-wrap">
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <ul class="nav-primary">
+              <li><a href="/learn/">Learn</a></li>
+              <li><a href="/docs/language.html">Docs</a></li>
+              <li><a href="/downloads.html">Download</a></li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">More</button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/ai-models.html">AI models</a></li>
+                  <li><a href="/docs/programming-guide.html">Programming guide</a></li>
+                  <li><a href="/docs/ide.html">IDE</a></li>
+                  <li><a href="/docs/self-host.html">Contributor internals</a></li>
+                </ul>
+              </li>
+            </ul>
+            <a href="/playground.html" class="nav-cta">Try</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <div class="shell doc-layout">
+      <aside class="doc-sidebar" aria-label="Table of contents">
+        <p class="doc-sidebar__title">On this page</p>
+        <nav id="doc-toc-list"></nav>
+        <hr style="border: none; border-top: 1px solid var(--spark-border-light); margin: 1rem 0" />
+        <p class="doc-sidebar__title">Tutorial trail</p>
+        <ul class="toc-list">
+          <li><a href="/learn/getting-started.html">Getting Started</a></li>
+          <li><a href="/learn/first-program.html" aria-current="page">Your First Program</a></li>
+          <li><a href="/learn/ai-in-5-minutes.html">AI in 5 Minutes</a></li>
+          <li><a href="/learn/build-model.html">Build a Model</a></li>
+        </ul>
+      </aside>
+
+      <main class="doc-main">
+        <p class="doc-breadcrumb"><a href="/learn/">Learn</a> / Your First Program</p>
+        <article class="doc__body">
+          <h1 id="first-program">Your First Program</h1>
+          <p>
+            A minimal Spark program selects a model alias, asks a question, and
+            prints the result — like “Hello World” for an AI-first language.
+          </p>
+
+          <h2 id="hello-spark">hello.spark</h2>
+          <p>Create a file named <code class="inline-code">hello.spark</code>:</p>
+          <pre class="doc__pre"><code>use code
+
+ask "Explain gravity in one sentence" -> text
+
+print text</code></pre>
+          <p>
+            <code class="inline-code">use code</code> is sugar for
+            <code class="inline-code">model code</code> — it sets the default model
+            alias for following <code class="inline-code">ask</code> calls. Aliases like
+            <code class="inline-code">fast</code> and <code class="inline-code">best</code> are
+            configured in your runtime, not hardcoded vendor strings.
+          </p>
+
+          <h2 id="run-it">Run it</h2>
+          <pre class="doc__pre"><code class="language-bash">./spark --dry-run hello.spark</code></pre>
+          <p>
+            Dry-run returns a fixture reply so you can iterate without an API key.
+            For a real response:
+          </p>
+          <pre class="doc__pre"><code class="language-bash">export AI_GATEWAY_URL=http://127.0.0.1:4000
+./spark --live hello.spark</code></pre>
+
+          <h2 id="sugar">Optional sugar</h2>
+          <p>Spark supports shorthand for quick scripts:</p>
+          <pre class="doc__pre"><code>use fast
+? "Explain gravity in one sentence" -> text
+print text</code></pre>
+          <p>
+            <code class="inline-code">?</code> is sugar for
+            <code class="inline-code">ask</code>. Try it on the
+            <a href="/playground.html">Playground</a> page or see
+            <a href="/docs/language.html#lexical-rules">language reference</a>.
+          </p>
+
+          <h2 id="next">Next lesson</h2>
+          <p>
+            <a href="/learn/ai-in-5-minutes.html">AI in 5 Minutes</a> — classify,
+            extract, and pipeline in one short lesson.
+          </p>
+        </article>
+      </main>
+    </div>
+
+        <footer class="site-footer">
+      <div class="shell footer-inner">
+        <div class="footer-brand">
+          <span>SparkLang — the Spark programming language</span>
+          <span class="footer-meta">v0.6.2 · MIT</span>
+        </div>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="/about.html">About</a>
+<a href="/LICENSE.txt">License</a>
+          <a href="/CHANGELOG.html">Changelog</a>
+          <a href="/learn/">Learn</a>
+          <a href="/downloads.html">Downloads</a>
+          <a href="/playground.html">Playground</a>
+        </nav>
+      </div>
+    
+      <div class="shell footer-trail">
+        <a href="/learn/getting-started.html">← Getting Started</a>
+        <a href="/learn/ai-in-5-minutes.html">Next: AI in 5 Minutes →</a>
+      </div>
+    </footer>
+    <script src="/js/site.js"></script>
+  </body>
+</html>

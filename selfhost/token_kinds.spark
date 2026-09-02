@@ -1,0 +1,13 @@
+# Self-host token kind catalog (lane A seed).
+# Valid on today’s GAS ./spark --dry-run.
+# Kinds match selfhost/lex.c and expected_mini.tokens.jsonl.
+# Note: GAS scaffold pads `let` dumps; let_dry.spark still dry-runs
+# (exit 0, redirected). Prefer ask/print in catalogs when possible.
+
+model fast
+
+ask "Spark token kinds: COMMENT KEYWORD IDENT STRING NUMBER ARROW PIPE PUNCT EOF" -> kinds
+print kinds
+
+ask "Spark lexer: # comment, quoted string, -> arrow, | pipe, keywords at statement start" -> rules
+print rules

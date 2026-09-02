@@ -1,0 +1,3 @@
+# engine fetch parse — C bootstrap dry parity with GAS j_fp
+engine fetch parse "file://examples/fixtures/engine/sample.html" -> dom
+print dom

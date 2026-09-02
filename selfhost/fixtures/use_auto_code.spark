@@ -1,0 +1,4 @@
+# BC use auto -> code (dry_auto_model; fix/test prompt).
+use auto
+ask "Fix the unit test failure in add()" -> text
+print text

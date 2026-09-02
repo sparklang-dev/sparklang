@@ -1,0 +1,4 @@
+include "lib/ai.spark"
+classify Intent { support, sales } from "My account is locked and I need help" -> intent
+ask "Reply helpfully to: My account is locked and I need help" -> reply
+print reply

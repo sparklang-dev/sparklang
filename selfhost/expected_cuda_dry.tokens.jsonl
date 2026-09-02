@@ -1,0 +1,34 @@
+{"kind":"COMMENT","lexeme":"# CUDA / memory dry keywords lex fixture.","line":1,"col":1}
+{"kind":"COMMENT","lexeme":"# Stage 1 golden (expected_cuda_dry.tokens.jsonl).","line":2,"col":1}
+{"kind":"COMMENT","lexeme":"# Keywords: cuda, memory (probe/memstat/prefer/gpu/pin/size stay IDENT).","line":3,"col":1}
+{"kind":"COMMENT","lexeme":"# Forms from LANGUAGE.md / examples/cuda_mem.spark.","line":4,"col":1}
+{"kind":"COMMENT","lexeme":"# Not a full compiler. Avoid `let` (GAS scaffold pads dumps).","line":5,"col":1}
+{"kind":"KEYWORD","lexeme":"model","line":6,"col":1}
+{"kind":"IDENT","lexeme":"code","line":6,"col":7}
+{"kind":"KEYWORD","lexeme":"cuda","line":8,"col":1}
+{"kind":"IDENT","lexeme":"probe","line":8,"col":6}
+{"kind":"ARROW","lexeme":"->","line":8,"col":12}
+{"kind":"IDENT","lexeme":"info","line":8,"col":15}
+{"kind":"KEYWORD","lexeme":"cuda","line":9,"col":1}
+{"kind":"IDENT","lexeme":"memstat","line":9,"col":6}
+{"kind":"ARROW","lexeme":"->","line":9,"col":14}
+{"kind":"IDENT","lexeme":"stats","line":9,"col":17}
+{"kind":"KEYWORD","lexeme":"cuda","line":10,"col":1}
+{"kind":"IDENT","lexeme":"prefer","line":10,"col":6}
+{"kind":"IDENT","lexeme":"gpu","line":10,"col":13}
+{"kind":"NUMBER","lexeme":"0","line":10,"col":17}
+{"kind":"KEYWORD","lexeme":"memory","line":11,"col":1}
+{"kind":"IDENT","lexeme":"pin","line":11,"col":8}
+{"kind":"STRING","lexeme":"\"buffer\"","line":11,"col":12}
+{"kind":"IDENT","lexeme":"size","line":11,"col":21}
+{"kind":"NUMBER","lexeme":"1","line":11,"col":26}
+{"kind":"IDENT","lexeme":"M","line":11,"col":27}
+{"kind":"ARROW","lexeme":"->","line":11,"col":29}
+{"kind":"IDENT","lexeme":"buf","line":11,"col":32}
+{"kind":"KEYWORD","lexeme":"print","line":13,"col":1}
+{"kind":"IDENT","lexeme":"info","line":13,"col":7}
+{"kind":"KEYWORD","lexeme":"print","line":14,"col":1}
+{"kind":"IDENT","lexeme":"stats","line":14,"col":7}
+{"kind":"KEYWORD","lexeme":"print","line":15,"col":1}
+{"kind":"IDENT","lexeme":"buf","line":15,"col":7}
+{"kind":"EOF","lexeme":"","line":16,"col":1}

@@ -1,0 +1,10 @@
+# Spark IDE e2e — open → ask → show (AI strip + engine window).
+# Dry: fixture ask (Gravity) + PPM validate + out/browser/show.json.
+# Live: ./spark --live examples/ide_ask_show.spark → ask-http + spark-engine-show.
+# No Electron.
+
+ide open "examples/hello.spark" -> opened
+
+ide ask -> reply
+
+ide show -> shown

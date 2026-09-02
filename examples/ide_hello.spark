@@ -1,0 +1,13 @@
+# Spark IDE e2e dry — open → paint PPM → run (no Electron).
+# ./spark --dry-run examples/ide_hello.spark
+# After open: out/ide/editor.ppm (buffer paint). ide run forks ./spark.
+
+ide new
+
+ide open "examples/hello.spark" -> opened
+
+ide buffer -> shown
+
+ide save "out/ide/ide_hello_saved.spark" -> saved
+
+ide run -> ran

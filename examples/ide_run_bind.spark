@@ -1,0 +1,11 @@
+# Spark IDE - proven ide run bind (-> ran) + print op JSON.
+# After keys-miss. Unlike ask -> reply (Gravity text), run bind
+# stores the op JSON line; print ran shows that JSON.
+# Run: ./spark --dry-run examples/ide_run_bind.spark
+# No Electron. No new asm - documents proven bind only.
+
+ide open "examples/hello.spark"
+
+ide run -> ran
+
+print ran

@@ -1,0 +1,19 @@
+# Spark OS design — AgentOS blueprint (dry-run)
+# Generates educational stubs under out/os/agentos — never installs on host.
+
+os design name "agentos" kind ai_agent -> blueprint
+
+os design name "aikitchen" kind ai_runtime features [scheduler, model_router, sandbox, net] -> blueprint
+
+os specify blueprint {
+  target: x86_64
+  memory_model: flat
+  ai: { agent_runtime: true, model_slots: 4, tool_bus: true }
+  drivers: [serial, framebuffer_stub, virtio_net_stub]
+} -> spec
+
+os generate spec into "out/os/agentos" -> tree
+
+os build tree -> image
+
+os explain blueprint -> text

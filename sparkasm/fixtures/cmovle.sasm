@@ -1,0 +1,11 @@
+# cmovle — 0 <= 0 → move 42 into rdi
+.global _start
+.text
+_start:
+	mov	rdi, 0
+	mov	rsi, 42
+	mov	rax, 0
+	cmp	rax, 0
+	cmovle	rdi, rsi
+	mov	rax, 60
+	syscall

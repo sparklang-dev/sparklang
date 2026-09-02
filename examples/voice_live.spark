@@ -1,0 +1,6 @@
+# Live STT/TTS (requires --live; dry-run stays offline stubs)
+# Local: sidecar .intent.txt for listen; built-in PCM synth for speak.
+# Vendor net OFF unless SPARK_STT_NET / SPARK_TTS_NET / SPARK_SPEECH_NET=1.
+
+listen "examples/fixtures/audio/sample_review.wav" -> transcript
+speak "hello from spark live speech" -> "out/voice_live.wav"

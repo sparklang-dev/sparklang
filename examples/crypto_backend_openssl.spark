@@ -1,0 +1,3 @@
+# Explicit OpenSSL backend (default / always-safe on a typical Linux host)
+crypto backend openssl -> be
+crypto probe -> info

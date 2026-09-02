@@ -1,0 +1,22 @@
+{"kind":"COMMENT","lexeme":"# Embed + retrieve dry keywords lex fixture.","line":1,"col":1}
+{"kind":"COMMENT","lexeme":"# Stage 1 golden (expected_rag_dry.tokens.jsonl).","line":2,"col":1}
+{"kind":"COMMENT","lexeme":"# Keywords: model, embed, retrieve, print.","line":3,"col":1}
+{"kind":"COMMENT","lexeme":"# Forms from docs/LANGUAGE.md / examples/retrieve_embed.spark.","line":4,"col":1}
+{"kind":"KEYWORD","lexeme":"model","line":6,"col":1}
+{"kind":"IDENT","lexeme":"fast","line":6,"col":7}
+{"kind":"IDENT","lexeme":"embed","line":8,"col":1}
+{"kind":"STRING","lexeme":"\"Spark is a language for AI workflows\"","line":8,"col":7}
+{"kind":"ARROW","lexeme":"->","line":8,"col":46}
+{"kind":"IDENT","lexeme":"vec","line":8,"col":49}
+{"kind":"KEYWORD","lexeme":"print","line":10,"col":1}
+{"kind":"IDENT","lexeme":"vec","line":10,"col":7}
+{"kind":"IDENT","lexeme":"retrieve","line":12,"col":1}
+{"kind":"STRING","lexeme":"\"how does dry-run embed work\"","line":12,"col":10}
+{"kind":"IDENT","lexeme":"from","line":12,"col":40}
+{"kind":"IDENT","lexeme":"project","line":12,"col":45}
+{"kind":"STRING","lexeme":"\"docs\"","line":12,"col":53}
+{"kind":"ARROW","lexeme":"->","line":12,"col":60}
+{"kind":"IDENT","lexeme":"hits","line":12,"col":63}
+{"kind":"KEYWORD","lexeme":"print","line":14,"col":1}
+{"kind":"IDENT","lexeme":"hits","line":14,"col":7}
+{"kind":"EOF","lexeme":"","line":15,"col":1}

@@ -1,0 +1,6 @@
+# Proven keymap open slice — script token `o path` → open.
+# Consumed by: ide keys "examples/fixtures/ide/cmds_open.txt"
+# o=open q=quit (dry: real read + paint editor.ppm)
+
+o examples/hello.spark
+q

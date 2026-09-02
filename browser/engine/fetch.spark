@@ -1,0 +1,8 @@
+# Engine B fetch driver (language surface for engine lanes).
+# SoT implementation: asm/engine_fetch.s
+#
+# engine fetch "file://…"           # always (dry default)
+# engine fetch "http://127.0.0.1/…" # needs --allow-net
+# Exports: engine_fetch_buf / engine_fetch_len / out/engine/body.bin
+
+engine fetch "file://examples/fixtures/engine/sample.html" -> html_bytes

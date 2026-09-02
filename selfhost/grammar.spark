@@ -1,0 +1,60 @@
+# Self-host grammar catalog (lane A).
+# Destination: Spark parser uses these forms on B.
+# Today: valid on GAS ./spark --dry-run (docs as ask/print).
+# Not a compiler. GAS pads `let` dumps; see fixtures/let_dry.spark.
+
+model code
+
+ask "Spark stmt forms: model | ask | generate | extract | classify | print | review path | pipeline | | step | builder | implement | ide | browser" -> forms
+print forms
+
+ask "Stage 1 B subset: tool/with | extract block | listen | speak | pipeline{| | ask}; classify in ops.spark" -> bootstrap_ops
+print bootstrap_ops
+
+ask "Review/voice forms: review path|text | voice{listen|speak}; golden review_voice.spark" -> review_voice_forms
+print review_voice_forms
+
+ask "Browser/mitm forms: browser run|goto | mitm enable; golden browser_dry.spark" -> browser_dry_forms
+print browser_dry_forms
+
+ask "IDE forms: ide open|run|ask|show; golden ide_dry.spark" -> ide_dry_forms
+print ide_dry_forms
+
+ask "Classify forms: classify Label{…} from … [min_confidence N] | classify multi; golden classify_dry.spark" -> classify_dry_forms
+print classify_dry_forms
+
+ask "Let form: let name string; golden let_dry.spark (KEYWORD in lex.c; B parity clean)" -> let_dry_forms
+print let_dry_forms
+
+ask "Ask/generate forms: ask string -> name | generate string -> name; golden ask_dry.spark" -> ask_dry_forms
+print ask_dry_forms
+
+ask "Engine forms: engine fetch file:// | parse | css attach | layout; golden engine_dry.spark" -> engine_dry_forms
+print engine_dry_forms
+
+ask "IDE keys forms: ide keys path | ide key open|show|save|run|quit; golden ide_keys_dry.spark" -> ide_keys_dry_forms
+print ide_keys_dry_forms
+
+ask "Binary forms: binary open|elf|disasm|understand|kernelmod|firmware; golden binary_dry.spark" -> binary_dry_forms
+print binary_dry_forms
+
+ask "Network forms: network capture probe|interface | open | analyze | explain; golden network_dry.spark" -> network_dry_forms
+print network_dry_forms
+
+ask "Encrypt forms: crypto keygen | encrypt gateway enable | gateway encrypt on|off | seal|open; golden encrypt_dry.spark" -> encrypt_dry_forms
+print encrypt_dry_forms
+
+ask "CUDA/memory forms: cuda probe|memstat|prefer gpu | memory pin; golden cuda_dry.spark" -> cuda_dry_forms
+print cuda_dry_forms
+
+ask "OS forms: os design|specify|generate|build|explain; golden os_dry.spark" -> os_dry_forms
+print os_dry_forms
+
+ask "PCIe forms: cuda pcie | pcie probe gpu | cuda pcie explain; golden pcie_dry.spark" -> pcie_dry_forms
+print pcie_dry_forms
+
+ask "Lexical: # comment, quoted string, -> bind, | pipe prefix, keywords at statement start" -> lex_rules
+print lex_rules
+
+ask "Bindings: ask/extract/classify/... -> name then print name; no invented lex/parse ops" -> bind_rules
+print bind_rules

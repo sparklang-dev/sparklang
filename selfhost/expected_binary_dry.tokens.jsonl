@@ -1,0 +1,50 @@
+{"kind":"COMMENT","lexeme":"# Binary dry keywords lex fixture.","line":1,"col":1}
+{"kind":"COMMENT","lexeme":"# Stage 1 golden (expected_binary_dry.tokens.jsonl).","line":2,"col":1}
+{"kind":"COMMENT","lexeme":"# Keywords: binary (open/elf/disasm/understand/kernelmod/firmware stay IDENT).","line":3,"col":1}
+{"kind":"COMMENT","lexeme":"# Forms from LANGUAGE.md / examples/binary_any.spark.","line":4,"col":1}
+{"kind":"COMMENT","lexeme":"# Not a full compiler. Avoid `let` (GAS scaffold pads dumps).","line":5,"col":1}
+{"kind":"KEYWORD","lexeme":"model","line":6,"col":1}
+{"kind":"IDENT","lexeme":"code","line":6,"col":7}
+{"kind":"KEYWORD","lexeme":"binary","line":8,"col":1}
+{"kind":"IDENT","lexeme":"open","line":8,"col":8}
+{"kind":"STRING","lexeme":"\"examples/fixtures/binary/tiny_cuda_stub.so\"","line":8,"col":13}
+{"kind":"ARROW","lexeme":"->","line":8,"col":58}
+{"kind":"IDENT","lexeme":"bin","line":8,"col":61}
+{"kind":"KEYWORD","lexeme":"binary","line":9,"col":1}
+{"kind":"IDENT","lexeme":"elf","line":9,"col":8}
+{"kind":"IDENT","lexeme":"bin","line":9,"col":12}
+{"kind":"ARROW","lexeme":"->","line":9,"col":16}
+{"kind":"IDENT","lexeme":"elf","line":9,"col":19}
+{"kind":"KEYWORD","lexeme":"binary","line":10,"col":1}
+{"kind":"IDENT","lexeme":"disasm","line":10,"col":8}
+{"kind":"IDENT","lexeme":"bin","line":10,"col":15}
+{"kind":"ARROW","lexeme":"->","line":10,"col":19}
+{"kind":"IDENT","lexeme":"ops","line":10,"col":22}
+{"kind":"KEYWORD","lexeme":"binary","line":11,"col":1}
+{"kind":"IDENT","lexeme":"understand","line":11,"col":8}
+{"kind":"IDENT","lexeme":"bin","line":11,"col":19}
+{"kind":"ARROW","lexeme":"->","line":11,"col":23}
+{"kind":"IDENT","lexeme":"report","line":11,"col":26}
+{"kind":"KEYWORD","lexeme":"binary","line":12,"col":1}
+{"kind":"IDENT","lexeme":"kernelmod","line":12,"col":8}
+{"kind":"STRING","lexeme":"\"examples/fixtures/binary/tiny_mod.ko\"","line":12,"col":18}
+{"kind":"ARROW","lexeme":"->","line":12,"col":57}
+{"kind":"IDENT","lexeme":"kmod","line":12,"col":60}
+{"kind":"KEYWORD","lexeme":"binary","line":13,"col":1}
+{"kind":"IDENT","lexeme":"firmware","line":13,"col":8}
+{"kind":"STRING","lexeme":"\"examples/fixtures/binary/tiny_fw.bin\"","line":13,"col":17}
+{"kind":"ARROW","lexeme":"->","line":13,"col":56}
+{"kind":"IDENT","lexeme":"fw","line":13,"col":59}
+{"kind":"KEYWORD","lexeme":"print","line":15,"col":1}
+{"kind":"IDENT","lexeme":"bin","line":15,"col":7}
+{"kind":"KEYWORD","lexeme":"print","line":16,"col":1}
+{"kind":"IDENT","lexeme":"elf","line":16,"col":7}
+{"kind":"KEYWORD","lexeme":"print","line":17,"col":1}
+{"kind":"IDENT","lexeme":"ops","line":17,"col":7}
+{"kind":"KEYWORD","lexeme":"print","line":18,"col":1}
+{"kind":"IDENT","lexeme":"report","line":18,"col":7}
+{"kind":"KEYWORD","lexeme":"print","line":19,"col":1}
+{"kind":"IDENT","lexeme":"kmod","line":19,"col":7}
+{"kind":"KEYWORD","lexeme":"print","line":20,"col":1}
+{"kind":"IDENT","lexeme":"fw","line":20,"col":7}
+{"kind":"EOF","lexeme":"","line":21,"col":1}

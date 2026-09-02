@@ -1,0 +1,2 @@
+# Must fail loud — engine show needs an existing PPM/RGB path
+engine show "out/engine/no_such_show.ppm"

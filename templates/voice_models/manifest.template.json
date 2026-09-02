@@ -1,0 +1,25 @@
+{
+  "kind": "spark_voice_model",
+  "name": "NAME",
+  "format": "written-v1",
+  "product_note": "Vendor TTS optional; brand_voice id config-only",
+  "brand_voice_id_optional": "",
+  "timbre": {
+    "pitch_hz": 180,
+    "brightness": 0.55,
+    "warmth": 0.6,
+    "peak": 0,
+    "rms_proxy": 0,
+    "sample_rate": 8000,
+    "channels": 1,
+    "bits": 16
+  },
+  "prosody": {
+    "rate": 1.0,
+    "pause_ms": 120,
+    "silence_frames": 0,
+    "clip_hits": 0
+  },
+  "features_file": "features.bin",
+  "neural_clone": "written-coeffs — vendor neural clone is external; this artifact loads for speak with model"
+}

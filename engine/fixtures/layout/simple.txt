@@ -1,0 +1,12 @@
+# Human-readable mirror of spark_layout_fixture_simple
+# html
+#   head          (display:none — no box)
+#   body
+#     h1          text_len=5
+#     p           text_len=20
+#     div
+#       span      text_len=4 inline
+#       span      text_len=4 inline
+#
+# Expected boxes: viewport + html + body + h1 + p + div + span + span = 8
+viewport: 800x600

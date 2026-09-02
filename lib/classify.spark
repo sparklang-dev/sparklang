@@ -1,0 +1,95 @@
+# Spark stdlib — classify helpers (bootstrap: include "lib/classify.spark")
+# mode: dry-run (fixtures) | live (with --live)
+
+model fast
+
+# @helper classify_intent_support_sales: Route customer messages by intent
+# classify Intent { support, sales, spam }
+#   from "My account is locked"
+#   min_confidence 0.7
+#   -> intent
+
+# @helper classify_intent_multi: Multi-label tags
+# let message "Billing question about late fees"
+# classify multi Tags { support, sales, billing, spam }
+#   from message
+#   -> tags
+
+# @helper classify_sentiment: Positive / neutral / negative
+# classify Sentiment { positive, neutral, negative }
+#   from "Thanks, that fixed it!"
+#   -> sentiment
+
+# @helper classify_urgency: Triage by urgency
+# classify Urgency { low, medium, high, emergency }
+#   from "Water is flooding the floor"
+#   min_confidence 0.8
+#   -> urgency
+
+# @helper classify_language: Detect language bucket
+# classify Lang { en, es, other }
+#   from "Necesito ayuda con el pedido"
+#   -> lang
+
+# @helper classify_topic_store: Generic store topic routing
+# classify Topic { machines, payment, hours, other }
+#   from "What time do you close?"
+#   -> topic
+
+# @helper classify_fraud_risk: Coarse fraud screening
+# classify Risk { low, medium, high }
+#   from "Send gift cards to this address"
+#   -> risk
+
+# @helper classify_email_type: Inbox routing template
+# classify MailType { customer, vendor, internal, spam }
+#   from "Invoice attached for Q3"
+#   -> mail_type
+
+# @helper classify_voice_intent: After listen — classify transcript
+# listen "input.wav" -> user
+# classify Intent { support, sales } from user -> intent
+
+# @helper classify_min_conf_high: Strict confidence gate
+# classify Intent { support, sales, spam }
+#   from "maybe sales?"
+#   min_confidence 0.9
+#   -> intent
+
+# @helper classify_min_conf_low: Permissive routing
+# classify Intent { support, sales, spam }
+#   from "hello"
+#   min_confidence 0.5
+#   -> intent
+
+# @helper classify_then_ask: Classify then generate reply
+# let message "Order won't ship"
+# classify Intent { support, sales } from message -> intent
+# ask "Reply as {intent} agent to: {message}" -> reply
+
+# @helper classify_pipeline: Classify inside pipeline block
+# let message "Refund request"
+# pipeline {
+#   classify Intent { support, sales, billing } from message -> intent
+#   | ask "Draft reply for {intent}: {message}" -> reply
+# }
+
+# @helper classify_routing_table: Map label to action name
+# classify Route { queue_support, queue_sales, discard }
+#   from "I want to buy 10 machines"
+#   -> route
+
+# @helper classify_compliance: Policy bucket
+# classify Policy { allowed, review, block }
+#   from "Share customer card numbers"
+#   -> policy
+
+# @helper classify_product_line: Product category
+# classify Product { wash, dry, fold, vending }
+#   from "Snack machine ate my dollar"
+#   -> product
+
+# @helper classify_channel: Channel source
+# classify Channel { phone, sms, email, chat }
+#   from "Text me the hours"
+#   -> channel

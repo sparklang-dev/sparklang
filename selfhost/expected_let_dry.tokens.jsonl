@@ -1,0 +1,13 @@
+{"kind":"COMMENT","lexeme":"# Let keyword lex fixture.","line":1,"col":1}
+{"kind":"COMMENT","lexeme":"# Stage 1 golden (expected_let_dry.tokens.jsonl).","line":2,"col":1}
+{"kind":"COMMENT","lexeme":"# Keyword: let (lex.c KEYWORDS). Form from examples/pipeline_translate.spark.","line":3,"col":1}
+{"kind":"COMMENT","lexeme":"# GAS scaffold pads let dumps; dry-run still exits 0 (make redirects).","line":4,"col":1}
+{"kind":"COMMENT","lexeme":"# Not a full compiler. B dry-run is clean (Stage 1 parity).","line":5,"col":1}
+{"kind":"KEYWORD","lexeme":"model","line":6,"col":1}
+{"kind":"IDENT","lexeme":"fast","line":6,"col":7}
+{"kind":"KEYWORD","lexeme":"let","line":8,"col":1}
+{"kind":"IDENT","lexeme":"doc","line":8,"col":5}
+{"kind":"STRING","lexeme":"\"Office printers need regular cleaning and toner checks.\"","line":8,"col":9}
+{"kind":"KEYWORD","lexeme":"print","line":10,"col":1}
+{"kind":"IDENT","lexeme":"doc","line":10,"col":7}
+{"kind":"EOF","lexeme":"","line":11,"col":1}

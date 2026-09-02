@@ -1,0 +1,122 @@
+{
+  "generatedBy": "tools/gen_playbooks_catalog.py",
+  "libFile": "lib/playbooks.spark",
+  "fixturesDir": "bootstrap/fixtures/playbooks",
+  "playbookCount": 9,
+  "entryCount": 10,
+  "note": "Browser has no Spark WASM runtime. Loading a playbook only fills the editor; Run dry-run fails loud with a download link.",
+  "downloadUrl": "/downloads.html",
+  "localDryRun": "./spark-bootstrap --dry-run <file.spark>",
+  "entries": [
+    {
+      "id": "explain_code",
+      "name": "explain_code",
+      "label": "explain code",
+      "source": "include \"lib/ai.spark\"\nlet snippet \"function add(a,b){ return a+b; }\"\nask \"Explain this code in one sentence: {snippet}\" -> answer\nprint answer\n",
+      "fixture": "bootstrap/fixtures/playbooks/explain_code.spark",
+      "libRef": "lib/playbooks.spark",
+      "kind": "playbook",
+      "runtime": "bootstrap",
+      "siteRun": "download-required"
+    },
+    {
+      "id": "fix_test_failure",
+      "name": "fix_test_failure",
+      "label": "fix test failure",
+      "source": "include \"lib/ai.spark\"\nlet failure \"AssertionError: expected 3 got 2 in test_add\"\nask \"Fix this test failure: {failure}\" -> fix\nprint fix\n",
+      "fixture": "bootstrap/fixtures/playbooks/fix_test_failure.spark",
+      "libRef": "lib/playbooks.spark",
+      "kind": "playbook",
+      "runtime": "bootstrap",
+      "siteRun": "download-required"
+    },
+    {
+      "id": "add_api_endpoint",
+      "name": "add_api_endpoint",
+      "label": "add api endpoint",
+      "source": "include \"lib/ai.spark\"\nask \"Add a GET /health API endpoint returning JSON status\" -> plan\nprint plan\n",
+      "fixture": "bootstrap/fixtures/playbooks/add_api_endpoint.spark",
+      "libRef": "lib/playbooks.spark",
+      "kind": "playbook",
+      "runtime": "bootstrap",
+      "siteRun": "download-required"
+    },
+    {
+      "id": "refactor_rename",
+      "name": "refactor_rename",
+      "label": "refactor rename",
+      "source": "include \"lib/ai.spark\"\nask \"Refactor: rename foo to bar across the module\" -> steps\nprint steps\n",
+      "fixture": "bootstrap/fixtures/playbooks/refactor_rename.spark",
+      "libRef": "lib/playbooks.spark",
+      "kind": "playbook",
+      "runtime": "bootstrap",
+      "siteRun": "download-required"
+    },
+    {
+      "id": "write_unit_test",
+      "name": "write_unit_test",
+      "label": "write unit test",
+      "source": "include \"lib/ai.spark\"\nask \"Write a unit test for function add(a,b)\" -> test_code\nprint test_code\n",
+      "fixture": "bootstrap/fixtures/playbooks/write_unit_test.spark",
+      "libRef": "lib/playbooks.spark",
+      "kind": "playbook",
+      "runtime": "bootstrap",
+      "siteRun": "download-required"
+    },
+    {
+      "id": "debug_error_message",
+      "name": "debug_error_message",
+      "label": "debug error message",
+      "source": "include \"lib/ai.spark\"\nlet err \"TypeError: undefined is not a function at line 42\"\nask \"Debug this error message: {err}\" -> hint\nprint hint\n",
+      "fixture": "bootstrap/fixtures/playbooks/debug_error_message.spark",
+      "libRef": "lib/playbooks.spark",
+      "kind": "playbook",
+      "runtime": "bootstrap",
+      "siteRun": "download-required"
+    },
+    {
+      "id": "classify_and_reply",
+      "name": "classify_and_reply",
+      "label": "classify and reply",
+      "source": "include \"lib/ai.spark\"\nclassify Intent { support, sales } from \"My account is locked and I need help\" -> intent\nask \"Reply helpfully to: My account is locked and I need help\" -> reply\nprint reply\n",
+      "fixture": "bootstrap/fixtures/playbooks/classify_and_reply.spark",
+      "libRef": "lib/playbooks.spark",
+      "kind": "playbook",
+      "runtime": "bootstrap",
+      "siteRun": "download-required"
+    },
+    {
+      "id": "review_and_suggest",
+      "name": "review_and_suggest",
+      "label": "review and suggest",
+      "source": "use auto\nlet report \"{\\\"issues\\\":[\\\"possible eval\\\",\\\"ai-authored patterns\\\"],\\\"complexity\\\":\\\"mid\\\"}\"\nask \"Fix this test failure shown in the review report: {report}\" -> suggestion\nprint suggestion\n",
+      "fixture": "bootstrap/fixtures/playbooks/review_and_suggest.spark",
+      "libRef": "lib/playbooks.spark",
+      "kind": "playbook",
+      "runtime": "bootstrap",
+      "siteRun": "download-required"
+    },
+    {
+      "id": "pipeline_summarize_explain",
+      "name": "pipeline_summarize_explain",
+      "label": "pipeline summarize explain",
+      "source": "include \"lib/ai.spark\"\nlet doc \"Spark is a small language where AI is a first-class primitive.\"\npipeline {\n  ask \"Summarize: {doc}\" -> summary\n  | ask \"Explain in one sentence: {summary}\" -> plain\n}\nprint plain\n",
+      "fixture": "bootstrap/fixtures/playbooks/pipeline_summarize_explain.spark",
+      "libRef": "lib/playbooks.spark",
+      "kind": "playbook",
+      "runtime": "bootstrap",
+      "siteRun": "download-required"
+    },
+    {
+      "id": "use_auto_explicit",
+      "name": "use_auto_explicit",
+      "label": "use auto explicit",
+      "source": "use auto\nask \"Explain gravity in one sentence\" -> text\nprint text\n",
+      "fixture": "bootstrap/fixtures/playbooks/use_auto_explicit.spark",
+      "libRef": null,
+      "kind": "fixture-golden",
+      "runtime": "bootstrap",
+      "siteRun": "download-required"
+    }
+  ]
+}

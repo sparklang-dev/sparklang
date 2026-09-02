@@ -1,0 +1,6 @@
+# Network traffic — open/analyze/explain parse pcap bytes (asm).
+# Live capture: network capture + --allow-net-capture (AF_PACKET).
+
+network open "examples/fixtures/sample.pcap" -> pcap
+network analyze pcap -> traffic_report
+network explain traffic_report -> text

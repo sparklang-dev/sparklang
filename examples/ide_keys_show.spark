@@ -1,0 +1,13 @@
+# Spark IDE keymap — proven keys, show (`w`) focus.
+# After save forms. Show already in asm — this slice documents+tests
+# the `w` token like save (`s`) / run (`r`) / quit (`q`).
+# Dry: script `w` → {"cmd":"show"} + editor.ppm validate; open still reads.
+# Also proves single `ide key show` after open.
+# Run: ./spark --dry-run examples/ide_keys_show.spark
+# No Electron. No new asm — documents proven keys only.
+
+ide keys "examples/fixtures/ide/cmds_show.txt"
+
+ide key open "examples/hello.spark"
+
+ide key show

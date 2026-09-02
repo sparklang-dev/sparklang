@@ -1,0 +1,27 @@
+{
+  "id": "examples/eval_suite.json",
+  "mode": "fixture",
+  "note": "Recorded heuristic probes for Spark dry-run — not live leaderboard",
+  "cases": [
+    {
+      "name": "tool_call_json_validity",
+      "metric": "tool_call_json_valid_pct",
+      "scores": { "fast": 71, "code": 94, "best": 96 }
+    },
+    {
+      "name": "quality_proxy",
+      "metric": "quality_proxy",
+      "scores": { "fast": 0.78, "code": 0.91, "best": 0.93 }
+    },
+    {
+      "name": "latency_p50",
+      "metric": "latency_ms_p50",
+      "scores": { "fast": 95, "code": 420, "best": 610 }
+    },
+    {
+      "name": "tokens_per_s",
+      "metric": "tokens_per_s",
+      "scores": { "fast": 72.0, "code": 38.2, "best": 28.0 }
+    }
+  ]
+}

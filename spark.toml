@@ -1,0 +1,28 @@
+# Optional defaults (documented; dry-run asm VM does not parse TOML yet)
+model = "fast"
+temperature = 0.2
+timeout_secs = 60
+repair_once = true
+
+# Reachable model catalog seeds (analyze all / model-probe)
+# Live discovery may append to data/model-catalog.jsonl
+[models]
+aliases = ["fast", "code", "best", "alias-code"]
+# local_vllm discovery is read-only; never use :8010 for Spark compute
+never_compute_ports = [8010]
+
+# PSTN — OFF by default. Live dial needs CLI --pstn-live + SPARK_PSTN=1
+# + Telnyx creds. Dry-run / make test never places calls.
+[pstn]
+enabled = false
+allowlist = ["+15555550100", "+15555550101"]  # placeholders; real via SPARK_PSTN_ALLOW
+# Optional divert override: SPARK_PSTN_OVERRIDE_DIVERT=1
+# Optional brand TTS id for written voice models (config only):
+# brand_voice_id = ""
+
+# Live listen/speak — companion spark-stt-tts. Dry-run never forks.
+# Vendor HTTP OFF unless SPARK_STT_NET / SPARK_TTS_NET / SPARK_SPEECH_NET=1.
+[speech]
+vendor_net = false
+# stt_url = "http://127.0.0.1:9/v1/audio/transcriptions"
+# tts_url = "http://127.0.0.1:9/v1/audio/speech"

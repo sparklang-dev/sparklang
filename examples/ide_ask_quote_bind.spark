@@ -1,0 +1,11 @@
+# Spark IDE - proven quoted ide ask bind (-> reply) + print.
+# After new-bind. Bare ask bind is ide_ask_bind; this proves
+# ask "instruction" -> reply stores Gravity text too.
+# Run: ./spark --dry-run examples/ide_ask_quote_bind.spark
+# No Electron. No new asm - documents proven bind only.
+
+ide open "examples/hello.spark"
+
+ide ask "Explain gravity in one sentence" -> reply
+
+print reply

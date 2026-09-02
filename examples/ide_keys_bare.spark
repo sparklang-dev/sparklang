@@ -1,0 +1,7 @@
+# Spark IDE - proven bare ide keys (default cmds.txt).
+# After buffer-bind 5beeaf1. No path => asm default_cmds
+# examples/fixtures/ide/cmds.txt (open/show/save/run/quit).
+# Run: ./spark --dry-run examples/ide_keys_bare.spark
+# No Electron. No keymap n. No new asm - documents proven default only.
+
+ide keys

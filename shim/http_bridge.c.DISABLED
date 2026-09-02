@@ -1,0 +1,11 @@
+/* TEMPORARY note — live HTTP is NOT this shim.
+ *
+ * Live ask companion (real sockets / curl for https):
+ *   tools/ask/spark_ask_http.c → ./spark-ask-http
+ *   asm/ask_ops.s forks it under `spark --live`
+ *   docs/ASK_LIVE.md
+ *
+ * Default `./spark --dry-run` stays pure asm (no libc link).
+ * Do NOT link this file into the default binary.
+ */
+#error "Use tools/ask/spark_ask_http.c (make spark-ask-http) — not this shim"

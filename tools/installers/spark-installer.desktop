@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Install Spark
+GenericName=Spark AI runtime installer
+Comment=Graphical installer for the Spark AI-first language runtime
+Exec=/opt/spark/bin/spark-install-gui
+Icon=spark-installer
+Terminal=false
+Categories=Development;IDE;
+Keywords=spark;ai;runtime;language;
+StartupNotify=true

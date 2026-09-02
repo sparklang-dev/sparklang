@@ -1,0 +1,11 @@
+# Engine B pipeline — table fixture (2×2 th/td side-by-side cells).
+# Dry:  ./spark --dry-run examples/engine_pipeline_table.spark
+#       → out/engine/pipeline.ppm + show.json
+# Live: ./spark --live examples/engine_pipeline_table.spark
+
+engine fetch "file://engine/fixtures/table_demo.html" -> body
+engine parse "out/engine/body.bin" -> dom
+engine css attach -> styles
+engine layout -> boxes
+engine paint boxes -> ppm
+engine show "out/engine/pipeline.ppm" -> shown

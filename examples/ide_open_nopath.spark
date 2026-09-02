@@ -1,0 +1,6 @@
+# Spark IDE - proven ide open needs-path fail-loud.
+# After ask-nobuf. Bare open with no quote path exits non-zero.
+# Run: ./spark --dry-run examples/ide_open_nopath.spark  (expect rc!=0)
+# No Electron. No new asm - documents proven fail-loud only.
+
+ide open

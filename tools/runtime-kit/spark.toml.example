@@ -1,0 +1,22 @@
+# Optional defaults (documented; dry-run VM does not parse TOML yet).
+# Use a `model` statement in your .spark file for per-program aliases.
+
+model = "fast"
+temperature = 0.2
+timeout_secs = 60
+repair_once = true
+
+[models]
+aliases = ["fast", "code", "best"]
+
+# Live ask — set OPENAI_API_KEY (or your provider's equivalent) and run:
+#   ./bin/spark --live examples/ask_live.spark
+#
+# Speech companions (spark-stt-tts) stay offline in dry-run.
+# Vendor HTTP for STT/TTS is OFF unless you opt in via env — see runtime-ai-guide.txt.
+
+[pstn]
+enabled = false
+
+[speech]
+vendor_net = false

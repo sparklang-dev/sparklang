@@ -1,0 +1,19 @@
+# Spark IDE — proven ide buffer forms (bare + -> shown bind).
+# After quit 54b005e. Forms already live in hello / save_reopen /
+# new_chain — this slice documents+tests both in one example.
+# open→dirty→save * e2e skipped: redundant with ide_dirty_status +
+# ide_new_chain.
+# Proof: both emit {"op":"ide.buffer","ok":true}; nonempty dumps body;
+#        empty dumps nothing before JSON; -> shown does not hit show
+#        (dispatch matches buffer before show — "shown" contains
+#        "show").
+# Run: ./spark --dry-run examples/ide_buffer_forms.spark
+# No Electron. No new asm — documents proven forms only.
+
+ide open "examples/hello.spark" -> opened
+
+ide buffer -> shown
+
+ide new
+
+ide buffer

@@ -1,0 +1,2 @@
+# Must fail loud — C bootstrap never live-dials / forks TLS companion
+engine fetch --live "file://examples/fixtures/engine/sample.html"

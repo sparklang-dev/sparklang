@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Function Catalog — Learn Spark</title>
+    <meta
+      name="description"
+      content="Browse 100+ Spark functions — AI, voice, model, review, browser, network, CUDA, IDE, and stdlib helpers with syntax and mode badges."
+    />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/css/tokens.css?v=20260902b" />
+    <link rel="stylesheet" href="/css/site.css?v=20260902b" />
+  </head>
+  <body class="doc-page function-catalog">
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="site-brand" href="/" aria-label="SparkLang home">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z" fill="currentColor" />
+          </svg>
+          Spark
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+        </button>
+        <div class="header-nav-wrap">
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <ul class="nav-primary">
+              <li><a href="/learn/">Learn</a></li>
+              <li><a href="/docs/language.html">Docs</a></li>
+              <li><a href="/downloads.html">Download</a></li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">More</button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/ai-models.html">AI models</a></li>
+                  <li><a href="/docs/programming-guide.html">Programming guide</a></li>
+                  <li><a href="/docs/ide.html">IDE</a></li>
+                  <li><a href="/docs/self-host.html">Contributor internals</a></li>
+                </ul>
+              </li>
+            </ul>
+            <a href="/playground.html" class="nav-cta">Try</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <div class="shell doc-layout">
+      <aside class="doc-sidebar" aria-label="Table of contents">
+        <p class="doc-sidebar__title">On this page</p>
+        <nav id="doc-toc-list"></nav>
+        <hr style="border: none; border-top: 1px solid var(--spark-border-light); margin: 1rem 0" />
+        <p class="doc-sidebar__title">Tutorial trail</p>
+        <ul class="toc-list">
+          <li><a href="/learn/getting-started.html">Getting Started</a></li>
+          <li><a href="/learn/first-program.html">Your First Program</a></li>
+          <li><a href="/learn/ai-in-5-minutes.html">AI in 5 Minutes</a></li>
+          <li><a href="/learn/function-catalog.html" aria-current="page">Function Catalog</a></li>
+          <li><a href="/learn/build-model.html">Build a Model</a></li>
+        </ul>
+      </aside>
+
+      <main class="doc-main">
+        <p class="doc-breadcrumb"><a href="/learn/">Learn</a> / Function Catalog</p>
+        <article class="doc__body">
+          <h1 id="function-catalog">Function Catalog</h1>
+          <p id="fc-stats">Loading catalog…</p>
+          <p>
+            Every entry maps to real Spark syntax or a stdlib recipe in
+            <code class="inline-code">lib/*.spark</code>. Mode badges:
+            <strong>dry-run</strong> works offline;
+            <strong>live</strong> needs gateway keys.
+          </p>
+
+          <div class="fc-toolbar">
+            <div class="fc-field">
+              <label for="fc-search">Search</label>
+              <input
+                type="search"
+                id="fc-search"
+                placeholder="ask, classify, cuda, review…"
+                autocomplete="off"
+              />
+            </div>
+
+            <div class="fc-field">
+              <label for="fc-category">Category</label>
+              <select id="fc-category" aria-label="Filter by category">
+                <option value="">All categories</option>
+              </select>
+            </div>
+
+            <div class="fc-field">
+              <label for="fc-mode">Mode</label>
+              <select id="fc-mode" aria-label="Filter by mode">
+                <option value="">All modes</option>
+                <option value="dry-run">dry-run</option>
+                <option value="live">live</option>
+              </select>
+            </div>
+
+            <div class="fc-field">
+              <label for="fc-source">Source</label>
+              <select id="fc-source" aria-label="Filter by source">
+                <option value="">language + stdlib</option>
+                <option value="language">language spec</option>
+                <option value="stdlib">stdlib recipe</option>
+              </select>
+            </div>
+
+            <div class="fc-field fc-field--action">
+              <span class="fc-field__spacer" aria-hidden="true"></span>
+              <button type="button" class="btn btn--ghost" id="fc-clear">
+                Clear filters
+              </button>
+            </div>
+          </div>
+
+          <p id="fc-count" class="fc-count" aria-live="polite"></p>
+
+          <div class="fc-table-wrap">
+            <table class="fc-table">
+              <thead>
+                <tr>
+                  <th scope="col">Category</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Description</th>
+                  <th scope="col">Mode / source</th>
+                  <th scope="col">Syntax</th>
+                  <th scope="col">Example</th>
+                </tr>
+              </thead>
+              <tbody id="fc-tbody">
+                <tr><td colspan="6">Loading…</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2 id="stdlib-files">Stdlib files</h2>
+          <ul class="doc__ul">
+            <li><code class="inline-code">lib/ask.spark</code> — summarize, translate, bullet, json patterns</li>
+            <li><code class="inline-code">lib/classify.spark</code> — intent, sentiment, routing templates</li>
+            <li><code class="inline-code">lib/extract.spark</code> — person, date, money, entities</li>
+            <li><code class="inline-code">lib/voice.spark</code> — listen/speak session helpers</li>
+            <li><code class="inline-code">lib/model.spark</code> — analyze/compare/improve wrappers</li>
+            <li><code class="inline-code">lib/review.spark</code> — review path/url/text helpers</li>
+            <li><code class="inline-code">lib/data.spark</code> — let/print and csv-ish patterns</li>
+            <li><code class="inline-code">lib/http.spark</code> — probe and network patterns</li>
+            <li><code class="inline-code">lib/pipeline.spark</code> — multi-step pipeline recipes</li>
+          </ul>
+        </article>
+      </main>
+    </div>
+
+        <footer class="site-footer">
+      <div class="shell footer-inner">
+        <div class="footer-brand">
+          <span>SparkLang — the Spark programming language</span>
+          <span class="footer-meta">v0.6.2 · MIT</span>
+        </div>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="/about.html">About</a>
+<a href="/LICENSE.txt">License</a>
+          <a href="/CHANGELOG.html">Changelog</a>
+          <a href="/learn/">Learn</a>
+          <a href="/downloads.html">Downloads</a>
+          <a href="/playground.html">Playground</a>
+        </nav>
+      </div>
+    
+      <div class="shell footer-trail">
+        <a href="/learn/ai-in-5-minutes.html">← AI in 5 Minutes</a>
+        <a href="/playground.html">Try in Playground →</a>
+      </div>
+    </footer>
+    <script src="/js/site.js?v=20260902b"></script>
+    <script src="/js/function-catalog.js?v=20260902b"></script>
+  </body>
+</html>

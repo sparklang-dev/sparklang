@@ -1,0 +1,71 @@
+# Spark stdlib — pipeline helpers (bootstrap: include "lib/pipeline.spark")
+# Pipe steps use | prefix inside pipeline { … } blocks.
+
+# @helper pipeline_summarize_translate: Summarize then translate to Spanish
+# let doc "Your document text here."
+# pipeline {
+#   ask "Summarize: {doc}" -> summary
+#   | ask "Translate to Spanish: {summary}" -> es
+# }
+
+# @helper pipeline_classify_reply: Classify then draft reply
+# let message "Billing question"
+# pipeline {
+#   classify Intent { support, sales, billing } from message -> intent
+#   | ask "Reply as {intent}: {message}" -> reply
+# }
+
+# @helper pipeline_extract_summarize: Extract struct then summarize
+# let text "Ada Lovelace, age 36, London"
+# pipeline {
+#   extract Person { name: string, age: int } from text -> person
+#   | ask "Bio blurb for: {person}" -> blurb
+# }
+
+# @helper pipeline_three_step: Title from summary chain
+# let doc "Long article."
+# pipeline {
+#   ask "Summarize: {doc}" -> summary
+#   | ask "Keywords: {summary}" -> keywords
+#   | ask "Title from keywords: {keywords}" -> title
+# }
+
+# @helper pipeline_voice_prep: Text steps before speak (outside voice block)
+# let user "Guest question about hours"
+# pipeline {
+#   classify Intent { support, sales } from user -> intent
+#   | ask "Short spoken answer for {intent}: {user}" -> reply
+# }
+# speak reply
+
+# @helper pipeline_model_tune: Model analyze then improve
+# pipeline {
+#   model analyze "fast" -> report
+#   | model improve from report prefer quality -> blueprint
+# }
+
+# @helper pipeline_review_build: Review path then builder lower
+# pipeline {
+#   review path "examples/fixtures/sample.js" -> report
+#   | builder prefer lower request "fix eval" -> patch
+# }
+
+# @helper pipeline_bullet_translate: Bullets then translate
+# let doc "Meeting notes."
+# pipeline {
+#   ask "Bullet points: {doc}" -> bullets
+#   | ask "Translate to French: {bullets}" -> fr
+# }
+
+# @helper pipeline_sentiment_reply: Sentiment then empathetic reply
+# let message "This place is amazing!"
+# pipeline {
+#   classify Sentiment { positive, neutral, negative } from message -> mood
+#   | ask "Reply matching {mood} tone: {message}" -> reply
+# }
+
+# @helper pipeline_minimal: Single ask inside pipeline block
+# let doc "Short note."
+# pipeline {
+#   ask "One line summary: {doc}" -> line
+# }

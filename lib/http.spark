@@ -1,0 +1,65 @@
+# Spark stdlib — HTTP / gateway / probe patterns (bootstrap: include "lib/http.spark")
+# Honest: probes are dry-run safe; live ask needs gateway. No invented routing.
+
+model fast
+
+# @helper http_ask_probe: gateway probe credential check (dry-run)
+# ask probe -> info
+
+# @helper http_gateway_probe: Gateway credential probe alias
+# gateway probe -> info
+
+# @helper http_ask_live_pattern: Live ask via companion (needs --live + key)
+# ask "Ping gateway" -> reply
+
+# @helper http_ask_dry_pattern: Offline heuristic reply
+# ask "Summarize: test document" -> summary
+
+# @helper http_model_fast: Set fast alias before HTTP-backed ask
+# use fast
+# ask "One sentence about HTTP" -> text
+
+# @helper http_model_code: Set code alias for heavier asks
+# model code
+# ask "Explain REST idempotency" -> text
+
+# @helper http_encrypt_probe: Crypto backend probe
+# crypto probe -> info
+
+# @helper http_encrypt_gateway_dry: Encrypt gateway dry-run chain
+# crypto backend openssl
+# crypto keygen -> key
+# encrypt gateway enable key
+# gateway encrypt on
+
+# @helper http_encrypt_seal_open: Seal and open roundtrip
+# encrypt seal text "secret payload" -> blob
+# encrypt open blob -> text
+
+# @helper http_gateway_encrypt_off: Disable encrypt gateway
+# gateway encrypt off
+
+# @helper http_fetch_engine_file: Local file fetch (engine op, not HTTP client lib)
+# engine fetch parse "file://examples/fixtures/engine/sample.html"
+
+# @helper http_fetch_needs_allow_net: Remote HTTP needs --allow-net flag
+# engine fetch "http://example.com/" 
+
+# @helper http_network_capture_probe: Packet capture readiness probe
+# network capture probe -> info
+
+# @helper http_network_open_pcap: Open fixture pcap for analysis
+# network open "examples/fixtures/sample.pcap" -> pcap
+
+# @helper http_network_analyze: Analyze opened pcap
+# network open "examples/fixtures/sample.pcap" -> pcap
+# network analyze pcap -> traffic_report
+
+# @helper http_network_explain: Plain language traffic summary
+# network explain traffic_report -> text
+
+# @helper http_browser_goto_record: Record navigation URL in session
+# browser goto "https://example.com/"
+
+# @helper http_mitm_har_export: Export HAR from MITM session
+# mitm har export "out/browser/session.har"

@@ -1,0 +1,79 @@
+# Spark stdlib — ask / generate helpers (bootstrap: include "lib/ask.spark")
+# Each recipe is a commented pattern. Copy into your program or uncomment.
+# mode: dry-run | live (ask needs --live + gateway env)
+
+model fast
+
+# @helper ask_one_line: Single-turn question with binding interpolation
+# ? "What is {topic}?" -> answer
+
+# @helper ask_summarize: One-line summary of a document
+# let doc "Long text here."
+# ask "Summarize in one sentence: {doc}" -> summary
+
+# @helper ask_bullet_points: Bullet list from prose
+# let doc "Meeting notes paragraph."
+# ask "Bullet points (max 5): {doc}" -> bullets
+
+# @helper ask_translate_es: Translate text to Spanish
+# let text "Hello world"
+# ask "Translate to Spanish: {text}" -> es
+
+# @helper ask_translate_fr: Translate text to French
+# let text "Hello world"
+# ask "Translate to French: {text}" -> fr
+
+# @helper ask_json_shape: Ask for JSON matching a shape description
+# ask "Return JSON with keys name, age for Ada Lovelace" -> json_text
+
+# @helper ask_rewrite_formal: Rewrite informal text formally
+# let draft "hey can u fix the login"
+# ask "Rewrite formally: {draft}" -> formal
+
+# @helper ask_rewrite_simple: Simplify jargon for customers
+# let jargon "The centrifugal imbalance sensor tripped."
+# ask "Explain simply for a laundromat guest: {jargon}" -> simple
+
+# @helper ask_title: Generate a short title for content
+# let doc "Article body here."
+# ask "Title (max 8 words): {doc}" -> title
+
+# @helper ask_keywords: Extract keywords as comma list
+# let doc "Product description."
+# ask "Keywords (comma-separated): {doc}" -> keywords
+
+# @helper ask_compare: Compare two texts briefly
+# let a "Version A"
+# let b "Version B"
+# ask "Compare briefly: A={a} B={b}" -> comparison
+
+# @helper ask_yes_no: Yes/no question with short rationale
+# let fact "Machine error E42 on line 3"
+# ask "Is this likely user error? Answer yes or no with one reason: {fact}" -> verdict
+
+# @helper ask_code_review_hint: Lightweight review hint (not full review op)
+# let snippet "function x(){ eval(y); }"
+# ask "One security concern in this snippet: {snippet}" -> hint
+
+# @helper ask_probe_dry: Credential probe without network (dry-run)
+# ask probe -> info
+
+# @helper ask_gateway_probe: Same as ask probe — gateway credential check
+# gateway probe -> info
+
+# @helper ask_with_tools: Ask inside tool scope (dry-run returns stub)
+# tool weather(city: string) -> string { "stub:local" }
+# with tools [weather] {
+#   ask "Weather in Springfield?" -> answer
+# }
+
+# @helper ask_pipeline_step: Ask as first pipeline step
+# let doc "Notes."
+# pipeline {
+#   ask "Summarize: {doc}" -> summary
+# }
+
+# @helper ask_followup: Second ask using prior binding
+# let topic "gravity"
+# ask "Explain {topic} in one sentence" -> first
+# ask "Give one example using: {first}" -> second

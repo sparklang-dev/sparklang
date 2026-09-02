@@ -1,0 +1,8 @@
+# Escape hatch dry-run — allowlisted shell only (no exec).
+#   ./spark --dry-run examples/shell_escape.spark
+
+shell "echo hello" -> out
+print out
+
+shell "true" -> ok
+print ok

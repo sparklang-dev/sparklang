@@ -1,0 +1,10 @@
+# Spark IDE e2e — open → run → show (engine window / spark-engine-show).
+# Dry: child ./spark --dry-run + PPM validate + out/browser/show.json.
+# Live: ./spark --live examples/ide_run_show.spark → spark-engine-show.
+# No Electron.
+
+ide open "examples/hello.spark" -> opened
+
+ide run -> ran
+
+ide show -> shown

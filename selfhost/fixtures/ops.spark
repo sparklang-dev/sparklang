@@ -1,0 +1,16 @@
+# Richer lex fixture — PIPE, review path, NUMBER via classify.
+# Stage 0 dry-run + spark-lex golden (expected_ops.tokens.jsonl).
+# Avoid `let` (GAS scaffold pads dumps). Classify must be one line
+# (GAS treats indented `from` as a new statement).
+model code
+
+review path "selfhost/fixtures/mini.spark" -> body
+
+ask "hello" -> a
+| ask "world" -> b
+
+classify Intent { support, sales, spam } from "My account is locked" min_confidence 0.7 -> intent
+
+print body
+print b
+print intent

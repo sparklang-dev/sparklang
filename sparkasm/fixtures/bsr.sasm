@@ -1,0 +1,9 @@
+# bsr — bit 9 of 0x200 → 9; +33 → exit 42
+.global _start
+.text
+_start:
+	mov	rsi, 512
+	bsr	rdi, rsi
+	add	rdi, 33
+	mov	rax, 60
+	syscall

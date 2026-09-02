@@ -1,0 +1,3 @@
+include "lib/ai.spark"
+ask "Add a GET /health API endpoint returning JSON status" -> plan
+print plan

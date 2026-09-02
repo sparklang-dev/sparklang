@@ -1,0 +1,16 @@
+{
+  "id": "compare-fast-code-best",
+  "mode": "fixture",
+  "suite": "examples/eval_suite.json",
+  "reasons": [
+    "code wins tool-call JSON validity 94% vs 71% (fast)",
+    "best edges quality_proxy 0.93 vs code 0.91",
+    "fast wins latency_ms_p50 95 vs code 420"
+  ],
+  "winner_by": {
+    "quality": "best",
+    "speed": "fast",
+    "tool_json": "best",
+    "balanced": "code"
+  }
+}

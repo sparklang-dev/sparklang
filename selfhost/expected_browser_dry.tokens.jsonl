@@ -1,0 +1,27 @@
+{"kind":"COMMENT","lexeme":"# Browser + mitm dry keywords lex fixture.","line":1,"col":1}
+{"kind":"COMMENT","lexeme":"# Stage 1 golden (expected_browser_dry.tokens.jsonl).","line":2,"col":1}
+{"kind":"COMMENT","lexeme":"# Keywords: browser, mitm (run/goto/enable stay IDENT). Not a full compiler.","line":3,"col":1}
+{"kind":"COMMENT","lexeme":"# Avoid `let` (GAS scaffold pads dumps).","line":4,"col":1}
+{"kind":"KEYWORD","lexeme":"model","line":5,"col":1}
+{"kind":"IDENT","lexeme":"code","line":5,"col":7}
+{"kind":"KEYWORD","lexeme":"browser","line":7,"col":1}
+{"kind":"IDENT","lexeme":"run","line":7,"col":9}
+{"kind":"STRING","lexeme":"\"examples/browser_main.spark\"","line":7,"col":13}
+{"kind":"ARROW","lexeme":"->","line":7,"col":43}
+{"kind":"IDENT","lexeme":"session","line":7,"col":46}
+{"kind":"KEYWORD","lexeme":"browser","line":8,"col":1}
+{"kind":"IDENT","lexeme":"goto","line":8,"col":9}
+{"kind":"STRING","lexeme":"\"https://example.com/\"","line":8,"col":14}
+{"kind":"ARROW","lexeme":"->","line":8,"col":37}
+{"kind":"IDENT","lexeme":"page","line":8,"col":40}
+{"kind":"KEYWORD","lexeme":"mitm","line":9,"col":1}
+{"kind":"IDENT","lexeme":"enable","line":9,"col":6}
+{"kind":"ARROW","lexeme":"->","line":9,"col":13}
+{"kind":"IDENT","lexeme":"mitm_session","line":9,"col":16}
+{"kind":"KEYWORD","lexeme":"print","line":11,"col":1}
+{"kind":"IDENT","lexeme":"session","line":11,"col":7}
+{"kind":"KEYWORD","lexeme":"print","line":12,"col":1}
+{"kind":"IDENT","lexeme":"page","line":12,"col":7}
+{"kind":"KEYWORD","lexeme":"print","line":13,"col":1}
+{"kind":"IDENT","lexeme":"mitm_session","line":13,"col":7}
+{"kind":"EOF","lexeme":"","line":14,"col":1}

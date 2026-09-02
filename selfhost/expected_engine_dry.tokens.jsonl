@@ -1,0 +1,36 @@
+{"kind":"COMMENT","lexeme":"# Engine dry keywords lex fixture.","line":1,"col":1}
+{"kind":"COMMENT","lexeme":"# Stage 1 golden (expected_engine_dry.tokens.jsonl).","line":2,"col":1}
+{"kind":"COMMENT","lexeme":"# Keywords: engine (fetch/parse/css/layout/attach stay IDENT).","line":3,"col":1}
+{"kind":"COMMENT","lexeme":"# Forms from LANGUAGE.md / examples/engine_fetch_parse_layout.spark","line":4,"col":1}
+{"kind":"COMMENT","lexeme":"# (B subset: file:// fetch + parse + css attach + layout).","line":5,"col":1}
+{"kind":"COMMENT","lexeme":"# Not a full compiler. Avoid `let` (GAS scaffold pads dumps).","line":6,"col":1}
+{"kind":"KEYWORD","lexeme":"model","line":7,"col":1}
+{"kind":"IDENT","lexeme":"code","line":7,"col":7}
+{"kind":"KEYWORD","lexeme":"engine","line":9,"col":1}
+{"kind":"IDENT","lexeme":"fetch","line":9,"col":8}
+{"kind":"STRING","lexeme":"\"file://engine/fixtures/table_demo.html\"","line":9,"col":14}
+{"kind":"ARROW","lexeme":"->","line":9,"col":55}
+{"kind":"IDENT","lexeme":"body","line":9,"col":58}
+{"kind":"KEYWORD","lexeme":"engine","line":10,"col":1}
+{"kind":"IDENT","lexeme":"parse","line":10,"col":8}
+{"kind":"STRING","lexeme":"\"out/engine/body.bin\"","line":10,"col":14}
+{"kind":"ARROW","lexeme":"->","line":10,"col":36}
+{"kind":"IDENT","lexeme":"dom","line":10,"col":39}
+{"kind":"KEYWORD","lexeme":"engine","line":11,"col":1}
+{"kind":"IDENT","lexeme":"css","line":11,"col":8}
+{"kind":"IDENT","lexeme":"attach","line":11,"col":12}
+{"kind":"ARROW","lexeme":"->","line":11,"col":19}
+{"kind":"IDENT","lexeme":"styles","line":11,"col":22}
+{"kind":"KEYWORD","lexeme":"engine","line":12,"col":1}
+{"kind":"IDENT","lexeme":"layout","line":12,"col":8}
+{"kind":"ARROW","lexeme":"->","line":12,"col":15}
+{"kind":"IDENT","lexeme":"boxes","line":12,"col":18}
+{"kind":"KEYWORD","lexeme":"print","line":14,"col":1}
+{"kind":"IDENT","lexeme":"body","line":14,"col":7}
+{"kind":"KEYWORD","lexeme":"print","line":15,"col":1}
+{"kind":"IDENT","lexeme":"dom","line":15,"col":7}
+{"kind":"KEYWORD","lexeme":"print","line":16,"col":1}
+{"kind":"IDENT","lexeme":"styles","line":16,"col":7}
+{"kind":"KEYWORD","lexeme":"print","line":17,"col":1}
+{"kind":"IDENT","lexeme":"boxes","line":17,"col":7}
+{"kind":"EOF","lexeme":"","line":18,"col":1}

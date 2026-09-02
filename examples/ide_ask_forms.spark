@@ -1,0 +1,14 @@
+# Spark IDE - proven ide ask forms (bare + quoted instruction).
+# After show forms d2fdc64. Bare ask already in ide_ask.spark -
+# this slice documents+tests both forms in one example.
+# Proof: both emit {"op":"ide.ask","ok":true,"via":"ask_run_prompt"};
+#        dry fixture Gravity; quoted instruction is printed before
+#        buffer ask body.
+# Run: ./spark --dry-run examples/ide_ask_forms.spark
+# No Electron. No new asm - documents proven forms only.
+
+ide open "examples/hello.spark" -> opened
+
+ide ask -> reply
+
+ide ask "Explain gravity briefly" -> reply

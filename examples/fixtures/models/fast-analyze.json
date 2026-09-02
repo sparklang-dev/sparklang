@@ -1,0 +1,16 @@
+{
+  "id": "fast",
+  "mode": "fixture",
+  "source": "examples/fixtures/models/fast-analyze.json",
+  "metrics": {
+    "latency_ms_p50": 95,
+    "tokens_per_s": 72.0,
+    "quality_proxy": 0.78,
+    "tool_call_json_valid_pct": 71
+  },
+  "failure_modes": ["tool JSON validity drops on nested schemas"],
+  "reasons": [
+    "latency_ms_p50 95 (speed win vs code 420)",
+    "tool_call_json_valid_pct 71% vs code 94%"
+  ]
+}

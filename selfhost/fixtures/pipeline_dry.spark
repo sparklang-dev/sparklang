@@ -1,0 +1,11 @@
+# Pipeline dry stub — selfhost golden.
+# Stage 1 lex subset; pipe tokens parsed (vm.c / bc_vm.c).
+# Avoid `let` (GAS scaffold pads dumps). Form from
+# bootstrap/fixtures/extract_listen_pipe.spark pipeline block.
+model fast
+
+pipeline {
+  ask "Summarize: Inventory" -> summary
+  | ask "Translate to Spanish: gravity" -> es
+}
+print es

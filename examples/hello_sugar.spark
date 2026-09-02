@@ -1,0 +1,6 @@
+# DX sugar: use (alias for model) + ? (alias for ask)
+use code
+
+? "Explain gravity in one sentence" -> text
+
+print text

@@ -1,0 +1,2 @@
+network capture interface "lo" duration 1s -> pcap
+network analyze pcap

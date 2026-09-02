@@ -1,0 +1,17 @@
+# Spark IDE keymap / command loop (asm).
+# Dry-run prints command-trace JSON; open paints editor.ppm; show
+# dry-validates via engine_window_show (live → spark-engine-show).
+# Run: ./spark --dry-run examples/ide_keys.spark
+# No mouse GUI. No Electron.
+
+ide keys "examples/fixtures/ide/cmds.txt"
+
+ide key open "examples/hello.spark"
+
+ide key show
+
+ide key save
+
+ide key run
+
+ide key quit

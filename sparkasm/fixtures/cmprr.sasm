@@ -1,0 +1,15 @@
+# cmp reg,reg — equal → exit 42
+.global _start
+.text
+_start:
+	mov	rdi, 5
+	mov	rsi, 5
+	cmp	rdi, rsi
+	je	exit42
+	mov	rdi, 1
+	jmp	done
+exit42:
+	mov	rdi, 42
+done:
+	mov	rax, 60
+	syscall

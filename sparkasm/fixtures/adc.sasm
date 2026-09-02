@@ -1,0 +1,9 @@
+# adc — 41 + 1 + CF0 → exit 42
+.global _start
+.text
+_start:
+	mov	rdi, 41
+	mov	rsi, 1
+	adc	rdi, rsi
+	mov	rax, 60
+	syscall

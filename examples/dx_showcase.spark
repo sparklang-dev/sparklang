@@ -1,0 +1,18 @@
+# Spark DX showcase — use/? sugar, pipeline, classify (GAS + bootstrap dry-run)
+use fast
+
+let topic "gravity"
+
+? "Explain {topic} in one sentence" -> fact
+print fact
+
+classify Intent { support, sales, spam } from "My account is locked and I need help" min_confidence 0.7 -> intent
+print intent
+
+let doc "Machines need balance checks weekly."
+
+pipeline {
+  ask "Summarize: {doc}" -> summary
+  | ask "Translate to Spanish: {summary}" -> es
+}
+print es

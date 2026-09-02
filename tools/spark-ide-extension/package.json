@@ -1,0 +1,32 @@
+{
+  "name": "spark-lang",
+  "displayName": "SparkLang",
+  "description": "Syntax highlighting for Spark (.spark) AI language",
+  "version": "0.1.0",
+  "publisher": "sparklang",
+  "engines": { "vscode": "^1.85.0" },
+  "categories": ["Programming Languages"],
+  "contributes": {
+    "languages": [
+      {
+        "id": "spark",
+        "aliases": ["SparkLang", "Spark", "spark"],
+        "extensions": [".spark"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "spark",
+        "scopeName": "source.spark",
+        "path": "./syntaxes/spark.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "spark",
+        "path": "./snippets/playbooks.json"
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+# review → builder → implement (codegen loop — NOT the product IDE)
+# Run: ./spark --dry-run examples/ide.spark
+# Custom Spark IDE is ground-up in progress — see docs/IDE.md.
+# Primary today: CLI ./spark (docs/PROGRAMMING_GUIDE.md).
+model code
+
+review path "examples/fixtures/sample.js" -> report
+
+review url "file://examples/fixtures/sample.js" -> report_url
+
+review text "function x(){ eval(y); }" -> report_text
+
+print report
+
+builder prefer lower request "add classify Intent and wire voice turn" -> patch
+
+implement patch into "out/program.spark"
+
+print patch

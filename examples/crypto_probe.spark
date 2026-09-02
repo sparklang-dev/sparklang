@@ -1,0 +1,2 @@
+# Honest crypto backend probe (AF_ALG vs OpenSSL)
+crypto probe -> info

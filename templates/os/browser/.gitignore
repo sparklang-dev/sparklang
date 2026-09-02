@@ -1,0 +1,11 @@
+# Mirror spark-browser — never commit CA private material
+data/ca/ca.key
+data/ca/ca.pem
+data/ca/ca.meta.json
+data/ca/leaves/
+sessions/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+.venv/

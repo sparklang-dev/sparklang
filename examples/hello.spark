@@ -1,0 +1,6 @@
+# Spark — AI markup run by an assembly VM
+model code
+
+ask "Explain gravity in one sentence" -> text
+
+print text

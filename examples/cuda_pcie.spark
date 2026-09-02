@@ -1,0 +1,7 @@
+# Spark CUDA PCIe — live sysfs link report (asm/pcie_ops.s)
+# Prefer minor 0 (compute). Never treat minor 2 (voice-only)
+# as a Spark target. Numbers from /sys/bus/pci/devices/… only.
+
+cuda pcie -> report
+pcie probe gpu 0 -> report
+cuda pcie explain -> text

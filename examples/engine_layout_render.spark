@@ -1,0 +1,6 @@
+# Engine B — parse HTML → layout SePaintBox → paint → show.
+# Honest: hello.html only. Not Google.com. No inventing.
+
+engine parse "engine/fixtures/hello.html" -> dom
+engine layout -> boxes
+engine render -> frame

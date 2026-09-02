@@ -1,0 +1,7 @@
+# Live ask with use fast — ./spark --live (needs AI_GATEWAY_URL + key)
+# Offline companion gate: ./spark-ask-http --dry --model fast --prompt "…"
+use fast
+
+ask "Reply with exactly one word: pong" -> text
+
+print text

@@ -1,0 +1,2 @@
+# Must fail loud — browser show needs an existing PPM/RGB path
+browser show "out/engine/no_such_browser_show.ppm"

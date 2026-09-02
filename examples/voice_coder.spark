@@ -1,0 +1,3 @@
+# Codifer — emit real Spark implementing voice behavior
+voice code request "listen classify speak support turn" -> artifact
+print artifact

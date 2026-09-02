@@ -1,0 +1,2 @@
+# Must fail loud — C bootstrap never forks live MITM daemon
+mitm enable --live -> mitm_session

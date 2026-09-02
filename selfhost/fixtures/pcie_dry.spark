@@ -1,0 +1,14 @@
+# PCIe dry keywords lex fixture.
+# Stage 1 golden (expected_pcie_dry.tokens.jsonl).
+# Keywords: cuda, pcie (probe/gpu/explain stay IDENT).
+# Forms from LANGUAGE.md / examples/cuda_pcie.spark.
+# Not a full compiler. Avoid `let` (GAS scaffold pads dumps).
+# Live /sys only — never invent Gen/width.
+model code
+
+cuda pcie -> report
+pcie probe gpu 0 -> report
+cuda pcie explain -> text
+
+print report
+print text

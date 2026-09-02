@@ -1,0 +1,5 @@
+# Copier of voices → written voice model
+voice copy from "examples/fixtures/audio/sample_review.wav" to demo_voice -> model_path
+print model_path
+voice model load demo_voice -> loaded
+speak with model demo_voice

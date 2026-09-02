@@ -1,0 +1,13 @@
+# Model analyze → compare → improve → build (blueprint/config only)
+# Dry-run: fixture metrics only — no live leaderboard, no train@
+model code
+
+model analyze "alias-code" -> report
+
+model analyze all -> catalog_report
+
+model compare ["fast", "code", "best"] on suite "examples/eval_suite.json" -> comparison
+
+model improve from report prefer quality -> blueprint
+
+model build blueprint into "out/better-model.md"

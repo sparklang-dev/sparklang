@@ -1,0 +1,3 @@
+include "lib/ai.spark"
+ask "Write a unit test for function add(a,b)" -> test_code
+print test_code

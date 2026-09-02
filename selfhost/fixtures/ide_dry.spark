@@ -1,0 +1,16 @@
+# IDE dry keywords lex fixture.
+# Stage 1 golden (expected_ide_dry.tokens.jsonl).
+# Keywords: ide (+ ask is KEYWORD); open/run/show stay IDENT.
+# Not a full compiler. Avoid `let` (GAS scaffold pads dumps).
+# Forms from docs/LANGUAGE.md.
+model code
+
+ide open "examples/hello.spark" -> opened
+ide run -> ran
+ide ask -> reply
+ide show -> shown
+
+print opened
+print ran
+print reply
+print shown

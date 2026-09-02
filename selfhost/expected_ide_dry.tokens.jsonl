@@ -1,0 +1,33 @@
+{"kind":"COMMENT","lexeme":"# IDE dry keywords lex fixture.","line":1,"col":1}
+{"kind":"COMMENT","lexeme":"# Stage 1 golden (expected_ide_dry.tokens.jsonl).","line":2,"col":1}
+{"kind":"COMMENT","lexeme":"# Keywords: ide (+ ask is KEYWORD); open/run/show stay IDENT.","line":3,"col":1}
+{"kind":"COMMENT","lexeme":"# Not a full compiler. Avoid `let` (GAS scaffold pads dumps).","line":4,"col":1}
+{"kind":"COMMENT","lexeme":"# Forms from docs/LANGUAGE.md.","line":5,"col":1}
+{"kind":"KEYWORD","lexeme":"model","line":6,"col":1}
+{"kind":"IDENT","lexeme":"code","line":6,"col":7}
+{"kind":"KEYWORD","lexeme":"ide","line":8,"col":1}
+{"kind":"IDENT","lexeme":"open","line":8,"col":5}
+{"kind":"STRING","lexeme":"\"examples/hello.spark\"","line":8,"col":10}
+{"kind":"ARROW","lexeme":"->","line":8,"col":33}
+{"kind":"IDENT","lexeme":"opened","line":8,"col":36}
+{"kind":"KEYWORD","lexeme":"ide","line":9,"col":1}
+{"kind":"IDENT","lexeme":"run","line":9,"col":5}
+{"kind":"ARROW","lexeme":"->","line":9,"col":9}
+{"kind":"IDENT","lexeme":"ran","line":9,"col":12}
+{"kind":"KEYWORD","lexeme":"ide","line":10,"col":1}
+{"kind":"KEYWORD","lexeme":"ask","line":10,"col":5}
+{"kind":"ARROW","lexeme":"->","line":10,"col":9}
+{"kind":"IDENT","lexeme":"reply","line":10,"col":12}
+{"kind":"KEYWORD","lexeme":"ide","line":11,"col":1}
+{"kind":"IDENT","lexeme":"show","line":11,"col":5}
+{"kind":"ARROW","lexeme":"->","line":11,"col":10}
+{"kind":"IDENT","lexeme":"shown","line":11,"col":13}
+{"kind":"KEYWORD","lexeme":"print","line":13,"col":1}
+{"kind":"IDENT","lexeme":"opened","line":13,"col":7}
+{"kind":"KEYWORD","lexeme":"print","line":14,"col":1}
+{"kind":"IDENT","lexeme":"ran","line":14,"col":7}
+{"kind":"KEYWORD","lexeme":"print","line":15,"col":1}
+{"kind":"IDENT","lexeme":"reply","line":15,"col":7}
+{"kind":"KEYWORD","lexeme":"print","line":16,"col":1}
+{"kind":"IDENT","lexeme":"shown","line":16,"col":7}
+{"kind":"EOF","lexeme":"","line":17,"col":1}

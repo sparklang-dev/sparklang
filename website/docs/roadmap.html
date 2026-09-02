@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Roadmap — Spark</title>
+    <meta name="description" content="SparkLang roadmap — done, next, won&#x27;t." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/css/tokens.css?v=bb4433f" />
+    <link rel="stylesheet" href="/css/site.css?v=bb4433f" />
+  </head>
+  <body class="doc-page">
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="site-brand" href="/" aria-label="Spark home">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z" fill="currentColor" />
+          </svg>
+          Spark
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+        </button>
+        <div class="header-nav-wrap">
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <ul class="nav-primary">
+              <li><a href="/learn/">Learn</a></li>
+              <li><a href="/docs/language.html">Docs</a></li>
+              <li><a href="/downloads.html">Download</a></li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">More</button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/adoption-bar.html">Adoption bar</a></li>
+                  <li><a href="/docs/ai-models.html">AI models</a></li>
+                  <li><a href="/docs/native-network-web.html">Network + web</a></li>
+                  <li><a href="/docs/programming-guide.html">Programming guide</a></li>
+                  <li><a href="/docs/ide.html">IDE</a></li>
+                  <li><a href="/docs/self-host.html">Contributor internals</a></li>
+                </ul>
+              </li>
+            </ul>
+            <a href="/playground.html" class="nav-cta">Try</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <div class="shell doc-layout">
+      <aside class="doc-sidebar" aria-label="Table of contents">
+        <p class="doc-sidebar__title">On this page</p>
+        <nav id="doc-toc-list"></nav>
+      </aside>
+      <main class="doc-main">
+      <nav class="doc__nav" aria-label="Docs">
+        <a href="/learn/">Learn</a>
+        <a href="/docs/adoption-bar.html">Adoption bar</a>
+        <a href="/docs/ai-models.html">AI models</a>
+        <a href="/docs/native-network-web.html">Network + web</a>
+        <a href="/docs/programming-guide.html">Programming guide</a>
+        <a href="/docs/language.html">Language reference</a>
+        <a href="/docs/ide.html">IDE</a>
+        <a href="/docs/self-host.html">Contributor internals</a>
+        <a href="/downloads.html">Downloads</a>
+      </nav>      <article class="doc__body">
+        <h1 id="sparklang-roadmap">SparkLang roadmap</h1>
+        <p>Prioritized against the adoption bar. Status: <strong>done</strong> / <strong>next</strong> / <strong>won't</strong>
+        (near-term product focus). Details: <a href="/docs/adoption-bar.html">ADOPTION_BAR.md</a>.</p>
+        <h2 id="done-this-era">Done (this era)</h2>
+        <ul class="doc__ul">
+        <li>Public MIT repo, SparkLang branding, About disambiguation</li>
+        <li>Changelog + release process doc</li>
+        <li><code class="inline-code">embed</code> / <code class="inline-code">retrieve</code> first-class ops + dry fixtures + <code class="inline-code">spark-rag-http</code></li>
+        <li>Dry-run escape hatch: <code class="inline-code">shell</code> / <code class="inline-code">run</code> allowlist fixtures</li>
+        <li><code class="inline-code">./spark --embed</code> FFI handshake stub</li>
+        <li>Per-<code class="inline-code">ask</code> <code class="inline-code">[accounting]</code> line (dry zeros; live usage when present)</li>
+        <li>Positioning: not a Bifrost plugin; dry-run first</li>
+        </ul>
+        <h2 id="next">Next</h2>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Track</th>
+        <th>What</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td>HTTP</td>
+        <td><code class="inline-code">http get</code> / <code class="inline-code">http post</code> with auth, retries, timeouts</td>
+        </tr>
+        <tr>
+        <td>Extract</td>
+        <td>Schema validation + JSON-mode + retry on miss</td>
+        </tr>
+        <tr>
+        <td>Ask</td>
+        <td>Streaming token/SSE path</td>
+        </tr>
+        <tr>
+        <td>Eval</td>
+        <td>Expectation pass/fail harness (not only alias compare)</td>
+        </tr>
+        <tr>
+        <td>Escape</td>
+        <td>Live <code class="inline-code">--allow-shell</code> argv policy; <code class="inline-code">import spark</code> host embed</td>
+        </tr>
+        <tr>
+        <td>Accounting</td>
+        <td>Wall-clock latency on live ask; run-level rollup</td>
+        </tr>
+        <tr>
+        <td>LSP</td>
+        <td>Prefer editor LSP + highlighting over IDE chrome</td>
+        </tr>
+        <tr>
+        <td>Receptionist</td>
+        <td>Promote <code class="inline-code">examples/receptionist_goal.spark</code> off <code class="inline-code">[goal]</code> when transfer + eval syntax exist</td>
+        </tr>
+        <tr>
+        <td>Releases</td>
+        <td>Cut version tags from CHANGELOG; ship installers on Pages (see release docs)</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <h2 id="done-rename">Done (rename)</h2>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Track</th>
+        <th>What</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td>Rename</td>
+        <td>Public product identity is <strong>SparkLang</strong> at sparklang.dev. CLI remains <code class="inline-code">spark</code>.</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <h2 id="wont-near-term-focus">Won't (near-term focus)</h2>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Drop</th>
+        <th>Why</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td>MITM / pcap / browser automation as hero</td>
+        <td>Distracts from AI workflow language</td>
+        </tr>
+        <tr>
+        <td>Homegrown Electron/PyQt IDE as hero chrome</td>
+        <td>Prefer LSP for editor story; <strong>IDE tree kept</strong> (hard-delete OWNER-CONFIRM <strong>revoked</strong> 2026-09-02)</td>
+        </tr>
+        <tr>
+        <td>Model-build as training product</td>
+        <td>Blueprint / eval sugar only</td>
+        </tr>
+        <tr>
+        <td>Production voice/telephony claim</td>
+        <td>Gaps remain (barge-in, EOU, SM, adapters) — gated demo only</td>
+        </tr>
+        <tr>
+        <td>Bifrost-as-identity</td>
+        <td>Gateway optional; any OpenAI-compatible URL</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <h2 id="voice-gaps-honest">Voice gaps (honest)</h2>
+        <p>If not shipping soon, keep voice off the production claim list:</p>
+        <ul class="doc__ul">
+        <li>Barge-in, EOU / silence detection, latency budget</li>
+        <li>Call state machine: transfer / hold / hangup / VM / DTMF / STT retry</li>
+        <li>Named STT / TTS / telephony adapters as stable contracts</li>
+        <li>Concurrency model for multi-call</li>
+        </ul>
+        <p>Dry <code class="inline-code">listen</code> / <code class="inline-code">speak</code> / gated PSTN remain demos. See <a href="/docs/language.html">VOICE.md</a>.</p>
+      </article>
+      </main>
+    </div>
+
+    <footer class="site-footer">
+      <div class="shell footer-inner">
+        <span>Spark programming language</span>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="/learn/">Learn</a>
+          <a href="/docs/language.html">Reference</a>
+          <a href="/downloads.html">Downloads</a>
+          <a href="/playground.html">Playground</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="/js/site.js"></script>
+  </body>
+</html>

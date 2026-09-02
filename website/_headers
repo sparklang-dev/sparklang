@@ -1,0 +1,11 @@
+/favicon.svg
+  Content-Type: image/svg+xml
+  Cache-Control: public, max-age=86400
+
+/css/*
+  Content-Type: text/css; charset=utf-8
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/docs/*
+  Content-Type: text/html; charset=utf-8
+  Cache-Control: public, max-age=300

@@ -1,0 +1,2 @@
+# Fail-loud when AF_ALG is blacklisted / unusable (host CVE-2026-31431)
+crypto backend af_alg

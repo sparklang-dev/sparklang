@@ -1,0 +1,20 @@
+{"kind":"COMMENT","lexeme":"# Ask/generate + print dry keywords lex fixture.","line":1,"col":1}
+{"kind":"COMMENT","lexeme":"# Stage 1 golden (expected_ask_dry.tokens.jsonl).","line":2,"col":1}
+{"kind":"COMMENT","lexeme":"# Keywords: model, ask, generate, print. Forms from LANGUAGE.md /","line":3,"col":1}
+{"kind":"COMMENT","lexeme":"# examples/hello.spark + ask_live.spark (generate aliases ask).","line":4,"col":1}
+{"kind":"COMMENT","lexeme":"# Not a full compiler. Avoid `let` (GAS scaffold pads dumps).","line":5,"col":1}
+{"kind":"KEYWORD","lexeme":"model","line":6,"col":1}
+{"kind":"IDENT","lexeme":"code","line":6,"col":7}
+{"kind":"KEYWORD","lexeme":"ask","line":8,"col":1}
+{"kind":"STRING","lexeme":"\"Explain gravity in one sentence\"","line":8,"col":5}
+{"kind":"ARROW","lexeme":"->","line":8,"col":39}
+{"kind":"IDENT","lexeme":"text","line":8,"col":42}
+{"kind":"KEYWORD","lexeme":"generate","line":10,"col":1}
+{"kind":"STRING","lexeme":"\"Reply with exactly one word: pong\"","line":10,"col":10}
+{"kind":"ARROW","lexeme":"->","line":10,"col":46}
+{"kind":"IDENT","lexeme":"pong","line":10,"col":49}
+{"kind":"KEYWORD","lexeme":"print","line":12,"col":1}
+{"kind":"IDENT","lexeme":"text","line":12,"col":7}
+{"kind":"KEYWORD","lexeme":"print","line":13,"col":1}
+{"kind":"IDENT","lexeme":"pong","line":13,"col":7}
+{"kind":"EOF","lexeme":"","line":14,"col":1}

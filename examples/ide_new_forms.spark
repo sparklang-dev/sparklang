@@ -1,0 +1,16 @@
+# Spark IDE - proven ide new forms (bare + quoted path).
+# After keys-long 40ff5a6. Quoted new already in ide_new_chain -
+# this slice documents+tests both forms in one example.
+# Proof: both emit {"op":"ide.new","ok":true,"dirty":true};
+#        quoted sets path (arrow print); bare clears without path line.
+# Keymap n->new NOT invented.
+# Run: ./spark --dry-run examples/ide_new_forms.spark
+# No Electron. No new asm - documents proven forms only.
+
+ide new
+
+ide buffer
+
+ide new "out/ide/ide_new_forms_blank.spark"
+
+ide buffer

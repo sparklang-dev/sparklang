@@ -1,0 +1,14 @@
+# Embed + retrieve dry keywords lex fixture.
+# Stage 1 golden (expected_rag_dry.tokens.jsonl).
+# Keywords: model, embed, retrieve, print.
+# Forms from docs/LANGUAGE.md / examples/retrieve_embed.spark.
+
+model fast
+
+embed "Spark is a language for AI workflows" -> vec
+
+print vec
+
+retrieve "how does dry-run embed work" from project "docs" -> hits
+
+print hits

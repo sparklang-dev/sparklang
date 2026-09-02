@@ -1,0 +1,8 @@
+# Prefer higher suggestion layer (companion, not VM replacement)
+model fast
+
+review path "examples/fixtures/sample.js" -> report
+
+builder prefer higher request "wrap classify+voice as helpers" -> patch
+
+implement patch into "out/program.py.txt"

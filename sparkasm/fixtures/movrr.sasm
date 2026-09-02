@@ -1,0 +1,8 @@
+# mov reg,reg — copy imm via rsi→rdi to exit 42
+.global _start
+.text
+_start:
+	mov	rsi, 42
+	mov	rdi, rsi
+	mov	rax, 60
+	syscall

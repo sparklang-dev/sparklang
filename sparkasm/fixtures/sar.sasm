@@ -1,0 +1,9 @@
+# sar — -84 >> 1 → -42; neg → exit 42
+.global _start
+.text
+_start:
+	mov	rdi, -84
+	sar	rdi, 1
+	neg	rdi
+	mov	rax, 60
+	syscall

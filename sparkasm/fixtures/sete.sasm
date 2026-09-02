@@ -1,0 +1,13 @@
+# sete — cmp equal → sete al → exit 42
+.global _start
+.text
+_start:
+	xor	rax, rax
+	mov	rsi, 5
+	mov	rdi, 5
+	cmp	rdi, rsi
+	sete	al
+	add	rax, 41
+	mov	rdi, rax
+	mov	rax, 60
+	syscall

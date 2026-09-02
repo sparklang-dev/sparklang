@@ -1,0 +1,27 @@
+{"kind":"COMMENT","lexeme":"# IDE keys dry keywords lex fixture.","line":1,"col":1}
+{"kind":"COMMENT","lexeme":"# Stage 1 golden (expected_ide_keys_dry.tokens.jsonl).","line":2,"col":1}
+{"kind":"COMMENT","lexeme":"# Keywords: ide (keys/key/open/show/save/run/quit stay IDENT).","line":3,"col":1}
+{"kind":"COMMENT","lexeme":"# Forms from LANGUAGE.md / examples/ide_keys.spark.","line":4,"col":1}
+{"kind":"COMMENT","lexeme":"# Not a full compiler. Avoid `let` (GAS scaffold pads dumps).","line":5,"col":1}
+{"kind":"KEYWORD","lexeme":"model","line":6,"col":1}
+{"kind":"IDENT","lexeme":"code","line":6,"col":7}
+{"kind":"KEYWORD","lexeme":"ide","line":8,"col":1}
+{"kind":"IDENT","lexeme":"keys","line":8,"col":5}
+{"kind":"STRING","lexeme":"\"examples/fixtures/ide/cmds.txt\"","line":8,"col":10}
+{"kind":"KEYWORD","lexeme":"ide","line":9,"col":1}
+{"kind":"IDENT","lexeme":"key","line":9,"col":5}
+{"kind":"IDENT","lexeme":"open","line":9,"col":9}
+{"kind":"STRING","lexeme":"\"examples/hello.spark\"","line":9,"col":14}
+{"kind":"KEYWORD","lexeme":"ide","line":10,"col":1}
+{"kind":"IDENT","lexeme":"key","line":10,"col":5}
+{"kind":"IDENT","lexeme":"show","line":10,"col":9}
+{"kind":"KEYWORD","lexeme":"ide","line":11,"col":1}
+{"kind":"IDENT","lexeme":"key","line":11,"col":5}
+{"kind":"IDENT","lexeme":"save","line":11,"col":9}
+{"kind":"KEYWORD","lexeme":"ide","line":12,"col":1}
+{"kind":"IDENT","lexeme":"key","line":12,"col":5}
+{"kind":"IDENT","lexeme":"run","line":12,"col":9}
+{"kind":"KEYWORD","lexeme":"ide","line":13,"col":1}
+{"kind":"IDENT","lexeme":"key","line":13,"col":5}
+{"kind":"IDENT","lexeme":"quit","line":13,"col":9}
+{"kind":"EOF","lexeme":"","line":14,"col":1}

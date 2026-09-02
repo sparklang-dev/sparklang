@@ -1,0 +1,76 @@
+# Self-host lexer seed (lane A).
+# Destination: Spark-hosted lexer run by bootstrap B.
+# Today: valid on GAS ./spark --dry-run (no invented lex op).
+# Real byte scan: make selfhost-lex && ./selfhost/spark-lex …
+#
+# Algorithm (to grow into Spark once B can run it):
+#   1. Skip ASCII whitespace
+#   2. If '#': COMMENT through newline
+#   3. If '"': STRING with escapes
+#   4. If '-' and next '>': ARROW
+#   5. If '|': PIPE
+#   6. If digit: NUMBER
+#   7. If alpha/_: IDENT; if in keyword set -> KEYWORD
+#   8. Else single-byte PUNCT or fail loud
+#   9. Emit EOF
+#
+# GAS pads `let` dumps; Stage 1 golden: fixtures/let_dry.spark.
+
+model code
+
+review path "selfhost/fixtures/mini.spark" -> fixture_review
+print fixture_review
+
+review path "selfhost/fixtures/bootstrap_ops.spark" -> bootstrap_review
+print bootstrap_review
+
+ask "Self-host lexer seed: C spark-lex is SoT scanner today; grow this .spark on B" -> phase
+print phase
+
+ask "Stage 1 B golden: bootstrap_ops.spark lexes tool/with/extract/listen/speak/pipeline" -> stage1_lex
+print stage1_lex
+
+ask "Stage 1 golden: review_voice.spark lexes review path|text + voice{listen/speak}" -> review_voice_lex
+print review_voice_lex
+
+ask "Stage 1 golden: browser_dry.spark lexes browser + mitm keywords" -> browser_dry_lex
+print browser_dry_lex
+
+ask "Stage 1 golden: ide_dry.spark lexes ide open|run|ask|show keywords" -> ide_dry_lex
+print ide_dry_lex
+
+ask "Stage 1 golden: classify_dry.spark lexes model|classify|print keywords" -> classify_dry_lex
+print classify_dry_lex
+
+ask "Stage 1 golden: let_dry.spark lexes let KEYWORD (form from pipeline_translate)" -> let_dry_lex
+print let_dry_lex
+
+ask "Stage 1 golden: ask_dry.spark lexes ask|generate|print (LANGUAGE ask/generate)" -> ask_dry_lex
+print ask_dry_lex
+
+ask "Stage 1 golden: engine_dry.spark lexes engine KEYWORD (fetch/parse/css/layout)" -> engine_dry_lex
+print engine_dry_lex
+
+ask "Stage 1 golden: ide_keys_dry.spark lexes ide KEYWORD (keys/key forms)" -> ide_keys_dry_lex
+print ide_keys_dry_lex
+
+ask "Stage 1 golden: binary_dry.spark lexes binary KEYWORD (open/elf/disasm/…)" -> binary_dry_lex
+print binary_dry_lex
+
+ask "Stage 1 golden: network_dry.spark lexes network KEYWORD (capture/open/analyze/…)" -> network_dry_lex
+print network_dry_lex
+
+ask "Stage 1 golden: encrypt_dry.spark lexes crypto|encrypt|gateway KEYWORDs" -> encrypt_dry_lex
+print encrypt_dry_lex
+
+ask "Stage 1 golden: cuda_dry.spark lexes cuda|memory KEYWORDs (probe/memstat/pin)" -> cuda_dry_lex
+print cuda_dry_lex
+
+ask "Stage 1 golden: os_dry.spark lexes os KEYWORD (design/specify/generate/…)" -> os_dry_lex
+print os_dry_lex
+
+ask "Stage 1 golden: pcie_dry.spark lexes cuda|pcie KEYWORDs (probe/explain)" -> pcie_dry_lex
+print pcie_dry_lex
+
+ask "Next gate: Stage 1 B subset dry-run proof; then Stage 3 lexer.spark on B vs expected_*.tokens.jsonl" -> next_step
+print next_step

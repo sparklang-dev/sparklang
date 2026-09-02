@@ -1,0 +1,17 @@
+# Review + voice ops lex fixture.
+# Stage 1 golden (expected_review_voice.tokens.jsonl).
+# Avoid `let` (GAS scaffold pads dumps). Not a full compiler.
+model code
+
+review path "selfhost/fixtures/mini.spark" -> path_report
+
+review text "function x(){ return 1; }" -> text_report
+
+voice {
+  listen "in.wav" -> user
+  speak "Hello" -> "out/hello.wav"
+}
+
+print path_report
+print text_report
+print user

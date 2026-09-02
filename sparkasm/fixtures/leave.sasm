@@ -1,0 +1,10 @@
+# leave — frame restore; exit 42
+.global _start
+.text
+_start:
+	push	rbp
+	mov	rbp, rsp
+	mov	rdi, 42
+	leave
+	mov	rax, 60
+	syscall

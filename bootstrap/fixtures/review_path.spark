@@ -1,0 +1,3 @@
+# Dry review path — C bootstrap matches GAS pick_review_report heuristics
+review path "examples/fixtures/sample.js" -> report
+print report

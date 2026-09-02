@@ -1,0 +1,2 @@
+# Must fail loud — cdp companion not in C bootstrap yet
+browser cdp status -> cdp_status

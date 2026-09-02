@@ -1,0 +1,17 @@
+# Voice turn: listen → classify → ask → speak
+model fast
+
+voice {
+  listen -> user
+  classify Intent { support, sales } from user -> intent
+  ask "Reply helpfully to: {user}" -> reply
+  speak reply -> "out.wav"
+}
+
+# Same composition as a pipeline
+pipeline {
+  listen "input.wav" -> transcript
+  | classify Intent { support, sales, spam } from transcript -> intent
+  | ask "Reply helpfully to: {transcript}" -> reply
+  | speak reply -> "spark-out.wav"
+}

@@ -1,0 +1,7 @@
+# Spark IDE - proven status path strip after open.
+# After bind forms. Open remembers path into status.txt (no trailing *).
+# Proof: out/ide/status.txt == examples/hello.spark after open.
+# Run: ./spark --dry-run examples/ide_status_path.spark
+# No Electron. No new asm - documents proven status wire only.
+
+ide open "examples/hello.spark" -> opened

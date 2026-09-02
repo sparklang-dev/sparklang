@@ -1,0 +1,8 @@
+# imul reg,imm — multiply to exit 42
+.global _start
+.text
+_start:
+	mov	rdi, 21
+	imul	rdi, 2
+	mov	rax, 60
+	syscall

@@ -1,0 +1,10 @@
+# First-class classify — support vs sales vs spam
+model fast
+
+classify Intent { support, sales, spam } from "My account is locked and I need help" min_confidence 0.7 -> intent
+
+print intent
+
+classify multi Tags { support, sales, spam } from "Please help me buy a card, what is the price?" -> tags
+
+print tags
