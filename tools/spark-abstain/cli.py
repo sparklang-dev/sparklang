@@ -5,6 +5,7 @@ Usage:
   spark-abstain --dry|--live --stmt-file PATH --out PATH
   spark-abstain --live train --dataset … --out …
   spark-abstain --live export --dataset … --out … [--model|dim]
+  spark-abstain --live eval --dataset … [--weights|--train-out]
   spark-abstain --live attach --model … --weights … --out …
   spark-abstain --live ask --prompt … --weights … [--hidden|/HF]
 """
@@ -26,6 +27,7 @@ if _PY.is_dir() and str(_PY) not in sys.path:
 from sparklang.abstain.attach import attach_head
 from sparklang.abstain.corpus import validate_corpus
 from sparklang.abstain.dry import dry_result, dumps_compact
+from sparklang.abstain.eval import run_heldout_eval
 from sparklang.abstain.export import export_hiddens
 from sparklang.abstain.gate import GateConfig, select_before_sample
 from sparklang.abstain.generate import live_ask
@@ -148,6 +150,7 @@ def main(argv: list[str] | None = None) -> int:
             "gate",
             "ask",
             "export",
+            "eval",
             "validate-corpus",
             "outer-verify",
             "mark-quality",
@@ -173,6 +176,21 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--threshold", type=float, default=0.7)
     ap.add_argument("--idk", default="I don't know.")
+    ap.add_argument(
+        "--holdout",
+        type=float,
+        default=0.2,
+        help="held-out fraction for eval (default 0.2)",
+    )
+    ap.add_argument(
+        "--train-out",
+        help="eval: write retrained head weights here",
+    )
+    ap.add_argument(
+        "--split-dir",
+        help="eval: write train.jsonl + heldout.jsonl here",
+    )
+    ap.add_argument("--steps", type=int, default=200)
     ap.add_argument("--p", type=float)
     ap.add_argument("--entropy", type=float, default=None)
     ap.add_argument("--entropy-max", type=float, default=None)
@@ -263,6 +281,28 @@ def main(argv: list[str] | None = None) -> int:
         _write_out(dumps_compact(result), args.out)
         return 0
 
+    if args.cmd == "eval":
+        if not live:
+            raise SystemExit("eval needs --live")
+        if not args.dataset:
+            raise SystemExit("eval needs --dataset")
+        result = run_heldout_eval(
+            args.dataset,
+            weights=args.weights,
+            train_out=args.train_out,
+            holdout_frac=float(args.holdout),
+            seed=int(args.seed),
+            threshold=float(args.threshold),
+            idk=str(args.idk),
+            hidden_dim=args.hidden_dim,
+            steps=int(args.steps),
+            split_dir=args.split_dir,
+            out=args.out,
+        )
+        # Always echo metrics; --out also stamps the JSON file.
+        _write_out(dumps_compact(result), None)
+        return 0
+
     if args.cmd == "train":
         fields = {
             "op": "train",
@@ -346,7 +386,7 @@ def main(argv: list[str] | None = None) -> int:
     if not args.stmt_file:
         raise SystemExit(
             "need --stmt-file or "
-            "train|export|attach|gate|ask|validate-corpus"
+            "train|export|eval|attach|gate|ask|validate-corpus"
         )
     stmt = Path(args.stmt_file).read_text(encoding="utf-8")
     # First non-comment line

@@ -213,4 +213,106 @@ grep -q '"mode": "live"\|"mode":"live"' /tmp/spark-ab-ask-vllm.txt
 cleanup_stub
 trap - EXIT
 
+# Held-out eval on synthetic export (honest metrics, not SOTA)
+./spark-abstain --live eval \
+  --dataset out/heads-test/synth768.jsonl \
+  --train-out out/heads-test/abstain768-heldout.pt \
+  --split-dir out/heads-test/eval-split \
+  --holdout 0.2 --seed 42 --threshold 0.5 \
+  --steps 120 --hidden-dim 768 \
+  --out out/heads-test/eval768.json \
+  >/tmp/spark-ab-eval768.txt
+grep -q '"op":"head_eval"' /tmp/spark-ab-eval768.txt
+grep -q '"state":"succeeded"' /tmp/spark-ab-eval768.txt
+grep -q '"quality":"heldout_eval_retrained"' /tmp/spark-ab-eval768.txt
+grep -q '"f1"' /tmp/spark-ab-eval768.txt
+test -f out/heads-test/eval768.json
+test -f out/heads-test/eval-split/heldout.jsonl
+
+# Continue-SAMPLE deferred note when gate continues (file hidden)
+PYTHONPATH=python python3 - <<'PY'
+import torch
+from pathlib import Path
+from sparklang.abstain.head import AbstainHead, save_head
+head = AbstainHead(4)
+with torch.no_grad():
+    head.net.weight.fill_(0.0)
+    head.net.bias.fill_(-8.0)
+save_head(head, Path("out/heads-test/cont.pt"))
+torch.save(torch.zeros(4), Path("out/heads-test/cont_h.pt"))
+print("ok")
+PY
+unset SPARK_ABSTAIN_SAMPLE_URL || true
+./spark-abstain --live ask \
+  --prompt "What is 2+2?" \
+  --weights out/heads-test/cont.pt \
+  --hidden out/heads-test/cont_h.pt \
+  --threshold 0.9 \
+  >/tmp/spark-ab-cont-defer.txt
+grep -q '"reason":"continue"' /tmp/spark-ab-cont-defer.txt
+grep -q 'SAMPLE deferred' /tmp/spark-ab-cont-defer.txt
+
+# Continue via SAMPLE_URL (mock OpenAI-compat)
+PYTHONPATH=python python3 - <<'PY' &
+from http.server import BaseHTTPRequestHandler, HTTPServer
+import json
+
+class H(BaseHTTPRequestHandler):
+    def do_POST(self):
+        n = int(self.headers.get("Content-Length", 0))
+        _ = self.rfile.read(n)
+        body = json.dumps(
+            {"choices": [{"message": {"content": "four"}}]}
+        ).encode()
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def log_message(self, *_a):
+        return
+
+HTTPServer(("127.0.0.1", 18766), H).serve_forever()
+PY
+SAMPLE_PID=$!
+cleanup_sample() { kill "$SAMPLE_PID" 2>/dev/null || true; }
+trap cleanup_sample EXIT
+for _ in 1 2 3 4 5 6 7 8 9 10; do
+  if curl -sf -X POST "http://127.0.0.1:18766/v1/chat/completions" \
+    -H 'Content-Type: application/json' \
+    -d '{"model":"local","messages":[{"role":"user","content":"x"}]}' \
+    >/tmp/spark-ab-sample-http.json; then
+    break
+  fi
+  sleep 0.2
+done
+grep -q four /tmp/spark-ab-sample-http.json
+SPARK_ABSTAIN_SAMPLE_URL=http://127.0.0.1:18766 \
+  ./spark-abstain --live ask \
+  --prompt "What is 2+2?" \
+  --weights out/heads-test/cont.pt \
+  --hidden out/heads-test/cont_h.pt \
+  --threshold 0.9 \
+  >/tmp/spark-ab-cont-sample.txt
+grep -q '"sample_source":"openai_compat"' /tmp/spark-ab-cont-sample.txt
+grep -q '"text":"four"' /tmp/spark-ab-cont-sample.txt
+cleanup_sample
+trap - EXIT
+
+# Optional: held-out eval on existing kl3m export (skip if missing)
+if [[ -f out/heads-hf-smoke-kl3m/from-hf.jsonl ]]; then
+  ./spark-abstain --live eval \
+    --dataset out/heads-hf-smoke-kl3m/from-hf.jsonl \
+    --train-out out/heads-hf-smoke-kl3m/abstain-heldout.pt \
+    --split-dir out/heads-hf-smoke-kl3m/eval-split \
+    --holdout 0.2 --seed 42 --threshold 0.5 \
+    --steps 200 \
+    --out out/heads-hf-smoke-kl3m/eval-heldout.json \
+    >/tmp/spark-ab-eval-kl3m.txt || true
+  if grep -q '"state":"succeeded"' /tmp/spark-ab-eval-kl3m.txt 2>/dev/null; then
+    echo "kl3m held-out eval OK"
+  fi
+fi
+
 echo "test-abstain OK"

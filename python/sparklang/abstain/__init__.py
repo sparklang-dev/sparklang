@@ -8,6 +8,11 @@ from __future__ import annotations
 
 from sparklang.abstain.attach import attach_head, load_manifest
 from sparklang.abstain.corpus import validate_corpus
+from sparklang.abstain.eval import (
+    run_heldout_eval,
+    score_heldout,
+    split_train_heldout,
+)
 from sparklang.abstain.export import (
     export_hiddens,
     synthetic_backbone_hidden,
@@ -48,8 +53,11 @@ __all__ = [
     "parse_request",
     "parse_response",
     "post_spark_hidden",
+    "run_heldout_eval",
+    "score_heldout",
     "score_hidden",
     "select_before_sample",
+    "split_train_heldout",
     "synthetic_backbone_hidden",
     "toy_backbone_hidden",
     "train_abstain_head",

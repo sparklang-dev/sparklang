@@ -136,14 +136,105 @@ make test-abstain
 ./spark-abstain --live train \
   --dataset out/heads/synth768.jsonl \
   --out out/heads/abstain768.pt --hidden-dim 768
+
+# Held-out eval (retrain on train fold — honest metrics)
+./spark-abstain --live eval \
+  --dataset out/heads/synth768.jsonl \
+  --train-out out/heads/abstain768-heldout.pt \
+  --split-dir out/heads/eval-split \
+  --holdout 0.2 --threshold 0.5 \
+  --out out/heads/eval768.json
 ```
 
 Shipped fixtures:
 
 - `examples/fixtures/abstain/corpus_seed.jsonl` — curated seed
-  (~95 honest answer/abstain rows)
+  (~105 honest answer/abstain rows)
 - `labels*.jsonl` — legacy CI shapes (bag-hash 64 / toy 16)
 - `sot_dryer_price.json` — dry SoT for inventable playbook
+
+---
+
+## Held-out evaluation (honest metrics)
+
+`./spark-abstain --live eval` splits the labeled JSONL
+(stratified by answer/abstain), **retrains** on the train fold
+(unless `--weights` is passed), then scores precision / recall /
+F1 / accuracy on the held-out fold for the **abstain** positive
+class.
+
+| Flag | Role |
+|------|------|
+| `--dataset` | JSONL with `label` + `hidden` (or text → bag-hash) |
+| `--holdout` | Fraction held out (default `0.2`) |
+| `--train-out` | Where to write the retrained `.pt` |
+| `--split-dir` | Write `train.jsonl` + `heldout.jsonl` |
+| `--weights` | Skip retrain — **leakage risk** if those weights saw full data |
+| `--out` | Stamp full metrics JSON |
+| `--threshold` / `--steps` / `--seed` / `--hidden-dim` | Gate + train |
+
+Result stamps:
+
+- `quality=heldout_eval_retrained` — clean train/held-out
+- `quality=weights_provided_possible_leakage` — `--weights` path
+- `note` always says **not production SOTA**
+
+### Eval on kl3m-exported hiddens (owner host)
+
+After a successful HF smoke (`out/heads-hf-smoke-kl3m/`, stamp
+`hf_backbone_trained`, `hidden_dim` 2048):
+
+```bash
+./spark-abstain --live eval \
+  --dataset out/heads-hf-smoke-kl3m/from-hf.jsonl \
+  --train-out out/heads-hf-smoke-kl3m/abstain-heldout.pt \
+  --split-dir out/heads-hf-smoke-kl3m/eval-split \
+  --holdout 0.2 --threshold 0.5 --steps 200 \
+  --out out/heads-hf-smoke-kl3m/eval-heldout.json
+```
+
+Do **not** pass the full-corpus `abstain.pt` as `--weights` if you
+want an honest gate — retrain on the train fold instead. Metrics
+are host/fixture only; never market as LM accuracy.
+
+**How to read numbers:** synthetic / label-conditioned exports can
+hit near-perfect held-out F1 by construction — that proves the
+eval plumbing, **not** LM quality. Text/bag-hash fixture eval is
+weaker and more honest as a lower bound (example on this host:
+~0.67 F1 on `corpus_seed.jsonl` bag-hash dim 64). Always cite
+`quality` + `note` from the eval JSON.
+
+---
+
+## Continue-SAMPLE (gate does not fire)
+
+When `p_abstain` is below τ (and entropy/margin do not trip):
+
+1. **In-process HF** (`SPARK_ABSTAIN_HF=1` + local/`org/name`
+   model, no `SPARK_ABSTAIN_HIDDEN` override) →
+   `try_hf_select_then_sample` runs `generate` and returns answer
+   tokens (`reason=continue`, `halted=false`).
+2. **File / sidecar hidden** → if `SPARK_ABSTAIN_SAMPLE_URL` is
+   set, POST OpenAI-compat `/v1/chat/completions` and fill
+   `text` (`sample_source=openai_compat`).
+3. Else → honest deferred: empty `text` +
+   `note` containing `SAMPLE deferred` (no invented answer).
+
+Dry/live coverage: `make test-abstain` asserts deferred note and
+a mock SAMPLE_URL continue path (no multi‑GB download).
+
+```bash
+# Deferred (no SAMPLE_URL / HF)
+./spark-abstain --live ask --prompt "What is 2+2?" \
+  --weights out/heads/cont.pt --hidden out/heads/cont_h.pt \
+  --threshold 0.9
+
+# Continue via SAMPLE URL
+export SPARK_ABSTAIN_SAMPLE_URL=http://127.0.0.1:8000
+./spark-abstain --live ask --prompt "What is 2+2?" \
+  --weights out/heads/cont.pt --hidden out/heads/cont_h.pt \
+  --threshold 0.9
+```
 
 ---
 
@@ -212,8 +303,10 @@ held-out accuracy / production LoRA).
 | `synthetic_backbone_dim_match` | Wide synthetic — dim contract only |
 | `hf_exported_unverified` | Real HF hiddens exported/trained — no smoke stamp yet |
 | `hf_backbone_trained` | export→train→ask smoke succeeded on that backbone |
+| `heldout_eval_retrained` | train/held-out eval retrained on train fold |
 
 Never claim “we trained on Llama-70B” from fixtures or smoke.
+`heldout_eval_*` metrics are **not** production SOTA.
 
 ---
 
@@ -268,6 +361,7 @@ Extras: `pip install -e 'python/[hf]'` · `python/[sidecar]`.
   deferred (honest empty `text` + note).
 - Stock vLLM lacks native hidden export — use sidecar.
 - llama.cpp / GGUF hidden hooks out of scope.
-- Corpus is curated seed (~95), not a production billion.
+- Corpus is curated seed (~105), not a production billion.
 - Cloud verify-or-refuse is orchestrator composition — not Bifrost.
 - `hf_backbone_trained` ≠ published accuracy claim.
+- Held-out F1 on synthetic/kl3m exports ≠ production gate quality.

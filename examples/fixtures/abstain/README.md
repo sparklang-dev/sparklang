@@ -1,6 +1,6 @@
 # Abstain labeled corpus (fixtures)
 
-Curated **seed** JSONL for SparkLang abstain heads (~95 rows).
+Curated **seed** JSONL for SparkLang abstain heads (~105 rows).
 Not a production accuracy dataset. Do not invent a fake large
 corpus or claim Llama-70B / live LM gate quality from these rows.
 
@@ -62,11 +62,18 @@ Offline dim-match smoke (no HF):
 ./spark-abstain --live train \
   --dataset out/heads/synth768.jsonl \
   --out out/heads/abstain768.pt --hidden-dim 768
+
+# Honest held-out metrics (retrain on train fold)
+./spark-abstain --live eval \
+  --dataset out/heads/synth768.jsonl \
+  --train-out out/heads/abstain768-heldout.pt \
+  --holdout 0.2 --out out/heads/eval768.json
 ```
 
 Quality stamps in export/train JSON (`toy_backbone`,
 `synthetic_backbone_dim_match`, `hf_exported_unverified`,
-`hf_backbone_trained`, `bag_hash_fixture`) mean **fixture /
-pipeline** — never production accuracy. Use
+`hf_backbone_trained`, `bag_hash_fixture`,
+`heldout_eval_retrained`) mean **fixture / pipeline** — never
+production accuracy. Use
 `./spark-abstain --live mark-quality --weights …` only after a
 real HF export→train→ask smoke on that backbone.

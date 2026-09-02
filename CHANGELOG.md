@@ -4,6 +4,18 @@ All notable user-facing releases of **SparkLang** (the Spark programming
 language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
+## 0.6.17 — 2026-09-02
+
+- **Abstain held-out eval + continue-SAMPLE:**
+  `./spark-abstain --live eval` stratified train/held-out split,
+  retrain on train fold, precision/recall/F1 on held-out
+  (fixture/synthetic/host only — not production SOTA). Corpus
+  seed ~105 rows. Continue path covered: HF `generate` when gate
+  continues; `SPARK_ABSTAIN_SAMPLE_URL` OpenAI-compat SAMPLE;
+  honest deferred note otherwise. Docs:
+  [docs/ABSTAIN_HEADS.md](docs/ABSTAIN_HEADS.md). Gate:
+  `make test-abstain` (optional kl3m eval if smoke dir present).
+
 ## 0.6.16 — 2026-09-02
 
 - **Abstain real-dim corpus path:** curated

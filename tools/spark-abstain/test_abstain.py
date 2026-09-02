@@ -729,5 +729,233 @@ class GateCliThresholdTests(unittest.TestCase):
         self.assertTrue(d2.halted)
 
 
+class HeldoutEvalTests(unittest.TestCase):
+    """Honest held-out metrics on synthetic / bag-hash fixtures."""
+
+    def test_split_stratified(self) -> None:
+        from sparklang.abstain.eval import split_train_heldout
+
+        rows = [
+            {"text": f"a{i}", "label": 0} for i in range(10)
+        ] + [
+            {"text": f"b{i}", "label": 1} for i in range(10)
+        ]
+        train, held = split_train_heldout(
+            rows, holdout_frac=0.2, seed=1
+        )
+        self.assertEqual(len(train) + len(held), 20)
+        self.assertGreaterEqual(
+            sum(1 for r in held if r["label"] == 0), 1
+        )
+        self.assertGreaterEqual(
+            sum(1 for r in held if r["label"] == 1), 1
+        )
+
+    def test_eval_synthetic_retrain(self) -> None:
+        from sparklang.abstain.eval import run_heldout_eval
+        from sparklang.abstain.export import export_hiddens
+
+        seed_ds = ROOT / "examples/fixtures/abstain/corpus_seed.jsonl"
+        with tempfile.TemporaryDirectory() as td:
+            td_p = Path(td)
+            exported = td_p / "s.jsonl"
+            export_hiddens(
+                seed_ds,
+                exported,
+                source="synthetic",
+                hidden_dim=64,
+                seed=3,
+            )
+            result = run_heldout_eval(
+                exported,
+                train_out=td_p / "h.pt",
+                split_dir=td_p / "split",
+                holdout_frac=0.2,
+                seed=3,
+                threshold=0.5,
+                steps=150,
+                hidden_dim=64,
+                out=td_p / "eval.json",
+            )
+            self.assertEqual(result["state"], "succeeded")
+            self.assertEqual(
+                result["quality"], "heldout_eval_retrained"
+            )
+            self.assertFalse(result["leakage_risk"])
+            m = result["metrics"]
+            self.assertIn("f1", m)
+            self.assertIn("precision", m)
+            self.assertIn("recall", m)
+            self.assertGreater(m["n"], 0)
+            self.assertTrue((td_p / "eval.json").is_file())
+            self.assertTrue((td_p / "split" / "heldout.jsonl").is_file())
+            # Synthetic dim-match is linearly separable — expect
+            # strong but do not claim SOTA.
+            self.assertGreaterEqual(m["f1"], 0.5)
+
+    def test_eval_weights_marks_leakage(self) -> None:
+        from sparklang.abstain.eval import run_heldout_eval
+
+        ds = ROOT / "examples/fixtures/abstain/labels.jsonl"
+        with tempfile.TemporaryDirectory() as td:
+            td_p = Path(td)
+            w = td_p / "h.pt"
+            train_abstain_head(
+                ds, w, steps=40, hidden_dim=64, seed=0
+            )
+            result = run_heldout_eval(
+                ds,
+                weights=w,
+                holdout_frac=0.25,
+                seed=0,
+                threshold=0.5,
+                hidden_dim=64,
+            )
+            self.assertTrue(result["leakage_risk"])
+            self.assertIn("leakage", result["quality"])
+
+
+class ContinueSampleTests(unittest.TestCase):
+    """Continue-SAMPLE when gate does not fire."""
+
+    def test_file_continue_deferred_without_sample_url(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            td_p = Path(td)
+            head = AbstainHead(4)
+            with torch.no_grad():
+                head.net.weight.fill_(0.0)
+                head.net.bias.fill_(-8.0)
+            wpath = td_p / "h.pt"
+            save_head(head, wpath)
+            hpath = td_p / "hidden.pt"
+            torch.save(torch.zeros(4), hpath)
+            with patch.dict(os.environ, {}, clear=False):
+                os.environ.pop("SPARK_ABSTAIN_SAMPLE_URL", None)
+                r = live_ask(
+                    "What is 2+2?",
+                    weights=str(wpath),
+                    hidden_path=str(hpath),
+                    threshold=0.9,
+                )
+            self.assertFalse(r["abstain"])
+            self.assertFalse(r["halted"])
+            self.assertEqual(r["reason"], "continue")
+            self.assertEqual(r["text"], "")
+            self.assertIn("SAMPLE deferred", r.get("note", ""))
+
+    def test_file_continue_via_sample_url(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            td_p = Path(td)
+            head = AbstainHead(4)
+            with torch.no_grad():
+                head.net.weight.fill_(0.0)
+                head.net.bias.fill_(-8.0)
+            wpath = td_p / "h.pt"
+            save_head(head, wpath)
+            hpath = td_p / "hidden.pt"
+            torch.save(torch.zeros(4), hpath)
+
+            payload = json.dumps(
+                {
+                    "choices": [
+                        {
+                            "message": {
+                                "content": "four",
+                            }
+                        }
+                    ]
+                }
+            ).encode("utf-8")
+
+            class _Resp:
+                def read(self) -> bytes:
+                    return payload
+
+                def __enter__(self) -> "_Resp":
+                    return self
+
+                def __exit__(self, *a: object) -> None:
+                    return None
+
+            with patch.dict(
+                os.environ,
+                {"SPARK_ABSTAIN_SAMPLE_URL": "http://mock.local"},
+            ):
+                with patch(
+                    "urllib.request.urlopen",
+                    return_value=_Resp(),
+                ):
+                    r = live_ask(
+                        "What is 2+2?",
+                        weights=str(wpath),
+                        hidden_path=str(hpath),
+                        threshold=0.9,
+                    )
+            self.assertFalse(r["abstain"])
+            self.assertEqual(r["text"], "four")
+            self.assertEqual(r["sample_source"], "openai_compat")
+
+    def test_hf_select_continue_generates(self) -> None:
+        fake_tok = MagicMock()
+        fake_tok.pad_token = "</s>"
+        fake_tok.eos_token = "</s>"
+        fake_tok.pad_token_id = 0
+        fake_tok.return_value = {
+            "input_ids": torch.tensor([[1, 2]]),
+            "attention_mask": torch.tensor([[1, 1]]),
+        }
+        fake_tok.decode = MagicMock(return_value=" 42 ")
+
+        class _Out:
+            def __init__(self) -> None:
+                layer = torch.zeros(1, 2, 4)
+                self.hidden_states = (layer,)
+                self.logits = torch.zeros(1, 2, 8)
+
+        fake_model = MagicMock()
+        fake_model.return_value = _Out()
+        fake_model.eval = MagicMock()
+        fake_model.generate = MagicMock(
+            return_value=torch.tensor([[1, 2, 9, 9]])
+        )
+
+        head = AbstainHead(4)
+        with torch.no_grad():
+            head.net.weight.fill_(0.0)
+            head.net.bias.fill_(-8.0)
+        cfg = GateConfig(threshold=0.9, idk="IDK.")
+
+        with patch.dict(os.environ, {"SPARK_ABSTAIN_HF": "1"}):
+            with patch.dict(
+                "sys.modules",
+                {
+                    "transformers": MagicMock(
+                        AutoTokenizer=MagicMock(
+                            from_pretrained=MagicMock(
+                                return_value=fake_tok
+                            )
+                        ),
+                        AutoModelForCausalLM=MagicMock(
+                            from_pretrained=MagicMock(
+                                return_value=fake_model
+                            )
+                        ),
+                    )
+                },
+            ):
+                r = try_hf_select_then_sample(
+                    "org/tiny-mock",
+                    "What is 2+2?",
+                    head,
+                    cfg,
+                )
+        self.assertIsNotNone(r)
+        assert r is not None
+        self.assertFalse(r["abstain"])
+        self.assertEqual(r["reason"], "continue")
+        self.assertEqual(r["text"], "42")
+        fake_model.generate.assert_called_once()
+
+
 if __name__ == "__main__":
     unittest.main()
