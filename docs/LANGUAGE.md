@@ -75,10 +75,19 @@ model improve from report prefer quality -> blueprint
 
 model plan blueprint into "out/better-model.md"   # markdown only
 
-model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" -> job
+model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" method "spark_distill_cpu" -> job
 model build -> job                               # same as train
-model status "job-dry-001" -> status
+model status "job-dry-001" -> status             # polls that job id
 ```
+
+Optional **`method "…"`** selects the training algorithm
+(`spark_distill_cpu` | `spark_pref_pack` | `spark_playbook_fit` |
+`spark_faq_index`).
+Default when omitted: `spark_distill_cpu` (env `SPARK_TRAIN_METHOD`
+override). Live GAS passes the statement via
+`./spark-train-http --spark-line`; status uses the **quoted** job id
+(never a hardcoded `job-dry-001`). GAS-first — no SPARK_BC opcode yet
+(see [SPARK_BC.md](SPARK_BC.md)).
 
 **Backends:** `http` (default MVP companion `./spark-train-http`),
 `local-yield` (optional allowlisted `train@` unit), `huggingface`

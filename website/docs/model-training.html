@@ -108,10 +108,13 @@
         </tbody>
         </table></div>
         <p>Minimal train form (fields optional in dry-run; fixtures fill gaps):</p>
-        <pre class="doc__pre"><code class="inline-code">model train dataset &quot;data/train.jsonl&quot; base &quot;base-id&quot; out &quot;out/train/demo&quot; backend &quot;http&quot; -&gt; job
+        <pre class="doc__pre"><code class="inline-code">model train dataset &quot;data/train.jsonl&quot; base &quot;base-id&quot; out &quot;out/train/demo&quot; backend &quot;http&quot; method &quot;spark_distill_cpu&quot; -&gt; job
 
         model status &quot;job-dry-001&quot; -&gt; status
         </code></pre>
+        <p><code class="inline-code">method &quot;…&quot;</code> is optional (<code class="inline-code">spark_distill_cpu</code> default).
+        Live GAS forwards the statement with <code class="inline-code">./spark-train-http --spark-line</code>.
+        Status polls the <strong>quoted</strong> job id (not a hardcoded <code class="inline-code">job-dry-001</code>).</p>
         <h2 id="job-lifecycle">Job lifecycle</h2>
         <pre class="doc__pre"><code class="inline-code">submit  →  accepted (job_id)
                 →  running
@@ -248,18 +251,15 @@
         </tr>
         </tbody>
         </table></div>
-        <p>Select via:</p>
+        <p>Select via (first match wins):</p>
         <ol class="doc__ol">
-        <li>POST body <code class="inline-code">method</code> (companion <code class="inline-code">--method</code> / env <code class="inline-code">SPARK_TRAIN_METHOD</code>)</li>
+        <li>Language <code class="inline-code">method &quot;…&quot;</code> on <code class="inline-code">model train</code> / <code class="inline-code">model build</code> (live <code class="inline-code">--spark-line</code>)</li>
+        <li>Companion <code class="inline-code">--method</code> / POST body <code class="inline-code">method</code> / env <code class="inline-code">SPARK_TRAIN_METHOD</code></li>
         <li>Or <code class="inline-code">base</code> equal to a method id (reference trainer only)</li>
         <li>Default: <code class="inline-code">spark_distill_cpu</code></li>
         </ol>
-        <p><strong>Live <code class="inline-code">.spark</code> note:</strong> GAS still forks <code class="inline-code">./spark-train-http --live
-        --submit</code> without parsing method/out from the statement. Pass method
-        and out with env (<code class="inline-code">SPARK_TRAIN_METHOD</code>, <code class="inline-code">SPARK_TRAIN_OUT</code>) or call the
-        companion directly. Live <code class="inline-code">model status</code> still polls hardcoded
-        <code class="inline-code">job-dry-001</code> in GAS — use <code class="inline-code">./spark-train-http --live --status &lt;id&gt;</code>
-        for other job ids. Language-level <code class="inline-code">method</code> keyword = <strong>[next]</strong>.</p>
+        <p>Unknown method → fail loud. Dry status for an unknown job id → fail loud
+        (no silent <code class="inline-code">job-dry-001</code>).</p>
         <p>HTTP <code class="inline-code">artifacts.adapter</code> remains a <strong>compat alias</strong> to the method’s
         primary weight file (not a LoRA adapter).</p>
         <p>When <code class="inline-code">out</code> basename matches <code class="inline-code">job-*</code>, that basename is the <code class="inline-code">job_id</code>.</p>
@@ -272,23 +272,11 @@
         export SPARK_TRAIN_BACKEND=http
         export SPARK_TRAIN_URL=http://127.0.0.1:8090/v1
 
-        # distill via .spark
+        # method comes from the .spark line
         ./spark --live examples/model_train.spark
-
-        # preference pack
-        ./spark-train-http --live --submit --method spark_pref_pack \
-          --dataset examples/fixtures/train/dataset.jsonl \
-          --base spark_pref_pack --out out/train/job-pref-001
-
-        # playbook fit
-        ./spark-train-http --live --submit --method spark_playbook_fit \
-          --dataset examples/fixtures/train/dataset.jsonl \
-          --base spark_playbook_fit --out out/train/job-play-001
-
-        # FAQ index
-        ./spark-train-http --live --submit --method spark_faq_index \
-          --dataset examples/fixtures/train/dataset.jsonl \
-          --base spark_faq_index --out out/train/job-faq-001
+        ./spark --live examples/model_train_pref.spark
+        ./spark --live examples/model_train_playbook.spark
+        ./spark --live examples/model_train_faq.spark
         </code></pre>
         <p>Dry-run fixtures still plan stub paths without training.</p>
         <h3 id="local-yield-optional-gated">local-yield (optional; gated)</h3>
@@ -339,7 +327,6 @@
         <li>Full LoRA studio / multi-node scheduler UI</li>
         <li>Invented owner train-grant strings</li>
         <li>Bifrost alias pickers as “Step 2” of building a model</li>
-        <li>Language-level <code class="inline-code">method "…"</code> keyword on <code class="inline-code">model train</code> (use env / companion)</li>
         </ul>
       </article>
       </main>

@@ -128,7 +128,7 @@
 
         model plan blueprint into &quot;out/better-model.md&quot;   # markdown only
 
-        model train dataset &quot;examples/fixtures/train/dataset.jsonl&quot; base &quot;fixture-base&quot; out &quot;out/train/job-dry-001&quot; backend &quot;http&quot; -&gt; job
+        model train dataset &quot;examples/fixtures/train/dataset.jsonl&quot; base &quot;fixture-base&quot; out &quot;out/train/job-dry-001&quot; backend &quot;http&quot; method &quot;spark_distill_cpu&quot; -&gt; job
         model build -&gt; job                               # same as train
         model status &quot;job-dry-001&quot; -&gt; status
         </code></pre>

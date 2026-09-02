@@ -1,0 +1,23 @@
+# SparkLang live train — method keyword via .spark (2026-09-02)
+# SPARK_TRAIN_URL=http://127.0.0.1:8090/v1
+
+## distill
+[spark] live ask via AI_GATEWAY_URL (spark-ask-http)
+[model] code
+[model] {"job_id":"job-dry-001","status":"accepted","artifacts":{"checkpoint":"out/train/job-dry-001/checkpoint.json","marker":"out/train/job-dry-001/ARTIFACT","adapter":"out/train/job-dry-001/weights.pt","weights":"out/train/job-dry-001/weights.pt"},"out":"out/train/job-dry-001","base":"fixture-base","dataset":"examples/fixtures/train/dataset.jsonl","backend":"http","method":"spark_distill_cpu","note":"spark_distill_cpu \u2014 CPU train (loss=3e-06; not LoRA)","final_loss":3e-06,"methods":["spark_distill_cpu","spark_pref_pack","spark_playbook_fit","spark_faq_index"]}
+[model] {"job_id":"job-dry-001","state":"succeeded","artifacts":{"checkpoint":"out/train/job-dry-001/checkpoint.json","marker":"out/train/job-dry-001/ARTIFACT","adapter":"out/train/job-dry-001/weights.pt","weights":"out/train/job-dry-001/weights.pt"},"out":"out/train/job-dry-001","base":"fixture-base","dataset":"examples/fixtures/train/dataset.jsonl","backend":"http","method":"spark_distill_cpu","note":"spark_distill_cpu \u2014 CPU train (loss=3e-06; not LoRA)","final_loss":3e-06}
+[spark] ok
+
+## pref
+[spark] live ask via AI_GATEWAY_URL (spark-ask-http)
+[model] code
+[model] {"job_id":"job-pref-001","status":"accepted","artifacts":{"checkpoint":"out/train/job-pref-001/checkpoint.json","marker":"out/train/job-pref-001/ARTIFACT","adapter":"out/train/job-pref-001/ranker.pt","weights":"out/train/job-pref-001/ranker.pt","pref_pack":"out/train/job-pref-001/pref_pack.json","ranker":"out/train/job-pref-001/ranker.pt"},"out":"out/train/job-pref-001","base":"spark_pref_pack","dataset":"examples/fixtures/train/dataset.jsonl","backend":"http","method":"spark_pref_pack","note":"spark_pref_pack \u2014 CPU train (loss=0.492465; not LoRA)","final_loss":0.492465,"methods":["spark_distill_cpu","spark_pref_pack","spark_playbook_fit","spark_faq_index"]}
+[model] {"job_id":"job-pref-001","state":"succeeded","artifacts":{"checkpoint":"out/train/job-pref-001/checkpoint.json","marker":"out/train/job-pref-001/ARTIFACT","adapter":"out/train/job-pref-001/ranker.pt","weights":"out/train/job-pref-001/ranker.pt","pref_pack":"out/train/job-pref-001/pref_pack.json","ranker":"out/train/job-pref-001/ranker.pt"},"out":"out/train/job-pref-001","base":"spark_pref_pack","dataset":"examples/fixtures/train/dataset.jsonl","backend":"http","method":"spark_pref_pack","note":"spark_pref_pack \u2014 CPU train (loss=0.492465; not LoRA)","final_loss":0.492465}
+[spark] ok
+
+## playbook
+[spark] live ask via AI_GATEWAY_URL (spark-ask-http)
+[model] code
+[model] {"job_id":"job-play-001","status":"accepted","artifacts":{"checkpoint":"out/train/job-play-001/checkpoint.json","marker":"out/train/job-play-001/ARTIFACT","adapter":"out/train/job-play-001/router.pt","weights":"out/train/job-play-001/router.pt","playbooks":"out/train/job-play-001/playbooks.json","router":"out/train/job-play-001/router.pt"},"out":"out/train/job-play-001","base":"spark_playbook_fit","dataset":"examples/fixtures/train/dataset.jsonl","backend":"http","method":"spark_playbook_fit","note":"spark_playbook_fit \u2014 CPU train (loss=3e-06; not LoRA)","final_loss":3e-06,"methods":["spark_distill_cpu","spark_pref_pack","spark_playbook_fit","spark_faq_index"]}
+[model] {"job_id":"job-play-001","state":"succeeded","artifacts":{"checkpoint":"out/train/job-play-001/checkpoint.json","marker":"out/train/job-play-001/ARTIFACT","adapter":"out/train/job-play-001/router.pt","weights":"out/train/job-play-001/router.pt","playbooks":"out/train/job-play-001/playbooks.json","router":"out/train/job-play-001/router.pt"},"out":"out/train/job-play-001","base":"spark_playbook_fit","dataset":"examples/fixtures/train/dataset.jsonl","backend":"http","method":"spark_playbook_fit","note":"spark_playbook_fit \u2014 CPU train (loss=3e-06; not LoRA)","final_loss":3e-06}
+[spark] ok

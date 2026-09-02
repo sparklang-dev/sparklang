@@ -1,8 +1,7 @@
 # Model train — spark_pref_pack (preference pack + CPU ranker)
-# Live: SPARK_TRAIN_METHOD=spark_pref_pack SPARK_TRAIN_OUT=...
 # See docs/MODEL_TRAINING.md
 model code
 
-model train dataset "examples/fixtures/train/dataset.jsonl" base "spark_pref_pack" out "out/train/job-pref-001" backend "http" -> job
+model train dataset "examples/fixtures/train/dataset.jsonl" base "spark_pref_pack" out "out/train/job-pref-001" backend "http" method "spark_pref_pack" -> job
 
 model status "job-pref-001" -> status

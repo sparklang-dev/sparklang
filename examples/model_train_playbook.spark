@@ -1,8 +1,7 @@
 # Model train — spark_playbook_fit (intent→playbook router)
-# Live: SPARK_TRAIN_METHOD=spark_playbook_fit
 # See docs/MODEL_TRAINING.md
 model code
 
-model train dataset "examples/fixtures/train/dataset.jsonl" base "spark_playbook_fit" out "out/train/job-play-001" backend "http" -> job
+model train dataset "examples/fixtures/train/dataset.jsonl" base "spark_playbook_fit" out "out/train/job-play-001" backend "http" method "spark_playbook_fit" -> job
 
 model status "job-play-001" -> status

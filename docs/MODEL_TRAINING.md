@@ -25,10 +25,14 @@ Full language forms: [LANGUAGE.md](LANGUAGE.md).
 Minimal train form (fields optional in dry-run; fixtures fill gaps):
 
 ```
-model train dataset "data/train.jsonl" base "base-id" out "out/train/demo" backend "http" -> job
+model train dataset "data/train.jsonl" base "base-id" out "out/train/demo" backend "http" method "spark_distill_cpu" -> job
 
 model status "job-dry-001" -> status
 ```
+
+`method "…"` is optional (`spark_distill_cpu` default). Live GAS forwards
+the statement with `./spark-train-http --spark-line`. Status polls the
+**quoted** job id from the line (not a hardcoded `job-dry-001`).
 
 ## Job lifecycle
 
@@ -132,18 +136,16 @@ voice-reserved GPU. None invent `train@` grants.
 | `spark_playbook_fit` | Fit an intent→playbook router from reply templates | `playbooks.json` + `router.pt` |
 | `spark_faq_index` | Build FAQ corpus and train a tiny dual-encoder retriever | `faq_index.json` + `encoder.pt` |
 
-Select via:
+Select via (first match wins):
 
-1. POST body `method` (companion `--method` / env `SPARK_TRAIN_METHOD`)
-2. Or `base` equal to a method id (reference trainer only)
-3. Default: `spark_distill_cpu`
+1. Language `method "…"` on `model train` / `model build` (live
+   `--spark-line`)
+2. Companion `--method` / POST body `method` / env `SPARK_TRAIN_METHOD`
+3. Or `base` equal to a method id (reference trainer only)
+4. Default: `spark_distill_cpu`
 
-**Live `.spark` note:** GAS still forks `./spark-train-http --live
---submit` without parsing method/out from the statement. Pass method
-and out with env (`SPARK_TRAIN_METHOD`, `SPARK_TRAIN_OUT`) or call the
-companion directly. Live `model status` still polls hardcoded
-`job-dry-001` in GAS — use `./spark-train-http --live --status <id>`
-for other job ids. Language-level `method` keyword = **[next]**.
+Unknown method → fail loud (exit 2). Dry status for an unknown job id
+→ fail loud (no silent `job-dry-001`).
 
 HTTP `artifacts.adapter` remains a **compat alias** to the method’s
 primary weight file (not a LoRA adapter).
@@ -160,23 +162,11 @@ python3 tools/spark-train-ref/server.py --host 127.0.0.1 --port 8090
 export SPARK_TRAIN_BACKEND=http
 export SPARK_TRAIN_URL=http://127.0.0.1:8090/v1
 
-# distill via .spark
+# method comes from the .spark line
 ./spark --live examples/model_train.spark
-
-# preference pack
-./spark-train-http --live --submit --method spark_pref_pack \
-  --dataset examples/fixtures/train/dataset.jsonl \
-  --base spark_pref_pack --out out/train/job-pref-001
-
-# playbook fit
-./spark-train-http --live --submit --method spark_playbook_fit \
-  --dataset examples/fixtures/train/dataset.jsonl \
-  --base spark_playbook_fit --out out/train/job-play-001
-
-# FAQ index
-./spark-train-http --live --submit --method spark_faq_index \
-  --dataset examples/fixtures/train/dataset.jsonl \
-  --base spark_faq_index --out out/train/job-faq-001
+./spark --live examples/model_train_pref.spark
+./spark --live examples/model_train_playbook.spark
+./spark --live examples/model_train_faq.spark
 ```
 
 Dry-run fixtures still plan stub paths without training.

@@ -73,6 +73,19 @@
 <p>All notable user-facing releases of <strong>SparkLang</strong> (the Spark programming
 language) are listed here. Site and installers track
 <code>website/downloads/manifest.json</code>.</p>
+<h2>0.6.9 — 2026-09-02</h2>
+<ul>
+<li><strong>Language <code class="inline-code">method &quot;…&quot;</code></strong> on
+  <code class="inline-code">model train</code> /
+  <code class="inline-code">model build</code>
+  (includes <code class="inline-code">spark_faq_index</code>).</li>
+<li>Live GAS forwards the statement via
+  <code class="inline-code">./spark-train-http --spark-line</code>.</li>
+<li>Live <code class="inline-code">model status &quot;job-id&quot;</code> polls that
+  job id — <strong>not</strong> hardcoded
+  <code class="inline-code">job-dry-001</code>.</li>
+<li>Dry fixtures fail loud on unknown method or unknown status job id.</li>
+</ul>
 <h2>0.6.8 — 2026-09-02</h2>
 <ul>
 <li><strong>Fourth CPU train method:</strong>

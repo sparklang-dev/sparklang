@@ -1,38 +1,5 @@
-# SparkLang live train capture — spark_distill_cpu
-#
-# Custom path: CPU distill student (not LoRA / not HF PEFT / no GPU).
-# Multi-method sibling: live-train-methods-capture.txt
-#
-# Command:
-#   python3 tools/spark-train-ref/server.py --host 127.0.0.1 --port 8090
-#   export SPARK_TRAIN_BACKEND=http SPARK_TRAIN_URL=http://127.0.0.1:8090/v1
-#   ./spark --live examples/model_train.spark
-
 [spark] live ask via AI_GATEWAY_URL (spark-ask-http)
 [model] code
-[model] {"job_id":"job-dry-001","status":"accepted","artifacts":{"checkpoint":"out/train/job-dry-001/checkpoint.json","marker":"out/train/job-dry-001/ARTIFACT","adapter":"out/train/job-dry-001/weights.pt","weights":"out/train/job-dry-001/weights.pt"},"out":"out/train/job-dry-001","base":"fixture-base","dataset":"examples/fixtures/train/dataset.jsonl","backend":"http","method":"spark_distill_cpu","note":"spark_distill_cpu \u2014 CPU train (loss=1e-06; not LoRA)","final_loss":1e-06,"methods":["spark_distill_cpu","spark_pref_pack","spark_playbook_fit"]}
-[model] {"job_id":"job-dry-001","state":"succeeded","artifacts":{"checkpoint":"out/train/job-dry-001/checkpoint.json","marker":"out/train/job-dry-001/ARTIFACT","adapter":"out/train/job-dry-001/weights.pt","weights":"out/train/job-dry-001/weights.pt"},"out":"out/train/job-dry-001","base":"fixture-base","dataset":"examples/fixtures/train/dataset.jsonl","backend":"http","method":"spark_distill_cpu","note":"spark_distill_cpu \u2014 CPU train (loss=1e-06; not LoRA)","final_loss":1e-06}
+[model] {"job_id":"job-dry-001","status":"accepted","artifacts":{"checkpoint":"out/train/job-dry-001/checkpoint.json","marker":"out/train/job-dry-001/ARTIFACT","adapter":"out/train/job-dry-001/weights.pt","weights":"out/train/job-dry-001/weights.pt"},"out":"out/train/job-dry-001","base":"fixture-base","dataset":"examples/fixtures/train/dataset.jsonl","backend":"http","method":"spark_distill_cpu","note":"spark_distill_cpu \u2014 CPU train (loss=3e-06; not LoRA)","final_loss":3e-06,"methods":["spark_distill_cpu","spark_pref_pack","spark_playbook_fit","spark_faq_index"]}
+[model] {"job_id":"job-dry-001","state":"succeeded","artifacts":{"checkpoint":"out/train/job-dry-001/checkpoint.json","marker":"out/train/job-dry-001/ARTIFACT","adapter":"out/train/job-dry-001/weights.pt","weights":"out/train/job-dry-001/weights.pt"},"out":"out/train/job-dry-001","base":"fixture-base","dataset":"examples/fixtures/train/dataset.jsonl","backend":"http","method":"spark_distill_cpu","note":"spark_distill_cpu \u2014 CPU train (loss=3e-06; not LoRA)","final_loss":3e-06}
 [spark] ok
-
-### weights.pt
--rw-rw-r-- 1 mike mike 5601 Sep  2 07:12 out/train/job-dry-001/weights.pt
-
-{
-  "method": "spark_distill_cpu",
-  "job_id": "job-dry-001",
-  "base": "fixture-base",
-  "dataset": "examples/fixtures/train/dataset.jsonl",
-  "pairs": 12,
-  "vocab_size": 19,
-  "n_replies": 5,
-  "steps": 200,
-  "final_loss": 1e-06,
-  "device": "cpu",
-  "elapsed_s": 0.194,
-  "weights": "out/train/job-dry-001/weights.pt",
-  "note": "Spark custom path: CPU distill student (not LoRA, not HF PEFT, no GPU)"
-}
-
-spark-train-dry job-dry-001
-adapter=out/train/job-dry-001/adapter.bin
-checkpoint=out/train/job-dry-001/checkpoint.json

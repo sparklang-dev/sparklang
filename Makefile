@@ -496,6 +496,16 @@ test-train-http: spark-train-http spark
 	./spark-train-http --dry --submit --method spark_faq_index | \
 		grep -q spark_faq_index
 	./spark-train-http --dry --status job-dry-001 | grep -q '"state":"succeeded"'
+	./spark-train-http --dry --status job-pref-001 | grep -q job-pref-001
+	./spark-train-http --dry --status job-missing-999 ; test $$? -ne 0
+	./spark-train-http --dry --submit --method not_a_method ; \
+		test $$? -ne 0
+	printf '%s\n' \
+	  'model train dataset "examples/fixtures/train/dataset.jsonl" base "spark_pref_pack" out "out/train/job-pref-001" backend "http" method "spark_pref_pack" -> job' \
+	  > /tmp/spark-train-line-test.txt
+	./spark-train-http --dry --submit --spark-line \
+		/tmp/spark-train-line-test.txt | grep -q spark_pref_pack
+	test -f out/train/job-pref-001/ARTIFACT
 	./spark --dry-run examples/model_train.spark | grep -q '"op":"train"'
 	test -f out/train/job-dry-001/ARTIFACT
 	@echo "test-train-http OK (dry only)"

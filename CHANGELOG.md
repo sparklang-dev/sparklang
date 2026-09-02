@@ -4,6 +4,17 @@ All notable user-facing releases of **SparkLang** (the Spark programming
 language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
+## 0.6.9 — 2026-09-02
+
+- **Language `method "…"`** on `model train` / `model build`
+  (`spark_distill_cpu` | `spark_pref_pack` | `spark_playbook_fit` |
+  `spark_faq_index`).
+- Live GAS forwards the statement via
+  `./spark-train-http --spark-line` (method / dataset / base / out).
+- Live `model status "job-id"` polls that job id — **not** hardcoded
+  `job-dry-001`.
+- Dry fixtures fail loud on unknown method or unknown status job id.
+
 ## 0.6.8 — 2026-09-02
 
 - **Fourth CPU train method:** **`spark_faq_index`** — FAQ corpus +
