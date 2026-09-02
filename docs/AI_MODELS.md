@@ -23,11 +23,11 @@ plain `.spark` files you can diff, dry-run, and ship.
 |------|-------------|---------------|
 | **Train / build** real jobs | `model train` / `model build` → job; `model status` | Dry fixtures; live `./spark-train-http` (`http` or allowlisted `local-yield`) — see [MODEL_TRAINING.md](MODEL_TRAINING.md) |
 | **Abstain / IDK heads** | `head abstain|train|attach|ask` | Probe on frozen local LLM; SELECT before SAMPLE; [ABSTAIN_HEADS.md](ABSTAIN_HEADS.md) |
-| **Analyze** reachable models | `model analyze "alias" -> report` | Dry-run = fixtures under `examples/fixtures/models/`; not live leaderboards |
+| **Analyze** reachable models | `model analyze "…" -> report` | Dry-run = fixtures under `examples/fixtures/models/`; not live leaderboards |
 | **Compare** on your suite | `model compare […] on suite "…" -> comparison` | Same fixture metrics; optional `make model-probe` for read-only discovery |
 | **Improve** toward a preference | `model improve from report prefer quality\|speed\|cost\|local -> blueprint` | Heuristic; review before train |
 | **Plan** markdown export | `model plan blueprint into "out/better-model.md"` | Markdown only — not weights |
-| **Pick model alias** per task | `use auto` / `use code` / `use fast` | Bootstrap heuristics in dry-run; live uses prior `model` line |
+| **Name a concrete model** | `model "/path/or/org/name"` / attach manifest | Explicit path or hub id only — **no** auto/code/fast alias pick, no dry-run invent |
 | **AI coding** with less boilerplate | `include "lib/playbooks.spark"`, `review` / `builder` / `implement` | Playbooks = bootstrap VM; GAS `./spark` catches up on self-host track |
 | **Call models live (optional)** | `ask "…" -> reply` with `./spark --live` | Needs `AI_GATEWAY_URL` + key; companion `./spark-ask-http` |
 | **Embed / retrieve** | `embed "…" -> vec`, `retrieve "…" from project "docs" -> hits` | Dry fixtures; live `./spark-rag-http` |

@@ -5,6 +5,7 @@ Usage:
   spark-abstain --dry|--live --stmt-file PATH --out PATH
   spark-abstain --live train --dataset … --out …
   spark-abstain --live attach --model … --weights … --out …
+  spark-abstain --live ask --prompt … --weights … [--hidden|/HF]
 """
 
 from __future__ import annotations
@@ -24,6 +25,7 @@ if _PY.is_dir() and str(_PY) not in sys.path:
 from sparklang.abstain.attach import attach_head
 from sparklang.abstain.dry import dry_result, dumps_compact
 from sparklang.abstain.gate import GateConfig, select_before_sample
+from sparklang.abstain.generate import live_ask
 from sparklang.abstain.parse import parse_head_stmt
 from sparklang.abstain.train import train_abstain_head
 
@@ -93,14 +95,31 @@ def _run_stmt(fields: dict, live: bool) -> dict:
             "state": "ready",
         }
     if op == "ask":
-        # Live without HF: refuse inventing — dry-style gate only
-        # if SPARK_ABSTAIN_STUB=1; else require hidden via env path.
+        # Stub = dry heuristics only. Live = real p(abstain|h).
         stub = os.environ.get("SPARK_ABSTAIN_STUB", "") == "1"
         if stub:
-            return dry_result(fields)
-        raise SystemExit(
-            "head ask live needs local hidden path "
-            "(or SPARK_ABSTAIN_STUB=1 for fixture gate)"
+            out = dry_result(fields)
+            out["mode"] = "stub"
+            return out
+        prompt = str(fields.get("prompt") or "")
+        return live_ask(
+            prompt,
+            weights=os.environ.get("SPARK_ABSTAIN_WEIGHTS") or None,
+            manifest=(
+                os.environ.get("SPARK_ABSTAIN_MANIFEST") or None
+            ),
+            model=os.environ.get("SPARK_ABSTAIN_MODEL") or None,
+            hidden_path=(
+                os.environ.get("SPARK_ABSTAIN_HIDDEN") or None
+            ),
+            threshold=(
+                float(fields["threshold"])
+                if "threshold" in fields
+                else None
+            ),
+            idk=(
+                str(fields["idk"]) if "idk" in fields else None
+            ),
         )
     raise SystemExit(f"unknown op {op}")
 
@@ -116,16 +135,20 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument(
         "cmd",
         nargs="?",
-        choices=("train", "attach", "gate"),
+        choices=("train", "attach", "gate", "ask"),
     )
     ap.add_argument("--dataset")
     ap.add_argument("--model")
     ap.add_argument("--weights")
+    ap.add_argument("--manifest")
+    ap.add_argument("--hidden")
+    ap.add_argument("--prompt")
     ap.add_argument("--kind", default="internal")
     ap.add_argument("--hidden-dim", type=int)
     ap.add_argument("--threshold", type=float, default=0.7)
     ap.add_argument("--idk", default="I don't know.")
     ap.add_argument("--p", type=float)
+    ap.add_argument("--max-new-tokens", type=int, default=32)
     args = ap.parse_args(argv)
     live = bool(args.live)
 
@@ -173,8 +196,57 @@ def main(argv: list[str] | None = None) -> int:
         _write_out(dumps_compact(result), None)
         return 0
 
+    if args.cmd == "ask":
+        if not args.prompt:
+            raise SystemExit("ask needs --prompt")
+        if not live:
+            result = dry_result(
+                {
+                    "op": "ask",
+                    "prompt": args.prompt,
+                    "idk": args.idk,
+                }
+            )
+            _write_out(dumps_compact(result), args.out)
+            return 0
+        # Fixture gate only — never invents a model / alias.
+        if os.environ.get("SPARK_ABSTAIN_STUB", "") == "1":
+            result = dry_result(
+                {
+                    "op": "ask",
+                    "prompt": args.prompt,
+                    "idk": args.idk,
+                }
+            )
+            result["mode"] = "stub"
+            _write_out(dumps_compact(result), args.out)
+            return 0
+        # Propagate CLI paths into env for live_ask resolution.
+        if args.weights:
+            os.environ["SPARK_ABSTAIN_WEIGHTS"] = args.weights
+        if args.manifest:
+            os.environ["SPARK_ABSTAIN_MANIFEST"] = args.manifest
+        if args.model:
+            os.environ["SPARK_ABSTAIN_MODEL"] = args.model
+        if args.hidden:
+            os.environ["SPARK_ABSTAIN_HIDDEN"] = args.hidden
+        result = live_ask(
+            args.prompt,
+            weights=args.weights,
+            manifest=args.manifest,
+            model=args.model,
+            hidden_path=args.hidden,
+            threshold=args.threshold,
+            idk=args.idk,
+            max_new_tokens=args.max_new_tokens,
+        )
+        _write_out(dumps_compact(result), args.out)
+        return 0
+
     if not args.stmt_file:
-        raise SystemExit("need --stmt-file or train|attach|gate")
+        raise SystemExit(
+            "need --stmt-file or train|attach|gate|ask"
+        )
     stmt = Path(args.stmt_file).read_text(encoding="utf-8")
     # First non-comment line
     line = ""

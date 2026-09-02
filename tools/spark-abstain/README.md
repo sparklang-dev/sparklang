@@ -1,7 +1,7 @@
 # spark-abstain companion
 
 Forked by GAS `head …` statements. Dry fixtures by default.
-Live: CPU train / attach of a real abstain head (not LoRA).
+Live: CPU train / attach / gated ask (not LoRA).
 
 See [docs/ABSTAIN_HEADS.md](../../docs/ABSTAIN_HEADS.md).
 
@@ -14,5 +14,13 @@ See [docs/ABSTAIN_HEADS.md](../../docs/ABSTAIN_HEADS.md).
   --model /path/to/hf-model \
   --weights out/heads/abstain.pt \
   --out /path/to/hf-model/spark_abstain_manifest.json
+
+# Live ask: synthetic hidden (CI) or HF when SPARK_ABSTAIN_HF=1
+./spark-abstain --live ask \
+  --prompt "What is gravity?" \
+  --weights out/heads/abstain.pt \
+  --hidden /tmp/hidden.pt
+SPARK_ABSTAIN_STUB=1 ./spark-abstain --live ask \
+  --prompt "Who is the mayor of Springfield?"
 make test-abstain
 ```

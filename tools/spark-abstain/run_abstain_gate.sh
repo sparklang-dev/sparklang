@@ -49,4 +49,28 @@ grep -q head_attach /tmp/spark-ab-att.txt
 test -f out/heads-test/manifest.json
 test -f out/heads-test/spark_abstain_manifest.json
 
+# Live ask with synthetic hidden file (no HF download)
+PYTHONPATH=python python3 - <<'PY'
+import torch
+from pathlib import Path
+p = Path("out/heads-test/hidden.pt")
+# 64-d vector matching fixture-trained head
+torch.save(torch.zeros(64), p)
+print(p)
+PY
+./spark-abstain --live ask \
+  --prompt "What is gravity?" \
+  --weights out/heads-test/abstain.pt \
+  --hidden out/heads-test/hidden.pt \
+  >/tmp/spark-ab-ask-live.txt
+grep -q '"op":"head_ask"' /tmp/spark-ab-ask-live.txt
+grep -q '"mode":"live"' /tmp/spark-ab-ask-live.txt
+grep -q '"hidden_source":"file"' /tmp/spark-ab-ask-live.txt
+
+# Stub ask still works without weights
+SPARK_ABSTAIN_STUB=1 ./spark-abstain --live ask \
+  --prompt "Who is the mayor of Springfield?" \
+  >/tmp/spark-ab-ask-stub.txt
+grep -q '"abstain":true' /tmp/spark-ab-ask-stub.txt
+
 echo "test-abstain OK"

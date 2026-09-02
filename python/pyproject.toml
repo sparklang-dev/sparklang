@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sparklang"
-version = "0.6.11"
+version = "0.6.12"
 description = "Host embed: run SparkLang (.spark) from Python"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -24,6 +24,9 @@ Source = "https://github.com/sparklang-dev/sparklang"
 
 [project.scripts]
 sparklang = "sparklang.__main__:main"
+
+[project.optional-dependencies]
+hf = ["transformers>=4.40.0"]
 
 [tool.setuptools.packages.find]
 where = ["."]

@@ -4,6 +4,17 @@ All notable user-facing releases of **SparkLang** (the Spark programming
 language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
+## 0.6.12 — 2026-09-02
+
+- **Abstain HF hooks:** live `head ask` SELECT-before-SAMPLE with real
+  `p(abstain|h)` from last-token hidden (file / HF transformers /
+  best-effort vLLM `/spark_hidden`). Stub path unchanged
+  (`SPARK_ABSTAIN_STUB=1`). Refuses gateway aliases (`auto`/`code`/
+  `fast`, …) — explicit HF path or `org/name` only. Optional
+  `pip install -e 'python/[hf]'`. Docs: live generate path in
+  [docs/ABSTAIN_HEADS.md](docs/ABSTAIN_HEADS.md). Gate:
+  `make test-abstain` (mocks HF; no 27B download).
+
 ## 0.6.11 — 2026-09-02
 
 - **Abstain / IDK heads:** language ops `head abstain|train|attach|ask`

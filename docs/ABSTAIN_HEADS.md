@@ -102,12 +102,118 @@ program.
 python3 -m sparklang.abstain.gate --p 0.8 --threshold 0.7
 ```
 
+## Live generate path (HF / hidden file / vLLM)
+
+`head ask` live refuses to invent. It needs a **real**
+`p(abstain|h)` from a trained head + a last-token hidden.
+
+**No gateway alias picking.** Live model is an explicit local HF
+directory or hub `org/name` only — never `auto` / `code` / `fast`
+(or other short gateway names). Dry-run / stub does not invent a
+model line from aliases.
+
+**Hidden source priority**
+
+1. `SPARK_ABSTAIN_HIDDEN` — `.pt` tensor or JSON float list
+2. HF transformers prefill when model path exists **or**
+   `SPARK_ABSTAIN_HF=1` + explicit hub id (`SPARK_ABSTAIN_MODEL`)
+3. Best-effort vLLM: `SPARK_ABSTAIN_VLLM_URL` → POST
+   `{url}/spark_hidden` with `{"prompt":…}` → `{"hidden":[…]}`
+
+**Head weights**
+
+- `SPARK_ABSTAIN_WEIGHTS` — `abstain_head.pt` from `head train`
+- or `SPARK_ABSTAIN_MANIFEST` — attach manifest (includes weights,
+  threshold, idk, model)
+
+**Stub (CI / no model)**
+
+```bash
+SPARK_ABSTAIN_STUB=1 ./spark-abstain --live ask \
+  --prompt "Who is the mayor of Springfield?"
+```
+
+Uses dry inventable heuristics — **not** a real `p(abstain|h)`.
+
+### Example: local HF dir (no hub download)
+
+Head `hidden_dim` must match the backbone’s last-layer width
+(e.g. train on exported hiddens from that model, not the 64-d
+fixture hash vectors).
+
+```bash
+pip install -e 'python/[hf]'   # optional: transformers
+
+./spark-abstain --live train \
+  --dataset path/to/labels-with-real-hiddens.jsonl \
+  --out out/heads/abstain.pt
+
+./spark-abstain --live attach \
+  --model /path/to/local-hf-model \
+  --weights out/heads/abstain.pt \
+  --out /path/to/local-hf-model/spark_abstain_manifest.json
+
+# SELECT-before-SAMPLE in one HF load (prefill → gate → generate)
+SPARK_ABSTAIN_HF=1 \
+./spark-abstain --live ask \
+  --prompt "Who is the mayor of Springfield?" \
+  --model /path/to/local-hf-model \
+  --weights out/heads/abstain.pt \
+  --manifest /path/to/local-hf-model/spark_abstain_manifest.json
+```
+
+Or via env only (GAS `./spark --live examples/head_ask.spark`):
+
+```bash
+export SPARK_ABSTAIN_HF=1
+export SPARK_ABSTAIN_MODEL=/path/to/local-hf-model
+export SPARK_ABSTAIN_WEIGHTS=out/heads/abstain.pt
+./spark --live examples/head_ask.spark
+```
+
+### Example: pre-exported hidden (offline / CI-shaped)
+
+```bash
+# hidden.pt = last-token vector, dim == head.hidden_dim
+./spark-abstain --live ask \
+  --prompt "What is gravity?" \
+  --weights out/heads/abstain.pt \
+  --hidden /tmp/hidden.pt
+```
+
+Continue without an in-process HF generate returns
+`"note": "continue - SAMPLE deferred …"` and empty `text`.
+
+### Env reference
+
+| Env | Role |
+|-----|------|
+| `SPARK_ABSTAIN_STUB=1` | Fixture gate only (dry heuristics) |
+| `SPARK_ABSTAIN_WEIGHTS` | Path to `abstain_head.pt` |
+| `SPARK_ABSTAIN_MANIFEST` | Attach manifest JSON |
+| `SPARK_ABSTAIN_MODEL` | Local HF dir or hub id |
+| `SPARK_ABSTAIN_HF=1` | Allow hub id + HF forward / generate |
+| `SPARK_ABSTAIN_HIDDEN` | Pre-exported last-token hidden |
+| `SPARK_ABSTAIN_VLLM_URL` | Optional `/spark_hidden` sidecar |
+
+Optional Python extra: `pip install -e 'python/[hf]'`
+(`transformers`). CI does **not** install it; unit tests mock
+HF tensors.
+
 ## Honest gaps
 
-- Dry-run / CI never loads a 27B. Fixtures + stub hidden states only.
-- Real attach-to-vLLM / llama.cpp needs those runtimes’ hidden-state
-  hooks; HF `generate` path is the first-class local integrate.
-- Labeled abstain data is **user-supplied** — we ship a tiny fixture,
-  not a production corpus.
+- Dry-run / CI never loads a 27B. Fixtures + stub / synthetic
+  hidden only. Live HF is opt-in via env + local weights.
+- Head trained on fixture hash features (dim 64) is **not**
+  compatible with a real LM hidden size — retrain on exported
+  hiddens from the target backbone before claiming gate quality.
+- vLLM path needs a host that implements `/spark_hidden`; stock
+  OpenAI-compat servers do not export last-layer states.
+- llama.cpp / GGUF hidden hooks are still out of scope.
+- Labeled abstain data is **user-supplied** — we ship a tiny
+  fixture, not a production corpus.
 - Cloud verify-or-refuse is documented + composable; not a second
   gateway plugin.
+- Do **not** call this production-ready without real head weights
+  matched to the live backbone.
+- Never resolve `auto`/`code`/`fast` (or similar) as the live model.
