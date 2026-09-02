@@ -12,6 +12,7 @@ Default loop: dry-run / offline / no keys. Live gateway only when you opt in.
 
 First-class surface: `ask`, `classify`, `extract`, `pipeline`, tools,
 **model train/build/status** (real jobs — dry fixtures first),
+**head abstain/train/attach/ask** (IDK gate on local LLMs),
 **model analyze/compare/improve/plan** (eval helpers),
 **review/builder/implement**, **os design/generate**,
 browser/mitm, cuda/pcie, encrypt-to-model companion — one reviewable file.

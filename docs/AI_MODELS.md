@@ -10,6 +10,7 @@ plain `.spark` files you can diff, dry-run, and ship.
 `retrieve` via gateway env is **optional** (`./spark --live`).
 
 **Related:** [MODEL_TRAINING.md](MODEL_TRAINING.md) (train jobs) ·
+[ABSTAIN_HEADS.md](ABSTAIN_HEADS.md) (IDK / abstain heads) ·
 [MODEL_ANALYSIS.md](MODEL_ANALYSIS.md) (eval methodology) ·
 [AI_PLAYBOOKS.md](AI_PLAYBOOKS.md) (coding playbooks) ·
 [LANGUAGE.md](LANGUAGE.md) (full statement reference) ·
@@ -21,6 +22,7 @@ plain `.spark` files you can diff, dry-run, and ship.
 | Goal | Spark today | Honest limits |
 |------|-------------|---------------|
 | **Train / build** real jobs | `model train` / `model build` → job; `model status` | Dry fixtures; live `./spark-train-http` (`http` or allowlisted `local-yield`) — see [MODEL_TRAINING.md](MODEL_TRAINING.md) |
+| **Abstain / IDK heads** | `head abstain|train|attach|ask` | Probe on frozen local LLM; SELECT before SAMPLE; [ABSTAIN_HEADS.md](ABSTAIN_HEADS.md) |
 | **Analyze** reachable models | `model analyze "alias" -> report` | Dry-run = fixtures under `examples/fixtures/models/`; not live leaderboards |
 | **Compare** on your suite | `model compare […] on suite "…" -> comparison` | Same fixture metrics; optional `make model-probe` for read-only discovery |
 | **Improve** toward a preference | `model improve from report prefer quality\|speed\|cost\|local -> blueprint` | Heuristic; review before train |

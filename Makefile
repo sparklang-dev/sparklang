@@ -37,7 +37,7 @@ playbooks-catalog:
 SPARK_OBJS = asm/spark.o asm/model_ops.o asm/train_ops.o asm/binary_ops.o \
 	asm/network_ops.o asm/os_ops.o asm/bind_ops.o asm/cuda_ops.o \
 	asm/ask_ops.o asm/rag_ops.o asm/http_ops.o asm/extract_ops.o \
-	asm/expect_ops.o \
+	asm/expect_ops.o asm/abstain_ops.o \
 	asm/browser_ops.o \
 	asm/voice_ops.o asm/pcie_ops.o \
 	asm/crypto_ops.o asm/gateway_ops.o asm/engine_js.o asm/engine_html.o \
@@ -95,6 +95,9 @@ asm/extract_ops.o: asm/extract_ops.s
 	$(AS) $(ASFLAGS) -o $@ $<
 
 asm/expect_ops.o: asm/expect_ops.s
+	$(AS) $(ASFLAGS) -o $@ $<
+
+asm/abstain_ops.o: asm/abstain_ops.s
 	$(AS) $(ASFLAGS) -o $@ $<
 
 asm/browser_ops.o: asm/browser_ops.s
@@ -191,7 +194,7 @@ asm/engine_js.o: asm/engine_js.s
 companions: spark-cuda-probe spark-net-capture \
 	spark-binary-probe spark-section-dump spark-lift spark-ask-http \
 	spark-ask-probe spark-rag-http spark-http spark-extract spark-expect \
-	spark-train-http \
+	spark-train-http spark-abstain \
 	spark-browser-host spark-mitm-quic \
 	spark-mitm-quic-divert spark-mitm-ca spark-mitm-h2 spark-browser-cdp spark-pstn-dial \
 	spark-enc-gateway spark-stt-tts spark-review-url spark-engine-show \
@@ -252,6 +255,11 @@ spark-train-http: tools/train/spark_train_http.c bootstrap/dry_train.c \
 	bootstrap/dry_train.h
 	$(CC) -O2 -Wall -Wextra -o $@ tools/train/spark_train_http.c \
 		bootstrap/dry_train.c
+
+# Abstain / IDK heads (Python companion; dry fixtures + CPU train).
+spark-abstain: tools/spark-abstain/spark_abstain.sh \
+	tools/spark-abstain/cli.py
+	install -m 755 tools/spark-abstain/spark_abstain.sh $@
 
 # Gateway probe credential dry/live check (public AI gateway).
 spark-ask-probe: tools/ask/spark_ask_probe.c
@@ -334,7 +342,7 @@ machine-proof: spark
 	$(OBJDUMP) -d ./spark | sed -n '/<_start>:/,/^$$/p' | head -20
 
 test: spark companions spark-bootstrap test-sparkbc test-ai-playbooks \
-	test-extract test-expect test-host-embed
+	test-extract test-expect test-host-embed test-abstain
 	./tests/run_dry.sh
 	./tests/hdl_check.sh
 	./bootstrap/tests/run_bootstrap.sh
@@ -405,7 +413,7 @@ clean:
 	rm -f spark-cuda-probe spark-net-capture
 	rm -f spark-binary-probe spark-section-dump spark-lift
 	rm -f spark-ask-http spark-ask-probe spark-rag-http spark-http \
-		spark-extract spark-expect spark-train-http \
+		spark-extract spark-expect spark-train-http spark-abstain \
 		spark-browser-host spark-pstn-dial spark-mitm-quic
 	rm -f spark-mitm-quic-divert spark-mitm-ca spark-mitm-h2 spark-browser-cdp spark-enc-gateway
 	rm -f spark-stt-tts spark-review-url spark-engine-show spark-engine-paint
@@ -490,6 +498,11 @@ test-expect: spark-expect spark
 test-host-embed: spark
 	chmod +x tools/host_embed/run_host_embed_gate.sh
 	./tools/host_embed/run_host_embed_gate.sh
+
+.PHONY: test-abstain
+test-abstain: spark spark-abstain
+	chmod +x tools/spark-abstain/run_abstain_gate.sh
+	./tools/spark-abstain/run_abstain_gate.sh
 
 .PHONY: test-train-http
 test-train-http: spark-train-http spark

@@ -63,6 +63,7 @@
 .extern extract_feed
 .extern extract_pending
 .extern expect_dispatch
+.extern abstain_dispatch
 .extern pcie_ops_dispatch
 .extern voice_ops_dispatch
 .extern voice_speak_model_dispatch
@@ -470,6 +471,7 @@ kw_use:     .ascii "use"
 kw_print:   .ascii "print"
 kw_extract: .ascii "extract"
 kw_expect:  .ascii "expect"
+kw_head:    .ascii "head"
 kw_tool:    .ascii "tool"
 kw_voice:   .ascii "voice"
 kw_let:     .ascii "let"
@@ -1024,6 +1026,13 @@ il_kw:
     call    keyword_match
     test    rax, rax
     jnz     do_expect
+
+    mov     rsi, rbx
+    lea     rdi, [rip+kw_head]
+    mov     rdx, 4
+    call    keyword_match
+    test    rax, rax
+    jnz     do_head
 
     mov     rsi, rbx
     lea     rdi, [rip+kw_tool]
@@ -1864,6 +1873,10 @@ do_extract:
 
 do_expect:
     call    expect_dispatch
+    jmp     il_done
+
+do_head:
+    call    abstain_dispatch
     jmp     il_done
 
 do_tool:

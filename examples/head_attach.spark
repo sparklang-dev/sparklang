@@ -1,0 +1,4 @@
+# Attach head to a local model path (dry fixtures)
+head attach model "fixture-model" weights "out/heads/abstain.pt" out "out/heads/manifest.json" -> attach
+
+expect contains attach "head_attach"

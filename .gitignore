@@ -15,6 +15,7 @@ out/browser/ca/
 /spark-enc-gateway
 /spark-extract
 /spark-expect
+/spark-abstain
 /spark-http
 /spark-lift
 /spark-mitm-ca

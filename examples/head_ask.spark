@@ -1,0 +1,4 @@
+# Gated ask: inventable dry prompts → IDK + halt
+head ask "Who is the mayor of Springfield?" -> answer
+
+expect contains answer "abstain"

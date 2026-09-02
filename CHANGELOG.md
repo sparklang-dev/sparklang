@@ -4,6 +4,17 @@ All notable user-facing releases of **SparkLang** (the Spark programming
 language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
+## 0.6.11 — 2026-09-02
+
+- **Abstain / IDK heads:** language ops `head abstain|train|attach|ask`
+  with SELECT-before-SAMPLE gate. Internal = linear/MLP probe on frozen
+  backbone last-hidden; external = same math as sidecar. Companion
+  `./spark-abstain` (dry fixtures + CPU train/attach). Docs:
+  [docs/ABSTAIN_HEADS.md](docs/ABSTAIN_HEADS.md). Not LoRA; no fake
+  weights in dry-run. Gate: `make test-abstain`.
+- Examples: `head_abstain.spark`, `head_ask.spark`, `head_train.spark`,
+  `head_attach.spark`, `head_abstain_external.spark`.
+
 ## 0.6.10 — 2026-09-02
 
 - **Python host embed:** `from sparklang import run` under

@@ -1,0 +1,4 @@
+# External sidecar head declare (dry)
+head abstain external model "fixture-model" weights "out/heads/abstain_ext.pt" threshold 0.65 -> gate
+
+expect contains gate "external"

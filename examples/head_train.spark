@@ -1,0 +1,4 @@
+# Train abstain head job accept (dry = fixtures, no GPU)
+head train dataset "examples/fixtures/abstain/labels.jsonl" kind internal out "out/heads/abstain.pt" hidden_dim 64 -> job
+
+expect contains job "head_train"

@@ -94,6 +94,24 @@ override). Live GAS passes the statement via
 (reserved — not wired). Env: `SPARK_TRAIN_BACKEND`, `SPARK_TRAIN_URL`,
 optional `SPARK_TRAIN_TOKEN`. See [MODEL_TRAINING.md](MODEL_TRAINING.md).
 
+### `head abstain` / `train` / `attach` / `ask`
+
+Decode-layer abstain / IDK gating for **local** models (and dry stubs).
+Companion `./spark-abstain`. Design: [ABSTAIN_HEADS.md](ABSTAIN_HEADS.md).
+
+```
+head abstain internal model "path" weights "out/heads/abstain.pt" threshold 0.7 idk "I don't know." -> gate
+head abstain external model "path" weights "out/heads/ext.pt" threshold 0.7 -> gate
+head train dataset "examples/fixtures/abstain/labels.jsonl" kind internal out "out/heads/abstain.pt" hidden_dim 64 -> job
+head attach model "path" weights "out/heads/abstain.pt" out "out/heads/manifest.json" -> attach
+head ask "Who is the mayor of Springfield?" -> answer
+```
+
+SELECT before SAMPLE: if `p(abstain) ≥ threshold` (or entropy/margin
+trip) → emit `idk` and halt. Internal = probe registered with a frozen
+backbone; external = sidecar on exported hiddens/logprobs. Not LoRA.
+Dry-run = fixtures only.
+
 **“All models”** = all reachable configured aliases + discovered local
 vLLM endpoints (read-only) — **not** every model in existence. Catalog:
 `data/model-catalog.jsonl`. Public gateway probes need a probe

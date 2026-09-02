@@ -1,0 +1,4 @@
+# Declare an internal abstain head (dry-run fixtures)
+head abstain internal model "fixture-model" weights "out/heads/abstain.pt" threshold 0.7 idk "I don't know." -> gate
+
+expect contains gate "head_abstain"
