@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import os
 from pathlib import Path
 from typing import Any, Optional, Union
@@ -71,6 +72,61 @@ def _quality_for_source(source: str) -> str:
     if source == SOURCE_BAG_HASH:
         return "bag_hash_fixture"
     return "fixture_unverified"
+
+
+_ALLOWED_QUALITY = frozenset(
+    {
+        "fixture_seed",
+        "fixture_unverified",
+        "bag_hash_fixture",
+        "toy_backbone",
+        "synthetic_backbone_dim_match",
+        "hf_exported_unverified",
+        "hf_backbone_trained",
+    }
+)
+
+
+def mark_head_quality(
+    weights: PathLike,
+    quality: str,
+    *,
+    note: Optional[str] = None,
+) -> dict[str, Any]:
+    """Stamp head meta after a real export→train→ask smoke.
+
+    Only ``hf_backbone_trained`` after that smoke succeeds on a
+    real backbone. Never invent accuracy claims.
+    """
+    q = str(quality).strip()
+    if q not in _ALLOWED_QUALITY:
+        raise SystemExit(
+            f"unknown quality stamp {q!r}; "
+            f"allowed={sorted(_ALLOWED_QUALITY)}"
+        )
+    w = Path(weights)
+    meta_path = w.with_suffix(".meta.json")
+    if not w.is_file():
+        raise SystemExit(f"weights missing: {w}")
+    meta: dict[str, Any] = {}
+    if meta_path.is_file():
+        meta = json.loads(meta_path.read_text(encoding="utf-8"))
+    meta["quality"] = q
+    meta["quality_note"] = note or (
+        "pipeline proven on this host — still not "
+        "production accuracy / held-out eval"
+    )
+    meta_path.write_text(
+        json.dumps(meta, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    return {
+        "op": "mark_quality",
+        "weights": str(w),
+        "meta": str(meta_path),
+        "quality": q,
+        "state": "succeeded",
+    }
 
 
 def train_abstain_head(

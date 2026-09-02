@@ -1,0 +1,8 @@
+{
+  "location": "fixture-store",
+  "machine": "dryer",
+  "price_usd": 2.50,
+  "duration_min": 30,
+  "source": "fixture_sot",
+  "note": "dry SoT only — not a live vendor card / ops quote"
+}

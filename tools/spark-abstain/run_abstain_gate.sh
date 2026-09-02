@@ -29,6 +29,27 @@ grep -q '"abstain":true' /tmp/spark-ab-ex2.txt
   >/tmp/spark-ab-ex3.txt
 grep -q head_train /tmp/spark-ab-ex3.txt
 
+# Inventable outer verify-or-refuse playbook (SoT before ask)
+./spark --dry-run examples/head_ask_inventable_verify.spark \
+  >/tmp/spark-ab-invent.txt
+grep -q '"abstain":true' /tmp/spark-ab-invent.txt
+grep -q price_usd /tmp/spark-ab-invent.txt
+
+# Shared gate: entropy / margin trips via CLI
+./spark-abstain --dry gate --p 0.1 --threshold 0.99 \
+  --entropy 3.0 --entropy-max 1.5 >/tmp/spark-ab-ent.txt
+grep -q '"reason":"entropy"' /tmp/spark-ab-ent.txt
+./spark-abstain --dry gate --p 0.1 --threshold 0.99 \
+  --margin 0.05 --margin-min 0.2 >/tmp/spark-ab-mar.txt
+grep -q '"reason":"margin"' /tmp/spark-ab-mar.txt
+
+# Outer-verify helper (no weights)
+./spark-abstain --dry outer-verify \
+  --prompt "What is the dryer start price at that store right now?" \
+  >/tmp/spark-ab-outer.txt
+grep -q '"reason":"outer_verify"' /tmp/spark-ab-outer.txt
+grep -q '"halted":true' /tmp/spark-ab-outer.txt
+
 # Live CPU train on fixture (real .pt, not a marker stub)
 rm -rf out/heads-test
 mkdir -p out/heads-test
@@ -67,6 +88,14 @@ grep -q '"state":"succeeded"' /tmp/spark-ab-shipped.txt
   >/tmp/spark-ab-corpus.txt
 grep -q '"state":"ok"' /tmp/spark-ab-corpus.txt
 grep -q '"n_abstain"' /tmp/spark-ab-corpus.txt
+# Curated seed must be large enough to train a non-toy head.
+python3 - <<'PY'
+import json
+p = "examples/fixtures/abstain/corpus_seed.jsonl"
+n = sum(1 for line in open(p) if line.strip() and not line.startswith("#"))
+assert n >= 50, n
+print("corpus_n", n)
+PY
 ./spark-abstain --live export \
   --dataset examples/fixtures/abstain/corpus_seed.jsonl \
   --source synthetic --hidden-dim 768 \

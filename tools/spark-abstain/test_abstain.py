@@ -628,6 +628,7 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(info["state"], "ok")
         self.assertGreaterEqual(info["n_answer"], 1)
         self.assertGreaterEqual(info["n_abstain"], 1)
+        self.assertGreaterEqual(info["n"], 50)
         self.assertEqual(info["quality"], "fixture_seed")
 
     def test_bad_label_raises(self) -> None:
@@ -635,6 +636,97 @@ class CorpusTests(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             normalize_row({"text": "x", "label": 2})
+
+
+class HaltAndDimTests(unittest.TestCase):
+    """HALT on abstain; dim mismatch refuses invent."""
+
+    def test_gated_halt_no_continue_text(self) -> None:
+        head = AbstainHead(4)
+        with torch.no_grad():
+            head.net.weight.fill_(1.0)
+            head.net.bias.fill_(8.0)
+        r = gated_from_hidden(
+            head,
+            torch.ones(4),
+            GateConfig(threshold=0.5, idk="IDK."),
+            continue_text="SHOULD_NOT_APPEAR",
+        )
+        self.assertTrue(r["abstain"])
+        self.assertTrue(r["halted"])
+        self.assertEqual(r["text"], "IDK.")
+
+    def test_live_ask_dim_mismatch(self) -> None:
+        with tempfile.TemporaryDirectory() as td:
+            td_p = Path(td)
+            head = AbstainHead(8)
+            wpath = td_p / "h.pt"
+            save_head(head, wpath)
+            hpath = td_p / "hidden.pt"
+            torch.save(torch.zeros(4), hpath)
+            r = live_ask(
+                "What is gravity?",
+                weights=str(wpath),
+                hidden_path=str(hpath),
+            )
+            self.assertTrue(r["halted"])
+            self.assertEqual(r["reason"], "hidden_dim_mismatch")
+            self.assertEqual(r["text"], "")
+
+
+class InventableOuterTests(unittest.TestCase):
+    """Outer verify-or-refuse for inventable facts."""
+
+    def test_refuse_without_sot(self) -> None:
+        from sparklang.abstain.inventable import (
+            outer_verify_or_refuse,
+        )
+
+        r = outer_verify_or_refuse(
+            "What is the dryer start price at that store right now?",
+            sot_ok=False,
+        )
+        self.assertTrue(r["abstain"])
+        self.assertTrue(r["halted"])
+        self.assertEqual(r["reason"], "outer_verify")
+
+    def test_continue_with_sot(self) -> None:
+        from sparklang.abstain.inventable import (
+            outer_verify_or_refuse,
+        )
+
+        r = outer_verify_or_refuse(
+            "What is the dryer start price at that store right now?",
+            sot_ok=True,
+        )
+        self.assertFalse(r["abstain"])
+        self.assertEqual(r["reason"], "continue")
+
+    def test_live_ask_outer_verify(self) -> None:
+        r = live_ask(
+            "What is Bob's private API key?",
+            weights=None,
+            outer_verify=True,
+            sot_ok=False,
+            idk="I don't know.",
+        )
+        self.assertEqual(r["mode"], "outer")
+        self.assertTrue(r["halted"])
+
+
+class GateCliThresholdTests(unittest.TestCase):
+    """Shared gate entropy/margin trips."""
+
+    def test_entropy_and_margin_shared(self) -> None:
+        cfg = GateConfig(
+            threshold=0.99, entropy_max=1.0, margin_min=0.3
+        )
+        d1 = select_before_sample(0.1, cfg, entropy=2.5)
+        self.assertEqual(d1.reason, "entropy")
+        self.assertTrue(d1.halted)
+        d2 = select_before_sample(0.1, cfg, margin=0.01)
+        self.assertEqual(d2.reason, "margin")
+        self.assertTrue(d2.halted)
 
 
 if __name__ == "__main__":

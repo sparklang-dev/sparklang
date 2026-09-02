@@ -16,6 +16,10 @@ from sparklang.abstain.export import (
 from sparklang.abstain.gate import GateConfig, GateDecision, select_before_sample
 from sparklang.abstain.generate import live_ask, score_hidden
 from sparklang.abstain.head import AbstainHead, head_from_state
+from sparklang.abstain.inventable import (
+    looks_inventable,
+    outer_verify_or_refuse,
+)
 from sparklang.abstain.parse import parse_head_stmt
 from sparklang.abstain.spark_hidden import (
     SparkHiddenRequest,
@@ -24,7 +28,7 @@ from sparklang.abstain.spark_hidden import (
     parse_response,
     post_spark_hidden,
 )
-from sparklang.abstain.train import train_abstain_head
+from sparklang.abstain.train import mark_head_quality, train_abstain_head
 
 __all__ = [
     "AbstainHead",
@@ -37,6 +41,9 @@ __all__ = [
     "head_from_state",
     "live_ask",
     "load_manifest",
+    "looks_inventable",
+    "mark_head_quality",
+    "outer_verify_or_refuse",
     "parse_head_stmt",
     "parse_request",
     "parse_response",

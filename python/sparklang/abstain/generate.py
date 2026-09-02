@@ -20,6 +20,7 @@ import torch
 from sparklang.abstain.attach import load_manifest
 from sparklang.abstain.gate import GateConfig, select_before_sample
 from sparklang.abstain.head import AbstainHead, load_head
+from sparklang.abstain.inventable import outer_verify_or_refuse
 
 PathLike = Union[str, Path]
 
@@ -220,6 +221,8 @@ def try_hf_select_then_sample(
     *,
     max_new_tokens: int = 32,
     max_length: int = 512,
+    entropy: Optional[float] = None,
+    margin: Optional[float] = None,
 ) -> Optional[dict[str, Any]]:
     """One HF load: prefill → SELECT → optional SAMPLE.
 
@@ -260,8 +263,19 @@ def try_hf_select_then_sample(
             "prompt": prompt,
             "model": model_id,
         }
+    # Optional next-token entropy from logits when not provided.
+    ent = entropy
+    if ent is None and config.entropy_max is not None:
+        logits = out.logits[0, -1, :].float()
+        probs = torch.softmax(logits, dim=-1)
+        ent = float(
+            (-(probs * torch.log(probs.clamp_min(1e-12))).sum())
+            .item()
+        )
     p = score_hidden(head, hidden)
-    d = select_before_sample(p, config)
+    d = select_before_sample(
+        p, config, entropy=ent, margin=margin
+    )
     if d.abstain:
         return {
             "op": "head_ask",
@@ -336,6 +350,8 @@ def _resolve_head_and_cfg(
     manifest: Optional[str],
     threshold: Optional[float],
     idk: Optional[str],
+    entropy_max: Optional[float] = None,
+    margin_min: Optional[float] = None,
 ) -> tuple[AbstainHead, GateConfig, dict[str, Any]]:
     """Load head from manifest or weights path."""
     man: dict[str, Any] = {}
@@ -356,6 +372,24 @@ def _resolve_head_and_cfg(
                 if idk is not None
                 else man.get("idk") or "I don't know."
             ),
+            entropy_max=(
+                float(entropy_max)
+                if entropy_max is not None
+                else (
+                    float(man["entropy_max"])
+                    if man.get("entropy_max") is not None
+                    else None
+                )
+            ),
+            margin_min=(
+                float(margin_min)
+                if margin_min is not None
+                else (
+                    float(man["margin_min"])
+                    if man.get("margin_min") is not None
+                    else None
+                )
+            ),
         )
         return head, cfg, man
     if not weights:
@@ -367,8 +401,64 @@ def _resolve_head_and_cfg(
     cfg = GateConfig(
         threshold=float(threshold if threshold is not None else 0.7),
         idk=str(idk if idk is not None else "I don't know."),
+        entropy_max=(
+            float(entropy_max) if entropy_max is not None else None
+        ),
+        margin_min=(
+            float(margin_min) if margin_min is not None else None
+        ),
     )
     return head, cfg, man
+
+
+def _env_float(name: str) -> Optional[float]:
+    raw = os.environ.get(name)
+    if raw is None or not str(raw).strip():
+        return None
+    return float(raw)
+
+
+def _sample_via_openai(
+    base_url: str,
+    prompt: str,
+    *,
+    model: Optional[str] = None,
+    max_new_tokens: int = 32,
+    token: Optional[str] = None,
+    timeout_s: float = 30.0,
+) -> Optional[str]:
+    """Best-effort OpenAI-compat chat SAMPLE after SELECT continue."""
+    import json
+    import urllib.error
+    import urllib.request
+
+    url = base_url.rstrip("/") + "/v1/chat/completions"
+    body = {
+        "model": model or "local",
+        "messages": [{"role": "user", "content": prompt}],
+        "max_tokens": max_new_tokens,
+        "temperature": 0,
+    }
+    data = json.dumps(body).encode("utf-8")
+    req = urllib.request.Request(
+        url,
+        data=data,
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+    if token:
+        req.add_header("Authorization", f"Bearer {token}")
+    try:
+        with urllib.request.urlopen(req, timeout=timeout_s) as resp:
+            payload = json.loads(resp.read().decode("utf-8"))
+    except (urllib.error.URLError, TimeoutError, OSError, ValueError):
+        return None
+    try:
+        return str(
+            payload["choices"][0]["message"]["content"]
+        ).strip()
+    except (KeyError, IndexError, TypeError):
+        return None
 
 
 def live_ask(
@@ -381,6 +471,12 @@ def live_ask(
     threshold: Optional[float] = None,
     idk: Optional[str] = None,
     max_new_tokens: int = 32,
+    entropy_max: Optional[float] = None,
+    margin_min: Optional[float] = None,
+    entropy: Optional[float] = None,
+    margin: Optional[float] = None,
+    outer_verify: bool = False,
+    sot_ok: bool = False,
 ) -> dict[str, Any]:
     """Live gated ask — real p(abstain|h), no stub invent.
 
@@ -391,6 +487,10 @@ def live_ask(
       SPARK_ABSTAIN_HF=1  (allow hub id + HF forward)
       SPARK_ABSTAIN_VLLM_URL  (optional /spark_hidden sidecar)
       SPARK_ABSTAIN_VLLM_TIMEOUT / SPARK_ABSTAIN_VLLM_TOKEN
+      SPARK_ABSTAIN_SAMPLE_URL  (OpenAI-compat SAMPLE after continue)
+      SPARK_ABSTAIN_ENTROPY_MAX / SPARK_ABSTAIN_MARGIN_MIN
+      SPARK_ABSTAIN_OUTER_VERIFY=1  (inventable outer refuse)
+      SPARK_ABSTAIN_SOT_OK=1  (SoT already verified)
     """
     weights = weights or os.environ.get("SPARK_ABSTAIN_WEIGHTS") or None
     manifest = (
@@ -401,13 +501,34 @@ def live_ask(
         hidden_path or os.environ.get("SPARK_ABSTAIN_HIDDEN") or None
     )
     vllm_url = os.environ.get("SPARK_ABSTAIN_VLLM_URL") or None
+    sample_url = os.environ.get("SPARK_ABSTAIN_SAMPLE_URL") or None
     hf_on = os.environ.get("SPARK_ABSTAIN_HF", "") == "1"
+    if entropy_max is None:
+        entropy_max = _env_float("SPARK_ABSTAIN_ENTROPY_MAX")
+    if margin_min is None:
+        margin_min = _env_float("SPARK_ABSTAIN_MARGIN_MIN")
+    if os.environ.get("SPARK_ABSTAIN_OUTER_VERIFY", "") == "1":
+        outer_verify = True
+    if os.environ.get("SPARK_ABSTAIN_SOT_OK", "") == "1":
+        sot_ok = True
+
+    if outer_verify:
+        outer = outer_verify_or_refuse(
+            prompt,
+            sot_ok=sot_ok,
+            idk=idk or "I don't know.",
+        )
+        if outer["abstain"]:
+            outer["mode"] = "outer"
+            return outer
 
     head, cfg, man = _resolve_head_and_cfg(
         weights=weights,
         manifest=manifest,
         threshold=threshold,
         idk=idk,
+        entropy_max=entropy_max,
+        margin_min=margin_min,
     )
     if not model and man.get("model"):
         model = str(man["model"])
@@ -422,6 +543,8 @@ def live_ask(
             head,
             cfg,
             max_new_tokens=max_new_tokens,
+            entropy=entropy,
+            margin=margin,
         )
         if packed is not None:
             return packed
@@ -469,16 +592,39 @@ def live_ask(
             "hidden_source": source,
         }
 
-    result = gated_from_hidden(head, hidden, cfg, continue_text="")
+    result = gated_from_hidden(
+        head,
+        hidden,
+        cfg,
+        continue_text="",
+        entropy=entropy,
+        margin=margin,
+    )
     result["mode"] = "live"
     result["prompt"] = prompt
     result["hidden_source"] = source
     if model:
         result["model"] = model
-    if not result["abstain"]:
-        result["text"] = ""
-        result["note"] = (
-            "continue - SAMPLE deferred "
-            "(provide HF model for in-process generate)"
+    if result["abstain"]:
+        return result
+    # Continue: SAMPLE via OpenAI-compat if configured; else defer.
+    if sample_url:
+        cont = _sample_via_openai(
+            sample_url,
+            prompt,
+            model=model,
+            max_new_tokens=max_new_tokens,
+            token=os.environ.get("SPARK_ABSTAIN_SAMPLE_TOKEN")
+            or os.environ.get("SPARK_ABSTAIN_VLLM_TOKEN"),
         )
+        if cont is not None:
+            result["text"] = cont
+            result["sample_source"] = "openai_compat"
+            return result
+    result["text"] = ""
+    result["note"] = (
+        "continue - SAMPLE deferred "
+        "(provide HF model for in-process generate, "
+        "or SPARK_ABSTAIN_SAMPLE_URL)"
+    )
     return result

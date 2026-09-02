@@ -29,8 +29,12 @@ from sparklang.abstain.dry import dry_result, dumps_compact
 from sparklang.abstain.export import export_hiddens
 from sparklang.abstain.gate import GateConfig, select_before_sample
 from sparklang.abstain.generate import live_ask
+from sparklang.abstain.inventable import outer_verify_or_refuse
 from sparklang.abstain.parse import parse_head_stmt
-from sparklang.abstain.train import train_abstain_head
+from sparklang.abstain.train import (
+    mark_head_quality,
+    train_abstain_head,
+)
 
 
 def _write_out(text: str, out: str | None) -> None:
@@ -145,6 +149,8 @@ def main(argv: list[str] | None = None) -> int:
             "ask",
             "export",
             "validate-corpus",
+            "outer-verify",
+            "mark-quality",
         ),
     )
     ap.add_argument("--dataset")
@@ -168,7 +174,21 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--threshold", type=float, default=0.7)
     ap.add_argument("--idk", default="I don't know.")
     ap.add_argument("--p", type=float)
+    ap.add_argument("--entropy", type=float, default=None)
+    ap.add_argument("--entropy-max", type=float, default=None)
+    ap.add_argument("--margin", type=float, default=None)
+    ap.add_argument("--margin-min", type=float, default=None)
     ap.add_argument("--max-new-tokens", type=int, default=32)
+    ap.add_argument(
+        "--sot-ok",
+        action="store_true",
+        help="outer verify: SoT/HTTP expect already passed",
+    )
+    ap.add_argument(
+        "--outer-verify",
+        action="store_true",
+        help="run inventable outer verify-or-refuse helper",
+    )
     args = ap.parse_args(argv)
     live = bool(args.live)
 
@@ -201,7 +221,14 @@ def main(argv: list[str] | None = None) -> int:
             raise SystemExit("gate needs --p")
         d = select_before_sample(
             args.p,
-            GateConfig(threshold=args.threshold, idk=args.idk),
+            GateConfig(
+                threshold=args.threshold,
+                idk=args.idk,
+                entropy_max=args.entropy_max,
+                margin_min=args.margin_min,
+            ),
+            entropy=args.entropy,
+            margin=args.margin,
         )
         payload = {
             "abstain": d.abstain,
@@ -211,6 +238,29 @@ def main(argv: list[str] | None = None) -> int:
             "reason": d.reason,
         }
         _write_out(dumps_compact(payload), args.out)
+        return 0
+
+    if args.cmd == "outer-verify":
+        if not args.prompt:
+            raise SystemExit("outer-verify needs --prompt")
+        result = outer_verify_or_refuse(
+            args.prompt,
+            sot_ok=bool(args.sot_ok),
+            idk=args.idk,
+        )
+        _write_out(dumps_compact(result), args.out)
+        return 0
+
+    if args.cmd == "mark-quality":
+        if not live:
+            raise SystemExit("mark-quality needs --live")
+        if not args.weights:
+            raise SystemExit("mark-quality needs --weights")
+        stamp = os.environ.get(
+            "SPARK_ABSTAIN_QUALITY_STAMP", "hf_backbone_trained"
+        )
+        result = mark_head_quality(args.weights, stamp)
+        _write_out(dumps_compact(result), args.out)
         return 0
 
     if args.cmd == "train":
@@ -283,6 +333,12 @@ def main(argv: list[str] | None = None) -> int:
             threshold=args.threshold,
             idk=args.idk,
             max_new_tokens=args.max_new_tokens,
+            entropy_max=args.entropy_max,
+            margin_min=args.margin_min,
+            entropy=args.entropy,
+            margin=args.margin,
+            outer_verify=bool(args.outer_verify),
+            sot_ok=bool(args.sot_ok),
         )
         _write_out(dumps_compact(result), args.out)
         return 0

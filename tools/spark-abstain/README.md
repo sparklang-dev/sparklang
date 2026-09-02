@@ -19,6 +19,11 @@ See [docs/ABSTAIN_HEADS.md](../../docs/ABSTAIN_HEADS.md).
   --dataset out/heads/synth768.jsonl \
   --out out/heads/abstain768.pt --hidden-dim 768
 
+# Outer inventable verify (no weights when refuse fires)
+./spark-abstain --dry outer-verify \
+  --prompt "What is the dryer start price at that store right now?"
+./spark --dry-run examples/head_ask_inventable_verify.spark
+
 # Toy dim-16 (CI contract)
 ./spark-abstain --live export \
   --dataset examples/fixtures/abstain/labels_text.jsonl \
@@ -48,6 +53,9 @@ SPARK_ABSTAIN_STUB=1 ./spark-abstain --live ask \
 # Optional HF export→train→ask (skips unless env+local model)
 # SPARK_ABSTAIN_HF=1 SPARK_ABSTAIN_MODEL=/path/to/hf \
 #   ./tools/spark-abstain/hf_export_train_smoke.sh
+# Owner tiny download (CI OFF):
+# SPARK_ABSTAIN_ALLOW_TINY_DOWNLOAD=1 \
+#   ./tools/spark-abstain/tiny_hf_download.sh
 
 # HF /spark_hidden sidecar (beside stock vLLM chat)
 pip install -e 'python/[sidecar]'
@@ -64,3 +72,4 @@ make test-abstain
 ```
 
 Contract + client: `python/sparklang/abstain/spark_hidden.py`.
+Full runbook: [docs/ABSTAIN_HEADS.md](../../docs/ABSTAIN_HEADS.md).

@@ -1,14 +1,15 @@
 # Abstain labeled corpus (fixtures)
 
-Small **seed** JSONL for SparkLang abstain heads. Not a production
-accuracy dataset. Do not invent a fake large corpus or claim
-Llama-70B / live LM gate quality from these rows.
+Curated **seed** JSONL for SparkLang abstain heads (~95 rows).
+Not a production accuracy dataset. Do not invent a fake large
+corpus or claim Llama-70B / live LM gate quality from these rows.
 
 ## Files
 
 | File | Role |
 |------|------|
-| `corpus_seed.jsonl` | Curated text + `label` 0/1 + `reason` (preferred seed) |
+| `corpus_seed.jsonl` | Curated text + `label` 0/1 + `reason` (preferred; dozens of rows) |
+| `sot_dryer_price.json` | Dry SoT fixture for inventable outer verify playbook |
 | `labels_text.jsonl` | Minimal text+label (legacy / CI export input) |
 | `labels.jsonl` | Legacy bag-hash dim **64** features |
 | `labels_exported.jsonl` | Toy-backbone dim **16** export→train contract |
@@ -65,5 +66,7 @@ Offline dim-match smoke (no HF):
 
 Quality stamps in export/train JSON (`toy_backbone`,
 `synthetic_backbone_dim_match`, `hf_exported_unverified`,
-`bag_hash_fixture`) mean **fixture / unverified** — never
-production accuracy.
+`hf_backbone_trained`, `bag_hash_fixture`) mean **fixture /
+pipeline** — never production accuracy. Use
+`./spark-abstain --live mark-quality --weights …` only after a
+real HF export→train→ask smoke on that backbone.

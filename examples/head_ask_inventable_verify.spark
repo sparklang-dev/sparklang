@@ -1,0 +1,20 @@
+# Inventable facts — outer verify-or-refuse (dry playbook)
+# Abstain head alone is NOT enough for prices / IDs / live ledger.
+# Pattern: SoT / HTTP / expect FIRST, then gated ask.
+#
+#   ./spark --dry-run examples/head_ask_inventable_verify.spark
+#
+# Live shape (owner): http get real SoT → expect → head ask with
+# SPARK_ABSTAIN_* weights. Missing SoT must refuse, not invent.
+
+# 1) Source of truth (dry fixture — no network invent)
+http get "https://example.invalid/sot/dryer-start" fixture "examples/fixtures/abstain/sot_dryer_price.json" timeout 5 -> sot
+
+# 2) Verify SoT before free generate
+expect contains sot "price_usd"
+expect contains sot "2.50"
+
+# 3) Inventable ask without attaching SoT text → dry abstain
+head ask "What is the dryer start price at that store right now?" -> answer
+expect contains answer fixture "examples/fixtures/abstain/want_abstain_true.txt"
+expect contains answer fixture "examples/fixtures/abstain/want_halted_true.txt"

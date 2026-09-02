@@ -62,6 +62,12 @@ def dry_result(fields: dict[str, Any]) -> dict[str, Any]:
                 "ssn",
                 "password",
                 "invent",
+                "api key",
+                "dryer start",
+                "price at",
+                "right now",
+                "card balance",
+                "serial number",
             )
         )
         if inventable:

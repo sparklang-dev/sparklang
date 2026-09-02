@@ -78,4 +78,10 @@ grep -q '"mode":"live' "$OUT_DIR/ask.json" || \
 grep -q '"op":"head_ask"' "$OUT_DIR/ask.json" || \
   grep -q '"op": "head_ask"' "$OUT_DIR/ask.json"
 
-echo "hf_export_train_smoke OK (quality=hf_exported_unverified — not production accuracy)"
+# Stamp only after export→train→ask succeeded on this backbone.
+./spark-abstain --live mark-quality \
+  --weights "$OUT_DIR/abstain.pt" | tee "$OUT_DIR/quality.json"
+grep -q '"quality":"hf_backbone_trained"' "$OUT_DIR/quality.json" || \
+  grep -q '"quality": "hf_backbone_trained"' "$OUT_DIR/quality.json"
+
+echo "hf_export_train_smoke OK (quality=hf_backbone_trained — pipeline proven, not production accuracy)"

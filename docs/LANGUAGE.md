@@ -117,7 +117,10 @@ SELECT before SAMPLE: if `p(abstain) ≥ threshold` (or entropy/margin
 trip) → emit `idk` and halt. Internal = probe registered with a frozen
 backbone; external = sidecar on exported hiddens/logprobs. Prefer
 `./spark-abstain --live export` then train so `hidden_dim` matches the
-backbone. Not LoRA. Dry-run = fixtures only. Never `auto`/`code`/`fast`.
+backbone. Inventable prices/IDs: SoT / HTTP / `expect` **before** free
+generate (`examples/head_ask_inventable_verify.spark`). Not LoRA.
+Dry-run = fixtures only. Never `auto`/`code`/`fast`. Full runbook:
+[ABSTAIN_HEADS.md](ABSTAIN_HEADS.md).
 
 **“All models”** = all reachable configured model ids + discovered local
 vLLM endpoints (read-only) — **not** every model in existence. Catalog:
