@@ -34,6 +34,7 @@
 #define SPBC_OP_WITH_END 0x22
 #define SPBC_OP_EMBED 0x23
 #define SPBC_OP_RETRIEVE 0x24
+#define SPBC_OP_EXPECT 0x25
 #define SPBC_CONST_STR 0
 #define SPBC_MAGIC0 'S'
 #define SPBC_MAGIC1 'P'

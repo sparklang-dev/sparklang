@@ -1,0 +1,22 @@
+# Spark stdlib — expectation helpers (bootstrap: include "lib/expect.spark")
+# Assert a bound value against a literal or a fixture file.
+# Pass prints [expect] pass … and exits 0; fail exits 1 with the reason.
+
+model fast
+
+# @helper expect_equal_literal: Exact string match
+# let answer "Ada Lovelace"
+# expect equal answer "Ada Lovelace"
+
+# @helper expect_contains: Substring match
+# let answer "Ada Lovelace"
+# expect contains answer "Lovelace"
+
+# @helper expect_equal_fixture: Want text from a real file
+# let answer "Ada Lovelace"
+# expect equal answer fixture "examples/fixtures/eval/want_name.txt"
+
+# @helper expect_after_extract: Assert a field after dry extract
+# extract Person { name: string, age: int } from "Ada Lovelace was born in 1815"
+#   fixture "examples/fixtures/extract/person.json" -> person
+# expect contains person "Ada Lovelace"

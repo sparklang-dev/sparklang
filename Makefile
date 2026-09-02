@@ -37,6 +37,7 @@ playbooks-catalog:
 SPARK_OBJS = asm/spark.o asm/model_ops.o asm/train_ops.o asm/binary_ops.o \
 	asm/network_ops.o asm/os_ops.o asm/bind_ops.o asm/cuda_ops.o \
 	asm/ask_ops.o asm/rag_ops.o asm/http_ops.o asm/extract_ops.o \
+	asm/expect_ops.o \
 	asm/browser_ops.o \
 	asm/voice_ops.o asm/pcie_ops.o \
 	asm/crypto_ops.o asm/gateway_ops.o asm/engine_js.o asm/engine_html.o \
@@ -91,6 +92,9 @@ asm/http_ops.o: asm/http_ops.s
 	$(AS) $(ASFLAGS) -o $@ $<
 
 asm/extract_ops.o: asm/extract_ops.s
+	$(AS) $(ASFLAGS) -o $@ $<
+
+asm/expect_ops.o: asm/expect_ops.s
 	$(AS) $(ASFLAGS) -o $@ $<
 
 asm/browser_ops.o: asm/browser_ops.s
@@ -186,7 +190,8 @@ asm/engine_js.o: asm/engine_js.s
 
 companions: spark-cuda-probe spark-net-capture \
 	spark-binary-probe spark-section-dump spark-lift spark-ask-http \
-	spark-ask-probe spark-rag-http spark-http spark-extract spark-train-http \
+	spark-ask-probe spark-rag-http spark-http spark-extract spark-expect \
+	spark-train-http \
 	spark-browser-host spark-mitm-quic \
 	spark-mitm-quic-divert spark-mitm-ca spark-mitm-h2 spark-browser-cdp spark-pstn-dial \
 	spark-enc-gateway spark-stt-tts spark-review-url spark-engine-show \
@@ -235,6 +240,12 @@ spark-extract: tools/extract/spark_extract.c bootstrap/dry_extract.c \
 	bootstrap/dry_extract.h
 	$(CC) -O2 -Wall -Wextra -o $@ tools/extract/spark_extract.c \
 		bootstrap/dry_extract.c
+
+# Expect equal/contains (literal or fixture want; pass/fail exit).
+spark-expect: tools/expect/spark_expect.c bootstrap/dry_expect.c \
+	bootstrap/dry_expect.h
+	$(CC) -O2 -Wall -Wextra -o $@ tools/expect/spark_expect.c \
+		bootstrap/dry_expect.c
 
 # Model train submit/status (HTTP or allowlisted local-yield).
 spark-train-http: tools/train/spark_train_http.c bootstrap/dry_train.c \
@@ -323,7 +334,7 @@ machine-proof: spark
 	$(OBJDUMP) -d ./spark | sed -n '/<_start>:/,/^$$/p' | head -20
 
 test: spark companions spark-bootstrap test-sparkbc test-ai-playbooks \
-	test-extract
+	test-extract test-expect
 	./tests/run_dry.sh
 	./tests/hdl_check.sh
 	./bootstrap/tests/run_bootstrap.sh
@@ -341,7 +352,7 @@ test-e2e-browser: spark companions
 # Every examples/*.spark under --dry-run. Fail-loud IDE demos expect rc!=0.
 test-examples: spark companions
 	@fail=0; \
-	fail_loud='ide_open_miss|ide_open_nopath|ide_run_nobuf|ide_save_nopath|ide_show_miss|ide_show_notppm|ide_ask_nobuf|ide_key_bad|ide_keys_miss|http_get_live|extract_bad'; \
+	fail_loud='ide_open_miss|ide_open_nopath|ide_run_nobuf|ide_save_nopath|ide_show_miss|ide_show_notppm|ide_ask_nobuf|ide_key_bad|ide_keys_miss|http_get_live|extract_bad|expect_fail|expect_miss_fixture'; \
 	for f in examples/*.spark; do \
 	  to=""; \
 	  base="$$(basename "$$f")"; \
@@ -394,7 +405,8 @@ clean:
 	rm -f spark-cuda-probe spark-net-capture
 	rm -f spark-binary-probe spark-section-dump spark-lift
 	rm -f spark-ask-http spark-ask-probe spark-rag-http spark-http \
-		spark-train-http spark-browser-host spark-pstn-dial spark-mitm-quic
+		spark-extract spark-expect spark-train-http \
+		spark-browser-host spark-pstn-dial spark-mitm-quic
 	rm -f spark-mitm-quic-divert spark-mitm-ca spark-mitm-h2 spark-browser-cdp spark-enc-gateway
 	rm -f spark-stt-tts spark-review-url spark-engine-show spark-engine-paint
 	rm -f spark-ide-paint spark-engine-fetch-tls
@@ -412,7 +424,7 @@ SPARKC_SRCS = bootstrap/main.c bootstrap/vm.c bootstrap/engine_parse.c \
 	bootstrap/engine_paint.c bootstrap/engine_show.c \
 	bootstrap/engine_render.c bootstrap/dry_ask.c bootstrap/dry_auto_model.c \
 	bootstrap/dry_classify.c bootstrap/dry_rag.c bootstrap/dry_http.c \
-	bootstrap/dry_extract.c \
+	bootstrap/dry_extract.c bootstrap/dry_expect.c \
 	bootstrap/dry_engine.c \
 	bootstrap/dry_ide.c bootstrap/dry_ops.c \
 	bootstrap/bc_read.c bootstrap/bc_vm.c bootstrap/bc_write.c \
@@ -420,6 +432,7 @@ SPARKC_SRCS = bootstrap/main.c bootstrap/vm.c bootstrap/engine_parse.c \
 spark-bootstrap sparkc: $(SPARKC_SRCS) bootstrap/vm.h \
 	bootstrap/dry_ask.h bootstrap/dry_auto_model.h bootstrap/dry_classify.h \
 	bootstrap/dry_rag.h bootstrap/dry_http.h bootstrap/dry_extract.h \
+	bootstrap/dry_expect.h \
 	bootstrap/dry_engine.h \
 	bootstrap/dry_ide.h \
 	bootstrap/dry_ops.h \
@@ -467,6 +480,11 @@ test-extract: spark-extract spark
 	./tools/extract/run_extract_gate.sh
 	chmod +x tools/extract/run_lib_gate.sh
 	./tools/extract/run_lib_gate.sh
+
+.PHONY: test-expect
+test-expect: spark-expect spark
+	chmod +x tools/expect/run_expect_gate.sh
+	./tools/expect/run_expect_gate.sh
 
 .PHONY: test-train-http
 test-train-http: spark-train-http spark

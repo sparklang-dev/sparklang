@@ -1,7 +1,8 @@
 # [goal] Generic receptionist-style workflow
 # Not a production claim. No store/PII. Dry-run sketch for the adoption bar:
 # fallback + transfer intent, shorter to read than Python+gateway glue.
-# When transfer / expectation-eval language ops ship, promote off [goal].
+# When transfer language ops ship, promote off [goal].
+# Expectation pass/fail is shipped: expect equal / expect contains.
 #
 #   ./spark --dry-run examples/receptionist_goal.spark
 
@@ -21,5 +22,6 @@ print reply
 shell "echo transfer-queue" -> side
 print side
 
-# [goal] transfer / hold / hangup / expectation pass-fail — not language yet.
+# [goal] transfer / hold / hangup — not language yet.
+# Expectation pass/fail is shipped: expect equal / expect contains.
 # See docs/ADOPTION_BAR.md · docs/ROADMAP.md

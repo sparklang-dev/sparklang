@@ -9,6 +9,7 @@
 #include "dry_auto_model.h"
 #include "dry_classify.h"
 #include "dry_extract.h"
+#include "dry_expect.h"
 #include "dry_http.h"
 #include "dry_rag.h"
 #include "dry_ops.h"
@@ -827,6 +828,40 @@ static int op_extract_cont(SparkVM *vm, char *line)
   return 0;
 }
 
+static int op_expect(SparkVM *vm, char *line)
+{
+  char mode[32];
+  char name[SPARK_VM_NAME_MAX];
+  char *want = NULL;
+  char *want_body = NULL;
+  const char *got;
+  int want_is_fixture = 0;
+  int rc;
+
+  if (spark_expect_parse_stmt(line, mode, sizeof(mode), name,
+			      sizeof(name), &want,
+			      &want_is_fixture) != 0)
+    return 1;
+  got = vars_get(vm, name);
+  if (!got) {
+    fprintf(stderr, "error: expect unknown name %s\n", name);
+    free(want);
+    return 1;
+  }
+  if (want_is_fixture) {
+    if (spark_expect_load_fixture(want, &want_body, NULL) != 0) {
+      free(want);
+      return 1;
+    }
+    rc = spark_expect_check(mode, name, got, want_body);
+    free(want_body);
+  } else {
+    rc = spark_expect_check(mode, name, got, want);
+  }
+  free(want);
+  return rc;
+}
+
 static int op_listen(SparkVM *vm, char *line)
 {
   (void)vm;
@@ -1589,6 +1624,8 @@ int spark_vm_run_line(SparkVM *vm, const char *raw)
     return op_http(vm, line);
   if (kw_at(line, "extract"))
     return op_extract(vm, line);
+  if (kw_at(line, "expect"))
+    return op_expect(vm, line);
   if (kw_at(line, "tool"))
     return migrated_bc("tool");
   if (kw_at(line, "with"))
@@ -1638,7 +1675,7 @@ int spark_vm_run_line(SparkVM *vm, const char *raw)
   fprintf(stderr,
           "error: unknown statement: %s\n"
           "  hint: model|use|ask|?|classify|embed|retrieve|http|"
-          "shell|pipeline|include (bootstrap)\n",
+          "shell|extract|expect|pipeline|include (bootstrap)\n",
           line);
   return 1;
 }

@@ -249,7 +249,8 @@
         <code class="inline-code">./spark-http --live --get --url https://example.com/ --timeout 10</code>.
         Gate: <code class="inline-code">make test-http</code> (live SKIP unless <code class="inline-code">SPARK_HTTP_LIVE=1</code>).</p>
         <h3 id="extract"><code class="inline-code">extract</code></h3>
-        <p>Inline schema, validated against JSON. A field is required unless its
+        <p>Pulls typed fields out of text into JSON, validated on dry-run.
+        The inline schema declares the fields: a field is required unless its
         name ends in <code class="inline-code">?</code>. Types are <code class="inline-code">string</code>, <code class="inline-code">int</code>, <code class="inline-code">float</code>, <code class="inline-code">bool</code>.</p>
         <pre class="doc__pre"><code class="inline-code">extract Person {
           name: string
@@ -258,6 +259,7 @@
         } from &quot;Ada Lovelace was born in 1815&quot;
           fixture &quot;examples/fixtures/extract/person.json&quot; -&gt; person
         </code></pre>
+        <p>Run it: <code class="inline-code">./spark --dry-run examples/extract_person.spark</code>.</p>
         <p><code class="inline-code">fixture "PATH"</code> names the JSON file that dry-run reads. Dry-run never
         calls a model and never invents a value, so the clause is required:
         without it, or with a path that does not exist, the run stops with a
@@ -279,6 +281,47 @@
         a schema miss. <code class="inline-code">./spark-extract --live</code> refuses rather than guessing.</p>
         <p>Examples: <code class="inline-code">examples/extract_person.spark</code> (valid),
         <code class="inline-code">examples/extract_bad.spark</code> (type mismatch). Gate: <code class="inline-code">make test-extract</code>.</p>
+        <h3 id="expect-passfail"><code class="inline-code">expect</code> (pass/fail)</h3>
+        <p>Assert a <strong>bound</strong> name against a literal or a fixture file. Pass =
+        exit <strong>0</strong>; fail = exit <strong>1</strong> with the reason. This is the dry-run CI
+        shape — not <code class="inline-code">model compare</code> picking aliases.</p>
+        <pre class="doc__pre"><code class="inline-code">let answer &quot;Ada Lovelace&quot;
+        expect equal answer &quot;Ada Lovelace&quot;
+        expect contains answer &quot;Lovelace&quot;
+        expect equal answer fixture &quot;examples/fixtures/eval/want_name.txt&quot;
+        </code></pre>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Form</th>
+        <th>Behavior</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><code class="inline-code">expect equal NAME "…"</code></td>
+        <td>Exact string match</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">expect contains NAME "…"</code></td>
+        <td>Substring match</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">expect equal NAME fixture "PATH"</code></td>
+        <td>Exact match to file bytes (trailing NL trimmed)</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">expect contains NAME fixture "PATH"</code></td>
+        <td>Substring match against file bytes</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <p>Missing binding, missing fixture, or mismatch → non-zero exit (no
+        invented want). Gate: <code class="inline-code">make test-expect</code>.</p>
+        <p>Examples: <code class="inline-code">examples/expect_pass.spark</code> (exit 0),
+        <code class="inline-code">examples/expect_fail.spark</code> (exit 1),
+        <code class="inline-code">examples/expect_miss_fixture.spark</code> (exit 1).</p>
+        <p><strong>Not shipped:</strong> regex <code class="inline-code">match</code>, streaming ask assertions.</p>
         <h3 id="classify-first-class"><code class="inline-code">classify</code> (first-class)</h3>
         <p>Single-label (default) or <code class="inline-code">multi</code>:</p>
         <pre class="doc__pre"><code class="inline-code">classify Intent { support, sales, spam }

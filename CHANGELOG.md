@@ -4,6 +4,15 @@ All notable user-facing releases of **SparkLang** (the Spark programming
 language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
+## 0.6.5 — 2026-09-02
+
+- **`expect equal` / `expect contains`:** assert a bound name against a
+  literal or `fixture "PATH"`. Pass exits **0**; fail exits **1** with
+  the reason (missing fixture / unknown name / mismatch). Wired in GAS
+  (`./spark-expect`), bootstrap, and SPARK_BC `0x25`. Gate:
+  `make test-expect`. Examples: `examples/expect_pass.spark`,
+  `examples/expect_fail.spark`.
+
 ## 0.6.4 — 2026-09-02
 
 - **`http get` / `http post`:** first-class ops with `timeout` and

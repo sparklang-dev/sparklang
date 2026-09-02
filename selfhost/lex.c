@@ -15,7 +15,8 @@
 
 /* Statement-start / core keywords only. Bindings like `text` stay IDENT. */
 static const char *KEYWORDS[] = {
-    "model", "use", "ask", "generate", "extract", "classify", "listen",
+    "model", "use", "ask", "generate", "extract", "expect", "classify",
+    "listen",
     "speak", "voice", "pipeline", "tool", "with", "let", "print",
     "set", "review", "builder", "implement", "ide", "browser",
     "mitm", "engine", "os", "cuda", "memory", "pcie", "binary",

@@ -26,7 +26,7 @@ Not Apache Spark. Not AdaCore SPARK.
 | Typed `extract` + JSON-mode validate/retry | **partial** | Validation shipped: required vs `?` optional fields, `string`/`int`/`float`/`bool` types, top-level only, non-zero exit on a miss. Dry-run reads a real `fixture "PATH"`. Live extract and retry-on-miss = **next** |
 | Cost/latency/token accounting | **done (hooks)** | Dry zeros; live prints `usage` when gateway returns it — never invents tokens |
 | Streaming `ask` | **next** | Not shipped |
-| Eval vs expectations (pass/fail) | **next** | `model compare` picks aliases; expectation harness = **next** |
+| Eval vs expectations (pass/fail) | **done** | `expect equal` / `expect contains` vs bound vars or `fixture "PATH"`; exit 0/1. Gate: `make test-expect` |
 | Voice production telephony | **won't (soon)** | Gated demo + honest gaps in VOICE.md / ROADMAP — not sold as production |
 | Packet capture / MITM / browser automation | **won't (focus)** | Still in LANGUAGE; de-emphasized on landing — prefer LSP + highlighting |
 | Homegrown IDE as product chrome | **won't (focus) / keep tree** | Prefer LSP for editor story; language `ide` ops + IDE tree **kept**. Hard-delete OWNER-CONFIRM **revoked** 2026-09-02 (rename yes; delete no) |
@@ -46,9 +46,8 @@ Without both directions, a DSL dies:
 
 Shipped enough to dry-demo RAG + ask + classify + http get/post in one
 file. Still missing for a clear “shorter than Python+gateway” win on
-production paths: streaming, expectation evals, HTTP auth/retries,
-live `extract` against a model, and a dry-runnable receptionist that is
-more than a `[goal]` sketch.
+production paths: streaming, HTTP auth/retries, live `extract` against a
+model, and a dry-runnable receptionist that is more than a `[goal]` sketch.
 
 ## Voice — honest
 
@@ -82,8 +81,9 @@ Keep these off the hero; they belong here and in docs:
 One generic receptionist-style workflow (fallback + transfer), shorter
 and easier to dry-test than Python+gateway — **no store/PII examples**.
 
-→ `examples/receptionist_goal.spark` (`[goal]`). When syntax for transfer /
-expectation eval lands, promote off the goal tag.
+→ `examples/receptionist_goal.spark` (`[goal]`). When syntax for transfer
+lands, promote off the goal tag. Expectation pass/fail is shipped
+(`expect equal` / `expect contains`).
 
 ## Related
 

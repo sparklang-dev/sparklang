@@ -14,6 +14,7 @@ out/browser/ca/
 /spark-cuda-probe
 /spark-enc-gateway
 /spark-extract
+/spark-expect
 /spark-http
 /spark-lift
 /spark-mitm-ca

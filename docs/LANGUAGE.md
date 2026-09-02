@@ -245,6 +245,35 @@ a schema miss. `./spark-extract --live` refuses rather than guessing.
 Examples: `examples/extract_person.spark` (valid),
 `examples/extract_bad.spark` (type mismatch). Gate: `make test-extract`.
 
+### `expect` (pass/fail)
+
+Assert a **bound** name against a literal or a fixture file. Pass =
+exit **0**; fail = exit **1** with the reason. This is the dry-run CI
+shape — not `model compare` picking aliases.
+
+```
+let answer "Ada Lovelace"
+expect equal answer "Ada Lovelace"
+expect contains answer "Lovelace"
+expect equal answer fixture "examples/fixtures/eval/want_name.txt"
+```
+
+| Form | Behavior |
+|------|----------|
+| `expect equal NAME "…" ` | Exact string match |
+| `expect contains NAME "…" ` | Substring match |
+| `expect equal NAME fixture "PATH"` | Exact match to file bytes (trailing NL trimmed) |
+| `expect contains NAME fixture "PATH"` | Substring match against file bytes |
+
+Missing binding, missing fixture, or mismatch → non-zero exit (no
+invented want). Gate: `make test-expect`.
+
+Examples: `examples/expect_pass.spark` (exit 0),
+`examples/expect_fail.spark` (exit 1),
+`examples/expect_miss_fixture.spark` (exit 1).
+
+**Not shipped:** regex `match`, streaming ask assertions.
+
 ### `classify` (first-class)
 
 Single-label (default) or `multi`:

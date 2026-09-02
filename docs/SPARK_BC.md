@@ -109,6 +109,11 @@ Mapped 1:1 to LANGUAGE.md statement starts. Voice merge keeps
 | `0x22` | `WITH_END` | `}` clears tools | none | *(no line; `vm.c` 1559–1562)* |
 | `0x23` | `EMBED` | `embed` | text, bind | `[embed] <text>` / `  → <json>` |
 | `0x24` | `RETRIEVE` | `retrieve` | query, bind | `[retrieve] <query>` / `  → <json>` |
+| `0x25` | `EXPECT` | `expect` | mode, name, want | `[expect] pass <mode> <name>` or exit 1 |
+
+`EXPECT` want is a literal, or `@fixture:path` when the source used
+`fixture "path"`. Missing binding / missing fixture / mismatch →
+non-zero exit. Shared validator: `bootstrap/dry_expect.c`.
 
 `EMBED` / `RETRIEVE` dry replies come from `bootstrap/dry_rag.c`
 (same fixtures as `examples/fixtures/rag/`). Live GAS forks
@@ -123,7 +128,7 @@ until an opcode lands.
 `improve` / `train` / `status` / `plan` / `build` run in
 `asm/model_ops.s` (+ `asm/train_ops.s` live). Dry fixtures under
 `examples/fixtures/train/`; companion `./spark-train-http`. Do **not**
-invent `0x25+` train opcodes until bootstrap parses those forms.
+invent `0x26+` train opcodes until bootstrap parses those forms.
 See [MODEL_TRAINING.md](MODEL_TRAINING.md).
 
 `LET` is in the table so the ISA is not hello-only

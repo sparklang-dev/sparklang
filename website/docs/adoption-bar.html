@@ -146,8 +146,8 @@
         </tr>
         <tr>
         <td>Eval vs expectations (pass/fail)</td>
-        <td><strong>next</strong></td>
-        <td><code class="inline-code">model compare</code> picks aliases; expectation harness = <strong>next</strong></td>
+        <td><strong>done</strong></td>
+        <td><code class="inline-code">expect equal</code> / <code class="inline-code">expect contains</code> vs bound vars or <code class="inline-code">fixture "PATH"</code>; exit 0/1. Gate: <code class="inline-code">make test-expect</code></td>
         </tr>
         <tr>
         <td>Voice production telephony</td>
@@ -187,9 +187,8 @@
         <h2 id="worth-using-over-script-gateway">Worth using over script + gateway</h2>
         <p>Shipped enough to dry-demo RAG + ask + classify + http get/post in one
         file. Still missing for a clear “shorter than Python+gateway” win on
-        production paths: streaming, expectation evals, HTTP auth/retries,
-        live <code class="inline-code">extract</code> against a model, and a dry-runnable receptionist that is
-        more than a <code class="inline-code">[goal]</code> sketch.</p>
+        production paths: streaming, HTTP auth/retries, live <code class="inline-code">extract</code> against a
+        model, and a dry-runnable receptionist that is more than a <code class="inline-code">[goal]</code> sketch.</p>
         <h2 id="voice-honest">Voice — honest</h2>
         <p>Optional <code class="inline-code">listen</code> / <code class="inline-code">speak</code> / <code class="inline-code">voice</code> / gated PSTN exist as language
         surface and dry demos. <strong>Not</strong> production barge-in / EOU / SM transfer
@@ -199,19 +198,25 @@
         IDE <em>chrome as hero</em>, model-build-as-training. Prefer: language + dry-run +
         playbooks + LSP / syntax highlighting + optional live gateway I/O.
         <strong>IDE tree stays in-repo</strong> (delete revoked).</p>
-        <h3 id="homepage-honesty">Homepage honesty (critique v0.6.3)</h3>
-        <ul>
-          <li><strong><code class="inline-code">model plan</code> is not training</strong> — markdown plan only; train/build submit jobs.</li>
-          <li><strong>HTTP auth / retries</strong> for language <code class="inline-code">http get</code>/<code class="inline-code">post</code> = <strong>next</strong>.</li>
-          <li><strong>Packet capture / MITM / browser</strong> stay in LANGUAGE but are secondary vs train→eval (homepage “Also available” is one line to docs).</li>
-          <li><strong>Live train</strong> requires a trainer you operate at <code class="inline-code">SPARK_TRAIN_URL</code> (<code class="inline-code">backend "http"</code>). Dry-run fixtures demonstrate the job path; do not claim a live GPU completion on sparklang.dev without a real run.</li>
-          <li><strong>Expectation pass/fail harness</strong> (<code class="inline-code">expect</code> / <code class="inline-code">assert</code>) = <strong>next</strong> until merged; homepage flagship uses shipped <code class="inline-code">model compare</code> (+ <code class="inline-code">classify</code>).</li>
+        <h3 id="homepage-honesty-critique-v063">Homepage honesty (critique v0.6.3)</h3>
+        <p>Keep these off the hero; they belong here and in docs:</p>
+        <ul class="doc__ul">
+        <li><strong><code class="inline-code">model plan</code> is not training</strong> — markdown plan only; train/build submit jobs.</li>
+        <li><strong>HTTP auth / retries</strong> for language <code class="inline-code">http get</code>/<code class="inline-code">post</code> = <strong>next</strong>.</li>
+        <li><strong>Packet capture / MITM / browser</strong> stay in LANGUAGE but are secondary vs
+          train→eval (see “Also available” one-liner on the homepage).</li>
+        <li><strong>Live train</strong> requires a trainer you operate at <code class="inline-code">SPARK_TRAIN_URL</code>
+          (<code class="inline-code">backend "http"</code>). Dry-run fixtures demonstrate the job path; do not claim
+          a live GPU completion on sparklang.dev without a real run.</li>
+        <li><strong>Expectation pass/fail harness</strong> (<code class="inline-code">expect</code> / <code class="inline-code">assert</code>) = <strong>next</strong> until
+          merged; homepage flagship uses shipped <code class="inline-code">model compare</code> (+ <code class="inline-code">classify</code>).</li>
         </ul>
         <h2 id="the-real-bar-goal-not-claim">The real bar (goal, not claim)</h2>
         <p>One generic receptionist-style workflow (fallback + transfer), shorter
         and easier to dry-test than Python+gateway — <strong>no store/PII examples</strong>.</p>
-        <p>→ <code class="inline-code">examples/receptionist_goal.spark</code> (<code class="inline-code">[goal]</code>). When syntax for transfer /
-        expectation eval lands, promote off the goal tag.</p>
+        <p>→ <code class="inline-code">examples/receptionist_goal.spark</code> (<code class="inline-code">[goal]</code>). When syntax for transfer
+        lands, promote off the goal tag. Expectation pass/fail is shipped
+        (<code class="inline-code">expect equal</code> / <code class="inline-code">expect contains</code>).</p>
         <h2 id="related">Related</h2>
         <ul class="doc__ul">
         <li><a href="/docs/roadmap.html">ROADMAP.md</a></li>

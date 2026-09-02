@@ -1,7 +1,6 @@
 # Let keyword lex fixture.
 # Stage 1 golden (expected_let_dry.tokens.jsonl).
 # Keyword: let (lex.c KEYWORDS). Form from examples/pipeline_translate.spark.
-# GAS scaffold pads let dumps; dry-run still exits 0 (make redirects).
 # Not a full compiler. B dry-run is clean (Stage 1 parity).
 model fast
 

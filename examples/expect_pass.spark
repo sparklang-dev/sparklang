@@ -1,0 +1,9 @@
+# Expect pass — equal + contains + fixture want (dry-run CI shape).
+#   ./spark --dry-run examples/expect_pass.spark
+# Exit 0 when every expectation holds.
+
+let answer "Ada Lovelace"
+
+expect equal answer "Ada Lovelace"
+expect contains answer "Lovelace"
+expect equal answer fixture "examples/fixtures/eval/want_name.txt"

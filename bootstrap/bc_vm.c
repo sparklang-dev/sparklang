@@ -6,6 +6,7 @@
 #include "dry_auto_model.h"
 #include "dry_classify.h"
 #include "dry_extract.h"
+#include "dry_expect.h"
 #include "dry_rag.h"
 #include "dry_ops.h"
 #include "dry_engine.h"
@@ -758,6 +759,45 @@ static int op_extract(BcFrame *fr, const SparkBc *bc, uint32_t *ip)
   return 0;
 }
 
+/* EXPECT: mode, name, want — want may be "@fixture:path" for file want. */
+static int op_expect(BcFrame *fr, const SparkBc *bc, uint32_t *ip)
+{
+  uint16_t midx, nidx, widx;
+  const char *mode;
+  const char *name;
+  const char *want_raw;
+  const char *got;
+  char *want_body = NULL;
+  int rc;
+
+  if (take_u16(bc, ip, &midx) != 0)
+    return 1;
+  if (take_u16(bc, ip, &nidx) != 0)
+    return 1;
+  if (take_u16(bc, ip, &widx) != 0)
+    return 1;
+  if (const_str(bc, midx, &mode) != 0)
+    return 1;
+  if (const_str(bc, nidx, &name) != 0)
+    return 1;
+  if (const_str(bc, widx, &want_raw) != 0)
+    return 1;
+  got = vars_get(fr, name);
+  if (!got) {
+    fprintf(stderr, "error: expect unknown name %s\n", name);
+    return 1;
+  }
+  if (strncmp(want_raw, "@fixture:", 9) == 0) {
+    if (spark_expect_load_fixture(want_raw + 9, &want_body, NULL) !=
+	0)
+      return 1;
+    rc = spark_expect_check(mode, name, got, want_body);
+    free(want_body);
+    return rc;
+  }
+  return spark_expect_check(mode, name, got, want_raw);
+}
+
 static int op_pipeline(BcFrame *fr, const SparkBc *bc, uint32_t *ip)
 {
   (void)fr;
@@ -1010,6 +1050,8 @@ int spark_bc_run_file(const char *path)
       rc = op_retrieve(&fr, &bc, &ip);
     else if (op == SPBC_OP_EXTRACT)
       rc = op_extract(&fr, &bc, &ip);
+    else if (op == SPBC_OP_EXPECT)
+      rc = op_expect(&fr, &bc, &ip);
     else if (op == SPBC_OP_PIPELINE)
       rc = op_pipeline(&fr, &bc, &ip);
     else if (op == SPBC_OP_LISTEN)

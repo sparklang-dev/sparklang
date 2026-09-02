@@ -1013,6 +1013,73 @@ too_long:
   return 1;
 }
 
+/* expect equal|contains NAME "want" | fixture "path" */
+static int compile_expect(long line)
+{
+  Tok *t;
+  char mode[32];
+  char name[128];
+  char want[1024];
+  int is_fixture = 0;
+
+  t = take();
+  if (!t || (strcmp(t->kind, "IDENT") != 0 &&
+	     strcmp(t->kind, "KEYWORD") != 0)) {
+    fprintf(stderr,
+	    "error:%ld: compile expect needs equal|contains\n", line);
+    return 1;
+  }
+  snprintf(mode, sizeof(mode), "%s", t->lexeme);
+  if (strcmp(mode, "equal") != 0 && strcmp(mode, "contains") != 0) {
+    fprintf(stderr,
+	    "error:%ld: compile expect mode must be equal or "
+	    "contains\n",
+	    line);
+    return 1;
+  }
+  t = take();
+  if (!t || (strcmp(t->kind, "IDENT") != 0 &&
+	     strcmp(t->kind, "KEYWORD") != 0)) {
+    fprintf(stderr, "error:%ld: compile expect needs a name\n", line);
+    return 1;
+  }
+  snprintf(name, sizeof(name), "%s", t->lexeme);
+  t = peek();
+  if (t && strcmp(t->kind, "IDENT") == 0 &&
+      strcmp(t->lexeme, "fixture") == 0) {
+    take();
+    is_fixture = 1;
+  }
+  t = take();
+  if (!t || strcmp(t->kind, "STRING") != 0) {
+    fprintf(stderr,
+	    "error:%ld: compile expect needs \"want\" or "
+	    "fixture \"path\"\n",
+	    line);
+    return 1;
+  }
+  if (strip_quotes(t->lexeme, want, sizeof(want)) != 0) {
+    fprintf(stderr, "error:%ld: compile expect bad string\n", line);
+    return 1;
+  }
+  if (is_fixture) {
+    char packed[1100];
+
+    if (snprintf(packed, sizeof(packed), "@fixture:%s", want) >=
+	(int)sizeof(packed)) {
+      fprintf(stderr, "error:%ld: compile expect path too long\n",
+	      line);
+      return 1;
+    }
+    emit_op3(SPBC_OP_EXPECT, add_str_const(mode), add_str_const(name),
+	     add_str_const(packed));
+  } else {
+    emit_op3(SPBC_OP_EXPECT, add_str_const(mode), add_str_const(name),
+	     add_str_const(want));
+  }
+  return 0;
+}
+
 static int compile_pipeline_inner(void)
 {
   for (;;) {
@@ -1356,6 +1423,12 @@ int spark_compile_file(const char *path, const char *out_bc)
     if (strcmp(kw->kind, "KEYWORD") == 0 &&
         strcmp(kw->lexeme, "extract") == 0) {
       if (compile_extract(kw->line) != 0)
+        goto done;
+      continue;
+    }
+    if (strcmp(kw->kind, "KEYWORD") == 0 &&
+        strcmp(kw->lexeme, "expect") == 0) {
+      if (compile_expect(kw->line) != 0)
         goto done;
       continue;
     }

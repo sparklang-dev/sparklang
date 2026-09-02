@@ -299,6 +299,7 @@ vg_miss:
 do_let:
     push    rbx
     push    r12
+    push    r13
     lea     rsi, [rip+msg_let]
     mov     rdx, msg_let_len
     call    write_stdout
@@ -342,7 +343,8 @@ dl_no_eq:
     call    extract_quote
     test    rax, rax
     jz      dl_fail
-    mov     r12, rax
+    mov     r12, rax                # value ptr
+    mov     r13, rcx                # value len (rcx is caller-saved)
     # print name = value
     lea     rsi, [rip+bind_name]
     call    strlen
@@ -353,17 +355,19 @@ dl_no_eq:
     mov     rdx, msg_eq_len
     call    write_stdout
     mov     rsi, r12
-    mov     rdx, rcx
+    mov     rdx, r13
     call    write_stdout
     lea     rsi, [rip+msg_nl]
     mov     rdx, 1
     call    write_stdout
     lea     rdi, [rip+bind_name]
     mov     rsi, r12
-    mov     rdx, rcx
+    mov     rdx, r13
     call    vars_put
     mov     rax, r12
+    mov     rcx, r13
     call    set_last_from_rcx
+    pop     r13
     pop     r12
     pop     rbx
     ret

@@ -375,7 +375,6 @@ static int opcode_size(uint8_t op)
     return 1;
   case SPBC_OP_MODEL:
   case SPBC_OP_PRINT:
-  case SPBC_OP_EXTRACT:
   case SPBC_OP_LISTEN:
   case SPBC_OP_SPEAK:
   case SPBC_OP_TOOL:
@@ -389,6 +388,9 @@ static int opcode_size(uint8_t op)
   case SPBC_OP_IDE_ASK:
   case SPBC_OP_MITM_ENABLE:
     return 3;
+  case SPBC_OP_EXTRACT:
+  case SPBC_OP_EXPECT:
+    return 7;
   case SPBC_OP_ASK:
   case SPBC_OP_LET:
   case SPBC_OP_CLASSIFY:
@@ -686,7 +688,7 @@ static int emit_reply_pool(FILE *out, const SparkBc *bc)
         var_bind(bind, rlabel, strlen(reply));
       nreply++;
     } else if (op == SPBC_OP_EXTRACT) {
-      uint16_t bidx = read_u16le(bc, ip + 1);
+      uint16_t bidx = read_u16le(bc, ip + 5);
       const char *bind;
       const char *person = spark_dry_person();
 
@@ -694,6 +696,9 @@ static int emit_reply_pool(FILE *out, const SparkBc *bc)
         return 1;
       if (bind[0])
         var_bind(bind, "dry_person", strlen(person));
+    } else if (op == SPBC_OP_EXPECT) {
+      /* Assert only — no new binding. Runtime is bc_vm / GAS. */
+      (void)0;
     } else if (op == SPBC_OP_LISTEN) {
       uint16_t bidx = read_u16le(bc, ip + 1);
       const char *bind;
