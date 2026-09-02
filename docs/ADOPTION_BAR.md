@@ -72,10 +72,11 @@ Keep these off the hero; they belong here and in docs:
   (`bearer` / `header`, `retries` / `backoff`; see LANGUAGE.md).
 - **Packet capture / MITM / browser** stay in LANGUAGE but are secondary vs
   train→eval (see “Also available” one-liner on the homepage).
-- **Live train** — reference trainer ships **three** CPU methods:
+- **Live train** — reference trainer ships **four** CPU methods:
   **`spark_distill_cpu`** (`weights.pt`), **`spark_pref_pack`**
   (`pref_pack.json` + `ranker.pt`), **`spark_playbook_fit`**
-  (`playbooks.json` + `router.pt`). Same HTTP contract; select with
+  (`playbooks.json` + `router.pt`), **`spark_faq_index`**
+  (`faq_index.json` + `encoder.pt`). Same HTTP contract; select with
   POST `method` / `SPARK_TRAIN_METHOD`. Captures under
   `website/docs/examples/live-train-*.txt`.
   Do not claim LoRA or voice-GPU training on sparklang.dev.

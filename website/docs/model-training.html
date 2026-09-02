@@ -178,7 +178,7 @@
         export SPARK_TRAIN_BACKEND=http
         export SPARK_TRAIN_URL=https://train.example/v1   # your API
         # optional: SPARK_TRAIN_TOKEN=…   (never commit)
-        # optional: SPARK_TRAIN_METHOD=spark_distill_cpu|spark_pref_pack|spark_playbook_fit
+        # optional: SPARK_TRAIN_METHOD=spark_distill_cpu|spark_pref_pack|spark_playbook_fit|spark_faq_index
         # optional: SPARK_TRAIN_OUT=out/train/job-…   (live out override)
         ./spark --live examples/model_train.spark
         # or:
@@ -214,7 +214,7 @@
         (TLS must terminate upstream for <code class="inline-code">https://</code> — MVP dies with a clear
         config error).</p>
         <h2 id="reference-methods-in-repo-not-lora">Reference methods (in-repo) — not LoRA</h2>
-        <p><code class="inline-code">tools/spark-train-ref/</code> implements the HTTP contract with <strong>three</strong>
+        <p><code class="inline-code">tools/spark-train-ref/</code> implements the HTTP contract with <strong>four</strong>
         SparkLang-native CPU methods. None are LoRA / HF PEFT. None use a
         voice-reserved GPU. None invent <code class="inline-code">train@</code> grants.</p>
         <div class="doc__table-wrap"><table class="doc__table">
@@ -241,6 +241,11 @@
         <td>Fit an intent→playbook router from reply templates</td>
         <td><code class="inline-code">playbooks.json</code> + <code class="inline-code">router.pt</code></td>
         </tr>
+        <tr>
+        <td><code class="inline-code">spark_faq_index</code></td>
+        <td>Build FAQ corpus and train a tiny dual-encoder retriever</td>
+        <td><code class="inline-code">faq_index.json</code> + <code class="inline-code">encoder.pt</code></td>
+        </tr>
         </tbody>
         </table></div>
         <p>Select via:</p>
@@ -261,7 +266,7 @@
         <p>Live captures:</p>
         <ul class="doc__ul">
         <li>Distill: <code class="inline-code">../website/docs/examples/live-train-capture.txt</code></li>
-        <li>All three: <code class="inline-code">../website/docs/examples/live-train-methods-capture.txt</code></li>
+        <li>All four: <code class="inline-code">../website/docs/examples/live-train-methods-capture.txt</code></li>
         </ul>
         <pre class="doc__pre"><code class="language-bash">python3 tools/spark-train-ref/server.py --host 127.0.0.1 --port 8090
         export SPARK_TRAIN_BACKEND=http
@@ -279,6 +284,11 @@
         ./spark-train-http --live --submit --method spark_playbook_fit \
           --dataset examples/fixtures/train/dataset.jsonl \
           --base spark_playbook_fit --out out/train/job-play-001
+
+        # FAQ index
+        ./spark-train-http --live --submit --method spark_faq_index \
+          --dataset examples/fixtures/train/dataset.jsonl \
+          --base spark_faq_index --out out/train/job-faq-001
         </code></pre>
         <p>Dry-run fixtures still plan stub paths without training.</p>
         <h3 id="local-yield-optional-gated">local-yield (optional; gated)</h3>
@@ -314,11 +324,12 @@
         test -f out/train/job-dry-001/ARTIFACT
         ./spark-train-http --dry --submit | grep job-dry-001
         ./spark-train-http --dry --submit --method spark_pref_pack | grep spark_pref_pack
+        ./spark-train-http --dry --submit --method spark_faq_index | grep spark_faq_index
         </code></pre>
         <p><code class="inline-code">make test</code> never starts GPU jobs or dials the network.</p>
         <h2 id="product-story">Product story</h2>
         <p>Spark ships <strong>multiple</strong> CPU training methods behind one HTTP contract —
-        distill, preference pack, playbook fit. That is the product story: not
+        distill, preference pack, playbook fit, FAQ index. That is the product story: not
         LoRA-by-default, not a marker file pretending to be weights. Larger
         full-SFT / multi-node remain operator backends behind the same contract.</p>
         <h2 id="not-in-mvp">Not in MVP</h2>

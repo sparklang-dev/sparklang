@@ -493,6 +493,8 @@ test-train-http: spark-train-http spark
 		grep -q spark_pref_pack
 	./spark-train-http --dry --submit --method spark_playbook_fit | \
 		grep -q spark_playbook_fit
+	./spark-train-http --dry --submit --method spark_faq_index | \
+		grep -q spark_faq_index
 	./spark-train-http --dry --status job-dry-001 | grep -q '"state":"succeeded"'
 	./spark --dry-run examples/model_train.spark | grep -q '"op":"train"'
 	test -f out/train/job-dry-001/ARTIFACT

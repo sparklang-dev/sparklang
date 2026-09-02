@@ -10,6 +10,7 @@ HTTP server for `./spark --live` / `./spark-train-http`
 | `spark_distill_cpu` | Reply-class student | `weights.pt` |
 | `spark_pref_pack` | Preference ranker over chosen/rejected | `pref_pack.json` + `ranker.pt` |
 | `spark_playbook_fit` | Intent→playbook router | `playbooks.json` + `router.pt` |
+| `spark_faq_index` | FAQ corpus + dual-encoder retriever | `faq_index.json` + `encoder.pt` |
 
 Select via POST `method` (or `base` if it matches a method id),
 companion `--method`, or env `SPARK_TRAIN_METHOD`.
@@ -35,6 +36,13 @@ SPARK_TRAIN_METHOD=spark_playbook_fit \
 ./spark-train-http --live --submit \
   --method spark_playbook_fit \
   --out out/train/job-play-001
+
+# FAQ index
+SPARK_TRAIN_METHOD=spark_faq_index \
+./spark-train-http --live --submit \
+  --method spark_faq_index \
+  --base spark_faq_index \
+  --out out/train/job-faq-001
 ```
 
 CPU only — never uses a voice-reserved GPU.

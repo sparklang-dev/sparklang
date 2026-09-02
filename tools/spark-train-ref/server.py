@@ -6,6 +6,7 @@ Methods (POST body ``method`` field, default spark_distill_cpu):
   spark_distill_cpu   — reply-class student → weights.pt
   spark_pref_pack     — preference pairs + ranker → pref_pack.json + ranker.pt
   spark_playbook_fit  — intent→playbook router → playbooks.json + router.pt
+  spark_faq_index     — FAQ corpus + dual-encoder → faq_index.json + encoder.pt
 
 HTTP contract:
 
@@ -35,6 +36,7 @@ if str(_REF_DIR) not in sys.path:
 
 from common import METHODS  # noqa: E402
 from distill_cpu import train_distill  # noqa: E402
+from faq_index import train_faq_index  # noqa: E402
 from playbook_fit import train_playbook_fit  # noqa: E402
 from pref_pack import train_pref_pack  # noqa: E402
 
@@ -46,6 +48,7 @@ _TRAINERS: dict[str, Callable[..., dict[str, Any]]] = {
     "spark_distill_cpu": train_distill,
     "spark_pref_pack": train_pref_pack,
     "spark_playbook_fit": train_playbook_fit,
+    "spark_faq_index": train_faq_index,
 }
 
 
@@ -86,6 +89,8 @@ def _artifact_paths(result: dict[str, Any]) -> dict[str, str]:
         "ranker",
         "playbooks",
         "router",
+        "faq_index",
+        "encoder",
     ):
         if key in result and isinstance(result[key], str):
             arts[key] = result[key]

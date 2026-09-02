@@ -9,7 +9,7 @@
  *      SPARK_TRAIN_URL, SPARK_TRAIN_TOKEN (optional),
  *      SPARK_TRAIN_UNIT_ALLOWLIST (local-yield only)
  *      SPARK_TRAIN_METHOD=spark_distill_cpu|spark_pref_pack|
- *                          spark_playbook_fit
+ *                          spark_playbook_fit|spark_faq_index
  *      SPARK_TRAIN_OUT (optional live out dir override)
  */
 
@@ -47,7 +47,7 @@ static void usage(void)
 		"  [--dataset PATH] [--base ID] [--out DIR]\n"
 		"  [--backend http|local-yield|huggingface]\n"
 		"  [--method spark_distill_cpu|spark_pref_pack|"
-		"spark_playbook_fit]\n"
+		"spark_playbook_fit|spark_faq_index]\n"
 		"  [--unit NAME]  (local-yield only)\n");
 	exit(1);
 }
@@ -371,7 +371,8 @@ int main(int argc, char **argv)
 	}
 	if (strcmp(method, "spark_distill_cpu") != 0 &&
 	    strcmp(method, "spark_pref_pack") != 0 &&
-	    strcmp(method, "spark_playbook_fit") != 0)
+	    strcmp(method, "spark_playbook_fit") != 0 &&
+	    strcmp(method, "spark_faq_index") != 0)
 		die_cfg("unknown SPARK_TRAIN_METHOD");
 
 	if (dry) {

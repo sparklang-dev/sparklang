@@ -1,0 +1,8 @@
+# Model train — spark_faq_index (FAQ corpus + CPU dual-encoder)
+# Live: SPARK_TRAIN_METHOD=spark_faq_index SPARK_TRAIN_OUT=...
+# See docs/MODEL_TRAINING.md
+model code
+
+model train dataset "examples/fixtures/train/dataset.jsonl" base "spark_faq_index" out "out/train/job-faq-001" backend "http" -> job
+
+model status "job-faq-001" -> status

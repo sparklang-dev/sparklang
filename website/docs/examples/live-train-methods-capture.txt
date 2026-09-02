@@ -4,13 +4,13 @@
 # Proof: real PyTorch state_dicts / JSON packs — not marker stubs.
 
 ## Methods listed by trainer
-{"ok":true,"service":"spark-train-ref","methods":["spark_distill_cpu","spark_pref_pack","spark_playbook_fit"]}
+{"ok":true,"service":"spark-train-ref","methods":["spark_distill_cpu","spark_pref_pack","spark_playbook_fit","spark_faq_index"]}
 
 
 ## 1) spark_distill_cpu — ./spark --live examples/model_train.spark
 [spark] live ask via AI_GATEWAY_URL (spark-ask-http)
 [model] code
-[model] {"job_id":"job-dry-001","status":"accepted","artifacts":{"checkpoint":"out/train/job-dry-001/checkpoint.json","marker":"out/train/job-dry-001/ARTIFACT","adapter":"out/train/job-dry-001/weights.pt","weights":"out/train/job-dry-001/weights.pt"},"out":"out/train/job-dry-001","base":"fixture-base","dataset":"examples/fixtures/train/dataset.jsonl","backend":"http","method":"spark_distill_cpu","note":"spark_distill_cpu \u2014 CPU train (loss=1e-06; not LoRA)","final_loss":1e-06,"methods":["spark_distill_cpu","spark_pref_pack","spark_playbook_fit"]}
+[model] {"job_id":"job-dry-001","status":"accepted","artifacts":{"checkpoint":"out/train/job-dry-001/checkpoint.json","marker":"out/train/job-dry-001/ARTIFACT","adapter":"out/train/job-dry-001/weights.pt","weights":"out/train/job-dry-001/weights.pt"},"out":"out/train/job-dry-001","base":"fixture-base","dataset":"examples/fixtures/train/dataset.jsonl","backend":"http","method":"spark_distill_cpu","note":"spark_distill_cpu \u2014 CPU train (loss=1e-06; not LoRA)","final_loss":1e-06,"methods":["spark_distill_cpu","spark_pref_pack","spark_playbook_fit","spark_faq_index"]}
 [model] {"job_id":"job-dry-001","state":"succeeded","artifacts":{"checkpoint":"out/train/job-dry-001/checkpoint.json","marker":"out/train/job-dry-001/ARTIFACT","adapter":"out/train/job-dry-001/weights.pt","weights":"out/train/job-dry-001/weights.pt"},"out":"out/train/job-dry-001","base":"fixture-base","dataset":"examples/fixtures/train/dataset.jsonl","backend":"http","method":"spark_distill_cpu","note":"spark_distill_cpu \u2014 CPU train (loss=1e-06; not LoRA)","final_loss":1e-06}
 [spark] ok
 
@@ -23,7 +23,7 @@ drwxr-xr-x 8 mike mike 4096 Sep  2 07:12 ..
 -rw-rw-r-- 1 mike mike 5601 Sep  2 07:12 weights.pt
 
 ## 2) spark_pref_pack — companion --method
-{"job_id":"job-pref-001","status":"accepted","artifacts":{"checkpoint":"out/train/job-pref-001/checkpoint.json","marker":"out/train/job-pref-001/ARTIFACT","adapter":"out/train/job-pref-001/ranker.pt","weights":"out/train/job-pref-001/ranker.pt","pref_pack":"out/train/job-pref-001/pref_pack.json","ranker":"out/train/job-pref-001/ranker.pt"},"out":"out/train/job-pref-001","base":"spark_pref_pack","dataset":"examples/fixtures/train/dataset.jsonl","backend":"http","method":"spark_pref_pack","note":"spark_pref_pack \u2014 CPU train (loss=0.492453; not LoRA)","final_loss":0.492453,"methods":["spark_distill_cpu","spark_pref_pack","spark_playbook_fit"]}
+{"job_id":"job-pref-001","status":"accepted","artifacts":{"checkpoint":"out/train/job-pref-001/checkpoint.json","marker":"out/train/job-pref-001/ARTIFACT","adapter":"out/train/job-pref-001/ranker.pt","weights":"out/train/job-pref-001/ranker.pt","pref_pack":"out/train/job-pref-001/pref_pack.json","ranker":"out/train/job-pref-001/ranker.pt"},"out":"out/train/job-pref-001","base":"spark_pref_pack","dataset":"examples/fixtures/train/dataset.jsonl","backend":"http","method":"spark_pref_pack","note":"spark_pref_pack \u2014 CPU train (loss=0.492453; not LoRA)","final_loss":0.492453,"methods":["spark_distill_cpu","spark_pref_pack","spark_playbook_fit","spark_faq_index"]}
 {"job_id":"job-pref-001","state":"succeeded","artifacts":{"checkpoint":"out/train/job-pref-001/checkpoint.json","marker":"out/train/job-pref-001/ARTIFACT","adapter":"out/train/job-pref-001/ranker.pt","weights":"out/train/job-pref-001/ranker.pt","pref_pack":"out/train/job-pref-001/pref_pack.json","ranker":"out/train/job-pref-001/ranker.pt"},"out":"out/train/job-pref-001","base":"spark_pref_pack","dataset":"examples/fixtures/train/dataset.jsonl","backend":"http","method":"spark_pref_pack","note":"spark_pref_pack \u2014 CPU train (loss=0.492453; not LoRA)","final_loss":0.492453}
 
 total 28
@@ -35,7 +35,7 @@ drwxr-xr-x 8 mike mike 4096 Sep  2 07:12 ..
 -rw-rw-r-- 1 mike mike 5592 Sep  2 07:12 ranker.pt
 
 ## 3) spark_playbook_fit — companion --method
-{"job_id":"job-play-001","status":"accepted","artifacts":{"checkpoint":"out/train/job-play-001/checkpoint.json","marker":"out/train/job-play-001/ARTIFACT","adapter":"out/train/job-play-001/router.pt","weights":"out/train/job-play-001/router.pt","playbooks":"out/train/job-play-001/playbooks.json","router":"out/train/job-play-001/router.pt"},"out":"out/train/job-play-001","base":"spark_playbook_fit","dataset":"examples/fixtures/train/dataset.jsonl","backend":"http","method":"spark_playbook_fit","note":"spark_playbook_fit \u2014 CPU train (loss=3e-06; not LoRA)","final_loss":3e-06,"methods":["spark_distill_cpu","spark_pref_pack","spark_playbook_fit"]}
+{"job_id":"job-play-001","status":"accepted","artifacts":{"checkpoint":"out/train/job-play-001/checkpoint.json","marker":"out/train/job-play-001/ARTIFACT","adapter":"out/train/job-play-001/router.pt","weights":"out/train/job-play-001/router.pt","playbooks":"out/train/job-play-001/playbooks.json","router":"out/train/job-play-001/router.pt"},"out":"out/train/job-play-001","base":"spark_playbook_fit","dataset":"examples/fixtures/train/dataset.jsonl","backend":"http","method":"spark_playbook_fit","note":"spark_playbook_fit \u2014 CPU train (loss=3e-06; not LoRA)","final_loss":3e-06,"methods":["spark_distill_cpu","spark_pref_pack","spark_playbook_fit","spark_faq_index"]}
 {"job_id":"job-play-001","state":"succeeded","artifacts":{"checkpoint":"out/train/job-play-001/checkpoint.json","marker":"out/train/job-play-001/ARTIFACT","adapter":"out/train/job-play-001/router.pt","weights":"out/train/job-play-001/router.pt","playbooks":"out/train/job-play-001/playbooks.json","router":"out/train/job-play-001/router.pt"},"out":"out/train/job-play-001","base":"spark_playbook_fit","dataset":"examples/fixtures/train/dataset.jsonl","backend":"http","method":"spark_playbook_fit","note":"spark_playbook_fit \u2014 CPU train (loss=3e-06; not LoRA)","final_loss":3e-06}
 
 total 28
@@ -93,3 +93,25 @@ out/train/job-play-001/checkpoint.json {
   "router": "out/train/job-play-001/router.pt",
   "note": "Spark method: playbook fit router on CPU (not LoRA, not HF PEFT)"
 }
+
+## GET /v1/
+{"ok":true,"service":"spark-train-ref","methods":["spark_distill_cpu","spark_pref_pack","spark_playbook_fit","spark_faq_index"]}
+
+
+## 4) spark_faq_index — companion --method
+{"job_id":"job-faq-001","status":"accepted","artifacts":{"checkpoint":"out/train/job-faq-001/checkpoint.json","marker":"out/train/job-faq-001/ARTIFACT","adapter":"out/train/job-faq-001/encoder.pt","weights":"out/train/job-faq-001/encoder.pt","faq_index":"out/train/job-faq-001/faq_index.json","encoder":"out/train/job-faq-001/encoder.pt"},"out":"out/train/job-faq-001","base":"spark_faq_index","dataset":"examples/fixtures/train/dataset.jsonl","backend":"http","method":"spark_faq_index","note":"spark_faq_index \u2014 CPU train (loss=0.758859; not LoRA)","final_loss":0.758859,"methods":["spark_distill_cpu","spark_pref_pack","spark_playbook_fit","spark_faq_index"]}
+
+{"job_id":"job-faq-001","state":"succeeded","artifacts":{"checkpoint":"out/train/job-faq-001/checkpoint.json","marker":"out/train/job-faq-001/ARTIFACT","adapter":"out/train/job-faq-001/encoder.pt","weights":"out/train/job-faq-001/encoder.pt","faq_index":"out/train/job-faq-001/faq_index.json","encoder":"out/train/job-faq-001/encoder.pt"},"out":"out/train/job-faq-001","base":"spark_faq_index","dataset":"examples/fixtures/train/dataset.jsonl","backend":"http","method":"spark_faq_index","note":"spark_faq_index \u2014 CPU train (loss=0.758859; not LoRA)","final_loss":0.758859}
+
+## ARTIFACT
+spark_faq_index job-faq-001
+primary=out/train/job-faq-001/encoder.pt
+final_loss=0.758859
+faq_index=out/train/job-faq-001/faq_index.json
+
+## checkpoint.json (method)
+spark_faq_index
+## encoder.pt method + keys
+spark_faq_index ['emb.weight', 'proj.bias', 'proj.weight']
+## faq_index.json n_faqs
+5

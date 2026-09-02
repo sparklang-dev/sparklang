@@ -67,7 +67,7 @@ Generic interface — SparkLang is not hard-wired to one machine.
 export SPARK_TRAIN_BACKEND=http
 export SPARK_TRAIN_URL=https://train.example/v1   # your API
 # optional: SPARK_TRAIN_TOKEN=…   (never commit)
-# optional: SPARK_TRAIN_METHOD=spark_distill_cpu|spark_pref_pack|spark_playbook_fit
+# optional: SPARK_TRAIN_METHOD=spark_distill_cpu|spark_pref_pack|spark_playbook_fit|spark_faq_index
 # optional: SPARK_TRAIN_OUT=out/train/job-…   (live out override)
 ./spark --live examples/model_train.spark
 # or:
@@ -121,7 +121,7 @@ config error).
 
 ## Reference methods (in-repo) — not LoRA
 
-`tools/spark-train-ref/` implements the HTTP contract with **three**
+`tools/spark-train-ref/` implements the HTTP contract with **four**
 SparkLang-native CPU methods. None are LoRA / HF PEFT. None use a
 voice-reserved GPU. None invent `train@` grants.
 
@@ -130,6 +130,7 @@ voice-reserved GPU. None invent `train@` grants.
 | `spark_distill_cpu` | Tiny student learns which teacher reply class matches each user turn | `weights.pt` (+ `checkpoint.json`) |
 | `spark_pref_pack` | Build chosen/rejected preference pairs and train a tiny ranker | `pref_pack.json` + `ranker.pt` |
 | `spark_playbook_fit` | Fit an intent→playbook router from reply templates | `playbooks.json` + `router.pt` |
+| `spark_faq_index` | Build FAQ corpus and train a tiny dual-encoder retriever | `faq_index.json` + `encoder.pt` |
 
 Select via:
 
@@ -152,7 +153,7 @@ When `out` basename matches `job-*`, that basename is the `job_id`.
 Live captures:
 
 - Distill: [website/docs/examples/live-train-capture.txt](../website/docs/examples/live-train-capture.txt)
-- All three: [website/docs/examples/live-train-methods-capture.txt](../website/docs/examples/live-train-methods-capture.txt)
+- All four: [website/docs/examples/live-train-methods-capture.txt](../website/docs/examples/live-train-methods-capture.txt)
 
 ```bash
 python3 tools/spark-train-ref/server.py --host 127.0.0.1 --port 8090
@@ -171,6 +172,11 @@ export SPARK_TRAIN_URL=http://127.0.0.1:8090/v1
 ./spark-train-http --live --submit --method spark_playbook_fit \
   --dataset examples/fixtures/train/dataset.jsonl \
   --base spark_playbook_fit --out out/train/job-play-001
+
+# FAQ index
+./spark-train-http --live --submit --method spark_faq_index \
+  --dataset examples/fixtures/train/dataset.jsonl \
+  --base spark_faq_index --out out/train/job-faq-001
 ```
 
 Dry-run fixtures still plan stub paths without training.
@@ -204,6 +210,7 @@ Blueprint markdown → **`model plan`**.
 test -f out/train/job-dry-001/ARTIFACT
 ./spark-train-http --dry --submit | grep job-dry-001
 ./spark-train-http --dry --submit --method spark_pref_pack | grep spark_pref_pack
+./spark-train-http --dry --submit --method spark_faq_index | grep spark_faq_index
 ```
 
 `make test` never starts GPU jobs or dials the network.
@@ -211,9 +218,10 @@ test -f out/train/job-dry-001/ARTIFACT
 ## Product story
 
 Spark ships **multiple** CPU training methods behind one HTTP contract —
-distill, preference pack, playbook fit. That is the product story: not
-LoRA-by-default, not a marker file pretending to be weights. Larger
-full-SFT / multi-node remain operator backends behind the same contract.
+distill, preference pack, playbook fit, FAQ index. That is the product
+story: not LoRA-by-default, not a marker file pretending to be weights.
+Larger full-SFT / multi-node remain operator backends behind the same
+contract.
 
 ## Not in MVP
 

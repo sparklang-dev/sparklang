@@ -15,6 +15,7 @@ METHODS = (
     "spark_distill_cpu",
     "spark_pref_pack",
     "spark_playbook_fit",
+    "spark_faq_index",
 )
 
 

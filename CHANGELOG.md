@@ -4,6 +4,15 @@ All notable user-facing releases of **SparkLang** (the Spark programming
 language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
+## 0.6.8 — 2026-09-02
+
+- **Fourth CPU train method:** **`spark_faq_index`** — FAQ corpus +
+  dual-encoder retriever → `faq_index.json` + `encoder.pt`. Not LoRA /
+  not a marker stub. Same HTTP `method` field as distill / pref /
+  playbook.
+- Example: `examples/model_train_faq.spark`.
+- Docs / hero list four methods honestly.
+
 ## 0.6.7 — 2026-09-02
 
 - **`http get` / `http post` auth + retries:** `bearer "TOKEN"`,

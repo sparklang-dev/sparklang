@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>SparkLang — three CPU train methods, not LoRA</title>
+    <title>SparkLang — four CPU train methods, not LoRA</title>
     <meta
       name="description"
-      content="SparkLang: reviewable .spark programs with three CPU train methods (distill, preference pack, playbook fit) — not LoRA — then status→expect. Dry-run CI + HTTP trainer contract."
+      content="SparkLang: reviewable .spark programs with four CPU train methods (distill, preference pack, playbook fit, FAQ index) — not LoRA — then status→expect. Dry-run CI + HTTP trainer contract."
     />
     <meta
       name="keywords"
@@ -62,7 +62,7 @@
       <section class="hero shell">
         <p class="hero__eyebrow">SparkLang</p>
         <h1 class="hero__title">
-          Three CPU train methods — not LoRA
+          Four CPU train methods — not LoRA
         </h1>
         <p class="hero__lede">
           A language beats another Python SDK because one reviewable
@@ -82,8 +82,9 @@
           Reference methods (CPU only):
           <code class="inline-code">spark_distill_cpu</code>,
           <code class="inline-code">spark_pref_pack</code>,
-          <code class="inline-code">spark_playbook_fit</code>
-          — real weights / packs, not LoRA, not a voice GPU.
+          <code class="inline-code">spark_playbook_fit</code>,
+          <code class="inline-code">spark_faq_index</code>
+          — real weights / packs / FAQ index, not LoRA, not a voice GPU.
         </p>
         <div class="cta-row">
           <a class="btn btn--primary" href="/downloads.html">Download Spark</a>
@@ -163,13 +164,15 @@ expect contains status fixture "…/want_succeeded.txt"
               >
               — in-repo reference:
               <code class="inline-code">tools/spark-train-ref</code>
-              ships three CPU methods:
+              ships four CPU methods:
               <code class="inline-code">spark_distill_cpu</code>,
               <code class="inline-code">spark_pref_pack</code>,
-              <code class="inline-code">spark_playbook_fit</code>
+              <code class="inline-code">spark_playbook_fit</code>,
+              <code class="inline-code">spark_faq_index</code>
               (real <code class="inline-code">weights.pt</code> /
               <code class="inline-code">pref_pack.json</code>+ranker /
-              <code class="inline-code">playbooks.json</code>+router —
+              <code class="inline-code">playbooks.json</code>+router /
+              <code class="inline-code">faq_index.json</code>+encoder —
               not LoRA). Captures:
               <a href="/docs/examples/live-train-capture.txt"
                 >live-train-capture.txt</a
@@ -234,7 +237,7 @@ expect contains status fixture "examples/fixtures/train/want_succeeded.txt"</cod
         <p class="prose-muted">
           Fail path:
           <code class="inline-code">examples/train_eval_fail.spark</code>
-          (exit 1). Live HTTP proof (three CPU methods, via
+          (exit 1). Live HTTP proof (four CPU methods, via)
           <code class="inline-code">./spark --live</code> /
           <code class="inline-code">./spark-train-http --method</code>):
           <a href="/docs/examples/live-train-methods-capture.txt"

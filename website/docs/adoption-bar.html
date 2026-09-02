@@ -207,10 +207,11 @@
           (<code class="inline-code">bearer</code> / <code class="inline-code">header</code>, <code class="inline-code">retries</code> / <code class="inline-code">backoff</code>; see LANGUAGE.md).</li>
         <li><strong>Packet capture / MITM / browser</strong> stay in LANGUAGE but are secondary vs
           train→eval (see “Also available” one-liner on the homepage).</li>
-        <li><strong>Live train</strong> — reference trainer ships <strong>three</strong> CPU methods:
+        <li><strong>Live train</strong> — reference trainer ships <strong>four</strong> CPU methods:
           <strong><code class="inline-code">spark_distill_cpu</code></strong> (<code class="inline-code">weights.pt</code>), <strong><code class="inline-code">spark_pref_pack</code></strong>
           (<code class="inline-code">pref_pack.json</code> + <code class="inline-code">ranker.pt</code>), <strong><code class="inline-code">spark_playbook_fit</code></strong>
-          (<code class="inline-code">playbooks.json</code> + <code class="inline-code">router.pt</code>). Same HTTP contract; select with
+          (<code class="inline-code">playbooks.json</code> + <code class="inline-code">router.pt</code>), <strong><code class="inline-code">spark_faq_index</code></strong>
+          (<code class="inline-code">faq_index.json</code> + <code class="inline-code">encoder.pt</code>). Same HTTP contract; select with
           POST <code class="inline-code">method</code> / <code class="inline-code">SPARK_TRAIN_METHOD</code>. Captures under
           <code class="inline-code">website/docs/examples/live-train-*.txt</code>.
           Do not claim LoRA or voice-GPU training on sparklang.dev.</li>
