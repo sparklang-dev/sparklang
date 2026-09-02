@@ -271,6 +271,8 @@ invented want). Gate: `make test-expect`.
 Examples: `examples/expect_pass.spark` (exit 0),
 `examples/expect_fail.spark` (exit 1),
 `examples/expect_miss_fixture.spark` (exit 1).
+Flagship train→status→expect: `examples/train_eval.spark` (exit 0) and
+`examples/train_eval_fail.spark` (exit 1).
 
 **Not shipped:** regex `match`, streaming ask assertions.
 

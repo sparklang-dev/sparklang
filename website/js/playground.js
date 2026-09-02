@@ -3,12 +3,13 @@
 
   var BASE_PRESETS = {
     hello: {
-      label: "Train → eval (dry)",
+      label: "Train → expect (dry)",
       source:
         'model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" -> job\n\n' +
         'model status "job-dry-001" -> status\n\n' +
-        'model compare ["fast", "code", "best"] on suite "examples/eval_suite.json" -> comparison\n\n' +
-        "print comparison",
+        'expect contains job "job-dry-001"\n' +
+        'expect contains job fixture "examples/fixtures/train/want_accepted.txt"\n' +
+        'expect contains status fixture "examples/fixtures/train/want_succeeded.txt"',
     },
     classify: {
       label: "Classify intent",
@@ -43,8 +44,8 @@
       source:
         'model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" -> job\n\n' +
         'model status "job-dry-001" -> status\n\n' +
-        'model compare ["fast", "code", "best"] on suite "examples/eval_suite.json" -> comparison\n\n' +
-        "print comparison",
+        'expect contains job fixture "examples/fixtures/train/want_accepted.txt"\n' +
+        'expect contains status fixture "examples/fixtures/train/want_succeeded.txt"',
     },
     voice: {
       label: "Voice session (listen/speak)",

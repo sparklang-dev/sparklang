@@ -5,16 +5,17 @@
     hello: {
       cmd: "./spark --dry-run examples/train_eval.spark",
       out:
-        '{"op":"train","job_id":"job-dry-001","mode":"dry-run"}\n' +
+        '{"op":"train","job_id":"job-dry-001","status":"accepted","mode":"dry-run"}\n' +
         '{"op":"status","state":"succeeded","mode":"dry-run"}\n' +
-        '{"op":"compare","mode":"dry-run","winner_by":{"balanced":"code"}}\n' +
+        "[expect] pass contains job\n" +
+        "[expect] pass contains status\n" +
         "wrote out/train/job-dry-001/ARTIFACT",
     },
     sugar: {
       cmd: "./spark --dry-run examples/train_eval.spark",
       out:
-        '{"op":"train","job_id":"job-dry-001","mode":"dry-run"}\n' +
-        '{"op":"compare","mode":"dry-run","winner_by":{"balanced":"code"}}',
+        '{"op":"train","job_id":"job-dry-001","status":"accepted","mode":"dry-run"}\n' +
+        "[expect] pass contains job",
     },
     classify: {
       cmd: "./spark --dry-run classify_intent.spark",
@@ -34,17 +35,19 @@
     model: {
       cmd: "./spark --dry-run examples/train_eval.spark",
       out:
-        '{"op":"train","job_id":"job-dry-001","mode":"dry-run"}\n' +
+        '{"op":"train","job_id":"job-dry-001","status":"accepted","mode":"dry-run"}\n' +
         '{"op":"status","state":"succeeded","mode":"dry-run"}\n' +
-        '{"op":"compare","mode":"dry-run","winner_by":{"balanced":"code"}}\n' +
+        "[expect] pass contains job\n" +
+        "[expect] pass contains status\n" +
         "wrote out/train/job-dry-001/ARTIFACT",
     },
     "model-tune": {
       cmd: "./spark --dry-run examples/train_eval.spark",
       out:
-        '{"op":"train","job_id":"job-dry-001","mode":"dry-run"}\n' +
+        '{"op":"train","job_id":"job-dry-001","status":"accepted","mode":"dry-run"}\n' +
         '{"op":"status","state":"succeeded","mode":"dry-run"}\n' +
-        '{"op":"compare","mode":"dry-run","winner_by":{"balanced":"code"}}\n' +
+        "[expect] pass contains job\n" +
+        "[expect] pass contains status\n" +
         "wrote out/train/job-dry-001/ARTIFACT",
     },
   };
@@ -52,14 +55,14 @@
   var MODEL_WORKFLOW_CHAIN =
     'model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" -> job\n\n' +
     'model status "job-dry-001" -> status\n\n' +
-    'model compare ["fast", "code", "best"] on suite "examples/eval_suite.json" -> comparison\n\n' +
-    "print comparison";
+    'expect contains job "job-dry-001"\n' +
+    'expect contains job fixture "examples/fixtures/train/want_accepted.txt"\n' +
+    'expect contains status fixture "examples/fixtures/train/want_succeeded.txt"';
 
   var MODEL_TEMPLATES = {
     ask:
-      'model compare ["fast", "code", "best"]\n' +
-      '  on suite "examples/eval_suite.json" -> comparison\n\n' +
-      "print comparison",
+      'expect contains job fixture "examples/fixtures/train/want_accepted.txt"\n' +
+      'expect contains status fixture "examples/fixtures/train/want_succeeded.txt"',
     classify:
       'classify Intent { support, sales, spam }\n' +
       '  from "My account is locked and I need help"\n' +
@@ -269,8 +272,9 @@
     return (
       'model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" -> job\n\n' +
       'model status "job-dry-001" -> status\n\n' +
-      'model compare ["fast", "code", "best"] on suite "examples/eval_suite.json" -> comparison\n\n' +
-      "print comparison"
+      'expect contains job "job-dry-001"\n' +
+      'expect contains job fixture "examples/fixtures/train/want_accepted.txt"\n' +
+      'expect contains status fixture "examples/fixtures/train/want_succeeded.txt"'
     );
   }
 

@@ -155,6 +155,48 @@ vm_miss_fixture() {
 }
 vm_miss_fixture
 
+# --- flagship train → status → expect ---------------------------------
+vm_train_eval() {
+  local out n
+  if ! out="$(./spark --dry-run examples/train_eval.spark 2>&1)"; then
+    echo "FAIL vm_train_eval (exit $?)"
+    echo "$out" | head -40
+    fail=1
+    return 0
+  fi
+  n="$(echo "$out" | grep -c '\[expect\] pass' || true)"
+  if [[ "$n" -lt 4 ]]; then
+    echo "FAIL vm_train_eval (want ≥4 pass lines, got $n)"
+    echo "$out" | head -40
+    fail=1
+    return 0
+  fi
+  echo "PASS vm_train_eval"
+}
+vm_train_eval
+
+vm_train_eval_fail() {
+  local out rc=0
+  set +e
+  out="$(./spark --dry-run examples/train_eval_fail.spark 2>&1)"
+  rc=$?
+  set -e
+  if [[ "$rc" -eq 0 ]]; then
+    echo "FAIL vm_train_eval_fail (expected non-zero)"
+    echo "$out" | head -40
+    fail=1
+    return 0
+  fi
+  echo "$out" | grep -q 'state":"failed' || {
+    echo "FAIL vm_train_eval_fail (reason)"
+    echo "$out" | head -40
+    fail=1
+    return 0
+  }
+  echo "PASS vm_train_eval_fail"
+}
+vm_train_eval_fail
+
 if [[ "$fail" -ne 0 ]]; then
   echo "test-expect FAIL"
   exit 1

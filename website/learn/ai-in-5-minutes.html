@@ -76,13 +76,13 @@
             <code class="inline-code">backend "http"</code> to a trainer you run
             at <code class="inline-code">SPARK_TRAIN_URL</code>. Dry-run shows
             the job path with fixtures (no GPU). Live needs that service.
-            Score aliases with
-            <code class="inline-code">model compare</code>:
+            Assert bound job and status with
+            <code class="inline-code">expect</code>:
           </p>
           <pre class="doc__pre"><code>model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" -> job
 model status "job-dry-001" -> status
-model compare ["fast", "code", "best"] on suite "examples/eval_suite.json" -> comparison
-print comparison</code></pre>
+expect contains job fixture "examples/fixtures/train/want_accepted.txt"
+expect contains status fixture "examples/fixtures/train/want_succeeded.txt"</code></pre>
           <pre class="doc__pre"><code class="language-bash">./spark --dry-run examples/train_eval.spark</code></pre>
           <p>
             See

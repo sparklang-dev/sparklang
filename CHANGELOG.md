@@ -12,6 +12,14 @@ language) are listed here. Site and installers track
   (`./spark-expect`), bootstrap, and SPARK_BC `0x25`. Gate:
   `make test-expect`. Examples: `examples/expect_pass.spark`,
   `examples/expect_fail.spark`.
+- **Flagship train→status→expect:** `model train` / `model status` now
+  bind `->` names in GAS dry-run so `expect` can assert against job and
+  status JSON. Homepage / Learn use `examples/train_eval.spark` (exit 0);
+  fail path `examples/train_eval_fail.spark` (exit 1). Live train still
+  needs your trainer at `SPARK_TRAIN_URL` — dry-run only proves the path.
+- **Reference trainer:** `tools/spark-train-ref/server.py` implements the
+  companion HTTP contract; live capture at
+  `website/docs/examples/live-train-capture.txt`.
 
 ## 0.6.4 — 2026-09-02
 

@@ -1,12 +1,13 @@
-# Train → status → eval (dry-run fixtures; no GPU)
+# Train → status → expect (dry-run fixtures; no GPU)
 # Live train needs SPARK_TRAIN_URL (backend "http" → your trainer).
-# Eval: model compare on a recorded suite (not freeform ask).
+# Eval: expect equal / expect contains on bound job + status (exit 0/1).
 model code
 
 model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" -> job
 
 model status "job-dry-001" -> status
 
-model compare ["fast", "code", "best"] on suite "examples/eval_suite.json" -> comparison
-
-print comparison
+expect contains job "job-dry-001"
+expect contains job fixture "examples/fixtures/train/want_accepted.txt"
+expect contains status "job-dry-001"
+expect contains status fixture "examples/fixtures/train/want_succeeded.txt"

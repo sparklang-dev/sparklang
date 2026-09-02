@@ -6,7 +6,7 @@
     <title>Your First Program — Learn Spark</title>
     <meta
       name="description"
-      content="Write your first Spark program: dry-run train → status → model compare."
+      content="Write your first Spark program: dry-run train → status → expect."
     />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
@@ -69,9 +69,9 @@
           <h1 id="first-program">Your First Program</h1>
           <p>
             A minimal Spark program submits a train job (dry fixtures), polls
-            status, then scores aliases with
-            <code class="inline-code">model compare</code> — the train→eval loop
-            you can put in a PR.
+            status, then asserts with
+            <code class="inline-code">expect</code> — the train→status→expect
+            loop you can put in a PR (exit 0 pass / exit 1 fail).
           </p>
 
           <h2 id="train-eval-spark">train_eval.spark</h2>
@@ -85,9 +85,9 @@
 
 model status "job-dry-001" -> status
 
-model compare ["fast", "code", "best"] on suite "examples/eval_suite.json" -> comparison
-
-print comparison</code></pre>
+expect contains job "job-dry-001"
+expect contains job fixture "examples/fixtures/train/want_accepted.txt"
+expect contains status fixture "examples/fixtures/train/want_succeeded.txt"</code></pre>
           <p>
             <code class="inline-code">backend "http"</code> means Spark POSTs to
             a trainer you run at
@@ -96,9 +96,13 @@ print comparison</code></pre>
           </p>
 
           <h2 id="run-it">Run it</h2>
-          <pre class="doc__pre"><code class="language-bash">./spark --dry-run examples/train_eval.spark</code></pre>
+          <pre class="doc__pre"><code class="language-bash">./spark --dry-run examples/train_eval.spark
+# exit 0 — [expect] pass …
+
+./spark --dry-run examples/train_eval_fail.spark ; echo $?
+# → 1</code></pre>
           <p>
-            Dry-run returns fixture job + suite metrics so you can iterate without
+            Dry-run returns fixture job + status so you can iterate without
             a trainer or API key. For a live train submit (your service):
           </p>
           <pre class="doc__pre"><code class="language-bash">export SPARK_TRAIN_URL=http://127.0.0.1:8090/v1

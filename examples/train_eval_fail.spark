@@ -1,0 +1,10 @@
+# Train → status → expect fail (intentional mismatch; exit 1).
+#   ./spark --dry-run examples/train_eval_fail.spark ; echo $?
+# → 1
+model code
+
+model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" -> job
+
+model status "job-dry-001" -> status
+
+expect contains status fixture "examples/fixtures/train/want_failed.txt"

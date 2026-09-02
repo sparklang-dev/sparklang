@@ -1,4 +1,4 @@
-# SparkLang adoption bar
+# What's real today (SparkLang)
 
 Honest checklist against the critique: table stakes, escape hatch,
 worth-using ops, voice honesty, what we drop, and the production-style
@@ -73,8 +73,9 @@ Keep these off the hero; they belong here and in docs:
 - **Live train** requires a trainer you operate at `SPARK_TRAIN_URL`
   (`backend "http"`). Dry-run fixtures demonstrate the job path; do not claim
   a live GPU completion on sparklang.dev without a real run.
-- **Expectation pass/fail harness** (`expect` / `assert`) = **next** until
-  merged; homepage flagship uses shipped `model compare` (+ `classify`).
+- **Expectation pass/fail** is shipped (`expect equal` / `expect contains`).
+  Homepage flagship is train → status → expect (`examples/train_eval.spark`).
+  `model compare` remains an eval helper, not the hero loop.
 
 ## The real bar (goal, not claim)
 

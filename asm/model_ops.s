@@ -22,6 +22,8 @@
 .extern fork_exec_wait
 .extern train_live_submit
 .extern train_live_status
+.extern set_last_from_rcx
+.extern bind_arrow_from_line
 
 .section .data
 
@@ -426,6 +428,11 @@ mc_noq:
     lea     rsi, [rip+msg_nl_local]
     mov     rdx, 1
     call    write_stdout
+    # Bind -> name so expect / print can read the JSON.
+    lea     rax, [rip+dry_compare]
+    mov     rcx, dry_compare_len
+    call    set_last_from_rcx
+    call    bind_arrow_from_line
     pop     rbx
     ret
 
@@ -529,6 +536,11 @@ mt_dry:
     lea     rsi, [rip+msg_nl_local]
     mov     rdx, 1
     call    write_stdout
+    # Bind -> job (accept JSON) for expect pass/fail.
+    lea     rax, [rip+dry_train_accept]
+    mov     rcx, dry_train_accept_len
+    call    set_last_from_rcx
+    call    bind_arrow_from_line
     pop     rbx
     ret
 
@@ -555,6 +567,11 @@ ms_dry:
     lea     rsi, [rip+msg_nl_local]
     mov     rdx, 1
     call    write_stdout
+    # Bind -> status for expect pass/fail.
+    lea     rax, [rip+dry_train_status]
+    mov     rcx, dry_train_status_len
+    call    set_last_from_rcx
+    call    bind_arrow_from_line
     pop     rbx
     ret
 

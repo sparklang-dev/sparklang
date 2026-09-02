@@ -33,7 +33,7 @@
               <li class="nav-more">
                 <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">More</button>
                 <ul class="nav-more__menu" hidden>
-                  <li><a href="/docs/adoption-bar.html">Adoption bar</a></li>
+                  <li><a href="/docs/adoption-bar.html">What's real today</a></li>
                   <li><a href="/docs/ai-models.html">AI models</a></li>
                   <li><a href="/docs/native-network-web.html">Network + web</a></li>
                   <li><a href="/docs/programming-guide.html">Programming guide</a></li>
@@ -56,7 +56,7 @@
       <main class="doc-main">
       <nav class="doc__nav" aria-label="Docs">
         <a href="/learn/">Learn</a>
-        <a href="/docs/adoption-bar.html">Adoption bar</a>
+        <a href="/docs/adoption-bar.html">What's real today</a>
         <a href="/docs/ai-models.html" aria-current="page">AI models</a>
         <a href="/docs/model-training.html" aria-current="page">Model training</a>
         <a href="/docs/native-network-web.html">Network + web</a>
@@ -190,6 +190,37 @@
         <li><code class="inline-code">GET {SPARK_TRAIN_URL}/jobs/{id}</code> →
           <code class="inline-code">{job_id,state,artifacts}</code></li>
         </ul>
+        <h2 id="trainer-http-contract">Trainer HTTP contract</h2>
+        <p>Exact shapes <code class="inline-code">./spark-train-http</code> sends and prints
+        (no other endpoints):</p>
+        <h3 id="submit">Submit</h3>
+        <pre class="doc__pre"><code>POST {SPARK_TRAIN_URL}/jobs
+Content-Type: application/json
+Authorization: Bearer {SPARK_TRAIN_TOKEN}   # optional
+
+{"dataset":"…","base":"…","out":"…","backend":"http"}
+
+→ {"job_id":"…","status":"accepted","artifacts":{"adapter":"…","checkpoint":"…","marker":"…"}, …}</code></pre>
+        <h3 id="status-poll">Status</h3>
+        <pre class="doc__pre"><code>GET {SPARK_TRAIN_URL}/jobs/{job_id}
+
+→ {"job_id":"…","state":"succeeded|failed|running|…","artifacts":{…}, …}</code></pre>
+        <p><code class="inline-code">status</code> is the submit ack;
+        <code class="inline-code">state</code> is the poll field. Companion uses plain HTTP
+        (TLS must terminate upstream for <code class="inline-code">https://</code>).</p>
+        <h3 id="reference-trainer">Reference trainer (in-repo)</h3>
+        <p><code class="inline-code">tools/spark-train-ref/server.py</code> implements this contract and
+        writes a real <code class="inline-code">adapter.bin</code> marker under
+        <code class="inline-code">out</code>. Genuine recorded capture:
+        <a href="/docs/examples/live-train-capture.txt"><code class="inline-code">docs/examples/live-train-capture.txt</code></a>
+        (not a GPU train — filesystem artifacts only).</p>
+        <pre class="doc__pre"><code>python3 tools/spark-train-ref/server.py --host 127.0.0.1 --port 8090
+export SPARK_TRAIN_BACKEND=http
+export SPARK_TRAIN_URL=http://127.0.0.1:8090/v1
+./spark-train-http --live --submit \
+  --dataset examples/fixtures/train/dataset.jsonl \
+  --base fixture-base \
+  --out out/train/job-live-ref-001</code></pre>
         <h3 id="local-yield-optional-gated">local-yield (optional; gated)</h3>
         <p>Only when <strong>all</strong> hold:</p>
         <ol class="doc__ol">

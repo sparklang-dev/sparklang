@@ -1,0 +1,27 @@
+# Live train capture — 2026-09-02T11:23Z
+# Host: local · reference trainer tools/spark-train-ref/server.py
+# Not a GPU train — adapter.bin is a real file written by the server.
+
+$ export SPARK_TRAIN_BACKEND=http
+$ export SPARK_TRAIN_URL=http://127.0.0.1:8090/v1
+$ ./spark-train-http --live --submit \
+    --dataset examples/fixtures/train/dataset.jsonl \
+    --base fixture-base \
+    --out out/train/job-live-ref-001
+{"job_id":"job-ref-5477e90d","status":"accepted","artifacts":{"adapter":"out/train/job-live-ref-001/adapter.bin","checkpoint":"out/train/job-live-ref-001/checkpoint.json","marker":"out/train/job-live-ref-001/ARTIFACT"},"out":"out/train/job-live-ref-001","base":"fixture-base","dataset":"examples/fixtures/train/dataset.jsonl","backend":"http","note":"spark-train-ref - filesystem marker only, no GPU"}
+
+$ ./spark-train-http --live --status job-ref-5477e90d
+{"job_id":"job-ref-5477e90d","state":"succeeded","artifacts":{"adapter":"out/train/job-live-ref-001/adapter.bin","checkpoint":"out/train/job-live-ref-001/checkpoint.json","marker":"out/train/job-live-ref-001/ARTIFACT"},"out":"out/train/job-live-ref-001","base":"fixture-base","dataset":"examples/fixtures/train/dataset.jsonl","backend":"http","note":"spark-train-ref - filesystem marker only, no GPU"}
+
+$ ls -la out/train/job-live-ref-001/
+total 20
+drwxrwxr-x 2 mike mike 4096 Sep  2 06:23 .
+drwxr-xr-x 4 mike mike 4096 Sep  2 06:23 ..
+-rw-rw-r-- 1 mike mike  119 Sep  2 06:23 adapter.bin
+-rw-rw-r-- 1 mike mike   80 Sep  2 06:23 ARTIFACT
+-rw-rw-r-- 1 mike mike  164 Sep  2 06:23 checkpoint.json
+
+$ head -3 out/train/job-live-ref-001/adapter.bin
+spark-train-ref adapter marker
+job_id=job-ref-5477e90d
+base=fixture-base

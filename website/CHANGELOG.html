@@ -80,6 +80,18 @@ language) are listed here. Site and installers track
   <code class="inline-code">fixture "PATH"</code>. Pass exits <strong>0</strong>; fail exits
   <strong>1</strong> with the reason. Gate:
   <code class="inline-code">make test-expect</code>.</li>
+<li><strong>Flagship train→status→expect:</strong>
+  <code class="inline-code">model train</code> /
+  <code class="inline-code">model status</code> bind
+  <code class="inline-code">-&gt;</code> names in dry-run so
+  <code class="inline-code">expect</code> can assert. Homepage / Learn use
+  <code class="inline-code">examples/train_eval.spark</code> (exit 0);
+  fail path <code class="inline-code">examples/train_eval_fail.spark</code>
+  (exit 1). Live train still needs your trainer at
+  <code class="inline-code">SPARK_TRAIN_URL</code>.</li>
+<li><strong>Reference trainer:</strong>
+  <code class="inline-code">tools/spark-train-ref</code> + live capture
+  <code class="inline-code">docs/examples/live-train-capture.txt</code>.</li>
 </ul>
 <h2>0.6.4 — 2026-09-02</h2>
 <ul>
