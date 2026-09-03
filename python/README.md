@@ -31,5 +31,5 @@ r.check()
 Discovery: `SPARK_BIN`, `./spark`, walk-up from cwd/package, then
 `PATH`. Missing binary → `SparkBinNotFound` (fail loud).
 
-**Not shipped:** JavaScript `require` / C FFI — still `[next]`.
-Handshake: `./spark --embed` prints JSON advertising this package.
+**Also shipped:** JavaScript (`js/sparklang`) and C
+(`host/c/sparklang.h`). Handshake: `./spark --embed`.

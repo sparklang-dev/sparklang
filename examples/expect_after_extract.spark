@@ -1,0 +1,13 @@
+# Expect after extract — bind the dry JSON, then assert a substring.
+# Requires ./spark-expect (make spark-expect / make test-extract).
+#   ./spark --dry-run examples/expect_after_extract.spark
+
+model fast
+
+extract Person {
+  name: string
+  age: int
+} from "Ada Lovelace was born in 1815"
+  fixture "examples/fixtures/extract/person.json" -> person
+
+expect contains person "Ada Lovelace"

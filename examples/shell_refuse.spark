@@ -1,0 +1,6 @@
+# Fail loud: not on argv allowlist (dry or live --allow-shell).
+#   ./spark --dry-run examples/shell_refuse.spark
+#   ./spark --live --allow-shell examples/shell_refuse.spark
+
+shell "rm -rf /" -> out
+print out

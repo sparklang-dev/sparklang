@@ -1,7 +1,8 @@
 """SparkLang host embed — run ``.spark`` from Python.
 
 Dry-run is the default (fixtures, no network). Opt into live with
-``live=True`` / ``./spark --live``. JS and C FFI remain ``[next]``.
+``live=True`` / ``./spark --live``. JS: ``js/sparklang``. C:
+``host/c/sparklang.h``.
 """
 
 from __future__ import annotations
@@ -22,4 +23,4 @@ __all__ = [
     "run",
 ]
 
-__version__ = "0.6.11"
+__version__ = "0.6.22"

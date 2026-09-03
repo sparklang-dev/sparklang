@@ -9,9 +9,15 @@ Prioritized against the adoption bar. Status: **done** / **next** / **won't**
 - Changelog + release process doc
 - `embed` / `retrieve` first-class ops + dry fixtures + `spark-rag-http`
 - Dry-run escape hatch: `shell` / `run` allowlist fixtures
-- Python host embed: `from sparklang import run` (`python/sparklang/`);
-  `./spark --embed` JSON handshake (`api=python`); JS/C FFI still next
-- Per-`ask` `[accounting]` line (dry zeros; live usage when present)
+- Live `--allow-shell`: `./spark-shell` argv `execve` (echo|true|false)
+- Host embed: Python + JS (`js/sparklang`) + C (`host/c/sparklang.h`);
+  `./spark --embed` JSON handshake
+- Per-`ask` `[accounting]` line (dry zeros; live wall-clock + usage)
+- Live run-level `[accounting-run]` rollup (`spark-ask-http --rollup`)
+- Streaming `ask`: `./spark-ask-http --stream` SSE + `ask stream`
+  language form (live); dry prints `stream=1`
+- Live `extract`: schema validate + retry-on-miss (`--retries`,
+  `--stub-file` offline); forks `./spark-ask-http`
 - Positioning: not a Bifrost plugin; dry-run first
 - `http get` / `http post` + timeout + dry fixture files + live
   `./spark-http` with `bearer` / `header` + `retries` / `backoff`
@@ -20,11 +26,11 @@ Prioritized against the adoption bar. Status: **done** / **next** / **won't**
 
 | Track | What |
 |-------|------|
-| Extract | Schema validation + JSON-mode + retry on miss |
-| Ask | Streaming token/SSE path |
+| Extract | ~~Schema validation + JSON-mode + retry on miss~~ **done** (live + `--retries` / stub) |
+| Ask | ~~Streaming token/SSE path~~ **done** (`--stream` / `ask stream`) |
 | Eval | Expectation pass/fail harness (not only alias compare) |
-| Escape | Live `--allow-shell` argv policy; JS / C host FFI |
-| Accounting | Wall-clock latency on live ask; run-level rollup |
+| Escape | ~~Live `--allow-shell` argv policy; JS / C host FFI~~ **done** |
+| Accounting | ~~Wall-clock latency on live ask; run-level rollup~~ **done** |
 | LSP | Prefer editor LSP + highlighting over IDE chrome |
 | Receptionist | Promote `examples/receptionist_goal.spark` off `[goal]` when transfer + eval syntax exist |
 | Releases | Cut GitHub Release tags from CHANGELOG (see RELEASE.md) |

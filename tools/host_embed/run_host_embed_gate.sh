@@ -22,7 +22,7 @@ hs="$(./spark --embed 2>&1)" || {
   hs=""
 }
 if echo "$hs" | grep -q '"spark_embed":true' \
-  && echo "$hs" | grep -q '"api":"python"' \
+  && echo "$hs" | grep -q '"api":"python' \
   && echo "$hs" | grep -q 'sparklang'; then
   pass embed_cli_handshake
 else
@@ -30,6 +30,16 @@ else
 fi
 if echo "$hs" | grep -q '"api":"stub"'; then
   fail_one embed_not_stub "still advertising stub API"
+fi
+if echo "$hs" | grep -q '"js":"js/sparklang"' \
+  && echo "$hs" | grep -q '"c_ffi":"host/c/sparklang.h"'; then
+  pass embed_js_c_handshake
+else
+  fail_one embed_js_c_handshake "js/c FFI not advertised: $hs"
+fi
+if echo "$hs" | grep -q '"js":"\[next\]"' \
+  || echo "$hs" | grep -q '"c_ffi":"\[next\]"'; then
+  fail_one embed_not_next "still advertising js/c as [next]"
 fi
 
 export PYTHONPATH="$ROOT/python${PYTHONPATH:+:$PYTHONPATH}"
@@ -137,6 +147,53 @@ if [[ "$mod_rc" -eq 0 ]] && [[ -n "$mod_out" ]]; then
   pass mod_cli
 else
   fail_one mod_cli "rc=$mod_rc out=$mod_out"
+fi
+
+# --- JavaScript host embed --------------------------------------------
+if command -v node >/dev/null 2>&1; then
+  set +e
+  js_out="$(node -e "
+const { run } = require('./js/sparklang');
+const r = run('examples/hello.spark', { cwd: process.cwd() });
+if (!r.ok) process.exit(r.returncode || 1);
+if (r.mode !== 'dry-run') process.exit(2);
+if (!r.stdout) process.exit(3);
+process.stdout.write('OK js ' + r.returncode + '\n');
+" 2>&1)"
+  js_rc=$?
+  set -e
+  if [[ "$js_rc" -eq 0 ]] && echo "$js_out" | grep -q '^OK js'; then
+    pass js_path_dry
+  else
+    fail_one js_path_dry "rc=$js_rc out=$js_out"
+  fi
+  set +e
+  node examples/js/host_embed.js >/dev/null 2>&1
+  js_ex=$?
+  set -e
+  if [[ "$js_ex" -eq 0 ]]; then
+    pass example_host_embed_js
+  else
+    fail_one example_host_embed_js "rc=$js_ex"
+  fi
+else
+  echo "SKIP js_path_dry (no node)"
+  echo "SKIP example_host_embed_js (no node)"
+fi
+
+# --- C host embed -----------------------------------------------------
+if [[ ! -x examples/c/host_embed ]]; then
+  fail_one c_host_embed "examples/c/host_embed not built"
+else
+  set +e
+  c_out="$(examples/c/host_embed 2>&1)"
+  c_rc=$?
+  set -e
+  if [[ "$c_rc" -eq 0 ]] && [[ -n "$c_out" ]]; then
+    pass c_host_embed
+  else
+    fail_one c_host_embed "rc=$c_rc out=$c_out"
+  fi
 fi
 
 if [[ "$fail" -ne 0 ]]; then

@@ -56,6 +56,65 @@ Asm path: `ask` under `--live` → `asm/ask_ops.s` writes the prompt,
 `fork`+`execve` `./spark-ask-http`, reads `/tmp/spark-ask-out.txt`,
 binds `->`.
 
+## Streaming (`--stream` / `ask stream`)
+
+Token/SSE path is **shipped** on the companion:
+
+```bash
+./spark-ask-http --dry --stream --model fixtures/tiny-lm --prompt "ping"
+# → dry … stream=1 … dry ok (no network)
+
+./spark-ask-http --stream --model fast --prompt "Say hi" \
+  --out /tmp/spark-ask-out.txt
+```
+
+Live request sets `"stream":true` (+ `stream_options.include_usage`
+when the gateway supports it). Deltas print to stdout as they arrive;
+`--out` gets the accumulated text. Language form under `--live`:
+
+```
+ask stream "Say hello in three words" -> reply
+```
+
+`asm/ask_ops.s` detects `stream "` on the line and passes `--stream`.
+Dry-run of a `.spark` file still uses the offline ask fixtures (no
+network); use companion `--dry --stream` for the offline stream gate.
+
+Example: `examples/ask_stream.spark`. Gate: `make test-ask-gateway`
+(`PASS dry_stream`).
+
+## Accounting (wall-clock + usage)
+
+Live `./spark-ask-http` prints a real wall-clock line (never invents
+tokens):
+
+```
+[accounting] latency_ms=87 prompt_tokens=12 completion_tokens=9 total_tokens=21
+```
+
+`latency_ms` is `CLOCK_MONOTONIC` around the HTTP/SSE round-trip.
+`prompt_tokens` / `completion_tokens` / `total_tokens` come from the
+gateway `usage` object when present — otherwise they stay 0 and a
+`note=no usage field` line is printed.
+
+Each live ask appends one JSONL row to
+`SPARK_ACCOUNT_FILE` (default `/tmp/spark-ask-account.jsonl`).
+`./spark --live` truncates that file at start and prints a run rollup
+at end:
+
+```
+[accounting-run] asks=2 latency_ms=140 prompt_tokens=20 completion_tokens=18 total_tokens=38
+```
+
+Offline proof (no gateway):
+
+```bash
+./spark-ask-http --rollup --account-file fixtures.jsonl
+make test-ask-gateway   # includes PASS rollup
+```
+
+Dry-run still prints zeros (`note=dry-run`) and does not append.
+
 ## Public tunnel
 
 Public gateway tunnel probes use a dedicated gateway probe credential only.

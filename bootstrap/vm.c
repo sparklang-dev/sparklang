@@ -635,9 +635,9 @@ static int op_shell(SparkVM *vm, char *line)
   printf("%s\n", q);
   if (!shell_allowlisted(q)) {
     fprintf(stderr,
-            "error: dry-run refuses shell/run %s "
-            "(allowlist: echo|true|false; live --allow-shell is "
-            "[next])\n",
+            "error: refuses shell/run %s "
+            "(allowlist: echo|true|false; live needs "
+            "./spark --live --allow-shell)\n",
             q);
     free(q);
     return 1;

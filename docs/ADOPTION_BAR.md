@@ -19,13 +19,13 @@ Not Apache Spark. Not AdaCore SPARK.
 | Maintainer identity | **done** | GitHub org `sparklang-dev`; About page |
 | Versioned releases + changelog | **done** | `CHANGELOG.md` + site `/CHANGELOG.html`; GitHub Release **0.6.2** (rename). Installer kit artifacts remain **0.6.0** until next packaging |
 | Searchable name (SparkLang) | **done** | Hero / About / footers; public `sparklang-dev/sparklang`. CLI stays `spark` / `./spark-bootstrap` |
-| Escape hatch (`.spark` → host) | **done (dry)** | `shell` / `run` allowlist dry-run fixtures; live gated exec = **next** |
-| Escape hatch (host → `.spark`) | **done (Python)** | `from sparklang import run` (`python/sparklang/`); dry-run default, live opt-in; `./spark --embed` JSON handshake. JS / C FFI = **next** |
+| Escape hatch (`.spark` → host) | **done** | `shell` / `run` allowlist dry-run fixtures; live gated exec via `./spark --live --allow-shell` + `./spark-shell` (`execve`, never `system()`) |
+| Escape hatch (host → `.spark`) | **done** | Python `from sparklang import run`; JS `require('./js/sparklang')`; C `host/c/sparklang.h`. Dry-run default, live opt-in. `./spark --embed` handshake. Gate: `make test-host-embed` |
 | `retrieve` / `embed` language ops | **done** | Dry fixtures + live `./spark-rag-http`; see LANGUAGE.md |
 | Real `http get` / `post` | **done** | Dry fixture files + timeout; live `./spark-http` (curl). `bearer` / `header` + `retries` / `backoff` on documented failure classes |
-| Typed `extract` + JSON-mode validate/retry | **partial** | Validation shipped: required vs `?` optional fields, `string`/`int`/`float`/`bool` types, top-level only, non-zero exit on a miss. Dry-run reads a real `fixture "PATH"`. Live extract and retry-on-miss = **next** |
-| Cost/latency/token accounting | **done (hooks)** | Dry zeros; live prints `usage` when gateway returns it — never invents tokens |
-| Streaming `ask` | **next** | Not shipped |
+| Typed `extract` + JSON-mode validate/retry | **done** | Dry fixture validation unchanged. Live: `./spark-extract --live` via `spark-ask-http`, schema validate, `--retries N` (default 2) on miss; offline `--stub-file` proves retry. `--model auto` refused |
+| Cost/latency/token accounting | **done** | Dry zeros; live wall-clock `latency_ms` + gateway `usage` when present; run-level `[accounting-run]` rollup. Never invents tokens |
+| Streaming `ask` | **done** | Companion `./spark-ask-http --stream` (SSE deltas + `--out` accumulate); language `ask stream "…"` under `--live`; dry gate `stream=1` |
 | Eval vs expectations (pass/fail) | **done** | `expect equal` / `expect contains` vs bound vars or `fixture "PATH"`; exit 0/1. Gate: `make test-expect` |
 | Voice production telephony | **won't (soon)** | Gated demo + honest gaps in VOICE.md / ROADMAP — not sold as production |
 | Packet capture / MITM / browser automation | **won't (focus)** | Still in LANGUAGE; de-emphasized on landing — prefer LSP + highlighting |
@@ -37,21 +37,22 @@ Not Apache Spark. Not AdaCore SPARK.
 
 Without both directions, a DSL dies:
 
-1. **From `.spark`:** `shell "echo …"` / `run "…"` — dry-run allowlist only
-   (`echo` / `true` / `false`). Arbitrary exec refused offline. Live
-   `--allow-shell` = **next**.
-2. **Into `.spark`:** Python host embed is **shipped** —
-   `from sparklang import run` (path or source string; dry-run default).
+1. **From `.spark`:** `shell "echo …"` / `run "…"` — dry-run allowlist
+   fixtures (`echo` / `true` / `false`). Arbitrary exec refused.
+   Live: `./spark --live --allow-shell` forks `./spark-shell` which
+   `execve`s the resolved binary (never `system()`, never `/bin/sh -c`).
+2. **Into `.spark`:** Python / JS / C host embed is **shipped** —
+   `from sparklang import run`, `require('./js/sparklang')`,
+   `spark_run_path()` (path; dry-run default).
    Handshake: `./spark --embed`. Gate: `make test-host-embed`.
-   JS / C FFI remain **next**.
 
 ## Worth using over script + gateway
 
 Shipped enough to dry-demo RAG + ask + classify + http get/post (with
-auth/retries) in one file. Still missing for a clear “shorter than
-Python+gateway” win on production paths: streaming, live `extract`
-against a model, and a dry-runnable receptionist that is more than a
-`[goal]` sketch.
+auth/retries), streaming `ask`, and live `extract` (validate +
+retry) in one file. Still missing for a clear “shorter than
+Python+gateway” win on production paths: a dry-runnable
+receptionist that is more than a `[goal]` sketch.
 
 ## Voice — honest
 

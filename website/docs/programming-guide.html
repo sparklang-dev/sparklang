@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Programming guide — Spark</title>
-    <meta name="description" content="How to build, run, and write SparkLang (.spark) programs." />
+    <meta name="description" content="How to write and run SparkLang programs — dry-run, live flags, host embed, and first programs." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
     <link rel="stylesheet" href="/css/tokens.css?v=bb4433f" />
@@ -35,7 +35,6 @@
                 <ul class="nav-more__menu" hidden>
                   <li><a href="/docs/adoption-bar.html">Adoption bar</a></li>
                   <li><a href="/docs/ai-models.html">AI models</a></li>
-                  <li><a href="/docs/abstain-heads.html">Abstain heads</a></li>
                   <li><a href="/docs/native-network-web.html">Network + web</a></li>
                   <li><a href="/docs/programming-guide.html">Programming guide</a></li>
                   <li><a href="/docs/ide.html">IDE</a></li>
@@ -60,7 +59,6 @@
         <a href="/docs/adoption-bar.html">Adoption bar</a>
         <a href="/docs/ai-models.html">AI models</a>
         <a href="/docs/model-training.html">Model training</a>
-        <a href="/docs/abstain-heads.html">Abstain heads</a>
         <a href="/docs/native-network-web.html">Network + web</a>
         <a href="/docs/programming-guide.html">Programming guide</a>
         <a href="/docs/language.html">Language reference</a>
@@ -101,8 +99,8 @@
         <td>Full statement reference</td>
         </tr>
         <tr>
-        <td><a href="/docs/abstain-heads.html">ABSTAIN_HEADS.md</a></td>
-        <td>IDK / abstain heads + <code class="inline-code">./spark-abstain</code></td>
+        <td><code class="inline-code">ABSTAIN_HEADS.md</code></td>
+        <td>IDK / abstain heads + <code class="inline-code">./spark-abstain</code>; flagship <code class="inline-code">examples/no_invent.spark</code></td>
         </tr>
         <tr>
         <td><a href="/docs/ai-models.html#live-gateway-integration-wired-today">ASK_LIVE.md</a></td>
@@ -209,7 +207,11 @@
         </tr>
         <tr>
         <td><code class="inline-code">make test-host-embed</code></td>
-        <td>Python <code class="inline-code">sparklang</code> host embed + <code class="inline-code">--embed</code> handshake</td>
+        <td>Python / JS / C host embed + <code class="inline-code">--embed</code> handshake</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">make test-shell</code></td>
+        <td>Live <code class="inline-code">--allow-shell</code> argv <code class="inline-code">execve</code> (echo|true|false)</td>
         </tr>
         <tr>
         <td><code class="inline-code">make test-e2e-browser</code></td>
@@ -232,9 +234,9 @@
         <hr class="doc__hr" />
         <h2 id="3-run-dry-vs-live">3. Run: dry vs live</h2>
         <p>Verified usage from bare <code class="inline-code">./spark</code>:</p>
-        <pre class="doc__pre"><code class="inline-code">Usage: spark --dry-run [--allow-net] [--allow-net-capture] &lt;file.spark&gt;
-               spark --live &lt;file.spark&gt;  # optional ask → AI_GATEWAY_URL
-               spark --live --pstn-live &lt;file&gt;  # PSTN off unless SPARK_PSTN=1
+        <pre class="doc__pre"><code class="inline-code">Usage: spark --dry-run [--allow-net] [--allow-net-capture] [--allow-shell] &lt;file.spark&gt;
+               spark --live [--allow-shell] &lt;file.spark&gt;
+               spark --live --pstn-live &lt;file&gt;
                spark --version
         </code></pre>
         <p>There is <strong>no</strong> <code class="inline-code">./spark ide</code> ELF subcommand. IDE core is <strong>language
@@ -268,8 +270,8 @@
         <td><code class="inline-code">review url</code> may fetch remote <code class="inline-code">http(s)</code></td>
         </tr>
         <tr>
-        <td><code class="inline-code">--allow-net-capture</code></td>
-        <td>Live AF_PACKET capture (needs <code class="inline-code">CAP_NET_RAW</code>)</td>
+        <td><code class="inline-code">--allow-shell</code></td>
+        <td>With <code class="inline-code">--live</code>: gated <code class="inline-code">execve</code> of <code class="inline-code">echo</code>/<code class="inline-code">true</code>/<code class="inline-code">false</code> via <code class="inline-code">./spark-shell</code>. Dry-run still fixtures. Never <code class="inline-code">system()</code>.</td>
         </tr>
         <tr>
         <td><code class="inline-code">--pstn-live</code> + <code class="inline-code">SPARK_PSTN=1</code></td>
@@ -277,7 +279,7 @@
         </tr>
         </tbody>
         </table></div>
-        <h3 id="host-embed-python">Host embed (Python)</h3>
+        <h3 id="host-embed-python-js-c">Host embed (Python, JS, C)</h3>
         <p>Call Spark from a host language — dry-run default, same fixtures as CLI:</p>
         <pre class="doc__pre"><code class="language-bash">PYTHONPATH=python python -c &quot;
         from sparklang import run
@@ -286,11 +288,14 @@
         assert r.ok
         &quot;
         PYTHONPATH=python python -m sparklang examples/hello.spark
-        ./spark --embed   # JSON handshake: api=python
+        node -e &quot;console.log(require('./js/sparklang').run('examples/hello.spark').ok)&quot;
+        make examples/c/host_embed &amp;&amp; ./examples/c/host_embed
+        ./spark --embed   # JSON handshake: api=python,js,c
         make test-host-embed
+        make test-shell
         </code></pre>
-        <p>Package lives in <code class="inline-code">python/sparklang/</code>. JS / C FFI are <strong>next</strong>. See
-        <a href="/docs/language.html">LANGUAGE.md</a> (<code class="inline-code">shell</code> / <code class="inline-code">run</code> / host embed) and
+        <p>Package lives in <code class="inline-code">python/sparklang/</code>, <code class="inline-code">js/sparklang/</code>, <code class="inline-code">host/c/</code>.
+        See <a href="/docs/language.html">LANGUAGE.md</a> (<code class="inline-code">shell</code> / <code class="inline-code">run</code> / host embed) and
         <a href="/docs/adoption-bar.html">ADOPTION_BAR.md</a>.</p>
         <hr class="doc__hr" />
         <h2 id="4-first-program">4. First program</h2>
@@ -317,17 +322,17 @@
         <h2 id="5-syntax-verified-examples">5. Syntax (verified examples)</h2>
         <h3 id="50-dx-sugar-use-say">5.0 DX sugar (<code class="inline-code">use</code>, <code class="inline-code">?</code>, <code class="inline-code">say</code>)</h3>
         <p><code class="inline-code">examples/hello_sugar.spark</code>, <code class="inline-code">examples/dx_showcase.spark</code></p>
-        <pre class="doc__pre"><code class="inline-code">model "fixtures/tiny-lm"    # explicit HF id / path / configured name
+        <pre class="doc__pre"><code class="inline-code">model &quot;fixtures/tiny-lm&quot;    # explicit HF id / path / configured name
 
-        ? &quot;Explain gravity in one sentence&quot; -&gt; text   # alias for ask
+        ? &quot;Explain gravity in one sentence&quot; -&gt; text   # sugar for ask
 
-        say &quot;Hello&quot; -&gt; &quot;out.wav&quot;    # alias for speak
+        say &quot;Hello&quot; -&gt; &quot;out.wav&quot;    # sugar for speak
         </code></pre>
         <p>Bootstrap also supports <code class="inline-code">include "lib/ai.spark"</code> and <code class="inline-code">{var}</code> interpolation
         in ask/<code class="inline-code">?</code> prompts — see <code class="inline-code">LANGUAGE_IMPROVEMENTS.md</code>.</p>
         <h3 id="51-model-ask">5.1 <code class="inline-code">model</code> + <code class="inline-code">ask</code></h3>
         <p><code class="inline-code">examples/hello.spark</code>, <code class="inline-code">examples/ask_live.spark</code></p>
-        <pre class="doc__pre"><code class="inline-code">model "fixtures/tiny-lm"
+        <pre class="doc__pre"><code class="inline-code">model &quot;fixtures/tiny-lm&quot;
 
         ask &quot;Explain gravity in one sentence&quot; -&gt; text
         print text

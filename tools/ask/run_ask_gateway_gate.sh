@@ -11,6 +11,25 @@ if [[ ! -x ./spark-ask-http ]]; then
   make -s spark-ask-http
 fi
 
+
+run_dry_stream() {
+  local out
+  out="$(./spark-ask-http --dry --stream --model fixtures/tiny-lm \
+    --prompt "ping" 2>&1)" || {
+    echo "FAIL dry_stream (exit $?)"
+    echo "$out" | head -20
+    fail=1
+    return
+  }
+  echo "$out" | grep -q "stream=1" || {
+    echo "FAIL dry_stream (missing stream=1)"
+    echo "$out" | head -20
+    fail=1
+    return
+  }
+  echo "PASS dry_stream"
+}
+
 run_dry() {
   local name="$1" model="$2" prompt="$3" expect="$4"
   local out
@@ -52,6 +71,46 @@ run_dry dry_path org/local-lm "Explain gravity in one sentence" org/local-lm
 # only the picker token "auto" is refused.
 run_dry dry_named_fast fast "Reply with exactly one word: pong" fast
 run_refuse_auto
+run_dry_stream
+
+# Rollup from fixture jsonl (no network, no invent).
+run_rollup() {
+  local tf out
+  tf="$(mktemp /tmp/spark-ask-account-test.XXXXXX)"
+  printf '%s\n' \
+    '{"latency_ms":10,"prompt_tokens":2,"completion_tokens":3,"total_tokens":5}' \
+    '{"latency_ms":5,"prompt_tokens":1,"completion_tokens":1,"total_tokens":2}' \
+    > "$tf"
+  out="$(./spark-ask-http --rollup --account-file "$tf" 2>&1)" || {
+    echo "FAIL rollup (exit $?)"
+    echo "$out" | head -20
+    fail=1
+    rm -f "$tf"
+    return
+  }
+  echo "$out" | grep -q 'asks=2' \
+    && echo "$out" | grep -q 'latency_ms=15' \
+    && echo "$out" | grep -q 'prompt_tokens=3' \
+    && echo "$out" | grep -q 'total_tokens=7' || {
+    echo "FAIL rollup (sums)"
+    echo "$out" | head -20
+    fail=1
+    rm -f "$tf"
+    return
+  }
+  echo "PASS rollup"
+  rm -f "$tf"
+}
+run_rollup
+
+# Missing account file is asks=0, not a crash.
+if ./spark-ask-http --rollup --account-file \
+  /tmp/spark-ask-account-missing-$$.jsonl 2>&1 | grep -q 'asks=0'; then
+  echo "PASS rollup_missing"
+else
+  echo "FAIL rollup_missing"
+  fail=1
+fi
 
 # Refuse inventing OpenAI.com as primary — dry never needs a key.
 if unset SPARK_GATEWAY_KEY OPENAI_API_KEY; \
@@ -89,6 +148,14 @@ if [[ "${SPARK_ASK_GATEWAY_LIVE:-0}" == "1" ]]; then
         [[ -n "$(echo "$out" | tr -d '[:space:]')" ]] && \
           echo "PASS live_explicit (nonempty reply)" || {
           echo "FAIL live_explicit (empty)"
+          fail=1
+        }
+      }
+      echo "$out" | grep -qE '\[accounting\] latency_ms=[1-9]' \
+        && echo "PASS live_latency" || {
+        echo "$out" | grep -q '\[accounting\] latency_ms=' \
+          && echo "PASS live_latency (zero or present)" || {
+          echo "FAIL live_latency (no accounting line)"
           fail=1
         }
       }

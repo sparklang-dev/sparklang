@@ -73,6 +73,25 @@
 <p>All notable user-facing releases of <strong>SparkLang</strong> (the Spark programming
 language) are listed here. Site and installers track
 <code>website/downloads/manifest.json</code>.</p>
+<h2>0.6.22 — 2026-09-02</h2>
+<ul>
+<li><strong>Live <code>--allow-shell</code>:</strong>
+  <code>./spark --live --allow-shell</code> forks
+  <code>./spark-shell</code>, which <code>execve</code>s allowlisted
+  <code>echo</code> / <code>true</code> / <code>false</code> only.
+  Never <code>system()</code>, never <code>/bin/sh -c</code>.
+  Gate: <code>make test-shell</code>.</li>
+<li><strong>JS + C host FFI:</strong>
+  <code>js/sparklang</code> and <code>host/c/sparklang.h</code>.
+  <code>./spark --embed</code> advertises
+  <code>api=python,js,c</code>. Gate:
+  <code>make test-host-embed</code>.</li>
+<li><strong>Ask accounting:</strong> live wall-clock
+  <code>latency_ms</code>; run-level
+  <code>[accounting-run]</code> via
+  <code>spark-ask-http --rollup</code>. Dry zeros.
+  Gate: <code>make test-ask-gateway</code>.</li>
+</ul>
 <h2>0.6.17 — 2026-09-02</h2>
 <ul>
 <li><strong>Abstain held-out eval + continue-SAMPLE:</strong>

@@ -151,6 +151,15 @@ is rejected. Prefer `SPARK_GATEWAY_KEY`;
 `make test` never hits the network; `make test-ask-gateway` is offline
 `--dry` on the companion.
 
+**Accounting:** dry-run prints
+`[accounting] latency_ms=0 … note=dry-run` (zeros; never invents
+tokens). Live `./spark-ask-http` prints wall-clock `latency_ms`
+(`CLOCK_MONOTONIC`) plus gateway `usage` when present, appends
+`/tmp/spark-ask-account.jsonl` (or `--account-file` /
+`SPARK_ACCOUNT_FILE`). End of a live `./spark --live` run prints
+`[accounting-run]` via `./spark-ask-http --rollup`. See
+[ASK_LIVE.md](ASK_LIVE.md).
+
 ### `ask probe` / `gateway probe`
 
 Dry gateway probe credential check (no network under `--dry-run`):
@@ -209,9 +218,9 @@ run "python" "-c" "print(1)" -> out
 
 | Mode | Behavior |
 |------|----------|
-| **Dry-run** | **Never** execs arbitrary shells. Allowlist `echo` / `true` / `false` → fixture stdout (`[shell] dry …`). Anything else → fail loud. |
-| **Live** | `[next]` gated exec (`--allow-shell`) with argv allowlist — not shipped as open `system()`. |
-| **Host embed (Python)** | **Shipped.** `from sparklang import run` under `python/sparklang/` invokes `./spark --dry-run` (default) or `--live`. Returns stdout / stderr / exit code; missing binary or path → fail loud. `./spark --embed` prints a JSON handshake advertising the Python API. **JS `require` / C FFI = `[next]`.** |
+| **Dry-run** | **Never** execs. Allowlist `echo` / `true` / `false` → fixture stdout (`[shell] dry …`). Anything else → fail loud. `--allow-shell` is a no-op here. |
+| **Live** | `./spark --live --allow-shell` forks `./spark-shell`, which `execve`s the resolved allowlisted binary (`/bin/echo` etc.). **Not** `system()`, **not** `/bin/sh -c`. Live without `--allow-shell` fails loud. Path / metacharacters / `rm` refused. |
+| **Host embed** | **Shipped (Python, JS, C).** `from sparklang import run`; `require('./js/sparklang')`; `spark_run_path()` in `host/c/sparklang.h`. Dry-run default, `--live` opt-in. `./spark --embed` JSON handshake. |
 
 ```python
 from sparklang import run
@@ -224,12 +233,17 @@ r = run('print "from host"\n')         # inline source → temp .spark
 
 ```bash
 PYTHONPATH=python python -m sparklang examples/hello.spark
-./spark --embed   # {"api":"python","package":"sparklang",…}
+node examples/js/host_embed.js
+make examples/c/host_embed && ./examples/c/host_embed
+./spark --embed   # {"api":"python,js,c",…}
 make test-host-embed
+make test-shell   # live --allow-shell argv execve
 ```
 
 See [ADOPTION_BAR.md](ADOPTION_BAR.md). Examples: `examples/shell_escape.spark`
-(from `.spark` → host), `examples/python/host_embed.py` (host → `.spark`).
+(from `.spark` → host), `examples/shell_refuse.spark` (fail loud),
+`examples/python/host_embed.py`, `examples/js/host_embed.js`,
+`examples/c/host_embed.c` (host → `.spark`).
 
 ### `http get` / `http post` (shipped)
 
@@ -311,11 +325,23 @@ error: extract Person did not validate against .../person_bad_type.json
 1
 ```
 
-**Not shipped (still [next]):** live model-backed extract, and retry on
-a schema miss. `./spark-extract --live` refuses rather than guessing.
+**Live** (`./spark --live` / `./spark-extract --live`): model-backed
+JSON extract via `./spark-ask-http`. Requires `from "TEXT"` and an
+explicit `--model` (or `SPARK_MODEL`; `auto` refused). Validates the
+reply against the schema; on a miss, retries with the validation
+errors in the prompt (`--retries N`, default **2**, or a `retries N`
+clause). Offline proof: `--stub-file PATH` (JSONL of canned replies).
 
-Examples: `examples/extract_person.spark` (valid),
-`examples/extract_bad.spark` (type mismatch). Gate: `make test-extract`.
+```bash
+./spark-extract --live --stmt-file /tmp/xt.txt --model fast --retries 2
+./spark-extract --live --stmt-file /tmp/xt.txt --model fixtures/tiny-lm \
+  --stub-file examples/fixtures/extract/stub_retry.jsonl
+```
+
+Examples: `examples/extract_person.spark` (valid dry),
+`examples/extract_bad.spark` (type mismatch),
+`examples/extract_live.spark` (live + retries). Gate: `make test-extract`
+(includes stub retry cases).
 
 ### `expect` (pass/fail)
 

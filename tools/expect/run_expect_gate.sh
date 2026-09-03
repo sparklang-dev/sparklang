@@ -201,6 +201,23 @@ vm_train_eval_fail() {
 }
 vm_train_eval_fail
 
+# Catalog lib-expect-after-extract: extract -> bind -> expect contains
+vm_expect_after_extract() {
+  local out
+  if ! out="$(./spark --dry-run examples/expect_after_extract.spark 2>&1)"; then
+    echo "FAIL vm_expect_after_extract (exit $?)"
+    echo "$out" | head -30
+    fail=1
+    return 0
+  fi
+  echo "$out" | grep -qF '[extract] {"name":"Ada Lovelace","age":36}' || {
+    echo "FAIL vm_expect_after_extract (extract)"; fail=1; return 0; }
+  echo "$out" | grep -qF '[expect] pass contains person' || {
+    echo "FAIL vm_expect_after_extract (expect)"; fail=1; return 0; }
+  echo "PASS vm_expect_after_extract"
+}
+vm_expect_after_extract
+
 if [[ "$fail" -ne 0 ]]; then
   echo "test-expect FAIL"
   exit 1

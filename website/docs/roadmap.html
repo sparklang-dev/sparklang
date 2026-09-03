@@ -75,9 +75,15 @@
         <li>Changelog + release process doc</li>
         <li><code class="inline-code">embed</code> / <code class="inline-code">retrieve</code> first-class ops + dry fixtures + <code class="inline-code">spark-rag-http</code></li>
         <li>Dry-run escape hatch: <code class="inline-code">shell</code> / <code class="inline-code">run</code> allowlist fixtures</li>
-        <li>Python host embed: <code class="inline-code">from sparklang import run</code> (<code class="inline-code">python/sparklang/</code>);
-          <code class="inline-code">./spark --embed</code> JSON handshake (<code class="inline-code">api=python</code>); JS/C FFI still next</li>
-        <li>Per-<code class="inline-code">ask</code> <code class="inline-code">[accounting]</code> line (dry zeros; live usage when present)</li>
+        <li>Live <code class="inline-code">--allow-shell</code>: <code class="inline-code">./spark-shell</code> argv <code class="inline-code">execve</code> (echo|true|false)</li>
+        <li>Host embed: Python + JS (<code class="inline-code">js/sparklang</code>) + C (<code class="inline-code">host/c/sparklang.h</code>);
+          <code class="inline-code">./spark --embed</code> JSON handshake</li>
+        <li>Per-<code class="inline-code">ask</code> <code class="inline-code">[accounting]</code> line (dry zeros; live wall-clock + usage)</li>
+        <li>Live run-level <code class="inline-code">[accounting-run]</code> rollup (<code class="inline-code">spark-ask-http --rollup</code>)</li>
+        <li>Streaming <code class="inline-code">ask</code>: <code class="inline-code">./spark-ask-http --stream</code> SSE + <code class="inline-code">ask stream</code>
+          language form (live); dry prints <code class="inline-code">stream=1</code></li>
+        <li>Live <code class="inline-code">extract</code>: schema validate + retry-on-miss (<code class="inline-code">--retries</code>,
+          <code class="inline-code">--stub-file</code> offline); forks <code class="inline-code">./spark-ask-http</code></li>
         <li>Positioning: not a Bifrost plugin; dry-run first</li>
         <li><code class="inline-code">http get</code> / <code class="inline-code">http post</code> + timeout + dry fixture files + live
           <code class="inline-code">./spark-http</code> with <code class="inline-code">bearer</code> / <code class="inline-code">header</code> + <code class="inline-code">retries</code> / <code class="inline-code">backoff</code></li>
@@ -93,11 +99,11 @@
         <tbody>
         <tr>
         <td>Extract</td>
-        <td>Schema validation + JSON-mode + retry on miss</td>
+        <td>~~Schema validation + JSON-mode + retry on miss~~ <strong>done</strong> (live + <code class="inline-code">--retries</code> / stub)</td>
         </tr>
         <tr>
         <td>Ask</td>
-        <td>Streaming token/SSE path</td>
+        <td>~~Streaming token/SSE path~~ <strong>done</strong> (<code class="inline-code">--stream</code> / <code class="inline-code">ask stream</code>)</td>
         </tr>
         <tr>
         <td>Eval</td>
@@ -105,11 +111,11 @@
         </tr>
         <tr>
         <td>Escape</td>
-        <td>Live <code class="inline-code">--allow-shell</code> argv policy; JS / C host FFI</td>
+        <td>~~Live <code class="inline-code">--allow-shell</code> argv policy; JS / C host FFI~~ <strong>done</strong></td>
         </tr>
         <tr>
         <td>Accounting</td>
-        <td>Wall-clock latency on live ask; run-level rollup</td>
+        <td>~~Wall-clock latency on live ask; run-level rollup~~ <strong>done</strong></td>
         </tr>
         <tr>
         <td>LSP</td>

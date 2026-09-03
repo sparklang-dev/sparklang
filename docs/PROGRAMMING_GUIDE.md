@@ -72,7 +72,8 @@ make machine-proof   # file(1) + objdump of _start
 | `make` / `make all` | VM + companions |
 | `make test` | `tests/run_dry.sh` + HDL check |
 | `make test-examples` | every `examples/*.spark` under `--dry-run` |
-| `make test-host-embed` | Python `sparklang` host embed + `--embed` handshake |
+| `make test-host-embed` | Python / JS / C host embed + `--embed` handshake |
+| `make test-shell` | Live `--allow-shell` argv `execve` (echo\|true\|false) |
 | `make test-e2e-browser` | browser dry E2E (no display) |
 | `make ide` | interim Cursor workspace open (not product IDE) |
 | `make clean` | remove ELF + companion binaries |
@@ -89,9 +90,9 @@ link; language examples below were verified when `./spark` was present.
 Verified usage from bare `./spark`:
 
 ```
-Usage: spark --dry-run [--allow-net] [--allow-net-capture] <file.spark>
-       spark --live <file.spark>  # optional ask → AI_GATEWAY_URL
-       spark --live --pstn-live <file>  # PSTN off unless SPARK_PSTN=1
+Usage: spark --dry-run [--allow-net] [--allow-net-capture] [--allow-shell] <file.spark>
+       spark --live [--allow-shell] <file.spark>
+       spark --live --pstn-live <file>
        spark --version
 ```
 
@@ -113,10 +114,10 @@ export OPENAI_API_KEY=…          # sk-bf-* ; never commit
 | `--dry-run` | Offline / fixture path (CI) |
 | `--live` | Live companions (ask, speech, GUI, …) |
 | `--allow-net` | `review url` may fetch remote `http(s)` |
-| `--allow-net-capture` | Live AF_PACKET capture (needs `CAP_NET_RAW`) |
+| `--allow-shell` | With `--live`: gated `execve` of `echo`/`true`/`false` via `./spark-shell`. Dry-run still fixtures. Never `system()`. |
 | `--pstn-live` + `SPARK_PSTN=1` | PSTN dial (off by default) |
 
-### Host embed (Python)
+### Host embed (Python, JS, C)
 
 Call Spark from a host language — dry-run default, same fixtures as CLI:
 
@@ -128,12 +129,15 @@ print(r.stdout)
 assert r.ok
 "
 PYTHONPATH=python python -m sparklang examples/hello.spark
-./spark --embed   # JSON handshake: api=python
+node -e "console.log(require('./js/sparklang').run('examples/hello.spark').ok)"
+make examples/c/host_embed && ./examples/c/host_embed
+./spark --embed   # JSON handshake: api=python,js,c
 make test-host-embed
+make test-shell
 ```
 
-Package lives in `python/sparklang/`. JS / C FFI are **next**. See
-[LANGUAGE.md](LANGUAGE.md) (`shell` / `run` / host embed) and
+Package lives in `python/sparklang/`, `js/sparklang/`, `host/c/`.
+See [LANGUAGE.md](LANGUAGE.md) (`shell` / `run` / host embed) and
 [ADOPTION_BAR.md](ADOPTION_BAR.md).
 
 ---

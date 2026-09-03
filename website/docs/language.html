@@ -35,7 +35,6 @@
                 <ul class="nav-more__menu" hidden>
                   <li><a href="/docs/adoption-bar.html">Adoption bar</a></li>
                   <li><a href="/docs/ai-models.html">AI models</a></li>
-                  <li><a href="/docs/abstain-heads.html">Abstain heads</a></li>
                   <li><a href="/docs/native-network-web.html">Network + web</a></li>
                   <li><a href="/docs/programming-guide.html">Programming guide</a></li>
                   <li><a href="/docs/ide.html">IDE</a></li>
@@ -60,7 +59,6 @@
         <a href="/docs/adoption-bar.html">Adoption bar</a>
         <a href="/docs/ai-models.html">AI models</a>
         <a href="/docs/model-training.html">Model training</a>
-        <a href="/docs/abstain-heads.html">Abstain heads</a>
         <a href="/docs/native-network-web.html">Network + web</a>
         <a href="/docs/programming-guide.html">Programming guide</a>
         <a href="/docs/language.html">Language reference</a>
@@ -103,13 +101,14 @@
         <p>Set the default model for following calls. Pass an <strong>explicit</strong> HF id,
         checkpoint path, or configured gateway model string. SparkLang is <strong>not</strong>
         a Bifrost plugin — there is no per-task alias roulette.</p>
-        <pre class="doc__pre"><code class="inline-code">model "fixtures/tiny-lm"
-        model "org/local-lm"
+        <pre class="doc__pre"><code class="inline-code">model &quot;fixtures/tiny-lm&quot;
+        model &quot;org/local-lm&quot;
         use auto          # keeps prior spark.toml / model line (no pick)
         </code></pre>
-        <p><strong><code class="inline-code">use auto</code></strong> — keeps the <strong>prior</strong> configured model.
-        Dry-run prints <code class="inline-code">[model] prior &lt;id&gt; (no alias pick)</code>.
-        Prefer an explicit <code class="inline-code">model "…"</code> line.
+        <p><strong><code class="inline-code">use auto</code></strong> — keeps the <strong>prior</strong> configured model (<code class="inline-code">spark.toml</code> or an
+        earlier <code class="inline-code">model</code> / <code class="inline-code">use</code> line). Dry-run prints
+        <code class="inline-code">[model] prior &lt;id&gt; (no alias pick)</code>. It does <strong>not</strong> invent <code class="inline-code">fast</code> /
+        <code class="inline-code">code</code> from task text. Prefer an explicit <code class="inline-code">model "…"</code> line.
         See <a href="/learn/build-model.html">AI_PLAYBOOKS.md</a>; goldens: <code class="inline-code">make test-ai-playbooks</code>.</p>
         <p>Optional <strong><code class="inline-code">spark.toml</code></strong> (<code class="inline-code">model = "…"</code>) is read by the <strong>bootstrap</strong>
         VM on startup; <code class="inline-code">./spark</code> (GAS) still needs a <code class="inline-code">model</code>/<code class="inline-code">use</code> line in the file.</p>
@@ -148,6 +147,27 @@
         <code class="inline-code">local-yield</code> (optional allowlisted <code class="inline-code">train@</code> unit), <code class="inline-code">huggingface</code>
         (reserved — not wired). Env: <code class="inline-code">SPARK_TRAIN_BACKEND</code>, <code class="inline-code">SPARK_TRAIN_URL</code>,
         optional <code class="inline-code">SPARK_TRAIN_TOKEN</code>. See <a href="/docs/model-training.html">MODEL_TRAINING.md</a>.</p>
+        <h3 id="head-abstain-train-attach-ask"><code class="inline-code">head abstain</code> / <code class="inline-code">train</code> / <code class="inline-code">attach</code> / <code class="inline-code">ask</code></h3>
+        <p>Decode-layer abstain / IDK gating for <strong>local</strong> models (and dry stubs).
+        Companion <code class="inline-code">./spark-abstain</code>. Design: <code class="inline-code">ABSTAIN_HEADS.md</code>.</p>
+        <pre class="doc__pre"><code class="inline-code">head abstain internal model &quot;path&quot; weights &quot;out/heads/abstain.pt&quot; threshold 0.7 idk &quot;I don't know.&quot; -&gt; gate
+        head abstain external model &quot;path&quot; weights &quot;out/heads/ext.pt&quot; threshold 0.7 -&gt; gate
+        head train dataset &quot;examples/fixtures/abstain/labels.jsonl&quot; kind internal out &quot;out/heads/abstain.pt&quot; hidden_dim 64 -&gt; job
+        # Prefer dim-matched export (see ABSTAIN_HEADS.md):
+        # head train dataset &quot;examples/fixtures/abstain/labels_exported.jsonl&quot; …
+        #   kind internal out &quot;out/heads/abstain.pt&quot; hidden_dim 16 -&gt; job
+        head attach model &quot;path&quot; weights &quot;out/heads/abstain.pt&quot; out &quot;out/heads/manifest.json&quot; -&gt; attach
+        head ask &quot;Who is the mayor of Springfield?&quot; -&gt; answer
+        </code></pre>
+        <p>SELECT before SAMPLE: if <code class="inline-code">p(abstain) ≥ threshold</code> (or entropy/margin
+        trip) → emit <code class="inline-code">idk</code> and halt. Internal = probe registered with a frozen
+        backbone; external = sidecar on exported hiddens/logprobs. Prefer
+        <code class="inline-code">./spark-abstain --live export</code> then train so <code class="inline-code">hidden_dim</code> matches the
+        backbone. Inventable prices/IDs: SoT / HTTP / <code class="inline-code">expect</code> <strong>before</strong> free
+        generate. Flagship: <code class="inline-code">examples/no_invent.spark</code> (also
+        <code class="inline-code">examples/head_ask_inventable_verify.spark</code>). Not LoRA.
+        Dry-run = fixtures only. Never <code class="inline-code">auto</code>/<code class="inline-code">code</code>/<code class="inline-code">fast</code>. Full runbook:
+        <code class="inline-code">ABSTAIN_HEADS.md</code>.</p>
         <p><strong>“All models”</strong> = all reachable configured model ids + discovered local
         vLLM endpoints (read-only) — <strong>not</strong> every model in existence. Catalog:
         <code class="inline-code">data/model-catalog.jsonl</code>. Public gateway probes need a probe
@@ -156,31 +176,27 @@
         (latency, tokens/s, quality proxy, tool JSON %), failure_modes,
         concrete <code class="inline-code">reasons[]</code>, risks on improve/plan.</p>
         <p>Examples: <code class="inline-code">examples/model_train.spark</code>, <code class="inline-code">examples/model_improve.spark</code>.</p>
-        <h3 id="head-abstain-train-attach-ask"><code class="inline-code">head abstain</code> / <code class="inline-code">train</code> / <code class="inline-code">attach</code> / <code class="inline-code">ask</code></h3>
-        <p>Decode-layer abstain / IDK gating for <strong>local</strong> models (and dry stubs).
-        Companion <code class="inline-code">./spark-abstain</code>. Design:
-        <a href="/docs/abstain-heads.html">ABSTAIN_HEADS.md</a>.</p>
-        <pre class="doc__pre"><code class="inline-code">head abstain internal model "path" weights "out/heads/abstain.pt" threshold 0.7 idk "I don't know." -&gt; gate
-        head abstain external model "path" weights "out/heads/ext.pt" threshold 0.7 -&gt; gate
-        head train dataset "examples/fixtures/abstain/labels_exported.jsonl" kind internal out "out/heads/abstain.pt" hidden_dim 16 -&gt; job
-        head attach model "path" weights "out/heads/abstain.pt" out "out/heads/manifest.json" -&gt; attach
-        head ask "Who is the mayor of Springfield?" -&gt; answer
-        </code></pre>
-        <p>SELECT before SAMPLE: if <code class="inline-code">p(abstain) ≥ threshold</code> → emit
-        <code class="inline-code">idk</code> and halt. Prefer export→train so
-        <code class="inline-code">hidden_dim</code> matches the backbone. Not LoRA.
-        Never resolve <code class="inline-code">auto</code>/<code class="inline-code">code</code>/<code class="inline-code">fast</code> as the live model.</p>
         <h3 id="ask-generate"><code class="inline-code">ask</code> / <code class="inline-code">generate</code> / <code class="inline-code">?</code></h3>
         <p><strong>Bootstrap only:</strong> <code class="inline-code">{topic}</code> in the quoted prompt resolves <code class="inline-code">let topic "…"</code>
         bindings (fail loud if missing). GAS dry-run matches fixtures on prompt
         substrings (e.g. <code class="inline-code">Summarize:</code> still hits the summary stub even with <code class="inline-code">{doc}</code>).</p>
         <p><strong>Dry-run</strong> (<code class="inline-code">--dry-run</code>): offline heuristic replies (no network).</p>
         <p><strong>Live</strong> (<code class="inline-code">--live</code>): OpenAI-compatible <code class="inline-code">POST /v1/chat/completions</code> via
-        companion <code class="inline-code">./spark-ask-http</code> → <code class="inline-code">AI_GATEWAY_URL</code> (Bifrost). See
-        <a href="/docs/ai-models.html#live-gateway-integration-wired-today">ASK_LIVE.md</a>. Model id comes from the prior explicit <code class="inline-code">model</code> / <code class="inline-code">use</code> line. <code class="inline-code">--model auto</code> is rejected. Prefer <code class="inline-code">SPARK_GATEWAY_KEY</code>;
+        companion <code class="inline-code">./spark-ask-http</code> → <code class="inline-code">AI_GATEWAY_URL</code>. See
+        <a href="/docs/ai-models.html#live-gateway-integration-wired-today">ASK_LIVE.md</a>. Model id comes from the prior explicit
+        <code class="inline-code">model</code> / <code class="inline-code">use</code> line (HF id / path / configured name). <code class="inline-code">--model auto</code>
+        is rejected. Prefer <code class="inline-code">SPARK_GATEWAY_KEY</code>;
         <code class="inline-code">OPENAI_API_KEY</code> is wire-compat only. Public tunnel uses a probe credential; HTTP 401 → credential unavailable (no invented routing).
         <code class="inline-code">make test</code> never hits the network; <code class="inline-code">make test-ask-gateway</code> is offline
         <code class="inline-code">--dry</code> on the companion.</p>
+        <p><strong>Accounting:</strong> dry-run prints
+        <code class="inline-code">[accounting] latency_ms=0 … note=dry-run</code> (zeros; never invents
+        tokens). Live <code class="inline-code">./spark-ask-http</code> prints wall-clock <code class="inline-code">latency_ms</code>
+        (<code class="inline-code">CLOCK_MONOTONIC</code>) plus gateway <code class="inline-code">usage</code> when present, appends
+        <code class="inline-code">/tmp/spark-ask-account.jsonl</code> (or <code class="inline-code">--account-file</code> /
+        <code class="inline-code">SPARK_ACCOUNT_FILE</code>). End of a live <code class="inline-code">./spark --live</code> run prints
+        <code class="inline-code">[accounting-run]</code> via <code class="inline-code">./spark-ask-http --rollup</code>. See
+        <a href="/docs/ai-models.html#live-gateway-integration-wired-today">ASK_LIVE.md</a>.</p>
         <h3 id="ask-probe-gateway-probe"><code class="inline-code">ask probe</code> / <code class="inline-code">gateway probe</code></h3>
         <p>Dry gateway probe credential check (no network under <code class="inline-code">--dry-run</code>):</p>
         <pre class="doc__pre"><code class="inline-code">ask probe -&gt; info
@@ -229,15 +245,15 @@
         <tbody>
         <tr>
         <td><strong>Dry-run</strong></td>
-        <td><strong>Never</strong> execs arbitrary shells. Allowlist <code class="inline-code">echo</code> / <code class="inline-code">true</code> / <code class="inline-code">false</code> → fixture stdout (<code class="inline-code">[shell] dry …</code>). Anything else → fail loud.</td>
+        <td><strong>Never</strong> execs. Allowlist <code class="inline-code">echo</code> / <code class="inline-code">true</code> / <code class="inline-code">false</code> → fixture stdout (<code class="inline-code">[shell] dry …</code>). Anything else → fail loud. <code class="inline-code">--allow-shell</code> is a no-op here.</td>
         </tr>
         <tr>
         <td><strong>Live</strong></td>
-        <td><code class="inline-code">[next]</code> gated exec (<code class="inline-code">--allow-shell</code>) with argv allowlist — not shipped as open <code class="inline-code">system()</code>.</td>
+        <td><code class="inline-code">./spark --live --allow-shell</code> forks <code class="inline-code">./spark-shell</code>, which <code class="inline-code">execve</code>s the resolved allowlisted binary (<code class="inline-code">/bin/echo</code> etc.). <strong>Not</strong> <code class="inline-code">system()</code>, <strong>not</strong> <code class="inline-code">/bin/sh -c</code>. Live without <code class="inline-code">--allow-shell</code> fails loud. Path / metacharacters / <code class="inline-code">rm</code> refused.</td>
         </tr>
         <tr>
-        <td><strong>Host embed (Python)</strong></td>
-        <td><strong>Shipped.</strong> <code class="inline-code">from sparklang import run</code> under <code class="inline-code">python/sparklang/</code> invokes <code class="inline-code">./spark --dry-run</code> (default) or <code class="inline-code">--live</code>. Returns stdout / stderr / exit code; missing binary or path → fail loud. <code class="inline-code">./spark --embed</code> prints a JSON handshake advertising the Python API. <strong>JS <code class="inline-code">require</code> / C FFI = <code class="inline-code">[next]</code>.</strong></td>
+        <td><strong>Host embed</strong></td>
+        <td><strong>Shipped (Python, JS, C).</strong> <code class="inline-code">from sparklang import run</code>; <code class="inline-code">require('./js/sparklang')</code>; <code class="inline-code">spark_run_path()</code> in <code class="inline-code">host/c/sparklang.h</code>. Dry-run default, <code class="inline-code">--live</code> opt-in. <code class="inline-code">./spark --embed</code> JSON handshake.</td>
         </tr>
         </tbody>
         </table></div>
@@ -249,11 +265,16 @@
         # r = run(&quot;examples/ask_live.spark&quot;, live=True)  # opt-in
         </code></pre>
         <pre class="doc__pre"><code class="language-bash">PYTHONPATH=python python -m sparklang examples/hello.spark
-        ./spark --embed   # {&quot;api&quot;:&quot;python&quot;,&quot;package&quot;:&quot;sparklang&quot;,…}
+        node examples/js/host_embed.js
+        make examples/c/host_embed &amp;&amp; ./examples/c/host_embed
+        ./spark --embed   # {&quot;api&quot;:&quot;python,js,c&quot;,…}
         make test-host-embed
+        make test-shell   # live --allow-shell argv execve
         </code></pre>
         <p>See <a href="/docs/adoption-bar.html">ADOPTION_BAR.md</a>. Examples: <code class="inline-code">examples/shell_escape.spark</code>
-        (from <code class="inline-code">.spark</code> → host), <code class="inline-code">examples/python/host_embed.py</code> (host → <code class="inline-code">.spark</code>).</p>
+        (from <code class="inline-code">.spark</code> → host), <code class="inline-code">examples/shell_refuse.spark</code> (fail loud),
+        <code class="inline-code">examples/python/host_embed.py</code>, <code class="inline-code">examples/js/host_embed.js</code>,
+        <code class="inline-code">examples/c/host_embed.c</code> (host → <code class="inline-code">.spark</code>).</p>
         <h3 id="http-get-http-post-shipped"><code class="inline-code">http get</code> / <code class="inline-code">http post</code> (shipped)</h3>
         <p>Generic HTTP client ops — <strong>not</strong> Bifrost-specific and <strong>not</strong>
         <code class="inline-code">engine fetch</code> <code class="inline-code">file://</code>. Dry-run never dials the network.</p>
@@ -352,10 +373,20 @@
         error: extract Person did not validate against .../person_bad_type.json
         1
         </code></pre>
-        <p><strong>Not shipped (still [next]):</strong> live model-backed extract, and retry on
-        a schema miss. <code class="inline-code">./spark-extract --live</code> refuses rather than guessing.</p>
-        <p>Examples: <code class="inline-code">examples/extract_person.spark</code> (valid),
-        <code class="inline-code">examples/extract_bad.spark</code> (type mismatch). Gate: <code class="inline-code">make test-extract</code>.</p>
+        <p><strong>Live</strong> (<code class="inline-code">./spark --live</code> / <code class="inline-code">./spark-extract --live</code>): model-backed
+        JSON extract via <code class="inline-code">./spark-ask-http</code>. Requires <code class="inline-code">from "TEXT"</code> and an
+        explicit <code class="inline-code">--model</code> (or <code class="inline-code">SPARK_MODEL</code>; <code class="inline-code">auto</code> refused). Validates the
+        reply against the schema; on a miss, retries with the validation
+        errors in the prompt (<code class="inline-code">--retries N</code>, default <strong>2</strong>, or a <code class="inline-code">retries N</code>
+        clause). Offline proof: <code class="inline-code">--stub-file PATH</code> (JSONL of canned replies).</p>
+        <pre class="doc__pre"><code class="language-bash">./spark-extract --live --stmt-file /tmp/xt.txt --model fast --retries 2
+        ./spark-extract --live --stmt-file /tmp/xt.txt --model fixtures/tiny-lm \
+          --stub-file examples/fixtures/extract/stub_retry.jsonl
+        </code></pre>
+        <p>Examples: <code class="inline-code">examples/extract_person.spark</code> (valid dry),
+        <code class="inline-code">examples/extract_bad.spark</code> (type mismatch),
+        <code class="inline-code">examples/extract_live.spark</code> (live + retries). Gate: <code class="inline-code">make test-extract</code>
+        (includes stub retry cases).</p>
         <h3 id="expect-passfail"><code class="inline-code">expect</code> (pass/fail)</h3>
         <p>Assert a <strong>bound</strong> name against a literal or a fixture file. Pass =
         exit <strong>0</strong>; fail = exit <strong>1</strong> with the reason. This is the dry-run CI

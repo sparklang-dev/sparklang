@@ -292,6 +292,14 @@ def main() -> int:
             "",
         )
         render(
+            docs / "PROGRAMMING_GUIDE.md",
+            out / "programming-guide.html",
+            "Programming guide",
+            "How to write and run SparkLang programs — dry-run, "
+            "live flags, host embed, and first programs.",
+            "",
+        )
+        render(
             docs / "SELF_HOST.md",
             out / "self-host.html",
             "Contributor internals",

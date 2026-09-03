@@ -33,6 +33,7 @@ out/browser/ca/
 /spark-engine-fetch-tls
 /spark-ide-paint
 /spark-train-http
+/spark-shell
 /spark-bootstrap
 /sparkc
 /spark-bc-pack-hello
@@ -66,3 +67,4 @@ website/.wrangler/
 /spark-browser-cdp
 /spark-engine-layout-test
 spark-bc-emit
+/examples/c/host_embed

@@ -52,6 +52,7 @@ make
 ./spark --dry-run examples/http_get.spark   # http get + fixture (no network)
 ./spark --dry-run examples/ide.spark    # review → builder → implement (not the IDE)
 PYTHONPATH=python python -c "from sparklang import run; print(run('examples/hello.spark').ok)"
+node -e "console.log(require('./js/sparklang').run('examples/hello.spark').ok)"
 make test
 ```
 

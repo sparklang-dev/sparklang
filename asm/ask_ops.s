@@ -15,17 +15,19 @@
 .global ask_probe_dispatch
 .global ask_run_prompt
 .global current_model
+.global accounting_reset
+.global accounting_rollup
 
 .extern linebuf
 .extern write_stdout
 .extern extract_quote
 .extern fork_exec_wait
 .extern write_bytes_path
+.extern sys_mkdir
 .extern sys_open
 .extern sys_read
 .extern sys_close
 .extern sys_exit
-.extern sys_mkdir
 .extern set_last_from_rcx
 .extern bind_arrow_from_line
 .extern strlen
@@ -34,6 +36,7 @@
 .extern enc_key_path
 .extern enc_key_loaded
 .extern pick_ask_reply_ptr
+.extern contains
 # Use local msg_arrow for lengths — extern absolute msg_reply_len
 # assembles as memory load from address 6 (SIGSEGV). Do not .extern equ.
 
@@ -72,6 +75,15 @@ ask_flag_pf:
     .ascii "--prompt-file\0"
 ask_flag_out:
     .ascii "--out\0"
+ask_flag_stream:
+    .ascii "--stream\0"
+flg_rollup:
+    .ascii "--rollup\0"
+account_path:
+    .ascii "/tmp/spark-ask-account.jsonl\0"
+needle_ask_stream:
+    .ascii "stream \""
+    .byte 0
 ask_prompt_path:
     .ascii "/tmp/spark-ask-prompt.txt\0"
 ask_out_path:
@@ -123,6 +135,29 @@ msg_need_key:
 msg_need_key_len = . - msg_need_key
 
 .section .text
+
+# Truncate the live ask account jsonl (ignore errors).
+accounting_reset:
+    lea     rdi, [rip+account_path]
+    lea     rsi, [rip+msg_nl]
+    xor     rdx, rdx
+    call    write_bytes_path
+    ret
+
+# Print [accounting-run] via companion --rollup. Missing binary
+# or empty file is non-fatal (rax ignored).
+accounting_rollup:
+    push    rbx
+    lea     rax, [rip+ask_bin]
+    mov     [rip+ask_argv], rax
+    lea     rax, [rip+flg_rollup]
+    mov     [rip+ask_argv+8], rax
+    mov     qword ptr [rip+ask_argv+16], 0
+    lea     rdi, [rip+ask_bin]
+    lea     rsi, [rip+ask_argv]
+    call    fork_exec_wait
+    pop     rbx
+    ret
 
 # ------------------------------------------------------------
 # ask_probe_dispatch: gateway probe credential dry/live check
@@ -322,8 +357,19 @@ ald_argv:
     mov     [rip+ask_argv+40], rax
     lea     rax, [rip+ask_out_path]
     mov     [rip+ask_argv+48], rax
+    # Optional: `ask stream "..."` → pass --stream to companion
+    lea     rdi, [rip+linebuf]
+    lea     rsi, [rip+needle_ask_stream]
+    call    contains
+    test    rax, rax
+    jz      ald_no_stream
+    lea     rax, [rip+ask_flag_stream]
+    mov     [rip+ask_argv+56], rax
+    mov     qword ptr [rip+ask_argv+64], 0
+    jmp     ald_exec
+ald_no_stream:
     mov     qword ptr [rip+ask_argv+56], 0
-
+ald_exec:
     lea     rdi, [rip+ask_bin]
     lea     rsi, [rip+ask_argv]
     call    fork_exec_wait

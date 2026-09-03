@@ -4,6 +4,50 @@ All notable user-facing releases of **SparkLang** (the Spark programming
 language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
+## 0.6.22 — 2026-09-02
+
+- **Live `--allow-shell`:** `./spark --live --allow-shell` forks
+  `./spark-shell`, which `execve`s allowlisted `echo` / `true` /
+  `false` only. Never `system()`, never `/bin/sh -c`. Dry-run stays
+  fixtures. Gate: `make test-shell`.
+- **JS + C host FFI:** `js/sparklang` (`require`) and
+  `host/c/sparklang.h` (`spark_run_path`). Python embed unchanged.
+  `./spark --embed` advertises `api=python,js,c`. Gate:
+  `make test-host-embed`.
+- **Ask accounting:** live wall-clock `latency_ms` on
+  `[accounting]`; run-level `[accounting-run]` via
+  `spark-ask-http --rollup`. Dry zeros. Never invents tokens.
+  Gate: `make test-ask-gateway` (`PASS rollup`).
+
+## 0.6.21 — 2026-09-02
+
+- **`lib-expect-after-extract` gate:** `make test-extract` / lib gate
+  now require `./spark-expect`. Without the companion, extract still
+  bound `-> person` but expect's fork failed and looked like a bind
+  miss. Example: `examples/expect_after_extract.spark`. Gate:
+  `PASS vm_expect_after_extract` / `PASS lib-expect-after-extract`.
+
+## 0.6.20 — 2026-09-02
+
+- **Live `extract` + retry-on-miss:** `./spark-extract --live` builds
+  a JSON-only prompt, calls `./spark-ask-http`, validates against the
+  inline schema, and retries with validation errors in the prompt
+  (`--retries N`, default 2; optional `retries N` clause). Offline
+  proof via `--stub-file` JSONL. `--model auto` refused. Asm passes
+  `--model` from `model …`. Docs: LANGUAGE / ADOPTION_BAR / ROADMAP.
+  Example: `examples/extract_live.spark`. Gate: `make test-extract`
+  (`PASS live_stub_retry`).
+
+## 0.6.19 — 2026-09-02
+
+- **Streaming `ask` (SSE):** `./spark-ask-http --stream` sends
+  `"stream":true`, prints token deltas as they arrive, accumulates
+  for `--out`. Dry prints `stream=1` (no network). Language:
+  `ask stream "…"` under `--live` (asm passes `--stream`).
+  Docs: [docs/ASK_LIVE.md](docs/ASK_LIVE.md), ADOPTION_BAR /
+  ROADMAP. Example: `examples/ask_stream.spark`. Gate:
+  `make test-ask-gateway` (`PASS dry_stream`).
+
 ## 0.6.18 — 2026-09-02
 
 - **Flagship no-invent example:** `examples/no_invent.spark` —

@@ -35,6 +35,7 @@
 .global linebuf
 .global flag_allow_net_capture
 .global flag_allow_net
+.global flag_allow_shell
 .global flag_live
 .global flag_pstn_live
 .global tools_active
@@ -52,6 +53,9 @@
 .extern engine_js_ops_dispatch
 .extern cuda_ops_dispatch
 .extern memory_ops_dispatch
+.extern shell_live_dispatch
+.extern accounting_reset
+.extern accounting_rollup
 .extern ask_live_dispatch
 .extern ask_encrypt_dispatch
 .extern ask_probe_dispatch
@@ -128,6 +132,7 @@ last_val_len: .space 8
 bind_name:  .space 64
 flag_allow_net_capture: .space 8
 flag_allow_net: .space 8
+flag_allow_shell: .space 8
 flag_live:  .space 8
 flag_pstn_live: .space 8
 tools_active: .space 8
@@ -146,8 +151,9 @@ errno_buf:  .space 32
 msg_usage:
     .ascii "Spark VM (asm→machine code) — 0.6.0\n"
     .ascii "Usage: spark --dry-run [--allow-net]"
-    .ascii " [--allow-net-capture] <file.spark>\n"
-    .ascii "       spark --live <file.spark>"
+    .ascii " [--allow-net-capture] [--allow-shell]"
+    .ascii " <file.spark>\n"
+    .ascii "       spark --live [--allow-shell] <file.spark>"
     .ascii "  # ask → AI_GATEWAY_URL\n"
     .ascii "       spark --live --pstn-live <file>"
     .ascii "  # PSTN off unless SPARK_PSTN=1\n"
@@ -199,11 +205,12 @@ msg_accounting:
     .ascii "note=dry-run\n"
 msg_accounting_len = . - msg_accounting
 msg_embed_cli:
-    .ascii "{\"spark_embed\":true,\"api\":\"python\","
+    .ascii "{\"spark_embed\":true,\"api\":\"python,js,c\","
     .ascii "\"package\":\"sparklang\","
     .ascii "\"import\":\"from sparklang import run\","
     .ascii "\"module\":\"python/sparklang\","
-    .ascii "\"js\":\"[next]\",\"c_ffi\":\"[next]\"}\n"
+    .ascii "\"js\":\"js/sparklang\","
+    .ascii "\"c_ffi\":\"host/c/sparklang.h\"}\n"
 msg_embed_cli_len = . - msg_embed_cli
 dry_shell_echo:
     .ascii "{\"ok\":true,\"mode\":\"dry-run\","
@@ -221,9 +228,13 @@ dry_shell_false:
     .ascii "\"note\":\"fixture — no exec\"}"
 dry_shell_false_len = . - dry_shell_false
 msg_shell_refuse:
-    .ascii "error: dry-run refuses shell/run "
+    .ascii "error: refuses shell/run "
     .ascii "(allowlist: echo|true|false)\n"
 msg_shell_refuse_len = . - msg_shell_refuse
+msg_shell_need_flag:
+    .ascii "error: live shell/run needs --allow-shell "
+    .ascii "(argv allowlist; not open system())\n"
+msg_shell_need_flag_len = . - msg_shell_need_flag
 msg_retrieve: .ascii "[retrieve] "
 msg_retrieve_len = . - msg_retrieve
 msg_listen: .ascii "[listen] "
@@ -445,6 +456,7 @@ kw_ver:     .ascii "--version\0"
 kw_help:    .ascii "--help\0"
 kw_allow_net_cap:.ascii "--allow-net-capture\0"
 kw_allow_net_fetch:.ascii "--allow-net\0"
+kw_allow_shell:.ascii "--allow-shell\0"
 kw_pstn_live:.ascii "--pstn-live\0"
 needle_with_model: .ascii "with model\0"
 needle_analyze_kw: .ascii "analyze\0"
@@ -556,6 +568,7 @@ _start:
     mov     rbp, rsp
     mov     qword ptr [rip+flag_allow_net_capture], 0
     mov     qword ptr [rip+flag_allow_net], 0
+    mov     qword ptr [rip+flag_allow_shell], 0
     mov     qword ptr [rip+flag_live], 0
     mov     qword ptr [rip+flag_pstn_live], 0
     # envp follows argv NULL on the initial stack (needed by execve)
@@ -568,7 +581,8 @@ _start:
     jl      usage_exit
 
     # scan argv[1..] for --version / --help / --allow-net /
-    # --allow-net-capture / --pstn-live / --dry-run|--live <path>
+    # --allow-net-capture / --allow-shell / --pstn-live /
+    # --dry-run|--live <path>
     mov     r12, 1              # i
     xor     r13, r13            # path set flag
 arg_scan:
@@ -622,8 +636,21 @@ arg_net_cap:
     lea     rdi, [rip+kw_allow_net_cap]
     call    streq
     test    rax, rax
-    jz      arg_pstn_flag
+    jz      arg_allow_shell
     mov     qword ptr [rip+flag_allow_net_capture], 1
+    inc     r12
+    jmp     arg_scan
+arg_allow_shell:
+    mov     rax, r12
+    shl     rax, 3
+    add     rax, rbp
+    add     rax, 8
+    mov     rsi, [rax]
+    lea     rdi, [rip+kw_allow_shell]
+    call    streq
+    test    rax, rax
+    jz      arg_pstn_flag
+    mov     qword ptr [rip+flag_allow_shell], 1
     inc     r12
     jmp     arg_scan
 arg_pstn_flag:
@@ -688,8 +715,21 @@ arg_after_cap:
     lea     rdi, [rip+kw_allow_net_cap]
     call    streq
     test    rax, rax
-    jz      arg_after_pstn
+    jz      arg_after_shell
     mov     qword ptr [rip+flag_allow_net_capture], 1
+    inc     r12
+    jmp     arg_after_dry
+arg_after_shell:
+    mov     rax, r12
+    shl     rax, 3
+    add     rax, rbp
+    add     rax, 8
+    mov     rsi, [rax]
+    lea     rdi, [rip+kw_allow_shell]
+    call    streq
+    test    rax, rax
+    jz      arg_after_pstn
+    mov     qword ptr [rip+flag_allow_shell], 1
     inc     r12
     jmp     arg_after_dry
 arg_after_pstn:
@@ -774,6 +814,7 @@ run_file:
     lea     rsi, [rip+msg_banner_live]
     mov     rdx, msg_banner_live_len
     call    write_stdout
+    call    accounting_reset
     jmp     rf_open
 rf_banner_dry:
     lea     rsi, [rip+msg_banner]
@@ -838,6 +879,10 @@ line_ready:
     jmp     line_loop
 
 run_done:
+    cmp     qword ptr [rip+flag_live], 0
+    je      rd_pop
+    call    accounting_rollup
+rd_pop:
     pop     r13
     pop     r12
     pop     rbx
@@ -1395,6 +1440,10 @@ shell_chk_f:
     jne     shell_refuse
     jmp     shell_ok_false
 shell_ok_echo:
+    cmp     qword ptr [rip+flag_live], 0
+    je      shell_dry_echo
+    jmp     shell_live_gate
+shell_dry_echo:
     lea     rsi, [rip+msg_reply]
     mov     rdx, msg_reply_len
     call    write_stdout
@@ -1406,6 +1455,10 @@ shell_ok_echo:
     call    set_last_from_rcx
     jmp     shell_bind
 shell_ok_true:
+    cmp     qword ptr [rip+flag_live], 0
+    je      shell_dry_true
+    jmp     shell_live_gate
+shell_dry_true:
     lea     rsi, [rip+msg_reply]
     mov     rdx, msg_reply_len
     call    write_stdout
@@ -1417,6 +1470,10 @@ shell_ok_true:
     call    set_last_from_rcx
     jmp     shell_bind
 shell_ok_false:
+    cmp     qword ptr [rip+flag_live], 0
+    je      shell_dry_false
+    jmp     shell_live_gate
+shell_dry_false:
     lea     rsi, [rip+msg_reply]
     mov     rdx, msg_reply_len
     call    write_stdout
@@ -1432,6 +1489,17 @@ shell_bind:
     mov     rdx, 1
     call    write_stdout
     jmp     il_done
+shell_live_gate:
+    cmp     qword ptr [rip+flag_allow_shell], 0
+    je      shell_need_flag
+    call    shell_live_dispatch
+    jmp     il_done
+shell_need_flag:
+    lea     rsi, [rip+msg_shell_need_flag]
+    mov     rdx, msg_shell_need_flag_len
+    call    write_stdout
+    mov     edi, 1
+    call    sys_exit
 shell_refuse:
     lea     rsi, [rip+msg_shell_refuse]
     mov     rdx, msg_shell_refuse_len

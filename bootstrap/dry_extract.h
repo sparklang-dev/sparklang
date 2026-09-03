@@ -42,6 +42,15 @@ int spark_extract_parse_schema(const char *stmt,
 int spark_extract_resolve_fixture(const char *stmt, char *buf,
 				  size_t buflen);
 
+/* Read a from "TEXT" clause (source for live extract). */
+int spark_extract_resolve_from(const char *stmt, char *buf,
+				 size_t buflen);
+
+/* Like validate; also appends each reason to errbuf (may be NULL). */
+int spark_extract_validate_explain(
+	const struct spark_extract_schema *schema, const char *json,
+	char *errbuf, size_t errcap);
+
 /* fopen + slurp. Missing file is an error, not an empty result. */
 int spark_extract_load_fixture(const char *path, char **out,
 			       size_t *out_len);

@@ -262,6 +262,59 @@ int spark_extract_resolve_fixture(const char *stmt, char *buf,
 	return 0;
 }
 
+
+int spark_extract_resolve_from(const char *stmt, char *buf, size_t buflen)
+{
+	const char *p;
+	size_t n = 0;
+
+	p = stmt ? strstr(stmt, "from") : NULL;
+	if (!p) {
+		fprintf(stderr,
+			"error: extract live requires from \"TEXT\"\n");
+		return 1;
+	}
+	p += 4;
+	while (*p == ' ' || *p == '\t' || *p == '\n' || *p == '\r')
+		p++;
+	if (*p != '"') {
+		fprintf(stderr,
+			"error: extract from clause needs \"TEXT\"\n");
+		return 1;
+	}
+	p++;
+	while (*p && *p != '"') {
+		if (n + 1 >= buflen) {
+			fprintf(stderr,
+				"error: extract from text too long\n");
+			return 1;
+		}
+		if (*p == '\\' && p[1]) {
+			p++;
+			if (*p == 'n')
+				buf[n++] = '\n';
+			else if (*p == 't')
+				buf[n++] = '\t';
+			else
+				buf[n++] = *p;
+			p++;
+			continue;
+		}
+		buf[n++] = *p++;
+	}
+	if (*p != '"') {
+		fprintf(stderr,
+			"error: extract from text is not closed with \"\n");
+		return 1;
+	}
+	buf[n] = 0;
+	if (n == 0) {
+		fprintf(stderr, "error: extract from text is empty\n");
+		return 1;
+	}
+	return 0;
+}
+
 int spark_extract_load_fixture(const char *path, char **out,
 			       size_t *out_len)
 {
@@ -504,11 +557,31 @@ static int kind_matches(enum spark_extract_type want,
 	return 0;
 }
 
-int spark_extract_validate(const struct spark_extract_schema *schema,
-			   const char *json)
+static void append_err(char *errbuf, size_t errcap, const char *line)
+{
+	size_t have, need;
+
+	if (!errbuf || errcap == 0)
+		return;
+	have = strlen(errbuf);
+	need = strlen(line) + 1;
+	if (have + need + 1 >= errcap)
+		return;
+	if (have)
+		errbuf[have++] = '\n';
+	memcpy(errbuf + have, line, need);
+}
+
+int spark_extract_validate_explain(
+	const struct spark_extract_schema *schema, const char *json,
+	char *errbuf, size_t errcap)
 {
 	size_t i;
 	int bad = 0;
+	char line[256];
+
+	if (errbuf && errcap)
+		errbuf[0] = 0;
 
 	for (i = 0; i < schema->n_fields; i++) {
 		const struct spark_extract_field *f = &schema->fields[i];
@@ -516,31 +589,42 @@ int spark_extract_validate(const struct spark_extract_schema *schema,
 		int found = json_find_key(json, f->name, &kind);
 
 		if (found < 0) {
-			fprintf(stderr,
-				"error: extract %s: fixture is not a "
-				"JSON object\n", schema->name);
+			snprintf(line, sizeof(line),
+				 "error: extract %s: fixture is not a "
+				 "JSON object", schema->name);
+			fprintf(stderr, "%s\n", line);
+			append_err(errbuf, errcap, line);
 			return 1;
 		}
 		if (!found) {
 			if (f->optional)
 				continue;
-			fprintf(stderr,
-				"error: extract %s: missing required "
-				"field %s (%s)\n", schema->name,
-				f->name,
-				spark_extract_type_name(f->type));
+			snprintf(line, sizeof(line),
+				 "error: extract %s: missing required "
+				 "field %s (%s)", schema->name, f->name,
+				 spark_extract_type_name(f->type));
+			fprintf(stderr, "%s\n", line);
+			append_err(errbuf, errcap, line);
 			bad = 1;
 			continue;
 		}
 		if (!kind_matches(f->type, kind)) {
-			fprintf(stderr,
-				"error: extract %s: field %s expected "
-				"%s, fixture has %s\n", schema->name,
-				f->name,
-				spark_extract_type_name(f->type),
-				kind_name(kind));
+			snprintf(line, sizeof(line),
+				 "error: extract %s: field %s expected "
+				 "%s, fixture has %s", schema->name,
+				 f->name,
+				 spark_extract_type_name(f->type),
+				 kind_name(kind));
+			fprintf(stderr, "%s\n", line);
+			append_err(errbuf, errcap, line);
 			bad = 1;
 		}
 	}
 	return bad;
+}
+
+int spark_extract_validate(const struct spark_extract_schema *schema,
+			   const char *json)
+{
+	return spark_extract_validate_explain(schema, json, NULL, 0);
 }

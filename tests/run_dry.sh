@@ -47,6 +47,8 @@ check hello examples/hello.spark "Gravity"
 check hello_sugar examples/hello_sugar.spark "Gravity"
 check dx_showcase examples/dx_showcase.spark "Resumen"
 check classify examples/classify_intent.spark '"label":"support"'
+check shell_echo examples/shell_escape.spark 'fixture'
+check_fail shell_refuse examples/shell_refuse.spark 'allowlist'
 
 # IDE core — open/save/run dry (asm buffer; fork ./spark --dry-run)
 check ide_open examples/ide_hello.spark '"op":"ide.open"'

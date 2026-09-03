@@ -138,28 +138,105 @@ no_fixture_clause() {
 }
 no_fixture_clause
 
-# Live is not implemented; it must say so, not silently read the fixture.
-live_refused() {
-  local out rc=0
+# Live + retry: offline stubs (no gateway). First stub line fails
+# validation; second validates — proves retry-on-miss.
+live_stub_retry() {
+  local out stmt
+  stmt=$(mktemp)
+  cat >"$stmt" <<'EOF'
+extract Person {
+  name: string
+  age: int
+  email?: string
+} from "Ada Lovelace was born in 1815" -> person
+EOF
+  if ! out="$(./spark-extract --live --stmt-file "$stmt" \
+      --model fixtures/tiny-lm --retries 2 \
+      --stub-file "$FX/stub_retry.jsonl" 2>&1)"; then
+    echo "FAIL live_stub_retry (exit $?)"
+    echo "$out" | head -30
+    rm -f "$stmt"
+    fail=1
+    return 0
+  fi
+  echo "$out" | grep -qF 'live ok' || {
+    echo "FAIL live_stub_retry (no live ok)"; echo "$out" | head -20
+    fail=1; rm -f "$stmt"; return 0; }
+  echo "$out" | grep -qF 'Ada Lovelace' || {
+    echo "FAIL live_stub_retry (missing name)"; fail=1; rm -f "$stmt"
+    return 0; }
+  echo "$out" | grep -qE 'attempt 1/.+: schema miss' || {
+    echo "FAIL live_stub_retry (no first-miss retry)"
+    echo "$out" | head -30; fail=1; rm -f "$stmt"; return 0; }
+  rm -f "$stmt"
+  echo "PASS live_stub_retry"
+}
+live_stub_retry
+
+live_stub_ok_first() {
+  local out stmt
+  stmt=$(mktemp)
+  cat >"$stmt" <<'EOF'
+extract Person { name: string, age: int } from "Ada" -> person
+EOF
+  if ! out="$(./spark-extract --live --stmt-file "$stmt" \
+      --model fixtures/tiny-lm --retries 0 \
+      --stub-file "$FX/stub_ok.jsonl" 2>&1)"; then
+    echo "FAIL live_stub_ok_first"; echo "$out" | head -20
+    fail=1; rm -f "$stmt"; return 0
+  fi
+  echo "$out" | grep -qF 'live ok (validated after 1 attempt)' || {
+    echo "FAIL live_stub_ok_first (banner)"; echo "$out" | head -20
+    fail=1; rm -f "$stmt"; return 0; }
+  rm -f "$stmt"
+  echo "PASS live_stub_ok_first"
+}
+live_stub_ok_first
+
+live_stub_exhaust() {
+  local out rc=0 stmt
+  stmt=$(mktemp)
+  cat >"$stmt" <<'EOF'
+extract Person { name: string, age: int } from "Ada" -> person
+EOF
   set +e
-  out="$(./spark-extract --live --schema "$PERSON" \
-    --fixture "$FX/person.json" 2>&1)"
+  out="$(./spark-extract --live --stmt-file "$stmt" \
+    --model fixtures/tiny-lm --retries 2 \
+    --stub-file "$FX/stub_always_bad.jsonl" 2>&1)"
   rc=$?
   set -e
+  rm -f "$stmt"
   if [[ "$rc" -eq 0 ]]; then
-    echo "FAIL live_refused (expected non-zero)"
-    fail=1
-    return 0
+    echo "FAIL live_stub_exhaust (expected non-zero)"; fail=1; return 0
   fi
-  if ! echo "$out" | grep -qF 'not implemented'; then
-    echo "FAIL live_refused (wrong reason)"
-    echo "$out" | head -20
-    fail=1
-    return 0
-  fi
-  echo "PASS live_refused"
+  echo "$out" | grep -qF 'did not validate after' || {
+    echo "FAIL live_stub_exhaust (reason)"; echo "$out" | head -20
+    fail=1; return 0; }
+  echo "PASS live_stub_exhaust"
 }
-live_refused
+live_stub_exhaust
+
+live_refuse_auto() {
+  local out rc=0 stmt
+  stmt=$(mktemp)
+  cat >"$stmt" <<'EOF'
+extract Person { name: string, age: int } from "Ada" -> person
+EOF
+  set +e
+  out="$(./spark-extract --live --stmt-file "$stmt" \
+    --model auto --stub-file "$FX/stub_ok.jsonl" 2>&1)"
+  rc=$?
+  set -e
+  rm -f "$stmt"
+  if [[ "$rc" -eq 0 ]]; then
+    echo "FAIL live_refuse_auto"; fail=1; return 0
+  fi
+  echo "$out" | grep -qiE 'refuse|auto' || {
+    echo "FAIL live_refuse_auto (reason)"; echo "$out" | head -20
+    fail=1; return 0; }
+  echo "PASS live_refuse_auto"
+}
+live_refuse_auto
 
 # --- through the assembly VM ------------------------------------------
 # The multi-line schema block, the fixture read, and the -> binding all

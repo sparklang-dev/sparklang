@@ -1,5 +1,6 @@
-# Escape hatch dry-run — allowlisted shell only (no exec).
+# Escape hatch — allowlisted shell (dry = fixtures; live = execve).
 #   ./spark --dry-run examples/shell_escape.spark
+#   ./spark --live --allow-shell examples/shell_escape.spark
 
 shell "echo hello" -> out
 print out

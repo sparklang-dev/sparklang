@@ -21,6 +21,7 @@
 .extern msg_reply
 .extern sys_exit
 .extern strlen
+.extern current_model
 
 XT_MAX = 8192
 
@@ -42,6 +43,10 @@ flg_stmt:
     .ascii "--stmt-file\0"
 flg_out:
     .ascii "--out\0"
+flg_model:
+    .ascii "--model\0"
+xt_default_model:
+    .ascii "fast\0"
 stmt_path:
     .ascii "/tmp/spark-extract-stmt.txt\0"
 out_path:
@@ -264,7 +269,24 @@ xt_mode:
     mov     [rip+xt_argv+32], rax
     lea     rax, [rip+out_path]
     mov     [rip+xt_argv+40], rax
+    # Live needs --model (current_model from `model …`, else fast)
+    cmp     qword ptr [rip+flag_live], 0
+    je      xt_argv_done
+    lea     rax, [rip+flg_model]
+    mov     [rip+xt_argv+48], rax
+    cmp     byte ptr [rip+current_model], 0
+    jne     xt_have_model
+    lea     rax, [rip+xt_default_model]
+    jmp     xt_set_model
+xt_have_model:
+    lea     rax, [rip+current_model]
+xt_set_model:
+    mov     [rip+xt_argv+56], rax
+    mov     qword ptr [rip+xt_argv+64], 0
+    jmp     xt_exec
+xt_argv_done:
     mov     qword ptr [rip+xt_argv+48], 0
+xt_exec:
     lea     rdi, [rip+xt_bin]
     lea     rsi, [rip+xt_argv]
     call    fork_exec_wait

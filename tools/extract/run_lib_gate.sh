@@ -16,6 +16,12 @@ cd "$ROOT"
 CATALOG="website/data/function-catalog.json"
 
 [[ -x ./spark ]] || { echo "FAIL: ./spark not built (make spark)"; exit 1; }
+# Catalog snippets may chain extract → expect (lib-expect-after-extract).
+# Missing companion used to look like an expect bind failure.
+[[ -x ./spark-expect ]] || {
+  echo "FAIL: ./spark-expect not built (make spark-expect)"
+  exit 1
+}
 [[ -f "$CATALOG" ]] || { echo "FAIL: missing $CATALOG"; exit 1; }
 
 tmp="$(mktemp -d)"
