@@ -14,6 +14,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <sys/wait.h>
 
 #include "../../bootstrap/dry_expect.h"
 
@@ -76,6 +78,53 @@ static char *arg_val(int *i, int argc, char **argv, const char *flag)
 	}
 	(*i)++;
 	return argv[*i];
+}
+
+
+static int is_json_mode(const char *mode)
+{
+	return mode &&
+	       (strcmp(mode, "gte") == 0 || strcmp(mode, "lte") == 0 ||
+		strcmp(mode, "eq") == 0 ||
+		strcmp(mode, "histogram_min") == 0 ||
+		strcmp(mode, "score") == 0);
+}
+
+static int run_json_assert(const char *stmt_file, const char *got_file,
+			   const char *out_path, int live)
+{
+	pid_t pid;
+	int status;
+	char *argv[12];
+	int n = 0;
+
+	argv[n++] = "python3";
+	argv[n++] = "tools/expect/json_assert.py";
+	if (live)
+		argv[n++] = "--live";
+	else
+		argv[n++] = "--dry";
+	argv[n++] = "--stmt-file";
+	argv[n++] = (char *)stmt_file;
+	argv[n++] = "--got-file";
+	argv[n++] = (char *)got_file;
+	if (out_path) {
+		argv[n++] = "--out";
+		argv[n++] = (char *)out_path;
+	}
+	argv[n] = NULL;
+	pid = fork();
+	if (pid < 0)
+		die("fork json_assert");
+	if (pid == 0) {
+		execvp("python3", argv);
+		_exit(127);
+	}
+	if (waitpid(pid, &status, 0) < 0)
+		die("wait json_assert");
+	if (WIFEXITED(status))
+		return WEXITSTATUS(status);
+	return 1;
 }
 
 int main(int argc, char **argv)
@@ -172,6 +221,36 @@ int main(int argc, char **argv)
 		free(stmt);
 		free(parsed_want);
 		return 1;
+	}
+
+	if (is_json_mode(mode)) {
+		int live = 0;
+		const char *sf = stmt_file;
+
+		if (!sf) {
+			fprintf(stderr,
+				"error: json expect needs --stmt-file\n");
+			free(got);
+			free(stmt);
+			free(parsed_want);
+			return 1;
+		}
+		/* got already loaded into got_file path when provided */
+		if (!got_file) {
+			/* write temp got for helper */
+			FILE *tf = fopen("/tmp/spark-expect-got-json.txt",
+					 "wb");
+			if (!tf)
+				die("tmp got");
+			fputs(got, tf);
+			fclose(tf);
+			got_file = "/tmp/spark-expect-got-json.txt";
+		}
+		free(got);
+		free(want);
+		free(stmt);
+		free(parsed_want);
+		return run_json_assert(sf, got_file, out_path, live);
 	}
 
 	if (fixture) {
