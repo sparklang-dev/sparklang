@@ -980,3 +980,15 @@ Browser dry E2E (no display): `make test-e2e-browser`.
 
 Human-readable: file open failures, usage, and (when live lands) schema /
 classify mismatch messages. Dry-run uses heuristic stubs so CI needs no keys.
+
+## Numeric expects (0.7)
+
+| Form | Meaning |
+|------|---------|
+| `expect gte NAME $.path N` | JSON path ≥ N |
+| `expect lte NAME $.path N` | JSON path ≤ N |
+| `expect eq NAME $.path V` | JSON equality |
+| `expect histogram_min NAME CLASS N` | class histogram floor |
+| `expect score NAME $.path using "URL" >= N` | rubric score (dry fixture) |
+
+`expect equal` / `expect contains` unchanged.

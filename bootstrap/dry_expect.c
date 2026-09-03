@@ -196,24 +196,49 @@ int spark_expect_parse_stmt(const char *stmt, char *mode, size_t mode_n,
 	}
 	p = skip_ws(p + 6);
 	if (copy_ident(&p, mode, mode_n) != 0) {
-		fprintf(stderr,
-			"error: expect needs equal or contains\n");
+		fprintf(stderr, "error: expect needs a mode\n");
 		return 1;
 	}
-	if (strcmp(mode, "equal") != 0 &&
-	    strcmp(mode, "contains") != 0) {
-		fprintf(stderr,
-			"error: expect mode must be equal or "
-			"contains, got \"%s\"\n",
-			mode);
-		return 1;
+	{
+		int json_mode =
+			strcmp(mode, "gte") == 0 ||
+			strcmp(mode, "lte") == 0 ||
+			strcmp(mode, "eq") == 0 ||
+			strcmp(mode, "histogram_min") == 0 ||
+			strcmp(mode, "score") == 0;
+		if (strcmp(mode, "equal") != 0 &&
+		    strcmp(mode, "contains") != 0 && !json_mode) {
+			fprintf(stderr,
+				"error: expect mode must be equal|"
+				"contains|gte|lte|eq|histogram_min|"
+				"score, got \"%s\"\n",
+				mode);
+			return 1;
+		}
+		if (copy_ident(&p, name, name_n) != 0) {
+			fprintf(stderr,
+				"error: expect needs a bound name\n");
+			return 1;
+		}
+		p = skip_ws(p);
+		if (json_mode) {
+			/* Remainder is path/threshold; helper re-parses
+			 * the full statement from --stmt-file. */
+			size_t n = strlen(p);
+			while (n > 0 &&
+			       (p[n - 1] == '\n' || p[n - 1] == '\r' ||
+				p[n - 1] == ' ' || p[n - 1] == '\t'))
+				n--;
+			*want_out = malloc(n + 1);
+			if (!*want_out) {
+				fprintf(stderr, "error: expect oom\n");
+				return 1;
+			}
+			memcpy(*want_out, p, n);
+			(*want_out)[n] = 0;
+			return 0;
+		}
 	}
-	if (copy_ident(&p, name, name_n) != 0) {
-		fprintf(stderr,
-			"error: expect needs a bound name\n");
-		return 1;
-	}
-	p = skip_ws(p);
 	if (strncmp(p, "fixture", 7) == 0 &&
 	    (p[7] == ' ' || p[7] == '\t' || p[7] == '"')) {
 		p = skip_ws(p + 7);
