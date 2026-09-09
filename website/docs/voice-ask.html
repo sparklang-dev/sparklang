@@ -251,11 +251,23 @@
         PYTHONPATH=python:tools python3 -m unittest \
           tools.spark_ask.test_voice_ask -v
         </code></pre>
+        <h2 id="grounding-anti-guess">Grounding / anti-guess</h2>
+        <p>Dump facts are the SoT for opcode / sha answers. For inventable
+        prices or free generate, use forced grounding — abstain unless
+        expect / fixture / dump match:</p>
+        <pre class="doc__pre"><code class="language-bash">./spark-ground ask --prompt &quot;…&quot; --dump dump.txt \
+          --candidate &quot;…&quot;   # miss → exit 2
+        make test-ground
+        </code></pre>
+        <p>See <a href="/docs/knowledge-safety.html">knowledge/SAFETY_LIMITS.md</a>
+        (Grounded generation / anti-guess). Recompile ≠ semantics.
+        Does <strong>not</strong> beat Claude.</p>
         <h2 id="related">Related</h2>
         <ul class="doc__ul">
         <li>Loop UX: <a href="/workflow.html">/workflow.html</a></li>
         <li>Analyze project folder: <code class="inline-code">helpers/spark-analyze</code> (when present)</li>
         <li><a href="/docs/spark-coder.html">SPARK_CODER.md</a> · <a href="/docs/tools-helpers.html">TOOLS_HELPERS.md</a></li>
+        <li><a href="/docs/knowledge-safety.html">knowledge/SAFETY_LIMITS.md</a></li>
         </ul>
       </article>
       </main>

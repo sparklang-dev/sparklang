@@ -59,7 +59,6 @@ If CLI/auth absent → Cloudflare dashboard Direct Upload of
 - https://sparklang.dev/docs/model-aspects.html
 - https://sparklang.dev/docs/voice-easy.html
 - https://sparklang.dev/docs/voice.html
-- https://sparklang.dev/docs/voice-ask.html
 - https://sparklang.dev/docs/spark-coder.html
 - https://sparklang.dev/docs/weight-gallery.html
 - https://sparklang.dev/weight-playground.html
@@ -69,6 +68,7 @@ If CLI/auth absent → Cloudflare dashboard Direct Upload of
 - https://sparklang.dev/docs/decompile-compete.html
 - https://sparklang.dev/docs/llm-decompile.html
 - https://sparklang.dev/docs/knowledge.html
+- https://sparklang.dev/docs/knowledge-safety.html
 - https://sparklang.dev/data/decompile-scoreboard.json
 - https://sparklang.dev/downloads.html
 

@@ -16,6 +16,7 @@ out/browser/ca/
 /spark-extract
 /spark-expect
 /spark-abstain
+/spark-ground
 /spark-model-lab
 /spark-serve
 /spark-serve-api

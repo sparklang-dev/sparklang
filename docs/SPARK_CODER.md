@@ -95,8 +95,20 @@ Tool loop (owned model ranks authored candidates, then compiles):
 checkpoint) and `bin/spark-code` when present after
 `make spark-coder-train`. Large pack is opt-in local only.
 
+## Grounding / anti-guess
+
+TinyCoder still **guesses** next bytes. For operator Q&A that must
+not invent facts, wrap answers with `./spark-ground` (expect /
+fixture / dump / schema) or language `expect` + abstain heads.
+External Qwen-class adapt stays attach-only via
+`model modify` / `spark-ground adapter-attach`; full SFT is opt-in
+on **5090**, never **6000**.
+
+Docs: [knowledge/SAFETY_LIMITS.md](knowledge/SAFETY_LIMITS.md).
+
 ## Related
 
 - [BUILD_MODELS.md](BUILD_MODELS.md) · [TRAIN_LOOP.md](TRAIN_LOOP.md)
 - [FACTORY.md](FACTORY.md) · [AI_MODELS.md](AI_MODELS.md)
+- [knowledge/SAFETY_LIMITS.md](knowledge/SAFETY_LIMITS.md)
 - Factory scale: `make spark-sgd-proof-scale`

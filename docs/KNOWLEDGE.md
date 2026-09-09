@@ -19,7 +19,7 @@ CPU / 5090 paths stay honest. Not an OpenBin clone.
 | Agents & tools | [knowledge/AGENTS_TOOLS.md](knowledge/AGENTS_TOOLS.md) | Tool loops, ReAct-style patterns |
 | Eval honesty | [knowledge/EVAL_HONESTY.md](knowledge/EVAL_HONESTY.md) | Benchmarks, baselines, no win theater |
 | Decompile + LLM RE | [knowledge/DECOMPILE_RE.md](knowledge/DECOMPILE_RE.md) | Link to existing research; recompile ≠ semantics |
-| Safety & limits | [knowledge/SAFETY_LIMITS.md](knowledge/SAFETY_LIMITS.md) | Hallucination, abstain, what Spark won't claim |
+| Safety & limits | [knowledge/SAFETY_LIMITS.md](knowledge/SAFETY_LIMITS.md) | Hallucination, abstain, grounded anti-guess (`./spark-ground`) |
 
 ## Spark cross-links (factory SoT)
 

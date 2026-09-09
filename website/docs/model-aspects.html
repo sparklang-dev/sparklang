@@ -314,7 +314,7 @@
         <tr>
         <td>Behaviors / policies</td>
         <td><strong>partial</strong></td>
-        <td><code class="inline-code">spark_reply_pack</code>, abstain heads, expect; no full SM</td>
+        <td><code class="inline-code">spark_reply_pack</code>, abstain, expect, <code class="inline-code">./spark-ground</code>; no full SM</td>
         </tr>
         <tr>
         <td>Train / adaptation</td>
@@ -901,6 +901,11 @@
         <td>Fail loud — never fabricate</td>
         </tr>
         <tr>
+        <td>Grounded / anti-guess</td>
+        <td><code class="inline-code">./spark-ground</code> verify-before-speak</td>
+        <td>Wrong expect → abstain (exit 2); not “impossible to lie”</td>
+        </tr>
+        <tr>
         <td>Tool use</td>
         <td><code class="inline-code">tool name(…) { stub }</code> + <code class="inline-code">with tools […]</code></td>
         <td>Dry returns <code class="inline-code">[tool:…] stub:local</code>; no agentic loop claim</td>
@@ -1013,6 +1018,8 @@
         </table></div>
         <h3 id="links">Links</h3>
         <p><a href="/docs/language.html">LANGUAGE.md</a> · <a href="/docs/voice.html">VOICE.md</a> ·
+        <a href="/docs/knowledge-safety.html">knowledge/SAFETY_LIMITS.md</a>
+        (grounded / anti-guess) ·
         <a href="/docs/adoption-bar.html">ADOPTION_BAR.md</a> · <a href="/docs/spark-coder.html">SPARK_CODER.md</a>.</p>
         <hr class="doc__hr" />
         <h2 id="memory-context-cross-cutting">Memory &amp; context (cross-cutting)</h2>

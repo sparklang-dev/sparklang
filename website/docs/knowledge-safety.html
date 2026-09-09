@@ -136,7 +136,9 @@
         <li><strong>Eval hacking</strong> — optimize the benchmark, miss the job.</li>
         </ul>
         <p>Alignment stacks (RLHF/RLAIF) reduce <em>some</em> failure modes; they do
-        not erase them (<a href="https://arxiv.org/abs/2407.16216">alignment survey</a>).</p>
+        not erase them (<a href="https://arxiv.org/abs/2407.16216">alignment survey</a>).
+        Spark does <strong>not</strong> claim literal impossibility of all lies. What we
+        ship is <strong>forced grounding</strong>: guessing should fail CI.</p>
         <h2 id="spark-printed-guardrails">Spark-printed guardrails</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
@@ -163,6 +165,10 @@
         <td><a href="/docs/abstain-heads.html">ABSTAIN_HEADS.md</a></td>
         </tr>
         <tr>
+        <td>Grounded generation / anti-guess</td>
+        <td>This page · <code class="inline-code">./spark-ground</code></td>
+        </tr>
+        <tr>
         <td>LLM decompile ≠ SoT</td>
         <td><a href="/docs/llm-decompile.html">llm-decompile</a></td>
         </tr>
@@ -176,6 +182,102 @@
         </tr>
         </tbody>
         </table></div>
+        <h2 id="grounded-generation-anti-guess">Grounded generation / anti-guess</h2>
+        <p><strong>Goal:</strong> make it <strong>nearly impossible to pass CI while guessing</strong> —
+        abstain, retrieve/expect, tool allowlists, verify-before-speak,
+        structured outputs. Not magic honesty weights.</p>
+        <h3 id="modify-adapt-path-qwen-class-spark-owned">Modify / adapt path (Qwen-class + Spark-owned)</h3>
+        <p>Language already has attach-only modify:</p>
+        <pre class="doc__pre"><code class="language-text">model modify keep_existing &quot;out/train/existing-lora&quot; \
+          add &quot;out/train/job-dry-001/adapter.bin&quot; \
+          head &quot;out/heads/abstain.pt&quot; -&gt; modified
+        </code></pre>
+        <p>Companion API (manifest only — no Hub download, no PEFT train in
+        this tool):</p>
+        <pre class="doc__pre"><code class="language-bash">./spark-ground adapter-attach \
+          --base qwen \
+          --keep-existing out/train/existing-lora \
+          --add out/train/job-dry-001/adapter.bin \
+          --add out/heads/abstain.pt \
+          --out out/ground/adapter_manifest.json
+        </code></pre>
+        <ul class="doc__ul">
+        <li><strong>Spark-owned</strong> bases (TinyCoder / STEP / reply-pack): train on
+          CPU or <strong>5090</strong> via existing factory / coder lanes.</li>
+        <li><strong>External bases</strong> (e.g. local Qwen HF dir): reverse/inspect via
+          <code class="inline-code">./spark-model-lab</code>; attach adapters/heads with
+          <code class="inline-code">keep_special_training</code>. <strong>Full Qwen SFT</strong> is operator <strong>opt-in
+          large</strong> on <strong>5090</strong> — <strong>never</strong> the RTX PRO <strong>6000</strong> (voice-only).</li>
+        <li>Owned homepage methods are <strong>not</strong> LoRA theater; see
+          <a href="/docs/knowledge-training.html">TRAINING.md</a> · <a href="/docs/model-training.html">MODEL_LAB.md</a>.</li>
+        </ul>
+        <h3 id="functions-forced-grounding">Functions (forced grounding)</h3>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Function</th>
+        <th>Role</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><code class="inline-code">expect</code></td>
+        <td>Pass/fail on bound vars / fixtures (<code class="inline-code">make test-expect</code>)</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">retrieve</code></td>
+        <td>RAG hits before answer (<a href="/docs/knowledge-agents.html">AGENTS_TOOLS.md</a>)</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">abstain</code></td>
+        <td>SELECT-before-SAMPLE IDK heads (<a href="/docs/abstain-heads.html">ABSTAIN_HEADS.md</a>)</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">verify</code></td>
+        <td><code class="inline-code">./spark-ground verify</code> — wrong candidate → abstain</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">cite</code></td>
+        <td>Cite expect / fixture / dump / retrieve in the payload</td>
+        </tr>
+        <tr>
+        <td>Dry tools</td>
+        <td>Allowlisted <code class="inline-code">tool</code> stubs; default dry</td>
+        </tr>
+        <tr>
+        <td>Recompile ≠ semantics</td>
+        <td>Decompile round-trip is <strong>not</strong> proof of meaning</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <h3 id="spark-ground-mode"><code class="inline-code">spark-ground</code> mode</h3>
+        <p>Refuses to answer unless dump / fixture / expect (or schema) match:</p>
+        <pre class="doc__pre"><code class="language-bash">make spark-ground
+        # Wrong guess fails CI (exit 2):
+        ./spark-ground ask --prompt &quot;dryer start price right now?&quot; \
+          --sot-ok --expect &quot;2.50&quot; --candidate &quot;9.99&quot;
+        # Match passes:
+        ./spark-ground ask --prompt &quot;dryer start price right now?&quot; \
+          --sot-ok --expect &quot;2.50&quot; --candidate &quot;2.50&quot;
+        # Structured verify (stdlib JSON Schema subset — no xgrammar dep):
+        ./spark-ground verify \
+          --candidate '{&quot;price_usd&quot;:2.5,&quot;source&quot;:&quot;fixture&quot;}' \
+          --schema examples/fixtures/ground/want_price.schema.json
+        make test-ground
+        </code></pre>
+        <p>Flagship dry playbook: <code class="inline-code">examples/grounded_ask.spark</code> (with
+        <code class="inline-code">examples/no_invent.spark</code> / inventable verify).</p>
+        <p>Optional constrained decode via <strong>xgrammar</strong> is <strong>not</strong> required;
+        Spark verifies JSON against a small schema subset after generate.
+        Heavier constrained-decode stacks stay opt-in operator choice.</p>
+        <pre class="mermaid">flowchart TB
+          ask[Request] --> tools{Tool allowlist?}
+          tools -->|denied| abs[Abstain]
+          tools -->|ok| inv{Inventable?}
+          inv -->|yes, no SoT| abs
+          inv -->|SoT / safe| ver[verify-before-speak]
+          ver -->|expect/dump/schema miss| abs
+          ver -->|match| ans[Answer + cite]</pre>
         <h2 id="practical-checklist">Practical checklist</h2>
         <ol class="doc__ol">
         <li>Prefer <strong>retrieve / expect / tests</strong> over vibes.</li>
@@ -183,6 +285,8 @@
         <li>Log tool args; redact secrets.</li>
         <li>Treat benchmark wins as <strong>hypotheses</strong>.</li>
         <li>When unsure — <strong>abstain</strong> and ask a human.</li>
+        <li>Run <strong><code class="inline-code">make test-ground</code></strong> before claiming inventable facts are
+           safe.</li>
         </ol>
         <pre class="mermaid">flowchart TB
           ask[Request] --> ground{Grounded?}
@@ -191,7 +295,10 @@
           tools --> ground
           ground -->|still no| abs[Abstain]</pre>
         <p>Hive home: <a href="/docs/knowledge.html">KNOWLEDGE.md</a> · Learn:
-        <a href="/learn/">/learn/</a> · Factory: <a href="/docs/factory.html">FACTORY.md</a>.</p>
+        <a href="/learn/">/learn/</a> · Factory: <a href="/docs/factory.html">FACTORY.md</a> ·
+        Behaviors: <a href="/docs/model-aspects.html">MODEL_ASPECTS.md</a> ·
+        Voice ask: <a href="/docs/voice-ask.html">VOICE_ASK.md</a> ·
+        Coder: <a href="/docs/spark-coder.html">SPARK_CODER.md</a>.</p>
       </article>
       </main>
     </div>
