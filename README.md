@@ -144,6 +144,7 @@ file ./spark
 
 make test
 make test-e2e-browser   # browser dry E2E (no display)
+make sparkbc-e2e        # TRAIN→STEP→ARTIFACT (dry; not SGD)
 ```
 
 ## Language surface
@@ -209,6 +210,7 @@ See [docs/LANGUAGE.md](docs/LANGUAGE.md).
 | Dry (no display) | `./spark --dry-run examples/browser_main.spark` |
 | Live product | `cd ../spark-browser && make run` → `./spark --live browser/run.spark` |
 | Dry E2E | `make test-e2e-browser` |
+| SPARK_BC STEP e2e | `make sparkbc-e2e` |
 
 `python3 -m spark_browser run` is **not** a product entry (Qt debug
 only via `make run-host` in spark-browser).

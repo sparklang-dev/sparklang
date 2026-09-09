@@ -106,6 +106,8 @@ forever.”
 - **Gates met:** `make test-sparkbc` (compile → `--run-bc` body equals
   GAS dry-run after banner for hello/mini/classify/extract/pipeline/
   tool/listen/speak + engine/IDE + review/browser/mitm fixtures).
+  `make sparkbc-e2e` (TRAIN→STEP→TRAIN_STATUS: compile → dump →
+  `--run-bc` dry → `ARTIFACT`; not SGD; weights follow-on).
   `make test-bc-emit` (bc_vm ↔ spark-bc-emit parity on same `.sparkbc`
   goldens).
 - `--dry-run` tries compile+`bc_vm` first; on compile failure falls
@@ -219,6 +221,7 @@ Never auto-escalate to Opus / `judge`. Do not retarget Bifrost CEL.
 # Phase 0 — bytecode on B (destination runner for hello)
 ./spark-bootstrap --run-bc selfhost/fixtures/hello.sparkbc
 make test-sparkbc
+make sparkbc-e2e   # TRAIN→STEP→ARTIFACT (dry; not SGD)
 
 # Phase 2 — lex on B (same goldens as ./selfhost/spark-lex)
 ./spark-bootstrap --lex selfhost/fixtures/mini.spark

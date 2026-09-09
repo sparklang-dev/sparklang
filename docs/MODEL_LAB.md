@@ -57,6 +57,19 @@ Factory (SPARK_BC dump + Spark-created init weights):
 [SPARK_BUILDER.md](SPARK_BUILDER.md). Seed is Spark compiling Spark.
 Later train aims to beat Claude. Not trained today.
 
+Focused TRAIN→STEP→TRAIN_STATUS proof:
+
+```bash
+make sparkbc-e2e
+# alias: make test-sparkbc-e2e
+# or:    ./tools/spark-bc-dump/run_e2e_gate.sh
+```
+
+Asserts compile matches published `.sparkbc`, dump shows TRAIN/STEP,
+`--run-bc` dry JSON, and `out/train/job-dry-001/ARTIFACT`
+(`not_sgd=true`, `trained=false`, `step_n=1`). Does **not** invent
+SGD. STEP-updated weights are a follow-on lane.
+
 ## Related
 
 - [SPARK_BUILDER.md](SPARK_BUILDER.md)

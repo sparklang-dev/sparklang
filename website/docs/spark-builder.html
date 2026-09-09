@@ -150,12 +150,16 @@
         <pre class="doc__pre"><code class="language-bash">./spark --dry-run examples/spark_builder.spark
         ./spark-bootstrap --run-bc docs/examples/spark-builder.sparkbc
         ./spark-bootstrap --run-bc docs/examples/spark-train-step.sparkbc
+        make sparkbc-e2e   # compile → dump TRAIN/STEP → --run-bc → ARTIFACT
         </code></pre>
         <p><code class="inline-code">./spark-bootstrap --run-bc</code> <strong>executes</strong> train opcodes from the
         binary: <code class="inline-code">TRAIN</code> (<code class="inline-code">0x26</code>), optional <code class="inline-code">STEP</code> (<code class="inline-code">0x28</code>), then
         <code class="inline-code">TRAIN_STATUS</code> (<code class="inline-code">0x27</code>). Dry JSON plus an <code class="inline-code">ARTIFACT</code> marker under
         <code class="inline-code">out/train/&lt;job&gt;/</code> (STEP updates <code class="inline-code">step_n</code>). That is a <strong>dry fixture</strong>
-        (<code class="inline-code">trained=false</code>), not SGD and not a trained model. Dry ≠ trained.</p>
+        (<code class="inline-code">trained=false</code>), not SGD and not a trained model. Dry ≠ trained.
+        <code class="inline-code">make sparkbc-e2e</code> is the focused proof for the STEP stream
+        (ARTIFACT + opcode order). It does <strong>not</strong> require a STEP-updated
+        weights file — that is a follow-on on <code class="inline-code">feat/sparkbc-step-weights</code>.</p>
         <p>GAS <code class="inline-code">./spark</code> has <strong>no SPARK_BC emit path</strong> and <strong>no</strong> <code class="inline-code">--run-bc</code>.
         Proof (must fail):</p>
         <pre class="doc__pre"><code class="language-bash">./spark --run-bc docs/examples/spark-builder.sparkbc
@@ -210,6 +214,10 @@
         <td><strong>implemented</strong> (<code class="inline-code">./spark-bootstrap --run-bc</code>; dry; <code class="inline-code">trained=false</code>)</td>
         </tr>
         <tr>
+        <td>Focused e2e gate (compile→dump→run-bc→ARTIFACT)</td>
+        <td><strong>implemented</strong> (<code class="inline-code">make sparkbc-e2e</code> / <code class="inline-code">make test-sparkbc-e2e</code>)</td>
+        </tr>
+        <tr>
         <td>GAS <code class="inline-code">./spark --dry-run</code> train verbs</td>
         <td><strong>implemented</strong> (source, not bytecode)</td>
         </tr>
@@ -228,6 +236,10 @@
         <tr>
         <td>Emit init weights from those bytes</td>
         <td><strong>implemented</strong> (init only)</td>
+        </tr>
+        <tr>
+        <td>STEP-updated weights file</td>
+        <td><strong>follow-on</strong> (<code class="inline-code">feat/sparkbc-step-weights</code>; not this gate)</td>
         </tr>
         <tr>
         <td>Round-trip hello SPARK_BC</td>

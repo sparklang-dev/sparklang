@@ -140,6 +140,9 @@ bind). Bootstrap `--run-bc` prints `"op":"step"` JSON and updates
 `examples/spark_train_step.spark` →
 `docs/examples/spark-train-step.sparkbc` (sha256
 `d08925b52bf8c840de626c9cfec619d4dbae5a674b94bb8c7c5837eb1ac64551`).
+Focused gate: `make sparkbc-e2e` (compile → dump TRAIN/STEP →
+`--run-bc` dry → assert `ARTIFACT`). Not SGD. Step-updated
+weights are a follow-on lane (`feat/sparkbc-step-weights`).
 Dry ≠ trained.
 
 Optional **`method "…"`** selects the training algorithm
