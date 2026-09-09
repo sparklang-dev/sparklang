@@ -9,7 +9,8 @@ Related research: [LLM decompile research](research/LLM_DECOMPILE.md)
 (site: [/docs/llm-decompile.html](/docs/llm-decompile.html)) —
 DecompAI (agent) vs seq2seq models, LLM4Decompile, EmergentMind
 survey, Quarkslab article + RE category (LLM ≠ verified SoT),
-Plain English demystify overview.
+Plain English demystify overview, OpenBin (online product — not
+Spark SoT; third-party trust/IP), recompile ≠ semantic fidelity.
 Mermaid factory overview: [DIAGRAMS.md](DIAGRAMS.md)
 ([/docs/diagrams.html](/docs/diagrams.html)).
 
