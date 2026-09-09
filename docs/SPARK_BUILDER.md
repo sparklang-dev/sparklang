@@ -23,18 +23,21 @@ Dry ≠ SGD ≠ trained. Later owner-granted train (not the 6000) aims to
 
 1. **Seed programs** — compiler slice, train slice, builder, STEP proof,
    optional model lab (see [Programs](#programs)).
-2. **`--compile`** — only `./spark-bootstrap --compile … -o ….sparkbc`
-   writes SPARK_BC. That is the factory emit path.
+2. **`--compile`** — `./spark-bootstrap --compile … -o ….sparkbc`
+   **or** `./spark --compile … -o ….sparkbc` (GAS thin fork).
+   C lowering remains SoT; that is the factory emit path.
 3. **Opcodes in the binary** — `TRAIN` `0x26`, `TRAIN_STATUS` `0x27`,
    `STEP` `0x28` (plus `MODEL` / `ASK` / `PRINT` / `HALT` as needed).
-4. **`--run-bc`** — `./spark-bootstrap --run-bc ….sparkbc` executes those
-   train opcodes as a **dry fixture** (`trained=false`, `ARTIFACT` under
-   `out/train/<job>/`). **STEP** also writes/updates
+4. **`--run-bc`** — `./spark-bootstrap --run-bc ….sparkbc` **or**
+   `./spark --run-bc ….sparkbc` (GAS thin fork → bootstrap bc_vm)
+   executes those train opcodes as a **dry fixture** (`trained=false`,
+   `ARTIFACT` under `out/train/<job>/`). **STEP** also writes/updates
    `out/train/<job>/weights.safetensors` (meta `step_n`, tiny bytecode-hash
    delta; still `trained=false` / `not_sgd=true`). Dry ≠ SGD ≠ trained.
-5. **GAS dry-run vs emit** — `./spark --dry-run file.spark` runs train
-   verbs from **source**. GAS does **not emit** `.sparkbc`.
-   `./spark --run-bc` is **BLOCKED** (exit 1). Use bootstrap.
+5. **GAS dry-run + wrappers** — `./spark --dry-run file.spark` runs
+   train verbs from **source**. `./spark --run-bc` and
+   `./spark --compile … -o …` thin-wrap bootstrap (bc_vm / C
+   lowering remain SoT).
 6. **Dump + init weights** — hex/mnemonic dump of the real file; emit
    `spark-self.init.safetensors` from those bytes (no HF load).
 7. **Later beat Claude** — owner train-grant path. **Not today.**
@@ -56,7 +59,8 @@ are `u16` little-endian constant-pool indices.
 
 `backend` is parsed and skipped (HTTP companion); not a BC operand.
 Dry fixture implementation: `bootstrap/dry_train.c`. Execute with
-`./spark-bootstrap --run-bc`. GAS `./spark --run-bc` is **BLOCKED**.
+`./spark-bootstrap --run-bc` or `./spark --run-bc` (GAS → bootstrap).
+Emit: `./spark-bootstrap --compile` or `./spark --compile`.
 
 ## Programs
 
@@ -128,6 +132,9 @@ txt/json dumps there when regenerating the site; do not invent hex.
 ```bash
 ./spark-bootstrap --run-bc docs/examples/spark-builder.sparkbc
 ./spark-bootstrap --run-bc docs/examples/spark-train-step.sparkbc
+# Same dry path via GAS (forks spark-bootstrap bc_vm):
+./spark --run-bc docs/examples/spark-builder.sparkbc
+./spark --run-bc docs/examples/spark-train-step.sparkbc
 # Expect dry JSON + ARTIFACT under out/train/job-dry-001/
 # trained=false; STEP bumps step_n + writes weights.safetensors.
 # Not SGD (apply_dry_step / tools/spark-bc-dump/apply_step.py).
@@ -136,7 +143,7 @@ ls -la out/train/job-dry-001/ARTIFACT \
 
 # Proof STEP weight write (clean job dir first):
 rm -f out/train/job-dry-001/{ARTIFACT,weights.safetensors}
-./spark-bootstrap --run-bc docs/examples/spark-train-step.sparkbc
+./spark --run-bc docs/examples/spark-train-step.sparkbc
 # → out/train/job-dry-001/weights.safetensors (meta step_n>=1)
 ```
 
@@ -148,12 +155,15 @@ rm -f out/train/job-dry-001/{ARTIFACT,weights.safetensors}
 ./spark --dry-run examples/model_lab.spark
 ```
 
-### 5) GAS BLOCKED paths (must fail)
+### 5) GAS wrappers (same SoT as bootstrap)
 
 ```bash
+./spark --compile examples/spark_builder.spark \
+  -o /tmp/builder.sparkbc
+# thin-wrap → ./spark-bootstrap --compile (bytes match published)
+
 ./spark --run-bc docs/examples/spark-builder.sparkbc
-# exits 1: need --dry-run|--live <file.spark>
-# GAS has no SPARK_BC emit and no --run-bc.
+# thin-wrap → ./spark-bootstrap --run-bc (dry fixture)
 ```
 
 ### 6) Automated gates already on main
@@ -169,7 +179,7 @@ Focused TRAIN→STEP→ARTIFACT gate: `make sparkbc-e2e` /
 `make test-sparkbc-e2e` (`tools/spark-bc-dump/run_e2e_gate.sh`,
 wrapper `scripts/sparkbc-e2e`). Compiles
 `examples/spark_train_step.spark`, dumps TRAIN/STEP decode, runs
-`./spark-bootstrap --run-bc` dry, asserts
+`./spark-bootstrap --run-bc` **and** `./spark --run-bc` dry, asserts
 `out/train/job-dry-001/ARTIFACT` (`not_sgd=true`, `trained=false`,
 `step_n=1`). Not SGD. `make test-sparkbc` asserts STEP weights
 (`weights.safetensors`, `step_n>=1`).
@@ -215,8 +225,8 @@ make test-model-lab
 
 | Item | Status |
 |------|--------|
-| GAS emit `.sparkbc` | **BLOCKED** — use `./spark-bootstrap --compile` |
-| GAS `./spark --run-bc` | **BLOCKED** — exit 1; use bootstrap |
+| GAS emit `.sparkbc` | **implemented** — `./spark --compile` wraps bootstrap |
+| GAS `./spark --run-bc` | **implemented** — thin fork → bootstrap bc_vm |
 | Dry ARTIFACT / `--run-bc` train | **implemented** — fixture; **not** SGD |
 | Init safetensors from SPARK_BC | **implemented** — `trained: false` |
 | STEP-updated weights file | **implemented** (`out/train/<job>/weights.safetensors`; dry delta; `trained=false`) |
@@ -234,7 +244,8 @@ make test-model-lab
 | Execute TRAIN / STEP from published `.sparkbc` | **implemented** (`--run-bc`; dry; `trained=false`) |
 | Focused e2e gate (compile→dump→run-bc→ARTIFACT) | **implemented** (`make sparkbc-e2e` / `make test-sparkbc-e2e`) |
 | GAS `./spark --dry-run` train verbs | **implemented** (source, not bytecode) |
-| GAS emit `.sparkbc` / `--run-bc` | **BLOCKED** |
+| GAS emit `.sparkbc` | **implemented** (`./spark --compile` wrap) |
+| GAS `./spark --run-bc` | **implemented** (fork → bootstrap bc_vm) |
 | Hex dump + decode | **implemented** (`tools/spark-bc-dump/dump.py`) |
 | Emit init weights from those bytes | **implemented** (init only) |
 | Round-trip hello SPARK_BC | **tested** (`make test-sparkbc`) |

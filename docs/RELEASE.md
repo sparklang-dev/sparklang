@@ -93,5 +93,5 @@ Product name in docs/site is **SparkLang**.
 
 - Do not invent token/cost numbers in release notes.
 - Dry-run remains the default story; live gateway is optional.
-- Builder factory honesty: init ≠ trained; GAS does not emit SPARK_BC
+- Builder factory honesty: init ≠ trained; GAS `--compile`/`--run-bc` wrap bootstrap
   — see [SPARK_BUILDER.md](SPARK_BUILDER.md).

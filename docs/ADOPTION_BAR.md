@@ -31,7 +31,7 @@ Not Apache Spark. Not AdaCore SPARK.
 | Packet capture / MITM / browser automation | **won't (focus)** | Still in LANGUAGE; de-emphasized on landing — prefer LSP + highlighting |
 | Homegrown IDE as product chrome | **won't (focus) / keep tree** | Prefer LSP for editor story; language `ide` ops + IDE tree **kept**. Hard-delete OWNER-CONFIRM **revoked** 2026-09-02 (rename yes; delete no) |
 | Model-build as training claim | **won't** | Blueprint / eval sugar only; demoted on landing |
-| SPARK_BC Builder factory | **done (init)** | Spark → `--compile` → `.sparkbc` with `TRAIN`/`STEP`/`TRAIN_STATUS`; bootstrap `--run-bc` dry fixture; Spark-created init safetensors. Dry ≠ trained. GAS emit / `--run-bc` **BLOCKED**. STEP→weights **implemented** (`out/train/<job>/weights.safetensors`; dry delta; `trained=false`). Later train aims to beat Claude — not claimed today. Page: [SPARK_BUILDER.md](SPARK_BUILDER.md) / `/docs/spark-builder.html` |
+| SPARK_BC Builder factory | **done (init)** | Spark → `--compile` → `.sparkbc` with `TRAIN`/`STEP`/`TRAIN_STATUS`; `--run-bc` dry fixture (bootstrap or GAS); Spark-created init safetensors. Dry ≠ trained. GAS `--run-bc` / `--compile` wrappers **implemented**. STEP→weights **implemented** (`out/train/<job>/weights.safetensors`; dry delta; `trained=false`). Later train aims to beat Claude — not claimed today. Page: [SPARK_BUILDER.md](SPARK_BUILDER.md) / `/docs/spark-builder.html` |
 | Production receptionist workflow | **goal** | `examples/receptionist_goal.spark` marked `[goal]` — dry sketch, not a live claim |
 
 ## Escape hatch (P0 design)

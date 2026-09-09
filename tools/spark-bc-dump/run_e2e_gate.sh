@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # SparkBC e2e gate: compile spark_train_step → dump TRAIN/STEP →
-# --run-bc dry → assert ARTIFACT. Not SGD. Not trained.
+# bootstrap --run-bc dry → GAS ./spark --run-bc → assert ARTIFACT.
+# Not SGD. Not trained.
 #
 # STEP weights are covered by make test-sparkbc (weights.safetensors).
 # This gate asserts ARTIFACT + opcode stream only.
@@ -131,6 +132,37 @@ echo "$step_run" | grep -q 'dry-run' || {
   exit 1
 }
 echo "PASS --run-bc dry"
+
+echo "=== sparkbc-e2e: GAS ./spark --run-bc ==="
+GAS="${ROOT}/spark"
+if [[ ! -x "$GAS" ]]; then
+  echo "FAIL sparkbc-e2e: missing $GAS (make spark)"
+  exit 1
+fi
+rm -f "$MARKER"
+gas_run="$("$GAS" --run-bc "$STEP_PUB" 2>&1)" || {
+  echo "FAIL sparkbc-e2e: GAS --run-bc exit non-zero"
+  echo "$gas_run" | head -20
+  exit 1
+}
+echo "$gas_run" | grep -q '"op":"train"' || {
+  echo "FAIL sparkbc-e2e: GAS missing train JSON"
+  echo "$gas_run" | head -16
+  exit 1
+}
+echo "$gas_run" | grep -q '"op":"step"' || {
+  echo "FAIL sparkbc-e2e: GAS missing step JSON"
+  exit 1
+}
+echo "$gas_run" | grep -q '"op":"status"' || {
+  echo "FAIL sparkbc-e2e: GAS missing status JSON"
+  exit 1
+}
+if [[ ! -f "$MARKER" ]]; then
+  echo "FAIL sparkbc-e2e: GAS --run-bc missing $MARKER"
+  exit 1
+fi
+echo "PASS GAS --run-bc dry"
 
 echo "=== sparkbc-e2e: ARTIFACT ==="
 if [[ ! -f "$MARKER" ]]; then

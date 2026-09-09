@@ -73,7 +73,7 @@
         <code class="inline-code">PROGRAMMING_GUIDE.md</code> ·
         <strong>AI models (user-facing):</strong> <a href="/docs/ai-models.html">AI_MODELS.md</a> ·
         <strong>Builder / bytecode:</strong> <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>
-        (full E2E factory reproduce — opcodes, sha256, GAS BLOCKED) ·
+        (full E2E factory reproduce — opcodes, sha256, GAS <code class="inline-code">--run-bc</code>/<code class="inline-code">--compile</code> wrappers) ·
         <strong>IDE status:</strong> <a href="/docs/ide.html">IDE.md</a> (verified
         <code class="inline-code">ide new|open|save|run|buffer|ask|show</code> + <code class="inline-code">ide keys</code> / <code class="inline-code">ide key</code>;
         paint = PPM wire, not a language op; show = real <code class="inline-code">spark-engine-show</code>)</p>
@@ -153,10 +153,10 @@
         as <code class="inline-code">TRAIN_STATUS</code> (<code class="inline-code">0x27</code>).
         Selfhost train seed: <code class="inline-code">selfhost/compile_train.spark</code> →
         <code class="inline-code">docs/examples/spark-selfhost-train.sparkbc</code>. Bootstrap
-        <code class="inline-code">./spark-bootstrap --run-bc</code> runs that binary (dry;
-        <code class="inline-code">trained=false</code>). GAS <code class="inline-code">./spark --dry-run</code> runs train verbs from
-        source; GAS does <strong>not emit</strong> <code class="inline-code">.sparkbc</code>. Emitting TRAIN/STEP ≠ a
-        trained model. See <a href="/docs/self-host.html">SPARK_BC.md</a> and
+        <code class="inline-code">./spark-bootstrap --run-bc</code> <strong>or</strong> GAS <code class="inline-code">./spark --run-bc</code> runs that
+        binary (dry; <code class="inline-code">trained=false</code>). GAS <code class="inline-code">./spark --dry-run</code> runs train
+        verbs from source; GAS <code class="inline-code">--compile</code> wraps bootstrap emit. Emitting
+        TRAIN/STEP ≠ a trained model. See <a href="/docs/self-host.html">SPARK_BC.md</a> and
         <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> (sha256 table + reproduce
         commands). STEP→weights is <strong>implemented</strong>
         (<code class="inline-code">out/train/&lt;job&gt;/weights.safetensors</code>; dry; <code class="inline-code">trained=false</code>).</p>
@@ -201,7 +201,7 @@
         <code class="inline-code">./spark-train-http --spark-line</code>; status uses the <strong>quoted</strong> job id
         (never a hardcoded <code class="inline-code">job-dry-001</code>). SPARK_BC <code class="inline-code">TRAIN</code> is <strong><code class="inline-code">0x26</code></strong>;
         <code class="inline-code">STEP</code> is <strong><code class="inline-code">0x28</code></strong>; <code class="inline-code">TRAIN_STATUS</code> is <strong><code class="inline-code">0x27</code></strong>. Execute with
-        <code class="inline-code">./spark-bootstrap --run-bc</code>. GAS <code class="inline-code">./spark --run-bc</code> exits 1.
+        <code class="inline-code">./spark-bootstrap --run-bc</code> or <code class="inline-code">./spark --run-bc</code>.
         See <a href="/docs/self-host.html">SPARK_BC.md</a> and
         <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</p>
         <p><strong>Backends:</strong> <code class="inline-code">http</code> (default MVP companion <code class="inline-code">./spark-train-http</code>),

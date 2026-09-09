@@ -78,7 +78,7 @@
         <code class="inline-code">retrieve</code> via gateway env is <strong>optional</strong> (<code class="inline-code">./spark --live</code>).</p>
         <p><strong>Related:</strong> <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> (full factory E2E —
         SPARK_BC vs weights; <code class="inline-code">TRAIN</code> <code class="inline-code">0x26</code> / <code class="inline-code">STEP</code> <code class="inline-code">0x28</code> /
-        <code class="inline-code">TRAIN_STATUS</code> <code class="inline-code">0x27</code>; sha256 table; GAS BLOCKED; dry ≠ trained) ·
+        <code class="inline-code">TRAIN_STATUS</code> <code class="inline-code">0x27</code>; sha256 table; GAS <code class="inline-code">--run-bc</code>/<code class="inline-code">--compile</code> wrappers; dry ≠ trained) ·
         <a href="/docs/self-host.html">SPARK_BC.md</a> (bytecode ISA) ·
         <code class="inline-code">MODEL_LAB.md</code> (reverse / compile / modify) ·
         <a href="/docs/model-training.html">MODEL_TRAINING.md</a> (train jobs) ·
@@ -115,8 +115,8 @@
         </tr>
         <tr>
         <td><strong>Builder from SPARK_BC</strong></td>
-        <td><code class="inline-code">--compile</code> Spark → <code class="inline-code">.sparkbc</code> (incl. <code class="inline-code">0x26</code>/<code class="inline-code">0x28</code>/<code class="inline-code">0x27</code>); dump; emit init weights; bootstrap <code class="inline-code">--run-bc</code> dry train</td>
-        <td>Spark-created <strong>init</strong>, not trained; GAS emit/<code class="inline-code">--run-bc</code> <strong>BLOCKED</strong>; STEP→weights <strong>implemented</strong> (dry); later train aims to beat Claude; <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a></td>
+        <td><code class="inline-code">--compile</code> Spark → <code class="inline-code">.sparkbc</code> (incl. <code class="inline-code">0x26</code>/<code class="inline-code">0x28</code>/<code class="inline-code">0x27</code>); dump; emit init weights; <code class="inline-code">--run-bc</code> dry train (bootstrap or GAS)</td>
+        <td>Spark-created <strong>init</strong>, not trained; GAS <code class="inline-code">--run-bc</code> / <code class="inline-code">--compile</code> wrappers <strong>implemented</strong>; STEP→weights <strong>implemented</strong> (dry); later train aims to beat Claude; <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a></td>
         </tr>
         <tr>
         <td><strong>Modify existing</strong></td>

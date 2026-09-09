@@ -55,7 +55,7 @@ under `out/lab/`.
 
 Factory (SPARK_BC dump + Spark-created init weights + TRAIN/STEP
 opcodes): [SPARK_BUILDER.md](SPARK_BUILDER.md) — full E2E reproduce
-commands, published sha256 table, GAS BLOCKED, dry ≠ trained.
+commands, published sha256 table, GAS `--compile`/`--run-bc`, dry ≠ trained.
 Seed is Spark compiling Spark. Later train aims to beat Claude.
 Not trained today. STEP→weights is **implemented** (dry; not SGD).
 

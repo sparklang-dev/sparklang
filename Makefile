@@ -593,8 +593,8 @@ test-sparkbc: spark-bootstrap spark
 	PYTHONPATH=python python3 tools/spark-bc-dump/test_dump.py
 
 # Focused TRAIN→STEP→TRAIN_STATUS e2e: compile → dump → --run-bc →
-# ARTIFACT. Not SGD. Step-weights file is a follow-on lane.
-test-sparkbc-e2e: spark-bootstrap
+# ARTIFACT (+ GAS ./spark --run-bc). Not SGD.
+test-sparkbc-e2e: spark-bootstrap spark
 	chmod +x tools/spark-bc-dump/run_e2e_gate.sh
 	./tools/spark-bc-dump/run_e2e_gate.sh
 

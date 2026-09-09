@@ -8,7 +8,8 @@
 #   model step                 → STEP         0x28
 #   model status                → TRAIN_STATUS 0x27
 # Same dry JSON shape as bootstrap/dry_train.c. Dry ≠ SGD ≠ trained.
-# SPARK_BC emit is BLOCKED in GAS — use bootstrap --compile.
+# GAS --run-bc / --compile thin-wrap spark-bootstrap (bc_vm / C
+# lowering remain SoT). Dry ≠ SGD ≠ trained.
 #
 # Exports: model_ops_dispatch
 # Imports from spark.s: linebuf, write_stdout, extract_quote, contains,
