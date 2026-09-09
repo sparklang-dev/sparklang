@@ -63,9 +63,9 @@ def resolve_arch(
     arch = dict(arch_from_bc(bc))
     if dim is not None:
         d = int(dim)
-        if d < 8 or d > 128:
+        if d < 8 or d > 256:
             raise ValueError(
-                "dim must be in [8, 128] for CPU-fast stub (got %d)"
+                "dim must be in [8, 256] for stub/gallery (got %d)"
                 % d
             )
         if d % N_HEAD != 0:

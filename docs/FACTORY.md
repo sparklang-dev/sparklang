@@ -26,6 +26,7 @@ tools, train, eval, serve.
 | Build models + weights | [BUILD_MODELS.md](BUILD_MODELS.md) | [/docs/build-models.html](/docs/build-models.html) |
 | Train loop (outer/inner) | [TRAIN_LOOP.md](TRAIN_LOOP.md) | [/docs/train-loop.html](/docs/train-loop.html) |
 | Architecture pieces | [ARCHITECTURE.md](ARCHITECTURE.md) | [/docs/architecture.html](/docs/architecture.html) |
+| **Weight gallery** | [WEIGHT_GALLERY.md](WEIGHT_GALLERY.md) | [/docs/weight-gallery.html](/docs/weight-gallery.html) |
 | Attention / MLP honesty | [ATTENTION_FORWARD.md](ATTENTION_FORWARD.md) | [/docs/attention-forward.html](/docs/attention-forward.html) |
 | Tokenizer / BPE | [TOKENIZER.md](TOKENIZER.md) | [/docs/tokenizer.html](/docs/tokenizer.html) |
 | Serve forward + HTTP | [SERVE.md](SERVE.md) | [/docs/serve.html](/docs/serve.html) |

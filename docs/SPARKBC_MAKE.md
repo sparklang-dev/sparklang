@@ -18,6 +18,9 @@ ISA: [SPARK_BC.md](SPARK_BC.md). Story:
 | `make spark-sgd-proof-scale` | Local opt-in larger JSONL + dim/n_layer (F-lane; not default CI) |
 | `make spark-coder-train` | Owned TinyCoder **tiny** (CI/default); prefer 5090; never 6000 |
 | `make spark-coder-train-large` | Opt-in **large** coder (dim 64 / n_layer 4); not GHA default |
+| `make weight-gallery` | Catalog + emit scale/large samples + website catalog JSON |
+| `make test-weights-play` | Weight gallery unit + CLI play/diff/stats |
+| `make weight-gallery-xl` | Opt-in XL emit (prefer 5090; never 6000) |
 | `make spark-eval` | Frozen copy/recall + next-token probes; exit 0 = harness ran (**not** beat Claude) |
 | `make spark-eval-claude` | Same + optional Anthropic baseline (E-lane; skip if no key) |
 | `make test-spark-eval` | Unit gate for eval harness |

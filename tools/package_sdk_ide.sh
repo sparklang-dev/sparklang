@@ -206,6 +206,35 @@ if [[ -f models/spark-coder/weights.safetensors ]]; then
   mkdir -p "$DEST/models/spark-coder"
   cp -a models/spark-coder/. "$DEST/models/spark-coder/"
 fi
+# Larger spark-coder variant when present
+if [[ -f models/spark-coder-large/weights.safetensors ]]; then
+  mkdir -p "$DEST/models/spark-coder-large"
+  cp -a models/spark-coder-large/. "$DEST/models/spark-coder-large/"
+fi
+# Weight gallery sample set (init + catalog JSON; large via make)
+mkdir -p "$DEST/models/gallery" "$DEST/tools/spark-weights"
+cp -a docs/examples/*.safetensors \
+  "$DEST/runtime/docs/examples/" 2>/dev/null || true
+if [[ -f docs/examples/weight-gallery-catalog.json ]]; then
+  cp -a docs/examples/weight-gallery-catalog.json \
+    "$DEST/runtime/docs/examples/"
+fi
+if [[ -f out/gallery/scale/weights.safetensors ]]; then
+  mkdir -p "$DEST/models/gallery/scale"
+  cp -a out/gallery/scale/weights.safetensors \
+    "$DEST/models/gallery/scale/"
+fi
+if [[ -f out/gallery/large/weights.safetensors ]]; then
+  mkdir -p "$DEST/models/gallery/large"
+  cp -a out/gallery/large/weights.safetensors \
+    "$DEST/models/gallery/large/"
+fi
+if [[ -f tools/spark-weights/cli.py ]]; then
+  cp -a tools/spark-weights/cli.py "$DEST/tools/spark-weights/"
+fi
+if [[ -f docs/WEIGHT_GALLERY.md ]]; then
+  cp -a docs/WEIGHT_GALLERY.md "$DEST/sdk/docs/"
+fi
 if [[ -x spark-code ]]; then
   cp -a spark-code "$DEST/bin/spark-code"
   mkdir -p "$DEST/tools/spark-code"
@@ -430,6 +459,7 @@ payload = {
         "GUI uses real --compile + bc_dump.format_dump",
         "Includes helpers + shadows + BC dump tools",
         "spark-coder owned weights when models/spark-coder present",
+        "weight gallery: init safetensors + catalog; scale/large when generated",
     ],
 }
 manifest_path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")

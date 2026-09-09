@@ -49,6 +49,7 @@ class TestDocsNav(unittest.TestCase):
             "BUILD_MODELS.md",
             "TRAIN_LOOP.md",
             "ARCHITECTURE.md",
+            "WEIGHT_GALLERY.md",
             "ATTENTION_FORWARD.md",
             "SERVE.md",
             "EVAL.md",

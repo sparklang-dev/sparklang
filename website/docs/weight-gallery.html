@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Weight gallery — view / play / understand — Spark</title>
+    <meta name="description" content="Catalog tiny through xl Spark stub weights; inspect, diff, play forward. Opt-in 5090 XL; never 6000." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/css/tokens.css?v=workflow0909" />
+    <link rel="stylesheet" href="/css/site.css?v=workflow0909" />
+  </head>
+  <body class="doc-page">
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="site-brand" href="/" aria-label="Spark home">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z" fill="currentColor" />
+          </svg>
+          Spark
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+        </button>
+        <div class="header-nav-wrap">
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <ul class="nav-primary">
+              <li><a href="/workflow.html">Loop</a></li>
+              <li><a href="/learn/">Learn</a></li>
+              <li><a href="/docs/language.html">Docs</a></li>
+              <li><a href="/docs/factory.html">Factory</a></li>
+              <li><a href="/downloads.html">Download</a></li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">Forge</button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/model-aspects.html">Model aspects</a></li>
+                  <li><a href="/docs/diagrams.html">Diagrams</a></li>
+                  <li><a href="/docs/spark-builder.html">Builder</a></li>
+                  <li><a href="/docs/build-models.html">Build models</a></li>
+                  <li><a href="/docs/model-training.html">Model training</a></li>
+                  <li><a href="/docs/train-loop.html">Train loop</a></li>
+                  <li><a href="/docs/spark-coder.html">Spark coder</a></li>
+                  <li><a href="/docs/weight-gallery.html">Weight gallery</a></li>
+                  <li><a href="/docs/ai-models.html">AI models</a></li>
+                  <li><a href="/docs/voice.html">Voice / STT / TTS</a></li>
+                </ul>
+              </li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">Bench</button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/compile.html">Compile</a></li>
+                  <li><a href="/docs/decompile.html">Decompile</a></li>
+                  <li><a href="/docs/programming-guide.html">Programming guide</a></li>
+                  <li><a href="/docs/ide.html">IDE</a></li>
+                  <li><a href="/ide-web.html">IDE web shell</a></li>
+                  <li><a href="/docs/native-network-web.html">Network + web</a></li>
+                  <li><a href="/docs/serve.html">Serve</a></li>
+                  <li><a href="/docs/tools-helpers.html">Tools & helpers</a></li>
+                  <li><a href="/about.html">About</a></li>
+                </ul>
+              </li>
+            </ul>
+            <a href="/playground.html" class="nav-cta">Try</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <div class="shell doc-layout">
+      <aside class="doc-sidebar" aria-label="Table of contents">
+        <p class="doc-sidebar__title">On this page</p>
+        <nav id="doc-toc-list"></nav>
+      </aside>
+      <main class="doc-main">
+      <nav class="doc__nav" aria-label="Docs">
+        <a href="/learn/">Learn</a>
+        <a href="/docs/factory.html">Factory hub</a>
+        <a href="/docs/model-aspects.html">Model aspects</a>
+        <a href="/docs/voice.html">Voice</a>
+        <a href="/docs/diagrams.html">Diagrams</a>
+        <a href="/docs/spark-builder.html">Builder</a>
+        <a href="/docs/compile.html">Compile</a>
+        <a href="/docs/decompile.html">Decompile</a>
+        <a href="/docs/llm-decompile.html">LLM research</a>
+        <a href="/docs/spark-bc.html">Opcodes / ISA</a>
+        <a href="/docs/build-models.html">Build models</a>
+        <a href="/docs/train-loop.html">Train loop</a>
+        <a href="/docs/spark-coder.html">Spark coder</a>
+        <a href="/docs/weight-gallery.html" aria-current="page">Weight gallery</a>
+        <a href="/docs/architecture.html">Architecture</a>
+        <a href="/docs/tokenizer.html">Tokenizer</a>
+        <a href="/docs/serve.html">Serve</a>
+        <a href="/docs/eval.html">Eval</a>
+        <a href="/docs/sparkbc-make.html">Make targets</a>
+        <a href="/docs/tools-helpers.html">Tools & helpers</a>
+        <a href="/docs/ci-pages.html">CI / Pages</a>
+        <a href="/docs/adoption-bar.html">Adoption bar</a>
+        <a href="/docs/language.html">Language</a>
+        <a href="/docs/programming-guide.html">Programming guide</a>
+        <a href="/downloads.html">Downloads</a>
+      </nav>      <article class="doc__body">
+        <h1 id="weight-gallery-view-play-understand-spark-stub-weights">Weight gallery — view / play / understand Spark stub weights</h1>
+        <p>Catalog <strong>many weight kinds</strong> Spark already produces (or can emit):
+        init / dry ARTIFACT, post-STEP SGD, checkpoints, F-lane scale
+        fixtures, owned <strong>spark-coder</strong>, and <strong>large / xl</strong> multi-layer
+        profiles. Play on CPU; opt-in generate XL on <strong>RTX 5090</strong>;
+        <strong>never</strong> the voice RTX PRO <strong>6000</strong>.</p>
+        <p><strong>Honesty:</strong> these are tiny-to-xl <strong>control stubs</strong>, not production
+        LLM weights. Dump/compile stay SoT for SPARK_BC. Does <strong>not</strong> beat
+        Claude.</p>
+        <p>Hub: <a href="/docs/factory.html">FACTORY.md</a>. Arch roles: <a href="/docs/architecture.html">ARCHITECTURE.md</a>.</p>
+        <h2 id="size-profiles-tiny-xl">Size profiles (tiny → xl)</h2>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Profile</th>
+        <th>dim</th>
+        <th>n_layer</th>
+        <th>Notes</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><code class="inline-code">tiny</code></td>
+        <td>32</td>
+        <td>2</td>
+        <td>Default init / spark-coder</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">scale</code></td>
+        <td>64</td>
+        <td>4</td>
+        <td>F-lane fixture (<code class="inline-code">spark-sgd-proof-scale</code>)</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">large</code></td>
+        <td>128</td>
+        <td>8</td>
+        <td>Multi-layer + full attn tensor set</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">xl</code></td>
+        <td>256</td>
+        <td>8</td>
+        <td>Opt-in; prefer 5090 generate</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <p>Larger spark-coder variant path (when present):
+        <code class="inline-code">models/spark-coder-large/weights.safetensors</code>.</p>
+        <h2 id="kind-catalog">Kind catalog</h2>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Kind</th>
+        <th>What it is</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td>Init / dry ARTIFACT</td>
+        <td>SPARK_BC-seeded Xavier; <code class="inline-code">trained=false</code></td>
+        </tr>
+        <tr>
+        <td>Post-STEP SGD</td>
+        <td>After <code class="inline-code">apply_step</code> / coder train (<code class="inline-code">lm_head</code>, embed, attn…)</td>
+        </tr>
+        <tr>
+        <td>Checkpoints</td>
+        <td><code class="inline-code">checkpoint.json</code> loss-curve companions</td>
+        </tr>
+        <tr>
+        <td>Scale fixtures</td>
+        <td>F-lane larger dim/layers</td>
+        </tr>
+        <tr>
+        <td>spark-coder</td>
+        <td>Owned TinyCoder under <code class="inline-code">models/spark-coder/</code></td>
+        </tr>
+        <tr>
+        <td>spark-coder-large / gallery large</td>
+        <td>xl</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">models/**/*.safetensors</code></td>
+        <td>Any owned pack on disk</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">docs/examples/*.safetensors</code></td>
+        <td>Checked-in init examples</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <h2 id="view">View</h2>
+        <pre class="doc__pre"><code class="language-bash">make weight-gallery          # catalog JSON + sample emits
+        PYTHONPATH=python python3 tools/spark-weights/cli.py catalog
+        PYTHONPATH=python python3 tools/spark-weights/cli.py inspect \
+          docs/examples/spark-self.init.safetensors
+        PYTHONPATH=python python3 tools/spark-weights/cli.py explain attn
+        </code></pre>
+        <p>Each tensor row: <strong>name</strong>, <strong>shape</strong>, <strong>dtype</strong> (F32), <strong>sha256</strong>,
+        <strong>role</strong> (<code class="inline-code">embed</code> / <code class="inline-code">attn</code> / <code class="inline-code">mlp</code> / <code class="inline-code">lm_head</code> / <code class="inline-code">norm</code> / <code class="inline-code">other</code>).</p>
+        <h2 id="play">Play</h2>
+        <pre class="doc__pre"><code class="language-bash"># Forward / predict (CPU; works on large/xl stubs too)
+        PYTHONPATH=python python3 tools/spark-weights/cli.py play \
+          docs/examples/spark-self.init.safetensors --prompt &quot;hi&quot;
+
+        # Diff norms between two weight files
+        PYTHONPATH=python python3 tools/spark-weights/cli.py diff A.safetensors B.safetensors
+
+        # Histogram / L2 stats (CPU)
+        PYTHONPATH=python python3 tools/spark-weights/cli.py stats \
+          out/gallery/large/weights.safetensors --name spark.embed.weight
+        </code></pre>
+        <p>Website: <a href="/docs/weight-gallery.html">/docs/weight-gallery.html</a>
+        and interactive browser <a href="/weight-playground.html">/weight-playground.html</a>
+        (loads <code class="inline-code">docs/examples/weight-gallery-catalog.json</code>).</p>
+        <h2 id="generate-opt-in-large">Generate (opt-in large)</h2>
+        <pre class="doc__pre"><code class="language-bash"># CPU scale + large samples under out/gallery/
+        make weight-gallery
+
+        # XL prefers 5090 (falls back to CPU); never 6000
+        PYTHONPATH=python python3 tools/spark-weights/cli.py generate xl --5090
+        # or force CPU:
+        PYTHONPATH=python python3 tools/spark-weights/cli.py generate xl --cpu
+        </code></pre>
+        <h2 id="understand-roles-in-the-spark-forward-path">Understand (roles in the Spark forward path)</h2>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Role</th>
+        <th>Plain English</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><strong>embed</strong></td>
+        <td>Byte/token table; prompt rows → mean-pool or attn0</td>
+        </tr>
+        <tr>
+        <td><strong>attn</strong></td>
+        <td>Layer q/k/v/o (+ norm); multi-layer on large/xl</td>
+        </tr>
+        <tr>
+        <td><strong>mlp</strong></td>
+        <td>SwiGLU up/gate/down; layer-0 in tiny CPU serve</td>
+        </tr>
+        <tr>
+        <td><strong>norm</strong></td>
+        <td>RMSNorm scales before MLP / lm_head</td>
+        </tr>
+        <tr>
+        <td><strong>lm_head</strong></td>
+        <td>Hidden → vocab logits; primary STEP CE target</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <p>Forward sketch: <code class="inline-code">embed → attn0? → mlp0? → rms_norm → lm_head</code>
+        (<a href="/docs/serve.html">SERVE.md</a>, <a href="/docs/attention-forward.html">ATTENTION_FORWARD.md</a>).</p>
+        <h2 id="make-targets">Make targets</h2>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Target</th>
+        <th>Role</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><code class="inline-code">make weight-gallery</code></td>
+        <td>Emit scale+large samples, write catalog JSON</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">make test-weights-play</code></td>
+        <td>Unit + CLI play/diff/stats smoke</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">make weight-gallery-xl</code></td>
+        <td>Opt-in XL emit (<code class="inline-code">--5090</code>)</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <p>SDK pack includes checked-in init safetensors + catalog JSON when
+        present; regenerate large samples via the make targets above (CI
+        keeps tiny/scale smoke — XL is opt-in).</p>
+        <h2 id="related">Related</h2>
+        <ul class="doc__ul">
+        <li><a href="/docs/build-models.html">BUILD_MODELS.md</a> · <a href="/docs/train-loop.html">TRAIN_LOOP.md</a></li>
+        <li><a href="/docs/spark-coder.html">SPARK_CODER.md</a> · <a href="/docs/sparkbc-make.html">SPARKBC_MAKE.md</a></li>
+        <li><a href="/docs/eval.html">EVAL.md</a> — measurement only; never beat Claude</li>
+        </ul>
+      </article>
+      </main>
+    </div>
+
+    <footer class="site-footer">
+      <div class="shell footer-inner">
+        <span>Spark programming language</span>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="/workflow.html">Loop</a>
+          <a href="/learn/">Learn</a>
+          <a href="/docs/language.html">Reference</a>
+          <a href="/downloads.html">Downloads</a>
+          <a href="/playground.html">Playground</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="/js/site.js"></script>
+  </body>
+</html>

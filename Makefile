@@ -22,7 +22,8 @@ NVML_LIB ?= /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1
 	spark-sgd-proof spark-sgd-proof-scale docs-html docs-check \
 	sdk-pack dist test-sdk-pack spark-bc-gui \
 	helpers tools-test test-senses \
-	spark-coder-train spark-coder-train-large test-spark-coder
+	spark-coder-train spark-coder-train-large test-spark-coder \
+	weight-gallery weight-gallery-xl test-weights-play
 
 all: spark companions
 
@@ -565,6 +566,45 @@ spark-coder-train-large: spark-bootstrap
 test-spark-coder: spark-bootstrap
 	PYTHONPATH=python python3 -m unittest \
 	  sparklang.spark_coder.test_spark_coder -v
+
+# Weight gallery: catalog tiny→xl kinds; emit scale+large samples;
+# write website catalog JSON. Play/diff/stats on CPU. Never 6000.
+.PHONY: weight-gallery weight-gallery-xl test-weights-play
+weight-gallery: spark-bootstrap
+	@mkdir -p out/gallery/scale out/gallery/large \
+	  website/docs/examples
+	PYTHONPATH=python python3 tools/spark-weights/cli.py generate scale \
+	  --out out/gallery/scale/weights.safetensors --cpu
+	PYTHONPATH=python python3 tools/spark-weights/cli.py generate large \
+	  --out out/gallery/large/weights.safetensors --cpu
+	PYTHONPATH=python python3 tools/spark-weights/cli.py \
+	  write-catalog-json \
+	  --out website/docs/examples/weight-gallery-catalog.json
+	@cp -f website/docs/examples/weight-gallery-catalog.json \
+	  docs/examples/weight-gallery-catalog.json 2>/dev/null || true
+	PYTHONPATH=python python3 tools/spark-weights/cli.py catalog | head -c 4000
+	@echo ""
+	@echo "weight-gallery: scale+large under out/gallery/; catalog JSON written"
+
+# Opt-in XL (dim=256). Prefer 5090; refuse 6000; CPU fallback OK.
+weight-gallery-xl: spark-bootstrap
+	@mkdir -p out/gallery/xl
+	PYTHONPATH=python python3 tools/spark-weights/cli.py generate xl \
+	  --out out/gallery/xl/weights.safetensors --5090
+	PYTHONPATH=python python3 tools/spark-weights/cli.py play \
+	  out/gallery/xl/weights.safetensors --prompt "xl"
+
+test-weights-play:
+	PYTHONPATH=python python3 -m unittest \
+	  sparklang.model_lab.test_weight_gallery -v
+	PYTHONPATH=python python3 tools/spark-weights/cli.py inspect \
+	  docs/examples/spark-self.init.safetensors >/tmp/wg-inspect.json
+	PYTHONPATH=python python3 tools/spark-weights/cli.py play \
+	  docs/examples/spark-self.init.safetensors --prompt "ok" \
+	  >/tmp/wg-play.json
+	@python3 -c "import json; p=json.load(open('/tmp/wg-play.json')); \
+	  assert p['beats_claude'] is False; assert 'argmax' in p['forward']; \
+	  print('play_ok', p['forward']['path'], 'beats_claude=False')"
 
 # Multi-outer CPU SGD + layer-0 attn proof + measurement-only eval.
 # Never claims beat Claude. CPU only. Tiny fixture = GHA/CI default.
