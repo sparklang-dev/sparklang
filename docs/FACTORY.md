@@ -31,6 +31,7 @@ tools, train, eval, serve.
 | Serve forward + HTTP | [SERVE.md](SERVE.md) | [/docs/serve.html](/docs/serve.html) |
 | Eval harness | [EVAL.md](EVAL.md) | [/docs/eval.html](/docs/eval.html) |
 | Makefile targets | [SPARKBC_MAKE.md](SPARKBC_MAKE.md) | [/docs/sparkbc-make.html](/docs/sparkbc-make.html) |
+| Tools & helpers | [TOOLS_HELPERS.md](TOOLS_HELPERS.md) | [/docs/tools-helpers.html](/docs/tools-helpers.html) |
 | CI + Pages how-to | [CI_PAGES.md](CI_PAGES.md) | [/docs/ci-pages.html](/docs/ci-pages.html) |
 | Full factory E2E | [SPARK_BUILDER.md](SPARK_BUILDER.md) | [/docs/spark-builder.html](/docs/spark-builder.html) |
 | Adoption honesty | [ADOPTION_BAR.md](ADOPTION_BAR.md) | [/docs/adoption-bar.html](/docs/adoption-bar.html) |
@@ -55,9 +56,10 @@ make docs-check
 | **F** | Scale fixtures / dim knobs | **Merged** — see [TRAIN_LOOP.md](TRAIN_LOOP.md) / `spark-sgd-proof-scale` |
 | **G** | Serve HTTP/API | **Merged** — see [SERVE.md](SERVE.md) / `make spark-serve-api` |
 | **H** | Website + factory docs | **Merged** (#23/#25) — this hub + [DIAGRAMS.md](DIAGRAMS.md) |
+| **I** | SDK / IDE / GUI pack | **Merged** (#24) — `make sdk-pack`; K enhances helpers overlay |
 | **J** | Decompile research / captures | **Merged** (#26) — [DECOMPILE.md](DECOMPILE.md) + [research/LLM_DECOMPILE.md](research/LLM_DECOMPILE.md); flow diagrams also in [DIAGRAMS.md](DIAGRAMS.md) |
-| **L** | AI model aspects (senses + behaviors) | **This page set** — [MODEL_ASPECTS.md](MODEL_ASPECTS.md); eyes stub only |
-| **I / K** | SDK / helpers / shadows | Mentioned under tools vs behaviors; do not steal |
+| **K** | Helpers / shadows / kit | See [TOOLS_HELPERS.md](TOOLS_HELPERS.md) — enhances I minimal helpers |
+| **L** | AI model aspects (senses + behaviors) | **Merged** (#29) — [MODEL_ASPECTS.md](MODEL_ASPECTS.md); eyes stub only |
 
 ## Honesty bar
 

@@ -71,3 +71,5 @@ website/.wrangler/
 /spark-engine-layout-test
 spark-bc-emit
 /examples/c/host_embed
+dist/
+build/

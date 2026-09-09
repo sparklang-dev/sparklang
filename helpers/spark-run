@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# One-shot: compile .spark → run-bc → inspect dump.
+# Never 6000. Does not claim beat Claude.
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$ROOT"
+
+SRC="${1:?usage: spark-run <file.spark> [out.sparkbc]}"
+OUT="${2:-}"
+if [[ -z "$OUT" ]]; then
+  base="$(basename "$SRC" .spark)"
+  mkdir -p out/helpers
+  OUT="out/helpers/${base}.sparkbc"
+fi
+
+if [[ -x "$ROOT/bin/spark-bootstrap" ]]; then
+  BOOT="$ROOT/bin/spark-bootstrap"
+elif [[ -x "$ROOT/spark-bootstrap" ]]; then
+  BOOT="$ROOT/spark-bootstrap"
+else
+  make -q spark-bootstrap 2>/dev/null || make spark-bootstrap
+  BOOT="$ROOT/spark-bootstrap"
+fi
+
+mkdir -p "$(dirname "$OUT")"
+echo "==> compile $SRC -> $OUT"
+"$BOOT" --compile "$SRC" -o "$OUT"
+echo "==> run-bc $OUT"
+"$BOOT" --run-bc "$OUT" || true
+echo "==> dump $OUT"
+export PYTHONPATH="${ROOT}/python:${PYTHONPATH:-}"
+python3 "$ROOT/tools/spark-bc-dump/dump.py" "$OUT" \
+  --source "$SRC" \
+  --command "./helpers/spark-run $SRC"
+echo "OK sparkbc=$OUT"

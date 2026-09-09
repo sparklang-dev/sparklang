@@ -1,9 +1,9 @@
 {
-  "name": "sparklang-sdk-0.6.38",
-  "version": "0.6.38",
-  "tarball": "sparklang-sdk-0.6.38.tar.gz",
-  "sha256": "d57bc7c969ac72074900dd25c2044094052ab244f7b796ff4450bc13e11b7eb5",
-  "size_bytes": 547630,
+  "name": "sparklang-sdk-0.6.40",
+  "version": "0.6.40",
+  "tarball": "sparklang-sdk-0.6.40.tar.gz",
+  "sha256": "41208ccefb93f8b2073a43f32ede7fcd2aeda62cf211e944131e980004d9f434",
+  "size_bytes": 608303,
   "required_paths": [
     "bin/spark-bootstrap",
     "bin/sparkc",

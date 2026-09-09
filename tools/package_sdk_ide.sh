@@ -145,11 +145,21 @@ chmod +x "$DEST/bin/spark-bc-gui"
 mkdir -p "$DEST/helpers" "$DEST/shadows" "$DEST/tools"
 cp -a tools/spark_helpers/. "$DEST/helpers/"
 cp -a tools/spark_shadows/. "$DEST/shadows/"
+# K-lane root helpers/ (richer CLIs) overlay when present
+if [[ -d helpers ]]; then
+  cp -a helpers/. "$DEST/helpers/"
+fi
+if [[ -d shadows ]]; then
+  cp -a shadows/. "$DEST/shadows/"
+fi
 # Also keep under tools/ for PYTHONPATH / sibling-K layout
 cp -a tools/spark_helpers "$DEST/tools/spark_helpers"
 cp -a tools/spark_shadows "$DEST/tools/spark_shadows"
 chmod +x "$DEST/helpers/"*.sh "$DEST/shadows/"*.sh \
-  "$DEST/tools/spark_helpers/"*.sh "$DEST/tools/spark_shadows/"*.sh
+  "$DEST/tools/spark_helpers/"*.sh "$DEST/tools/spark_shadows/"*.sh \
+  2>/dev/null || true
+# Executable K helper CLIs (no .sh suffix)
+chmod +x "$DEST"/helpers/spark-* 2>/dev/null || true
 # Assorted tools already useful for compile/decompile/build
 cp -a tools/spark-bc-dump "$DEST/tools/spark-bc-dump"
 if [[ -d tools/spark-eval ]]; then
@@ -162,19 +172,45 @@ if [[ -d tools/spark-bpe-seed ]]; then
   cp -a tools/spark-bpe-seed/README.md \
     "$DEST/tools/spark-bpe-seed/" 2>/dev/null || true
 fi
-# Include K-lane tree if present on main (tools/spark_kit or similar)
-for kdir in tools/spark_kit tools/spark-kit tools/helpers tools/shadows; do
+# Include K-lane tree if present (tools/spark_kit + spark_shadow)
+for kdir in tools/spark_kit tools/spark_shadow tools/spark-kit \
+  tools/helpers tools/shadows; do
   if [[ -d "$kdir" ]]; then
     base="$(basename "$kdir")"
     cp -a "$kdir" "$DEST/tools/$base"
   fi
 done
+# Bin wrappers for K-lane CLIs when present
+if [[ -x helpers/spark-run ]]; then
+  cat >"$DEST/bin/spark-run" <<'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+exec bash "$ROOT/helpers/spark-run" "$@"
+EOF
+  chmod +x "$DEST/bin/spark-run"
+fi
+if [[ -x helpers/spark-shadow ]]; then
+  cat >"$DEST/bin/spark-shadow" <<'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+export PYTHONPATH="${ROOT}/tools:${ROOT}/python:${ROOT}/runtime/python:${PYTHONPATH:-}"
+export SPARK_ROOT="$ROOT"
+exec bash "$ROOT/helpers/spark-shadow" "$@"
+EOF
+  chmod +x "$DEST/bin/spark-shadow"
+fi
 # Bin wrappers (scripts, not symlinks — $0 must stay under bin/)
 cat >"$DEST/bin/spark-helper-compile" <<'EOF'
 #!/usr/bin/env bash
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-exec bash "$ROOT/helpers/compile.sh" "$@"
+if [[ -x "$ROOT/helpers/compile.sh" ]]; then
+  exec bash "$ROOT/helpers/compile.sh" "$@"
+fi
+echo "spark-helper-compile: missing helpers/compile.sh" >&2
+exit 1
 EOF
 chmod +x "$DEST/bin/spark-helper-compile"
 cat >"$DEST/bin/spark-helper-decompile" <<'EOF'

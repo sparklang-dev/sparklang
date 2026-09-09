@@ -53,6 +53,7 @@ class TestDocsNav(unittest.TestCase):
             "SERVE.md",
             "EVAL.md",
             "SPARKBC_MAKE.md",
+            "TOOLS_HELPERS.md",
             "CI_PAGES.md",
             "TOKENIZER.md",
             "SPARK_BC.md",

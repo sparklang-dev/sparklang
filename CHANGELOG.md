@@ -5,7 +5,18 @@ language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
 
-## 0.6.40 — 2026-09-09
+## 0.6.41 — 2026-09-09
+
+- **Helpers / shadows / tools (K-lane):** enhances I-lane minimal
+  helpers with ergonomic CLIs under `helpers/` (compile→run→inspect,
+  train-proof shortcut, env check, BC pretty-print + diff, shadow
+  copy / `build/shadow/` / hash verify), kit under `tools/spark_kit/`
+  (hexdump, opcode sheet, fixture lint, vocab inspect), pack overlay
+  via `tools/package_helpers_k.sh` into `dist/spark-sdk/` and I-lane
+  `out/sdk-pack/` when present. Gates: `make helpers`,
+  `make tools-test` (with `make sdk-pack` / `make test-sdk-pack`).
+  Docs: [TOOLS_HELPERS.md](docs/TOOLS_HELPERS.md)
+  → `/docs/tools-helpers.html`. Never 6000. Does not beat Claude.
 
 - **AI model aspects (L-lane):** engineer hub for behaviors, ears/STT,
   eyes/vision, speaking/TTS, thinking/generation, memory, tools,
@@ -17,6 +28,9 @@ language) are listed here. Site and installers track
   stub: `python/sparklang/senses/` (`make test-senses`). Honest:
   STT/TTS language surface exists; vision runtime **not** shipped;
   attention decode still partial; **not** beat Claude; never 6000.
+
+## 0.6.40 — 2026-09-09
+
 
 ## 0.6.39 — 2026-09-09
 

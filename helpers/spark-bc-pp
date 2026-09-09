@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Pretty-print a real .sparkbc via tools/spark-bc-dump/dump.py.
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+BC="${1:?usage: spark-bc-pp <file.sparkbc> [out.txt]}"
+OUT="${2:-}"
+export PYTHONPATH="${ROOT}/python:${PYTHONPATH:-}"
+if [[ -n "$OUT" ]]; then
+  exec python3 "$ROOT/tools/spark-bc-dump/dump.py" "$BC" -o "$OUT"
+fi
+exec python3 "$ROOT/tools/spark-bc-dump/dump.py" "$BC"

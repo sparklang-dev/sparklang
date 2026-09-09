@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Train/step proof shortcut — wraps make spark-sgd-proof (tiny fixture).
+# Pass SCALE=1 to run spark-sgd-proof-scale instead.
+# Never 6000. Does not claim beat Claude.
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$ROOT"
+
+if [[ "${SCALE:-0}" == "1" ]]; then
+  echo "==> make spark-sgd-proof-scale (CPU; not beat Claude)"
+  exec make spark-sgd-proof-scale
+fi
+echo "==> make spark-sgd-proof (CPU; not beat Claude)"
+exec make spark-sgd-proof
