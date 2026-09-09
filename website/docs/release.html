@@ -91,7 +91,38 @@
         EOF
         </code></pre>
         <ol start="5">
-        <li>Deploy Pages (<code class="inline-code">website/</code>) so Changelog + Downloads match the tag.</li>
+        <li><strong>Deploy Cloudflare Pages (<code class="inline-code">website/</code>) via Wrangler CLI</strong> (OAuth
+           session — not <code class="inline-code">CLOUDFLARE_*</code> env). From the repo root, after the
+           release commit is on <code class="inline-code">main</code> (or you have checked out that SHA):</li>
+        </ol>
+        <p>```bash
+           # Regenerate stale doc HTML if markdown changed
+           python3 tools/md_to_doc_html.py --all-stale
+           # Mirror CHANGELOG.md → website/CHANGELOG.html; sync
+           # docs/examples/ → website/docs/examples/ when Builder artifacts
+           # changed.</p>
+        <p>npx wrangler pages deploy website \
+             --project-name=sparklang-dev \
+             --branch=production \
+             --commit-hash="$(git rev-parse HEAD)"
+           ```</p>
+        <p><strong>Auth gotcha:</strong> Wrangler OAuth on SoapBox lives under
+           <code class="inline-code">~/.config/.wrangler/</code> (leading <strong>dot</strong> on <code class="inline-code">.wrangler</code>), with
+           <code class="inline-code">pages:write</code>. That is <strong>not</strong> <code class="inline-code">~/.config/wrangler/</code> (no leading
+           dot). If deploy fails with auth / missing credentials, check the
+           dotted path first — do not invent or print tokens.</p>
+        <p>After deploy, spot-check and record the Pages deployment id next
+           to the git SHA (example: production deployment <code class="inline-code">80b7d3ee</code> for
+           <code class="inline-code">51e4dbd…</code>):</p>
+        <ul class="doc__ul">
+        <li><code class="inline-code">https://sparklang.dev/</code></li>
+        <li><code class="inline-code">https://sparklang.dev/CHANGELOG.html</code></li>
+        <li><code class="inline-code">https://sparklang.dev/docs/spark-builder.html</code></li>
+        <li><code class="inline-code">https://sparklang.dev/downloads.html</code></li>
+        </ul>
+        <p>Tip ≠ pin: if the live site lags git, say so — do not claim
+           sparklang.dev equals an unpushed local tree.</p>
+        <ol start="6">
         <li>Sync the public mirror so <code class="inline-code">sparklang-dev/sparklang</code> matches the
            tagged tree.</li>
         </ol>
