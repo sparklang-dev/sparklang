@@ -1,3 +1,8 @@
+# Cloudflare Pages custom headers.
+# IMPORTANT: never set Content-Type: text/html on /docs/* — that path
+# also matches /docs/images/* and, with x-content-type-options: nosniff,
+# browsers refuse to paint PNG/SVG screenshots (bytes OK, MIME wrong).
+
 /favicon.svg
   Content-Type: image/svg+xml
   Cache-Control: public, max-age=86400
@@ -8,11 +13,16 @@
 
 /docs/images/*.svg
   Content-Type: image/svg+xml
-  Cache-Control: public, max-age=86400
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/docs/images/*.png
+  Content-Type: image/png
+  Cache-Control: public, max-age=3600, must-revalidate
 
 /docs/images/*
-  Cache-Control: public, max-age=86400
+  Cache-Control: public, max-age=3600, must-revalidate
 
+# Pretty URLs (/docs/decompile) and *.html — Cache-Control only.
+# Let Pages set Content-Type for HTML; do not blanket /docs/*.
 /docs/*
-  Content-Type: text/html; charset=utf-8
   Cache-Control: public, max-age=300

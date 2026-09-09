@@ -200,25 +200,25 @@
         Ghidra/IDA/…” without measured scoreboard JSON.</p>
         <h2 id="tool-function-diagrams">Tool-function diagrams</h2>
         <h3 id="compile-path">Compile path</h3>
-        <p><img class="doc__img" alt="Compile path: source to SPARK_BC to run/train/serve" src="/docs/images/diagram-compile-path.svg" /></p>
+        <p><img class="doc__img" alt="Compile path: source to SPARK_BC to run/train/serve" src="/docs/images/diagram-compile-path.svg?v=0.6.58" /></p>
         <p><em>Caption: <code class="inline-code">.spark</code> → bootstrap / GAS assembler → <code class="inline-code">.sparkbc</code>
         (SPARK_BC) → <code class="inline-code">--run-bc</code> / TRAIN·STEP / serve. Helpers, published
         shadow-builds, and the SDK GUI wrap the same SoT — they do not
         invent bytecode.</em></p>
         <h3 id="decompile-path">Decompile path</h3>
-        <p><img class="doc__img" alt="Decompile path: BC to dump to readable view" src="/docs/images/diagram-decompile-path.svg" /></p>
+        <p><img class="doc__img" alt="Decompile path: BC to dump to readable view" src="/docs/images/diagram-decompile-path.svg?v=0.6.58" /></p>
         <p><em>Caption: <code class="inline-code">.sparkbc</code> → <code class="inline-code">dump.py</code> (disasm/inspect) → readable hex +
         mnemonics (or stub JSON / <code class="inline-code">--run-bc</code>). Optional edit is of the
         <code class="inline-code">.spark</code> source, then </em><em>recompile</em><em> — dashed because dump is not a
         lossless BC→source decompiler.</em></p>
         <h3 id="helpers-shadow-build-sdkide-gui">Helpers · shadow-build · SDK/IDE GUI</h3>
-        <p><img class="doc__img" alt="Helpers shadow-build and GUI placement" src="/docs/images/diagram-helpers-gui.svg" /></p>
+        <p><img class="doc__img" alt="Helpers shadow-build and GUI placement" src="/docs/images/diagram-helpers-gui.svg?v=0.6.58" /></p>
         <p><em>Caption: Deterministic SPARK_BC SoT in the center. Helpers
         (<code class="inline-code">Makefile</code>, <code class="inline-code">sparkc</code>, tests), shadow-build
         (<code class="inline-code">docs/examples/*.sparkbc</code>), and SDK/IDE GUI (<code class="inline-code">spark-bc-gui</code>) sit
         around it and call the same compile/dump paths.</em></p>
         <h3 id="deterministic-tools-vs-llm-assist">Deterministic tools vs LLM assist</h3>
-        <p><img class="doc__img" alt="Deterministic Spark vs optional LLM assist" src="/docs/images/diagram-deterministic-vs-llm.svg" /></p>
+        <p><img class="doc__img" alt="Deterministic Spark vs optional LLM assist" src="/docs/images/diagram-deterministic-vs-llm.svg?v=0.6.58" /></p>
         <p><em>Caption: Left = Spark SoT (compile, dump, run). Right = optional
         LLM assist later (names/comments/drafts) — </em><em>never</em><em> the SoT for
         <code class="inline-code">.sparkbc</code> bytes. See the research note for citations.</em></p>
@@ -235,7 +235,7 @@
           --command './spark-bootstrap --compile examples/spark_train_step.spark -o docs/examples/spark-train-step.sparkbc' \
           -o /tmp/spark-train-step-bc.txt
         </code></pre>
-        <p><img class="doc__img" alt="CLI dump of SPARK_BC" src="/docs/images/decompile-cli-dump.png" /></p>
+        <p><img class="doc__img" alt="CLI dump of SPARK_BC" src="/docs/images/decompile-cli-dump.png?v=0.6.58" /></p>
         <p><em>Caption: Real terminal capture of <code class="inline-code">tools/spark-bc-dump/dump.py</code> on
         <code class="inline-code">docs/examples/spark-train-step.sparkbc</code> — magic <code class="inline-code">SPBC</code>, pools,
         opcode listing. Not invented hex.</em></p>
@@ -257,18 +257,18 @@
         <pre class="doc__pre"><code class="language-bash">PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
           docs/examples/spark-builder.sparkbc --stub -o /tmp/stub.json
         </code></pre>
-        <p><img class="doc__img" alt="CLI --stub JSON" src="/docs/images/decompile-cli-stub.png" /></p>
+        <p><img class="doc__img" alt="CLI --stub JSON" src="/docs/images/decompile-cli-stub.png?v=0.6.58" /></p>
         <p><em>Caption: Real <code class="inline-code">--stub</code> JSON from <code class="inline-code">spark-builder.sparkbc</code> — status,
         sha256, magic, version. Still inspect metadata, not source recovery.</em></p>
         <h3 id="4-inspect-behavior-with---run-bc">4. Inspect behavior with <code class="inline-code">--run-bc</code></h3>
         <pre class="doc__pre"><code class="language-bash">./spark-bootstrap --run-bc docs/examples/spark-train-step.sparkbc
         ./spark --run-bc docs/examples/spark-train-step.sparkbc   # GAS → bc_vm
         </code></pre>
-        <p><img class="doc__img" alt="CLI --run-bc dry VM" src="/docs/images/decompile-cli-runbc.png" /></p>
+        <p><img class="doc__img" alt="CLI --run-bc dry VM" src="/docs/images/decompile-cli-runbc.png?v=0.6.58" /></p>
         <p><em>Caption: Real <code class="inline-code">./spark-bootstrap --run-bc</code> dry bytecode VM lines.
         TRAIN/STEP contracts: <a href="/docs/spark-bc.html">SPARK_BC.md</a>.</em></p>
         <h3 id="5-cli-help-flags">5. CLI help (flags)</h3>
-        <p><img class="doc__img" alt="CLI dump.py --help" src="/docs/images/decompile-cli-help.png" /></p>
+        <p><img class="doc__img" alt="CLI dump.py --help" src="/docs/images/decompile-cli-help.png?v=0.6.58" /></p>
         <p><em>Caption: Captured <code class="inline-code">dump.py --help</code> — <code class="inline-code">--stub</code>, <code class="inline-code">--weights</code>,
         <code class="inline-code">--serve</code> (tiny CPU forward; not production LLM).</em></p>
         <h3 id="6-init-weights-from-bytecode-not-trained">6. Init weights from bytecode (not trained)</h3>
@@ -290,7 +290,7 @@
         <p>Buttons: <strong>Compile → .sparkbc</strong>, <strong>Decompile .sparkbc</strong>, open
         source / <code class="inline-code">.sparkbc</code>, save dump, load sample. See also
         <a href="/docs/sdk-ide-download.html">sdk-ide-download</a>.</p>
-        <p><img class="doc__img" alt="Annotated SPARK_BC GUI" src="/docs/images/decompile-gui-sparkbc.png" /></p>
+        <p><img class="doc__img" alt="Annotated SPARK_BC GUI" src="/docs/images/decompile-gui-sparkbc.png?v=0.6.58" /></p>
         <p><em>Caption: Annotated layout matching <code class="inline-code">tools/spark_bc_gui</code> chrome.
         Right pane text is </em><em>real</em><em> <code class="inline-code">dump.py</code> output (same capture as the
         CLI screenshot). Interactive Tk GUI ships with the SDK download

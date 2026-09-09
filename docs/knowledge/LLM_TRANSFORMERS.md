@@ -5,7 +5,7 @@ sketch for Spark readers. Spark’s owned TinyCoder and SPARK_BC
 attention path are **tiny and honest**; they do not pretend to be
 frontier LLMs and **do not beat Claude**.
 
-![Transformer block schematic](/docs/images/diagram-knowledge-transformer.svg)
+![Transformer block schematic](/docs/images/diagram-knowledge-transformer.svg?v=0.6.58)
 
 ## Tokenization
 

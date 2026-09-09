@@ -3,7 +3,7 @@
 Training writes weights. **Inference** turns a prompt into tokens
 under latency and VRAM budgets.
 
-![Inference path schematic](/docs/images/diagram-knowledge-inference.svg)
+![Inference path schematic](/docs/images/diagram-knowledge-inference.svg?v=0.6.58)
 
 ## Prefill vs decode
 

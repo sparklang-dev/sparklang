@@ -24,7 +24,7 @@ HuggingFace export.
 
 ## Compile path diagram
 
-![Compile path](/docs/images/diagram-compile-path.svg)
+![Compile path](/docs/images/diagram-compile-path.svg?v=0.6.58)
 
 *Caption: `.spark` → bootstrap/GAS → `.sparkbc` → run/train/serve.
 Full decompile diagrams + screenshots:

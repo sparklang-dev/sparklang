@@ -5,7 +5,7 @@ five CPU reference methods and TinyCoder SGD are a **small parallel
 universe** — useful for reviewable `.spark` jobs, not InstructGPT-scale
 alignment theater.
 
-![Training stack schematic](/docs/images/diagram-knowledge-train-stack.svg)
+![Training stack schematic](/docs/images/diagram-knowledge-train-stack.svg?v=0.6.58)
 
 ## 1. Pretraining
 
