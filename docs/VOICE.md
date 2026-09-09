@@ -138,6 +138,20 @@ speak with model NAME
 Templates: `templates/voice_models/`. Artifacts under
 `out/voice_models/`.
 
+## Voice easy train (owned heads)
+
+Piece-of-cake path for **training** owned STT/TTS heads (tiny CI or
+large opt-in). Not vendor neural clone. Prefer 5090; never 6000.
+
+```bash
+make voice-easy
+./spark-voice easy --dry --device auto
+./spark-voice easy --scale large --device auto   # opt-in
+```
+
+Docs: [VOICE_EASY.md](VOICE_EASY.md) →
+[/docs/voice-easy.html](/docs/voice-easy.html).
+
 ## PSTN — capability on, default OFF
 
 | Gate | Required for live dial |

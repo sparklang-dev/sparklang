@@ -5,6 +5,18 @@ language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
 
+## 0.6.52 — 2026-09-09
+
+- **Voice easy train (tiny + large):** piece-of-cake owned STT/TTS
+  heads — `make voice-easy` / `./spark-voice easy` (env → fixtures →
+  train → dry round-trip). Default **tiny** for CI; opt-in
+  `--scale large` / `VOICE_SCALE=large` (bigger dims/steps; prefer
+  **RTX 5090**, ~2 GiB hint; **fail closed** if only PRO **6000**
+  visible unless `--device cpu`). Not ElevenLabs overnight. Never
+  beat Claude. Docs: [VOICE_EASY.md](docs/VOICE_EASY.md) →
+  [/docs/voice-easy.html](/docs/voice-easy.html). IDE command
+  **Spark: Voice easy train**. Gate: `make test-voice-easy`.
+
 ## 0.6.51 — 2026-09-09
 
 - **Project-loop analyze (OpenBin methods → Spark-native):**

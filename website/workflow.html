@@ -262,7 +262,7 @@
           <article class="step-detail__item" id="train">
             <span class="step-detail__num" aria-hidden="true">03</span>
             <div class="step-detail__body">
-              <h3>Train / step / spark-coder</h3>
+              <h3>Train / step / spark-coder / voice-easy</h3>
               <p>
                 Run <code class="inline-code">model train</code> →
                 <code class="inline-code">model status</code> →
@@ -272,16 +272,29 @@
                 factory loops, not a claim to beat frontier models.
               </p>
               <p>
+                <strong>Train voice / STT / TTS in 3 steps</strong> —
+                <a href="/docs/voice-easy.html">Voice easy</a>
+                (<code class="inline-code">make voice-easy</code>):
+                tiny CI default or
+                <code class="inline-code">--scale large</code> on the
+                5090 (never 6000). Owned heads — not ElevenLabs overnight.
+              </p>
+              <p>
                 <a href="/docs/train-loop.html">Train loop</a> ·
                 <a href="/docs/spark-coder.html">Spark coder</a> ·
+                <a href="/docs/voice-easy.html">Voice easy</a> ·
                 <a href="/docs/model-training.html">Model training</a>
               </p>
               <pre class="terminal code-block"><code><span class="comment"># Dry-run — fixtures, no keys</span>
-<span class="cmd">./spark --dry-run examples/train_eval.spark</span></code></pre>
+<span class="cmd">./spark --dry-run examples/train_eval.spark</span>
+<span class="comment"># Voice easy (tiny / CI)</span>
+<span class="cmd">make voice-easy</span>
+<span class="comment"># Large opt-in (prefer 5090; never 6000)</span>
+<span class="cmd">./spark-voice easy --scale large --device auto</span></code></pre>
               <p class="honest-note">
-                Honest bar: CPU reference methods and owned tiny coder.
-                Does <strong>not</strong> claim to beat Claude or replace
-                a general RE platform.
+                Honest bar: CPU reference methods and owned tiny coder /
+                voice heads. Does <strong>not</strong> claim to beat Claude
+                or replace a vendor TTS stack overnight.
               </p>
             </div>
           </article>

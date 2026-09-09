@@ -57,3 +57,6 @@ jobs:
       # Voice ask loop (STT/TTS dry + dump context)
       - name: make test-spark-ask
         run: make test-spark-ask
+# Voice easy — owned STT/TTS heads (tiny dry; never 6000)
+      - name: make test-voice-easy
+        run: make test-voice-easy
