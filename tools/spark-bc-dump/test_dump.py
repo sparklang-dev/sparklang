@@ -23,7 +23,9 @@ from sparklang.model_lab.weights import (
     apply_dry_step,
     apply_sgd_step,
     emit_init_weights,
+    read_safetensors,
     read_safetensors_meta,
+    _load_jsonl_pairs,
 )
 
 BUILDER_BC = ROOT / "docs/examples/spark-builder.sparkbc"
@@ -249,6 +251,97 @@ def test_sgd_step_loss_drops() -> dict:
         return r1
 
 
+def test_scale_fixture_loads() -> dict:
+    """Larger CE fixture loads; longer sequences than tiny default."""
+    tiny = ROOT / "examples/fixtures/train/dataset.jsonl"
+    scale = ROOT / "examples/fixtures/train/dataset_scale.jsonl"
+    cfg = ROOT / "examples/fixtures/train/scale_config.json"
+    assert tiny.is_file(), tiny
+    assert scale.is_file(), scale
+    assert cfg.is_file(), cfg
+    tiny_pairs = _load_jsonl_pairs(tiny)
+    scale_pairs = _load_jsonl_pairs(scale)
+    assert len(tiny_pairs) >= 12
+    assert len(scale_pairs) >= 72
+    assert len(scale_pairs) > len(tiny_pairs)
+    max_u = max(len(u) for u, _a in scale_pairs)
+    assert max_u >= 80, "scale fixture needs longer sequences"
+    long_n = sum(1 for u, _a in scale_pairs if len(u) >= 40)
+    assert long_n >= 24
+    meta = json.loads(cfg.read_text(encoding="utf-8"))
+    assert meta.get("beats_claude") is False
+    assert meta.get("device") == "cpu"
+    assert meta.get("never") == "rtx-pro-6000"
+    assert meta.get("ci_default") is False
+    assert int(meta.get("dim") or 0) == 64
+    assert int(meta.get("n_layer") or 0) == 4
+    return {
+        "tiny_n": len(tiny_pairs),
+        "scale_n": len(scale_pairs),
+        "max_user": max_u,
+        "long_ge40": long_n,
+    }
+
+
+def test_scale_arch_shapes() -> dict:
+    """Opt-in dim/n_layer seed shapes; no overnight train."""
+    with tempfile.TemporaryDirectory() as tmp:
+        dest = Path(tmp) / "scale.safetensors"
+        payload = emit_init_weights(
+            STEP_BC,
+            dest,
+            source=STEP_SRC,
+            command="scale shape check",
+            dim=64,
+            n_layer=4,
+        )
+        assert payload["arch"]["dim"] == 64
+        assert payload["arch"]["n_layer"] == 4
+        assert payload["arch"]["head_dim"] == 16
+        assert payload["trained"] is False
+        _meta, tensors = read_safetensors(dest)
+        emb_shape, _ = tensors["spark.embed.weight"]
+        head_shape, _ = tensors["spark.lm_head.weight"]
+        assert emb_shape == (256, 64)
+        assert head_shape == (256, 64)
+        q_layers = [
+            name
+            for name in tensors
+            if name.startswith("spark.layers.")
+            and name.endswith(".q.weight")
+        ]
+        assert len(q_layers) == 4
+        for name in q_layers:
+            assert tensors[name][0] == (64, 64)
+        # One-outer smoke on scale fixture (CI-fast; not overnight).
+        ckpt = Path(tmp) / "checkpoint.json"
+        r = apply_sgd_step(
+            STEP_BC,
+            dest,
+            step_n=1,
+            dataset=(
+                ROOT / "examples/fixtures/train/dataset_scale.jsonl"
+            ),
+            outer_steps=1,
+            inner_steps=1,
+            checkpoint=ckpt,
+            source=STEP_SRC,
+            command="scale fixture CE smoke",
+        )
+        assert r["dataset_n"] >= 72
+        assert r["arch_dim"] == 64
+        assert r["arch_n_layer"] == 4
+        assert r["loss_after"] < r["loss_before"]
+        assert r["beats_claude"] is False
+        assert r["device"] == "cpu"
+        return {
+            "dim": 64,
+            "n_layer": 4,
+            "n_tensors": payload["n_tensors"],
+            "dataset_n": r["dataset_n"],
+        }
+
+
 def test_serve_forward() -> dict:
     """Tiny CPU SERVE: forward=true, mlp0 when present, honest."""
 
@@ -301,11 +394,13 @@ def main() -> int:
     sops = test_train_step_opcode()
     step_w = test_dry_step_writes_weights()
     sgd_w = test_sgd_step_loss_drops()
+    scale_fix = test_scale_fixture_loads()
+    scale_arch = test_scale_arch_shapes()
     serve = test_serve_forward()
     print(
         "ok sha256=%s n_tensors=%d first32=%s train_ops=%s "
-        "step_ops=%s step_n=%s sgd_loss=%s->%s serve=%s "
-        "forward=%s"
+        "step_ops=%s step_n=%s sgd_loss=%s->%s "
+        "scale_n=%s dim=%s n_layer=%s serve=%s forward=%s"
         % (
             self_info["bc"]["sha256"][:12],
             self_info["weights"]["n_tensors"],
@@ -315,6 +410,9 @@ def main() -> int:
             step_w["step_n"],
             "%.4f" % sgd_w["loss_before"],
             "%.4f" % sgd_w["loss_after"],
+            scale_fix["scale_n"],
+            scale_arch["dim"],
+            scale_arch["n_layer"],
             serve["job_id"],
             serve["forward"],
         )

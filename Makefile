@@ -18,7 +18,7 @@ NVML_LIB ?= /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1
 	spark-bc spark-bc-pack-hello sparkasm \
 	test-sparkasm test-sparkasm-control docs-docx function-catalog \
 	playbooks-catalog spark-eval spark-eval-claude test-spark-eval \
-	spark-sgd-proof
+	spark-sgd-proof spark-sgd-proof-scale
 
 all: spark companions
 
@@ -456,7 +456,7 @@ test-spark-eval:
 	PYTHONPATH=python python3 tools/spark-eval/test_eval.py
 
 # Multi-outer CPU SGD proof + measurement-only eval on those weights.
-# Never claims beat Claude. CPU only.
+# Never claims beat Claude. CPU only. Tiny fixture = GHA/CI default.
 .PHONY: spark-sgd-proof
 spark-sgd-proof: spark-bootstrap
 	@mkdir -p out/train/sgd-proof
@@ -475,6 +475,39 @@ spark-sgd-proof: spark-bootstrap
 	  assert c['loss_after'] < c['loss_before']; \
 	  assert c['beats_claude'] is False"
 	@$(MAKE) spark-eval WEIGHTS=out/train/sgd-proof/weights.safetensors
+
+# Opt-in local scale proof: larger JSONL + dim/n_layer knobs.
+# Still CPU-fast; not overnight; not GHA default. Not beat Claude.
+# Knobs: SPARK_SGD_DIM SPARK_SGD_N_LAYER SPARK_SGD_OUTER SPARK_SGD_INNER
+.PHONY: spark-sgd-proof-scale
+spark-sgd-proof-scale: spark-bootstrap
+	@mkdir -p out/train/sgd-proof-scale
+	@rm -f out/train/sgd-proof-scale/{weights.safetensors,checkpoint.json}
+	PYTHONPATH=python python3 tools/spark-bc-dump/apply_step.py \
+	  --sparkbc docs/examples/spark-train-step.sparkbc \
+	  --weights out/train/sgd-proof-scale/weights.safetensors \
+	  --checkpoint out/train/sgd-proof-scale/checkpoint.json \
+	  --dataset examples/fixtures/train/dataset_scale.jsonl \
+	  --dim $${SPARK_SGD_DIM:-64} \
+	  --n-layer $${SPARK_SGD_N_LAYER:-4} \
+	  --outer $${SPARK_SGD_OUTER:-2} \
+	  --inner $${SPARK_SGD_INNER:-4} \
+	  --step 1 \
+	  --command 'make spark-sgd-proof-scale'
+	@python3 -c "import json; c=json.load(open('out/train/sgd-proof-scale/checkpoint.json')); \
+	  print('scale dataset_n', c['dataset_n'], 'dim', c.get('arch_dim'), \
+	        'n_layer', c.get('arch_n_layer')); \
+	  print('loss_curve', [(p['outer'], round(p['loss'],6)) for p in c['loss_curve']]); \
+	  print('loss', c['loss_before'], '->', c['loss_after']); \
+	  print('beats_claude', c['beats_claude'], 'device', c['device']); \
+	  assert c['dataset_n'] >= 72; \
+	  assert int(c.get('arch_dim') or 0) >= 64; \
+	  assert int(c.get('arch_n_layer') or 0) >= 4; \
+	  assert c['loss_after'] < c['loss_before']; \
+	  assert c['beats_claude'] is False; \
+	  assert c['device'] == 'cpu'; \
+	  assert c['never'] == 'rtx-pro-6000'"
+	@$(MAKE) spark-eval WEIGHTS=out/train/sgd-proof-scale/weights.safetensors
 
 corpus:
 	mkdir -p data

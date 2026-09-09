@@ -215,6 +215,23 @@ make spark-sgd-proof
 # → prints loss curve + make spark-eval WEIGHTS=… (scores only)
 ```
 
+**Opt-in larger fixture / dims (local; not GHA default):**
+
+```bash
+# 145-pair longer JSONL + dim=64 / n_layer=4 (still CPU-fast)
+make spark-sgd-proof-scale
+# override knobs:
+SPARK_SGD_DIM=64 SPARK_SGD_N_LAYER=4 \
+  SPARK_SGD_OUTER=2 SPARK_SGD_INNER=4 \
+  make spark-sgd-proof-scale
+```
+
+CI / `make spark-sgd-proof` keeps `dataset.jsonl` + `arch_from_bc`
+tiny defaults. Scale config SoT:
+`examples/fixtures/train/scale_config.json` +
+`dataset_scale.jsonl`. Shape checks live in `make test-sparkbc`
+(no overnight train). **Not beat Claude.** Never 6000.
+
 
 ## Eval harness (measure later — not beat Claude)
 

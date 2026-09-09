@@ -320,6 +320,19 @@
         <pre class="doc__pre"><code class="language-bash">make spark-sgd-proof
         # → prints loss curve + make spark-eval WEIGHTS=… (scores only)
         </code></pre>
+        <p><strong>Opt-in larger fixture / dims (local; not GHA default):</strong></p>
+        <pre class="doc__pre"><code class="language-bash"># 145-pair longer JSONL + dim=64 / n_layer=4 (still CPU-fast)
+        make spark-sgd-proof-scale
+        # override knobs:
+        SPARK_SGD_DIM=64 SPARK_SGD_N_LAYER=4 \
+          SPARK_SGD_OUTER=2 SPARK_SGD_INNER=4 \
+          make spark-sgd-proof-scale
+        </code></pre>
+        <p>CI / <code class="inline-code">make spark-sgd-proof</code> keeps <code class="inline-code">dataset.jsonl</code> + <code class="inline-code">arch_from_bc</code>
+        tiny defaults. Scale config SoT:
+        <code class="inline-code">examples/fixtures/train/scale_config.json</code> +
+        <code class="inline-code">dataset_scale.jsonl</code>. Shape checks live in <code class="inline-code">make test-sparkbc</code>
+        (no overnight train). <strong>Not beat Claude.</strong> Never 6000.</p>
         <h2 id="eval-harness-measure-later-not-beat-claude">Eval harness (measure later — not beat Claude)</h2>
         <p>Frozen tiny probes live under <code class="inline-code">examples/eval/</code> (copy/recall +
         next-token fixtures). Runner: <code class="inline-code">tools/spark-eval/run.py</code>.</p>
