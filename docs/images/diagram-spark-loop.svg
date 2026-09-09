@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 220" role="img" aria-labelledby="tloop dloop">
+  <title id="tloop">SparkLang five-step loop</title>
+  <desc id="dloop">Compile or open SPARK_BC, decompile and dump, train or step with spark-coder, serve helpers and shadows, then docs and Pages share</desc>
+  <defs>
+    <marker id="arrLoop" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#2c2c2c"/>
+    </marker>
+    <style>
+      .panel { fill:#f5f6f8; stroke:#d5d9e0; stroke-width:1.25; rx:8; }
+      .step { fill:#ffffff; stroke:#2c2c2c; stroke-width:1.5; rx:6; }
+      .step-hl { fill:#fff4ed; stroke:#e85d04; stroke-width:1.75; rx:6; }
+      .num { font:700 12px ui-monospace,Menlo,Consolas,monospace; fill:#e85d04; }
+      .lbl { font:650 12px ui-sans-serif,system-ui,sans-serif; fill:#1a1a1a; }
+      .sub { font:11px ui-sans-serif,system-ui,sans-serif; fill:#4a5568; }
+      .cap { font:600 12px ui-sans-serif,system-ui,sans-serif; fill:#2c2c2c; }
+      .flow { stroke:#2c2c2c; stroke-width:1.6; fill:none; marker-end:url(#arrLoop); }
+    </style>
+  </defs>
+  <rect class="panel" x="8" y="8" width="944" height="204"/>
+  <text x="24" y="32" class="cap">The Spark loop  SPARK_BC · dump · owned coder · serve · Pages</text>
+
+  <rect class="step-hl" x="24" y="52" width="150" height="88"/>
+  <text x="36" y="74" class="num">01</text>
+  <text x="99" y="96" text-anchor="middle" class="lbl">Compile / pack</text>
+  <text x="99" y="114" text-anchor="middle" class="sub">.spark ’ .sparkbc</text>
+  <text x="99" y="130" text-anchor="middle" class="sub">or open a pack</text>
+
+  <path class="flow" d="M178 96 H206"/>
+
+  <rect class="step" x="210" y="52" width="150" height="88"/>
+  <text x="222" y="74" class="num">02</text>
+  <text x="285" y="96" text-anchor="middle" class="lbl">Decompile</text>
+  <text x="285" y="114" text-anchor="middle" class="sub">dump / inspect</text>
+  <text x="285" y="130" text-anchor="middle" class="sub">CLI + spark-bc-gui</text>
+
+  <path class="flow" d="M364 96 H392"/>
+
+  <rect class="step" x="396" y="52" width="150" height="88"/>
+  <text x="408" y="74" class="num">03</text>
+  <text x="471" y="96" text-anchor="middle" class="lbl">Train / step</text>
+  <text x="471" y="114" text-anchor="middle" class="sub">spark-coder</text>
+  <text x="471" y="130" text-anchor="middle" class="sub">tiny · honest</text>
+
+  <path class="flow" d="M550 96 H578"/>
+
+  <rect class="step" x="582" y="52" width="150" height="88"/>
+  <text x="594" y="74" class="num">04</text>
+  <text x="657" y="96" text-anchor="middle" class="lbl">Serve</text>
+  <text x="657" y="114" text-anchor="middle" class="sub">helpers / shadows</text>
+  <text x="657" y="130" text-anchor="middle" class="sub">local HTTP</text>
+
+  <path class="flow" d="M736 96 H764"/>
+
+  <rect class="step" x="768" y="52" width="160" height="88"/>
+  <text x="780" y="74" class="num">05</text>
+  <text x="848" y="96" text-anchor="middle" class="lbl">Docs / share</text>
+  <text x="848" y="114" text-anchor="middle" class="sub">Pages + gallery</text>
+  <text x="848" y="130" text-anchor="middle" class="sub">sparklang.dev</text>
+
+  <text x="24" y="178" class="sub">Not malware RE · not a community feed · Spark / SparkLang tooling only</text>
+  <text x="24" y="196" class="sub">SPARK_BC is orchestration bytecode  not imported neural weights</text>
+</svg>

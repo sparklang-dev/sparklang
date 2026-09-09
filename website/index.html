@@ -3,21 +3,22 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>SparkLang — five CPU train methods, not LoRA</title>
+    <title>SparkLang — compile · inspect · train · serve · share</title>
     <meta
       name="description"
-      content="SparkLang: reviewable .spark programs with five CPU train methods (distill, preference pack, playbook fit, FAQ index, reply pack) — not LoRA — then status→expect. Dry-run CI + HTTP trainer contract."
+      content="SparkLang: reviewable .spark programs through SPARK_BC — compile, dump/inspect, train or step with owned tiny spark-coder, serve helpers, share on Pages. Five CPU train methods — not LoRA. Dry-run CI."
     />
     <meta
       name="keywords"
-      content="SparkLang, Spark programming language, .spark, dry-run, model train, AI workflow language"
+      content="SparkLang, Spark programming language, .spark, SPARK_BC, dry-run, model train, Spark loop"
     />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
-    <link rel="stylesheet" href="/css/tokens.css?v=methods0902" />
-    <link rel="stylesheet" href="/css/site.css?v=methods0902" />
+    <link rel="stylesheet" href="/css/tokens.css?v=workflow0909" />
+    <link rel="stylesheet" href="/css/site.css?v=workflow0909" />
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
     <header class="site-header">
       <div class="shell header-inner">
         <a class="site-brand" href="/" aria-label="SparkLang home">
@@ -37,6 +38,7 @@
         <div class="header-nav-wrap">
           <nav class="site-nav" id="site-nav" aria-label="Primary">
             <ul class="nav-primary">
+              <li><a href="/workflow.html">Loop</a></li>
               <li><a href="/learn/">Learn</a></li>
               <li><a href="/docs/language.html">Docs</a></li>
               <li><a href="/downloads.html">Download</a></li>
@@ -49,6 +51,7 @@
                   <li><a href="/docs/diagrams.html">Diagrams</a></li>
                   <li><a href="/docs/model-training.html">Model training</a></li>
                   <li><a href="/docs/spark-builder.html">Builder</a></li>
+                  <li><a href="/docs/decompile.html">Decompile</a></li>
                   <li><a href="/docs/ai-models.html">AI models</a></li>
                   <li><a href="/docs/programming-guide.html">Programming guide</a></li>
                   <li><a href="/docs/ide.html">IDE</a></li>
@@ -62,43 +65,74 @@
       </div>
     </header>
 
-    <main>
-      <section class="hero shell">
+    <main id="main">
+      <section class="hero hero--workshop shell">
         <p class="hero__eyebrow">SparkLang</p>
         <h1 class="hero__title">
-          Five CPU train methods — not LoRA
+          From .spark to SPARK_BC — then prove it
         </h1>
         <p class="hero__lede">
-          A language beats another Python SDK because one reviewable
-          <code class="inline-code">.spark</code> file covers
-          train → status → expect, with dry-run fixtures you can run in CI
-          without API keys.
+          One reviewable language surface for compile → dump → train →
+          serve → share. Dry-run fixtures in CI. Owned
+          <code class="inline-code">spark-coder</code> stays tiny and
+          honest — not LoRA theater, not “beats Claude.”
         </p>
         <p class="hero__lede hero__lede--tight">
-          For solo and small teams who want reviewable train-job pipelines
-          in PRs — without maintaining SDK glue.
-        </p>
-        <p class="hero__lede hero__lede--tight">
-          Offline-first by default:
+          Offline-first:
           <code class="inline-code">./spark --dry-run</code>.
-          Live submit POSTs to a trainer you run —
+          Live jobs hit
           <code class="inline-code">SPARK_TRAIN_URL</code>.
-          Reference methods (CPU only):
+          Five CPU reference methods:
           <code class="inline-code">spark_distill_cpu</code>,
           <code class="inline-code">spark_pref_pack</code>,
           <code class="inline-code">spark_playbook_fit</code>,
           <code class="inline-code">spark_faq_index</code>,
-          <code class="inline-code">spark_reply_pack</code>
-          — real weights / packs / FAQ index / voice+text overlay,
-          not LoRA, not a voice GPU. Reply pack never fabricates.
+          <code class="inline-code">spark_reply_pack</code>.
         </p>
         <div class="cta-row">
           <a class="btn btn--primary" href="/downloads.html">Download Spark</a>
-          <a class="btn btn--secondary" href="/playground.html">Playground</a>
-          <a class="btn btn--ghost" href="/learn/getting-started.html"
-            >Getting started</a
-          >
+          <a class="btn btn--secondary" href="/workflow.html">The Spark loop</a>
+          <a class="btn btn--ghost" href="/playground.html">Playground</a>
         </div>
+        <nav aria-label="Spark loop steps">
+          <ul class="loop-strip">
+            <li>
+              <a class="loop-strip__step" href="/workflow.html#compile">
+                <span class="loop-strip__n">01</span>
+                <span class="loop-strip__label">Compile</span>
+                <span class="loop-strip__hint">.spark → SPARK_BC</span>
+              </a>
+            </li>
+            <li>
+              <a class="loop-strip__step" href="/workflow.html#inspect">
+                <span class="loop-strip__n">02</span>
+                <span class="loop-strip__label">Inspect</span>
+                <span class="loop-strip__hint">dump · spark-bc-gui</span>
+              </a>
+            </li>
+            <li>
+              <a class="loop-strip__step" href="/workflow.html#train">
+                <span class="loop-strip__n">03</span>
+                <span class="loop-strip__label">Train</span>
+                <span class="loop-strip__hint">step · spark-coder</span>
+              </a>
+            </li>
+            <li>
+              <a class="loop-strip__step" href="/workflow.html#serve">
+                <span class="loop-strip__n">04</span>
+                <span class="loop-strip__label">Serve</span>
+                <span class="loop-strip__hint">helpers · shadows</span>
+              </a>
+            </li>
+            <li>
+              <a class="loop-strip__step" href="/workflow.html#share">
+                <span class="loop-strip__n">05</span>
+                <span class="loop-strip__label">Share</span>
+                <span class="loop-strip__hint">docs · Pages</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
       </section>
 
       <section class="trust-strip shell" aria-label="Product facts">
@@ -381,6 +415,7 @@ expect contains status fixture "examples/fixtures/train/want_succeeded.txt"</cod
           <span class="footer-meta">v0.6.3 · <a href="/LICENSE.txt">MIT</a></span>
         </div>
         <nav class="footer-nav" aria-label="Footer">
+          <a href="/workflow.html">Loop</a>
           <a href="/about.html">About</a>
           <a href="/LICENSE.txt">License</a>
           <a href="/CHANGELOG.html">Changelog</a>

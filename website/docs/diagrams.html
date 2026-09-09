@@ -7,8 +7,8 @@
     <meta name="description" content="How Spark tools and LLM assist relate — compile, decompile, train, serve, shadows. Deterministic SoT; never beat Claude." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
-    <link rel="stylesheet" href="/css/tokens.css?v=sparkcoder042" />
-    <link rel="stylesheet" href="/css/site.css?v=sparkcoder042" />
+    <link rel="stylesheet" href="/css/tokens.css?v=workflow0909" />
+    <link rel="stylesheet" href="/css/site.css?v=workflow0909" />
   </head>
   <body class="doc-page">
     <header class="site-header">
@@ -27,6 +27,7 @@
         <div class="header-nav-wrap">
           <nav class="site-nav" id="site-nav" aria-label="Primary">
             <ul class="nav-primary">
+              <li><a href="/workflow.html">Loop</a></li>
               <li><a href="/learn/">Learn</a></li>
               <li><a href="/docs/language.html">Docs</a></li>
               <li><a href="/downloads.html">Download</a></li>
@@ -118,6 +119,17 @@
         <a href="/docs/llm-decompile.html">/docs/llm-decompile.html</a>. This file
         keeps <strong>Mermaid flow</strong> diagrams; prefer DECOMPILE for screenshots.
         LLM remains assist-only; dump/<code class="inline-code">--run-bc</code> stay SoT.</p>
+        <h2 id="product-loop-landing">Product loop (landing)</h2>
+        <p>Public loop page: <a href="/workflow.html">/workflow.html</a> — compile →
+        inspect → train → serve → share. SVG:
+        <code class="inline-code">docs/images/diagram-spark-loop.svg</code> (synced to
+        <code class="inline-code">website/docs/images/</code>). Inspect panes mock:
+        <code class="inline-code">docs/images/mock-spark-inspect-panes.svg</code>. Screenshots on that
+        page are <strong>Spark</strong> CLI/GUI only (<code class="inline-code">decompile-cli-dump.png</code>,
+        <code class="inline-code">decompile-gui-sparkbc.png</code>). Original product UX — not a clone of
+        third-party RE platforms. OpenBin may appear as related reading on
+        <a href="/docs/llm-decompile.html">LLM decompile research</a> only — never on
+        the hero.</p>
         <h2 id="1-how-spark-tools-function">1) How Spark tools function</h2>
         <p>End-to-end factory: source → bytecode → inspect → train → serve →
         measure. Helpers that <strong>shadow</strong> (thin-wrap) SoT stay labeled.</p>
@@ -339,6 +351,7 @@
       <div class="shell footer-inner">
         <span>Spark programming language</span>
         <nav class="footer-nav" aria-label="Footer">
+          <a href="/workflow.html">Loop</a>
           <a href="/learn/">Learn</a>
           <a href="/docs/language.html">Reference</a>
           <a href="/downloads.html">Downloads</a>

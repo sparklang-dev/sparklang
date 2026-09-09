@@ -21,6 +21,19 @@ Quarkslab article + RE category, Plain English overview) —
 keeps **Mermaid flow** diagrams; prefer DECOMPILE for screenshots.
 LLM remains assist-only; dump/`--run-bc` stay SoT.
 
+## Product loop (landing)
+
+Public loop page: [/workflow.html](/workflow.html) — compile →
+inspect → train → serve → share. SVG:
+`docs/images/diagram-spark-loop.svg` (synced to
+`website/docs/images/`). Inspect panes mock:
+`docs/images/mock-spark-inspect-panes.svg`. Screenshots on that
+page are **Spark** CLI/GUI only (`decompile-cli-dump.png`,
+`decompile-gui-sparkbc.png`). Original product UX — not a clone of
+third-party RE platforms. OpenBin may appear as related reading on
+[LLM decompile research](research/LLM_DECOMPILE.md) only — never on
+the hero.
+
 ## 1) How Spark tools function
 
 End-to-end factory: source → bytecode → inspect → train → serve →

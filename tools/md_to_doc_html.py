@@ -13,7 +13,7 @@ from pathlib import Path
 import markdown
 
 ROOT = Path(__file__).resolve().parents[1]
-CSS_V = "sparkcoder042"
+CSS_V = "workflow0909"
 
 DOC_NAV = """\
       <nav class="doc__nav" aria-label="Docs">
@@ -73,6 +73,7 @@ HEADER = """\
         <div class="header-nav-wrap">
           <nav class="site-nav" id="site-nav" aria-label="Primary">
             <ul class="nav-primary">
+              <li><a href="/workflow.html">Loop</a></li>
               <li><a href="/learn/">Learn</a></li>
               <li><a href="/docs/language.html">Docs</a></li>
               <li><a href="/downloads.html">Download</a></li>
@@ -129,6 +130,7 @@ FOOTER = """\
       <div class="shell footer-inner">
         <span>Spark programming language</span>
         <nav class="footer-nav" aria-label="Footer">
+          <a href="/workflow.html">Loop</a>
           <a href="/learn/">Learn</a>
           <a href="/docs/language.html">Reference</a>
           <a href="/downloads.html">Downloads</a>
