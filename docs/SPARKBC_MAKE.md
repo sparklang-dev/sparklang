@@ -31,6 +31,8 @@ ISA: [SPARK_BC.md](SPARK_BC.md). Story:
 | `make helpers` / `make tools-test` | K-lane helper CLIs + kit/shadow/analyze smoke |
 | `make test-spark-analyze` | Project-loop analyze folder gate |
 | `make sdk-pack` / `make dist` | Stage `dist/spark-sdk/` (helpers + I overlay when present) |
+| `make voice-easy` / `make test-voice-easy` | Owned voice STT/TTS heads — tiny dry (CI) |
+| `make voice-easy-large` | Opt-in large voice-easy (prefer 5090; never 6000; not default CI) |
 
 ```bash
 make test-sparkbc
@@ -41,6 +43,7 @@ make spark-eval-claude
 make docs-check
 make tools-test
 make sdk-pack
+make test-voice-easy
 ```
 
 ## Build / tools

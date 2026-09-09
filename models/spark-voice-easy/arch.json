@@ -1,0 +1,11 @@
+{
+  "profile": "spark-voice-easy",
+  "dim": 16,
+  "n_phrases": 6,
+  "feat_bins": 8,
+  "scale": "tiny",
+  "beats_claude": false,
+  "never": "rtx-pro-6000",
+  "brain": "owned-weights",
+  "note": "Owned STT/TTS heads written+trained in sparklang; not a downloaded base model"
+}

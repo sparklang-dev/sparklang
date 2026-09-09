@@ -98,6 +98,7 @@
         <a href="/docs/model-aspects.html">Model aspects</a>
         <a href="/docs/voice.html">Voice</a>
         <a href="/docs/voice-ask.html">Voice ask</a>
+        <a href="/docs/voice-easy.html">Voice easy</a>
         <a href="/docs/diagrams.html">Diagrams</a>
         <a href="/docs/spark-builder.html">Builder</a>
         <a href="/docs/compile.html">Compile</a>
@@ -216,6 +217,14 @@
         <td><code class="inline-code">make sdk-pack</code> / <code class="inline-code">make dist</code></td>
         <td>Stage <code class="inline-code">dist/spark-sdk/</code> (helpers + I overlay when present)</td>
         </tr>
+        <tr>
+        <td><code class="inline-code">make voice-easy</code> / <code class="inline-code">make test-voice-easy</code></td>
+        <td>Owned voice STT/TTS heads — tiny dry (CI)</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">make voice-easy-large</code></td>
+        <td>Opt-in large voice-easy (prefer 5090; never 6000; not default CI)</td>
+        </tr>
         </tbody>
         </table></div>
         <pre class="doc__pre"><code class="language-bash">make test-sparkbc
@@ -226,6 +235,7 @@
         make docs-check
         make tools-test
         make sdk-pack
+        make test-voice-easy
         </code></pre>
         <h2 id="build-tools">Build / tools</h2>
         <div class="doc__table-wrap"><table class="doc__table">

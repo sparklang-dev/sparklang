@@ -5,7 +5,7 @@ language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
 
-## 0.6.52 — 2026-09-09
+## 0.6.53 — 2026-09-09
 
 - **Sensory mapping 100× (Model aspects):** expand
   [MODEL_ASPECTS.md](docs/MODEL_ASPECTS.md) →
@@ -17,11 +17,23 @@ language) are listed here. Site and installers track
   summary status table. New diagrams under `docs/images/diagram-*sense*`
   + `diagram-agentic-sensory-loop.svg` +
   `diagram-spark-vs-external-stacks.svg`. Cross-links Knowledge hive,
-  Voice ask, Methods vs OpenBin. Forge nav lists Model aspects.
-  **Honest:** eyes planned stub only; not beat Claude; never 6000;
-  no OpenBin/phone clone. Also fix `md_to_doc_html.py` so
+  Voice ask, Voice easy, Methods vs OpenBin. Forge nav lists Model
+  aspects. **Honest:** eyes planned stub only; not beat Claude; never
+  6000; no OpenBin/phone clone. Also fix `md_to_doc_html.py` so
   `![…](images/*.svg)` publishes as `<img>` under `/docs/images/`
   (was incorrectly rewritten to inline code).
+
+## 0.6.52 — 2026-09-09
+
+- **Voice easy train (tiny + large):** piece-of-cake owned STT/TTS
+  heads — `make voice-easy` / `./spark-voice easy` (env → fixtures →
+  train → dry round-trip). Default **tiny** for CI; opt-in
+  `--scale large` / `VOICE_SCALE=large` (bigger dims/steps; prefer
+  **RTX 5090**, ~2 GiB hint; **fail closed** if only PRO **6000**
+  visible unless `--device cpu`). Not ElevenLabs overnight. Never
+  beat Claude. Docs: [VOICE_EASY.md](docs/VOICE_EASY.md) →
+  [/docs/voice-easy.html](/docs/voice-easy.html). IDE command
+  **Spark: Voice easy train**. Gate: `make test-voice-easy`.
 
 ## 0.6.51 — 2026-09-09
 

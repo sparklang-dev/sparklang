@@ -27,7 +27,8 @@ NVML_LIB ?= /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1
 	weight-gallery-xl \
 	test-weights-play \
 	test-spark-ask \
-	test-spark-analyze
+	test-spark-analyze \
+	voice-easy test-voice-easy voice-easy-large
 
 all: spark companions
 
@@ -622,6 +623,23 @@ test-weights-play:
 	@python3 -c "import json; p=json.load(open('/tmp/wg-play.json')); \
 	  assert p['beats_claude'] is False; assert 'argmax' in p['forward']; \
 	  print('play_ok', p['forward']['path'], 'beats_claude=False')"
+
+# Voice easy — owned STT/TTS heads (tiny CI + large opt-in).
+# Prefer RTX 5090; NEVER RTX PRO 6000. Not ElevenLabs overnight.
+.PHONY: voice-easy test-voice-easy voice-easy-large
+voice-easy:
+	chmod +x spark-voice tools/spark-voice/cli.py
+	./spark-voice easy --dry --device auto --scale tiny
+
+test-voice-easy:
+	chmod +x spark-voice tools/spark-voice/cli.py
+	PYTHONPATH=python python3 -m unittest \
+	  sparklang.voice_easy.test_voice_easy -v
+	./spark-voice easy --dry --device cpu --scale tiny
+
+voice-easy-large:
+	chmod +x spark-voice tools/spark-voice/cli.py
+	./spark-voice easy --scale large --device auto
 
 # Multi-outer CPU SGD + layer-0 attn proof + measurement-only eval.
 # Never claims beat Claude. CPU only. Tiny fixture = GHA/CI default.

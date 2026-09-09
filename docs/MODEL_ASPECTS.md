@@ -10,7 +10,8 @@ bytecode + weights + serve. Not marketing. Not God/Loom metaphors.
 
 Factory hub: [FACTORY.md](FACTORY.md). Knowledge hive:
 [KNOWLEDGE.md](KNOWLEDGE.md) (agents/tools · multimodal · eval).
-Voice surface: [VOICE.md](VOICE.md). Voice ask (dump Q&A):
+Voice surface: [VOICE.md](VOICE.md). Voice easy train:
+[VOICE_EASY.md](VOICE_EASY.md). Voice ask (dump Q&A):
 [VOICE_ASK.md](VOICE_ASK.md). Methods vs OpenBin:
 [METHODS_OPENBIN.md](METHODS_OPENBIN.md). Coder:
 [SPARK_CODER.md](SPARK_CODER.md). Weights:
@@ -203,7 +204,7 @@ make voice-test               # local companion smoke
 |------|-------|--------|
 | Dry stub / CI whisper tiny | **tiny** | CPU |
 | Live sidecar + local whisper | small local | CPU |
-| Opt-in owned voice heads (when Voice easy merges) | tiny / **large** | Prefer **5090**; refuse **6000** |
+| Opt-in owned voice heads | tiny / **large** via [VOICE_EASY.md](VOICE_EASY.md) (`make voice-easy`) | Prefer **5090**; refuse **6000** |
 
 Large STT heads are **owned experiments**, not a claim of vendor ASR
 parity. See [VOICE.md](VOICE.md) tiny-vs-large table.
@@ -690,6 +691,7 @@ Roadmap sketches: [ROADMAP.md](ROADMAP.md).
 - Site: [/docs/model-aspects.html](/docs/model-aspects.html) ·
   [/docs/knowledge.html](/docs/knowledge.html) ·
   [/docs/voice.html](/docs/voice.html) ·
+  [/docs/voice-easy.html](/docs/voice-easy.html) ·
   [/docs/voice-ask.html](/docs/voice-ask.html) ·
   [/docs/methods-openbin.html](/docs/methods-openbin.html) ·
   [/docs/spark-coder.html](/docs/spark-coder.html) ·

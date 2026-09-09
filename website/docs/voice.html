@@ -98,6 +98,7 @@
         <a href="/docs/model-aspects.html">Model aspects</a>
         <a href="/docs/voice.html" aria-current="page">Voice</a>
         <a href="/docs/voice-ask.html">Voice ask</a>
+        <a href="/docs/voice-easy.html">Voice easy</a>
         <a href="/docs/diagrams.html">Diagrams</a>
         <a href="/docs/spark-builder.html">Builder</a>
         <a href="/docs/compile.html">Compile</a>
@@ -257,6 +258,15 @@
         </code></pre>
         <p>Templates: <code class="inline-code">templates/voice_models/</code>. Artifacts under
         <code class="inline-code">out/voice_models/</code>.</p>
+        <h2 id="voice-easy-train-owned-heads">Voice easy train (owned heads)</h2>
+        <p>Piece-of-cake path for <strong>training</strong> owned STT/TTS heads (tiny CI or
+        large opt-in). Not vendor neural clone. Prefer 5090; never 6000.</p>
+        <pre class="doc__pre"><code class="language-bash">make voice-easy
+        ./spark-voice easy --dry --device auto
+        ./spark-voice easy --scale large --device auto   # opt-in
+        </code></pre>
+        <p>Docs: <a href="/docs/voice-easy.html">VOICE_EASY.md</a> →
+        <a href="/docs/voice-easy.html">/docs/voice-easy.html</a>.</p>
         <h2 id="pstn-capability-on-default-off">PSTN — capability on, default OFF</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
