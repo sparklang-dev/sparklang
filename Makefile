@@ -876,7 +876,8 @@ spark-bc-pack-hello: bootstrap/bc_pack_hello.c bootstrap/bc_write.c \
 		bootstrap/bc_pack_hello.c bootstrap/bc_write.c
 
 .PHONY: test-sparkbc test-sparkbc-e2e sparkbc-e2e \
-	spark-bc-emit test-bc-emit spark-bc
+	spark-bc-emit test-bc-emit spark-bc \
+	test-decompile-compete decompile-roundtrip decompile-bench
 test-sparkbc: spark-bootstrap spark
 	chmod +x bootstrap/tests/run_sparkbc.sh
 	./bootstrap/tests/run_sparkbc.sh
@@ -889,6 +890,27 @@ test-sparkbc-e2e: spark-bootstrap spark
 	./tools/spark-bc-dump/run_e2e_gate.sh
 
 sparkbc-e2e: test-sparkbc-e2e
+
+# Richer dump symbols/xrefs + analysis project (no GPU).
+test-decompile-compete:
+	PYTHONPATH=python python3 \
+		tools/spark-bc-dump/test_decompile_compete.py
+
+# Loud SoT win: compile → dump → recompile hash on fixtures.
+decompile-roundtrip: spark-bootstrap
+	PYTHONPATH=python python3 tools/spark-bc-dump/roundtrip.py \
+		--json-out out/decompile-bench/roundtrip.json
+
+# Measured scoreboard JSON (+ sample analysis project).
+decompile-bench: spark-bootstrap test-decompile-compete
+	PYTHONPATH=python python3 tools/spark-bc-dump/decompile_bench.py \
+		--json-out website/data/decompile-scoreboard.json \
+		--project-dir out/decompile-bench/sample-project
+	cp -f website/data/decompile-scoreboard.json \
+		docs/examples/decompile-scoreboard.json
+	mkdir -p website/docs/examples
+	cp -f docs/examples/decompile-scoreboard.json \
+		website/docs/examples/decompile-scoreboard.json
 
 spark-bc-emit: bootstrap/bc_emit_sasm.c bootstrap/bc_read.c \
 	bootstrap/dry_ask.c bootstrap/dry_auto_model.c \

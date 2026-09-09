@@ -69,6 +69,7 @@
                 <ul class="nav-more__menu" hidden>
                   <li><a href="/docs/compile.html">Compile</a></li>
                   <li><a href="/docs/decompile.html">Decompile</a></li>
+                  <li><a href="/docs/decompile-compete.html">Decompile compete</a></li>
                   <li><a href="/docs/programming-guide.html">Programming guide</a></li>
                   <li><a href="/docs/ide.html">IDE</a></li>
                   <li><a href="/ide-web.html">IDE web shell</a></li>
@@ -103,6 +104,7 @@
         <a href="/docs/spark-builder.html">Builder</a>
         <a href="/docs/compile.html">Compile</a>
         <a href="/docs/decompile.html">Decompile</a>
+        <a href="/docs/decompile-compete.html">Compete</a>
         <a href="/docs/llm-decompile.html">LLM research</a>
         <a href="/docs/spark-bc.html">Opcodes / ISA</a>
         <a href="/docs/build-models.html">Build models</a>
@@ -148,6 +150,18 @@
         <tr>
         <td><code class="inline-code">make sparkbc-e2e</code></td>
         <td>Alias for <code class="inline-code">test-sparkbc-e2e</code></td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">make test-decompile-compete</code></td>
+        <td>Richer dump symbols/xrefs + analysis project units</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">make decompile-roundtrip</code></td>
+        <td>compile→dump→recompile sha256 on published fixtures</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">make decompile-bench</code></td>
+        <td>SPARK_BC metrics + <code class="inline-code">website/data/decompile-scoreboard.json</code></td>
         </tr>
         <tr>
         <td><code class="inline-code">make spark-sgd-proof</code></td>

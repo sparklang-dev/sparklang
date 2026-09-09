@@ -43,6 +43,25 @@ nconsts: 10
 ncode: 31
 code_off: 241
 
+## Sections
+magic  off=0 size=4  SPBC
+version  off=4 size=1  u8
+string_pool  off=7 size=198  nstrings=10
+const_pool  off=207 size=30  nconsts=10
+code  off=241 size=31  ncode=31
+
+## Symbols (string pool)
+str0  'code' (4 bytes)
+str1  'Inspect Spark SPARK_BC genome; emit builder stub from our bytes' (63 bytes)
+str2  'plan' (4 bytes)
+str3  'job' (3 bytes)
+str4  'spark_distill_cpu' (17 bytes)
+str5  'out/train/job-dry-001' (21 bytes)
+str6  'fixture-base' (12 bytes)
+str7  'examples/fixtures/train/dataset.jsonl' (37 bytes)
+str8  'status' (6 bytes)
+str9  'job-dry-001' (11 bytes)
+
 ## String pool
 0: 'code' (4 bytes)
 1: 'Inspect Spark SPARK_BC genome; emit builder stub from our bytes' (63 bytes)
@@ -66,6 +85,30 @@ code_off: 241
 7: kind=0 payload=7 → 'examples/fixtures/train/dataset.jsonl'
 8: kind=0 payload=8 → 'status'
 9: kind=0 payload=9 → 'job-dry-001'
+
+## Xrefs (const → ops; str → consts)
+n_ops: 7
+n_const_refs: 12
+const0 → MODEL@0
+const1 → ASK@3
+const2 → ASK@3, PRINT@8
+const3 → TRAIN@11, PRINT@27
+const4 → TRAIN@11
+const5 → TRAIN@11
+const6 → TRAIN@11
+const7 → TRAIN@11
+const8 → TRAIN_STATUS@22
+const9 → TRAIN_STATUS@22
+str0 ← consts 0
+str1 ← consts 1
+str2 ← consts 2
+str3 ← consts 3
+str4 ← consts 4
+str5 ← consts 5
+str6 ← consts 6
+str7 ← consts 7
+str8 ← consts 8
+str9 ← consts 9
 
 ## Code (opcode + u16le const indices)
 code+0  01 00 00  MODEL (0x01) const0 "code"

@@ -15,7 +15,12 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT / "python") not in sys.path:
     sys.path.insert(0, str(ROOT / "python"))
 
-from sparklang.model_lab.bc_dump import format_dump, load_sparkbc
+from sparklang.model_lab.bc_dump import (
+    format_dump,
+    format_dump_html,
+    format_dump_json,
+    load_sparkbc,
+)
 from sparklang.model_lab.builder import emit_base, emit_serve, emit_stub
 
 
@@ -27,6 +32,16 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--command", default="", help="compile command used")
     p.add_argument("--label", default="SPARK_BC dump")
     p.add_argument("-o", "--out", help="write dump text here")
+    p.add_argument(
+        "--json",
+        action="store_true",
+        help="emit structured analysis JSON (symbols/xrefs/ops)",
+    )
+    p.add_argument(
+        "--html",
+        action="store_true",
+        help="emit local HTML report",
+    )
     p.add_argument(
         "--stub",
         action="store_true",
@@ -72,9 +87,27 @@ def main(argv: list[str] | None = None) -> int:
         text = json.dumps(payload, indent=2) + "\n"
     else:
         bc = load_sparkbc(args.sparkbc)
-        text = format_dump(
-            bc, source=src, command=cmd, label=args.label
-        )
+        if args.html:
+            text = format_dump_html(
+                bc, source=src, command=cmd, label=args.label
+            )
+        elif args.json:
+            text = (
+                json.dumps(
+                    format_dump_json(
+                        bc,
+                        source=src,
+                        command=cmd,
+                        label=args.label,
+                    ),
+                    indent=2,
+                )
+                + "\n"
+            )
+        else:
+            text = format_dump(
+                bc, source=src, command=cmd, label=args.label
+            )
     if args.out:
         out = Path(args.out)
         out.parent.mkdir(parents=True, exist_ok=True)

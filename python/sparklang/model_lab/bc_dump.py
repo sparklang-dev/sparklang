@@ -228,6 +228,130 @@ def format_xxd(raw: bytes, width: int = 16) -> str:
     return "\n".join(lines)
 
 
+def symbol_table(bc: dict[str, Any]) -> list[dict[str, Any]]:
+    """String-pool symbols (SPARK_BC has no ELF dynsym)."""
+    out: list[dict[str, Any]] = []
+    for i, raw in enumerate(bc["strings"]):
+        text = raw.decode("utf-8", errors="replace")
+        out.append(
+            {
+                "id": "str%d" % i,
+                "kind": "string",
+                "index": i,
+                "bytes": len(raw),
+                "text": text,
+            }
+        )
+    return out
+
+
+def build_xrefs(bc: dict[str, Any]) -> dict[str, Any]:
+    """Const↔string and opcode→const cross-refs (SPARK_BC-native)."""
+    ops = decode_ops(bc)
+    const_to_ops: dict[str, list[dict[str, Any]]] = {}
+    str_to_consts: dict[str, list[int]] = {}
+    for i, c in enumerate(bc["consts"]):
+        if c["kind"] == 0:
+            key = "str%d" % c["payload"]
+            str_to_consts.setdefault(key, []).append(i)
+    for op in ops:
+        for a in op["operands"]:
+            key = "const%d" % a
+            const_to_ops.setdefault(key, []).append(
+                {
+                    "ip": op["ip"],
+                    "name": op["name"],
+                    "op": op["op"],
+                }
+            )
+    return {
+        "const_to_ops": const_to_ops,
+        "str_to_consts": str_to_consts,
+        "n_ops": len(ops),
+        "n_const_refs": sum(len(v) for v in const_to_ops.values()),
+    }
+
+
+def structured_sections(bc: dict[str, Any]) -> list[dict[str, Any]]:
+    """Byte-range sections of a SPARK_BC file."""
+    raw: bytes = bc["raw"]
+    # Walk layout to compute pool bounds (same as load_sparkbc).
+    off = 5
+    nstrs, off = _u16(raw, off)
+    str_start = off
+    for _ in range(nstrs):
+        nbytes, off = _u16(raw, off)
+        off += nbytes
+    str_end = off
+    nconsts, off = _u16(raw, off)
+    const_start = off
+    off += 3 * nconsts
+    const_end = off
+    _ncode, off = _u32(raw, off)
+    code_start = off
+    return [
+        {"name": "magic", "off": 0, "size": 4, "note": "SPBC"},
+        {"name": "version", "off": 4, "size": 1, "note": "u8"},
+        {
+            "name": "string_pool",
+            "off": str_start,
+            "size": str_end - str_start,
+            "note": "nstrings=%d" % nstrs,
+        },
+        {
+            "name": "const_pool",
+            "off": const_start,
+            "size": const_end - const_start,
+            "note": "nconsts=%d" % nconsts,
+        },
+        {
+            "name": "code",
+            "off": code_start,
+            "size": bc["ncode"],
+            "note": "ncode=%d" % bc["ncode"],
+        },
+    ]
+
+
+def analyze_bc(bc: dict[str, Any]) -> dict[str, Any]:
+    """Structured analysis dict for JSON/HTML/project export."""
+    ops = decode_ops(bc)
+    return {
+        "format": "SPARK_BC",
+        "path": bc["path"],
+        "sha256": bc["sha256"],
+        "size": bc["size"],
+        "magic": bc["magic"],
+        "version": bc["version"],
+        "nstrings": len(bc["strings"]),
+        "nconsts": len(bc["consts"]),
+        "ncode": bc["ncode"],
+        "code_off": bc["code_off"],
+        "first32_hex": hex_preview(bc["raw"], 32),
+        "sections": structured_sections(bc),
+        "symbols": symbol_table(bc),
+        "xrefs": build_xrefs(bc),
+        "ops": [
+            {
+                "ip": o["ip"],
+                "op": o["op"],
+                "name": o["name"],
+                "operands": o["operands"],
+                "hex": o["hex"],
+                "args_text": [
+                    _const_text(bc, a) for a in o["operands"]
+                ],
+            }
+            for o in ops
+        ],
+        "privacy": "local-only",
+        "note": (
+            "Deterministic SPARK_BC inspect — not ELF/PE decompile, "
+            "not lossless .spark source recovery."
+        ),
+    }
+
+
 def format_dump(
     bc: dict[str, Any],
     *,
@@ -235,8 +359,9 @@ def format_dump(
     command: str,
     label: str,
 ) -> str:
-    """Human dump: command, sha256, first 32 hex, header, ops."""
-    ops = decode_ops(bc)
+    """Human dump: command, sha256, sections, symbols, xrefs, ops."""
+    analysis = analyze_bc(bc)
+    ops = analysis["ops"]
     lines = [
         "# %s" % label,
         "# SPARK_BC is orchestration bytecode — not neural weights.",
@@ -267,8 +392,20 @@ def format_dump(
         "ncode: %d" % bc["ncode"],
         "code_off: %d" % bc["code_off"],
         "",
-        "## String pool",
+        "## Sections",
     ]
+    for sec in analysis["sections"]:
+        lines.append(
+            "%s  off=%d size=%d  %s"
+            % (sec["name"], sec["off"], sec["size"], sec["note"])
+        )
+    lines.extend(["", "## Symbols (string pool)"])
+    for sym in analysis["symbols"]:
+        lines.append(
+            "%s  %r (%d bytes)"
+            % (sym["id"], sym["text"], sym["bytes"])
+        )
+    lines.extend(["", "## String pool"])
     for i, s in enumerate(bc["strings"]):
         text = s.decode("utf-8", errors="replace")
         lines.append("%d: %r (%d bytes)" % (i, text, len(s)))
@@ -280,14 +417,142 @@ def format_dump(
                 "utf-8", errors="replace"
             )
         lines.append(
-            "%d: kind=%d payload=%d%s" % (i, c["kind"], c["payload"], extra)
+            "%d: kind=%d payload=%d%s"
+            % (i, c["kind"], c["payload"], extra)
+        )
+    xrefs = analysis["xrefs"]
+    lines.extend(
+        [
+            "",
+            "## Xrefs (const → ops; str → consts)",
+            "n_ops: %d" % xrefs["n_ops"],
+            "n_const_refs: %d" % xrefs["n_const_refs"],
+        ]
+    )
+    for ckey, refs in sorted(xrefs["const_to_ops"].items()):
+        ips = ", ".join(
+            "%s@%d" % (r["name"], r["ip"]) for r in refs
+        )
+        lines.append("%s → %s" % (ckey, ips))
+    for skey, cidxs in sorted(xrefs["str_to_consts"].items()):
+        lines.append(
+            "%s ← consts %s"
+            % (skey, ", ".join(str(i) for i in cidxs))
         )
     lines.extend(["", "## Code (opcode + u16le const indices)"])
     for op in ops:
-        args = " ".join(_const_text(bc, a) for a in op["operands"])
+        args = " ".join(op["args_text"])
         lines.append(
             "code+%d  %s  %s (0x%02x) %s"
             % (op["ip"], op["hex"], op["name"], op["op"], args)
         )
     lines.append("")
     return "\n".join(lines)
+
+
+def format_dump_json(
+    bc: dict[str, Any],
+    *,
+    source: str,
+    command: str,
+    label: str,
+) -> dict[str, Any]:
+    """JSON export of structured SPARK_BC analysis."""
+    payload = analyze_bc(bc)
+    payload["label"] = label
+    payload["source"] = source
+    payload["command"] = command
+    return payload
+
+
+def _html_esc(s: Any) -> str:
+    """Escape text for local HTML report bodies."""
+    return (
+        str(s)
+        .replace("&", "&amp;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+        .replace('"', "&quot;")
+    )
+
+
+def format_dump_html(
+    bc: dict[str, Any],
+    *,
+    source: str,
+    command: str,
+    label: str,
+) -> str:
+    """Minimal self-contained HTML report (local file, no CDN)."""
+    a = analyze_bc(bc)
+    esc = _html_esc
+    rows = []
+    for op in a["ops"]:
+        rows.append(
+            "<tr><td>%d</td><td>%s</td><td>%s</td><td>%s</td></tr>"
+            % (
+                op["ip"],
+                esc(op["hex"]),
+                esc(op["name"]),
+                esc(" ".join(op["args_text"])),
+            )
+        )
+    sec_rows = []
+    for sec in a["sections"]:
+        sec_rows.append(
+            "<tr><td>%s</td><td>%d</td><td>%d</td><td>%s</td></tr>"
+            % (
+                esc(sec["name"]),
+                sec["off"],
+                sec["size"],
+                esc(sec["note"]),
+            )
+        )
+    sym_rows = []
+    for sym in a["symbols"]:
+        sym_rows.append(
+            "<tr><td>%s</td><td>%s</td><td>%d</td></tr>"
+            % (esc(sym["id"]), esc(repr(sym["text"])), sym["bytes"])
+        )
+    return "\n".join(
+        [
+            "<!DOCTYPE html>",
+            '<html lang="en"><head><meta charset="utf-8"/>',
+            "<title>%s</title>" % esc(label),
+            "<style>",
+            "body{font:14px/1.45 ui-monospace,monospace;",
+            "margin:1.5rem;background:#0f1419;color:#e7ecf3}",
+            "h1,h2{font-family:system-ui,sans-serif}",
+            "table{border-collapse:collapse;width:100%;",
+            "margin:.75rem 0}",
+            "th,td{border:1px solid #2a3544;padding:.35rem .5rem;",
+            "text-align:left}",
+            "th{background:#1a2330}",
+            "code{color:#9ecbff}",
+            "</style></head><body>",
+            "<h1>%s</h1>" % esc(label),
+            "<p>Source: <code>%s</code><br/>Command: <code>%s</code>"
+            "<br/>sha256: <code>%s</code> · %d bytes · local-only</p>"
+            % (esc(source), esc(command), esc(a["sha256"]), a["size"]),
+            "<h2>Sections</h2><table><thead><tr>",
+            "<th>name</th><th>off</th><th>size</th><th>note</th>",
+            "</tr></thead><tbody>",
+            *sec_rows,
+            "</tbody></table>",
+            "<h2>Symbols</h2><table><thead><tr>",
+            "<th>id</th><th>text</th><th>bytes</th>",
+            "</tr></thead><tbody>",
+            *sym_rows,
+            "</tbody></table>",
+            "<h2>Code</h2><table><thead><tr>",
+            "<th>ip</th><th>hex</th><th>op</th><th>args</th>",
+            "</tr></thead><tbody>",
+            *rows,
+            "</tbody></table>",
+            "<p><em>SPARK_BC inspect — not ELF/PE decompile; "
+            "not lossless source recovery. Does not beat Claude."
+            "</em></p>",
+            "</body></html>",
+            "",
+        ]
+    )

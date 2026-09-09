@@ -1,4 +1,4 @@
-# Train-step SPARK_BC (TRAIN → STEP → TRAIN_STATUS)
+# Train/STEP SPARK_BC
 # SPARK_BC is orchestration bytecode — not neural weights.
 # Not HuggingFace. Not imported tensors. Spark's own binary.
 #
@@ -39,6 +39,24 @@ nconsts: 9
 ncode: 28
 code_off: 173
 
+## Sections
+magic  off=0 size=4  SPBC
+version  off=4 size=1  u8
+string_pool  off=7 size=133  nstrings=9
+const_pool  off=142 size=27  nconsts=9
+code  off=173 size=28  ncode=28
+
+## Symbols (string pool)
+str0  'code' (4 bytes)
+str1  'job' (3 bytes)
+str2  'spark_distill_cpu' (17 bytes)
+str3  'out/train/job-dry-001' (21 bytes)
+str4  'fixture-base' (12 bytes)
+str5  'examples/fixtures/train/dataset.jsonl' (37 bytes)
+str6  'step' (4 bytes)
+str7  'job-dry-001' (11 bytes)
+str8  'status' (6 bytes)
+
 ## String pool
 0: 'code' (4 bytes)
 1: 'job' (3 bytes)
@@ -60,6 +78,28 @@ code_off: 173
 6: kind=0 payload=6 → 'step'
 7: kind=0 payload=7 → 'job-dry-001'
 8: kind=0 payload=8 → 'status'
+
+## Xrefs (const → ops; str → consts)
+n_ops: 6
+n_const_refs: 11
+const0 → MODEL@0
+const1 → TRAIN@3, PRINT@24
+const2 → TRAIN@3
+const3 → TRAIN@3
+const4 → TRAIN@3
+const5 → TRAIN@3
+const6 → STEP@14
+const7 → STEP@14, TRAIN_STATUS@19
+const8 → TRAIN_STATUS@19
+str0 ← consts 0
+str1 ← consts 1
+str2 ← consts 2
+str3 ← consts 3
+str4 ← consts 4
+str5 ← consts 5
+str6 ← consts 6
+str7 ← consts 7
+str8 ← consts 8
 
 ## Code (opcode + u16le const indices)
 code+0  01 00 00  MODEL (0x01) const0 "code"

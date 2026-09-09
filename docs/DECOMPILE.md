@@ -11,11 +11,16 @@ DecompAI (agent) vs seq2seq models, LLM4Decompile, EmergentMind
 survey, Quarkslab article + RE category (LLM ≠ verified SoT),
 Plain English demystify overview, OpenBin (online product — not
 Spark SoT; third-party trust/IP), recompile ≠ semantic fidelity.
+**Compete / scoreboard:** [DECOMPILE_COMPETE.md](DECOMPILE_COMPETE.md)
+([/docs/decompile-compete.html](/docs/decompile-compete.html)) —
+parity matrix + measured `make decompile-bench` JSON (no fake
+“beats all”).
 Mermaid factory overview: [DIAGRAMS.md](DIAGRAMS.md)
 ([/docs/diagrams.html](/docs/diagrams.html)).
 
 **Never** claim an LLM perfectly decompiles SPARK_BC. **Never**
-6000. Does **not** beat Claude.
+6000. Does **not** beat Claude. Do **not** publish “beats
+Ghidra/IDA/…” without measured scoreboard JSON.
 
 ## Tool-function diagrams
 
@@ -81,8 +86,21 @@ PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
 `docs/examples/spark-train-step.sparkbc` — magic `SPBC`, pools,
 opcode listing. Not invented hex.*
 
-Loader / formatters: `python/sparklang/model_lab/bc_dump.py`.
-Units: `tools/spark-bc-dump/test_dump.py` via `make test-sparkbc`.
+Loader / formatters: `python/sparklang/model_lab/bc_dump.py`
+(sections, string **symbols**, const/op **xrefs**, `--json` /
+`--html` export). Units: `tools/spark-bc-dump/test_dump.py` via
+`make test-sparkbc`; richer dump gate
+`make test-decompile-compete`.
+
+**Round-trip (SoT win, loud):** `make decompile-roundtrip` —
+compile → dump → recompile → sha256 match on published fixtures.
+
+**Analysis project:** `tools/spark-bc-dump/analyze_project.py`
+writes `dump.txt` / `dump.json` / `dump.html` / `report.md` under
+an output folder (local-only).
+
+**Bench / scoreboard:** `make decompile-bench` →
+`website/data/decompile-scoreboard.json`.
 
 Published dump text (no rebuild): `docs/examples/*-bc.txt` (site:
 `website/docs/examples/`).
@@ -189,7 +207,12 @@ SPARK_BC↔ELF round-trip claim beyond `test-bc-emit`.
 | Claim | Status |
 |-------|--------|
 | Hex + opcode mnemonics for `.sparkbc` | **implemented** (`dump.py`) |
+| Symbols / xrefs / sections / JSON+HTML | **implemented** (`analyze_bc`) |
+| Compile→dump→recompile hash | **implemented** (`decompile-roundtrip`) |
+| Analysis project folder + report | **implemented** (`analyze_project.py`) |
+| Measured compete scoreboard | **implemented** (`decompile-bench`) |
 | Recover original `.spark` losslessly | **not** — inspect, not source decompiler |
+| Beat Ghidra/IDA on ELF/PE | **not claimed** (loss / N/A on that domain) |
 | LLM perfectly decompiles SPARK_BC | **never claimed** |
 | Attention head activation maps | **not** — see [ATTENTION_FORWARD.md](ATTENTION_FORWARD.md) |
 | Closed-weight model theft | **forbidden** — reverse stays index-only |
@@ -199,5 +222,6 @@ SPARK_BC↔ELF round-trip claim beyond `test-bc-emit`.
 - [Compile](COMPILE.md) · [Build models](BUILD_MODELS.md)
 - [SPARK_BUILDER.md](SPARK_BUILDER.md) · [SPARK_BC.md](SPARK_BC.md)
 - [Factory hub](FACTORY.md) · [LLM decompile research](research/LLM_DECOMPILE.md)
+- [Decompile compete / scoreboard](DECOMPILE_COMPETE.md)
 - Screenshots + diagrams: `website/docs/images/decompile-*`,
   `website/docs/images/diagram-*`

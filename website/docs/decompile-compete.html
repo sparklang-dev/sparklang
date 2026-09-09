@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Decompile compete — measured scoreboard — Spark</title>
+    <meta name="description" content="SPARK_BC parity matrix and measured scoreboard vs OpenBin / classic RE / LLM4Decompile — no fake beats-all." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/css/tokens.css?v=workflow0909" />
+    <link rel="stylesheet" href="/css/site.css?v=workflow0909" />
+  </head>
+  <body class="doc-page">
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="site-brand" href="/" aria-label="Spark home">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z" fill="currentColor" />
+          </svg>
+          Spark
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+        </button>
+        <div class="header-nav-wrap">
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <ul class="nav-primary">
+              <li><a href="/workflow.html">Loop</a></li>
+              <li><a href="/learn/">Learn</a></li>
+              <li><a href="/docs/language.html">Docs</a></li>
+              <li><a href="/docs/factory.html">Factory</a></li>
+              <li><a href="/downloads.html">Download</a></li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">Forge</button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/model-aspects.html">Model aspects</a></li>
+                  <li><a href="/docs/diagrams.html">Diagrams</a></li>
+                  <li><a href="/docs/spark-builder.html">Builder</a></li>
+                  <li><a href="/docs/build-models.html">Build models</a></li>
+                  <li><a href="/docs/model-training.html">Model training</a></li>
+                  <li><a href="/docs/train-loop.html">Train loop</a></li>
+                  <li><a href="/docs/spark-coder.html">Spark coder</a></li>
+                  <li><a href="/docs/weight-gallery.html">Weight gallery</a></li>
+                  <li><a href="/docs/ai-models.html">AI models</a></li>
+                  <li><a href="/docs/voice.html">Voice / STT / TTS</a></li>
+                </ul>
+              </li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">Bench</button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/compile.html">Compile</a></li>
+                  <li><a href="/docs/decompile.html">Decompile</a></li>
+                  <li><a href="/docs/decompile-compete.html">Decompile compete</a></li>
+                  <li><a href="/docs/programming-guide.html">Programming guide</a></li>
+                  <li><a href="/docs/ide.html">IDE</a></li>
+                  <li><a href="/ide-web.html">IDE web shell</a></li>
+                  <li><a href="/docs/native-network-web.html">Network + web</a></li>
+                  <li><a href="/docs/serve.html">Serve</a></li>
+                  <li><a href="/docs/tools-helpers.html">Tools & helpers</a></li>
+                  <li><a href="/about.html">About</a></li>
+                </ul>
+              </li>
+            </ul>
+            <a href="/playground.html" class="nav-cta">Try</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <div class="shell doc-layout">
+      <aside class="doc-sidebar" aria-label="Table of contents">
+        <p class="doc-sidebar__title">On this page</p>
+        <nav id="doc-toc-list"></nav>
+      </aside>
+      <main class="doc-main">
+      <nav class="doc__nav" aria-label="Docs">
+        <a href="/learn/">Learn</a>
+        <a href="/docs/factory.html">Factory hub</a>
+        <a href="/docs/model-aspects.html">Model aspects</a>
+        <a href="/docs/voice.html">Voice</a>
+        <a href="/docs/diagrams.html">Diagrams</a>
+        <a href="/docs/spark-builder.html">Builder</a>
+        <a href="/docs/compile.html">Compile</a>
+        <a href="/docs/decompile.html">Decompile</a>
+        <a href="/docs/decompile-compete.html" aria-current="page">Compete</a>
+        <a href="/docs/llm-decompile.html">LLM research</a>
+        <a href="/docs/spark-bc.html">Opcodes / ISA</a>
+        <a href="/docs/build-models.html">Build models</a>
+        <a href="/docs/train-loop.html">Train loop</a>
+        <a href="/docs/spark-coder.html">Spark coder</a>
+        <a href="/docs/weight-gallery.html">Weight gallery</a>
+        <a href="/docs/architecture.html">Architecture</a>
+        <a href="/docs/tokenizer.html">Tokenizer</a>
+        <a href="/docs/serve.html">Serve</a>
+        <a href="/docs/eval.html">Eval</a>
+        <a href="/docs/sparkbc-make.html">Make targets</a>
+        <a href="/docs/tools-helpers.html">Tools & helpers</a>
+        <a href="/docs/ci-pages.html">CI / Pages</a>
+        <a href="/docs/adoption-bar.html">Adoption bar</a>
+        <a href="/docs/language.html">Language</a>
+        <a href="/docs/programming-guide.html">Programming guide</a>
+        <a href="/downloads.html">Downloads</a>
+      </nav>      <article class="doc__body">
+        <h1 id="decompile-compete-capability-measured-scoreboard">Decompile compete — capability + measured scoreboard</h1>
+        <p>Honest path to compete at every level on <strong>SPARK_BC</strong> without
+        false marketing. Spark / SparkLang only.</p>
+        <p><strong>Never</strong> publish “Spark beats Ghidra / IDA / Binary Ninja /
+        LLM4Decompile / OpenBin” without the measured JSON from
+        <code class="inline-code">make decompile-bench</code>. <strong>Never</strong> 6000. <strong>Does not</strong> beat Claude.
+        Do <strong>not</strong> copy OpenBin code.</p>
+        <p>Related: <a href="/docs/decompile.html">DECOMPILE.md</a> ·
+        <a href="/docs/llm-decompile.html">research/LLM_DECOMPILE.md</a> ·
+        site <a href="/docs/decompile-compete.html">/docs/decompile-compete.html</a>.</p>
+        <h2 id="beat-axes-spark-bc-domain-where-we-can-actually-win">Beat-axes (SPARK_BC domain — where we can actually win)</h2>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Axis</th>
+        <th>Why it is a Spark win</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><strong>100% round-trip</strong></td>
+        <td><code class="inline-code">compile → dump → recompile</code> same <code class="inline-code">.spark</code> → identical sha256 on published fixtures (<code class="inline-code">tools/spark-bc-dump/roundtrip.py</code>)</td>
+        </tr>
+        <tr>
+        <td><strong>Best structured dump</strong></td>
+        <td>Sections + string symbols + const/op xrefs + txt/JSON/HTML export (<code class="inline-code">bc_dump.analyze_bc</code>)</td>
+        </tr>
+        <tr>
+        <td><strong>Best local privacy</strong></td>
+        <td>No upload — analysis project stays on disk</td>
+        </tr>
+        <tr>
+        <td><strong>Integrated train / weights</strong></td>
+        <td>Same BC drives TRAIN/STEP + init safetensors</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <p>Classic RE tools win <strong>ELF/PE/mach-O</strong> interactive decompile.
+        That is <strong>loss / N/A</strong> for Spark SoT — not a silent claim.</p>
+        <h2 id="feature-parity-matrix">Feature parity matrix</h2>
+        <p>Legend: <strong>win</strong> / <strong>tie</strong> / <strong>loss</strong> / <strong>na</strong> (wrong domain or not
+        claimed). Values are also emitted in
+        <code class="inline-code">website/data/decompile-scoreboard.json</code> by the bench.</p>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Category</th>
+        <th>Spark</th>
+        <th>OpenBin</th>
+        <th>Ghidra</th>
+        <th>IDA</th>
+        <th>Binja</th>
+        <th>LLM4Decompile</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td>Native dump fidelity (SPARK_BC)</td>
+        <td>win</td>
+        <td>na</td>
+        <td>na</td>
+        <td>na</td>
+        <td>na</td>
+        <td>na</td>
+        </tr>
+        <tr>
+        <td>Round-trip reassemble (compile hash)</td>
+        <td>win</td>
+        <td>na</td>
+        <td>loss</td>
+        <td>loss</td>
+        <td>loss</td>
+        <td>loss</td>
+        </tr>
+        <tr>
+        <td>IDE explore</td>
+        <td>win</td>
+        <td>tie</td>
+        <td>tie</td>
+        <td>tie</td>
+        <td>tie</td>
+        <td>na</td>
+        </tr>
+        <tr>
+        <td>Ask / voice assist</td>
+        <td>tie</td>
+        <td>tie</td>
+        <td>na</td>
+        <td>na</td>
+        <td>na</td>
+        <td>tie</td>
+        </tr>
+        <tr>
+        <td>Report export (txt/json/html project)</td>
+        <td>win</td>
+        <td>tie</td>
+        <td>tie</td>
+        <td>tie</td>
+        <td>tie</td>
+        <td>na</td>
+        </tr>
+        <tr>
+        <td>Multi-format ELF/PE</td>
+        <td>loss</td>
+        <td>win</td>
+        <td>win</td>
+        <td>win</td>
+        <td>win</td>
+        <td>win</td>
+        </tr>
+        <tr>
+        <td>LLM-assist decompile</td>
+        <td>na</td>
+        <td>win</td>
+        <td>tie</td>
+        <td>tie</td>
+        <td>tie</td>
+        <td>win</td>
+        </tr>
+        <tr>
+        <td>Batch / fixtures harness</td>
+        <td>win</td>
+        <td>tie</td>
+        <td>tie</td>
+        <td>tie</td>
+        <td>tie</td>
+        <td>tie</td>
+        </tr>
+        <tr>
+        <td>Shadows / helpers</td>
+        <td>win</td>
+        <td>na</td>
+        <td>na</td>
+        <td>na</td>
+        <td>na</td>
+        <td>na</td>
+        </tr>
+        <tr>
+        <td>Local privacy (no upload)</td>
+        <td>win</td>
+        <td>loss</td>
+        <td>win</td>
+        <td>win</td>
+        <td>win</td>
+        <td>tie</td>
+        </tr>
+        <tr>
+        <td>Integrated train / weights</td>
+        <td>win</td>
+        <td>na</td>
+        <td>na</td>
+        <td>na</td>
+        <td>na</td>
+        <td>na</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <h2 id="commands">Commands</h2>
+        <pre class="doc__pre"><code class="language-bash">make spark-bootstrap spark
+        make test-decompile-compete   # unit: richer dump + project
+        make decompile-roundtrip      # compile→dump→recompile hash
+        make decompile-bench          # metrics + scoreboard JSON
+        </code></pre>
+        <p>Analysis project (single file):</p>
+        <pre class="doc__pre"><code class="language-bash">PYTHONPATH=python python3 tools/spark-bc-dump/analyze_project.py \
+          docs/examples/spark-train-step.sparkbc \
+          -o out/analyze/train-step \
+          --source examples/spark_train_step.spark
+        </code></pre>
+        <p>Richer dump exports:</p>
+        <pre class="doc__pre"><code class="language-bash">PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
+          docs/examples/spark-train-step.sparkbc --json -o /tmp/bc.json
+        PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
+          docs/examples/spark-train-step.sparkbc --html -o /tmp/bc.html
+        </code></pre>
+        <h2 id="measured-scoreboard-data-driven">Measured scoreboard (data-driven)</h2>
+        <p>After <code class="inline-code">make decompile-bench</code>:</p>
+        <ul class="doc__ul">
+        <li><code class="inline-code">website/data/decompile-scoreboard.json</code></li>
+        <li><code class="inline-code">docs/examples/decompile-scoreboard.json</code> (mirror)</li>
+        <li>sample project: <code class="inline-code">out/decompile-bench/sample-project/</code></li>
+        </ul>
+        <p>The site page loads the JSON and renders win/tie/loss/na from
+        <strong>disk data</strong> — no hand-painted green checkmarks.</p>
+        <p>External tools (objdump, r2, ghidra, ida, binaryninja, openbin)
+        are probed; if absent → <code class="inline-code">status: absent</code> / <code class="inline-code">verdict: skip</code>. If
+        present but not a SPARK_BC decoder → <code class="inline-code">verdict: na-sparkbc</code>.</p>
+        <h2 id="what-is-still-not-claimed">What is still not claimed</h2>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Claim</th>
+        <th>Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td>Lossless BC → <code class="inline-code">.spark</code> source</td>
+        <td><strong>not</strong> implemented</td>
+        </tr>
+        <tr>
+        <td>Spark beats Ghidra on ELF</td>
+        <td><strong>false / loss</strong></td>
+        </tr>
+        <tr>
+        <td>LLM perfectly decompiles SPARK_BC</td>
+        <td><strong>never</strong></td>
+        </tr>
+        <tr>
+        <td>OpenBin clone</td>
+        <td><strong>never</strong> — local SoT only</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <h2 id="related">Related</h2>
+        <ul class="doc__ul">
+        <li><a href="/docs/decompile.html">DECOMPILE.md</a> · <a href="/docs/spark-bc.html">SPARK_BC.md</a></li>
+        <li><a href="/docs/tools-helpers.html">TOOLS_HELPERS.md</a> · <a href="/docs/sparkbc-make.html">SPARKBC_MAKE.md</a></li>
+        <li><a href="/docs/factory.html">FACTORY.md</a> · <a href="/docs/ci-pages.html">CI_PAGES.md</a></li>
+        </ul>
+        <div id="decompile-scoreboard-mount" class="doc__callout" role="region" aria-label="Measured scoreboard">
+          <p><strong>Live measured scoreboard</strong> — loaded from
+          <code class="inline-code">/data/decompile-scoreboard.json</code> after
+          <code class="inline-code">make decompile-bench</code>. Empty box means regenerate JSON.</p>
+          <div id="decompile-scoreboard-body"></div>
+        </div>
+        <script src="/js/decompile-scoreboard.js"></script>
+      </article>
+      </main>
+    </div>
+
+    <footer class="site-footer">
+      <div class="shell footer-inner">
+        <span>Spark programming language</span>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="/workflow.html">Loop</a>
+          <a href="/learn/">Learn</a>
+          <a href="/docs/language.html">Reference</a>
+          <a href="/downloads.html">Downloads</a>
+          <a href="/playground.html">Playground</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="/js/site.js"></script>
+  </body>
+</html>

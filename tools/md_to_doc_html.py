@@ -28,6 +28,7 @@ DOC_NAV = """\
         <a href="/docs/spark-builder.html"{bc}>Builder</a>
         <a href="/docs/compile.html"{cp}>Compile</a>
         <a href="/docs/decompile.html"{dc}>Decompile</a>
+        <a href="/docs/decompile-compete.html"{dcc}>Compete</a>
         <a href="/docs/llm-decompile.html"{rd}>LLM research</a>
         <a href="/docs/spark-bc.html"{isa}>Opcodes / ISA</a>
         <a href="/docs/build-models.html"{bm}>Build models</a>
@@ -120,6 +121,7 @@ HEADER = """\
                 <ul class="nav-more__menu" hidden>
                   <li><a href="/docs/compile.html">Compile</a></li>
                   <li><a href="/docs/decompile.html">Decompile</a></li>
+                  <li><a href="/docs/decompile-compete.html">Decompile compete</a></li>
                   <li><a href="/docs/programming-guide.html">Programming guide</a></li>
                   <li><a href="/docs/ide.html">IDE</a></li>
                   <li><a href="/ide-web.html">IDE web shell</a></li>
@@ -199,6 +201,7 @@ MD_LINK_MAP = {
     "DIAGRAMS.md": "/docs/diagrams.html",
     "COMPILE.md": "/docs/compile.html",
     "DECOMPILE.md": "/docs/decompile.html",
+    "DECOMPILE_COMPETE.md": "/docs/decompile-compete.html",
     "LLM_DECOMPILE.md": "/docs/llm-decompile.html",
     "BUILD_MODELS.md": "/docs/build-models.html",
     "TRAIN_LOOP.md": "/docs/train-loop.html",
@@ -304,6 +307,10 @@ DOC_PAGES = [
      "Decompile / inspect SPARK_BC",
      "Dump, inspect, and disassemble SPARK_BC and related "
      "binaries — hex mnemonics, not source recovery."),
+    ("dcc", "DECOMPILE_COMPETE.md", "decompile-compete.html",
+     "Decompile compete — measured scoreboard",
+     "SPARK_BC parity matrix and measured scoreboard vs "
+     "OpenBin / classic RE / LLM4Decompile — no fake beats-all."),
     ("rd", "research/LLM_DECOMPILE.md", "llm-decompile.html",
      "LLM decompile research",
      "Survey of LLM decompile tools vs Spark SPARK_BC "
@@ -450,9 +457,10 @@ def render(md_path: Path, out_path: Path, title: str, description: str, current:
     )
     body = decorate_html(body)
     keys = (
-        "ab", "ai", "nn", "ide", "sh", "bc", "cp", "dc", "rd", "bm",
-        "af", "mk", "th", "mo", "isa", "fy", "kh", "dg", "tl", "sc", "wg",
-        "ar", "tk", "sv", "ev", "ci", "ma", "vo", "va", "ve",
+        "ab", "ai", "nn", "ide", "sh", "bc", "cp", "dc", "dcc", "rd",
+        "bm", "af", "mk", "th", "mo", "isa", "fy", "kh", "dg", "tl",
+        "sc", "wg", "ar", "tk", "sv", "ev", "ci", "ma", "vo", "va",
+        "ve",
     )
     nav_kwargs = {
         k: (' aria-current="page"' if current == k else "") for k in keys
