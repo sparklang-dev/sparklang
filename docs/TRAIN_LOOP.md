@@ -30,10 +30,12 @@ Or: `make spark-sgd-proof` (same path + eval).
 
 ## What is trained today
 
-- Primary: `spark.lm_head` via mean-pool embed → CE.
+- Default (D #28): layer-0 last-query causal MHA CE on
+  `q/k/v/o` (+ embed / `lm_head`) via `train_attn=True`.
+- Fallback: `--no-train-attn` mean-pool embed → CE on `lm_head`.
 - Optional: embed grads when the helper enables them.
-- **Not** attention Q/K/V/O blocks on tip.
-- Device: **CPU only**. Never the voice GPU / 6000.
+- Device: **CPU** default; **RTX 5090 OK**. Never the voice GPU /
+  6000.
 
 ## Checkpoint / loss curve
 

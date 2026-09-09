@@ -120,8 +120,8 @@
         <tr>
         <td><code class="inline-code">spark.embed</code></td>
         <td><strong>yes</strong></td>
-        <td>optional grads</td>
-        <td>mean-pool <strong>yes</strong></td>
+        <td>optional grads (+ attn path)</td>
+        <td>last-token / mean-pool <strong>yes</strong></td>
         </tr>
         <tr>
         <td><code class="inline-code">spark.lm_head</code></td>
@@ -132,23 +132,23 @@
         <tr>
         <td><code class="inline-code">spark.final_norm</code> (RMSNorm)</td>
         <td><strong>yes</strong></td>
-        <td>no</td>
-        <td><strong>yes</strong> (after MLP0)</td>
+        <td>via attn path</td>
+        <td><strong>yes</strong> (after attn0/MLP0)</td>
         </tr>
         <tr>
         <td>Layer MLP SwiGLU (<code class="inline-code">mlp_up/gate/down</code>, <code class="inline-code">mlp_norm</code>)</td>
         <td><strong>yes</strong></td>
-        <td>no</td>
+        <td>no (serve only)</td>
         <td><strong>MLP0 yes</strong></td>
         </tr>
         <tr>
         <td>Layer attn (<code class="inline-code">q/k/v/o</code>, <code class="inline-code">attn_norm</code>)</td>
-        <td><strong>yes</strong> (allocated)</td>
-        <td><strong>no</strong></td>
-        <td><strong>no</strong></td>
+        <td><strong>yes</strong></td>
+        <td><strong>layer-0 yes</strong> (D)</td>
+        <td><strong>attn0 yes</strong> (D)</td>
         </tr>
         <tr>
-        <td>RoPE / GQA / KV cache</td>
+        <td>RoPE / multi-layer / KV cache</td>
         <td>sparkasm macros only</td>
         <td><strong>no</strong></td>
         <td><strong>no</strong></td>
@@ -160,16 +160,19 @@
         shapes match <code class="inline-code">control.sparkasm</code> comments (e.g. small <code class="inline-code">dim</code>, few
         layers, GQA head counts) — <strong>re-read</strong> <code class="inline-code">weights.py</code> /
         <code class="inline-code">control.sparkasm</code> for live numbers; do not invent a 3B claim.</p>
-        <p>Opt-in larger <code class="inline-code">dim</code> / <code class="inline-code">n_layer</code> for CPU-fast stubs may land via
-        <strong>F-lane</strong>; until merged, CI keeps defaults.</p>
+        <p>Opt-in larger <code class="inline-code">dim</code> / <code class="inline-code">n_layer</code> for CPU-fast stubs: <strong>F-lane</strong>
+        (<code class="inline-code">make spark-sgd-proof-scale</code>).</p>
         <h2 id="embed-logits-paths">Embed → logits paths</h2>
-        <p><strong>Serve (implemented):</strong></p>
-        <p><code class="inline-code">embed_mean_pool -&gt; mlp0 -&gt; rms_norm -&gt; lm_head</code></p>
+        <p><strong>Serve (implemented, D #28):</strong></p>
+        <p><code class="inline-code">embed -&gt; attn0 -&gt; mlp0 -&gt; rms_norm -&gt; lm_head</code></p>
+        <p>(when layer-0 attn tensors exist; else mean-pool → MLP0 path)</p>
+        <p><strong>Train STEP (implemented, D #28):</strong></p>
+        <p>last-query causal MHA CE on layer-0 q/k/v/o (+ embed / lm_head).
+        <code class="inline-code">--no-train-attn</code> keeps mean-pool CE.</p>
         <p><strong>sparkasm documented (not a VM):</strong></p>
         <p>full block = pre-norm attn (GQA+RoPE) + SwiGLU MLP — shape-checked
-        by <code class="inline-code">make test-sparkasm-control</code> only.</p>
-        <p><strong>Attention train/serve math:</strong> sibling <strong>D-lane</strong> — planned /
-        in-flight; rebase this page when it merges.</p>
+        by <code class="inline-code">make test-sparkasm-control</code> only. RoPE still <strong>not</strong> in the
+        Python CPU path.</p>
         <p>Detail: <a href="/docs/attention-forward.html">ATTENTION_FORWARD.md</a>.</p>
         <h2 id="safetensors-meta-honest-flags">Safetensors meta (honest flags)</h2>
         <p>Init emit sets <code class="inline-code">trained: false</code>, <code class="inline-code">served: false</code>, derivation notes

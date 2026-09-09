@@ -7,8 +7,8 @@
     <meta name="description" content="Spark compiles Spark to SPARK_BC (TRAIN 0x26 / TRAIN_STATUS 0x27) and emits init weights. Emitting TRAIN is not a trained model." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
-    <link rel="stylesheet" href="/css/tokens.css?v=polish0909" />
-    <link rel="stylesheet" href="/css/site.css?v=polish0909" />
+    <link rel="stylesheet" href="/css/tokens.css?v=workflow0909" />
+    <link rel="stylesheet" href="/css/site.css?v=workflow0909" />
   </head>
   <body class="doc-page">
     <header class="site-header">
@@ -346,8 +346,8 @@
         </code></pre>
         <h3 id="6c-serve-http-stdio-api-g-lane">6c) Serve HTTP / stdio API (G-lane)</h3>
         <p>Wraps the same tiny CPU forward behind a local JSON API
-        (predict next-token + embeddings). Attention forward (D-lane) is
-        not required — uses whatever tensors <code class="inline-code">serve.py</code> already runs.
+        (predict next-token + embeddings). Uses whatever tensors
+        <code class="inline-code">serve.py</code> already runs (attn0 when present — D #28).
         <strong>Not production. Never 6000.</strong></p>
         <pre class="doc__pre"><code class="language-bash"># one-shot SERVE dir first (or point --weights at any Spark .safetensors)
         ./spark-serve docs/examples/spark-builder.sparkbc /tmp/serve-dry-001

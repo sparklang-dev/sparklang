@@ -149,10 +149,12 @@
         <p>Or: <code class="inline-code">make spark-sgd-proof</code> (same path + eval).</p>
         <h2 id="what-is-trained-today">What is trained today</h2>
         <ul class="doc__ul">
-        <li>Primary: <code class="inline-code">spark.lm_head</code> via mean-pool embed → CE.</li>
+        <li>Default (D #28): layer-0 last-query causal MHA CE on
+          <code class="inline-code">q/k/v/o</code> (+ embed / <code class="inline-code">lm_head</code>) via <code class="inline-code">train_attn=True</code>.</li>
+        <li>Fallback: <code class="inline-code">--no-train-attn</code> mean-pool embed → CE on <code class="inline-code">lm_head</code>.</li>
         <li>Optional: embed grads when the helper enables them.</li>
-        <li><strong>Not</strong> attention Q/K/V/O blocks on tip.</li>
-        <li>Device: <strong>CPU only</strong>. Never the voice GPU / 6000.</li>
+        <li>Device: <strong>CPU</strong> default; <strong>RTX 5090 OK</strong>. Never the voice GPU /
+          6000.</li>
         </ul>
         <h2 id="checkpoint-loss-curve">Checkpoint / loss curve</h2>
         <p><code class="inline-code">checkpoint.json</code> (after a successful STEP) includes:</p>
