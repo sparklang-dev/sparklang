@@ -26,5 +26,5 @@
   <text x="220" y="250" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#0f172a">Residual path (sketch)</text>
   <text x="220" y="278" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#334155">x → LayerNorm → Attn → +x → LayerNorm → MLP → +x</text>
   <text x="220" y="306" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#64748b">Decoder-only LLMs stack many such blocks, then lm_head → vocab logits.</text>
-  <text x="220" y="334" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#64748b">Cite: Vaswani et al. 2017 · Annotated Transformer (Harvard NLP)</text>
+  <text x="220" y="334" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#64748b">Cite: Vaswani et al. · Annotated Transformer (Harvard NLP)</text>
 </svg>
