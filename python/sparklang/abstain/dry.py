@@ -52,24 +52,9 @@ def dry_result(fields: dict[str, Any]) -> dict[str, Any]:
         }
     if op == "ask":
         prompt = fields.get("prompt") or ""
-        # Deterministic dry gate: unknown-ish prompts abstain.
-        low = prompt.lower()
-        inventable = any(
-            k in low
-            for k in (
-                "mayor",
-                "who is",
-                "ssn",
-                "password",
-                "invent",
-                "api key",
-                "dryer start",
-                "price at",
-                "right now",
-                "card balance",
-                "serial number",
-            )
-        )
+        from sparklang.abstain.inventable import looks_inventable
+
+        inventable = looks_inventable(prompt)
         if inventable:
             idk = fields.get("idk") or "I don't know."
             return {

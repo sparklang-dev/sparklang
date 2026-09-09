@@ -4,6 +4,20 @@ All notable user-facing releases of **SparkLang** (the Spark programming
 language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
+## 0.6.24 — 2026-09-08
+
+- **Ground or IDK (default on):** inventable facts (prices, hours,
+  weather, mayors, live IDs) must have SoT / `--sot-ok` /
+  `SPARK_ASK_SOT_OK=1` or the runtime emits **I don't know.** — no
+  gateway sample, no guess. `./spark-ask-http` links
+  `bootstrap/ground_or_idk.c`. Head `live_ask` outer verify is **on
+  by default** (`SPARK_ABSTAIN_OUTER_VERIFY=0` or
+  `--no-outer-verify` / `--no-ground` to opt out). CPU train
+  `load_pairs` refuses inventable assistant rows without `sot_ref`.
+  Coding playbooks (`explain` / `reply with` / `ping`) and closed
+  math (`what is 2+2`) still continue. Gate: `make test-ask-gateway`
+  (`PASS dry_grounded_idk`) + `make test-abstain`.
+
 ## 0.6.23 — 2026-09-08
 
 - **`spark_reply_pack`:** fifth CPU train method. Overlay **text +

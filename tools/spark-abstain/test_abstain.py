@@ -537,6 +537,7 @@ class ExportTrainTests(unittest.TestCase):
                 weights=str(out),
                 hidden_path=str(td_p / "h.pt"),
                 threshold=0.5,
+                outer_verify=False,
             )
             self.assertEqual(r["mode"], "live")
             self.assertTrue(r["abstain"])
@@ -706,12 +707,30 @@ class InventableOuterTests(unittest.TestCase):
         r = live_ask(
             "What is Bob's private API key?",
             weights=None,
-            outer_verify=True,
             sot_ok=False,
             idk="I don't know.",
         )
         self.assertEqual(r["mode"], "outer")
         self.assertTrue(r["halted"])
+
+    def test_live_ask_outer_default_on_mayor(self) -> None:
+        r = live_ask(
+            "Who is the mayor of Springfield?",
+            weights=None,
+        )
+        self.assertEqual(r["mode"], "outer")
+        self.assertTrue(r["halted"])
+        self.assertEqual(r["text"], "I don't know.")
+
+    def test_looks_inventable_hours_weather_price(self) -> None:
+        from sparklang.abstain.inventable import looks_inventable
+
+        self.assertTrue(looks_inventable("what are your hours"))
+        self.assertTrue(looks_inventable("what's the weather in Clive"))
+        self.assertTrue(looks_inventable("dryer start is $2.50"))
+        self.assertFalse(looks_inventable("Explain gravity in one sentence"))
+        self.assertFalse(looks_inventable("What is 2+2?"))
+        self.assertFalse(looks_inventable("Reply with exactly one word: pong"))
 
 
 class GateCliThresholdTests(unittest.TestCase):

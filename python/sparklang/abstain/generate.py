@@ -475,10 +475,16 @@ def live_ask(
     margin_min: Optional[float] = None,
     entropy: Optional[float] = None,
     margin: Optional[float] = None,
-    outer_verify: bool = False,
+    outer_verify: Optional[bool] = None,
     sot_ok: bool = False,
 ) -> dict[str, Any]:
     """Live gated ask — real p(abstain|h), no stub invent.
+
+    Outer verify-or-refuse is **on by default**: inventable
+    prompts without SoT emit IDK and halt (no SAMPLE). Pass
+    ``outer_verify=False`` or ``SPARK_ABSTAIN_OUTER_VERIFY=0``
+    to disable. ``SPARK_ABSTAIN_SOT_OK=1`` allows inventable
+    through after a real SoT / expect.
 
     Env (when kwargs omitted)::
 
@@ -489,7 +495,7 @@ def live_ask(
       SPARK_ABSTAIN_VLLM_TIMEOUT / SPARK_ABSTAIN_VLLM_TOKEN
       SPARK_ABSTAIN_SAMPLE_URL  (OpenAI-compat SAMPLE after continue)
       SPARK_ABSTAIN_ENTROPY_MAX / SPARK_ABSTAIN_MARGIN_MIN
-      SPARK_ABSTAIN_OUTER_VERIFY=1  (inventable outer refuse)
+      SPARK_ABSTAIN_OUTER_VERIFY=0  (disable default outer refuse)
       SPARK_ABSTAIN_SOT_OK=1  (SoT already verified)
     """
     weights = weights or os.environ.get("SPARK_ABSTAIN_WEIGHTS") or None
@@ -507,7 +513,10 @@ def live_ask(
         entropy_max = _env_float("SPARK_ABSTAIN_ENTROPY_MAX")
     if margin_min is None:
         margin_min = _env_float("SPARK_ABSTAIN_MARGIN_MIN")
-    if os.environ.get("SPARK_ABSTAIN_OUTER_VERIFY", "") == "1":
+    env_ov = os.environ.get("SPARK_ABSTAIN_OUTER_VERIFY", "")
+    if env_ov == "0":
+        outer_verify = False
+    elif outer_verify is None:
         outer_verify = True
     if os.environ.get("SPARK_ABSTAIN_SOT_OK", "") == "1":
         sot_ok = True

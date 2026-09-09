@@ -152,7 +152,8 @@ companion `./spark-ask-http` → `AI_GATEWAY_URL`. See
 is rejected. Prefer `SPARK_GATEWAY_KEY`;
 `OPENAI_API_KEY` is wire-compat only. Public tunnel uses a probe credential; HTTP 401 → credential unavailable (no invented routing).
 `make test` never hits the network; `make test-ask-gateway` is offline
-`--dry` on the companion.
+`--dry` on the companion. Inventable live/dry prompts **IDK** unless
+`--sot-ok` (see [ASK_LIVE.md](ASK_LIVE.md)).
 
 **Accounting:** dry-run prints
 `[accounting] latency_ms=0 … note=dry-run` (zeros; never invents

@@ -9,7 +9,6 @@ Forces torch CPU (no 5090/6000 hijack). Writes real weights.pt.
 from __future__ import annotations
 
 import json
-import re
 import time
 from pathlib import Path
 from typing import Any
@@ -23,35 +22,7 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-METHOD = "spark_distill_cpu"
-_WORD = re.compile(r"[a-z0-9']+", re.I)
-
-
-def _pairs(dataset_path: Path) -> list[tuple[str, str]]:
-    """Load (user, assistant) pairs from chat-style JSONL."""
-    out: list[tuple[str, str]] = []
-    for line in dataset_path.read_text(encoding="utf-8").splitlines():
-        line = line.strip()
-        if not line:
-            continue
-        row = json.loads(line)
-        msgs = row.get("messages") or []
-        user = ""
-        for m in msgs:
-            role = str(m.get("role") or "")
-            content = str(m.get("content") or "").strip()
-            if role == "user":
-                user = content
-            elif role == "assistant" and user:
-                out.append((user, content))
-                user = ""
-    if not out:
-        raise ValueError(f"no user/assistant pairs in {dataset_path}")
-    return out
-
-
-def _tok(text: str) -> list[str]:
-    return _WORD.findall(text.lower()) or ["<empty>"]
+from common import load_pairs, tokenize, write_marker
 
 
 class Student(nn.Module):
@@ -83,18 +54,18 @@ def train_distill(
     """Train student on CPU; write weights.pt + checkpoint.json."""
     root = Path(out_dir)
     root.mkdir(parents=True, exist_ok=True)
-    pairs = _pairs(Path(dataset))
+    pairs = load_pairs(Path(dataset))
     replies = sorted({a for _, a in pairs})
     reply_to_i = {r: i for i, r in enumerate(replies)}
 
     vocab: dict[str, int] = {"<pad>": 0, "<unk>": 1}
     for u, _ in pairs:
-        for w in _tok(u):
+        for w in tokenize(u):
             if w not in vocab:
                 vocab[w] = len(vocab)
 
     def encode(text: str, width: int = 32) -> torch.Tensor:
-        ids = [vocab.get(w, 1) for w in _tok(text)][:width]
+        ids = [vocab.get(w, 1) for w in tokenize(text)][:width]
         ids += [0] * (width - len(ids))
         return torch.tensor(ids, dtype=torch.long)
 

@@ -95,7 +95,8 @@ OpenAI-compatible base URL (and rag-gateway for retrieve):
 
 Pass an **explicit** model id in `.spark` / `--model` — never invent one
 from task-text heuristics, and do not treat Spark as a Bifrost alias
-picker.
+picker. Inventable live prompts **IDK** unless `--sot-ok`
+(see [ASK_LIVE.md](ASK_LIVE.md)).
 
 ```bash
 export AI_GATEWAY_URL=http://127.0.0.1:4000
