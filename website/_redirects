@@ -8,3 +8,8 @@
 # Try Spark → Playground
 /try       /playground.html  301
 /try.html  /playground.html  301
+
+# AI knowledge hive hub aliases
+/docs/knowledge       /docs/knowledge.html  301
+/docs/knowledge/      /docs/knowledge.html  301
+/learn/knowledge      /docs/knowledge.html  301

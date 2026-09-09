@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 340" role="img" aria-labelledby="t d">
+  <title id="t">Agent tool loop</title>
+  <desc id="d">Model reasons, calls tools, observes results, repeats until answer.</desc>
+  <rect width="880" height="340" fill="#f8fafc"/>
+  <text x="24" y="32" font-family="ui-sans-serif,system-ui,sans-serif" font-size="16" font-weight="700" fill="#0f172a">Agents + tools (ReAct-style loop)</text>
+  <text x="24" y="52" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#64748b">Spark: with tools [&] · stub:local dry · see model-aspects</text>
+  <rect x="60" y="100" width="160" height="70" rx="10" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+  <text x="140" y="140" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#0c4a6e">User goal</text>
+  <rect x="280" y="100" width="160" height="70" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="360" y="130" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#78350f">Reason</text>
+  <text x="360" y="150" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#92400e">plan / think</text>
+  <rect x="500" y="100" width="160" height="70" rx="10" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+  <text x="580" y="130" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#064e3b">Act (tool)</text>
+  <text x="580" y="150" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#065f46">API · shell · retrieve</text>
+  <rect x="720" y="100" width="120" height="70" rx="10" fill="#fae8ff" stroke="#a21caf" stroke-width="2"/>
+  <text x="780" y="140" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#701a75">Answer</text>
+  <defs><marker id="d2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" fill="#334155"/></marker></defs>
+  <line x1="220" y1="135" x2="280" y2="135" stroke="#334155" stroke-width="2" marker-end="url(#d2)"/>
+  <line x1="440" y1="135" x2="500" y2="135" stroke="#334155" stroke-width="2" marker-end="url(#d2)"/>
+  <line x1="660" y1="135" x2="720" y2="135" stroke="#334155" stroke-width="2" marker-end="url(#d2)"/>
+  <path d="M580 170 L580 230 L360 230 L360 170" stroke="#334155" stroke-width="2" fill="none" marker-end="url(#d2)"/>
+  <text x="400" y="255" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#64748b">Observe → reason again until stop / abstain</text>
+  <text x="40" y="300" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#334155">Failure modes: tool hallucination, infinite loops, unsafe side effects — gate tools; prefer dry-run.</text>
+</svg>

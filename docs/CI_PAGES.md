@@ -64,6 +64,7 @@ If CLI/auth absent → Cloudflare dashboard Direct Upload of
 - https://sparklang.dev/docs/compile.html
 - https://sparklang.dev/docs/decompile.html
 - https://sparklang.dev/docs/llm-decompile.html
+- https://sparklang.dev/docs/knowledge.html
 - https://sparklang.dev/downloads.html
 
 Record the Pages deployment id next to the git tip. Tip ≠ live

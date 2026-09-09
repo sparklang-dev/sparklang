@@ -40,6 +40,15 @@ class TestDocsNav(unittest.TestCase):
         """H-lane markdown sources are present under docs/."""
         for name in (
             "FACTORY.md",
+            "KNOWLEDGE.md",
+            "knowledge/LLM_TRANSFORMERS.md",
+            "knowledge/TRAINING.md",
+            "knowledge/INFERENCE.md",
+            "knowledge/MULTIMODAL.md",
+            "knowledge/AGENTS_TOOLS.md",
+            "knowledge/EVAL_HONESTY.md",
+            "knowledge/DECOMPILE_RE.md",
+            "knowledge/SAFETY_LIMITS.md",
             "MODEL_ASPECTS.md",
             "VOICE.md",
             "DIAGRAMS.md",
@@ -68,6 +77,19 @@ class TestDocsNav(unittest.TestCase):
         for name in (
             "diagram-ears-brain-voice.svg",
             "diagram-behavior-tool-loop.svg",
+        ):
+            path = ROOT / "docs" / "images" / name
+            self.assertTrue(path.is_file(), msg=name)
+
+    def test_knowledge_svgs_exist(self) -> None:
+        """Knowledge-hive original diagrams under docs/images/."""
+        for name in (
+            "diagram-knowledge-transformer.svg",
+            "diagram-knowledge-train-stack.svg",
+            "diagram-knowledge-inference.svg",
+            "diagram-knowledge-agents.svg",
+            "diagram-knowledge-multimodal.svg",
+            "diagram-knowledge-recompile.svg",
         ):
             path = ROOT / "docs" / "images" / name
             self.assertTrue(path.is_file(), msg=name)

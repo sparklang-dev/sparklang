@@ -13,11 +13,12 @@ from pathlib import Path
 import markdown
 
 ROOT = Path(__file__).resolve().parents[1]
-CSS_V = "workflow0909"
+CSS_V = "knowledge0909"
 
 DOC_NAV = """\
       <nav class="doc__nav" aria-label="Docs">
         <a href="/learn/">Learn</a>
+        <a href="/docs/knowledge.html"{kh}>Knowledge hive</a>
         <a href="/docs/factory.html"{fy}>Factory hub</a>
         <a href="/docs/model-aspects.html"{ma}>Model aspects</a>
         <a href="/docs/voice.html"{vo}>Voice</a>
@@ -76,9 +77,25 @@ HEADER = """\
             <ul class="nav-primary">
               <li><a href="/workflow.html">Loop</a></li>
               <li><a href="/learn/">Learn</a></li>
+              <li><a href="/docs/knowledge.html">Knowledge</a></li>
               <li><a href="/docs/language.html">Docs</a></li>
               <li><a href="/docs/factory.html">Factory</a></li>
               <li><a href="/downloads.html">Download</a></li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">Hive</button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/knowledge.html">Knowledge hub</a></li>
+                  <li><a href="/docs/knowledge-llm.html">LLMs & transformers</a></li>
+                  <li><a href="/docs/knowledge-training.html">Training</a></li>
+                  <li><a href="/docs/knowledge-inference.html">Inference</a></li>
+                  <li><a href="/docs/knowledge-multimodal.html">Multimodal</a></li>
+                  <li><a href="/docs/knowledge-agents.html">Agents & tools</a></li>
+                  <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                  <li><a href="/docs/knowledge-decompile.html">Decompile + RE</a></li>
+                  <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
+                  <li><a href="/docs/llm-decompile.html">LLM decompile research</a></li>
+                </ul>
+              </li>
               <li class="nav-more">
                 <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">Forge</button>
                 <ul class="nav-more__menu" hidden>
@@ -133,6 +150,7 @@ FOOTER = """\
         <nav class="footer-nav" aria-label="Footer">
           <a href="/workflow.html">Loop</a>
           <a href="/learn/">Learn</a>
+          <a href="/docs/knowledge.html">Knowledge</a>
           <a href="/docs/language.html">Reference</a>
           <a href="/downloads.html">Downloads</a>
           <a href="/playground.html">Playground</a>
@@ -189,6 +207,15 @@ MD_LINK_MAP = {
     "CI_PAGES.md": "/docs/ci-pages.html",
     "MODEL_LAB.md": "/docs/model-training.html",
     "ABSTAIN_HEADS.md": "/docs/abstain-heads.html",
+    "KNOWLEDGE.md": "/docs/knowledge.html",
+    "LLM_TRANSFORMERS.md": "/docs/knowledge-llm.html",
+    "TRAINING.md": "/docs/knowledge-training.html",
+    "INFERENCE.md": "/docs/knowledge-inference.html",
+    "MULTIMODAL.md": "/docs/knowledge-multimodal.html",
+    "AGENTS_TOOLS.md": "/docs/knowledge-agents.html",
+    "EVAL_HONESTY.md": "/docs/knowledge-eval.html",
+    "DECOMPILE_RE.md": "/docs/knowledge-decompile.html",
+    "SAFETY_LIMITS.md": "/docs/knowledge-safety.html",
 }
 
 # (current_key, md_name, html_name, title, description)
@@ -196,6 +223,33 @@ DOC_PAGES = [
     ("fy", "FACTORY.md", "factory.html", "Factory documentation hub",
      "Map of SparkLang SPARK_BC factory docs — compile through "
      "eval, serve, CI/Pages. Does not beat Claude."),
+    ("kh", "KNOWLEDGE.md", "knowledge.html", "AI knowledge hive",
+     "Engineer-grade AI knowledge hub — transformers, training, "
+     "inference, agents, eval honesty. Does not beat Claude."),
+    ("kh", "knowledge/LLM_TRANSFORMERS.md", "knowledge-llm.html",
+     "LLMs & transformers",
+     "Tokens, embeddings, attention, transformers — Spark-framed."),
+    ("kh", "knowledge/TRAINING.md", "knowledge-training.html",
+     "Training stack",
+     "Pretrain, SFT, RLHF/RLAIF, LoRA/QLoRA, SGD/Adam — citations."),
+    ("kh", "knowledge/INFERENCE.md", "knowledge-inference.html",
+     "Inference",
+     "Sampling, KV cache, quantization — GPTQ/AWQ/NF4."),
+    ("kh", "knowledge/MULTIMODAL.md", "knowledge-multimodal.html",
+     "Multimodal STT/TTS/vision",
+     "Speech and vision I/O with honest Spark status."),
+    ("kh", "knowledge/AGENTS_TOOLS.md", "knowledge-agents.html",
+     "Agents and tools",
+     "Tool loops, ReAct-style patterns, failure modes."),
+    ("kh", "knowledge/EVAL_HONESTY.md", "knowledge-eval.html",
+     "Eval honesty",
+     "Benchmarks as instruments — never beat Claude."),
+    ("kh", "knowledge/DECOMPILE_RE.md", "knowledge-decompile.html",
+     "Decompile + LLM RE",
+     "Recompile ≠ semantics; links llm-decompile research."),
+    ("kh", "knowledge/SAFETY_LIMITS.md", "knowledge-safety.html",
+     "Safety and limits",
+     "Hallucination, abstain, Spark printed guardrails."),
     ("ma", "MODEL_ASPECTS.md", "model-aspects.html",
      "AI model aspects",
      "Behaviors, ears/STT, eyes/vision, speaking/TTS, thinking, "
@@ -375,8 +429,8 @@ def render(md_path: Path, out_path: Path, title: str, description: str, current:
     body = decorate_html(body)
     keys = (
         "ab", "ai", "nn", "ide", "sh", "bc", "cp", "dc", "rd", "bm",
-        "af", "mk", "th", "isa", "fy", "dg", "tl", "sc", "wg", "ar",
-        "tk", "sv", "ev", "ci", "ma", "vo",
+        "af", "mk", "th", "isa", "fy", "kh", "dg", "tl", "sc", "wg",
+        "ar", "tk", "sv", "ev", "ci", "ma", "vo",
     )
     nav_kwargs = {
         k: (' aria-current="page"' if current == k else "") for k in keys

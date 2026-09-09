@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 360" role="img" aria-labelledby="t d">
+  <title id="t">Inference path with KV cache</title>
+  <desc id="d">Prefill builds KV cache; decode steps reuse cache; sampling picks next token.</desc>
+  <rect width="900" height="360" fill="#f8fafc"/>
+  <text x="24" y="32" font-family="ui-sans-serif,system-ui,sans-serif" font-size="16" font-weight="700" fill="#0f172a">Inference: prefill → KV cache → decode → sample</text>
+  <text x="24" y="52" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#64748b">Original Spark schematic · quantization sits on weights or KV</text>
+  <rect x="40" y="100" width="160" height="80" rx="10" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+  <text x="120" y="135" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#0c4a6e">prompt tokens</text>
+  <text x="120" y="157" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#075985">prefill pass</text>
+  <rect x="250" y="100" width="180" height="80" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="340" y="135" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#78350f">KV cache</text>
+  <text x="340" y="157" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#92400e">keys + values / layer</text>
+  <rect x="480" y="100" width="180" height="80" rx="10" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+  <text x="570" y="135" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#064e3b">decode step</text>
+  <text x="570" y="157" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#065f46">one new query</text>
+  <rect x="710" y="100" width="150" height="80" rx="10" fill="#fae8ff" stroke="#a21caf" stroke-width="2"/>
+  <text x="785" y="135" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#701a75">sample</text>
+  <text x="785" y="157" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#86198f">temp · top-p</text>
+  <defs><marker id="c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" fill="#334155"/></marker></defs>
+  <line x1="200" y1="140" x2="250" y2="140" stroke="#334155" stroke-width="2" marker-end="url(#c)"/>
+  <line x1="430" y1="140" x2="480" y2="140" stroke="#334155" stroke-width="2" marker-end="url(#c)"/>
+  <line x1="660" y1="140" x2="710" y2="140" stroke="#334155" stroke-width="2" marker-end="url(#c)"/>
+  <path d="M785 180 L785 220 L340 220 L340 180" stroke="#94a3b8" stroke-width="2" fill="none" stroke-dasharray="5 4" marker-end="url(#c)"/>
+  <text x="40" y="280" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#334155">Dashed: append new K/V each step. Quantization (GPTQ/AWQ/NF4) shrinks weight or cache footprint — quality trade-offs apply.</text>
+  <text x="40" y="310" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#64748b">Spark serve today: tiny CPU forward + HTTP helpers — not production KV-cache decoder claims.</text>
+</svg>

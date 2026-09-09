@@ -11,11 +11,14 @@ assist vs deterministic SoT.
 **AI model aspects (L):** [MODEL_ASPECTS.md](MODEL_ASPECTS.md) —
 behaviors, ears/STT, eyes/vision, speaking/TTS, thinking, memory,
 tools, train, eval, serve.
+**AI knowledge hive:** [KNOWLEDGE.md](KNOWLEDGE.md) — engineer-grade
+field explainers (transformers → safety) with original diagrams.
 
 ## Map (everything)
 
 | Topic | Doc | Site |
 |-------|-----|------|
+| **AI knowledge hive** | [KNOWLEDGE.md](KNOWLEDGE.md) | [/docs/knowledge.html](/docs/knowledge.html) |
 | **AI model aspects** | [MODEL_ASPECTS.md](MODEL_ASPECTS.md) | [/docs/model-aspects.html](/docs/model-aspects.html) |
 | Voice / STT / TTS | [VOICE.md](VOICE.md) | [/docs/voice.html](/docs/voice.html) |
 | **Diagrams (tools + LLM)** | [DIAGRAMS.md](DIAGRAMS.md) | [/docs/diagrams.html](/docs/diagrams.html) |
