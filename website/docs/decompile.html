@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Decompile / inspect SPARK_BC — Spark</title>
+    <meta name="description" content="Dump, inspect, and disassemble SPARK_BC and related binaries — hex mnemonics, not source recovery." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/css/tokens.css?v=bb4433f" />
+    <link rel="stylesheet" href="/css/site.css?v=bb4433f" />
+  </head>
+  <body class="doc-page">
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="site-brand" href="/" aria-label="Spark home">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z" fill="currentColor" />
+          </svg>
+          Spark
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+        </button>
+        <div class="header-nav-wrap">
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <ul class="nav-primary">
+              <li><a href="/learn/">Learn</a></li>
+              <li><a href="/docs/language.html">Docs</a></li>
+              <li><a href="/downloads.html">Download</a></li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">More</button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/factory.html">Factory hub</a></li>
+                  <li><a href="/docs/spark-builder.html">Builder</a></li>
+                  <li><a href="/docs/compile.html">Compile</a></li>
+                  <li><a href="/docs/decompile.html">Decompile</a></li>
+                  <li><a href="/docs/spark-bc.html">Opcodes / ISA</a></li>
+                  <li><a href="/docs/build-models.html">Build models</a></li>
+                  <li><a href="/docs/train-loop.html">Train loop</a></li>
+                  <li><a href="/docs/architecture.html">Architecture</a></li>
+                  <li><a href="/docs/attention-forward.html">Attention honesty</a></li>
+                  <li><a href="/docs/tokenizer.html">Tokenizer</a></li>
+                  <li><a href="/docs/serve.html">Serve</a></li>
+                  <li><a href="/docs/eval.html">Eval</a></li>
+                  <li><a href="/docs/sparkbc-make.html">Make targets</a></li>
+                  <li><a href="/docs/ci-pages.html">CI / Pages</a></li>
+                  <li><a href="/docs/adoption-bar.html">Adoption bar</a></li>
+                  <li><a href="/docs/ai-models.html">AI models</a></li>
+                  <li><a href="/docs/programming-guide.html">Programming guide</a></li>
+                  <li><a href="/docs/ide.html">IDE</a></li>
+                  <li><a href="/docs/self-host.html">Contributor internals</a></li>
+                </ul>
+              </li>
+            </ul>
+            <a href="/playground.html" class="nav-cta">Try</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <div class="shell doc-layout">
+      <aside class="doc-sidebar" aria-label="Table of contents">
+        <p class="doc-sidebar__title">On this page</p>
+        <nav id="doc-toc-list"></nav>
+      </aside>
+      <main class="doc-main">
+      <nav class="doc__nav" aria-label="Docs">
+        <a href="/learn/">Learn</a>
+        <a href="/docs/factory.html">Factory hub</a>
+        <a href="/docs/spark-builder.html">Builder</a>
+        <a href="/docs/compile.html">Compile</a>
+        <a href="/docs/decompile.html" aria-current="page">Decompile</a>
+        <a href="/docs/spark-bc.html">Opcodes / ISA</a>
+        <a href="/docs/build-models.html">Build models</a>
+        <a href="/docs/train-loop.html">Train loop</a>
+        <a href="/docs/architecture.html">Architecture</a>
+        <a href="/docs/tokenizer.html">Tokenizer</a>
+        <a href="/docs/serve.html">Serve</a>
+        <a href="/docs/eval.html">Eval</a>
+        <a href="/docs/sparkbc-make.html">Make targets</a>
+        <a href="/docs/ci-pages.html">CI / Pages</a>
+        <a href="/docs/adoption-bar.html">Adoption bar</a>
+        <a href="/docs/language.html">Language</a>
+        <a href="/docs/programming-guide.html">Programming guide</a>
+        <a href="/downloads.html">Downloads</a>
+      </nav>      <article class="doc__body">
+        <h1 id="decompile-inspect-disassemble">Decompile / inspect / disassemble</h1>
+        <p>How to <strong>read</strong> SPARK_BC and related binaries. Spark / SparkLang
+        only. No invented hex — dump tools read real files from <code class="inline-code">--compile</code>.</p>
+        <h2 id="spark-bc-hex-mnemonic-dump-primary">SPARK_BC hex + mnemonic dump (primary)</h2>
+        <pre class="doc__pre"><code class="language-bash">PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
+          docs/examples/spark-train-step.sparkbc \
+          --source examples/spark_train_step.spark \
+          --command './spark-bootstrap --compile examples/spark_train_step.spark -o docs/examples/spark-train-step.sparkbc' \
+          -o /tmp/spark-train-step-bc.txt
+        </code></pre>
+        <ul class="doc__ul">
+        <li>Loader / formatters: <code class="inline-code">python/sparklang/model_lab/bc_dump.py</code></li>
+        <li>CLI: <code class="inline-code">tools/spark-bc-dump/dump.py</code></li>
+        <li>Unit coverage: <code class="inline-code">tools/spark-bc-dump/test_dump.py</code> (via
+          <code class="inline-code">make test-sparkbc</code>)</li>
+        </ul>
+        <p>Published dump text (for strangers without a rebuild):
+        <code class="inline-code">docs/examples/*-bc.txt</code>. Site mirrors under
+        <code class="inline-code">website/docs/examples/</code> when synced.</p>
+        <h3 id="stub-json-builder-metadata">Stub JSON (builder metadata)</h3>
+        <pre class="doc__pre"><code class="language-bash">PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
+          docs/examples/spark-builder.sparkbc --stub -o /tmp/stub.json
+        </code></pre>
+        <h3 id="init-weights-from-bytecode-not-trained">Init weights from bytecode (not trained)</h3>
+        <pre class="doc__pre"><code class="language-bash">PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
+          docs/examples/spark-self.sparkbc \
+          --weights /tmp/spark-self.init.safetensors
+        </code></pre>
+        <p>Emits Spark-created Xavier init (<code class="inline-code">trained: false</code>). See
+        <a href="/docs/build-models.html">BUILD_MODELS.md</a>.</p>
+        <h2 id="run-bytecode-inspect-behavior">Run bytecode (inspect behavior)</h2>
+        <pre class="doc__pre"><code class="language-bash">./spark-bootstrap --run-bc docs/examples/spark-train-step.sparkbc
+        ./spark --run-bc docs/examples/spark-train-step.sparkbc   # GAS → bc_vm
+        </code></pre>
+        <p>Dry stdout contracts are in <a href="/docs/spark-bc.html">SPARK_BC.md</a>. TRAIN /
+        STEP JSON lines + <code class="inline-code">ARTIFACT</code> under <code class="inline-code">out/train/&lt;job&gt;/</code>.</p>
+        <h2 id="model-lab-reverse-inspect">Model lab reverse / inspect</h2>
+        <p>GAS-first (no SPARK_BC opcode yet):</p>
+        <pre class="doc__pre"><code class="language-bash">./spark --dry-run examples/model_lab.spark
+        make test-model-lab
+        </code></pre>
+        <p><code class="inline-code">model reverse</code> / <code class="inline-code">inspect</code> read local <code class="inline-code">config.json</code> + safetensors
+        <strong>index names</strong> only — no tensor body theft. Runbook:
+        <a href="/docs/model-training.html">MODEL_LAB.md</a>.</p>
+        <h2 id="elf-machine-disassembly-not-spark-bc">ELF / machine disassembly (not SPARK_BC)</h2>
+        <p>For native companions / machine-proof paths (programming guide):</p>
+        <pre class="doc__pre"><code class="language-bash">make machine-proof   # ELF64 + _start disassembly when binary exists
+        </code></pre>
+        <p>Language surface <code class="inline-code">binary</code> / decompile artifacts may land under
+        <code class="inline-code">out/decompile/&lt;basename&gt;/</code> (<code class="inline-code">ALL_SECTIONS.disasm</code>, etc.) — that
+        path is <strong>ELF section dump</strong>, not SPARK_BC decode. Do not confuse
+        with <code class="inline-code">tools/spark-bc-dump</code>.</p>
+        <h2 id="sparkasm-objects">sparkasm objects</h2>
+        <pre class="doc__pre"><code class="language-bash">make -C sparkasm test
+        </code></pre>
+        <p>Disassemble assembled objects with host <code class="inline-code">objdump</code> if needed; there
+        is no Spark-branded SPARK_BC↔ELF round-trip claim beyond
+        <code class="inline-code">test-bc-emit</code>.</p>
+        <h2 id="what-is-not-decompile">What is not “decompile”</h2>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Claim</th>
+        <th>Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td>Hex + opcode mnemonics for <code class="inline-code">.sparkbc</code></td>
+        <td><strong>implemented</strong> (<code class="inline-code">dump.py</code>)</td>
+        </tr>
+        <tr>
+        <td>Recover original <code class="inline-code">.spark</code> source losslessly</td>
+        <td><strong>not</strong> — dump is inspect, not a source decompiler</td>
+        </tr>
+        <tr>
+        <td>Attention head activation maps</td>
+        <td><strong>not</strong> — serve skips attn; see <a href="/docs/attention-forward.html">ATTENTION_FORWARD.md</a></td>
+        </tr>
+        <tr>
+        <td>Closed-weight model theft</td>
+        <td><strong>forbidden</strong> — reverse stays index-only</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <h2 id="related">Related</h2>
+        <ul class="doc__ul">
+        <li><a href="/docs/compile.html">Compile</a> · <a href="/docs/build-models.html">Build models</a></li>
+        <li><a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> · <a href="/docs/spark-bc.html">SPARK_BC.md</a></li>
+        </ul>
+      </article>
+      </main>
+    </div>
+
+    <footer class="site-footer">
+      <div class="shell footer-inner">
+        <span>Spark programming language</span>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="/learn/">Learn</a>
+          <a href="/docs/language.html">Reference</a>
+          <a href="/downloads.html">Downloads</a>
+          <a href="/playground.html">Playground</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="/js/site.js"></script>
+  </body>
+</html>

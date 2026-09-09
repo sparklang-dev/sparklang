@@ -33,10 +33,22 @@
               <li class="nav-more">
                 <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">More</button>
                 <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/factory.html">Factory hub</a></li>
+                  <li><a href="/docs/spark-builder.html">Builder</a></li>
+                  <li><a href="/docs/compile.html">Compile</a></li>
+                  <li><a href="/docs/decompile.html">Decompile</a></li>
+                  <li><a href="/docs/spark-bc.html">Opcodes / ISA</a></li>
+                  <li><a href="/docs/build-models.html">Build models</a></li>
+                  <li><a href="/docs/train-loop.html">Train loop</a></li>
+                  <li><a href="/docs/architecture.html">Architecture</a></li>
+                  <li><a href="/docs/attention-forward.html">Attention honesty</a></li>
+                  <li><a href="/docs/tokenizer.html">Tokenizer</a></li>
+                  <li><a href="/docs/serve.html">Serve</a></li>
+                  <li><a href="/docs/eval.html">Eval</a></li>
+                  <li><a href="/docs/sparkbc-make.html">Make targets</a></li>
+                  <li><a href="/docs/ci-pages.html">CI / Pages</a></li>
                   <li><a href="/docs/adoption-bar.html">Adoption bar</a></li>
                   <li><a href="/docs/ai-models.html">AI models</a></li>
-                  <li><a href="/docs/spark-builder.html">Builder</a></li>
-                  <li><a href="/docs/native-network-web.html">Network + web</a></li>
                   <li><a href="/docs/programming-guide.html">Programming guide</a></li>
                   <li><a href="/docs/ide.html">IDE</a></li>
                   <li><a href="/docs/self-host.html">Contributor internals</a></li>
@@ -57,15 +69,22 @@
       <main class="doc-main">
       <nav class="doc__nav" aria-label="Docs">
         <a href="/learn/">Learn</a>
-        <a href="/docs/adoption-bar.html">Adoption bar</a>
-        <a href="/docs/ai-models.html">AI models</a>
-        <a href="/docs/model-training.html">Model training</a>
+        <a href="/docs/factory.html">Factory hub</a>
         <a href="/docs/spark-builder.html">Builder</a>
-        <a href="/docs/native-network-web.html">Network + web</a>
+        <a href="/docs/compile.html">Compile</a>
+        <a href="/docs/decompile.html">Decompile</a>
+        <a href="/docs/spark-bc.html">Opcodes / ISA</a>
+        <a href="/docs/build-models.html">Build models</a>
+        <a href="/docs/train-loop.html">Train loop</a>
+        <a href="/docs/architecture.html">Architecture</a>
+        <a href="/docs/tokenizer.html">Tokenizer</a>
+        <a href="/docs/serve.html">Serve</a>
+        <a href="/docs/eval.html">Eval</a>
+        <a href="/docs/sparkbc-make.html">Make targets</a>
+        <a href="/docs/ci-pages.html">CI / Pages</a>
+        <a href="/docs/adoption-bar.html">Adoption bar</a>
+        <a href="/docs/language.html">Language</a>
         <a href="/docs/programming-guide.html">Programming guide</a>
-        <a href="/docs/language.html">Language reference</a>
-        <a href="/docs/ide.html">IDE</a>
-        <a href="/docs/self-host.html">Contributor internals</a>
         <a href="/downloads.html">Downloads</a>
       </nav>      <article class="doc__body">
         <h1 id="spark-language-specification">Spark language specification</h1>
@@ -121,7 +140,7 @@
         <p>Inspect a <strong>local published</strong> checkpoint, compile the <code class="inline-code">.spark</code> program
         to SPARK_BC, <strong>build</strong> a new adapter/head, and <strong>modify</strong> an existing
         stack <strong>without deleting special training</strong>. Flagship:
-        <code class="inline-code">examples/model_lab.spark</code>. Runbook: <code class="inline-code">MODEL_LAB.md</code>.</p>
+        <code class="inline-code">examples/model_lab.spark</code>. Runbook: <a href="/docs/model-training.html">MODEL_LAB.md</a>.</p>
         <p>This is <strong>not</strong> a new foundation LLM. Reverse reads <code class="inline-code">config.json</code> +
         optional <code class="inline-code">model.safetensors.index.json</code> (no tensor load). Compile is
         the Spark program → <code class="inline-code">.sparkbc</code>. Train/build is adapters, overlays, or
@@ -141,7 +160,7 @@
         </code></pre>
         <p>Dry: <code class="inline-code">./spark --dry-run examples/model_lab.spark</code>. Gate:
         <code class="inline-code">make test-model-lab</code>. Inventable facts still use SoT +
-        <code class="inline-code">ABSTAIN_HEADS.md</code>. Never <code class="inline-code">auto</code>/<code class="inline-code">code</code>/<code class="inline-code">fast</code>.</p>
+        <a href="/docs/abstain-heads.html">ABSTAIN_HEADS.md</a>. Never <code class="inline-code">auto</code>/<code class="inline-code">code</code>/<code class="inline-code">fast</code>.</p>
         <h3 id="model-analyze-compare-improve-train-step-status-plan"><code class="inline-code">model analyze</code> / <code class="inline-code">compare</code> / <code class="inline-code">improve</code> / <code class="inline-code">train</code> / <code class="inline-code">step</code> / <code class="inline-code">status</code> / <code class="inline-code">plan</code></h3>
         <p>Analyze and compare reachable models, propose improvements, <strong>train</strong>
         real jobs (weights/adapters/checkpoints), run one dry <strong>step</strong>, poll
@@ -156,14 +175,14 @@
         <code class="inline-code">./spark-bootstrap --run-bc</code> <strong>or</strong> GAS <code class="inline-code">./spark --run-bc</code> runs that
         binary (TRAIN accept dry; STEP = multi-outer CPU SGD). GAS <code class="inline-code">./spark --dry-run</code>
         runs train verbs from source; GAS <code class="inline-code">--compile</code> wraps bootstrap emit.
-        Emitting TRAIN/STEP ≠ beating Claude. See <a href="/docs/self-host.html">SPARK_BC.md</a>
+        Emitting TRAIN/STEP ≠ beating Claude. See <a href="/docs/spark-bc.html">SPARK_BC.md</a>
         and <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> (sha256 table + reproduce
         commands). STEP→weights is <strong>CPU SGD</strong>
         (<code class="inline-code">out/train/&lt;job&gt;/weights.safetensors</code>; <code class="inline-code">trained=true</code> /
         <code class="inline-code">not_sgd=false</code> when grads apply; not beat Claude).</p>
         <p>Training methodology: <a href="/docs/model-training.html">MODEL_TRAINING.md</a>.
         Eval helpers: <a href="/docs/ai-models.html">MODEL_ANALYSIS.md</a>.
-        Lab pipeline: <code class="inline-code">MODEL_LAB.md</code>.</p>
+        Lab pipeline: <a href="/docs/model-training.html">MODEL_LAB.md</a>.</p>
         <pre class="doc__pre"><code class="inline-code">model analyze &quot;fixtures/tiny-lm&quot; -&gt; report
         model analyze all -&gt; catalog_report
 
@@ -208,7 +227,7 @@
         (never a hardcoded <code class="inline-code">job-dry-001</code>). SPARK_BC <code class="inline-code">TRAIN</code> is <strong><code class="inline-code">0x26</code></strong>;
         <code class="inline-code">STEP</code> is <strong><code class="inline-code">0x28</code></strong>; <code class="inline-code">TRAIN_STATUS</code> is <strong><code class="inline-code">0x27</code></strong>. Execute with
         <code class="inline-code">./spark-bootstrap --run-bc</code> or <code class="inline-code">./spark --run-bc</code>.
-        See <a href="/docs/self-host.html">SPARK_BC.md</a> and
+        See <a href="/docs/spark-bc.html">SPARK_BC.md</a> and
         <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</p>
         <p><strong>Backends:</strong> <code class="inline-code">http</code> (default MVP companion <code class="inline-code">./spark-train-http</code>),
         <code class="inline-code">local-yield</code> (optional allowlisted <code class="inline-code">train@</code> unit), <code class="inline-code">huggingface</code>
@@ -216,7 +235,7 @@
         optional <code class="inline-code">SPARK_TRAIN_TOKEN</code>. See <a href="/docs/model-training.html">MODEL_TRAINING.md</a>.</p>
         <h3 id="head-abstain-train-attach-ask"><code class="inline-code">head abstain</code> / <code class="inline-code">train</code> / <code class="inline-code">attach</code> / <code class="inline-code">ask</code></h3>
         <p>Decode-layer abstain / IDK gating for <strong>local</strong> models (and dry stubs).
-        Companion <code class="inline-code">./spark-abstain</code>. Design: <code class="inline-code">ABSTAIN_HEADS.md</code>.</p>
+        Companion <code class="inline-code">./spark-abstain</code>. Design: <a href="/docs/abstain-heads.html">ABSTAIN_HEADS.md</a>.</p>
         <pre class="doc__pre"><code class="inline-code">head abstain internal model &quot;path&quot; weights &quot;out/heads/abstain.pt&quot; threshold 0.7 idk &quot;I don't know.&quot; -&gt; gate
         head abstain external model &quot;path&quot; weights &quot;out/heads/ext.pt&quot; threshold 0.7 -&gt; gate
         head train dataset &quot;examples/fixtures/abstain/labels.jsonl&quot; kind internal out &quot;out/heads/abstain.pt&quot; hidden_dim 64 -&gt; job
@@ -234,7 +253,7 @@
         generate. Flagship: <code class="inline-code">examples/no_invent.spark</code> (also
         <code class="inline-code">examples/head_ask_inventable_verify.spark</code>). Not LoRA.
         Dry-run = fixtures only. Never <code class="inline-code">auto</code>/<code class="inline-code">code</code>/<code class="inline-code">fast</code>. Full runbook:
-        <code class="inline-code">ABSTAIN_HEADS.md</code>.</p>
+        <a href="/docs/abstain-heads.html">ABSTAIN_HEADS.md</a>.</p>
         <p><strong>“All models”</strong> = all reachable configured model ids + discovered local
         vLLM endpoints (read-only) — <strong>not</strong> every model in existence. Catalog:
         <code class="inline-code">data/model-catalog.jsonl</code>. Public gateway probes need a probe

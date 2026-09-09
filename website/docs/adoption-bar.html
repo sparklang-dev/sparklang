@@ -33,10 +33,22 @@
               <li class="nav-more">
                 <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">More</button>
                 <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/factory.html">Factory hub</a></li>
+                  <li><a href="/docs/spark-builder.html">Builder</a></li>
+                  <li><a href="/docs/compile.html">Compile</a></li>
+                  <li><a href="/docs/decompile.html">Decompile</a></li>
+                  <li><a href="/docs/spark-bc.html">Opcodes / ISA</a></li>
+                  <li><a href="/docs/build-models.html">Build models</a></li>
+                  <li><a href="/docs/train-loop.html">Train loop</a></li>
+                  <li><a href="/docs/architecture.html">Architecture</a></li>
+                  <li><a href="/docs/attention-forward.html">Attention honesty</a></li>
+                  <li><a href="/docs/tokenizer.html">Tokenizer</a></li>
+                  <li><a href="/docs/serve.html">Serve</a></li>
+                  <li><a href="/docs/eval.html">Eval</a></li>
+                  <li><a href="/docs/sparkbc-make.html">Make targets</a></li>
+                  <li><a href="/docs/ci-pages.html">CI / Pages</a></li>
                   <li><a href="/docs/adoption-bar.html">Adoption bar</a></li>
                   <li><a href="/docs/ai-models.html">AI models</a></li>
-                  <li><a href="/docs/spark-builder.html">Builder</a></li>
-                  <li><a href="/docs/native-network-web.html">Network + web</a></li>
                   <li><a href="/docs/programming-guide.html">Programming guide</a></li>
                   <li><a href="/docs/ide.html">IDE</a></li>
                   <li><a href="/docs/self-host.html">Contributor internals</a></li>
@@ -57,15 +69,22 @@
       <main class="doc-main">
       <nav class="doc__nav" aria-label="Docs">
         <a href="/learn/">Learn</a>
-        <a href="/docs/adoption-bar.html" aria-current="page">Adoption bar</a>
-        <a href="/docs/ai-models.html">AI models</a>
-        <a href="/docs/model-training.html">Model training</a>
+        <a href="/docs/factory.html">Factory hub</a>
         <a href="/docs/spark-builder.html">Builder</a>
-        <a href="/docs/native-network-web.html">Network + web</a>
+        <a href="/docs/compile.html">Compile</a>
+        <a href="/docs/decompile.html">Decompile</a>
+        <a href="/docs/spark-bc.html">Opcodes / ISA</a>
+        <a href="/docs/build-models.html">Build models</a>
+        <a href="/docs/train-loop.html">Train loop</a>
+        <a href="/docs/architecture.html">Architecture</a>
+        <a href="/docs/tokenizer.html">Tokenizer</a>
+        <a href="/docs/serve.html">Serve</a>
+        <a href="/docs/eval.html">Eval</a>
+        <a href="/docs/sparkbc-make.html">Make targets</a>
+        <a href="/docs/ci-pages.html">CI / Pages</a>
+        <a href="/docs/adoption-bar.html" aria-current="page">Adoption bar</a>
+        <a href="/docs/language.html">Language</a>
         <a href="/docs/programming-guide.html">Programming guide</a>
-        <a href="/docs/language.html">Language reference</a>
-        <a href="/docs/ide.html">IDE</a>
-        <a href="/docs/self-host.html">Contributor internals</a>
         <a href="/downloads.html">Downloads</a>
       </nav>      <article class="doc__body">
         <h1 id="whats-real-today-sparklang">What's real today (SparkLang)</h1>
@@ -174,7 +193,7 @@
         <tr>
         <td>SPARK_BC Builder factory</td>
         <td><strong>done (multi-outer + scale fixture)</strong></td>
-        <td>Spark → <code class="inline-code">--compile</code> → <code class="inline-code">.sparkbc</code> with <code class="inline-code">TRAIN</code>/<code class="inline-code">STEP</code>/<code class="inline-code">TRAIN_STATUS</code>; <code class="inline-code">--run-bc</code> TRAIN dry + STEP multi-outer CPU SGD (bootstrap or GAS); <code class="inline-code">checkpoint.json</code> loss curve; post-STEP <code class="inline-code">trained=true</code> / <code class="inline-code">not_sgd=false</code> when grads apply. Serve optional MLP0. Opt-in <code class="inline-code">make spark-sgd-proof-scale</code> (larger JSONL + dim/n_layer; CI stays tiny). GAS wrappers <strong>implemented</strong>. <strong>Not beat Claude.</strong> Page: <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> / <code class="inline-code">/docs/spark-builder.html</code></td>
+        <td>Spark → <code class="inline-code">--compile</code> → <code class="inline-code">.sparkbc</code> with <code class="inline-code">TRAIN</code>/<code class="inline-code">STEP</code>/<code class="inline-code">TRAIN_STATUS</code>; <code class="inline-code">--run-bc</code> TRAIN dry + STEP multi-outer CPU SGD (bootstrap or GAS); <code class="inline-code">checkpoint.json</code> loss curve; post-STEP <code class="inline-code">trained=true</code> / <code class="inline-code">not_sgd=false</code> when grads apply. Serve optional MLP0. Opt-in <code class="inline-code">make spark-sgd-proof-scale</code> (larger JSONL + dim/n_layer; CI stays tiny). GAS wrappers <strong>implemented</strong>. <strong>Not beat Claude.</strong> Hub: <a href="/docs/factory.html">FACTORY.md</a> / <code class="inline-code">/docs/factory.html</code>; Builder <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a></td>
         </tr>
         <tr>
         <td>Production receptionist workflow</td>

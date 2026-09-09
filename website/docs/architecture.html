@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Tokenizer — BPE seed vocab — Spark</title>
-    <meta name="description" content="From-nothing byte-level BPE seed vocab for Spark." />
+    <title>Architecture pieces — Spark</title>
+    <meta name="description" content="Embed, RMSNorm, lm_head, MLP/SwiGLU, attention honesty." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
     <link rel="stylesheet" href="/css/tokens.css?v=bb4433f" />
@@ -76,8 +76,8 @@
         <a href="/docs/spark-bc.html">Opcodes / ISA</a>
         <a href="/docs/build-models.html">Build models</a>
         <a href="/docs/train-loop.html">Train loop</a>
-        <a href="/docs/architecture.html">Architecture</a>
-        <a href="/docs/tokenizer.html" aria-current="page">Tokenizer</a>
+        <a href="/docs/architecture.html" aria-current="page">Architecture</a>
+        <a href="/docs/tokenizer.html">Tokenizer</a>
         <a href="/docs/serve.html">Serve</a>
         <a href="/docs/eval.html">Eval</a>
         <a href="/docs/sparkbc-make.html">Make targets</a>
@@ -87,67 +87,86 @@
         <a href="/docs/programming-guide.html">Programming guide</a>
         <a href="/downloads.html">Downloads</a>
       </nav>      <article class="doc__body">
-        <h1 id="byte-level-bpe-tokenizer-seed-from-nothing">Byte-level BPE tokenizer seed (from nothing)</h1>
-        <p>Spark trains a <strong>deterministic byte-level BPE</strong> vocab from a tiny
-        <strong>in-repo</strong> fixture — not FineWeb, not HuggingFace downloads.</p>
+        <h1 id="architecture-pieces-honest">Architecture pieces (honest)</h1>
+        <p>Tiny Spark control stack next to SPARK_BC. Product: <strong>Spark /
+        SparkLang</strong> only. Tensor names from
+        <code class="inline-code">python/sparklang/model_lab/weights.py</code>. Forward from
+        <code class="inline-code">python/sparklang/model_lab/serve.py</code>. Macro graph:
+        <code class="inline-code">examples/models/control.sparkasm</code>.</p>
+        <h2 id="inventory">Inventory</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
         <th>Piece</th>
-        <th>Path</th>
+        <th>Init tensors</th>
+        <th>Used in STEP SGD</th>
+        <th>Used in serve forward</th>
         </tr>
         </thead>
         <tbody>
         <tr>
-        <td>Trainer</td>
-        <td><code class="inline-code">python/sparklang/tokenize/</code></td>
+        <td><code class="inline-code">spark.embed</code></td>
+        <td><strong>yes</strong></td>
+        <td>optional grads</td>
+        <td>mean-pool <strong>yes</strong></td>
         </tr>
         <tr>
-        <td>Pinned corpus</td>
-        <td><code class="inline-code">examples/fixtures/tokenize/seed_corpus.txt</code> (LF ASCII)</td>
+        <td><code class="inline-code">spark.lm_head</code></td>
+        <td><strong>yes</strong></td>
+        <td><strong>yes</strong> (primary)</td>
+        <td><strong>yes</strong></td>
         </tr>
         <tr>
-        <td>Vocab artifact</td>
-        <td><code class="inline-code">docs/examples/spark-bpe-vocab.json</code></td>
+        <td><code class="inline-code">spark.final_norm</code> (RMSNorm)</td>
+        <td><strong>yes</strong></td>
+        <td>no</td>
+        <td><strong>yes</strong> (after MLP0)</td>
         </tr>
         <tr>
-        <td>Hash sidecar</td>
-        <td><code class="inline-code">docs/examples/spark-bpe-vocab.json.sha256</code></td>
+        <td>Layer MLP SwiGLU (<code class="inline-code">mlp_up/gate/down</code>, <code class="inline-code">mlp_norm</code>)</td>
+        <td><strong>yes</strong></td>
+        <td>no</td>
+        <td><strong>MLP0 yes</strong></td>
         </tr>
         <tr>
-        <td>Determinism gate</td>
-        <td><code class="inline-code">tools/spark-bpe-seed/test_bpe.py</code> / <code class="inline-code">make test-bpe-seed</code></td>
+        <td>Layer attn (<code class="inline-code">q/k/v/o</code>, <code class="inline-code">attn_norm</code>)</td>
+        <td><strong>yes</strong> (allocated)</td>
+        <td><strong>no</strong></td>
+        <td><strong>no</strong></td>
+        </tr>
+        <tr>
+        <td>RoPE / GQA / KV cache</td>
+        <td>sparkasm macros only</td>
+        <td><strong>no</strong></td>
+        <td><strong>no</strong></td>
         </tr>
         </tbody>
         </table></div>
-        <p>Format <code class="inline-code">spark-bpe-v1</code>: 256 byte base + N merges (default <strong>64</strong> →
-        vocab size <strong>320</strong>). Tie-break on equal pair counts is
-        lexicographically smaller <code class="inline-code">(left, right)</code> token id.</p>
-        <p>Packing this vocab into a SPARK_BC string/const pool is <strong>optional
-        later</strong> — the minimum ship is the reproducible JSON + sha256 under
-        <code class="inline-code">docs/examples/</code>.</p>
-        <h2 id="reproduce">Reproduce</h2>
-        <pre class="doc__pre"><code class="language-bash"># Train (writes JSON + .sha256 sidecar)
-        PYTHONPATH=python python3 -m sparklang.tokenize train \
-          --corpus examples/fixtures/tokenize/seed_corpus.txt \
-          --merges 64 \
-          --out docs/examples/spark-bpe-vocab.json
-
-        # Verify committed hash matches a fresh train
-        PYTHONPATH=python python3 -m sparklang.tokenize verify
-
-        # Determinism gate (trains twice + checks committed)
-        make test-bpe-seed
-        </code></pre>
-        <p>Pinned hashes (LF corpus; do not change without re-emitting):</p>
-        <pre class="doc__pre"><code class="inline-code">corpus_sha256=63b47d211ddfcecf241fff0976294216c233448a5ef6ef67fe6668b733d32fdf
-        vocab_sha256=c20f899bbd552b2773447838be31827952d8494c110613c9ade1cb8a07c21226
-        </code></pre>
-        <h2 id="never">Never</h2>
+        <h2 id="defaults-tip">Defaults (tip)</h2>
+        <p>Arch is derived from SPARK_BC bytes (tiny stub). Typical control
+        shapes match <code class="inline-code">control.sparkasm</code> comments (e.g. small <code class="inline-code">dim</code>, few
+        layers, GQA head counts) — <strong>re-read</strong> <code class="inline-code">weights.py</code> /
+        <code class="inline-code">control.sparkasm</code> for live numbers; do not invent a 3B claim.</p>
+        <p>Opt-in larger <code class="inline-code">dim</code> / <code class="inline-code">n_layer</code> for CPU-fast stubs may land via
+        <strong>F-lane</strong>; until merged, CI keeps defaults.</p>
+        <h2 id="embed-logits-paths">Embed → logits paths</h2>
+        <p><strong>Serve (implemented):</strong></p>
+        <p><code class="inline-code">embed_mean_pool -&gt; mlp0 -&gt; rms_norm -&gt; lm_head</code></p>
+        <p><strong>sparkasm documented (not a VM):</strong></p>
+        <p>full block = pre-norm attn (GQA+RoPE) + SwiGLU MLP — shape-checked
+        by <code class="inline-code">make test-sparkasm-control</code> only.</p>
+        <p><strong>Attention train/serve math:</strong> sibling <strong>D-lane</strong> — planned /
+        in-flight; rebase this page when it merges.</p>
+        <p>Detail: <a href="/docs/attention-forward.html">ATTENTION_FORWARD.md</a>.</p>
+        <h2 id="safetensors-meta-honest-flags">Safetensors meta (honest flags)</h2>
+        <p>Init emit sets <code class="inline-code">trained: false</code>, <code class="inline-code">served: false</code>, derivation notes
+        tying tensors to SPARK_BC sha256. STEP updates <code class="inline-code">trained</code> only when
+        SGD applies. Serve writes <code class="inline-code">SERVE</code> with <code class="inline-code">forward=true</code> and copies
+        honest <code class="inline-code">trained</code> from weights.</p>
+        <h2 id="related">Related</h2>
         <ul class="doc__ul">
-        <li>Download FineWeb / large web dumps for this seed</li>
-        <li>Rely on platform CRLF (corpus is LF-only; <code class="inline-code">.gitattributes</code> pins it)</li>
-        <li>Claim this tiny BPE beats a production LLM tokenizer</li>
+        <li><a href="/docs/serve.html">SERVE.md</a> · <a href="/docs/train-loop.html">TRAIN_LOOP.md</a></li>
+        <li><a href="/docs/build-models.html">BUILD_MODELS.md</a> · <a href="/docs/factory.html">FACTORY.md</a></li>
         </ul>
       </article>
       </main>

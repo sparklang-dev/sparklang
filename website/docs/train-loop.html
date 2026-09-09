@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Train loop — outer / inner SGD — Spark</title>
+    <meta name="description" content="Multi-outer CPU SGD, fixtures, checkpoints, loss curves." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/css/tokens.css?v=bb4433f" />
+    <link rel="stylesheet" href="/css/site.css?v=bb4433f" />
+  </head>
+  <body class="doc-page">
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="site-brand" href="/" aria-label="Spark home">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z" fill="currentColor" />
+          </svg>
+          Spark
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+        </button>
+        <div class="header-nav-wrap">
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <ul class="nav-primary">
+              <li><a href="/learn/">Learn</a></li>
+              <li><a href="/docs/language.html">Docs</a></li>
+              <li><a href="/downloads.html">Download</a></li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">More</button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/factory.html">Factory hub</a></li>
+                  <li><a href="/docs/spark-builder.html">Builder</a></li>
+                  <li><a href="/docs/compile.html">Compile</a></li>
+                  <li><a href="/docs/decompile.html">Decompile</a></li>
+                  <li><a href="/docs/spark-bc.html">Opcodes / ISA</a></li>
+                  <li><a href="/docs/build-models.html">Build models</a></li>
+                  <li><a href="/docs/train-loop.html">Train loop</a></li>
+                  <li><a href="/docs/architecture.html">Architecture</a></li>
+                  <li><a href="/docs/attention-forward.html">Attention honesty</a></li>
+                  <li><a href="/docs/tokenizer.html">Tokenizer</a></li>
+                  <li><a href="/docs/serve.html">Serve</a></li>
+                  <li><a href="/docs/eval.html">Eval</a></li>
+                  <li><a href="/docs/sparkbc-make.html">Make targets</a></li>
+                  <li><a href="/docs/ci-pages.html">CI / Pages</a></li>
+                  <li><a href="/docs/adoption-bar.html">Adoption bar</a></li>
+                  <li><a href="/docs/ai-models.html">AI models</a></li>
+                  <li><a href="/docs/programming-guide.html">Programming guide</a></li>
+                  <li><a href="/docs/ide.html">IDE</a></li>
+                  <li><a href="/docs/self-host.html">Contributor internals</a></li>
+                </ul>
+              </li>
+            </ul>
+            <a href="/playground.html" class="nav-cta">Try</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <div class="shell doc-layout">
+      <aside class="doc-sidebar" aria-label="Table of contents">
+        <p class="doc-sidebar__title">On this page</p>
+        <nav id="doc-toc-list"></nav>
+      </aside>
+      <main class="doc-main">
+      <nav class="doc__nav" aria-label="Docs">
+        <a href="/learn/">Learn</a>
+        <a href="/docs/factory.html">Factory hub</a>
+        <a href="/docs/spark-builder.html">Builder</a>
+        <a href="/docs/compile.html">Compile</a>
+        <a href="/docs/decompile.html">Decompile</a>
+        <a href="/docs/spark-bc.html">Opcodes / ISA</a>
+        <a href="/docs/build-models.html">Build models</a>
+        <a href="/docs/train-loop.html" aria-current="page">Train loop</a>
+        <a href="/docs/architecture.html">Architecture</a>
+        <a href="/docs/tokenizer.html">Tokenizer</a>
+        <a href="/docs/serve.html">Serve</a>
+        <a href="/docs/eval.html">Eval</a>
+        <a href="/docs/sparkbc-make.html">Make targets</a>
+        <a href="/docs/ci-pages.html">CI / Pages</a>
+        <a href="/docs/adoption-bar.html">Adoption bar</a>
+        <a href="/docs/language.html">Language</a>
+        <a href="/docs/programming-guide.html">Programming guide</a>
+        <a href="/downloads.html">Downloads</a>
+      </nav>      <article class="doc__body">
+        <h1 id="train-loop-outer-inner-sgd">Train loop — outer / inner SGD</h1>
+        <p>How <code class="inline-code">STEP</code> applies <strong>CPU</strong> SGD on Spark safetensors. Spark /
+        SparkLang only. Implementation SoT:
+        <code class="inline-code">python/sparklang/model_lab/</code> + <code class="inline-code">tools/spark-bc-dump/apply_step.py</code>.
+        This page does not reimplement grads.</p>
+        <p>Opcodes / ARTIFACT: <a href="/docs/build-models.html">BUILD_MODELS.md</a>.
+        Dims / layers: <a href="/docs/architecture.html">ARCHITECTURE.md</a>.</p>
+        <h2 id="loop-shape">Loop shape</h2>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Knob</th>
+        <th>Default (tip)</th>
+        <th>Meaning</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><code class="inline-code">--outer</code></td>
+        <td><code class="inline-code">4</code></td>
+        <td>Outer CE passes; each writes a <code class="inline-code">loss_curve</code> point</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">--inner</code></td>
+        <td><code class="inline-code">8</code></td>
+        <td>Inner micro-steps per outer</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">--step</code></td>
+        <td><code class="inline-code">1</code></td>
+        <td>STEP counter stamped into weights meta</td>
+        </tr>
+        <tr>
+        <td>Dataset</td>
+        <td><code class="inline-code">examples/fixtures/train/dataset.jsonl</code></td>
+        <td>JSONL pairs (tip scale)</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <pre class="doc__pre"><code class="language-bash">PYTHONPATH=python python3 tools/spark-bc-dump/apply_step.py \
+          --sparkbc docs/examples/spark-train-step.sparkbc \
+          --weights out/train/sgd-proof/weights.safetensors \
+          --checkpoint out/train/sgd-proof/checkpoint.json \
+          --dataset examples/fixtures/train/dataset.jsonl \
+          --outer 4 --inner 8 --step 1
+        </code></pre>
+        <p>Or: <code class="inline-code">make spark-sgd-proof</code> (same path + eval).</p>
+        <h2 id="what-is-trained-today">What is trained today</h2>
+        <ul class="doc__ul">
+        <li>Primary: <code class="inline-code">spark.lm_head</code> via mean-pool embed → CE.</li>
+        <li>Optional: embed grads when the helper enables them.</li>
+        <li><strong>Not</strong> attention Q/K/V/O blocks on tip.</li>
+        <li>Device: <strong>CPU only</strong>. Never the voice GPU / 6000.</li>
+        </ul>
+        <h2 id="checkpoint-loss-curve">Checkpoint / loss curve</h2>
+        <p><code class="inline-code">checkpoint.json</code> (after a successful STEP) includes:</p>
+        <ul class="doc__ul">
+        <li><code class="inline-code">loss_before</code> / <code class="inline-code">loss_after</code> (after must be <strong>lower</strong> or fail loud)</li>
+        <li><code class="inline-code">loss_curve</code> — list of <code class="inline-code">{outer, loss, …}</code></li>
+        <li><code class="inline-code">beats_claude</code>: always <strong>false</strong></li>
+        <li><code class="inline-code">device</code>: CPU</li>
+        </ul>
+        <p><code class="inline-code">ARTIFACT</code> under <code class="inline-code">out/train/&lt;job&gt;/</code> lists weights + checkpoint paths
+        and <code class="inline-code">not_sgd=false</code> / <code class="inline-code">trained=true</code> only when grads applied.</p>
+        <h2 id="fixtures-scale">Fixtures + scale</h2>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Fixture</th>
+        <th>Role</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><code class="inline-code">examples/fixtures/train/dataset.jsonl</code></td>
+        <td>STEP / sgd-proof pairs on tip</td>
+        </tr>
+        <tr>
+        <td>Larger multi-pair sets</td>
+        <td>Landed with multi-outer SGD (C-lane); do not invent counts — read the file</td>
+        </tr>
+        <tr>
+        <td>Opt-in <code class="inline-code">dim</code> / <code class="inline-code">n_layer</code> + scale JSONL</td>
+        <td><strong>on tip (F-lane)</strong> — <code class="inline-code">dataset_scale.jsonl</code>; <code class="inline-code">make spark-sgd-proof-scale</code>; CI keeps tiny <code class="inline-code">spark-sgd-proof</code></td>
+        </tr>
+        </tbody>
+        </table></div>
+        <p>Do not claim FineWeb-scale data. Seed BPE corpus is separate:
+        <a href="/docs/tokenizer.html">TOKENIZER.md</a>.</p>
+        <h2 id="spark-bc-program-path">SPARK_BC program path</h2>
+        <ol class="doc__ol">
+        <li><code class="inline-code">TRAIN</code> (<code class="inline-code">0x26</code>) — dry accept + <code class="inline-code">ARTIFACT</code> stub (<code class="inline-code">trained=false</code>)</li>
+        <li><code class="inline-code">STEP</code> (<code class="inline-code">0x28</code>) — runs this loop</li>
+        <li><code class="inline-code">TRAIN_STATUS</code> (<code class="inline-code">0x27</code>) — dry status JSON</li>
+        </ol>
+        <p>Execute: <code class="inline-code">./spark-bootstrap --run-bc …</code> or <code class="inline-code">./spark --run-bc …</code>.</p>
+        <h2 id="gates">Gates</h2>
+        <pre class="doc__pre"><code class="language-bash">make test-sparkbc      # loss_after &lt; loss_before among asserts
+        make sparkbc-e2e
+        make spark-sgd-proof
+        </code></pre>
+        <h2 id="related">Related</h2>
+        <ul class="doc__ul">
+        <li><a href="/docs/build-models.html">BUILD_MODELS.md</a> · <a href="/docs/eval.html">EVAL.md</a></li>
+        <li><a href="/docs/sparkbc-make.html">SPARKBC_MAKE.md</a> · <a href="/docs/factory.html">FACTORY.md</a></li>
+        </ul>
+      </article>
+      </main>
+    </div>
+
+    <footer class="site-footer">
+      <div class="shell footer-inner">
+        <span>Spark programming language</span>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="/learn/">Learn</a>
+          <a href="/docs/language.html">Reference</a>
+          <a href="/downloads.html">Downloads</a>
+          <a href="/playground.html">Playground</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="/js/site.js"></script>
+  </body>
+</html>

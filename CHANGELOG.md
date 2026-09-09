@@ -5,6 +5,24 @@ language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
 
+## 0.6.36 — 2026-09-09
+
+- **Factory docs (H-lane, full map):** engineer Pages for the whole
+  SPARK_BC factory — compile/assemble, decompile/inspect, opcodes
+  (ISA), build models + weights/checkpoints, tokenizer/BPE, train
+  loop (outer/inner SGD; scale fixture linked), architecture
+  (embed/RMSNorm/lm_head/MLP; attention honest/partial), serve
+  forward + HTTP/stdio API (G-lane linked), eval harness (E-lane
+  Claude baseline linked; **never** beat Claude), makefile targets,
+  CI/Pages contributor how-to. Hub: [FACTORY.md](docs/FACTORY.md)
+  → `/docs/factory.html`. Also: `/docs/compile.html`,
+  `/docs/decompile.html`, `/docs/spark-bc.html`,
+  `/docs/build-models.html`, `/docs/train-loop.html`,
+  `/docs/architecture.html`, `/docs/attention-forward.html`,
+  `/docs/tokenizer.html`, `/docs/serve.html`, `/docs/eval.html`,
+  `/docs/sparkbc-make.html`, `/docs/ci-pages.html`.
+  Regen/check: `make docs-html` / `make docs-check`.
+
 ## 0.6.35 — 2026-09-09
 
 - **Serve HTTP / stdio API (G-lane):** `./spark-serve-api` wraps the

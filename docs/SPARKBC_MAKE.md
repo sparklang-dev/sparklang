@@ -1,0 +1,84 @@
+# SPARK_BC makefile targets
+
+End-to-end gates and helpers for the Spark bytecode factory.
+Copy-paste from the repo root after `make spark-bootstrap` /
+`make spark` as needed. Spark / SparkLang only.
+
+ISA: [SPARK_BC.md](SPARK_BC.md). Story:
+[SPARK_BUILDER.md](SPARK_BUILDER.md).
+
+## Core gates
+
+| Target | Purpose |
+|--------|---------|
+| `make test-sparkbc` | `run_sparkbc.sh` + `tools/spark-bc-dump/test_dump.py` (compile, dump, serve, SGD asserts) |
+| `make test-sparkbc-e2e` | Focused TRAIN→STEP→ARTIFACT (`tools/spark-bc-dump/run_e2e_gate.sh`) |
+| `make sparkbc-e2e` | Alias for `test-sparkbc-e2e` |
+| `make spark-sgd-proof` | Multi-outer CPU SGD → `checkpoint.json` loss drop → `make spark-eval WEIGHTS=…` |
+| `make spark-sgd-proof-scale` | Local opt-in larger JSONL + dim/n_layer (F-lane; not default CI) |
+| `make spark-eval` | Frozen copy/recall + next-token probes; exit 0 = harness ran (**not** beat Claude) |
+| `make spark-eval-claude` | Same + optional Anthropic baseline (E-lane; skip if no key) |
+| `make test-spark-eval` | Unit gate for eval harness |
+| `make docs-html` / `make docs-check` | Regen `website/docs/*` + nav link check |
+| `make spark-serve-api` / `make test-serve-api` | G-lane HTTP/stdio predict + embeddings |
+
+```bash
+make test-sparkbc
+make sparkbc-e2e
+make spark-sgd-proof
+make spark-eval
+make spark-eval-claude
+make docs-check
+```
+
+## Build / tools
+
+| Target | Purpose |
+|--------|---------|
+| `make spark-bootstrap` / `make sparkc` | C bootstrap VM + `--compile` / `--run-bc` |
+| `make spark` | GAS ELF (`./spark`) |
+| `make spark-serve` | Install `./spark-serve` companion script |
+| `make spark-bc` | Product wrapper script (`scripts/spark-bc`) |
+| `make spark-bc-emit` / `make test-bc-emit` | SPARK_BC → sasm emit probe + pack hello |
+| `make sparkasm` / `make test-sparkasm` | Peer assembler |
+| `make test-sparkasm-control` | `control.sparkasm` shape check |
+| `make test-model-lab` | `examples/model_lab.spark` dry + expects |
+| `make test-bootstrap` | Bootstrap VM suite |
+| `make test-bpe-seed` | Tokenizer BPE seed (when present) |
+
+## Docs / site regen
+
+```bash
+make docs-html
+make docs-check
+# Mirror CHANGELOG.md → website/CHANGELOG.html for Pages when cutting
+```
+
+Release + Pages: [CI_PAGES.md](CI_PAGES.md) · [RELEASE.md](RELEASE.md).
+
+## Scripts (not always phony targets)
+
+| Path | Role |
+|------|------|
+| `scripts/sparkbc-e2e` | Wrapper around e2e gate |
+| `scripts/spark-bc` | Phase-6 compile→bc_vm product wrapper |
+| `bootstrap/tests/run_sparkbc.sh` | Oracle compare for `test-sparkbc` |
+| `tools/spark-bc-dump/apply_step.py` | CPU SGD helper used by `spark-sgd-proof` |
+| `tools/spark-eval/run.py` | Eval harness |
+
+## CI
+
+GitHub Actions workflow `.github/workflows/sparkbc.yml` runs the
+SPARK_BC gates on PRs. Prefer green `test-sparkbc` +
+`sparkbc-e2e` before claiming factory docs match tip.
+
+## Never
+
+- Claim `spark-eval` scores beat Claude.
+- Raise train onto the RTX PRO 6000 from these targets.
+- Treat empty / failing gates as soft success.
+
+## Related
+
+- [FACTORY.md](FACTORY.md) · [COMPILE.md](COMPILE.md) · [EVAL.md](EVAL.md)
+- [CI_PAGES.md](CI_PAGES.md) · [TRAIN_LOOP.md](TRAIN_LOOP.md)
