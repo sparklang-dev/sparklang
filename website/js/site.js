@@ -379,7 +379,11 @@
 
     if (path.indexOf("/docs") === 0) {
       var docs = qs('.nav-primary a[href="/docs/language.html"]');
-      if (docs && !qs('.nav-more__menu a[aria-current="page"]')) {
+      var factory = qs('.nav-primary a[href="/docs/factory.html"]');
+      var menuHit = qs('.nav-more__menu a[aria-current="page"]');
+      var factoryHit =
+        factory && factory.getAttribute("aria-current") === "page";
+      if (docs && !menuHit && !factoryHit) {
         docs.setAttribute("aria-current", "page");
       }
     }
