@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-# AI model aspects — behaviors, senses, voice I/O
-=======
 # AI model aspects — sensory mapping for agentic Spark
->>>>>>> origin/main
 
 Engineer map of the **Spark / SparkLang** AI model **as a whole
 system**: how text, tools, memory, and optional senses plug into
@@ -103,13 +99,7 @@ Jump: [Ears](#ears--stt--audio-in) · [Eyes](#eyes--vision--image-in) ·
 | Memory / context window | **partial** | Script bindings + dry fixtures; **no** KV-cache decode |
 | Tools / actions | **implemented** (dry) | `tool` / `with tools`; live tool bus **planned** |
 | Ears / STT | **implemented** (surface) | Dry stub; live sidecar / whisper / gated HTTP |
-<<<<<<< HEAD
-| Voice ask loop | **implemented** | `./spark-ask` / `./spark-speak-ask` — dump context + TinyCoder; [VOICE_ASK.md](VOICE_ASK.md) |
-| Voice easy train | **implemented** | `make voice-easy` — owned tiny/large heads; never 6000 |
-| Eyes / vision | **planned** | Stub module only — no `look` opcode on tip |
-=======
 | Eyes / vision | **planned** | Stub module only — **no** `look` opcode on tip |
->>>>>>> origin/main
 | Speaking / TTS | **implemented** (surface) | Dry WAV marker; live PCM synth / gated HTTP |
 | Behaviors / policies | **partial** | `spark_reply_pack`, abstain heads, expect; no full SM |
 | Train / adaptation | **implemented** (CPU/5090) | STEP SGD + owned TinyCoder (M #30) — never 6000 |
@@ -558,91 +548,7 @@ flowchart TB
 
 ---
 
-<<<<<<< HEAD
-**Train path (piece of cake):** [VOICE_EASY.md](VOICE_EASY.md) —
-`make voice-easy` / `./spark-voice easy` trains **owned** STT/TTS
-heads (tiny CI or `--scale large`). Prefer 5090; never 6000. Not a
-vendor clone.
-
-
-Network STT is **OFF** unless `SPARK_STT_NET=1` or
-`SPARK_SPEECH_NET=1` + `SPARK_STT_URL`. Fail closed (exit 2) if URL
-set without gate.
-
-Full surface + PSTN gates: [VOICE.md](VOICE.md).
-
-## Eyes / vision
-
-**Eyes = image / vision in.**
-
-**Honest:** Spark tip has **no** vision encoder, no image token
-path into `spark.embed`, and **no** language `look` opcode.
-Browser CDP screenshots (`browser cdp screenshot`) write PNG files
-for humans/automation — that is **not** a vision model.
-
-**Ship today:** thin interface stub
-`python/sparklang/senses/vision.py` documenting the planned contract
-(`VisionRequest` / `VisionResult`, status=`planned`). Gate:
-`make test-senses` / `python3 -m unittest
-python/sparklang/senses/test_senses.py`.
-
-**Planned (not claimed):** optional `look "path.png" -> caption`
-language op + companion that stays dry by default — same fail-closed
-net gates as STT. Until that lands, treat eyes as **external /
-roadmap**.
-
-## Speaking / TTS
-
-**Speaking = text-to-speech / audio out.**
-
-| Mode | Behavior |
-|------|----------|
-| Dry | `write_stub_wav` / tiny WAV marker for `speak … -> "path"` |
-| Live | Built-in PCM synthesizer → 16-bit WAV; or `SPARK_TTS_CMD`; or HTTP if gated; optional `aplay` |
-
-`speak with model NAME` loads a **written** voice model under
-`out/voice_models/` (timbre/prosody params) — config / features,
-**not** a claim of neural clone training inside Spark.
-
-`spark_reply_pack` can store spoken scripts for `speak reply` on
-text-only bases — still **not** voice-GPU / LoRA TTS.
-
-Net TTS: `SPARK_TTS_NET=1` or `SPARK_SPEECH_NET=1` + `SPARK_TTS_URL`.
-
-## Thinking / generation (LLM forward)
-
-**Thinking = neural (or heuristic) generation path.**
-
-### Tiny CPU serve (weights)
-
-Implemented path when MLP tensors exist:
-
-`embed_mean_pool -> mlp0 -> rms_norm -> lm_head`
-
-Code: `python/sparklang/model_lab/serve.py`. HTTP/stdio:
-`./spark-serve-api` (`/v1/predict`, `/v1/embeddings`).
-
-| Piece | Status |
-|-------|--------|
-| Embed + lm_head | **yes** |
-| MLP0 SwiGLU | **yes** in serve |
-| Layer-0 last-query attn (D #28) | **yes** train + serve |
-| Multi-layer attn decode | **no** |
-| RoPE / KV cache | sparkasm macros / shape check — **not** in Python path |
-
-### Language `ask` / classify / extract
-
-Dry: fixtures / heuristics. Live: optional OpenAI-compatible gateway
-(`./spark-ask-http`) — Bifrost is one optional backend, **not** a
-Spark requirement. See [AI_MODELS.md](AI_MODELS.md).
-
-Cross-link: [ATTENTION_FORWARD.md](ATTENTION_FORWARD.md) ·
-[ARCHITECTURE.md](ARCHITECTURE.md) · [SERVE.md](SERVE.md).
-
-## Memory & context
-=======
 ## Memory & context (cross-cutting)
->>>>>>> origin/main
 
 | Mechanism | Status | Notes |
 |-----------|--------|-------|
@@ -782,8 +688,6 @@ Roadmap sketches: [ROADMAP.md](ROADMAP.md).
 - [SPARK_CODER.md](SPARK_CODER.md) · [WEIGHT_GALLERY.md](WEIGHT_GALLERY.md)
 - [ARCHITECTURE.md](ARCHITECTURE.md) · [TOKENIZER.md](TOKENIZER.md)
 - [LANGUAGE.md](LANGUAGE.md) · [ROADMAP.md](ROADMAP.md)
-<<<<<<< HEAD
-=======
 - Site: [/docs/model-aspects.html](/docs/model-aspects.html) ·
   [/docs/knowledge.html](/docs/knowledge.html) ·
   [/docs/voice.html](/docs/voice.html) ·
@@ -792,4 +696,3 @@ Roadmap sketches: [ROADMAP.md](ROADMAP.md).
   [/docs/methods-openbin.html](/docs/methods-openbin.html) ·
   [/docs/spark-coder.html](/docs/spark-coder.html) ·
   [/docs/weight-gallery.html](/docs/weight-gallery.html)
->>>>>>> origin/main

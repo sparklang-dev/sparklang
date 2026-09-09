@@ -124,25 +124,7 @@
         <a href="/docs/programming-guide.html">Programming guide</a>
         <a href="/downloads.html">Downloads</a>
       </nav>      <article class="doc__body">
-        <p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</p>
-        <h1 id="ai-model-aspects-behaviors-senses-voice-io">AI model aspects — behaviors, senses, voice I/O</h1>
-        <p>=======</p>
         <h1 id="ai-model-aspects-sensory-mapping-for-agentic-spark">AI model aspects — sensory mapping for agentic Spark</h1>
-        <blockquote>
-        <blockquote>
-        <blockquote>
-        <blockquote>
-        <blockquote>
-        <blockquote>
-        <blockquote>
-        <p>origin/main</p>
-        </blockquote>
-        </blockquote>
-        </blockquote>
-        </blockquote>
-        </blockquote>
-        </blockquote>
-        </blockquote>
         <p>Engineer map of the <strong>Spark / SparkLang</strong> AI model <strong>as a whole
         system</strong>: how text, tools, memory, and optional senses plug into
         bytecode + weights + serve. Not marketing. Not God/Loom metaphors.</p>
@@ -320,39 +302,9 @@
         <td>Dry stub; live sidecar / whisper / gated HTTP</td>
         </tr>
         <tr>
-        <td>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</td>
-        <td></td>
-        <td></td>
-        </tr>
-        <tr>
-        <td>Voice ask loop</td>
-        <td><strong>implemented</strong></td>
-        <td><code class="inline-code">./spark-ask</code> / <code class="inline-code">./spark-speak-ask</code> — dump context + TinyCoder; <a href="/docs/voice-ask.html">VOICE_ASK.md</a></td>
-        </tr>
-        <tr>
-        <td>Voice easy train</td>
-        <td><strong>implemented</strong></td>
-        <td><code class="inline-code">make voice-easy</code> — owned tiny/large heads; never 6000</td>
-        </tr>
-        <tr>
-        <td>Eyes / vision</td>
-        <td><strong>planned</strong></td>
-        <td>Stub module only — no <code class="inline-code">look</code> opcode on tip</td>
-        </tr>
-        <tr>
-        <td>=======</td>
-        <td></td>
-        <td></td>
-        </tr>
-        <tr>
         <td>Eyes / vision</td>
         <td><strong>planned</strong></td>
         <td>Stub module only — <strong>no</strong> <code class="inline-code">look</code> opcode on tip</td>
-        </tr>
-        <tr>
-        <td>&gt;&gt;&gt;&gt;&gt;&gt;&gt; origin/main</td>
-        <td></td>
-        <td></td>
         </tr>
         <tr>
         <td>Speaking / TTS</td>
@@ -1063,117 +1015,7 @@
         <p><a href="/docs/language.html">LANGUAGE.md</a> · <a href="/docs/voice.html">VOICE.md</a> ·
         <a href="/docs/adoption-bar.html">ADOPTION_BAR.md</a> · <a href="/docs/spark-coder.html">SPARK_CODER.md</a>.</p>
         <hr class="doc__hr" />
-        <p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
-        <strong>Train path (piece of cake):</strong> <a href="/docs/voice-easy.html">VOICE_EASY.md</a> —
-        <code class="inline-code">make voice-easy</code> / <code class="inline-code">./spark-voice easy</code> trains <strong>owned</strong> STT/TTS
-        heads (tiny CI or <code class="inline-code">--scale large</code>). Prefer 5090; never 6000. Not a
-        vendor clone.</p>
-        <p>Network STT is <strong>OFF</strong> unless <code class="inline-code">SPARK_STT_NET=1</code> or
-        <code class="inline-code">SPARK_SPEECH_NET=1</code> + <code class="inline-code">SPARK_STT_URL</code>. Fail closed (exit 2) if URL
-        set without gate.</p>
-        <p>Full surface + PSTN gates: <a href="/docs/voice.html">VOICE.md</a>.</p>
-        <h2 id="eyes-vision">Eyes / vision</h2>
-        <p><strong>Eyes = image / vision in.</strong></p>
-        <p><strong>Honest:</strong> Spark tip has <strong>no</strong> vision encoder, no image token
-        path into <code class="inline-code">spark.embed</code>, and <strong>no</strong> language <code class="inline-code">look</code> opcode.
-        Browser CDP screenshots (<code class="inline-code">browser cdp screenshot</code>) write PNG files
-        for humans/automation — that is <strong>not</strong> a vision model.</p>
-        <p><strong>Ship today:</strong> thin interface stub
-        <code class="inline-code">python/sparklang/senses/vision.py</code> documenting the planned contract
-        (<code class="inline-code">VisionRequest</code> / <code class="inline-code">VisionResult</code>, status=<code class="inline-code">planned</code>). Gate:
-        <code class="inline-code">make test-senses</code> / <code class="inline-code">python3 -m unittest
-        python/sparklang/senses/test_senses.py</code>.</p>
-        <p><strong>Planned (not claimed):</strong> optional <code class="inline-code">look "path.png" -&gt; caption</code>
-        language op + companion that stays dry by default — same fail-closed
-        net gates as STT. Until that lands, treat eyes as <strong>external /
-        roadmap</strong>.</p>
-        <h2 id="speaking-tts">Speaking / TTS</h2>
-        <p><strong>Speaking = text-to-speech / audio out.</strong></p>
-        <div class="doc__table-wrap"><table class="doc__table">
-        <thead>
-        <tr>
-        <th>Mode</th>
-        <th>Behavior</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-        <td>Dry</td>
-        <td><code class="inline-code">write_stub_wav</code> / tiny WAV marker for <code class="inline-code">speak … -&gt; "path"</code></td>
-        </tr>
-        <tr>
-        <td>Live</td>
-        <td>Built-in PCM synthesizer → 16-bit WAV; or <code class="inline-code">SPARK_TTS_CMD</code>; or HTTP if gated; optional <code class="inline-code">aplay</code></td>
-        </tr>
-        </tbody>
-        </table></div>
-        <p><code class="inline-code">speak with model NAME</code> loads a <strong>written</strong> voice model under
-        <code class="inline-code">out/voice_models/</code> (timbre/prosody params) — config / features,
-        <strong>not</strong> a claim of neural clone training inside Spark.</p>
-        <p><code class="inline-code">spark_reply_pack</code> can store spoken scripts for <code class="inline-code">speak reply</code> on
-        text-only bases — still <strong>not</strong> voice-GPU / LoRA TTS.</p>
-        <p>Net TTS: <code class="inline-code">SPARK_TTS_NET=1</code> or <code class="inline-code">SPARK_SPEECH_NET=1</code> + <code class="inline-code">SPARK_TTS_URL</code>.</p>
-        <h2 id="thinking-generation-llm-forward">Thinking / generation (LLM forward)</h2>
-        <p><strong>Thinking = neural (or heuristic) generation path.</strong></p>
-        <h3 id="tiny-cpu-serve-weights">Tiny CPU serve (weights)</h3>
-        <p>Implemented path when MLP tensors exist:</p>
-        <p><code class="inline-code">embed_mean_pool -&gt; mlp0 -&gt; rms_norm -&gt; lm_head</code></p>
-        <p>Code: <code class="inline-code">python/sparklang/model_lab/serve.py</code>. HTTP/stdio:
-        <code class="inline-code">./spark-serve-api</code> (<code class="inline-code">/v1/predict</code>, <code class="inline-code">/v1/embeddings</code>).</p>
-        <div class="doc__table-wrap"><table class="doc__table">
-        <thead>
-        <tr>
-        <th>Piece</th>
-        <th>Status</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-        <td>Embed + lm_head</td>
-        <td><strong>yes</strong></td>
-        </tr>
-        <tr>
-        <td>MLP0 SwiGLU</td>
-        <td><strong>yes</strong> in serve</td>
-        </tr>
-        <tr>
-        <td>Layer-0 last-query attn (D #28)</td>
-        <td><strong>yes</strong> train + serve</td>
-        </tr>
-        <tr>
-        <td>Multi-layer attn decode</td>
-        <td><strong>no</strong></td>
-        </tr>
-        <tr>
-        <td>RoPE / KV cache</td>
-        <td>sparkasm macros / shape check — <strong>not</strong> in Python path</td>
-        </tr>
-        </tbody>
-        </table></div>
-        <h3 id="language-ask-classify-extract">Language <code class="inline-code">ask</code> / classify / extract</h3>
-        <p>Dry: fixtures / heuristics. Live: optional OpenAI-compatible gateway
-        (<code class="inline-code">./spark-ask-http</code>) — Bifrost is one optional backend, <strong>not</strong> a
-        Spark requirement. See <a href="/docs/ai-models.html">AI_MODELS.md</a>.</p>
-        <p>Cross-link: <a href="/docs/attention-forward.html">ATTENTION_FORWARD.md</a> ·
-        <a href="/docs/architecture.html">ARCHITECTURE.md</a> · <a href="/docs/serve.html">SERVE.md</a>.</p>
-        <h2 id="memory-context">Memory &amp; context</h2>
-        <p>=======</p>
         <h2 id="memory-context-cross-cutting">Memory &amp; context (cross-cutting)</h2>
-        <blockquote>
-        <blockquote>
-        <blockquote>
-        <blockquote>
-        <blockquote>
-        <blockquote>
-        <blockquote>
-        <p>origin/main</p>
-        </blockquote>
-        </blockquote>
-        </blockquote>
-        </blockquote>
-        </blockquote>
-        </blockquote>
-        </blockquote>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
@@ -1424,9 +1266,7 @@
         <li><a href="/docs/voice.html">VOICE.md</a> · <a href="/docs/ai-models.html">AI_MODELS.md</a> · <a href="/docs/ai-models.html#live-gateway-integration-wired-today">ASK_LIVE.md</a></li>
         <li><a href="/docs/spark-coder.html">SPARK_CODER.md</a> · <a href="/docs/weight-gallery.html">WEIGHT_GALLERY.md</a></li>
         <li><a href="/docs/architecture.html">ARCHITECTURE.md</a> · <a href="/docs/tokenizer.html">TOKENIZER.md</a></li>
-        <li><a href="/docs/language.html">LANGUAGE.md</a> · <a href="/docs/roadmap.html">ROADMAP.md</a>
-        &lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
-        =======</li>
+        <li><a href="/docs/language.html">LANGUAGE.md</a> · <a href="/docs/roadmap.html">ROADMAP.md</a></li>
         <li>Site: <a href="/docs/model-aspects.html">/docs/model-aspects.html</a> ·
           <a href="/docs/knowledge.html">/docs/knowledge.html</a> ·
           <a href="/docs/voice.html">/docs/voice.html</a> ·
@@ -1434,22 +1274,7 @@
           <a href="/docs/voice-ask.html">/docs/voice-ask.html</a> ·
           <a href="/docs/methods-openbin.html">/docs/methods-openbin.html</a> ·
           <a href="/docs/spark-coder.html">/docs/spark-coder.html</a> ·
-          <a href="/docs/weight-gallery.html">/docs/weight-gallery.html</a><blockquote>
-        <blockquote>
-        <blockquote>
-        <blockquote>
-        <blockquote>
-        <blockquote>
-        <blockquote>
-        <p>origin/main</p>
-        </blockquote>
-        </blockquote>
-        </blockquote>
-        </blockquote>
-        </blockquote>
-        </blockquote>
-        </blockquote>
-        </li>
+          <a href="/docs/weight-gallery.html">/docs/weight-gallery.html</a></li>
         </ul>
       </article>
       </main>
