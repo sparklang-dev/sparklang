@@ -13,7 +13,8 @@ static int method_ok(const char *method)
 	       (strcmp(method, "spark_distill_cpu") == 0 ||
 		strcmp(method, "spark_pref_pack") == 0 ||
 		strcmp(method, "spark_playbook_fit") == 0 ||
-		strcmp(method, "spark_faq_index") == 0);
+		strcmp(method, "spark_faq_index") == 0 ||
+		strcmp(method, "spark_reply_pack") == 0);
 }
 
 static int dry_job_ok(const char *job_id)
@@ -22,7 +23,8 @@ static int dry_job_ok(const char *job_id)
 	       (strcmp(job_id, "job-dry-001") == 0 ||
 		strcmp(job_id, "job-pref-001") == 0 ||
 		strcmp(job_id, "job-play-001") == 0 ||
-		strcmp(job_id, "job-faq-001") == 0);
+		strcmp(job_id, "job-faq-001") == 0 ||
+		strcmp(job_id, "job-reply-001") == 0);
 }
 
 const char *spark_pick_train_accept(const char *method, const char *job_id,

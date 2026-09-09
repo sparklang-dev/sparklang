@@ -85,7 +85,10 @@ model status "job-dry-001" -> status             # polls that job id
 
 Optional **`method "…"`** selects the training algorithm
 (`spark_distill_cpu` | `spark_pref_pack` | `spark_playbook_fit` |
-`spark_faq_index`).
+`spark_faq_index` | `spark_reply_pack`).
+**`spark_reply_pack`** overlays text + spoken replies on a base that
+has no voice (or locks major behaviors). Inventable facts require
+`sot_ref` — missing SoT fails loud; the pack never fabricates.
 Default when omitted: `spark_distill_cpu` (env `SPARK_TRAIN_METHOD`
 override). Live GAS passes the statement via
 `./spark-train-http --spark-line`; status uses the **quoted** job id

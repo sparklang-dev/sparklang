@@ -1,0 +1,8 @@
+# Model train — spark_reply_pack (voice+text overlay, no fabricate)
+# Overlay speak scripts on a text-only base. Inventable rows need SoT.
+# See docs/MODEL_TRAINING.md
+model code
+
+model train dataset "examples/fixtures/train/reply_pack.jsonl" base "spark_reply_pack" out "out/train/job-reply-001" backend "http" method "spark_reply_pack" -> job
+
+model status "job-reply-001" -> status

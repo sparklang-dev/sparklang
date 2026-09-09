@@ -4,6 +4,17 @@ All notable user-facing releases of **SparkLang** (the Spark programming
 language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
+## 0.6.23 — 2026-09-08
+
+- **`spark_reply_pack`:** fifth CPU train method. Overlay **text +
+  spoken** replies on a base that has **no voice**, or lock major
+  behaviors (`greeting` / `hours` / `transfer` / `idk`). Inventable
+  rows require `sot_ref` — missing SoT **fails loud** (never
+  fabricate). Artifacts: `replies.json` + `gate.json` + `router.pt`.
+  Not LoRA, not voice-GPU. Example:
+  `examples/model_train_reply.spark`. Gate: `make test-train-http`
+  (includes `tools/spark-train-ref/test_reply_pack.py`).
+
 ## 0.6.22 — 2026-09-02
 
 - **Live `--allow-shell`:** `./spark --live --allow-shell` forks

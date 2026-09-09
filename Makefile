@@ -538,6 +538,9 @@ test-train-http: spark-train-http spark
 		grep -q spark_playbook_fit
 	./spark-train-http --dry --submit --method spark_faq_index | \
 		grep -q spark_faq_index
+	./spark-train-http --dry --submit --method spark_reply_pack | \
+		grep -q spark_reply_pack
+	./spark-train-http --dry --status job-reply-001 | grep -q job-reply-001
 	./spark-train-http --dry --status job-dry-001 | grep -q '"state":"succeeded"'
 	./spark-train-http --dry --status job-pref-001 | grep -q job-pref-001
 	./spark-train-http --dry --status job-missing-999 ; test $$? -ne 0
@@ -551,6 +554,11 @@ test-train-http: spark-train-http spark
 	test -f out/train/job-pref-001/ARTIFACT
 	./spark --dry-run examples/model_train.spark | grep -q '"op":"train"'
 	test -f out/train/job-dry-001/ARTIFACT
+	./spark --dry-run examples/model_train_reply.spark | grep -q '"op":"train"'
+	./spark-train-http --dry --submit --method spark_reply_pack \
+	  --out out/train/job-reply-001 | grep -q spark_reply_pack
+	test -f out/train/job-reply-001/ARTIFACT
+	python3 tools/spark-train-ref/test_reply_pack.py
 	@echo "test-train-http OK (dry only)"
 
 # Packer for goldens (encoding, not a .spark compiler).

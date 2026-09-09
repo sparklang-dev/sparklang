@@ -21,7 +21,7 @@ plain `.spark` files you can diff, dry-run, and ship.
 
 | Goal | Spark today | Honest limits |
 |------|-------------|---------------|
-| **Train / build** real jobs | `model train` / `model build` → job; `model status` | Dry fixtures; live `./spark-train-http` (`http` or allowlisted `local-yield`) — see [MODEL_TRAINING.md](MODEL_TRAINING.md) |
+| **Train / build** real jobs | `model train` / `model build` → job; `model status` | Dry fixtures; live `./spark-train-http`. **`spark_reply_pack`** overlays voice+text on text-only bases and refuses inventable rows without SoT — see [MODEL_TRAINING.md](MODEL_TRAINING.md) |
 | **Abstain / IDK heads** | `head abstain|train|attach|ask` | Probe on frozen local LLM; SELECT before SAMPLE; [ABSTAIN_HEADS.md](ABSTAIN_HEADS.md) |
 | **Analyze** reachable models | `model analyze "…" -> report` | Dry-run = fixtures under `examples/fixtures/models/`; not live leaderboards |
 | **Compare** on your suite | `model compare […] on suite "…" -> comparison` | Same fixture metrics; optional `make model-probe` for read-only discovery |

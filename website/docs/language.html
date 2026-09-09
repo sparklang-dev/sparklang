@@ -137,7 +137,11 @@
         </code></pre>
         <p>Optional <strong><code class="inline-code">method "…"</code></strong> selects the training algorithm
         (<code class="inline-code">spark_distill_cpu</code> | <code class="inline-code">spark_pref_pack</code> | <code class="inline-code">spark_playbook_fit</code> |
-        <code class="inline-code">spark_faq_index</code>).
+        <code class="inline-code">spark_faq_index</code> |
+        <code class="inline-code">spark_reply_pack</code>).
+        <strong><code class="inline-code">spark_reply_pack</code></strong> overlays text + spoken replies on a base that
+        has no voice (or locks major behaviors). Inventable facts require
+        <code class="inline-code">sot_ref</code> — missing SoT fails loud; the pack never fabricates.
         Default when omitted: <code class="inline-code">spark_distill_cpu</code> (env <code class="inline-code">SPARK_TRAIN_METHOD</code>
         override). Live GAS passes the statement via
         <code class="inline-code">./spark-train-http --spark-line</code>; status uses the <strong>quoted</strong> job id

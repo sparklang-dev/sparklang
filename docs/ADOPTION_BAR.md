@@ -76,13 +76,15 @@ Keep these off the hero; they belong here and in docs:
   (`bearer` / `header`, `retries` / `backoff`; see LANGUAGE.md).
 - **Packet capture / MITM / browser** stay in LANGUAGE but are secondary vs
   train→eval (see “Also available” one-liner on the homepage).
-- **Live train** — reference trainer ships **four** CPU methods:
+- **Live train** — reference trainer ships **five** CPU methods:
   **`spark_distill_cpu`** (`weights.pt`), **`spark_pref_pack`**
   (`pref_pack.json` + `ranker.pt`), **`spark_playbook_fit`**
   (`playbooks.json` + `router.pt`), **`spark_faq_index`**
-  (`faq_index.json` + `encoder.pt`). Same HTTP contract; select with
-  POST `method` / `SPARK_TRAIN_METHOD`. Captures under
-  `website/docs/examples/live-train-*.txt`.
+  (`faq_index.json` + `encoder.pt`), **`spark_reply_pack`**
+  (`replies.json` + `gate.json` + `router.pt` — voice+text overlay
+  on text-only bases, behavior lock, inventable → SoT or IDK).
+  Same HTTP contract; select with POST `method` / `SPARK_TRAIN_METHOD`.
+  Captures under `website/docs/examples/live-train-*.txt`.
   Do not claim LoRA or voice-GPU training on sparklang.dev.
 - **Expectation pass/fail** is shipped (`expect equal` / `expect contains`).
   Homepage flagship is train → status → expect (`examples/train_eval.spark`).

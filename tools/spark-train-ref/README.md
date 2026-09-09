@@ -11,6 +11,7 @@ HTTP server for `./spark --live` / `./spark-train-http`
 | `spark_pref_pack` | Preference ranker over chosen/rejected | `pref_pack.json` + `ranker.pt` |
 | `spark_playbook_fit` | Intent→playbook router | `playbooks.json` + `router.pt` |
 | `spark_faq_index` | FAQ corpus + dual-encoder retriever | `faq_index.json` + `encoder.pt` |
+| `spark_reply_pack` | Voice+text overlay + behavior lock; never fabricate | `replies.json` + `gate.json` + `router.pt` |
 
 Select via POST `method` (or `base` if it matches a method id),
 companion `--method`, or env `SPARK_TRAIN_METHOD`.
@@ -43,6 +44,14 @@ SPARK_TRAIN_METHOD=spark_faq_index \
   --method spark_faq_index \
   --base spark_faq_index \
   --out out/train/job-faq-001
+
+# voice+text overlay (text-only base OK; inventable needs SoT)
+SPARK_TRAIN_METHOD=spark_reply_pack \
+./spark-train-http --live --submit \
+  --method spark_reply_pack \
+  --dataset examples/fixtures/train/reply_pack.jsonl \
+  --base text-only-base \
+  --out out/train/job-reply-001
 ```
 
 CPU only — never uses a voice-reserved GPU.

@@ -71,7 +71,7 @@ Generic interface — SparkLang is not hard-wired to one machine.
 export SPARK_TRAIN_BACKEND=http
 export SPARK_TRAIN_URL=https://train.example/v1   # your API
 # optional: SPARK_TRAIN_TOKEN=…   (never commit)
-# optional: SPARK_TRAIN_METHOD=spark_distill_cpu|spark_pref_pack|spark_playbook_fit|spark_faq_index
+# optional: SPARK_TRAIN_METHOD=spark_distill_cpu|spark_pref_pack|spark_playbook_fit|spark_faq_index|spark_reply_pack
 # optional: SPARK_TRAIN_OUT=out/train/job-…   (live out override)
 ./spark --live examples/model_train.spark
 # or:
@@ -135,6 +135,7 @@ voice-reserved GPU. None invent `train@` grants.
 | `spark_pref_pack` | Build chosen/rejected preference pairs and train a tiny ranker | `pref_pack.json` + `ranker.pt` |
 | `spark_playbook_fit` | Fit an intent→playbook router from reply templates | `playbooks.json` + `router.pt` |
 | `spark_faq_index` | Build FAQ corpus and train a tiny dual-encoder retriever | `faq_index.json` + `encoder.pt` |
+| `spark_reply_pack` | Overlay **text + spoken** replies on a base that has **no voice**, or lock major behaviors. Inventable facts require SoT — fail loud, never fabricate | `replies.json` + `gate.json` + `router.pt` |
 
 Select via (first match wins):
 
@@ -167,6 +168,7 @@ export SPARK_TRAIN_URL=http://127.0.0.1:8090/v1
 ./spark --live examples/model_train_pref.spark
 ./spark --live examples/model_train_playbook.spark
 ./spark --live examples/model_train_faq.spark
+./spark --live examples/model_train_reply.spark
 ```
 
 Dry-run fixtures still plan stub paths without training.
@@ -201,6 +203,8 @@ test -f out/train/job-dry-001/ARTIFACT
 ./spark-train-http --dry --submit | grep job-dry-001
 ./spark-train-http --dry --submit --method spark_pref_pack | grep spark_pref_pack
 ./spark-train-http --dry --submit --method spark_faq_index | grep spark_faq_index
+./spark-train-http --dry --submit --method spark_reply_pack | grep spark_reply_pack
+./spark --dry-run examples/model_train_reply.spark
 ```
 
 `make test` never starts GPU jobs or dials the network.
@@ -208,10 +212,39 @@ test -f out/train/job-dry-001/ARTIFACT
 ## Product story
 
 Spark ships **multiple** CPU training methods behind one HTTP contract —
-distill, preference pack, playbook fit, FAQ index. That is the product
-story: not LoRA-by-default, not a marker file pretending to be weights.
-Larger full-SFT / multi-node remain operator backends behind the same
-contract.
+distill, preference pack, playbook fit, FAQ index, **reply pack**.
+`spark_reply_pack` is how you teach **voice and text replies** to a
+model that has **no voice**, or **change major behaviors** (greeting,
+transfer, IDK) without LoRA. Inventable rows need a SoT file; missing
+SoT **fails loud** (no fabricated hours/prices/IDs). That is the
+product story: not LoRA-by-default, not a marker file pretending to be
+weights. Larger full-SFT / multi-node remain operator backends behind
+the same contract.
+
+## Voice + text overlay (`spark_reply_pack`)
+
+Dataset JSONL may add fields on each chat row:
+
+| Field | Role |
+|-------|------|
+| `channel` | `text` \| `voice` \| `both` (default `both`) |
+| `speak` | Spoken script (defaults to assistant text) |
+| `behavior` | Named lock (`greeting`, `hours`, `transfer`, `idk`, …) |
+| `lock` | `true` = overlay **wins** over the base model |
+| `inventable` | Fact that must not be open-decoded |
+| `sot_ref` | **Required** when inventable (path to SoT JSON) |
+| `idk` | Halt string when SoT is missing at serve time |
+| `wav` | Optional path reference (not a neural clone) |
+
+A **text-only** base still gets a speak channel: Spark `speak reply`
+uses the pack script. This is **not** voice-GPU / LoRA TTS training.
+
+Inventable without `sot_ref` → trainer exit error
+(`refuse fabricate`). Gate artifact `gate.json` always has
+`no_fabricate: true` and `abstain_on_inventable: true`.
+
+Example: `examples/model_train_reply.spark` +
+`examples/fixtures/train/reply_pack.jsonl`.
 
 ## Not in MVP
 
