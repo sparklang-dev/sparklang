@@ -89,6 +89,10 @@
         <li>Positioning: not a Bifrost plugin; dry-run first</li>
         <li><code class="inline-code">http get</code> / <code class="inline-code">http post</code> + timeout + dry fixture files + live
           <code class="inline-code">./spark-http</code> with <code class="inline-code">bearer</code> / <code class="inline-code">header</code> + <code class="inline-code">retries</code> / <code class="inline-code">backoff</code></li>
+        <li><strong>SPARK_BC Builder factory (init):</strong> <code class="inline-code">--compile</code> Spark → <code class="inline-code">.sparkbc</code>
+          with <code class="inline-code">TRAIN</code>/<code class="inline-code">STEP</code>/<code class="inline-code">TRAIN_STATUS</code>; bootstrap <code class="inline-code">--run-bc</code> dry;
+          Spark-created init safetensors; published dumps + sha256. See
+          <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>. Dry ≠ trained.</li>
         </ul>
         <h2 id="next">Next</h2>
         <div class="doc__table-wrap"><table class="doc__table">
@@ -120,6 +124,10 @@
         <td>~~Wall-clock latency on live ask; run-level rollup~~ <strong>done</strong></td>
         </tr>
         <tr>
+        <td>Builder</td>
+        <td>STEP-updated weights file (<code class="inline-code">feat/sparkbc-step-weights</code>); later owner train toward beat-Claude — not claimed today</td>
+        </tr>
+        <tr>
         <td>LSP</td>
         <td>Prefer editor LSP + highlighting over IDE chrome</td>
         </tr>
@@ -129,7 +137,7 @@
         </tr>
         <tr>
         <td>Releases</td>
-        <td>Cut GitHub Release tags from CHANGELOG (see RELEASE.md)</td>
+        <td>Cut GitHub Release tags from CHANGELOG (see RELEASE.md); Pages = human CF dashboard (no wrangler)</td>
         </tr>
         </tbody>
         </table></div>

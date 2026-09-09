@@ -4,6 +4,28 @@ All notable user-facing releases of **SparkLang** (the Spark programming
 language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
+## 0.6.27 — 2026-09-08
+
+- **SPARK_BC factory docs (full E2E):** Engineer reproduction guide so
+  a stranger can rebuild every published artifact from docs alone —
+  SPARK_BC vs neural weights, opcodes `TRAIN` `0x26` /
+  `TRAIN_STATUS` `0x27` / `STEP` `0x28`, programs
+  (`selfhost/compile.spark`, `compile_train.spark`,
+  `examples/spark_builder.spark`, `spark_train_step.spark`,
+  `model_lab.spark`), `--compile` / `--run-bc` / GAS `--dry-run` /
+  dump / `make test-sparkbc` / `make test-model-lab`, sha256 table
+  for published `docs/examples/*`, GAS emit/`--run-bc` **BLOCKED**,
+  dry ≠ SGD ≠ trained, STEP→weights **in flight**
+  (`feat/sparkbc-step-weights`), Pages deploy = human CF dashboard
+  (no wrangler on box). Site: regen `website/docs/*` via
+  `tools/md_to_doc_html.py --all-stale`; Learn + homepage link
+  Builder; CHANGELOG.html mirrored. Pages:
+  [SPARK_BUILDER.md](docs/SPARK_BUILDER.md) /
+  `/docs/spark-builder.html`, [SPARK_BC.md](docs/SPARK_BC.md),
+  [RELEASE.md](docs/RELEASE.md) step 5,
+  [ADOPTION_BAR.md](docs/ADOPTION_BAR.md),
+  [ROADMAP.md](docs/ROADMAP.md).
+
 ## 0.6.26 — 2026-09-08
 
 - **Builder / SPARK_BC factory:** Spark compiles Spark to SPARK_BC

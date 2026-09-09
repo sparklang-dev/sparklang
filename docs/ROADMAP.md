@@ -21,6 +21,10 @@ Prioritized against the adoption bar. Status: **done** / **next** / **won't**
 - Positioning: not a Bifrost plugin; dry-run first
 - `http get` / `http post` + timeout + dry fixture files + live
   `./spark-http` with `bearer` / `header` + `retries` / `backoff`
+- **SPARK_BC Builder factory (init):** `--compile` Spark → `.sparkbc`
+  with `TRAIN`/`STEP`/`TRAIN_STATUS`; bootstrap `--run-bc` dry;
+  Spark-created init safetensors; published dumps + sha256. See
+  [SPARK_BUILDER.md](SPARK_BUILDER.md). Dry ≠ trained.
 
 ## Next
 
@@ -31,9 +35,10 @@ Prioritized against the adoption bar. Status: **done** / **next** / **won't**
 | Eval | Expectation pass/fail harness (not only alias compare) |
 | Escape | ~~Live `--allow-shell` argv policy; JS / C host FFI~~ **done** |
 | Accounting | ~~Wall-clock latency on live ask; run-level rollup~~ **done** |
+| Builder | STEP-updated weights file (`feat/sparkbc-step-weights`); later owner train toward beat-Claude — not claimed today |
 | LSP | Prefer editor LSP + highlighting over IDE chrome |
 | Receptionist | Promote `examples/receptionist_goal.spark` off `[goal]` when transfer + eval syntax exist |
-| Releases | Cut GitHub Release tags from CHANGELOG (see RELEASE.md) |
+| Releases | Cut GitHub Release tags from CHANGELOG (see RELEASE.md); Pages = human CF dashboard (no wrangler) |
 
 ## Done (rename)
 

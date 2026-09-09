@@ -11,6 +11,8 @@ sugar. Optional plan export is `model plan` (markdown). Live gateway
 not a Bifrost plugin.
 
 Full language forms: [LANGUAGE.md](LANGUAGE.md).
+Factory / SPARK_BC bytecode train ops (`0x26` / `0x28` / `0x27`) and
+published proofs: [SPARK_BUILDER.md](SPARK_BUILDER.md).
 
 ## Verbs
 
@@ -18,6 +20,7 @@ Full language forms: [LANGUAGE.md](LANGUAGE.md).
 |-----------|---------|
 | `model train … -> job` | Submit a train job (dry fixtures or live backend) |
 | `model build …` | **Same as train** (rehabilitated; not blueprint) |
+| `model step "job-id" -> step` | Dry loop tick (SPARK_BC `STEP` `0x28`; not SGD) |
 | `model reverse` / `inspect` | Local published architecture (config + index names) |
 | `model compile` | SPARK_BC plan for the `.spark` program |
 | `model modify keep_existing …` | Attach adapters/heads; keep special training |
