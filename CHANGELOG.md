@@ -7,6 +7,7 @@ language) are listed here. Site and installers track
 
 ## 0.6.53 — 2026-09-09
 
+<<<<<<< HEAD
 - **Decompile compete path:** richer SPARK_BC dump (sections,
   symbols, xrefs, `--json` / `--html`), analysis project folder,
   loud compile→dump→recompile hash (`make decompile-roundtrip`),
@@ -15,6 +16,23 @@ language) are listed here. Site and installers track
   [/docs/decompile-compete.html](/docs/decompile-compete.html).
   External RE tools skipped cleanly if absent. Never 6000; does
   **not** beat Claude; do not copy OpenBin.
+=======
+- **Sensory mapping 100× (Model aspects):** expand
+  [MODEL_ASPECTS.md](docs/MODEL_ASPECTS.md) →
+  [/docs/model-aspects.html](/docs/model-aspects.html) with hero
+  explainer, deep Ears/Eyes/Speaking/Thinking/Behaviors sections
+  (dataflows, opcodes/CLI/make, tiny vs large / never 6000, gaps),
+  agentic system loop SVG, Spark vs OpenBin Ask vs phone-voice
+  comparison (local SoT — not clones), 15-min how-to lab. Keeps
+  summary status table. New diagrams under `docs/images/diagram-*sense*`
+  + `diagram-agentic-sensory-loop.svg` +
+  `diagram-spark-vs-external-stacks.svg`. Cross-links Knowledge hive,
+  Voice ask, Voice easy, Methods vs OpenBin. Forge nav lists Model
+  aspects. **Honest:** eyes planned stub only; not beat Claude; never
+  6000; no OpenBin/phone clone. Also fix `md_to_doc_html.py` so
+  `![…](images/*.svg)` publishes as `<img>` under `/docs/images/`
+  (was incorrectly rewritten to inline code).
+>>>>>>> origin/main
 
 ## 0.6.52 — 2026-09-09
 

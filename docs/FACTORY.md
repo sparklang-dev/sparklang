@@ -69,7 +69,7 @@ make docs-check
 | **J** | Decompile research / captures | **Merged** (#26) + research expand — [DECOMPILE.md](DECOMPILE.md) + [research/LLM_DECOMPILE.md](research/LLM_DECOMPILE.md) (DecompAI / LLM4Decompile / EmergentMind / Quarkslab article + RE category / Plain English overview); flow diagrams also in [DIAGRAMS.md](DIAGRAMS.md) |
 | **K** | Helpers / shadows / kit | **Merged** (#27) — [TOOLS_HELPERS.md](TOOLS_HELPERS.md) |
 | **M** | Owned spark-coder TinyCoder | **Merged** (#30) — tiny CI + opt-in **large** (`--scale large` / `make spark-coder-train-large`); [SPARK_CODER.md](SPARK_CODER.md) |
-| **L** | AI model aspects (senses + behaviors) | **Merged** (#29) — [MODEL_ASPECTS.md](MODEL_ASPECTS.md); eyes stub only |
+| **L** | AI model aspects (senses + behaviors) | **Merged** (#29) + sensory 100× expand — [MODEL_ASPECTS.md](MODEL_ASPECTS.md); eyes stub only |
 
 ## Honesty bar
 

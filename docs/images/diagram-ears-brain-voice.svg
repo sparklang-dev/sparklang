@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 280" role="img" aria-labelledby="title desc">
-  <title id="title">Spark ears ’ brain ’ voice</title>
+  <title id="title">Spark ears to brain to voice</title>
   <desc id="desc">Audio in through STT into tokenizer and tiny CPU forward, then tools and TTS out. Vision is planned only.</desc>
   <defs>
     <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
@@ -7,13 +7,13 @@
     </marker>
   </defs>
   <rect width="920" height="280" fill="#f8fafc"/>
-  <text x="24" y="36" font-family="ui-sans-serif,system-ui,sans-serif" font-size="16" font-weight="700" fill="#0f172a">Ears ’ brain ’ voice (Spark / SparkLang)</text>
-  <text x="24" y="58" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#64748b">Honest: MLP0 serve today; attention decode partial; eyes not wired</text>
+  <text x="24" y="36" font-family="ui-sans-serif,system-ui,sans-serif" font-size="16" font-weight="700" fill="#0f172a">Ears - brain - voice (Spark / SparkLang)</text>
+  <text x="24" y="58" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#64748b">Honest: attn0+MLP0 serve (D #28); no RoPE/KV; eyes not wired</text>
 
   <rect x="24" y="90" width="150" height="88" rx="10" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
   <text x="99" y="126" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="14" font-weight="700" fill="#0c4a6e">Ears / STT</text>
   <text x="99" y="148" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#075985">listen + spark-stt-tts</text>
-  <text x="99" y="166" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#075985">dry stub · live sidecar</text>
+  <text x="99" y="166" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#075985">dry stub / live sidecar</text>
 
   <rect x="210" y="90" width="150" height="88" rx="10" fill="#f1f5f9" stroke="#475569" stroke-width="2"/>
   <text x="285" y="126" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="14" font-weight="700" fill="#1e293b">Tokenizer</text>
@@ -22,19 +22,19 @@
 
   <rect x="396" y="78" width="180" height="112" rx="10" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
   <text x="486" y="112" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="14" font-weight="700" fill="#064e3b">Thinking / brain</text>
-  <text x="486" y="134" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#065f46">embed ’ MLP0 ’ RMSNorm</text>
-  <text x="486" y="152" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#065f46">’ lm_head (CPU serve)</text>
-  <text x="486" y="170" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#047857">attn math: partial / planned</text>
+  <text x="486" y="134" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#065f46">embed - attn0 - MLP0</text>
+  <text x="486" y="152" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#065f46">- RMSNorm - lm_head</text>
+  <text x="486" y="170" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#047857">layer-0 only / no RoPE</text>
 
   <rect x="612" y="90" width="140" height="88" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
   <text x="682" y="126" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="14" font-weight="700" fill="#78350f">Behaviors</text>
-  <text x="682" y="148" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#92400e">tools · classify · pack</text>
-  <text x="682" y="166" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#92400e">ask · expect · abstain</text>
+  <text x="682" y="148" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#92400e">tools / classify / pack</text>
+  <text x="682" y="166" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#92400e">ask / expect / abstain</text>
 
   <rect x="788" y="90" width="110" height="88" rx="10" fill="#fae8ff" stroke="#a21caf" stroke-width="2"/>
   <text x="843" y="126" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="14" font-weight="700" fill="#701a75">Speaking</text>
   <text x="843" y="148" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#86198f">speak / TTS</text>
-  <text x="843" y="166" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#86198f">PCM · gated HTTP</text>
+  <text x="843" y="166" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#86198f">PCM / gated HTTP</text>
 
   <line x1="174" y1="134" x2="210" y2="134" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
   <line x1="360" y1="134" x2="396" y2="134" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
@@ -42,6 +42,6 @@
   <line x1="752" y1="134" x2="788" y2="134" stroke="#334155" stroke-width="2" marker-end="url(#arrow)"/>
 
   <rect x="396" y="214" width="180" height="44" rx="8" fill="#fff7ed" stroke="#ea580c" stroke-dasharray="5 4" stroke-width="2"/>
-  <text x="486" y="241" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#9a3412">Eyes / vision  planned stub only</text>
+  <text x="486" y="241" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#9a3412">Eyes / vision - planned stub only</text>
   <line x1="486" y1="214" x2="486" y2="190" stroke="#ea580c" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
 </svg>
