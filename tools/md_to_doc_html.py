@@ -22,6 +22,12 @@ DOC_NAV = """\
         <a href="/docs/ai-models.html"{ai}>AI models</a>
         <a href="/docs/model-training.html"{ai}>Model training</a>
         <a href="/docs/spark-builder.html"{bc}>Builder</a>
+        <a href="/docs/compile.html"{cp}>Compile</a>
+        <a href="/docs/decompile.html"{dc}>Decompile</a>
+        <a href="/docs/build-models.html"{bm}>Build models</a>
+        <a href="/docs/attention-forward.html"{af}>Attention / serve</a>
+        <a href="/docs/sparkbc-make.html"{mk}>Make targets</a>
+        <a href="/docs/spark-bc.html"{isa}>SPARK_BC ISA</a>
         <a href="/docs/native-network-web.html"{nn}>Network + web</a>
         <a href="/docs/programming-guide.html">Programming guide</a>
         <a href="/docs/language.html">Language reference</a>
@@ -69,6 +75,12 @@ HEADER = """\
                   <li><a href="/docs/adoption-bar.html">Adoption bar</a></li>
                   <li><a href="/docs/ai-models.html">AI models</a></li>
                   <li><a href="/docs/spark-builder.html">Builder</a></li>
+                  <li><a href="/docs/compile.html">Compile</a></li>
+                  <li><a href="/docs/decompile.html">Decompile</a></li>
+                  <li><a href="/docs/build-models.html">Build models</a></li>
+                  <li><a href="/docs/attention-forward.html">Attention / serve</a></li>
+                  <li><a href="/docs/sparkbc-make.html">Make targets</a></li>
+                  <li><a href="/docs/spark-bc.html">SPARK_BC ISA</a></li>
                   <li><a href="/docs/native-network-web.html">Network + web</a></li>
                   <li><a href="/docs/programming-guide.html">Programming guide</a></li>
                   <li><a href="/docs/ide.html">IDE</a></li>
@@ -121,9 +133,9 @@ SELF_HOST_CALLOUT = """\
 MD_LINK_MAP = {
     "LANGUAGE.md": "/docs/language.html",
     "ADOPTION_BAR.md": "/docs/adoption-bar.html",
-"ROADMAP.md": "/docs/roadmap.html",
-"RELEASE.md": "/docs/release.html",
-"AI_MODELS.md": "/docs/ai-models.html",
+    "ROADMAP.md": "/docs/roadmap.html",
+    "RELEASE.md": "/docs/release.html",
+    "AI_MODELS.md": "/docs/ai-models.html",
     "ASK_LIVE.md": "/docs/ai-models.html#live-gateway-integration-wired-today",
     "MODEL_ANALYSIS.md": "/docs/ai-models.html",
     "MODEL_TRAINING.md": "/docs/model-training.html",
@@ -132,11 +144,75 @@ MD_LINK_MAP = {
     "IDE.md": "/docs/ide.html",
     "VOICE.md": "/docs/language.html",
     "SELF_HOST.md": "/docs/self-host.html",
-    "SPARK_BC.md": "/docs/self-host.html",
+    "SPARK_BC.md": "/docs/spark-bc.html",
     "SPARK_BUILDER.md": "/docs/spark-builder.html",
     "NATIVE_NETWORK_WEB.md": "/docs/native-network-web.html",
     "TOKENIZER.md": "/docs/tokenizer.html",
+    "COMPILE.md": "/docs/compile.html",
+    "DECOMPILE.md": "/docs/decompile.html",
+    "BUILD_MODELS.md": "/docs/build-models.html",
+    "ATTENTION_FORWARD.md": "/docs/attention-forward.html",
+    "SPARKBC_MAKE.md": "/docs/sparkbc-make.html",
+    "MODEL_LAB.md": "/docs/model-training.html",
+    "ABSTAIN_HEADS.md": "/docs/abstain-heads.html",
 }
+
+# (current_key, md_name, html_name, title, description)
+DOC_PAGES = [
+    ("ab", "ADOPTION_BAR.md", "adoption-bar.html", "Adoption bar",
+     "SparkLang adoption checklist — done, next, won't."),
+    ("", "ROADMAP.md", "roadmap.html", "Roadmap",
+     "SparkLang roadmap — done, next, won't."),
+    ("", "RELEASE.md", "release.html", "Release process",
+     "How SparkLang versions and GitHub Releases are cut."),
+    ("ai", "AI_MODELS.md", "ai-models.html", "AI models",
+     "What SparkLang means for model train, analyze, compare, "
+     "improve, plan, live ask, and embed/retrieve."),
+    ("ai", "MODEL_TRAINING.md", "model-training.html", "Model training",
+     "SparkLang model train / build — real jobs, dry fixtures, "
+     "HTTP and local-yield backends."),
+    ("bc", "SPARK_BUILDER.md", "spark-builder.html",
+     "Builder — SPARK_BC factory",
+     "Spark compiles Spark to SPARK_BC (TRAIN 0x26 / "
+     "TRAIN_STATUS 0x27) and emits init weights. "
+     "Emitting TRAIN is not a trained model."),
+    ("cp", "COMPILE.md", "compile.html", "Compile — SPARK_BC",
+     "Compile Spark to SPARK_BC via bootstrap, GAS wrappers, "
+     "and sparkasm — engineer makefile map."),
+    ("dc", "DECOMPILE.md", "decompile.html",
+     "Decompile / inspect SPARK_BC",
+     "Dump, inspect, and disassemble SPARK_BC and related "
+     "binaries — hex mnemonics, not source recovery."),
+    ("bm", "BUILD_MODELS.md", "build-models.html",
+     "Build models — TRAIN / STEP",
+     "TRAIN, STEP, ARTIFACT, weights, and checkpoints on CPU "
+     "fixtures. Does not beat Claude."),
+    ("af", "ATTENTION_FORWARD.md", "attention-forward.html",
+     "Attention / MLP / serve",
+     "Honest status: init attn tensors, MLP0 serve forward, "
+     "attention math planned — not beat Claude."),
+    ("mk", "SPARKBC_MAKE.md", "sparkbc-make.html",
+     "SPARK_BC makefile targets",
+     "test-sparkbc, sparkbc-e2e, spark-sgd-proof, spark-eval, "
+     "and related factory gates."),
+    ("isa", "SPARK_BC.md", "spark-bc.html", "SPARK_BC ISA",
+     "Spark bytecode ISA — opcodes, pools, dry-run contracts."),
+    ("", "LANGUAGE.md", "language.html", "Language reference",
+     "SparkLang statement reference — ask, classify, embed, "
+     "retrieve, shell, voice, pipeline, and more."),
+    ("", "PROGRAMMING_GUIDE.md", "programming-guide.html",
+     "Programming guide",
+     "How to write and run SparkLang programs — dry-run, "
+     "live flags, host embed, and first programs."),
+    ("sh", "SELF_HOST.md", "self-host.html", "Contributor internals",
+     "Spark self-host path: A + B bootstrap + C assembler, "
+     "SPARK_BC stages, and evidence gates."),
+    ("nn", "NATIVE_NETWORK_WEB.md", "native-network-web.html",
+     "Native network + web",
+     "Network/web ops — de-emphasized vs http get/post roadmap."),
+    ("", "TOKENIZER.md", "tokenizer.html", "Tokenizer — BPE seed vocab",
+     "From-nothing byte-level BPE seed vocab for Spark."),
+]
 
 
 def slugify(text: str) -> str:
@@ -207,14 +283,11 @@ def render(md_path: Path, out_path: Path, title: str, description: str, current:
         extensions=["tables", "fenced_code", "sane_lists"],
     )
     body = decorate_html(body)
-    nav = DOC_NAV.format(
-        ab=' aria-current="page"' if current == "ab" else "",
-        ai=' aria-current="page"' if current == "ai" else "",
-        nn=' aria-current="page"' if current == "nn" else "",
-        ide=' aria-current="page"' if current == "ide" else "",
-        sh=' aria-current="page"' if current == "sh" else "",
-        bc=' aria-current="page"' if current == "bc" else "",
-    )
+    keys = ("ab", "ai", "nn", "ide", "sh", "bc", "cp", "dc", "bm", "af", "mk", "isa")
+    nav_kwargs = {
+        k: (' aria-current="page"' if current == k else "") for k in keys
+    }
+    nav = DOC_NAV.format(**nav_kwargs)
     prefix = ""
     if current == "sh":
         prefix = SELF_HOST_CALLOUT
@@ -240,101 +313,67 @@ def indented_or(body: str) -> str:
     return body
 
 
+def expected_html_paths() -> list[Path]:
+    """Website HTML paths produced by --all-stale."""
+    out = ROOT / "website" / "docs"
+    return [out / html_name for _, _, html_name, _, _ in DOC_PAGES]
+
+
+def check_docs_links() -> int:
+    """Fail if expected docs HTML or nav href targets are missing."""
+    missing: list[str] = []
+    for path in expected_html_paths():
+        if not path.is_file():
+            missing.append(str(path.relative_to(ROOT)))
+    nav_hrefs = re.findall(r'href="(/docs/[^"]+\.html)"', DOC_NAV)
+    more_hrefs = re.findall(r'href="(/docs/[^"]+\.html)"', HEADER)
+    for href in sorted(set(nav_hrefs + more_hrefs)):
+        disk = ROOT / "website" / href.lstrip("/")
+        if not disk.is_file():
+            missing.append(href)
+    if missing:
+        print("docs link-check FAILED:")
+        for m in missing:
+            print(f"  missing {m}")
+        return 1
+    print(
+        "docs link-check OK "
+        f"({len(expected_html_paths())} pages, "
+        f"{len(set(nav_hrefs + more_hrefs))} nav hrefs)"
+    )
+    return 0
+
+
 def main() -> int:
+    """Regenerate website docs HTML and/or check nav targets."""
     ap = argparse.ArgumentParser()
     ap.add_argument(
         "--all-stale",
         action="store_true",
         help="Regenerate docs HTML including builder / SPARK_BC dump",
     )
+    ap.add_argument(
+        "--check",
+        action="store_true",
+        help="Verify expected website/docs HTML paths exist",
+    )
     args = ap.parse_args()
     docs = ROOT / "docs"
     out = ROOT / "website" / "docs"
     if args.all_stale:
-        render(
-            docs / "ADOPTION_BAR.md",
-            out / "adoption-bar.html",
-            "Adoption bar",
-            "SparkLang adoption checklist — done, next, won't.",
-            "ab",
-        )
-        render(
-            docs / "ROADMAP.md",
-            out / "roadmap.html",
-            "Roadmap",
-            "SparkLang roadmap — done, next, won't.",
-            "",
-        )
-        render(
-            docs / "RELEASE.md",
-            out / "release.html",
-            "Release process",
-            "How SparkLang versions and GitHub Releases are cut.",
-            "",
-        )
-        render(
-            docs / "AI_MODELS.md",
-            out / "ai-models.html",
-            "AI models",
-            "What SparkLang means for model train, analyze, compare, "
-            "improve, plan, live ask, and embed/retrieve.",
-            "ai",
-        )
-        render(
-            docs / "MODEL_TRAINING.md",
-            out / "model-training.html",
-            "Model training",
-            "SparkLang model train / build — real jobs, dry fixtures, "
-            "HTTP and local-yield backends.",
-            "ai",
-        )
-        render(
-            docs / "SPARK_BUILDER.md",
-            out / "spark-builder.html",
-            "Builder — SPARK_BC factory",
-            "Spark compiles Spark to SPARK_BC (TRAIN 0x26 / "
-            "TRAIN_STATUS 0x27) and emits init weights. "
-            "Emitting TRAIN is not a trained model.",
-            "bc",
-        )
-        render(
-            docs / "LANGUAGE.md",
-            out / "language.html",
-            "Language reference",
-            "SparkLang statement reference — ask, classify, embed, "
-            "retrieve, shell, voice, pipeline, and more.",
-            "",
-        )
-        render(
-            docs / "PROGRAMMING_GUIDE.md",
-            out / "programming-guide.html",
-            "Programming guide",
-            "How to write and run SparkLang programs — dry-run, "
-            "live flags, host embed, and first programs.",
-            "",
-        )
-        render(
-            docs / "SELF_HOST.md",
-            out / "self-host.html",
-            "Contributor internals",
-            "Spark self-host path: A + B bootstrap + C assembler, "
-            "SPARK_BC stages, and evidence gates.",
-            "sh",
-        )
-        render(
-            docs / "NATIVE_NETWORK_WEB.md",
-            out / "native-network-web.html",
-            "Native network + web",
-            "Network/web ops — de-emphasized vs http get/post roadmap.",
-            "nn",
-        )
-        render(
-            docs / "TOKENIZER.md",
-            out / "tokenizer.html",
-            "Tokenizer — BPE seed vocab",
-            "From-nothing byte-level BPE seed vocab for Spark.",
-            "",
-        )
+        for current, md_name, html_name, title, description in DOC_PAGES:
+            render(
+                docs / md_name,
+                out / html_name,
+                title,
+                description,
+                current,
+            )
+    if args.check:
+        return check_docs_links()
+    if not args.all_stale and not args.check:
+        ap.print_help()
+        return 2
     return 0
 
 

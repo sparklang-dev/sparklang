@@ -19,7 +19,7 @@ NVML_LIB ?= /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1
 	spark-bc spark-bc-pack-hello sparkasm \
 	test-sparkasm test-sparkasm-control docs-docx function-catalog \
 	playbooks-catalog spark-eval spark-eval-claude test-spark-eval \
-	spark-sgd-proof spark-sgd-proof-scale
+	spark-sgd-proof spark-sgd-proof-scale docs-html docs-check
 
 all: spark companions
 
@@ -31,6 +31,15 @@ ide:
 # No invented content — TOC/headers/ops-index from existing MD only.
 docs-docx:
 	python3 tools/docs_docx.py --rebuild-reference
+
+.PHONY: docs-html docs-check
+docs-html:
+	python3 tools/md_to_doc_html.py --all-stale
+
+docs-check: docs-html
+	python3 tools/md_to_doc_html.py --check
+	PYTHONPATH=python python3 -m unittest \
+		tools.test_docs_nav -v
 
 function-catalog:
 	python3 tools/gen_function_catalog.py

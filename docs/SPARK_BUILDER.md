@@ -380,6 +380,11 @@ make test-model-lab
 
 - Builder page live on production Pages:
   https://sparklang.dev/docs/spark-builder.html
+- Engineer factory docs: [COMPILE.md](COMPILE.md) ·
+  [DECOMPILE.md](DECOMPILE.md) ·
+  [BUILD_MODELS.md](BUILD_MODELS.md) ·
+  [ATTENTION_FORWARD.md](ATTENTION_FORWARD.md) ·
+  [SPARKBC_MAKE.md](SPARKBC_MAKE.md)
 - [SPARK_BC.md](SPARK_BC.md)
 - [MODEL_LAB.md](MODEL_LAB.md)
 - [AI_MODELS.md](AI_MODELS.md)
