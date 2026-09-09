@@ -5,6 +5,18 @@ language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
 
+## 0.6.46 — 2026-09-09
+
+- **Docs honesty after D+M:** rebase
+  [ATTENTION_FORWARD.md](docs/ATTENTION_FORWARD.md),
+  [ARCHITECTURE.md](docs/ARCHITECTURE.md),
+  [FACTORY.md](docs/FACTORY.md), [SERVE.md](docs/SERVE.md),
+  [TRAIN_LOOP.md](docs/TRAIN_LOOP.md),
+  [MODEL_ASPECTS.md](docs/MODEL_ASPECTS.md) so tip claims match
+  merged D (#28) layer-0 attn train+serve and M (#30) owned
+  TinyCoder. Still **not** beat Claude; never 6000; no RoPE /
+  multi-layer / KV-cache claim.
+
 ## 0.6.45 — 2026-09-09
 
 - **UI polish / smooth feel:** shared design tokens

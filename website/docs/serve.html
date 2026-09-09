@@ -165,14 +165,16 @@
         </tbody>
         </table></div>
         <p>Implementation: <code class="inline-code">python/sparklang/model_lab/serve_api.py</code> wraps
-        <code class="inline-code">run_tiny_forward</code> / <code class="inline-code">run_tiny_embed</code> — <strong>no</strong> attention math of its
-        own. Builder §6c: <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</p>
+        <code class="inline-code">run_tiny_forward</code> / <code class="inline-code">run_tiny_embed</code> — same path as file SERVE
+        (now <strong>attn0</strong> when tensors exist; D #28). Builder §6c:
+        <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</p>
         <p>Optional live <strong>gateway</strong> ask/embed (Bifrost etc.) is a different
         surface — <a href="/docs/ai-models.html">AI_MODELS.md</a> / <a href="/docs/ai-models.html#live-gateway-integration-wired-today">ASK_LIVE.md</a>.</p>
         <h2 id="never">Never</h2>
         <ul class="doc__ul">
         <li>Claim production LLM serving.</li>
-        <li>Claim attention decode in serve on tip.</li>
+        <li>Claim multi-layer / RoPE / KV-cache decode (layer-0 last-query
+          only).</li>
         <li>Claim beat Claude from SERVE / predict JSON.</li>
         <li>Bind serve training to the 6000.</li>
         </ul>

@@ -207,8 +207,8 @@ PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
 ### 6c) Serve HTTP / stdio API (G-lane)
 
 Wraps the same tiny CPU forward behind a local JSON API
-(predict next-token + embeddings). Attention forward (D-lane) is
-not required — uses whatever tensors `serve.py` already runs.
+(predict next-token + embeddings). Uses whatever tensors
+`serve.py` already runs (attn0 when present — D #28).
 **Not production. Never 6000.**
 
 ```bash

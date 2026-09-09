@@ -10,12 +10,12 @@ SparkLang** only. Tensor names from
 
 | Piece | Init tensors | Used in STEP SGD | Used in serve forward |
 |-------|--------------|------------------|------------------------|
-| `spark.embed` | **yes** | optional grads | mean-pool **yes** |
+| `spark.embed` | **yes** | optional grads (+ attn path) | last-token / mean-pool **yes** |
 | `spark.lm_head` | **yes** | **yes** (primary) | **yes** |
-| `spark.final_norm` (RMSNorm) | **yes** | no | **yes** (after MLP0) |
-| Layer MLP SwiGLU (`mlp_up/gate/down`, `mlp_norm`) | **yes** | no | **MLP0 yes** |
-| Layer attn (`q/k/v/o`, `attn_norm`) | **yes** (allocated) | **no** | **no** |
-| RoPE / GQA / KV cache | sparkasm macros only | **no** | **no** |
+| `spark.final_norm` (RMSNorm) | **yes** | via attn path | **yes** (after attn0/MLP0) |
+| Layer MLP SwiGLU (`mlp_up/gate/down`, `mlp_norm`) | **yes** | no (serve only) | **MLP0 yes** |
+| Layer attn (`q/k/v/o`, `attn_norm`) | **yes** | **layer-0 yes** (D) | **attn0 yes** (D) |
+| RoPE / multi-layer / KV cache | sparkasm macros only | **no** | **no** |
 
 ## Defaults (tip)
 
@@ -24,22 +24,27 @@ shapes match `control.sparkasm` comments (e.g. small `dim`, few
 layers, GQA head counts) — **re-read** `weights.py` /
 `control.sparkasm` for live numbers; do not invent a 3B claim.
 
-Opt-in larger `dim` / `n_layer` for CPU-fast stubs may land via
-**F-lane**; until merged, CI keeps defaults.
+Opt-in larger `dim` / `n_layer` for CPU-fast stubs: **F-lane**
+(`make spark-sgd-proof-scale`).
 
 ## Embed → logits paths
 
-**Serve (implemented):**
+**Serve (implemented, D #28):**
 
-`embed_mean_pool -> mlp0 -> rms_norm -> lm_head`
+`embed -> attn0 -> mlp0 -> rms_norm -> lm_head`
+
+(when layer-0 attn tensors exist; else mean-pool → MLP0 path)
+
+**Train STEP (implemented, D #28):**
+
+last-query causal MHA CE on layer-0 q/k/v/o (+ embed / lm_head).
+`--no-train-attn` keeps mean-pool CE.
 
 **sparkasm documented (not a VM):**
 
 full block = pre-norm attn (GQA+RoPE) + SwiGLU MLP — shape-checked
-by `make test-sparkasm-control` only.
-
-**Attention train/serve math:** sibling **D-lane** — planned /
-in-flight; rebase this page when it merges.
+by `make test-sparkasm-control` only. RoPE still **not** in the
+Python CPU path.
 
 Detail: [ATTENTION_FORWARD.md](ATTENTION_FORWARD.md).
 

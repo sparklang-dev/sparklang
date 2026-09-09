@@ -137,7 +137,7 @@
         <tr>
         <td><strong>Thinking</strong></td>
         <td>LLM forward / generation</td>
-        <td>Tiny CPU <code class="inline-code">embed→MLP0→RMSNorm→lm_head</code>; attention math <strong>partial</strong></td>
+        <td>Tiny CPU <code class="inline-code">embed→attn0→MLP0→RMSNorm→lm_head</code> (D #28); fixture-scale</td>
         </tr>
         <tr>
         <td><strong>Behaviors</strong></td>
@@ -166,22 +166,22 @@
         <tr>
         <td>Token embed (<code class="inline-code">spark.embed</code>)</td>
         <td><strong>implemented</strong></td>
-        <td>Init + mean-pool serve; optional STEP grads</td>
+        <td>Init + serve; optional STEP grads</td>
         </tr>
         <tr>
         <td>Layers / MLP (SwiGLU MLP0)</td>
         <td><strong>implemented</strong> (serve)</td>
-        <td><a href="/docs/serve.html">SERVE.md</a>; MLP0 only in forward</td>
+        <td><a href="/docs/serve.html">SERVE.md</a>; MLP0 in forward</td>
         </tr>
         <tr>
-        <td>Attention (QKVO / GQA / RoPE)</td>
-        <td><strong>partial</strong></td>
-        <td>Tensors allocated; forward <strong>skips</strong> attn — D-lane</td>
+        <td>Attention (QKVO / GQA)</td>
+        <td><strong>implemented</strong> (layer-0)</td>
+        <td>D #28 — last-query MHA train+serve; <strong>no</strong> RoPE</td>
         </tr>
         <tr>
         <td>RMSNorm / <code class="inline-code">lm_head</code></td>
         <td><strong>implemented</strong></td>
-        <td>Serve path after MLP0</td>
+        <td>Serve path after attn0/MLP0</td>
         </tr>
         <tr>
         <td>Memory / context window</td>
@@ -215,8 +215,8 @@
         </tr>
         <tr>
         <td>Train / adaptation</td>
-        <td><strong>implemented</strong> (CPU)</td>
-        <td>STEP SGD + five HTTP train methods — not LoRA/voice-GPU</td>
+        <td><strong>implemented</strong> (CPU/5090)</td>
+        <td>STEP SGD + owned TinyCoder (M #30) — never 6000</td>
         </tr>
         <tr>
         <td>Eval / honesty</td>
@@ -226,7 +226,7 @@
         <tr>
         <td>Runtime serve</td>
         <td><strong>implemented</strong></td>
-        <td><code class="inline-code">spark-serve</code> / <code class="inline-code">spark-serve-api</code> MLP0 CPU</td>
+        <td><code class="inline-code">spark-serve</code> / <code class="inline-code">spark-serve-api</code> attn0+MLP0 CPU</td>
         </tr>
         <tr>
         <td>Multimodal fused I/O</td>
@@ -240,7 +240,7 @@
         <pre class="mermaid">flowchart LR
           EAR["Ears — listen / STT<br/>spark-stt-tts"]
           TOK["Tokenizer / bindings"]
-          BRN["Thinking — tiny CPU forward<br/>embed → MLP0 → lm_head"]
+          BRN["Thinking — tiny CPU forward<br/>embed → attn0 → MLP0 → lm_head"]
           TOOL["Tools / behaviors<br/>classify · ask · reply pack"]
           VOC["Speaking — speak / TTS<br/>PCM or SPARK_TTS_*"]
           EAR --> TOK --> BRN
@@ -418,12 +418,16 @@
         <td><strong>yes</strong> in serve</td>
         </tr>
         <tr>
-        <td>Multi-layer attn decode</td>
-        <td><strong>no</strong> (tensors allocated only)</td>
+        <td>Layer-0 last-query attn (D #28)</td>
+        <td><strong>yes</strong> train + serve</td>
         </tr>
         <tr>
-        <td>RoPE / GQA / KV cache</td>
-        <td>sparkasm macros / shape check — <strong>not</strong> tensor VM</td>
+        <td>Multi-layer attn decode</td>
+        <td><strong>no</strong></td>
+        </tr>
+        <tr>
+        <td>RoPE / KV cache</td>
+        <td>sparkasm macros / shape check — <strong>not</strong> in Python path</td>
         </tr>
         </tbody>
         </table></div>
@@ -461,7 +465,7 @@
         <tr>
         <td>Transformer KV cache</td>
         <td><strong>not</strong></td>
-        <td>No attention decode on tip</td>
+        <td>Layer-0 last-query only; no KV cache</td>
         </tr>
         <tr>
         <td>RAG <code class="inline-code">retrieve</code> / <code class="inline-code">embed</code></td>
@@ -524,8 +528,8 @@
         </tr>
         <tr>
         <td>Attention train math</td>
-        <td><strong>planned</strong> (D)</td>
-        <td>Document when merged</td>
+        <td><strong>implemented</strong> (D #28)</td>
+        <td>layer-0 last-query MHA; see <a href="/docs/attention-forward.html">ATTENTION_FORWARD.md</a></td>
         </tr>
         </tbody>
         </table></div>

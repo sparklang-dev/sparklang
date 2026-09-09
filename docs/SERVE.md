@@ -56,8 +56,9 @@ make test-serve-api
 | `POST /v1/embeddings` | Embeddings from Spark weights |
 
 Implementation: `python/sparklang/model_lab/serve_api.py` wraps
-`run_tiny_forward` / `run_tiny_embed` — **no** attention math of its
-own. Builder §6c: [SPARK_BUILDER.md](SPARK_BUILDER.md).
+`run_tiny_forward` / `run_tiny_embed` — same path as file SERVE
+(now **attn0** when tensors exist; D #28). Builder §6c:
+[SPARK_BUILDER.md](SPARK_BUILDER.md).
 
 Optional live **gateway** ask/embed (Bifrost etc.) is a different
 surface — [AI_MODELS.md](AI_MODELS.md) / [ASK_LIVE.md](ASK_LIVE.md).
@@ -65,7 +66,8 @@ surface — [AI_MODELS.md](AI_MODELS.md) / [ASK_LIVE.md](ASK_LIVE.md).
 ## Never
 
 - Claim production LLM serving.
-- Claim attention decode in serve on tip.
+- Claim multi-layer / RoPE / KV-cache decode (layer-0 last-query
+  only).
 - Claim beat Claude from SERVE / predict JSON.
 - Bind serve training to the 6000.
 

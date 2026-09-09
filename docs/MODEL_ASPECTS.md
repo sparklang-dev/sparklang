@@ -17,7 +17,7 @@ Factory hub: [FACTORY.md](FACTORY.md). Companion senses detail:
 | **Ears** | STT / audio in | Language `listen` + `./spark-stt-tts` (dry stub / live sidecar) |
 | **Eyes** | Vision / image in | **Not in runtime** — thin Python interface stub only |
 | **Speaking** | TTS / audio out | Language `speak` + PCM synth / optional HTTP TTS |
-| **Thinking** | LLM forward / generation | Tiny CPU `embed→MLP0→RMSNorm→lm_head`; attention math **partial** |
+| **Thinking** | LLM forward / generation | Tiny CPU `embed→attn0→MLP0→RMSNorm→lm_head` (D #28); fixture-scale |
 | **Behaviors** | Policies, tools, turn-taking, safety, train/eval | `.spark` language + reply packs + `tool` / dry ask |
 
 External production voice stacks (other products) are **out of scope**
@@ -28,19 +28,19 @@ here — Spark documents its own language surface and companions.
 | Aspect | Status | Where / notes |
 |--------|--------|---------------|
 | Tokenizer (byte BPE seed) | **implemented** | [TOKENIZER.md](TOKENIZER.md); `python/sparklang/tokenize/` |
-| Token embed (`spark.embed`) | **implemented** | Init + mean-pool serve; optional STEP grads |
-| Layers / MLP (SwiGLU MLP0) | **implemented** (serve) | [SERVE.md](SERVE.md); MLP0 only in forward |
-| Attention (QKVO / GQA / RoPE) | **partial** | Tensors allocated; forward **skips** attn — D-lane |
-| RMSNorm / `lm_head` | **implemented** | Serve path after MLP0 |
+| Token embed (`spark.embed`) | **implemented** | Init + serve; optional STEP grads |
+| Layers / MLP (SwiGLU MLP0) | **implemented** (serve) | [SERVE.md](SERVE.md); MLP0 in forward |
+| Attention (QKVO / GQA) | **implemented** (layer-0) | D #28 — last-query MHA train+serve; **no** RoPE |
+| RMSNorm / `lm_head` | **implemented** | Serve path after attn0/MLP0 |
 | Memory / context window | **partial** | Script bindings + dry fixtures; **no** KV-cache decode |
 | Tools / actions | **implemented** (dry) | `tool` / `with tools`; live tool bus **planned** |
 | Ears / STT | **implemented** (surface) | Dry stub; live sidecar / whisper / gated HTTP |
 | Eyes / vision | **planned** | Stub module only — no `look` opcode on tip |
 | Speaking / TTS | **implemented** (surface) | Dry WAV marker; live PCM synth / gated HTTP |
 | Behaviors / policies | **partial** | `spark_reply_pack`, abstain heads, expect; no full SM |
-| Train / adaptation | **implemented** (CPU) | STEP SGD + five HTTP train methods — not LoRA/voice-GPU |
+| Train / adaptation | **implemented** (CPU/5090) | STEP SGD + owned TinyCoder (M #30) — never 6000 |
 | Eval / honesty | **implemented** | `make spark-eval`; optional Claude baseline — **not** beat Claude |
-| Runtime serve | **implemented** | `spark-serve` / `spark-serve-api` MLP0 CPU |
+| Runtime serve | **implemented** | `spark-serve` / `spark-serve-api` attn0+MLP0 CPU |
 | Multimodal fused I/O | **planned** | Text+voice demos exist; no joint vision+LM tensors |
 
 ## Diagram — ears → brain → voice
@@ -51,7 +51,7 @@ here — Spark documents its own language surface and companions.
 flowchart LR
   EAR["Ears — listen / STT<br/>spark-stt-tts"]
   TOK["Tokenizer / bindings"]
-  BRN["Thinking — tiny CPU forward<br/>embed → MLP0 → lm_head"]
+  BRN["Thinking — tiny CPU forward<br/>embed → attn0 → MLP0 → lm_head"]
   TOOL["Tools / behaviors<br/>classify · ask · reply pack"]
   VOC["Speaking — speak / TTS<br/>PCM or SPARK_TTS_*"]
   EAR --> TOK --> BRN
@@ -178,8 +178,9 @@ Code: `python/sparklang/model_lab/serve.py`. HTTP/stdio:
 |-------|--------|
 | Embed + lm_head | **yes** |
 | MLP0 SwiGLU | **yes** in serve |
-| Multi-layer attn decode | **no** (tensors allocated only) |
-| RoPE / GQA / KV cache | sparkasm macros / shape check — **not** tensor VM |
+| Layer-0 last-query attn (D #28) | **yes** train + serve |
+| Multi-layer attn decode | **no** |
+| RoPE / KV cache | sparkasm macros / shape check — **not** in Python path |
 
 ### Language `ask` / classify / extract
 
@@ -197,7 +198,7 @@ Cross-link: [ATTENTION_FORWARD.md](ATTENTION_FORWARD.md) ·
 | Statement bindings (`->`) | **implemented** | In-script memory for one run |
 | Pipeline `|` chaining | **implemented** | Passes last values |
 | Gateway chat history | **external** | Only if the live gateway keeps it — not Spark KV |
-| Transformer KV cache | **not** | No attention decode on tip |
+| Transformer KV cache | **not** | Layer-0 last-query only; no KV cache |
 | RAG `retrieve` / `embed` | **implemented** (dry + live companion) | Project fixtures / `spark-rag-http` |
 | Long-term episodic store | **planned** | Not a shipped product claim |
 
@@ -234,7 +235,7 @@ Also actions: `http get`/`post`, `shell`/`run` (gated), `implement`,
 | Init weights from BC | **implemented** | Xavier from SPARK_BC bytes |
 | Five HTTP train methods | **implemented** | distill / pref / playbook / FAQ / reply pack — CPU |
 | LoRA / voice-GPU | **won't (claim)** | Not sold on sparklang.dev |
-| Attention train math | **planned** (D) | Document when merged |
+| Attention train math | **implemented** (D #28) | layer-0 last-query MHA; see [ATTENTION_FORWARD.md](ATTENTION_FORWARD.md) |
 
 [TRAIN_LOOP.md](TRAIN_LOOP.md) · [BUILD_MODELS.md](BUILD_MODELS.md) ·
 [MODEL_TRAINING.md](MODEL_TRAINING.md) · [SPARK_BUILDER.md](SPARK_BUILDER.md).
