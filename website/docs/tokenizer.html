@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tokenizer — BPE seed vocab — Spark</title>
+    <meta name="description" content="From-nothing byte-level BPE seed vocab for Spark." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/css/tokens.css?v=bb4433f" />
+    <link rel="stylesheet" href="/css/site.css?v=bb4433f" />
+  </head>
+  <body class="doc-page">
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="site-brand" href="/" aria-label="Spark home">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z" fill="currentColor" />
+          </svg>
+          Spark
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+        </button>
+        <div class="header-nav-wrap">
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <ul class="nav-primary">
+              <li><a href="/learn/">Learn</a></li>
+              <li><a href="/docs/language.html">Docs</a></li>
+              <li><a href="/downloads.html">Download</a></li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">More</button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/adoption-bar.html">Adoption bar</a></li>
+                  <li><a href="/docs/ai-models.html">AI models</a></li>
+                  <li><a href="/docs/spark-builder.html">Builder</a></li>
+                  <li><a href="/docs/native-network-web.html">Network + web</a></li>
+                  <li><a href="/docs/programming-guide.html">Programming guide</a></li>
+                  <li><a href="/docs/ide.html">IDE</a></li>
+                  <li><a href="/docs/self-host.html">Contributor internals</a></li>
+                </ul>
+              </li>
+            </ul>
+            <a href="/playground.html" class="nav-cta">Try</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <div class="shell doc-layout">
+      <aside class="doc-sidebar" aria-label="Table of contents">
+        <p class="doc-sidebar__title">On this page</p>
+        <nav id="doc-toc-list"></nav>
+      </aside>
+      <main class="doc-main">
+      <nav class="doc__nav" aria-label="Docs">
+        <a href="/learn/">Learn</a>
+        <a href="/docs/adoption-bar.html">Adoption bar</a>
+        <a href="/docs/ai-models.html">AI models</a>
+        <a href="/docs/model-training.html">Model training</a>
+        <a href="/docs/spark-builder.html">Builder</a>
+        <a href="/docs/native-network-web.html">Network + web</a>
+        <a href="/docs/programming-guide.html">Programming guide</a>
+        <a href="/docs/language.html">Language reference</a>
+        <a href="/docs/ide.html">IDE</a>
+        <a href="/docs/self-host.html">Contributor internals</a>
+        <a href="/downloads.html">Downloads</a>
+      </nav>      <article class="doc__body">
+        <h1 id="byte-level-bpe-tokenizer-seed-from-nothing">Byte-level BPE tokenizer seed (from nothing)</h1>
+        <p>Spark trains a <strong>deterministic byte-level BPE</strong> vocab from a tiny
+        <strong>in-repo</strong> fixture — not FineWeb, not HuggingFace downloads.</p>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Piece</th>
+        <th>Path</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td>Trainer</td>
+        <td><code class="inline-code">python/sparklang/tokenize/</code></td>
+        </tr>
+        <tr>
+        <td>Pinned corpus</td>
+        <td><code class="inline-code">examples/fixtures/tokenize/seed_corpus.txt</code> (LF ASCII)</td>
+        </tr>
+        <tr>
+        <td>Vocab artifact</td>
+        <td><code class="inline-code">docs/examples/spark-bpe-vocab.json</code></td>
+        </tr>
+        <tr>
+        <td>Hash sidecar</td>
+        <td><code class="inline-code">docs/examples/spark-bpe-vocab.json.sha256</code></td>
+        </tr>
+        <tr>
+        <td>Determinism gate</td>
+        <td><code class="inline-code">tools/spark-bpe-seed/test_bpe.py</code> / <code class="inline-code">make test-bpe-seed</code></td>
+        </tr>
+        </tbody>
+        </table></div>
+        <p>Format <code class="inline-code">spark-bpe-v1</code>: 256 byte base + N merges (default <strong>64</strong> →
+        vocab size <strong>320</strong>). Tie-break on equal pair counts is
+        lexicographically smaller <code class="inline-code">(left, right)</code> token id.</p>
+        <p>Packing this vocab into a SPARK_BC string/const pool is <strong>optional
+        later</strong> — the minimum ship is the reproducible JSON + sha256 under
+        <code class="inline-code">docs/examples/</code>.</p>
+        <h2 id="reproduce">Reproduce</h2>
+        <pre class="doc__pre"><code class="language-bash"># Train (writes JSON + .sha256 sidecar)
+        PYTHONPATH=python python3 -m sparklang.tokenize train \
+          --corpus examples/fixtures/tokenize/seed_corpus.txt \
+          --merges 64 \
+          --out docs/examples/spark-bpe-vocab.json
+
+        # Verify committed hash matches a fresh train
+        PYTHONPATH=python python3 -m sparklang.tokenize verify
+
+        # Determinism gate (trains twice + checks committed)
+        make test-bpe-seed
+        </code></pre>
+        <p>Pinned hashes (LF corpus; do not change without re-emitting):</p>
+        <pre class="doc__pre"><code class="inline-code">corpus_sha256=63b47d211ddfcecf241fff0976294216c233448a5ef6ef67fe6668b733d32fdf
+        vocab_sha256=c20f899bbd552b2773447838be31827952d8494c110613c9ade1cb8a07c21226
+        </code></pre>
+        <h2 id="never">Never</h2>
+        <ul class="doc__ul">
+        <li>Download FineWeb / large web dumps for this seed</li>
+        <li>Rely on platform CRLF (corpus is LF-only; <code class="inline-code">.gitattributes</code> pins it)</li>
+        <li>Claim this tiny BPE beats a production LLM tokenizer</li>
+        </ul>
+      </article>
+      </main>
+    </div>
+
+    <footer class="site-footer">
+      <div class="shell footer-inner">
+        <span>Spark programming language</span>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="/learn/">Learn</a>
+          <a href="/docs/language.html">Reference</a>
+          <a href="/downloads.html">Downloads</a>
+          <a href="/playground.html">Playground</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="/js/site.js"></script>
+  </body>
+</html>
