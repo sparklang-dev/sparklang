@@ -5,6 +5,19 @@ language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
 
+## 0.6.40 — 2026-09-09
+
+- **AI model aspects (L-lane):** engineer hub for behaviors, ears/STT,
+  eyes/vision, speaking/TTS, thinking/generation, memory, tools,
+  train, eval, and serve wiring. Page:
+  [MODEL_ASPECTS.md](docs/MODEL_ASPECTS.md) →
+  `/docs/model-aspects.html`. Voice detail also published at
+  `/docs/voice.html`. SVG diagrams: ears→brain→voice and
+  behavior/tool loop under `docs/images/`. Thin **planned** vision
+  stub: `python/sparklang/senses/` (`make test-senses`). Honest:
+  STT/TTS language surface exists; vision runtime **not** shipped;
+  attention decode still partial; **not** beat Claude; never 6000.
+
 ## 0.6.39 — 2026-09-09
 
 - **Decompile UX + LLM research (J-lane):** step-by-step

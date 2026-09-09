@@ -4,6 +4,9 @@ AI voice **listen/speak (STT/TTS)**, **reviewer**, **coder (codifer)**,
 **copier**, **written voice models**, and **PSTN** (off by default).
 Asm: `asm/voice_ops.s`. Companions: `./spark-stt-tts`, `./spark-pstn-dial`.
 
+Whole-model map (behaviors + ears/eyes/speaking + thinking):
+[MODEL_ASPECTS.md](MODEL_ASPECTS.md).
+
 Spark stays a generic language; optional vendor voice ids are config only.
 
 ## Syntax
@@ -200,4 +203,5 @@ DTMF / STT retry); named STT/TTS/telephony adapter contracts; multi-call
 concurrency model.
 
 Until those land, keep voice **optional / gated** on the marketing site.
-See [ADOPTION_BAR.md](ADOPTION_BAR.md) and [ROADMAP.md](ROADMAP.md).
+See [ADOPTION_BAR.md](ADOPTION_BAR.md), [ROADMAP.md](ROADMAP.md), and
+[MODEL_ASPECTS.md](MODEL_ASPECTS.md).

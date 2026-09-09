@@ -55,6 +55,8 @@ If CLI/auth absent → Cloudflare dashboard Direct Upload of
 - https://sparklang.dev/
 - https://sparklang.dev/CHANGELOG.html
 - https://sparklang.dev/docs/factory.html
+- https://sparklang.dev/docs/model-aspects.html
+- https://sparklang.dev/docs/voice.html
 - https://sparklang.dev/docs/spark-builder.html
 - https://sparklang.dev/docs/compile.html
 - https://sparklang.dev/downloads.html

@@ -7,8 +7,8 @@
     <meta name="description" content="What SparkLang means for model train, analyze, compare, improve, plan, live ask, and embed/retrieve." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
-    <link rel="stylesheet" href="/css/tokens.css?v=jlane039" />
-    <link rel="stylesheet" href="/css/site.css?v=jlane039" />
+    <link rel="stylesheet" href="/css/tokens.css?v=modelaspects040" />
+    <link rel="stylesheet" href="/css/site.css?v=modelaspects040" />
   </head>
   <body class="doc-page">
     <header class="site-header">
@@ -34,6 +34,8 @@
                 <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">More</button>
                 <ul class="nav-more__menu" hidden>
                   <li><a href="/docs/factory.html">Factory hub</a></li>
+                  <li><a href="/docs/model-aspects.html">Model aspects</a></li>
+                  <li><a href="/docs/voice.html">Voice / STT / TTS</a></li>
                   <li><a href="/docs/diagrams.html">Diagrams</a></li>
                   <li><a href="/docs/spark-builder.html">Builder</a></li>
                   <li><a href="/docs/compile.html">Compile</a></li>
@@ -72,6 +74,8 @@
       <nav class="doc__nav" aria-label="Docs">
         <a href="/learn/">Learn</a>
         <a href="/docs/factory.html">Factory hub</a>
+        <a href="/docs/model-aspects.html">Model aspects</a>
+        <a href="/docs/voice.html">Voice</a>
         <a href="/docs/diagrams.html">Diagrams</a>
         <a href="/docs/spark-builder.html">Builder</a>
         <a href="/docs/compile.html">Compile</a>
@@ -99,7 +103,9 @@
         plain <code class="inline-code">.spark</code> files you can diff, dry-run, and ship.</p>
         <p><strong>Default story:</strong> dry-run / offline / no keys. Live <code class="inline-code">ask</code> / <code class="inline-code">embed</code> /
         <code class="inline-code">retrieve</code> via gateway env is <strong>optional</strong> (<code class="inline-code">./spark --live</code>).</p>
-        <p><strong>Related:</strong> <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> (full factory E2E —
+        <p><strong>Related:</strong> <a href="/docs/model-aspects.html">MODEL_ASPECTS.md</a> (behaviors + ears/eyes/speaking +
+        thinking + tools — honest status) ·
+        <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> (full factory E2E —
         SPARK_BC vs weights; <code class="inline-code">TRAIN</code> <code class="inline-code">0x26</code> / <code class="inline-code">STEP</code> <code class="inline-code">0x28</code> /
         <code class="inline-code">TRAIN_STATUS</code> <code class="inline-code">0x27</code>; sha256 table; GAS <code class="inline-code">--run-bc</code>/<code class="inline-code">--compile</code> wrappers; dry ≠ trained) ·
         <a href="/docs/spark-bc.html">SPARK_BC.md</a> (bytecode ISA) ·
@@ -331,7 +337,7 @@
         interim Cursor workspace (<code class="inline-code">make ide</code>). Not Electron / not PyQt product chrome.</p>
         <p>Voice (<code class="inline-code">listen</code> / <code class="inline-code">speak</code> / <code class="inline-code">voice { … }</code>) remains in the language for
         speech pipelines — it is an <strong>optional</strong> surface, not primary positioning. See
-        <a href="/docs/language.html">VOICE.md</a>.</p>
+        <a href="/docs/voice.html">VOICE.md</a>.</p>
         <h2 id="what-spark-is-not">What Spark is not</h2>
         <ul class="doc__ul">
         <li>Not a Bifrost plugin — gateway is optional live backend for <code class="inline-code">ask</code> /

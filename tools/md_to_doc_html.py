@@ -13,12 +13,14 @@ from pathlib import Path
 import markdown
 
 ROOT = Path(__file__).resolve().parents[1]
-CSS_V = "jlane039"
+CSS_V = "modelaspects040"
 
 DOC_NAV = """\
       <nav class="doc__nav" aria-label="Docs">
         <a href="/learn/">Learn</a>
         <a href="/docs/factory.html"{fy}>Factory hub</a>
+        <a href="/docs/model-aspects.html"{ma}>Model aspects</a>
+        <a href="/docs/voice.html"{vo}>Voice</a>
         <a href="/docs/diagrams.html"{dg}>Diagrams</a>
         <a href="/docs/spark-builder.html"{bc}>Builder</a>
         <a href="/docs/compile.html"{cp}>Compile</a>
@@ -76,6 +78,8 @@ HEADER = """\
                 <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">More</button>
                 <ul class="nav-more__menu" hidden>
                   <li><a href="/docs/factory.html">Factory hub</a></li>
+                  <li><a href="/docs/model-aspects.html">Model aspects</a></li>
+                  <li><a href="/docs/voice.html">Voice / STT / TTS</a></li>
                   <li><a href="/docs/diagrams.html">Diagrams</a></li>
                   <li><a href="/docs/spark-builder.html">Builder</a></li>
                   <li><a href="/docs/compile.html">Compile</a></li>
@@ -153,7 +157,8 @@ MD_LINK_MAP = {
     "AI_PLAYBOOKS.md": "/learn/build-model.html",
     "ENCRYPT_GATEWAY.md": "/docs/ai-models.html",
     "IDE.md": "/docs/ide.html",
-    "VOICE.md": "/docs/language.html",
+    "VOICE.md": "/docs/voice.html",
+    "MODEL_ASPECTS.md": "/docs/model-aspects.html",
     "SELF_HOST.md": "/docs/self-host.html",
     "SPARK_BC.md": "/docs/spark-bc.html",
     "SPARK_BUILDER.md": "/docs/spark-builder.html",
@@ -181,6 +186,13 @@ DOC_PAGES = [
     ("fy", "FACTORY.md", "factory.html", "Factory documentation hub",
      "Map of SparkLang SPARK_BC factory docs — compile through "
      "eval, serve, CI/Pages. Does not beat Claude."),
+    ("ma", "MODEL_ASPECTS.md", "model-aspects.html",
+     "AI model aspects",
+     "Behaviors, ears/STT, eyes/vision, speaking/TTS, thinking, "
+     "memory, tools, train, eval, serve — honest status table."),
+    ("vo", "VOICE.md", "voice.html", "Voice — STT / TTS / PSTN",
+     "Spark listen/speak companions, dry stubs, gated live STT/TTS "
+     "and PSTN. Not production telephony."),
     ("dg", "DIAGRAMS.md", "diagrams.html", "Factory diagrams",
      "How Spark tools and LLM assist relate — compile, decompile, "
      "train, serve, shadows. Deterministic SoT; never beat Claude."),
@@ -342,7 +354,7 @@ def render(md_path: Path, out_path: Path, title: str, description: str, current:
     keys = (
         "ab", "ai", "nn", "ide", "sh", "bc", "cp", "dc", "rd", "bm",
         "af", "mk", "isa", "fy", "dg", "tl", "ar", "tk", "sv", "ev",
-        "ci",
+        "ci", "ma", "vo",
     )
     nav_kwargs = {
         k: (' aria-current="page"' if current == k else "") for k in keys

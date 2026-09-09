@@ -9,7 +9,9 @@ plain `.spark` files you can diff, dry-run, and ship.
 **Default story:** dry-run / offline / no keys. Live `ask` / `embed` /
 `retrieve` via gateway env is **optional** (`./spark --live`).
 
-**Related:** [SPARK_BUILDER.md](SPARK_BUILDER.md) (full factory E2E —
+**Related:** [MODEL_ASPECTS.md](MODEL_ASPECTS.md) (behaviors + ears/eyes/speaking +
+thinking + tools — honest status) ·
+[SPARK_BUILDER.md](SPARK_BUILDER.md) (full factory E2E —
 SPARK_BC vs weights; `TRAIN` `0x26` / `STEP` `0x28` /
 `TRAIN_STATUS` `0x27`; sha256 table; GAS `--run-bc`/`--compile` wrappers; dry ≠ trained) ·
 [SPARK_BC.md](SPARK_BC.md) (bytecode ISA) ·

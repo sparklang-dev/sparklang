@@ -40,6 +40,8 @@ class TestDocsNav(unittest.TestCase):
         """H-lane markdown sources are present under docs/."""
         for name in (
             "FACTORY.md",
+            "MODEL_ASPECTS.md",
+            "VOICE.md",
             "DIAGRAMS.md",
             "COMPILE.md",
             "DECOMPILE.md",
@@ -57,6 +59,15 @@ class TestDocsNav(unittest.TestCase):
             "SPARK_BUILDER.md",
         ):
             path = ROOT / "docs" / name
+            self.assertTrue(path.is_file(), msg=name)
+
+    def test_model_aspect_svgs_exist(self) -> None:
+        """L-lane sensory diagrams are present under docs/images/."""
+        for name in (
+            "diagram-ears-brain-voice.svg",
+            "diagram-behavior-tool-loop.svg",
+        ):
+            path = ROOT / "docs" / "images" / name
             self.assertTrue(path.is_file(), msg=name)
 
 
