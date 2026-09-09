@@ -102,9 +102,8 @@
       </nav>      <article class="doc__body">
         <h1 id="attention-heads-mlp-serve-forward">Attention heads / MLP / serve forward</h1>
         <p>Honest status of <strong>neural forward</strong> pieces next to SPARK_BC.
-        Spark / SparkLang only. Sibling lanes own train/serve math and
-        HTTP API code — this page <strong>documents</strong> tip/<code class="inline-code">main</code>, it does not
-        reimplement them.</p>
+        Spark / SparkLang only. Documents tip/<code class="inline-code">main</code> after <strong>D-lane</strong>
+        (#28) attention train + serve landed.</p>
         <h2 id="summary-table">Summary table</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
@@ -126,14 +125,14 @@
         <td>same</td>
         </tr>
         <tr>
-        <td>Tiny CPU serve: embed → <strong>MLP0</strong> → RMSNorm → lm_head</td>
+        <td>Tiny CPU serve: embed → <strong>attn0</strong> → optional <strong>MLP0</strong> → RMSNorm → lm_head</td>
         <td><strong>implemented</strong></td>
-        <td><code class="inline-code">serve.py</code> / <code class="inline-code">dump.py --serve</code> / <code class="inline-code">./spark-serve</code></td>
+        <td><code class="inline-code">serve.py</code> / <code class="inline-code">dump.py --serve</code> when layer-0 attn tensors exist</td>
         </tr>
         <tr>
-        <td>Tiny CPU serve: <strong>attention</strong> (QKVO / GQA / RoPE)</td>
-        <td><strong>not</strong></td>
-        <td>tensors exist; forward path skips attn</td>
+        <td>Tiny CPU serve: attention (last-query causal MHA / GQA)</td>
+        <td><strong>implemented</strong></td>
+        <td>D-lane; no RoPE math yet</td>
         </tr>
         <tr>
         <td><code class="inline-code">control.sparkasm</code> ATTN / ROPE macros</td>
@@ -141,19 +140,24 @@
         <td><code class="inline-code">make test-sparkasm-control</code> — not a tensor VM</td>
         </tr>
         <tr>
-        <td>Attention train / serve math (factory D-lane)</td>
-        <td><strong>planned / in-flight</strong></td>
-        <td>document when merged; do not claim early</td>
+        <td>Attention train (factory D-lane)</td>
+        <td><strong>implemented</strong></td>
+        <td><code class="inline-code">apply_sgd_step</code> default <code class="inline-code">train_attn=True</code>; <code class="inline-code">--no-train-attn</code> = mean-pool CE</td>
         </tr>
         <tr>
         <td>HTTP serve API (factory G-lane)</td>
-        <td><strong>planned / sibling</strong></td>
-        <td>link code when on tip; not invented here</td>
+        <td><strong>implemented</strong></td>
+        <td><code class="inline-code">make spark-serve-api</code> — see <a href="/docs/serve.html">SERVE.md</a></td>
         </tr>
         <tr>
         <td>Beat Claude</td>
         <td><strong>not</strong></td>
         <td>never claim from docs</td>
+        </tr>
+        <tr>
+        <td>RTX PRO 6000 train</td>
+        <td><strong>never</strong></td>
+        <td>voice-only; 5090 OK</td>
         </tr>
         </tbody>
         </table></div>
@@ -166,35 +170,33 @@
           --serve /tmp/serve-dry-001
         </code></pre>
         <p>Writes <code class="inline-code">SERVE</code> with <code class="inline-code">forward=true</code> and honest <code class="inline-code">trained</code> from
-        weights meta. Path string when MLP tensors exist:</p>
-        <p><code class="inline-code">embed_mean_pool-&gt;mlp0-&gt;rms_norm-&gt;lm_head</code></p>
-        <p>Code: <code class="inline-code">python/sparklang/model_lab/serve.py</code> (<code class="inline-code">_mlp_block</code>,
-        <code class="inline-code">run_tiny_forward</code>). Gate: <code class="inline-code">make test-sparkbc</code> →
-        <code class="inline-code">test_serve_forward</code> in <code class="inline-code">tools/spark-bc-dump/test_dump.py</code>.</p>
-        <p><strong>Not</strong> a production LLM. <strong>Not</strong> multi-layer attn decode.</p>
-        <h2 id="attention-heads-what-exists-vs-planned">Attention heads (what exists vs planned)</h2>
-        <p><strong>Exists today</strong></p>
-        <ol class="doc__ol">
-        <li><strong>Weight names</strong> for a tiny control stack — <code class="inline-code">attn_norm</code>, <code class="inline-code">q</code>,
-           <code class="inline-code">k</code>, <code class="inline-code">v</code>, <code class="inline-code">o</code> per layer in init safetensors
-           (<code class="inline-code">python/sparklang/model_lab/weights.py</code>).</li>
-        <li><strong>sparkasm documentation</strong> of GQA + RoPE + <code class="inline-code">ATTN</code> macros in
-           <code class="inline-code">examples/models/control.sparkasm</code> (checked by
-           <code class="inline-code">sparkasm_check.py</code>).</li>
-        <li>Optional lab inspect of <strong>index</strong> names via model reverse.</li>
-        </ol>
-        <p><strong>Not on tip</strong></p>
+        weights meta. Path string when layer-0 attn (+ optional MLP)
+        tensors exist:</p>
+        <p><code class="inline-code">embed-&gt;attn0-&gt;mlp0-&gt;rms_norm-&gt;lm_head</code></p>
+        <p>Code: <code class="inline-code">python/sparklang/model_lab/serve.py</code> (<code class="inline-code">_attn_block</code>,
+        <code class="inline-code">_mlp_block</code>, <code class="inline-code">run_tiny_forward</code>) and
+        <code class="inline-code">python/sparklang/model_lab/attn.py</code>. Gate: <code class="inline-code">make test-sparkbc</code>
+        → <code class="inline-code">tools/spark-bc-dump/test_dump.py</code>.</p>
+        <p><strong>Not</strong> a production LLM. <strong>Not</strong> multi-layer full-decode /
+        RoPE. Fixture-scale only.</p>
+        <h2 id="attention-train-d-lane-on-tip">Attention train (D-lane on tip)</h2>
+        <pre class="doc__pre"><code class="language-bash">make spark-sgd-proof
+        # asserts train_attn, copy_recall&gt;0, next_token&gt;0, beats_claude=false
+        </code></pre>
         <ul class="doc__ul">
-        <li>Running attention in <code class="inline-code">serve.py</code> / SGD STEP (STEP trains
-          <code class="inline-code">lm_head</code> / optional embed — not attn blocks).</li>
-        <li>Claiming multi-head train quality or Claude-parity.</li>
+        <li>Module: <code class="inline-code">python/sparklang/model_lab/attn.py</code> (last-query causal
+          MHA forward + backward).</li>
+        <li>SGD: <code class="inline-code">weights.py</code> <code class="inline-code">apply_sgd_step(..., train_attn=True)</code> via
+          <code class="inline-code">tools/spark-bc-dump/apply_step.py</code>.</li>
+        <li>Eval path uses attn0 when weights present
+          (<code class="inline-code">tools/spark-eval/run.py</code>).</li>
+        <li>Docs: <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>. Changelog <strong>0.6.44</strong>.</li>
         </ul>
-        <p>When D-lane attention land merges to <code class="inline-code">main</code>, rebase this page and
-        cite the makefile / module paths — do not invent opcodes.</p>
+        <p><strong>Not</strong> claiming multi-head production quality or Claude-parity.</p>
         <h2 id="mlp0-what-exists">MLP0 (what exists)</h2>
         <p>Layer-0 SwiGLU-style block on CPU when tensors are present
-        (CHANGELOG <strong>0.6.32</strong>). Used in serve after mean-pool embed.
-        Still fixture-scale.</p>
+        (CHANGELOG <strong>0.6.32</strong>). Used in serve after attn0 (or mean-pool
+        when <code class="inline-code">--no-train-attn</code> / missing attn tensors). Still fixture-scale.</p>
         <h2 id="spark-bc-vs-tensor-asm">SPARK_BC vs tensor asm</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
@@ -221,11 +223,9 @@
         <p>Do not call sparkasm “SPARK_BC decompile.”</p>
         <h2 id="related">Related</h2>
         <ul class="doc__ul">
-        <li><a href="/docs/architecture.html">ARCHITECTURE.md</a> · <a href="/docs/serve.html">SERVE.md</a></li>
-        <li><a href="/docs/build-models.html">Build models</a> · <a href="/docs/compile.html">Compile</a></li>
-        <li><a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> § serve</li>
-        <li><a href="/docs/sparkbc-make.html">SPARKBC_MAKE.md</a> · <a href="/docs/factory.html">FACTORY.md</a></li>
-        <li><a href="/docs/abstain-heads.html">ABSTAIN_HEADS.md</a> (IDK heads — separate product surface)</li>
+        <li><a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> · <a href="/docs/train-loop.html">TRAIN_LOOP.md</a></li>
+        <li><a href="/docs/serve.html">SERVE.md</a> · <a href="/docs/architecture.html">ARCHITECTURE.md</a></li>
+        <li><a href="/docs/factory.html">FACTORY.md</a> · <a href="/docs/eval.html">EVAL.md</a></li>
         </ul>
       </article>
       </main>

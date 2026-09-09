@@ -244,7 +244,7 @@
         <tr>
         <td><strong>D</strong></td>
         <td>Attention train/serve math</td>
-        <td>Document as planned until on <code class="inline-code">main</code></td>
+        <td><strong>Merged</strong> (#28) — <a href="/docs/attention-forward.html">ATTENTION_FORWARD.md</a> / <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a></td>
         </tr>
         <tr>
         <td><strong>E</strong></td>
@@ -284,7 +284,7 @@
         <tr>
         <td><strong>M</strong></td>
         <td>Owned spark-coder TinyCoder</td>
-        <td><strong>This lane</strong> — <a href="/docs/spark-coder.html">SPARK_CODER.md</a></td>
+        <td><strong>Merged</strong> (#30) — <a href="/docs/spark-coder.html">SPARK_CODER.md</a></td>
         </tr>
         <tr>
         <td><strong>L</strong></td>
@@ -295,11 +295,14 @@
         </table></div>
         <h2 id="honesty-bar">Honesty bar</h2>
         <ul class="doc__ul">
-        <li>Multi-outer CPU SGD + MLP0 serve + frozen eval — <strong>yes</strong> on tip.</li>
+        <li>Multi-outer CPU SGD + layer-0 attn train + MLP0 serve + frozen
+          eval — <strong>yes</strong> on tip (D #28).</li>
+        <li>Owned TinyCoder (<code class="inline-code">make spark-coder-train</code>) — <strong>yes</strong> (M #30).</li>
         <li>Ears/speaking language surface + companions — <strong>yes</strong> (dry/live gated).</li>
         <li>Eyes / vision runtime — <strong>no</strong> (planned stub only).</li>
         <li>Beat Claude — <strong>no</strong>.</li>
-        <li>Full attention forward in serve — <strong>no</strong> (tensors allocated).</li>
+        <li>Multi-layer / RoPE / production attn decode — <strong>no</strong> (layer-0
+          last-query MHA only).</li>
         <li>RTX PRO <strong>6000</strong> train — <strong>never</strong> (voice-only).</li>
         <li>RTX <strong>5090</strong> — OK for factory GPU train when used.</li>
         </ul>
