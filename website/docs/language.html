@@ -7,8 +7,8 @@
     <meta name="description" content="SparkLang statement reference — ask, classify, embed, retrieve, shell, voice, pipeline, and more." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
-    <link rel="stylesheet" href="/css/tokens.css?v=jlane039" />
-    <link rel="stylesheet" href="/css/site.css?v=jlane039" />
+    <link rel="stylesheet" href="/css/tokens.css?v=modelaspects040" />
+    <link rel="stylesheet" href="/css/site.css?v=modelaspects040" />
   </head>
   <body class="doc-page">
     <header class="site-header">
@@ -34,6 +34,8 @@
                 <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">More</button>
                 <ul class="nav-more__menu" hidden>
                   <li><a href="/docs/factory.html">Factory hub</a></li>
+                  <li><a href="/docs/model-aspects.html">Model aspects</a></li>
+                  <li><a href="/docs/voice.html">Voice / STT / TTS</a></li>
                   <li><a href="/docs/diagrams.html">Diagrams</a></li>
                   <li><a href="/docs/spark-builder.html">Builder</a></li>
                   <li><a href="/docs/compile.html">Compile</a></li>
@@ -72,6 +74,8 @@
       <nav class="doc__nav" aria-label="Docs">
         <a href="/learn/">Learn</a>
         <a href="/docs/factory.html">Factory hub</a>
+        <a href="/docs/model-aspects.html">Model aspects</a>
+        <a href="/docs/voice.html">Voice</a>
         <a href="/docs/diagrams.html">Diagrams</a>
         <a href="/docs/spark-builder.html">Builder</a>
         <a href="/docs/compile.html">Compile</a>
@@ -534,7 +538,7 @@
         <p>Dry-run returns <code class="inline-code">{ label, confidence, reasons }</code>. Invalid labels fail loud.</p>
         <h3 id="listen-speak-voice-first-class"><code class="inline-code">listen</code> / <code class="inline-code">speak</code> / <code class="inline-code">voice</code> (first-class)</h3>
         <p>Provider-agnostic STT/TTS primitives. Extended voice surface
-        (review / code / copy / model / pstn): <a href="/docs/language.html">VOICE.md</a>.</p>
+        (review / code / copy / model / pstn): <a href="/docs/voice.html">VOICE.md</a>.</p>
         <pre class="doc__pre"><code class="inline-code">listen &quot;input.wav&quot; -&gt; transcript
         speak &quot;Hello&quot; -&gt; &quot;out.wav&quot;
         speak with model brand_voice
@@ -558,7 +562,7 @@
         (<code class="inline-code">speak … -&gt; "path"</code> honored). <code class="inline-code">--live</code> forks <code class="inline-code">./spark-stt-tts</code>
         (real WAV/mic/synth/local whisper; vendor HTTP OFF unless
         <code class="inline-code">SPARK_STT_NET</code> / <code class="inline-code">SPARK_TTS_NET</code> / <code class="inline-code">SPARK_SPEECH_NET=1</code> —
-        see <a href="/docs/language.html">VOICE.md</a>).
+        see <a href="/docs/voice.html">VOICE.md</a>).
         <code class="inline-code">voice review</code> <strong>byte-parses</strong> real RIFF/WAVE (not invented metrics);
         <code class="inline-code">voice code|copy|model</code> write real artifacts under <code class="inline-code">out/</code>.
         PSTN never places in <code class="inline-code">--dry-run</code> / <code class="inline-code">make test</code> (companion gated OFF).</p>

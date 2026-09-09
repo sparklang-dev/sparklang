@@ -8,11 +8,16 @@ SGD, attention, or serve APIs — links code + makefile targets.
 Reproduction story: [SPARK_BUILDER.md](SPARK_BUILDER.md).
 **Diagrams:** [DIAGRAMS.md](DIAGRAMS.md) — tool map, shadows, LLM
 assist vs deterministic SoT.
+**AI model aspects (L):** [MODEL_ASPECTS.md](MODEL_ASPECTS.md) —
+behaviors, ears/STT, eyes/vision, speaking/TTS, thinking, memory,
+tools, train, eval, serve.
 
 ## Map (everything)
 
 | Topic | Doc | Site |
 |-------|-----|------|
+| **AI model aspects** | [MODEL_ASPECTS.md](MODEL_ASPECTS.md) | [/docs/model-aspects.html](/docs/model-aspects.html) |
+| Voice / STT / TTS | [VOICE.md](VOICE.md) | [/docs/voice.html](/docs/voice.html) |
 | **Diagrams (tools + LLM)** | [DIAGRAMS.md](DIAGRAMS.md) | [/docs/diagrams.html](/docs/diagrams.html) |
 | Compile / assemble | [COMPILE.md](COMPILE.md) | [/docs/compile.html](/docs/compile.html) |
 | Decompile / dump / inspect | [DECOMPILE.md](DECOMPILE.md) | [/docs/decompile.html](/docs/decompile.html) |
@@ -49,12 +54,16 @@ make docs-check
 | **E** | Claude eval harness | **Merged** — see [EVAL.md](EVAL.md) |
 | **F** | Scale fixtures / dim knobs | **Merged** — see [TRAIN_LOOP.md](TRAIN_LOOP.md) / `spark-sgd-proof-scale` |
 | **G** | Serve HTTP/API | **Merged** — see [SERVE.md](SERVE.md) / `make spark-serve-api` |
-| **H** | Website + factory docs | **Merged** (#23) — this hub + [DIAGRAMS.md](DIAGRAMS.md) |
-| **J** | Decompile research / captures | **Not merged yet** — when live, link from [DECOMPILE.md](DECOMPILE.md); flow diagrams stay in [DIAGRAMS.md](DIAGRAMS.md) |
+| **H** | Website + factory docs | **Merged** (#23/#25) — this hub + [DIAGRAMS.md](DIAGRAMS.md) |
+| **J** | Decompile research / captures | **Merged** (#26) — [DECOMPILE.md](DECOMPILE.md) + [research/LLM_DECOMPILE.md](research/LLM_DECOMPILE.md); flow diagrams also in [DIAGRAMS.md](DIAGRAMS.md) |
+| **L** | AI model aspects (senses + behaviors) | **This page set** — [MODEL_ASPECTS.md](MODEL_ASPECTS.md); eyes stub only |
+| **I / K** | SDK / helpers / shadows | Mentioned under tools vs behaviors; do not steal |
 
 ## Honesty bar
 
 - Multi-outer CPU SGD + MLP0 serve + frozen eval — **yes** on tip.
+- Ears/speaking language surface + companions — **yes** (dry/live gated).
+- Eyes / vision runtime — **no** (planned stub only).
 - Beat Claude — **no**.
 - Full attention forward in serve — **no** (tensors allocated).
 - 6000 train — **never**.

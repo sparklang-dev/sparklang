@@ -22,6 +22,7 @@ exists.
 | [ABSTAIN_HEADS.md](ABSTAIN_HEADS.md) | IDK / abstain heads + `./spark-abstain`; flagship `examples/no_invent.spark` |
 | [ASK_LIVE.md](ASK_LIVE.md) | Optional live gateway `ask` |
 | [VOICE.md](VOICE.md) | STT/TTS / PSTN |
+| [MODEL_ASPECTS.md](MODEL_ASPECTS.md) | Behaviors, ears/eyes/speaking, thinking, tools |
 | [ENCRYPT_GATEWAY.md](ENCRYPT_GATEWAY.md) | Encrypt-to-model |
 | [MODEL_ANALYSIS.md](MODEL_ANALYSIS.md) | Model analyze/improve |
 | [OS_DESIGN.md](OS_DESIGN.md) | OS blueprints |

@@ -48,14 +48,20 @@ test-sdk-pack: spark-bootstrap
 docs-docx:
 	python3 tools/docs_docx.py --rebuild-reference
 
-.PHONY: docs-html docs-check
+.PHONY: docs-html docs-check test-senses
 docs-html:
 	python3 tools/md_to_doc_html.py --all-stale
+	mkdir -p website/docs/images
+	cp -a docs/images/. website/docs/images/
 
 docs-check: docs-html
 	python3 tools/md_to_doc_html.py --check
 	PYTHONPATH=python python3 -m unittest \
 		tools.test_docs_nav -v
+
+test-senses:
+	PYTHONPATH=python python3 -m unittest \
+		sparklang.senses.test_senses -v
 
 function-catalog:
 	python3 tools/gen_function_catalog.py

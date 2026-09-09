@@ -6,6 +6,9 @@ they do **not** replace `--compile`, `dump.py`, or `bc_vm`.
 **Never** beat Claude. **Never** 6000 train.
 
 Hub: [FACTORY.md](FACTORY.md). Builder: [SPARK_BUILDER.md](SPARK_BUILDER.md).
+**Model aspects (L):** [MODEL_ASPECTS.md](MODEL_ASPECTS.md) — ears →
+brain → voice SVG + behavior/tool loops (does not replace these
+factory tool diagrams).
 
 **J-lane (landed):** decompile how-to with CLI captures + SVG
 tool diagrams — [DECOMPILE.md](DECOMPILE.md) /
