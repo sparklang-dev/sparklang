@@ -23,6 +23,7 @@ DOC_NAV = """\
         <a href="/docs/model-aspects.html"{ma}>Model aspects</a>
         <a href="/docs/voice.html"{vo}>Voice</a>
         <a href="/docs/voice-ask.html"{va}>Voice ask</a>
+        <a href="/docs/voice-easy.html"{ve}>Voice easy</a>
         <a href="/docs/diagrams.html"{dg}>Diagrams</a>
         <a href="/docs/spark-builder.html"{bc}>Builder</a>
         <a href="/docs/compile.html"{cp}>Compile</a>
@@ -187,6 +188,7 @@ MD_LINK_MAP = {
     "IDE.md": "/docs/ide.html",
     "VOICE.md": "/docs/voice.html",
     "VOICE_ASK.md": "/docs/voice-ask.html",
+    "VOICE_EASY.md": "/docs/voice-easy.html",
     "MODEL_ASPECTS.md": "/docs/model-aspects.html",
     "SELF_HOST.md": "/docs/self-host.html",
     "SPARK_BC.md": "/docs/spark-bc.html",
@@ -266,6 +268,10 @@ DOC_PAGES = [
      "Voice ask — dump / binary Q&A",
      "STT → SPARK_BC dump context → TinyCoder → TTS. "
      "No OpenBin login. Tiny; does not beat Claude."),
+("ve", "VOICE_EASY.md", "voice-easy.html",
+     "Voice easy — train STT / TTS",
+     "Piece-of-cake owned voice heads (tiny CI + large opt-in). "
+     "Prefer 5090; never 6000. Not ElevenLabs overnight."),
     ("dg", "DIAGRAMS.md", "diagrams.html", "Factory diagrams",
      "How Spark tools and LLM assist relate — compile, decompile, "
      "train, serve, shadows. Deterministic SoT; never beat Claude."),
@@ -446,7 +452,7 @@ def render(md_path: Path, out_path: Path, title: str, description: str, current:
     keys = (
         "ab", "ai", "nn", "ide", "sh", "bc", "cp", "dc", "rd", "bm",
         "af", "mk", "th", "mo", "isa", "fy", "kh", "dg", "tl", "sc", "wg",
-        "ar", "tk", "sv", "ev", "ci", "ma", "vo", "va",
+        "ar", "tk", "sv", "ev", "ci", "ma", "vo", "va", "ve",
     )
     nav_kwargs = {
         k: (' aria-current="page"' if current == k else "") for k in keys

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Voice easy — train STT / TTS — Spark</title>
+    <meta name="description" content="Piece-of-cake owned voice heads (tiny CI + large opt-in). Prefer 5090; never 6000. Not ElevenLabs overnight." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/css/tokens.css?v=knowledge0909" />
+    <link rel="stylesheet" href="/css/site.css?v=knowledge0909" />
+  </head>
+  <body class="doc-page">
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="site-brand" href="/" aria-label="Spark home">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z" fill="currentColor" />
+          </svg>
+          Spark
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+        </button>
+        <div class="header-nav-wrap">
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <ul class="nav-primary">
+              <li><a href="/workflow.html">Loop</a></li>
+              <li><a href="/learn/">Learn</a></li>
+              <li><a href="/docs/knowledge.html">Knowledge</a></li>
+              <li><a href="/docs/language.html">Docs</a></li>
+              <li><a href="/docs/factory.html">Factory</a></li>
+              <li><a href="/downloads.html">Download</a></li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">Hive</button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/knowledge.html">Knowledge hub</a></li>
+                  <li><a href="/docs/knowledge-llm.html">LLMs & transformers</a></li>
+                  <li><a href="/docs/knowledge-training.html">Training</a></li>
+                  <li><a href="/docs/knowledge-inference.html">Inference</a></li>
+                  <li><a href="/docs/knowledge-multimodal.html">Multimodal</a></li>
+                  <li><a href="/docs/knowledge-agents.html">Agents & tools</a></li>
+                  <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                  <li><a href="/docs/knowledge-decompile.html">Decompile + RE</a></li>
+                  <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
+                  <li><a href="/docs/llm-decompile.html">LLM decompile research</a></li>
+                </ul>
+              </li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">Forge</button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/model-aspects.html">Model aspects</a></li>
+                  <li><a href="/docs/diagrams.html">Diagrams</a></li>
+                  <li><a href="/docs/spark-builder.html">Builder</a></li>
+                  <li><a href="/docs/build-models.html">Build models</a></li>
+                  <li><a href="/docs/model-training.html">Model training</a></li>
+                  <li><a href="/docs/train-loop.html">Train loop</a></li>
+                  <li><a href="/docs/spark-coder.html">Spark coder</a></li>
+                  <li><a href="/docs/weight-gallery.html">Weight gallery</a></li>
+                  <li><a href="/docs/ai-models.html">AI models</a></li>
+                  <li><a href="/docs/voice.html">Voice / STT / TTS</a></li>
+                  <li><a href="/docs/voice-ask.html">Voice ask</a></li>
+                </ul>
+              </li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">Bench</button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/compile.html">Compile</a></li>
+                  <li><a href="/docs/decompile.html">Decompile</a></li>
+                  <li><a href="/docs/programming-guide.html">Programming guide</a></li>
+                  <li><a href="/docs/ide.html">IDE</a></li>
+                  <li><a href="/ide-web.html">IDE web shell</a></li>
+                  <li><a href="/docs/native-network-web.html">Network + web</a></li>
+                  <li><a href="/docs/serve.html">Serve</a></li>
+                  <li><a href="/docs/tools-helpers.html">Tools & helpers</a></li>
+                  <li><a href="/about.html">About</a></li>
+                </ul>
+              </li>
+            </ul>
+            <a href="/playground.html" class="nav-cta">Try</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <div class="shell doc-layout">
+      <aside class="doc-sidebar" aria-label="Table of contents">
+        <p class="doc-sidebar__title">On this page</p>
+        <nav id="doc-toc-list"></nav>
+      </aside>
+      <main class="doc-main">
+      <nav class="doc__nav" aria-label="Docs">
+        <a href="/learn/">Learn</a>
+        <a href="/docs/knowledge.html">Knowledge hive</a>
+        <a href="/docs/factory.html">Factory hub</a>
+        <a href="/docs/model-aspects.html">Model aspects</a>
+        <a href="/docs/voice.html">Voice</a>
+        <a href="/docs/voice-ask.html">Voice ask</a>
+        <a href="/docs/voice-easy.html" aria-current="page">Voice easy</a>
+        <a href="/docs/diagrams.html">Diagrams</a>
+        <a href="/docs/spark-builder.html">Builder</a>
+        <a href="/docs/compile.html">Compile</a>
+        <a href="/docs/decompile.html">Decompile</a>
+        <a href="/docs/llm-decompile.html">LLM research</a>
+        <a href="/docs/spark-bc.html">Opcodes / ISA</a>
+        <a href="/docs/build-models.html">Build models</a>
+        <a href="/docs/train-loop.html">Train loop</a>
+        <a href="/docs/spark-coder.html">Spark coder</a>
+        <a href="/docs/weight-gallery.html">Weight gallery</a>
+        <a href="/docs/architecture.html">Architecture</a>
+        <a href="/docs/tokenizer.html">Tokenizer</a>
+        <a href="/docs/serve.html">Serve</a>
+        <a href="/docs/eval.html">Eval</a>
+        <a href="/docs/sparkbc-make.html">Make targets</a>
+        <a href="/docs/tools-helpers.html">Tools & helpers</a>
+        <a href="/docs/methods-openbin.html">Methods vs OpenBin</a>
+        <a href="/docs/ci-pages.html">CI / Pages</a>
+        <a href="/docs/adoption-bar.html">Adoption bar</a>
+        <a href="/docs/language.html">Language</a>
+        <a href="/docs/programming-guide.html">Programming guide</a>
+        <a href="/downloads.html">Downloads</a>
+      </nav>      <article class="doc__body">
+        <h1 id="voice-easy-train-stt-tts-in-3-steps">Voice easy — train STT / TTS in 3 steps</h1>
+        <p>Piece-of-cake path for <strong>owned</strong> Spark voice-related heads we write
+        and train in this repo. Companion to <a href="/docs/voice.html">VOICE.md</a> and
+        <a href="/docs/model-aspects.html">MODEL_ASPECTS.md</a> (L-lane ears/speaking).</p>
+        <p><strong>Not</strong> ElevenLabs, Kokoro, or a downloaded mega TTS overnight.
+        <strong>Never</strong> trains on the RTX PRO <strong>6000</strong> (voice-serving only).
+        Prefers RTX <strong>5090</strong> for large. Does <strong>not</strong> beat Claude.
+        No API keys in git.</p>
+        <h2 id="3-steps">3 steps</h2>
+        <pre class="doc__pre"><code class="language-bash"># 1) Env check (no secrets)
+        ./spark-voice env --dry
+
+        # 2) Tiny happy path (CI / laptop) — fixtures → train → prove
+        make voice-easy
+        # same as:
+        ./spark-voice easy --dry --device auto
+
+        # 3) Status
+        ./spark-voice status
+        </code></pre>
+        <p>Outputs:</p>
+        <ul class="doc__ul">
+        <li><code class="inline-code">models/spark-voice-easy/weights.safetensors</code> (+ <code class="inline-code">arch.json</code>,
+          <code class="inline-code">checkpoint.json</code>)</li>
+        <li><code class="inline-code">out/voice_easy/fixtures/</code> — owned tone WAVs + phrases</li>
+        <li><code class="inline-code">out/voice_easy/roundtrip/</code> — TTS dry WAVs + <code class="inline-code">roundtrip.json</code></li>
+        </ul>
+        <h2 id="scales">Scales</h2>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Scale</th>
+        <th>How</th>
+        <th>Dims / steps</th>
+        <th>Device</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><strong>tiny</strong> (default)</td>
+        <td><code class="inline-code">--scale tiny</code> or omit</td>
+        <td>dim 16, ~12 steps</td>
+        <td>CPU fine; CI</td>
+        </tr>
+        <tr>
+        <td><strong>large</strong> (opt-in)</td>
+        <td><code class="inline-code">--scale large</code> or <code class="inline-code">VOICE_SCALE=large</code></td>
+        <td>dim 256, ~80 steps</td>
+        <td>Prefer <strong>5090</strong>; ~2 GiB VRAM hint</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <pre class="doc__pre"><code class="language-bash"># Large — opt-in; prefers 5090; fail closed if only 6000 visible
+        ./spark-voice easy --scale large --device auto
+
+        # Large on CPU only when you explicitly ask (still owned weights)
+        ./spark-voice easy --scale large --device cpu
+        </code></pre>
+        <p>Large ≠ production vendor quality. It is a <strong>bigger owned head</strong> for
+        local experiments — honest about fixture-scale STT classify + PCM
+        tone TTS.</p>
+        <h3 id="fail-closed-6000">Fail closed (6000)</h3>
+        <p>If <code class="inline-code">VOICE_SCALE=large</code> / <code class="inline-code">--scale large</code> and the only visible GPU is
+        the RTX PRO 6000, Spark <strong>refuses</strong> (exit 2) unless you pass
+        <code class="inline-code">--device cpu</code>. Training never routes to the 6000.</p>
+        <h2 id="flags">Flags</h2>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Flag / env</th>
+        <th>Meaning</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><code class="inline-code">--dry</code></td>
+        <td>CI-friendly (clamped steps); used by <code class="inline-code">make voice-easy</code> / <code class="inline-code">make test-voice-easy</code></td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">--device auto\|cpu\|5090</code></td>
+        <td>auto prefers 5090; never 6000</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">--scale tiny\|large</code></td>
+        <td>model size</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">VOICE_SCALE=large</code></td>
+        <td>same as <code class="inline-code">--scale large</code> when flag omitted</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <h2 id="reuse-ears-speaking">Reuse ears / speaking</h2>
+        <p>Language <code class="inline-code">listen</code> / <code class="inline-code">speak</code> and <code class="inline-code">./spark-stt-tts</code> stay the live
+        sidecar path (<a href="/docs/voice.html">VOICE.md</a>). Voice-easy trains a <strong>separate
+        owned head</strong> under <code class="inline-code">models/spark-voice-easy/</code> so the training path
+        is obvious:</p>
+        <pre class="doc__pre"><code class="language-text">ears (fixtures / spark-stt-tts)
+           → voice-easy STT head (classify phrases)
+        brain (optional spark-coder / dump ask — sibling lanes)
+           → voice-easy TTS head (PCM params)
+        speaking (roundtrip WAV / spark-stt-tts speak)
+        </code></pre>
+        <h2 id="external-stt-tts-sidecars-later">External STT / TTS sidecars (later)</h2>
+        <p>Plug vendors <strong>outside</strong> these owned weights — same gates as voice:</p>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Gate</th>
+        <th>Meaning</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><code class="inline-code">SPARK_STT_CMD</code> / <code class="inline-code">SPARK_TTS_CMD</code></td>
+        <td>Local shell (<code class="inline-code">%i</code> / <code class="inline-code">%o</code>)</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">SPARK_STT_NET=1</code> + URL</td>
+        <td>HTTP STT</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">SPARK_TTS_NET=1</code> + URL</td>
+        <td>HTTP TTS</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <p>URL without gate → fail closed. Never commit Bearer keys.</p>
+        <h2 id="ide">IDE</h2>
+        <p>Spark IDE extension command <strong>“Spark: Voice easy train”</strong> runs
+        <code class="inline-code">./spark-voice easy --dry</code> (CLI-first; stub task hook).</p>
+        <h2 id="make-ci">Make / CI</h2>
+        <pre class="doc__pre"><code class="language-bash">make voice-easy          # dry tiny happy path
+        make test-voice-easy     # unittest + dry easy (GHA)
+        make voice-easy-large    # opt-in local large (not default CI)
+        </code></pre>
+        <h2 id="honesty-bar">Honesty bar</h2>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Claim</th>
+        <th>Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td>Owned STT/TTS heads we train</td>
+        <td><strong>yes</strong> (tiny + large)</td>
+        </tr>
+        <tr>
+        <td>CI dry green</td>
+        <td><strong>yes</strong> (<code class="inline-code">make test-voice-easy</code>)</td>
+        </tr>
+        <tr>
+        <td>Prefer 5090 / never 6000</td>
+        <td><strong>yes</strong></td>
+        </tr>
+        <tr>
+        <td>Replace ElevenLabs overnight</td>
+        <td><strong>no</strong></td>
+        </tr>
+        <tr>
+        <td>Beat Claude</td>
+        <td><strong>no</strong></td>
+        </tr>
+        </tbody>
+        </table></div>
+      </article>
+      </main>
+    </div>
+
+    <footer class="site-footer">
+      <div class="shell footer-inner">
+        <span>Spark programming language</span>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="/workflow.html">Loop</a>
+          <a href="/learn/">Learn</a>
+          <a href="/docs/knowledge.html">Knowledge</a>
+          <a href="/docs/language.html">Reference</a>
+          <a href="/downloads.html">Downloads</a>
+          <a href="/playground.html">Playground</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="/js/site.js"></script>
+  </body>
+</html>

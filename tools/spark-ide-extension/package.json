@@ -2,10 +2,14 @@
   "name": "spark-lang",
   "displayName": "SparkLang",
   "description": "Syntax highlighting for Spark (.spark) AI language",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "sparklang",
   "engines": { "vscode": "^1.85.0" },
   "categories": ["Programming Languages"],
+  "activationEvents": [
+    "onCommand:spark.voiceEasyTrain"
+  ],
+  "main": "./extension.js",
   "contributes": {
     "languages": [
       {
@@ -27,6 +31,20 @@
         "language": "spark",
         "path": "./snippets/playbooks.json"
       }
-    ]
+    ],
+    "commands": [
+      {
+        "command": "spark.voiceEasyTrain",
+        "title": "Spark: Voice easy train",
+        "category": "Spark"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "spark.voiceEasyTrain"
+        }
+      ]
+    }
   }
 }

@@ -13,6 +13,7 @@ from sparklang.senses.vision import (
     look,
     sense_name,
 )
+from sparklang.senses import voice_train_hint
 
 
 class TestVisionSense(unittest.TestCase):
@@ -43,6 +44,12 @@ class TestVisionSense(unittest.TestCase):
             self.assertEqual(out.status, VisionStatus.PLANNED)
             self.assertEqual(out.caption, "")
             self.assertIn("not shipped", out.detail)
+
+    def test_voice_train_hint(self) -> None:
+        """Ears/speaking train path points at voice-easy."""
+        hint = voice_train_hint()
+        self.assertIn("spark-voice", hint["train"])
+        self.assertEqual(hint["never"], "rtx-pro-6000")
 
 
 if __name__ == "__main__":

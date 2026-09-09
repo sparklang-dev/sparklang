@@ -21,7 +21,11 @@ field explainers (transformers → safety) with original diagrams.
 | **AI knowledge hive** | [KNOWLEDGE.md](KNOWLEDGE.md) | [/docs/knowledge.html](/docs/knowledge.html) |
 | **AI model aspects** | [MODEL_ASPECTS.md](MODEL_ASPECTS.md) | [/docs/model-aspects.html](/docs/model-aspects.html) |
 | Voice / STT / TTS | [VOICE.md](VOICE.md) | [/docs/voice.html](/docs/voice.html) |
+<<<<<<< HEAD
 | **Voice ask (dump Q&A)** | [VOICE_ASK.md](VOICE_ASK.md) | [/docs/voice-ask.html](/docs/voice-ask.html) |
+=======
+| **Voice easy train** | [VOICE_EASY.md](VOICE_EASY.md) | [/docs/voice-easy.html](/docs/voice-easy.html) |
+>>>>>>> 54714fa (feat(voice): easy train path for owned STT/TTS (tiny + large))
 | **Diagrams (tools + LLM)** | [DIAGRAMS.md](DIAGRAMS.md) | [/docs/diagrams.html](/docs/diagrams.html) |
 | Compile / assemble | [COMPILE.md](COMPILE.md) | [/docs/compile.html](/docs/compile.html) |
 | Decompile / dump / inspect | [DECOMPILE.md](DECOMPILE.md) | [/docs/decompile.html](/docs/decompile.html) |
@@ -75,6 +79,7 @@ make docs-check
   eval — **yes** on tip (D #28).
 - Owned TinyCoder (`make spark-coder-train`) — **yes** (M #30).
 - Ears/speaking language surface + companions — **yes** (dry/live gated).
+- Voice easy owned STT/TTS train (`make voice-easy`) — **yes** (tiny CI + large opt-in; never 6000).
 - Eyes / vision runtime — **no** (planned stub only).
 - Owned TinyCoder tiny (CI) + large opt-in — **yes** (M); still not Claude.
 - Beat Claude — **no**.
