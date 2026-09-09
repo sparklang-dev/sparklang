@@ -158,8 +158,8 @@
         source; GAS does <strong>not emit</strong> <code class="inline-code">.sparkbc</code>. Emitting TRAIN/STEP ≠ a
         trained model. See <a href="/docs/self-host.html">SPARK_BC.md</a> and
         <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> (sha256 table + reproduce
-        commands). STEP→weights is <strong>in flight</strong>
-        (<code class="inline-code">feat/sparkbc-step-weights</code>), not on <code class="inline-code">main</code> yet.</p>
+        commands). STEP→weights is <strong>implemented</strong>
+        (<code class="inline-code">out/train/&lt;job&gt;/weights.safetensors</code>; dry; <code class="inline-code">trained=false</code>).</p>
         <p>Training methodology: <a href="/docs/model-training.html">MODEL_TRAINING.md</a>.
         Eval helpers: <a href="/docs/ai-models.html">MODEL_ANALYSIS.md</a>.
         Lab pipeline: <code class="inline-code">MODEL_LAB.md</code>.</p>
@@ -188,7 +188,7 @@
         <code class="inline-code">d08925b52bf8c840de626c9cfec619d4dbae5a674b94bb8c7c5837eb1ac64551</code>).
         Focused gate: <code class="inline-code">make sparkbc-e2e</code> (compile → dump TRAIN/STEP →
         <code class="inline-code">--run-bc</code> dry → assert <code class="inline-code">ARTIFACT</code>). Not SGD. Step-updated
-        weights are a follow-on lane (<code class="inline-code">feat/sparkbc-step-weights</code>).
+        weights are <strong>implemented</strong> (<code class="inline-code">weights.safetensors</code>; dry delta; not SGD).
         Dry ≠ trained.</p>
         <p>Optional <strong><code class="inline-code">method "…"</code></strong> selects the training algorithm
         (<code class="inline-code">spark_distill_cpu</code> | <code class="inline-code">spark_pref_pack</code> | <code class="inline-code">spark_playbook_fit</code> |

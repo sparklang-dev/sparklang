@@ -4,6 +4,15 @@ All notable user-facing releases of **SparkLang** (the Spark programming
 language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
+## 0.6.28 — 2026-09-08
+
+- **STEP→weights:** Dry `--run-bc` `STEP` (`0x28`) writes/updates
+  `out/train/<job>/weights.safetensors` (meta `step_n`, tiny
+  bytecode-hash delta; `trained=false` / `not_sgd=true`). Helper
+  `tools/spark-bc-dump/apply_step.py` / `apply_dry_step`.
+  `make test-sparkbc` asserts `step_n>=1`. Docs:
+  [SPARK_BUILDER.md](docs/SPARK_BUILDER.md).
+
 ## 0.6.27 — 2026-09-08
 
 - **SPARK_BC factory docs (full E2E):** Engineer reproduction guide so
@@ -16,7 +25,7 @@ language) are listed here. Site and installers track
   dump / `make test-sparkbc` / `make test-model-lab` /
   `make sparkbc-e2e`, sha256 table for published `docs/examples/*`,
   GAS emit/`--run-bc` **BLOCKED**, dry ≠ SGD ≠ trained,
-  STEP→weights **in flight** (`feat/sparkbc-step-weights`), Pages
+  STEP→weights **implemented** (`weights.safetensors`; dry), Pages
   deploy = Wrangler OAuth preferred + CF dashboard fallback when
   CLI/auth absent. Site: regen `website/docs/*` via
   `tools/md_to_doc_html.py --all-stale`; Learn + homepage link
@@ -32,8 +41,8 @@ language) are listed here. Site and installers track
   `examples/spark_train_step.spark`, dumps TRAIN/STEP decode,
   runs `./spark-bootstrap --run-bc` dry, asserts
   `out/train/job-dry-001/ARTIFACT` (`not_sgd=true`,
-  `trained=false`, `step_n=1`). Not SGD. STEP-updated weights
-  remain a follow-on (`feat/sparkbc-step-weights`). Docs:
+  `trained=false`, `step_n=1`). Not SGD. STEP also writes
+  `weights.safetensors` (dry delta; `trained=false`). Docs:
   [SPARK_BC.md](docs/SPARK_BC.md),
   [SPARK_BUILDER.md](docs/SPARK_BUILDER.md),
   [MODEL_LAB.md](docs/MODEL_LAB.md),

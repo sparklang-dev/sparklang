@@ -2,7 +2,7 @@
 # SparkBC e2e gate: compile spark_train_step → dump TRAIN/STEP →
 # --run-bc dry → assert ARTIFACT. Not SGD. Not trained.
 #
-# Weights after STEP are a follow-on (feat/sparkbc-step-weights).
+# STEP weights are covered by make test-sparkbc (weights.safetensors).
 # This gate asserts ARTIFACT + opcode stream only.
 #
 # Usage (from repo root):
@@ -154,9 +154,8 @@ grep -q 'step_n=1' "$MARKER" || {
 }
 echo "PASS ARTIFACT ($MARKER)"
 
-# Follow-on (not this gate): STEP-updated weights file lives on
-# feat/sparkbc-step-weights when that lane lands. Do not invent SGD
-# or require a weights path here.
+# Optional: SPARKBC_E2E_REQUIRE_STEP_WEIGHTS=1 also asserts weights here.
+# Default gate stays ARTIFACT-only. Do not invent SGD.
 if [[ -n "${SPARKBC_E2E_REQUIRE_STEP_WEIGHTS:-}" ]]; then
   echo "FAIL sparkbc-e2e: SPARKBC_E2E_REQUIRE_STEP_WEIGHTS set but"
   echo "  step-weights are not on main yet (follow-on lane)."

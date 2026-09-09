@@ -110,8 +110,8 @@ Selfhost train seed: `selfhost/compile_train.spark` →
 source; GAS does **not emit** `.sparkbc`. Emitting TRAIN/STEP ≠ a
 trained model. See [SPARK_BC.md](SPARK_BC.md) and
 [SPARK_BUILDER.md](SPARK_BUILDER.md) (sha256 table + reproduce
-commands). STEP→weights is **in flight**
-(`feat/sparkbc-step-weights`), not on `main` yet.
+commands). STEP→weights is **implemented**
+(`out/train/<job>/weights.safetensors`; dry; `trained=false`).
 
 Training methodology: [MODEL_TRAINING.md](MODEL_TRAINING.md).
 Eval helpers: [MODEL_ANALYSIS.md](MODEL_ANALYSIS.md).
@@ -145,7 +145,7 @@ bind). Bootstrap `--run-bc` prints `"op":"step"` JSON and updates
 `d08925b52bf8c840de626c9cfec619d4dbae5a674b94bb8c7c5837eb1ac64551`).
 Focused gate: `make sparkbc-e2e` (compile → dump TRAIN/STEP →
 `--run-bc` dry → assert `ARTIFACT`). Not SGD. Step-updated
-weights are a follow-on lane (`feat/sparkbc-step-weights`).
+weights are **implemented** (`weights.safetensors`; dry delta; not SGD).
 Dry ≠ trained.
 
 Optional **`method "…"`** selects the training algorithm

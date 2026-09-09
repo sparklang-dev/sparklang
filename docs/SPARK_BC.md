@@ -353,10 +353,10 @@ Init weights from those bytes:
 `docs/examples/spark-self.init.safetensors` (sha256
 `60b9b7297cb5e2d8362702144a9d9c15487e65dd11783ba7d499499b500198cf`).
 Focused e2e: `make sparkbc-e2e` (compile → dump TRAIN/STEP →
-`--run-bc` dry → assert `ARTIFACT`; not SGD; weights follow-on).
+`--run-bc` dry → assert `ARTIFACT`; not SGD). STEP weights via `make test-sparkbc`.
 Factory page: [SPARK_BUILDER.md](SPARK_BUILDER.md).
 Not trained. Emitting TRAIN/STEP ≠ trained. Dry ≠ SGD ≠ trained.
-STEP→weights **in flight**. Later train aims to beat Claude. GAS
+STEP→weights **implemented** (dry). Later train aims to beat Claude. GAS
 does not emit `.sparkbc` — use bootstrap `--compile`.
 `./spark --run-bc` is **BLOCKED**.
 
