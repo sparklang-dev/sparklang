@@ -74,6 +74,9 @@
                   <li><a href="/docs/build-models.html">Build models</a></li>
                   <li><a href="/docs/model-training.html">Model training</a></li>
                   <li><a href="/docs/train-loop.html">Train loop</a></li>
+                  <li><a href="/docs/decompile.html">Decompile</a></li>
+                  <li><a href="/docs/tools-helpers.html">Tools &amp; helpers</a></li>
+                  <li><a href="/docs/methods-openbin.html">Methods vs OpenBin</a></li>
                   <li><a href="/docs/spark-coder.html">Spark coder</a></li>
                   <li><a href="/docs/ai-models.html">AI models</a></li>
                   <li><a href="/docs/voice.html">Voice / STT / TTS</a></li>
@@ -173,7 +176,13 @@
               <p>
                 Primary SoT:
                 <code class="inline-code">tools/spark-bc-dump/dump.py</code>
-                — hex, header, mnemonics. Optional
+                — hex, header, mnemonics. One-shot project loop:
+                <code class="inline-code">./helpers/spark-analyze</code>
+                → local
+                <code class="inline-code">out/analyze/&lt;name&gt;/</code>
+                (dump, ops list, REPORT stub; optional
+                <code class="inline-code">--serve</code> /
+                <code class="inline-code">--ask</code>). Optional
                 <code class="inline-code">spark-bc-gui</code> for a
                 readable pane. Deterministic inspect first; LLM research
                 is a separate, cited lane.
@@ -182,6 +191,13 @@
                 <a href="/docs/decompile.html">Decompile docs</a> ·
                 <a href="/docs/llm-decompile.html">LLM research notes</a>
               </p>
+                <a href="/docs/tools-helpers.html">Tools &amp; helpers</a> ·
+                <a href="/docs/methods-openbin.html">Methods vs OpenBin</a> ·
+                <a href="/docs/llm-decompile.html">LLM research notes</a>
+              </p>
+              <pre class="terminal code-block"><code><span class="comment"># Local analysis folder — no upload</span>
+<span class="cmd">./helpers/spark-analyze docs/examples/spark-train-step.sparkbc</span>
+<span class="cmd">./helpers/spark-analyze examples/spark_train_step.spark --ask</span></code></pre>
               <div class="inspect-split">
                 <figure class="shot-frame">
                   <img

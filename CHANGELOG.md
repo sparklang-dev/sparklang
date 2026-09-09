@@ -5,6 +5,21 @@ language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
 
+## 0.6.51 — 2026-09-09
+
+- **Project-loop analyze (OpenBin methods → Spark-native):**
+  `helpers/spark-analyze` / `tools/spark_analyze/` builds a **local**
+  analysis folder (`out/analyze/<name>/`) — compile (if `.spark`),
+  deterministic `dump.txt`, `ops.json` (SPARK_BC instruction list),
+  `REPORT.md` stub, screenshot placeholder; optional `--serve`
+  (tiny CPU) and `--ask` (owned `spark-coder` or honesty note — **not**
+  their SaaS). Docs: [METHODS_OPENBIN.md](docs/METHODS_OPENBIN.md)
+  → [/docs/methods-openbin.html](/docs/methods-openbin.html)
+  (adopted vs rejected; OpenBin prior art link only). Coordinates with
+  loop UX from PR #33 (`/workflow.html`). Gate:
+  `make test-spark-analyze`. Dump remains SoT. No upload. **Never**
+  6000. Does **not** beat Claude.
+
 ## 0.6.50 — 2026-09-09
 
 - **Voice ask (dump / binary Q&A):** `./spark-ask` /
@@ -60,6 +75,7 @@ language) are listed here. Site and installers track
   voice/weight play notes in [VOICE.md](docs/VOICE.md);
   SoT `examples/fixtures/coder/scale_config.json`.
   `./spark-code scales`. **Not beat Claude.**
+
 
 ## 0.6.46 — 2026-09-09
 

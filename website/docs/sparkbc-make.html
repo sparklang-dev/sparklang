@@ -114,6 +114,7 @@
         <a href="/docs/eval.html">Eval</a>
         <a href="/docs/sparkbc-make.html" aria-current="page">Make targets</a>
         <a href="/docs/tools-helpers.html">Tools & helpers</a>
+        <a href="/docs/methods-openbin.html">Methods vs OpenBin</a>
         <a href="/docs/ci-pages.html">CI / Pages</a>
         <a href="/docs/adoption-bar.html">Adoption bar</a>
         <a href="/docs/language.html">Language</a>
@@ -204,6 +205,14 @@
         <td>Voice/text ask loop (dump facts + dry TTS)</td>
         </tr>
         <tr>
+        <td><code class="inline-code">make helpers</code> / <code class="inline-code">make tools-test</code></td>
+        <td>K-lane helper CLIs + kit/shadow/analyze smoke</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">make test-spark-analyze</code></td>
+        <td>Project-loop analyze folder gate</td>
+        </tr>
+        <tr>
         <td><code class="inline-code">make sdk-pack</code> / <code class="inline-code">make dist</code></td>
         <td>Stage <code class="inline-code">dist/spark-sdk/</code> (helpers + I overlay when present)</td>
         </tr>
@@ -282,6 +291,10 @@
         <tr>
         <td><code class="inline-code">helpers/spark-run</code></td>
         <td>compile → run-bc → dump</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">helpers/spark-analyze</code></td>
+        <td>project loop → <code class="inline-code">out/analyze/&lt;name&gt;/</code> (optional <code class="inline-code">--serve</code>/<code class="inline-code">--ask</code>)</td>
         </tr>
         <tr>
         <td><code class="inline-code">helpers/spark-train-proof</code></td>

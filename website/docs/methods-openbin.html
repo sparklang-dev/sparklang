@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Attention / MLP / serve — Spark</title>
-    <meta name="description" content="Honest status: init attn tensors, MLP0 serve forward, attention math planned — not beat Claude." />
+    <title>Methods vs OpenBin — Spark</title>
+    <meta name="description" content="What Spark adopted vs rejected from public OpenBin methods — local analyze loop, no clone. Never beat Claude." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
     <link rel="stylesheet" href="/css/tokens.css?v=knowledge0909" />
@@ -114,140 +114,113 @@
         <a href="/docs/eval.html">Eval</a>
         <a href="/docs/sparkbc-make.html">Make targets</a>
         <a href="/docs/tools-helpers.html">Tools & helpers</a>
-        <a href="/docs/methods-openbin.html">Methods vs OpenBin</a>
+        <a href="/docs/methods-openbin.html" aria-current="page">Methods vs OpenBin</a>
         <a href="/docs/ci-pages.html">CI / Pages</a>
         <a href="/docs/adoption-bar.html">Adoption bar</a>
         <a href="/docs/language.html">Language</a>
         <a href="/docs/programming-guide.html">Programming guide</a>
         <a href="/downloads.html">Downloads</a>
       </nav>      <article class="doc__body">
-        <h1 id="attention-heads-mlp-serve-forward">Attention heads / MLP / serve forward</h1>
-        <p>Honest status of <strong>neural forward</strong> pieces next to SPARK_BC.
-        Spark / SparkLang only. Documents tip/<code class="inline-code">main</code> after <strong>D-lane</strong>
-        (#28) attention train + serve landed.</p>
-        <h2 id="summary-table">Summary table</h2>
+        <h1 id="methods-we-adopted-vs-rejected-openbin-prior-art">Methods we adopted vs rejected (OpenBin prior art)</h1>
+        <p>Spark studied <strong>public</strong> OpenBin surfaces (site copy, CLI <code class="inline-code">--help</code> in
+        a gated lab, <a href="https://github.com/openbin-ai/platform/releases/tag/openbin-v0.10.0">release v0.10.0</a>,
+        <a href="https://github.com/openbin-ai/platform">openbin-ai/platform</a> README)
+        to improve <strong>our</strong> loop — not to clone their product.</p>
+        <p>Prior art link only: <a href="https://openbin.ai/">https://openbin.ai/</a>.
+        Spark remains local-first SPARK_BC. Dump / <code class="inline-code">--compile</code> / <code class="inline-code">--run-bc</code>
+        are SoT. <strong>Never</strong> 6000. Does <strong>not</strong> beat Claude.</p>
+        <p>Hub: <a href="/docs/factory.html">FACTORY.md</a> · Loop UX: <a href="/workflow.html">/workflow.html</a>
+        · Helpers: <a href="/docs/tools-helpers.html">TOOLS_HELPERS.md</a> · Research:
+        <a href="/docs/llm-decompile.html">research/LLM_DECOMPILE.md</a>.</p>
+        <h2 id="adopted-methods-spark-native">Adopted (methods → Spark-native)</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
-        <th>Piece</th>
-        <th>On tip (<code class="inline-code">main</code>)</th>
-        <th>Notes</th>
+        <th>OpenBin method (public)</th>
+        <th>Spark improvement</th>
         </tr>
         </thead>
         <tbody>
         <tr>
-        <td>Init tensors <code class="inline-code">spark.layers.*.q/k/v/o</code> + <code class="inline-code">attn_norm</code></td>
-        <td><strong>allocated</strong></td>
-        <td><code class="inline-code">weights.py</code> Xavier init from SPARK_BC bytes</td>
+        <td>One CLI path that lands you in an inspectable <strong>project</strong></td>
+        <td><code class="inline-code">helpers/spark-analyze</code> → <code class="inline-code">out/analyze/&lt;name&gt;/</code> with dump, ops list, REPORT stub</td>
         </tr>
         <tr>
-        <td>Init tensors MLP (<code class="inline-code">mlp_up/gate/down</code>, <code class="inline-code">mlp_norm</code>)</td>
-        <td><strong>allocated</strong></td>
-        <td>same</td>
+        <td>Clear <strong>local-first</strong> story for native binaries</td>
+        <td>Keep binary / SPARK_BC <strong>local</strong>; analysis folder never uploads</td>
         </tr>
         <tr>
-        <td>Tiny CPU serve: embed → <strong>attn0</strong> → optional <strong>MLP0</strong> → RMSNorm → lm_head</td>
-        <td><strong>implemented</strong></td>
-        <td><code class="inline-code">serve.py</code> / <code class="inline-code">dump.py --serve</code> when layer-0 attn tensors exist</td>
+        <td>Side-by-side inspect vocabulary</td>
+        <td>Existing <code class="inline-code">dump.py</code> + <code class="inline-code">spark-bc-gui</code> + loop UX (<code class="inline-code">/workflow.html</code>, PR #33)</td>
         </tr>
         <tr>
-        <td>Tiny CPU serve: attention (last-query causal MHA / GQA)</td>
-        <td><strong>implemented</strong></td>
-        <td>D-lane; no RoPE math yet</td>
+        <td>Optional <strong>Ask</strong> after inspect</td>
+        <td><code class="inline-code">--ask</code> stub via <strong>owned</strong> <code class="inline-code">spark-coder</code> or honesty note — not their SaaS</td>
         </tr>
         <tr>
-        <td><code class="inline-code">control.sparkasm</code> ATTN / ROPE macros</td>
-        <td><strong>source + shape check</strong></td>
-        <td><code class="inline-code">make test-sparkasm-control</code> — not a tensor VM</td>
+        <td>Publish / share findings</td>
+        <td>Docs + Pages share (examples gallery) — <strong>not</strong> a malware community feed</td>
         </tr>
         <tr>
-        <td>Attention train (factory D-lane)</td>
-        <td><strong>implemented</strong></td>
-        <td><code class="inline-code">apply_sgd_step</code> default <code class="inline-code">train_attn=True</code>; <code class="inline-code">--no-train-attn</code> = mean-pool CE</td>
-        </tr>
-        <tr>
-        <td>HTTP serve API (factory G-lane)</td>
-        <td><strong>implemented</strong></td>
-        <td><code class="inline-code">make spark-serve-api</code> — see <a href="/docs/serve.html">SERVE.md</a></td>
-        </tr>
-        <tr>
-        <td>Beat Claude</td>
-        <td><strong>not</strong></td>
-        <td>never claim from docs</td>
-        </tr>
-        <tr>
-        <td>RTX PRO 6000 train</td>
-        <td><strong>never</strong></td>
-        <td>voice-only; 5090 OK</td>
+        <td>apk vs elf as separate worker paths</td>
+        <td>Spark stays SPARK_BC-only; no JADX/Ghidra workers in this lane</td>
         </tr>
         </tbody>
         </table></div>
-        <h2 id="serve-forward-what-exists">Serve forward (what exists)</h2>
-        <pre class="doc__pre"><code class="language-bash">make spark-serve
-        ./spark-serve docs/examples/spark-builder.sparkbc /tmp/serve-dry-001
-        # or:
-        PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
-          docs/examples/spark-builder.sparkbc \
-          --serve /tmp/serve-dry-001
-        </code></pre>
-        <p>Writes <code class="inline-code">SERVE</code> with <code class="inline-code">forward=true</code> and honest <code class="inline-code">trained</code> from
-        weights meta. Path string when layer-0 attn (+ optional MLP)
-        tensors exist:</p>
-        <p><code class="inline-code">embed-&gt;attn0-&gt;mlp0-&gt;rms_norm-&gt;lm_head</code></p>
-        <p>Code: <code class="inline-code">python/sparklang/model_lab/serve.py</code> (<code class="inline-code">_attn_block</code>,
-        <code class="inline-code">_mlp_block</code>, <code class="inline-code">run_tiny_forward</code>) and
-        <code class="inline-code">python/sparklang/model_lab/attn.py</code>. Gate: <code class="inline-code">make test-sparkbc</code>
-        → <code class="inline-code">tools/spark-bc-dump/test_dump.py</code>.</p>
-        <p><strong>Not</strong> a production LLM. <strong>Not</strong> multi-layer full-decode /
-        RoPE. Fixture-scale only.</p>
-        <h2 id="attention-train-d-lane-on-tip">Attention train (D-lane on tip)</h2>
-        <pre class="doc__pre"><code class="language-bash">make spark-sgd-proof
-        # asserts train_attn, copy_recall&gt;0, next_token&gt;0, beats_claude=false
-        </code></pre>
-        <ul class="doc__ul">
-        <li>Module: <code class="inline-code">python/sparklang/model_lab/attn.py</code> (last-query causal
-          MHA forward + backward).</li>
-        <li>SGD: <code class="inline-code">weights.py</code> <code class="inline-code">apply_sgd_step(..., train_attn=True)</code> via
-          <code class="inline-code">tools/spark-bc-dump/apply_step.py</code>.</li>
-        <li>Eval path uses attn0 when weights present
-          (<code class="inline-code">tools/spark-eval/run.py</code>).</li>
-        <li>Docs: <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>. Changelog <strong>0.6.44</strong>.</li>
-        </ul>
-        <p><strong>Not</strong> claiming multi-head production quality or Claude-parity.</p>
-        <h2 id="mlp0-what-exists">MLP0 (what exists)</h2>
-        <p>Layer-0 SwiGLU-style block on CPU when tensors are present
-        (CHANGELOG <strong>0.6.32</strong>). Used in serve after attn0 (or mean-pool
-        when <code class="inline-code">--no-train-attn</code> / missing attn tensors). Still fixture-scale.</p>
-        <h2 id="spark-bc-vs-tensor-asm">SPARK_BC vs tensor asm</h2>
+        <h2 id="rejected">Rejected</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
-        <th>Artifact</th>
-        <th>Role</th>
+        <th>Idea</th>
+        <th>Why rejected</th>
         </tr>
         </thead>
         <tbody>
         <tr>
-        <td><code class="inline-code">.sparkbc</code></td>
-        <td>Orchestration program (<code class="inline-code">TRAIN</code> / <code class="inline-code">STEP</code> / …)</td>
+        <td>Cloud project URL as default SoT</td>
+        <td>Spark SoT is local dump / SPARK_BC bytes</td>
         </tr>
         <tr>
-        <td><code class="inline-code">control.sparkasm</code></td>
-        <td>Human-readable <strong>forward graph</strong> macros</td>
+        <td>Upload decompiled JSON / APK trees to a third party</td>
+        <td>Trust / IP / malware-handling; gated lab only for studying their CLI</td>
         </tr>
         <tr>
-        <td><code class="inline-code">weights.safetensors</code></td>
-        <td>Numeric tensors (init or STEP)</td>
+        <td>BYOK Anthropic/OpenAI keys in git or Spark CLI defaults</td>
+        <td>Prefer owned TinyCoder / gateway aliases elsewhere; no keys in git</td>
+        </tr>
+        <tr>
+        <td>Pixel-clone of OpenBin / OpenAPK UI</td>
+        <td>Original Spark loop branding (PR #33)</td>
+        </tr>
+        <tr>
+        <td>Ghidra/JADX Docker workers as Spark runtime</td>
+        <td>Different problem (ELF/APK RE vs SPARK_BC orchestration)</td>
+        </tr>
+        <tr>
+        <td>“AI recovered perfect source” marketing</td>
+        <td>Forbidden; LLM research stays cited and non-SoT</td>
+        </tr>
+        <tr>
+        <td>Beat Claude / use RTX PRO 6000</td>
+        <td>Standing Spark policy</td>
         </tr>
         </tbody>
         </table></div>
-        <p>Do not call sparkasm “SPARK_BC decompile.”</p>
-        <h2 id="related">Related</h2>
-        <ul class="doc__ul">
-        <li><a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> · <a href="/docs/train-loop.html">TRAIN_LOOP.md</a></li>
-        <li><a href="/docs/serve.html">SERVE.md</a> · <a href="/docs/architecture.html">ARCHITECTURE.md</a></li>
-        <li><a href="/docs/factory.html">FACTORY.md</a> · <a href="/docs/eval.html">EVAL.md</a></li>
-        </ul>
+        <h2 id="cli-quick-path-spark">CLI quick path (Spark)</h2>
+        <pre class="doc__pre"><code class="language-bash">make helpers
+        ./helpers/spark-analyze docs/examples/spark-train-step.sparkbc
+        ./helpers/spark-analyze examples/spark_train_step.spark --ask
+        ./helpers/spark-analyze file.sparkbc --serve -o out/analyze/demo
+        # → out/analyze/&lt;name&gt;/{dump.txt,ops.json,REPORT.md,META.json,…}
+        </code></pre>
+        <p>Gate: <code class="inline-code">make test-spark-analyze</code> (or <code class="inline-code">PYTHONPATH=python:tools python3 -m unittest tools.spark_analyze.test_analyze -v</code>).</p>
+        <h2 id="ethics-lab-note">Ethics / lab note</h2>
+        <p>SoapBox runs OpenBin CLI <strong>v0.10.0</strong> only inside gated DinD
+        <code class="inline-code">openbin-lab</code> (see operator report
+        <code class="inline-code">workspaces/reports/openbin-gated-vm-install-20260909.md</code>).
+        Do not dump proprietary worker image layers for redistribution.
+        Login/BYOK for deeper OpenBin probes stays an owner action — this
+        doc does not require it.</p>
       </article>
       </main>
     </div>

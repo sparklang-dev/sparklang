@@ -39,6 +39,7 @@ DOC_NAV = """\
         <a href="/docs/eval.html"{ev}>Eval</a>
         <a href="/docs/sparkbc-make.html"{mk}>Make targets</a>
         <a href="/docs/tools-helpers.html"{th}>Tools & helpers</a>
+        <a href="/docs/methods-openbin.html"{mo}>Methods vs OpenBin</a>
         <a href="/docs/ci-pages.html"{ci}>CI / Pages</a>
         <a href="/docs/adoption-bar.html"{ab}>Adoption bar</a>
         <a href="/docs/language.html">Language</a>
@@ -207,6 +208,7 @@ MD_LINK_MAP = {
     "EVAL.md": "/docs/eval.html",
     "SPARKBC_MAKE.md": "/docs/sparkbc-make.html",
     "TOOLS_HELPERS.md": "/docs/tools-helpers.html",
+    "METHODS_OPENBIN.md": "/docs/methods-openbin.html",
     "CI_PAGES.md": "/docs/ci-pages.html",
     "MODEL_LAB.md": "/docs/model-training.html",
     "ABSTAIN_HEADS.md": "/docs/abstain-heads.html",
@@ -337,6 +339,10 @@ DOC_PAGES = [
      "Tools & helpers",
      "K-lane helpers, shadows, and spark_kit — compile/run/inspect, "
      "shadow build, opcode sheet. Never beat Claude."),
+("mo", "METHODS_OPENBIN.md", "methods-openbin.html",
+     "Methods vs OpenBin",
+     "What Spark adopted vs rejected from public OpenBin "
+     "methods — local analyze loop, no clone. Never beat Claude."),
     ("isa", "SPARK_BC.md", "spark-bc.html", "SPARK_BC ISA",
      "Spark bytecode ISA — opcodes, pools, dry-run contracts."),
     ("", "LANGUAGE.md", "language.html", "Language reference",
@@ -439,7 +445,7 @@ def render(md_path: Path, out_path: Path, title: str, description: str, current:
     body = decorate_html(body)
     keys = (
         "ab", "ai", "nn", "ide", "sh", "bc", "cp", "dc", "rd", "bm",
-        "af", "mk", "th", "isa", "fy", "kh", "dg", "tl", "sc", "wg",
+        "af", "mk", "th", "mo", "isa", "fy", "kh", "dg", "tl", "sc", "wg",
         "ar", "tk", "sv", "ev", "ci", "ma", "vo", "va",
     )
     nav_kwargs = {

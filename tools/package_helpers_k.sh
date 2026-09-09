@@ -31,15 +31,23 @@ chmod +x "$DEST"/helpers/spark-*
 cp -a shadows/. "$DEST/shadows/"
 cp -a tools/spark_kit "$DEST/tools/"
 cp -a tools/spark_shadow "$DEST/tools/"
-# Dump tool used by spark-bc-pp / spark-run
-mkdir -p "$DEST/tools/spark-bc-dump"
+# Dump tool used by spark-bc-pp / spark-run / spark-analyze
+mkdir -p "$DEST/tools/spark-bc-dump" "$DEST/tools/spark_analyze"
 cp -a tools/spark-bc-dump/dump.py "$DEST/tools/spark-bc-dump/"
+cp -a tools/spark_analyze/*.py "$DEST/tools/spark_analyze/"
 # Thin bin wrappers for pack layout
 cat >"$DEST/bin/spark-run" <<'EOF'
 #!/usr/bin/env bash
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 exec bash "$ROOT/helpers/spark-run" "$@"
+EOF
+cat >"$DEST/bin/spark-analyze" <<'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+export PYTHONPATH="${ROOT}/tools:${ROOT}/python:${PYTHONPATH:-}"
+exec bash "$ROOT/helpers/spark-analyze" "$@"
 EOF
 cat >"$DEST/bin/spark-shadow" <<'EOF'
 #!/usr/bin/env bash
@@ -49,23 +57,29 @@ export PYTHONPATH="${ROOT}/tools:${ROOT}/python:${ROOT}/runtime/python:${PYTHONP
 export SPARK_ROOT="$ROOT"
 exec bash "$ROOT/helpers/spark-shadow" "$@"
 EOF
-chmod +x "$DEST/bin/spark-run" "$DEST/bin/spark-shadow"
+chmod +x "$DEST/bin/spark-run" "$DEST/bin/spark-analyze" \
+  "$DEST/bin/spark-shadow"
 
 if [[ -f docs/TOOLS_HELPERS.md ]]; then
   cp -a docs/TOOLS_HELPERS.md "$DEST/docs/"
+fi
+if [[ -f docs/METHODS_OPENBIN.md ]]; then
+  cp -a docs/METHODS_OPENBIN.md "$DEST/docs/"
 fi
 
 cat >"$DEST/README-helpers-k.txt" <<EOF
 SparkLang helpers / shadows / kit (K-lane) — ${VERSION}
 =====================================================
 
-  helpers/     spark-run, spark-train-proof, spark-check-env,
-               spark-bc-pp, spark-bc-diff, spark-shadow
+  helpers/     spark-run, spark-analyze, spark-train-proof,
+               spark-check-env, spark-bc-pp, spark-bc-diff, spark-shadow
   shadows/     shadow-build docs (build/shadow/)
   tools/spark_kit/      hexdump, opcode sheet, fixture lint, vocab
   tools/spark_shadow/   python module behind spark-shadow
+  tools/spark_analyze/  project-loop analyze (local folders)
 
-  make helpers / make tools-test in the full repo.
+  make helpers / make tools-test / make test-spark-analyze
+  in the full repo.
 
 CPU only. Never RTX PRO 6000. Does not claim beat Claude.
 EOF

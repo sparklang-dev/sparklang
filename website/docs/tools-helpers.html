@@ -114,6 +114,7 @@
         <a href="/docs/eval.html">Eval</a>
         <a href="/docs/sparkbc-make.html">Make targets</a>
         <a href="/docs/tools-helpers.html" aria-current="page">Tools & helpers</a>
+        <a href="/docs/methods-openbin.html">Methods vs OpenBin</a>
         <a href="/docs/ci-pages.html">CI / Pages</a>
         <a href="/docs/adoption-bar.html">Adoption bar</a>
         <a href="/docs/language.html">Language</a>
@@ -131,6 +132,8 @@
         make sdk-pack         # stage dist/spark-sdk/ (+ I overlay)
         ./helpers/spark-check-env
         ./helpers/spark-run examples/spark_builder.spark
+        ./helpers/spark-analyze docs/examples/spark-train-step.sparkbc
+        ./helpers/spark-analyze examples/spark_train_step.spark --ask
         ./helpers/spark-bc-pp docs/examples/spark-train-step.sparkbc
         ./helpers/spark-bc-diff a.sparkbc b.sparkbc
         ./helpers/spark-train-proof          # make spark-sgd-proof
@@ -142,44 +145,30 @@
           --text &quot;What opcodes are in this dump?&quot;
         ./spark-speak-ask docs/examples/spark-train-step.sparkbc --dry
         </code></pre>
-        <p>Voice ask (STT→dump/TinyCoder→TTS): <a href="/docs/voice-ask.html">VOICE_ASK.md</a>.</p>
-        <h2 id="layout">Layout</h2>
-        <div class="doc__table-wrap"><table class="doc__table">
-        <thead>
-        <tr>
-        <th>Path</th>
-        <th>Role</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-        <td><code class="inline-code">helpers/</code></td>
-        <td>one-shot compile/run/inspect, train proof, env check, BC pp/diff, shadow CLI</td>
-        </tr>
-        <tr>
-        <td><code class="inline-code">shadows/</code></td>
-        <td>docs for <code class="inline-code">build/shadow/</code> dual-path experiments</td>
-        </tr>
-        <tr>
-        <td><code class="inline-code">tools/spark_kit/</code></td>
-        <td>hexdump, opcode sheet, fixture lint, vocab inspect, bc_diff</td>
-        </tr>
-        <tr>
-        <td><code class="inline-code">tools/spark_shadow/</code></td>
-        <td>Python behind <code class="inline-code">spark-shadow</code></td>
-        </tr>
-        <tr>
-        <td><code class="inline-code">tools/package_helpers_k.sh</code></td>
-        <td><code class="inline-code">make sdk-pack</code> stager → <code class="inline-code">dist/spark-sdk/</code></td>
-        </tr>
-        <tr>
-        <td><code class="inline-code">dist/spark-sdk/</code></td>
-        <td>downloadable helpers tree + <code class="inline-code">MANIFEST-helpers-k.json</code></td>
-        </tr>
-        </tbody>
-        </table></div>
-        <h2 id="tool-kit-clis">Tool kit CLIs</h2>
-        <pre class="doc__pre"><code class="language-bash">PYTHONPATH=python:tools python3 -m spark_kit.opcode_sheet
+        <p>Voice ask (STT→dump/TinyCoder→TTS): <a href="/docs/voice-ask.html">VOICE_ASK.md</a>.
+        make test-spark-analyze</p>
+        <pre class="doc__pre"><code class="inline-code">
+        Project loop: `spark-analyze` writes a **local** folder
+        `out/analyze/&lt;name&gt;/` (dump, `ops.json`, REPORT stub, screenshot
+        placeholder; optional `--serve` / `--ask`). No upload. Methods note:
+        [METHODS_OPENBIN.md](/docs/methods-openbin.html).
+
+        ## Layout
+
+        | Path | Role |
+        |------|------|
+        | `helpers/` | one-shot compile/run/inspect, **analyze loop**, train proof, env check, BC pp/diff, shadow CLI |
+        | `tools/spark_analyze/` | Python behind `spark-analyze` |
+        | `shadows/` | docs for `build/shadow/` dual-path experiments |
+        | `tools/spark_kit/` | hexdump, opcode sheet, fixture lint, vocab inspect, bc_diff |
+        | `tools/spark_shadow/` | Python behind `spark-shadow` |
+        | `tools/package_helpers_k.sh` | `make sdk-pack` stager → `dist/spark-sdk/` |
+        | `dist/spark-sdk/` | downloadable helpers tree + `MANIFEST-helpers-k.json` |
+
+        ## Tool kit CLIs
+
+        ```bash
+        PYTHONPATH=python:tools python3 -m spark_kit.opcode_sheet
         PYTHONPATH=python:tools python3 -m spark_kit.hexdump_bc \
           docs/examples/spark-train-step.sparkbc
         PYTHONPATH=python:tools python3 -m spark_kit.fixture_lint \

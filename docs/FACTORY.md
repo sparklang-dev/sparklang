@@ -38,6 +38,7 @@ field explainers (transformers → safety) with original diagrams.
 | **Spark coder (owned)** | [SPARK_CODER.md](SPARK_CODER.md) | [/docs/spark-coder.html](/docs/spark-coder.html) |
 | Makefile targets | [SPARKBC_MAKE.md](SPARKBC_MAKE.md) | [/docs/sparkbc-make.html](/docs/sparkbc-make.html) |
 | Tools & helpers | [TOOLS_HELPERS.md](TOOLS_HELPERS.md) | [/docs/tools-helpers.html](/docs/tools-helpers.html) |
+| Methods vs OpenBin | [METHODS_OPENBIN.md](METHODS_OPENBIN.md) | [/docs/methods-openbin.html](/docs/methods-openbin.html) |
 | CI + Pages how-to | [CI_PAGES.md](CI_PAGES.md) | [/docs/ci-pages.html](/docs/ci-pages.html) |
 | Full factory E2E | [SPARK_BUILDER.md](SPARK_BUILDER.md) | [/docs/spark-builder.html](/docs/spark-builder.html) |
 | Adoption honesty | [ADOPTION_BAR.md](ADOPTION_BAR.md) | [/docs/adoption-bar.html](/docs/adoption-bar.html) |
