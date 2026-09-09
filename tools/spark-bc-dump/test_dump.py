@@ -187,8 +187,8 @@ def test_dry_step_writes_weights() -> dict:
         return r1
 
 
-def test_serve_stub() -> dict:
-    """Dry SERVE marker: served stub, not trained, not production."""
+def test_serve_forward() -> dict:
+    """Tiny CPU SERVE: forward=true, trained honest, not production."""
     with tempfile.TemporaryDirectory() as tmp:
         dest = Path(tmp) / "serve-dry-001"
         payload = emit_serve(
@@ -198,14 +198,34 @@ def test_serve_stub() -> dict:
             command=BUILDER_CMD,
         )
         assert payload["served"] is True
+        assert payload["forward"] is True
         assert payload["trained"] is False
         assert payload["not_sgd"] is True
         assert payload["production"] is False
+        assert payload["mode"] == "cpu-forward"
+        fwd = payload["forward_result"]
+        assert isinstance(fwd["argmax"], int)
+        assert len(fwd["logits_preview"]) >= 1
+        assert fwd["path"].startswith("embed_mean_pool")
         marker = dest / "SERVE"
         assert marker.is_file()
         body = marker.read_text(encoding="utf-8")
         assert '"op": "serve"' in body
+        assert '"forward": true' in body
         assert '"production": false' in body
+        assert '"trained": false' in body
+        weights = dest / "weights.safetensors"
+        assert weights.is_file()
+        dest2 = Path(tmp) / "serve-reuse"
+        p2 = emit_serve(
+            BUILDER_BC,
+            dest2,
+            source=BUILDER_SRC,
+            command=BUILDER_CMD,
+            weights_path=weights,
+        )
+        assert p2["forward"] is True
+        assert p2["trained"] is False
         return payload
 
 
@@ -216,10 +236,10 @@ def main() -> int:
     test_builder_weights_stay_init()
     sops = test_train_step_opcode()
     step_w = test_dry_step_writes_weights()
-    serve = test_serve_stub()
+    serve = test_serve_forward()
     print(
         "ok sha256=%s n_tensors=%d first32=%s train_ops=%s "
-        "step_ops=%s step_n=%s serve=%s"
+        "step_ops=%s step_n=%s serve=%s forward=%s"
         % (
             self_info["bc"]["sha256"][:12],
             self_info["weights"]["n_tensors"],
@@ -228,6 +248,7 @@ def main() -> int:
             " ".join(sops),
             step_w["step_n"],
             serve["job_id"],
+            serve["forward"],
         )
     )
     return 0

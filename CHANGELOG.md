@@ -4,6 +4,14 @@ All notable user-facing releases of **SparkLang** (the Spark programming
 language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
+## 0.6.30 — 2026-09-09
+
+- **Tiny CPU serve forward:** `dump.py --serve` / `./spark-serve`
+  load Spark safetensors (or emit init), run one embed→RMSNorm→lm_head
+  matmul on CPU, write `SERVE` with `forward=true` and honest
+  `trained` from weights meta. Not a production LLM. Gate:
+  `make test-sparkbc`. Docs: [SPARK_BUILDER.md](docs/SPARK_BUILDER.md).
+
 ## 0.6.29 — 2026-09-08
 
 - **GAS SPARK_BC wrappers:** `./spark --run-bc <file.sparkbc>` and
