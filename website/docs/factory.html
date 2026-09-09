@@ -7,8 +7,8 @@
     <meta name="description" content="Map of SparkLang SPARK_BC factory docs — compile through eval, serve, CI/Pages. Does not beat Claude." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
-    <link rel="stylesheet" href="/css/tokens.css?v=bb4433f" />
-    <link rel="stylesheet" href="/css/site.css?v=bb4433f" />
+    <link rel="stylesheet" href="/css/tokens.css?v=diagrams037" />
+    <link rel="stylesheet" href="/css/site.css?v=diagrams037" />
   </head>
   <body class="doc-page">
     <header class="site-header">
@@ -34,6 +34,7 @@
                 <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">More</button>
                 <ul class="nav-more__menu" hidden>
                   <li><a href="/docs/factory.html">Factory hub</a></li>
+                  <li><a href="/docs/diagrams.html">Diagrams</a></li>
                   <li><a href="/docs/spark-builder.html">Builder</a></li>
                   <li><a href="/docs/compile.html">Compile</a></li>
                   <li><a href="/docs/decompile.html">Decompile</a></li>
@@ -70,6 +71,7 @@
       <nav class="doc__nav" aria-label="Docs">
         <a href="/learn/">Learn</a>
         <a href="/docs/factory.html" aria-current="page">Factory hub</a>
+        <a href="/docs/diagrams.html">Diagrams</a>
         <a href="/docs/spark-builder.html">Builder</a>
         <a href="/docs/compile.html">Compile</a>
         <a href="/docs/decompile.html">Decompile</a>
@@ -92,7 +94,9 @@
         <a href="https://sparklang.dev/">sparklang.dev</a>. Does <strong>not</strong> reimplement
         SGD, attention, or serve APIs — links code + makefile targets.
         <strong>Never</strong> claims beat Claude. <strong>Never</strong> trains on the RTX PRO 6000.</p>
-        <p>Reproduction story: <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</p>
+        <p>Reproduction story: <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.
+        <strong>Diagrams:</strong> <a href="/docs/diagrams.html">DIAGRAMS.md</a> — tool map, shadows, LLM
+        assist vs deterministic SoT.</p>
         <h2 id="map-everything">Map (everything)</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
@@ -103,6 +107,11 @@
         </tr>
         </thead>
         <tbody>
+        <tr>
+        <td><strong>Diagrams (tools + LLM)</strong></td>
+        <td><a href="/docs/diagrams.html">DIAGRAMS.md</a></td>
+        <td><a href="/docs/diagrams.html">/docs/diagrams.html</a></td>
+        </tr>
         <tr>
         <td>Compile / assemble</td>
         <td><a href="/docs/compile.html">COMPILE.md</a></td>
@@ -212,6 +221,16 @@
         <td><strong>G</strong></td>
         <td>Serve HTTP/API</td>
         <td><strong>Merged</strong> — see <a href="/docs/serve.html">SERVE.md</a> / <code class="inline-code">make spark-serve-api</code></td>
+        </tr>
+        <tr>
+        <td><strong>H</strong></td>
+        <td>Website + factory docs</td>
+        <td><strong>Merged</strong> (#23) — this hub + <a href="/docs/diagrams.html">DIAGRAMS.md</a></td>
+        </tr>
+        <tr>
+        <td><strong>J</strong></td>
+        <td>Decompile research / captures</td>
+        <td><strong>Not merged yet</strong> — when live, link from <a href="/docs/decompile.html">DECOMPILE.md</a>; flow diagrams stay in <a href="/docs/diagrams.html">DIAGRAMS.md</a></td>
         </tr>
         </tbody>
         </table></div>

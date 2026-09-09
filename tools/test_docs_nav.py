@@ -40,6 +40,7 @@ class TestDocsNav(unittest.TestCase):
         """H-lane markdown sources are present under docs/."""
         for name in (
             "FACTORY.md",
+            "DIAGRAMS.md",
             "COMPILE.md",
             "DECOMPILE.md",
             "BUILD_MODELS.md",

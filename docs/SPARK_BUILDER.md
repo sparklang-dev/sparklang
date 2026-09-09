@@ -51,6 +51,8 @@ import Claude or Grok weights.
 **Learn trail:** [/learn/](/learn/) →
 [Build a Model](/learn/build-model.html) →
 [/docs/spark-builder.html](/docs/spark-builder.html).
+**Diagrams:** [/docs/diagrams.html](/docs/diagrams.html) (tools,
+shadows, LLM assist vs SoT).
 
 ## Opcodes (train family)
 
@@ -382,6 +384,8 @@ make test-model-lab
   https://sparklang.dev/docs/spark-builder.html
 - **Factory hub:** [FACTORY.md](FACTORY.md) /
   https://sparklang.dev/docs/factory.html
+- **Diagrams:** [DIAGRAMS.md](DIAGRAMS.md) /
+  https://sparklang.dev/docs/diagrams.html
 - Engineer factory docs: [COMPILE.md](COMPILE.md) ·
   [DECOMPILE.md](DECOMPILE.md) ·
   [BUILD_MODELS.md](BUILD_MODELS.md) ·

@@ -7,6 +7,7 @@ This page does **not** reimplement the compiler. It points at
 makefile targets and in-tree tools. ISA detail:
 [SPARK_BC.md](SPARK_BC.md). Factory story:
 [SPARK_BUILDER.md](SPARK_BUILDER.md).
+**Diagrams:** [DIAGRAMS.md](DIAGRAMS.md) (tools + LLM assist vs SoT).
 
 ## What “compile” means here
 
