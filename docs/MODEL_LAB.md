@@ -55,9 +55,10 @@ under `out/lab/`.
 
 Factory (SPARK_BC dump + Spark-created init weights + TRAIN/STEP
 opcodes): [SPARK_BUILDER.md](SPARK_BUILDER.md) — full E2E reproduce
-commands, published sha256 table, GAS `--compile`/`--run-bc`, dry ≠ trained.
-Seed is Spark compiling Spark. Later train aims to beat Claude.
-Not trained today. STEP→weights is **implemented** (dry; not SGD).
+commands, published sha256 table, GAS `--compile`/`--run-bc`.
+Seed is Spark compiling Spark. `STEP` is tiny CPU SGD (not beat Claude).
+Init stays untrained until STEP; post-STEP `trained=true` when grads
+apply.
 
 Focused TRAIN→STEP→TRAIN_STATUS proof:
 
@@ -68,9 +69,10 @@ make sparkbc-e2e
 ```
 
 Asserts compile matches published `.sparkbc`, dump shows TRAIN/STEP,
-`--run-bc` dry JSON, and `out/train/job-dry-001/ARTIFACT`
-(`not_sgd=true`, `trained=false`, `step_n=1`). Does **not** invent
-SGD. STEP-updated weights are **implemented** (`weights.safetensors`).
+`--run-bc` JSON, and `out/train/job-dry-001/ARTIFACT`
+(`not_sgd=false`, `trained=true`, `step_n=1`). `make test-sparkbc`
+proves `loss_after < loss_before` on real CE grads (not hash toy).
+**Not beat Claude.**
 
 ## Related
 

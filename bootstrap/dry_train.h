@@ -12,11 +12,12 @@ const char *spark_pick_train_step(const char *job_id, int step_n);
 /* Dry ARTIFACT under out_dir. Not SGD. Not trained weights. */
 int spark_write_train_marker(const char *out_dir, const char *job_id,
 			     const char *method);
-/* Bump step_n on ARTIFACT (dry loop). Not SGD. */
+/* Bump step_n on ARTIFACT after a real CPU SGD STEP. */
 int spark_bump_train_step(const char *out_dir, const char *job_id,
 			  int step_n);
-/* Dry STEP: write/update Spark-created safetensors from SPARK_BC.
- * Not SGD. trained=false. Uses tools/spark-bc-dump/apply_step.py.
+/* STEP: CPU SGD on Spark safetensors (fixture JSONL).
+ * trained=true / not_sgd=false only when apply_step.py applies
+ * real grads. Uses tools/spark-bc-dump/apply_step.py.
  */
 int spark_bump_train_weights(const char *out_dir, const char *job_id,
 			     const char *sparkbc_path, int step_n);

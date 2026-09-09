@@ -106,12 +106,13 @@ as `TRAIN_STATUS` (`0x27`).
 Selfhost train seed: `selfhost/compile_train.spark` →
 `docs/examples/spark-selfhost-train.sparkbc`. Bootstrap
 `./spark-bootstrap --run-bc` **or** GAS `./spark --run-bc` runs that
-binary (dry; `trained=false`). GAS `./spark --dry-run` runs train
-verbs from source; GAS `--compile` wraps bootstrap emit. Emitting
-TRAIN/STEP ≠ a trained model. See [SPARK_BC.md](SPARK_BC.md) and
-[SPARK_BUILDER.md](SPARK_BUILDER.md) (sha256 table + reproduce
-commands). STEP→weights is **implemented**
-(`out/train/<job>/weights.safetensors`; dry; `trained=false`).
+binary (TRAIN accept dry; STEP = tiny CPU SGD). GAS `./spark --dry-run`
+runs train verbs from source; GAS `--compile` wraps bootstrap emit.
+Emitting TRAIN/STEP ≠ beating Claude. See [SPARK_BC.md](SPARK_BC.md)
+and [SPARK_BUILDER.md](SPARK_BUILDER.md) (sha256 table + reproduce
+commands). STEP→weights is **CPU SGD**
+(`out/train/<job>/weights.safetensors`; `trained=true` /
+`not_sgd=false` when grads apply; not beat Claude).
 
 Training methodology: [MODEL_TRAINING.md](MODEL_TRAINING.md).
 Eval helpers: [MODEL_ANALYSIS.md](MODEL_ANALYSIS.md).
@@ -130,23 +131,26 @@ model plan blueprint into "out/better-model.md"   # markdown only
 
 model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" method "spark_distill_cpu" -> job
 model build -> job                               # same as train
-model step "job-dry-001" -> step                 # dry loop tick (0x28)
+model step "job-dry-001" -> step                 # CPU SGD tick (0x28)
 model status "job-dry-001" -> status             # polls that job id
 ```
 
 ### `model step` (SPARK_BC `STEP` `0x28`)
 
-One dry training-loop tick in the binary — not SGD and not trained.
-Syntax: `model step "job-id" -> bind`. Compiles to `STEP` (job_id,
-bind). Bootstrap `--run-bc` prints `"op":"step"` JSON and updates
-`ARTIFACT` with `step_n`. Proof: TRAIN → STEP → TRAIN_STATUS in
+One training-loop tick in the binary — **tiny CPU SGD** on Spark
+tensors (fixture JSONL → CE on `lm_head`). Syntax:
+`model step "job-id" -> bind`. Compiles to `STEP` (job_id, bind).
+Bootstrap `--run-bc` prints `"op":"step"` / `mode=cpu-sgd` JSON,
+updates `ARTIFACT` (`trained=true`, `not_sgd=false`), and writes
+`weights.safetensors` when grads apply (fails loud if stub).
+**Not beat Claude.** Proof: TRAIN → STEP → TRAIN_STATUS in
 `examples/spark_train_step.spark` →
 `docs/examples/spark-train-step.sparkbc` (sha256
 `d08925b52bf8c840de626c9cfec619d4dbae5a674b94bb8c7c5837eb1ac64551`).
 Focused gate: `make sparkbc-e2e` (compile → dump TRAIN/STEP →
-`--run-bc` dry → assert `ARTIFACT`). Not SGD. Step-updated
-weights are **implemented** (`weights.safetensors`; dry delta; not SGD).
-Dry ≠ trained.
+`--run-bc` → assert `ARTIFACT`). Step-updated weights are
+**CPU SGD** (`weights.safetensors`; `trained=true`;
+`not_sgd=false`; loss must drop). Tiny; **not beat Claude**.
 
 Optional **`method "…"`** selects the training algorithm
 (`spark_distill_cpu` | `spark_pref_pack` | `spark_playbook_fit` |

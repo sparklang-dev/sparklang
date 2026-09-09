@@ -618,7 +618,7 @@ test-sparkbc: spark-bootstrap spark
 	PYTHONPATH=python python3 tools/spark-bc-dump/test_dump.py
 
 # Focused TRAIN→STEP→TRAIN_STATUS e2e: compile → dump → --run-bc →
-# ARTIFACT (+ GAS ./spark --run-bc). Not SGD.
+# ARTIFACT (+ GAS ./spark --run-bc). STEP = tiny CPU SGD.
 test-sparkbc-e2e: spark-bootstrap spark
 	chmod +x tools/spark-bc-dump/run_e2e_gate.sh
 	./tools/spark-bc-dump/run_e2e_gate.sh

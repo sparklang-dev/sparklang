@@ -73,39 +73,18 @@
 <p>All notable user-facing releases of <strong>SparkLang</strong> (the Spark programming
 language) are listed here. Site and installers track
 <code class="inline-code">website/downloads/manifest.json</code>.</p>
-<h2>0.6.33 — 2026-09-09</h2>
+<h2>0.6.31 — 2026-09-08</h2>
 <ul>
-<li><strong>Eval harness (beat-Claude goal, no win claim):</strong> frozen
-  copy/recall + next-token probes under <code class="inline-code">examples/eval/</code>; runner
-  <code class="inline-code">tools/spark-eval/run.py</code>; <code class="inline-code">make spark-eval</code> (dry default or
-  <code class="inline-code">WEIGHTS=</code> / <code class="inline-code">SPARK_EVAL_WEIGHTS</code>). Prints scores; exit 0 =
-  harness ran. Docs: how to compare later — <strong>does not</strong> claim
-  beat Claude. Independent of SGD. <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</li>
-</ul>
-<h2>0.6.32 — 2026-09-09</h2>
-<ul>
-  <li><strong>Control tensor-assembly source:</strong> readable
-  <code class="inline-code">examples/models/control.sparkasm</code>
-  documents the boring decoder control (GQA / RMSNorm / MATMUL / ROPE /
-  ATTN / SILU). Optional shape-check stub
-  <code class="inline-code">python/sparklang/model_lab/sparkasm_check.py</code>
-  (<code class="inline-code">make test-sparkasm-control</code>). Honest: source + shape check =
-  implemented; tensor VM / JIT / train = <strong>not</strong>. Linked from
+<li><strong>STEP CPU SGD (B-lane):</strong> <code class="inline-code">--run-bc</code> <code class="inline-code">STEP</code> (<code class="inline-code">0x28</code>) runs real
+  CPU SGD on Spark-created <code class="inline-code">lm_head</code> from
+  <code class="inline-code">examples/fixtures/train/dataset.jsonl</code> (mean-pool embed → CE).
+  Writes <code class="inline-code">weights.safetensors</code> with <code class="inline-code">trained=true</code> /
+  <code class="inline-code">not_sgd=false</code> only when loss drops and grads apply; fails loud
+  otherwise. Helper <code class="inline-code">apply_sgd_step</code> /
+  <code class="inline-code">tools/spark-bc-dump/apply_step.py</code>. Gates:
+  <code class="inline-code">make test-sparkbc</code> (loss drop), <code class="inline-code">make sparkbc-e2e</code>. <strong>Not beat
+  Claude.</strong> No 6000 / GPU-1. Docs:
   <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</li>
-</ul>
-<h2>0.6.31 — 2026-09-09</h2>
-<ul>
-<li><strong>Byte-level BPE tokenizer seed (from nothing):</strong> deterministic
-  trainer in <code class="inline-code">python/sparklang/tokenize/</code> trains on the pinned
-  fixture <code class="inline-code">examples/fixtures/tokenize/seed_corpus.txt</code> (no FineWeb /
-  downloads). Emits <code class="inline-code">docs/examples/spark-bpe-vocab.json</code> +
-  <code class="inline-code">.sha256</code> sidecar. Vocab sha256:
-  <code class="inline-code">c20f899bbd552b2773447838be31827952d8494c110613c9ade1cb8a07c21226</code>.
-  Reproduce:
-  <code class="inline-code">PYTHONPATH=python python3 -m sparklang.tokenize train</code>.
-  Gate: <code class="inline-code">make test-bpe-seed</code>. Docs:
-  <a href="/docs/tokenizer.html">TOKENIZER.md</a>. Optional later: pack vocab into
-  SPARK_BC pool.</li>
 </ul>
 <h2>0.6.30 — 2026-09-09</h2>
 <ul>
@@ -116,6 +95,7 @@ language) are listed here. Site and installers track
   <code class="inline-code">forward=true</code> and honest
   <code class="inline-code">trained</code> from weights meta. Not a production LLM. Gate:
   <code class="inline-code">make test-sparkbc</code>. Docs:
+
   <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</li>
 </ul>
 <h2>0.6.29 — 2026-09-08</h2>

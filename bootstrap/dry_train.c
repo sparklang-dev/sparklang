@@ -95,14 +95,14 @@ const char *spark_pick_train_step(const char *job_id, int step_n)
 	if (step_n < 1)
 		step_n = 1;
 	if (snprintf(step_buf, sizeof(step_buf),
-		     "{\"op\":\"step\",\"mode\":\"dry-run\","
+		     "{\"op\":\"step\",\"mode\":\"cpu-sgd\","
 		     "\"job_id\":\"%s\",\"step\":%d,"
 		     "\"state\":\"stepped\",\"backend\":\"http\","
 		     "\"artifacts\":{"
 		     "\"marker\":\"out/train/%s/ARTIFACT\","
 		     "\"weights\":\"out/train/%s/weights.safetensors\"},"
-		     "\"note\":\"dry-run STEP — weights bumped; "
-		     "not SGD; not trained\"}",
+		     "\"note\":\"CPU SGD STEP — real grads on Spark "
+		     "tensors; tiny; not beat Claude\"}",
 		     job_id, step_n, job_id, job_id) >=
 	    (int)sizeof(step_buf))
 		return NULL;
@@ -205,15 +205,15 @@ int spark_bump_train_step(const char *out_dir, const char *job_id,
 	if (n < 0 || n >= (int)sizeof(path))
 		return 1;
 	n = snprintf(body, sizeof(body),
-		     "spark-train-dry %s\n"
-		     "mode=dry-run-fixture\n"
-		     "not_sgd=true\n"
-		     "trained=false\n"
+		     "spark-train-sgd %s\n"
+		     "mode=cpu-sgd\n"
+		     "not_sgd=false\n"
+		     "trained=true\n"
 		     "step_n=%d\n"
 		     "op=step\n"
 		     "weights=%s/weights.safetensors\n"
-		     "note=dry STEP -- weights bumped; not SGD; "
-		     "not a trained model\n",
+		     "note=CPU SGD STEP -- real grads; tiny; "
+		     "not beat Claude\n",
 		     job_id, step_n, out_dir);
 	if (n < 0 || n >= (int)sizeof(body))
 		return 1;
@@ -272,6 +272,7 @@ int spark_bump_train_weights(const char *out_dir, const char *job_id,
 		     "PYTHONPATH=python python3 "
 		     "tools/spark-bc-dump/apply_step.py "
 		     "--sparkbc %s --weights %s --step %d "
+		     "--dataset examples/fixtures/train/dataset.jsonl "
 		     "--command './spark-bootstrap --run-bc %s'",
 		     sparkbc_path, weights, step_n, sparkbc_path);
 	if (n < 0 || n >= (int)sizeof(cmd))
@@ -279,7 +280,8 @@ int spark_bump_train_weights(const char *out_dir, const char *job_id,
 	st = system(cmd);
 	if (st != 0) {
 		fprintf(stderr,
-			"error: dry STEP weight write failed (status %d)\n",
+			"error: SGD STEP weight write failed "
+			"(status %d)\n",
 			st);
 		return 1;
 	}

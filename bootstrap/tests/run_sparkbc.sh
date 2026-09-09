@@ -515,8 +515,9 @@ print('decoded', ' '.join(ops), 'sha256', bc['sha256'][:12])
 fi
 rm -f "$builder_tmp"
 
-# STEP 0x28: TRAIN → STEP → TRAIN_STATUS in one stream. Dry ≠ SGD.
-# STEP also writes out/train/<job>/weights.safetensors (Spark-created).
+# STEP 0x28: TRAIN → STEP → TRAIN_STATUS in one stream.
+# STEP runs CPU SGD → out/train/<job>/weights.safetensors
+# (trained=true, not_sgd=false). Tiny; not beat Claude.
 step_src="examples/spark_train_step.spark"
 step_pub="docs/examples/spark-train-step.sparkbc"
 step_tmp="$(mktemp)"
@@ -553,10 +554,15 @@ i26, i28, i27 = code.index(0x26), code.index(0x28), code.index(0x27)
 assert i26 < i28 < i27, (i26, i28, i27)
 meta = read_safetensors_meta('$weights')
 assert int(meta.get('step_n', '0')) >= 1, meta
-assert meta.get('trained') == 'false', meta
-assert meta.get('not_sgd') == 'true', meta
+assert meta.get('trained') == 'true', meta
+assert meta.get('not_sgd') == 'false', meta
+assert meta.get('sgd') == 'true', meta
+lb = float(meta['loss_before'])
+la = float(meta['loss_after'])
+assert la < lb, (lb, la)
 print('sha256', bc['sha256'])
 print('weights_step_n', meta['step_n'])
+print('loss', lb, '->', la)
 print('first32', ' '.join('%02x' % b for b in bc['raw'][:32]))
 "; then
     if echo "$step_run" | grep -q '"op":"train"' &&
@@ -564,11 +570,12 @@ print('first32', ' '.join('%02x' % b for b in bc['raw'][:32]))
        echo "$step_run" | grep -q '"op":"status"' &&
        echo "$step_run" | grep -q 'job-dry-001' &&
        echo "$step_run" | grep -q 'weights.safetensors' &&
+       echo "$step_run" | grep -q 'cpu-sgd' &&
        test -f "$marker" &&
        test -f "$weights" &&
        grep -q 'step_n=1' "$marker" &&
-       grep -q 'trained=false' "$marker" &&
-       grep -q 'not_sgd=true' "$marker" &&
+       grep -q 'trained=true' "$marker" &&
+       grep -q 'not_sgd=false' "$marker" &&
        grep -q 'weights=' "$marker"; then
       echo "PASS sparkbc_train_step"
     else
