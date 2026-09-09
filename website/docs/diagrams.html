@@ -7,8 +7,8 @@
     <meta name="description" content="How Spark tools and LLM assist relate — compile, decompile, train, serve, shadows. Deterministic SoT; never beat Claude." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
-    <link rel="stylesheet" href="/css/tokens.css?v=diagrams037" />
-    <link rel="stylesheet" href="/css/site.css?v=diagrams037" />
+    <link rel="stylesheet" href="/css/tokens.css?v=jlane039" />
+    <link rel="stylesheet" href="/css/site.css?v=jlane039" />
   </head>
   <body class="doc-page">
     <header class="site-header">
@@ -38,6 +38,7 @@
                   <li><a href="/docs/spark-builder.html">Builder</a></li>
                   <li><a href="/docs/compile.html">Compile</a></li>
                   <li><a href="/docs/decompile.html">Decompile</a></li>
+                  <li><a href="/docs/llm-decompile.html">LLM research</a></li>
                   <li><a href="/docs/spark-bc.html">Opcodes / ISA</a></li>
                   <li><a href="/docs/build-models.html">Build models</a></li>
                   <li><a href="/docs/train-loop.html">Train loop</a></li>
@@ -75,6 +76,7 @@
         <a href="/docs/spark-builder.html">Builder</a>
         <a href="/docs/compile.html">Compile</a>
         <a href="/docs/decompile.html">Decompile</a>
+        <a href="/docs/llm-decompile.html">LLM research</a>
         <a href="/docs/spark-bc.html">Opcodes / ISA</a>
         <a href="/docs/build-models.html">Build models</a>
         <a href="/docs/train-loop.html">Train loop</a>
@@ -95,10 +97,12 @@
         they do <strong>not</strong> replace <code class="inline-code">--compile</code>, <code class="inline-code">dump.py</code>, or <code class="inline-code">bc_vm</code>.
         <strong>Never</strong> beat Claude. <strong>Never</strong> 6000 train.</p>
         <p>Hub: <a href="/docs/factory.html">FACTORY.md</a>. Builder: <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</p>
-        <p><strong>J-lane:</strong> dedicated decompile research pages / CLI capture galleries
-        may land separately. When merged, prefer those pages for screenshot
-        galleries — this file keeps <strong>flow</strong> diagrams only (no conflicting
-        SoT). Until then, the site is not diagram-empty.</p>
+        <p><strong>J-lane (landed):</strong> decompile how-to with CLI captures + SVG
+        tool diagrams — <a href="/docs/decompile.html">DECOMPILE.md</a> /
+        <a href="/docs/decompile.html">/docs/decompile.html</a>. LLM survey —
+        <a href="/docs/llm-decompile.html">research/LLM_DECOMPILE.md</a> /
+        <a href="/docs/llm-decompile.html">/docs/llm-decompile.html</a>. This file
+        keeps <strong>Mermaid flow</strong> diagrams; prefer DECOMPILE for screenshots.</p>
         <h2 id="1-how-spark-tools-function">1) How Spark tools function</h2>
         <p>End-to-end factory: source → bytecode → inspect → train → serve →
         measure. Helpers that <strong>shadow</strong> (thin-wrap) SoT stay labeled.</p>

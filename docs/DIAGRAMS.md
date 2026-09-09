@@ -7,10 +7,12 @@ they do **not** replace `--compile`, `dump.py`, or `bc_vm`.
 
 Hub: [FACTORY.md](FACTORY.md). Builder: [SPARK_BUILDER.md](SPARK_BUILDER.md).
 
-**J-lane:** dedicated decompile research pages / CLI capture galleries
-may land separately. When merged, prefer those pages for screenshot
-galleries — this file keeps **flow** diagrams only (no conflicting
-SoT). Until then, the site is not diagram-empty.
+**J-lane (landed):** decompile how-to with CLI captures + SVG
+tool diagrams — [DECOMPILE.md](DECOMPILE.md) /
+[/docs/decompile.html](/docs/decompile.html). LLM survey —
+[research/LLM_DECOMPILE.md](research/LLM_DECOMPILE.md) /
+[/docs/llm-decompile.html](/docs/llm-decompile.html). This file
+keeps **Mermaid flow** diagrams; prefer DECOMPILE for screenshots.
 
 ## 1) How Spark tools function
 

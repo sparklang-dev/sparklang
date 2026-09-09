@@ -13,7 +13,7 @@ from pathlib import Path
 import markdown
 
 ROOT = Path(__file__).resolve().parents[1]
-CSS_V = "diagrams037"
+CSS_V = "jlane039"
 
 DOC_NAV = """\
       <nav class="doc__nav" aria-label="Docs">
@@ -23,6 +23,7 @@ DOC_NAV = """\
         <a href="/docs/spark-builder.html"{bc}>Builder</a>
         <a href="/docs/compile.html"{cp}>Compile</a>
         <a href="/docs/decompile.html"{dc}>Decompile</a>
+        <a href="/docs/llm-decompile.html"{rd}>LLM research</a>
         <a href="/docs/spark-bc.html"{isa}>Opcodes / ISA</a>
         <a href="/docs/build-models.html"{bm}>Build models</a>
         <a href="/docs/train-loop.html"{tl}>Train loop</a>
@@ -79,6 +80,7 @@ HEADER = """\
                   <li><a href="/docs/spark-builder.html">Builder</a></li>
                   <li><a href="/docs/compile.html">Compile</a></li>
                   <li><a href="/docs/decompile.html">Decompile</a></li>
+                  <li><a href="/docs/llm-decompile.html">LLM research</a></li>
                   <li><a href="/docs/spark-bc.html">Opcodes / ISA</a></li>
                   <li><a href="/docs/build-models.html">Build models</a></li>
                   <li><a href="/docs/train-loop.html">Train loop</a></li>
@@ -161,6 +163,7 @@ MD_LINK_MAP = {
     "DIAGRAMS.md": "/docs/diagrams.html",
     "COMPILE.md": "/docs/compile.html",
     "DECOMPILE.md": "/docs/decompile.html",
+    "LLM_DECOMPILE.md": "/docs/llm-decompile.html",
     "BUILD_MODELS.md": "/docs/build-models.html",
     "TRAIN_LOOP.md": "/docs/train-loop.html",
     "ARCHITECTURE.md": "/docs/architecture.html",
@@ -207,6 +210,10 @@ DOC_PAGES = [
      "Decompile / inspect SPARK_BC",
      "Dump, inspect, and disassemble SPARK_BC and related "
      "binaries — hex mnemonics, not source recovery."),
+    ("rd", "research/LLM_DECOMPILE.md", "llm-decompile.html",
+     "LLM decompile research",
+     "Survey of LLM decompile tools vs Spark SPARK_BC "
+     "deterministic dump — citations, limits, no beat Claude."),
     ("bm", "BUILD_MODELS.md", "build-models.html",
      "Build models — TRAIN / STEP",
      "TRAIN, STEP, ARTIFACT, weights, and checkpoints on CPU "
@@ -286,6 +293,7 @@ def decorate_html(body: str) -> str:
     body = body.replace("<ol>", '<ol class="doc__ol">')
     body = body.replace("<hr />", '<hr class="doc__hr" />')
     body = body.replace("<hr>", '<hr class="doc__hr" />')
+    body = body.replace("<img ", '<img class="doc__img" ')
     def fence(m: re.Match[str]) -> str:
         lang = m.group(1) or ""
         if lang:
@@ -332,8 +340,9 @@ def render(md_path: Path, out_path: Path, title: str, description: str, current:
     )
     body = decorate_html(body)
     keys = (
-        "ab", "ai", "nn", "ide", "sh", "bc", "cp", "dc", "bm", "af",
-        "mk", "isa", "fy", "dg", "tl", "ar", "tk", "sv", "ev", "ci",
+        "ab", "ai", "nn", "ide", "sh", "bc", "cp", "dc", "rd", "bm",
+        "af", "mk", "isa", "fy", "dg", "tl", "ar", "tk", "sv", "ev",
+        "ci",
     )
     nav_kwargs = {
         k: (' aria-current="page"' if current == k else "") for k in keys

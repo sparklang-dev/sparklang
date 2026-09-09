@@ -43,6 +43,7 @@ class TestDocsNav(unittest.TestCase):
             "DIAGRAMS.md",
             "COMPILE.md",
             "DECOMPILE.md",
+            "research/LLM_DECOMPILE.md",
             "BUILD_MODELS.md",
             "TRAIN_LOOP.md",
             "ARCHITECTURE.md",

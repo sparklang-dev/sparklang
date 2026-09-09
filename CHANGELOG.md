@@ -5,6 +5,21 @@ language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
 
+## 0.6.39 — 2026-09-09
+
+- **Decompile UX + LLM research (J-lane):** step-by-step
+  [DECOMPILE.md](docs/DECOMPILE.md) with real CLI screenshots,
+  annotated SDK GUI mock, and SVG tool-function diagrams (compile
+  path, decompile path, helpers/GUI, deterministic vs LLM, LLM
+  assist flows). Research
+  [docs/research/LLM_DECOMPILE.md](docs/research/LLM_DECOMPILE.md)
+  → `/docs/llm-decompile.html` (LLM4Decompile, Nova, SK2,
+  Decompile-Bench, AutoDecompiler, Ghidra+LLM — cited). Complements
+  H-lane Mermaid [DIAGRAMS.md](docs/DIAGRAMS.md) and I-lane
+  `spark-bc-gui`. Dump stays SoT. **Never** perfect SPARK_BC LLM
+  claim. **Never** 6000. Does **not** beat Claude. Images:
+  `website/docs/images/decompile-*`, `diagram-*`.
+
 ## 0.6.38 — 2026-09-09
 
 - **SDK + IDE + GUI download pack (I-lane):** `make sdk-pack` /

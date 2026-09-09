@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 300" role="img" aria-labelledby="t5 d5">
+  <title id="t5">How LLMs typically assist compile and decompile</title>
+  <desc id="d5">Typical LLM assist flows for decompile and compile with honest limits</desc>
+  <defs>
+    <marker id="arrow5" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="#334155"/>
+    </marker>
+    <style>
+      .box { fill:#fff; stroke:#334155; stroke-width:1.5; rx:6; }
+      .guess { fill:#ffedd5; stroke:#c2410c; stroke-width:1.5; rx:6; }
+      .ok { fill:#dcfce7; stroke:#166534; stroke-width:1.5; rx:6; }
+      .lbl { font:600 12px ui-sans-serif,system-ui,sans-serif; fill:#0f172a; }
+      .sub { font:10px ui-sans-serif,system-ui,sans-serif; fill:#475569; }
+      .cap { font:12px ui-sans-serif,system-ui,sans-serif; fill:#334155; }
+      .flow { stroke:#334155; stroke-width:1.5; fill:none; marker-end:url(#arrow5); }
+      .warn { font:600 11px ui-sans-serif,system-ui,sans-serif; fill:#9a3412; }
+    </style>
+  </defs>
+  <rect x="8" y="8" width="904" height="284" fill="#f8fafc" stroke="#cbd5e1" rx="8"/>
+  <text x="20" y="28" class="cap">How LLMs typically assist  decompile (top) · compile (bottom)</text>
+
+  <!-- decompile row -->
+  <text x="24" y="52" class="lbl">Decompile assist (industry pattern)</text>
+  <rect class="ok" x="24" y="64" width="130" height="48"/>
+  <text x="89" y="84" text-anchor="middle" class="lbl">bytes / asm</text>
+  <text x="89" y="100" text-anchor="middle" class="sub">or Ghidra pseudo</text>
+  <path class="flow" d="M158 88 H186"/>
+  <rect class="guess" x="190" y="64" width="150" height="48"/>
+  <text x="265" y="84" text-anchor="middle" class="lbl">LLM decode</text>
+  <text x="265" y="100" text-anchor="middle" class="sub">guessed C / names</text>
+  <path class="flow" d="M344 88 H372"/>
+  <rect class="guess" x="376" y="64" width="160" height="48"/>
+  <text x="456" y="84" text-anchor="middle" class="lbl">Readable draft</text>
+  <text x="456" y="100" text-anchor="middle" class="sub">may fail re-exec</text>
+  <path class="flow" d="M540 88 H568"/>
+  <rect class="ok" x="572" y="64" width="160" height="48"/>
+  <text x="652" y="84" text-anchor="middle" class="lbl">Human verify</text>
+  <text x="652" y="100" text-anchor="middle" class="sub">tests / RE tools</text>
+  <text x="750" y="92" class="sub">` perfect SPARK_BC’.spark</text>
+
+  <!-- compile row -->
+  <text x="24" y="152" class="lbl">Compile assist (industry pattern)</text>
+  <rect class="ok" x="24" y="164" width="130" height="48"/>
+  <text x="89" y="184" text-anchor="middle" class="lbl">intent / prompt</text>
+  <text x="89" y="200" text-anchor="middle" class="sub">or sketch source</text>
+  <path class="flow" d="M158 188 H186"/>
+  <rect class="guess" x="190" y="164" width="150" height="48"/>
+  <text x="265" y="184" text-anchor="middle" class="lbl">LLM emit</text>
+  <text x="265" y="200" text-anchor="middle" class="sub">draft code</text>
+  <path class="flow" d="M344 188 H372"/>
+  <rect class="ok" x="376" y="164" width="160" height="48"/>
+  <text x="456" y="184" text-anchor="middle" class="lbl">Spark compile</text>
+  <text x="456" y="200" text-anchor="middle" class="sub">deterministic BC</text>
+  <path class="flow" d="M540 188 H568"/>
+  <rect class="ok" x="572" y="164" width="160" height="48"/>
+  <text x="652" y="184" text-anchor="middle" class="lbl">dump / --run-bc</text>
+  <text x="652" y="200" text-anchor="middle" class="sub">SoT check</text>
+  <text x="750" y="192" class="sub">LLM never packs SPBC</text>
+
+  <rect x="24" y="232" width="872" height="44" fill="#fff7ed" stroke="#c2410c" rx="6"/>
+  <text x="40" y="252" class="warn">Limits: obfuscation breaks most LLM decompilers; re-exec rates are partial;</text>
+  <text x="40" y="268" class="warn">general chat models refine Ghidra output  they are not a SPARK_BC SoT. Spark keeps dump.py.</text>
+</svg>
