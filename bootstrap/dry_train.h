@@ -15,5 +15,10 @@ int spark_write_train_marker(const char *out_dir, const char *job_id,
 /* Bump step_n on ARTIFACT (dry loop). Not SGD. */
 int spark_bump_train_step(const char *out_dir, const char *job_id,
 			  int step_n);
+/* Dry STEP: write/update Spark-created safetensors from SPARK_BC.
+ * Not SGD. trained=false. Uses tools/spark-bc-dump/apply_step.py.
+ */
+int spark_bump_train_weights(const char *out_dir, const char *job_id,
+			     const char *sparkbc_path, int step_n);
 
 #endif

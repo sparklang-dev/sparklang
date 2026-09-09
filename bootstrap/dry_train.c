@@ -3,6 +3,7 @@
 
 #include <errno.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
 
@@ -98,9 +99,12 @@ const char *spark_pick_train_step(const char *job_id, int step_n)
 		     "\"job_id\":\"%s\",\"step\":%d,"
 		     "\"state\":\"stepped\",\"backend\":\"http\","
 		     "\"artifacts\":{"
-		     "\"marker\":\"out/train/%s/ARTIFACT\"},"
-		     "\"note\":\"dry-run STEP — not SGD; not trained\"}",
-		     job_id, step_n, job_id) >= (int)sizeof(step_buf))
+		     "\"marker\":\"out/train/%s/ARTIFACT\","
+		     "\"weights\":\"out/train/%s/weights.safetensors\"},"
+		     "\"note\":\"dry-run STEP — weights bumped; "
+		     "not SGD; not trained\"}",
+		     job_id, step_n, job_id, job_id) >=
+	    (int)sizeof(step_buf))
 		return NULL;
 	return step_buf;
 }
@@ -207,8 +211,10 @@ int spark_bump_train_step(const char *out_dir, const char *job_id,
 		     "trained=false\n"
 		     "step_n=%d\n"
 		     "op=step\n"
-		     "note=dry STEP -- not SGD; not a trained model\n",
-		     job_id, step_n);
+		     "weights=%s/weights.safetensors\n"
+		     "note=dry STEP -- weights bumped; not SGD; "
+		     "not a trained model\n",
+		     job_id, step_n, out_dir);
 	if (n < 0 || n >= (int)sizeof(body))
 		return 1;
 	f = fopen(path, "w");
@@ -222,5 +228,67 @@ int spark_bump_train_step(const char *out_dir, const char *job_id,
 		return 1;
 	}
 	fclose(f);
+	return 0;
+}
+
+int spark_bump_train_weights(const char *out_dir, const char *job_id,
+			     const char *sparkbc_path, int step_n)
+{
+	char weights[512];
+	char cmd[2048];
+	int n;
+	int st;
+	FILE *probe;
+
+	(void)job_id;
+	if (!out_dir || !out_dir[0])
+		return 1;
+	if (!sparkbc_path || !sparkbc_path[0]) {
+		fprintf(stderr,
+			"error: STEP weights need SPARK_BC path\n");
+		return 1;
+	}
+	if (step_n < 1)
+		step_n = 1;
+	if (mkdir_p(out_dir) != 0) {
+		fprintf(stderr, "error: train weights mkdir failed %s\n",
+			out_dir);
+		return 1;
+	}
+	n = snprintf(weights, sizeof(weights), "%s/weights.safetensors",
+		     out_dir);
+	if (n < 0 || n >= (int)sizeof(weights))
+		return 1;
+	probe = fopen("tools/spark-bc-dump/apply_step.py", "r");
+	if (!probe) {
+		fprintf(stderr,
+			"error: missing tools/spark-bc-dump/apply_step.py "
+			"(run from repo root)\n");
+		return 1;
+	}
+	fclose(probe);
+	/* Paths from this repo have no spaces; fail loud if spawn fails. */
+	n = snprintf(cmd, sizeof(cmd),
+		     "PYTHONPATH=python python3 "
+		     "tools/spark-bc-dump/apply_step.py "
+		     "--sparkbc %s --weights %s --step %d "
+		     "--command './spark-bootstrap --run-bc %s'",
+		     sparkbc_path, weights, step_n, sparkbc_path);
+	if (n < 0 || n >= (int)sizeof(cmd))
+		return 1;
+	st = system(cmd);
+	if (st != 0) {
+		fprintf(stderr,
+			"error: dry STEP weight write failed (status %d)\n",
+			st);
+		return 1;
+	}
+	probe = fopen(weights, "rb");
+	if (!probe) {
+		fprintf(stderr, "error: missing STEP weights %s\n",
+			weights);
+		return 1;
+	}
+	fclose(probe);
 	return 0;
 }

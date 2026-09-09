@@ -516,10 +516,12 @@ fi
 rm -f "$builder_tmp"
 
 # STEP 0x28: TRAIN → STEP → TRAIN_STATUS in one stream. Dry ≠ SGD.
+# STEP also writes out/train/<job>/weights.safetensors (Spark-created).
 step_src="examples/spark_train_step.spark"
 step_pub="docs/examples/spark-train-step.sparkbc"
 step_tmp="$(mktemp)"
 marker="out/train/job-dry-001/ARTIFACT"
+weights="out/train/job-dry-001/weights.safetensors"
 ./spark-bootstrap --compile "$step_src" -o "$step_tmp" || {
   echo "FAIL sparkbc_train_step: compile"
   fail=1
@@ -532,7 +534,7 @@ if [[ "$fail" -eq 0 ]] && ! cmp -s "$step_tmp" "$step_pub"; then
   echo "FAIL sparkbc_train_step: compile != $step_pub"
   fail=1
 fi
-rm -f "$marker"
+rm -f "$marker" "$weights"
 if [[ "$fail" -eq 0 ]]; then
   step_run="$(./spark-bootstrap --run-bc "$step_pub" 2>&1)" || {
     echo "FAIL sparkbc_train_step: run-bc"
@@ -543,30 +545,39 @@ fi
 if [[ "$fail" -eq 0 ]]; then
   if PYTHONPATH=python python3 -c "
 from sparklang.model_lab.bc_dump import load_sparkbc
+from sparklang.model_lab.weights import read_safetensors_meta
 bc = load_sparkbc('$step_pub')
 code = bc['code']
 assert 0x26 in code and 0x28 in code and 0x27 in code, list(code)
 i26, i28, i27 = code.index(0x26), code.index(0x28), code.index(0x27)
 assert i26 < i28 < i27, (i26, i28, i27)
+meta = read_safetensors_meta('$weights')
+assert int(meta.get('step_n', '0')) >= 1, meta
+assert meta.get('trained') == 'false', meta
+assert meta.get('not_sgd') == 'true', meta
 print('sha256', bc['sha256'])
+print('weights_step_n', meta['step_n'])
 print('first32', ' '.join('%02x' % b for b in bc['raw'][:32]))
 "; then
     if echo "$step_run" | grep -q '"op":"train"' &&
        echo "$step_run" | grep -q '"op":"step"' &&
        echo "$step_run" | grep -q '"op":"status"' &&
        echo "$step_run" | grep -q 'job-dry-001' &&
+       echo "$step_run" | grep -q 'weights.safetensors' &&
        test -f "$marker" &&
+       test -f "$weights" &&
        grep -q 'step_n=1' "$marker" &&
        grep -q 'trained=false' "$marker" &&
-       grep -q 'not_sgd=true' "$marker"; then
+       grep -q 'not_sgd=true' "$marker" &&
+       grep -q 'weights=' "$marker"; then
       echo "PASS sparkbc_train_step"
     else
-      echo "FAIL sparkbc_train_step: run/marker miss"
+      echo "FAIL sparkbc_train_step: run/marker/weights miss"
       echo "$step_run" | head -20
       fail=1
     fi
   else
-    echo "FAIL sparkbc_train_step: opcode order"
+    echo "FAIL sparkbc_train_step: opcode/weights meta"
     fail=1
   fi
 fi

@@ -119,6 +119,51 @@ def write_safetensors(
     dest.write_bytes(struct.pack("<Q", len(hdr)) + hdr + body)
 
 
+def read_safetensors(
+    path: str | Path,
+) -> tuple[
+    dict[str, str],
+    dict[str, tuple[tuple[int, ...], bytes]],
+]:
+    """Load Spark-written safetensors (F32 only). No HuggingFace."""
+    raw = Path(path).read_bytes()
+    if len(raw) < 8:
+        raise ValueError("truncated safetensors")
+    hdr_len = struct.unpack_from("<Q", raw, 0)[0]
+    end = 8 + hdr_len
+    if end > len(raw):
+        raise ValueError("truncated safetensors header")
+    header = json.loads(raw[8:end].decode("utf-8"))
+    meta_raw = header.get("__metadata__") or {}
+    meta = {str(k): str(v) for k, v in meta_raw.items()}
+    body = raw[end:]
+    tensors: dict[str, tuple[tuple[int, ...], bytes]] = {}
+    for name, info in header.items():
+        if name == "__metadata__":
+            continue
+        if not isinstance(info, dict):
+            raise ValueError("bad tensor header: %s" % name)
+        dtype = info.get("dtype")
+        if dtype != "F32":
+            raise ValueError("unsupported dtype %s" % dtype)
+        shape = tuple(int(x) for x in info["shape"])
+        start, stop = info["data_offsets"]
+        blob = body[int(start) : int(stop)]
+        want = 4
+        for dim in shape:
+            want *= int(dim)
+        if len(blob) != want:
+            raise ValueError("tensor size mismatch: %s" % name)
+        tensors[name] = (shape, bytes(blob))
+    return meta, tensors
+
+
+def read_safetensors_meta(path: str | Path) -> dict[str, str]:
+    """Return only __metadata__ from a Spark safetensors file."""
+    meta, _tensors = read_safetensors(path)
+    return meta
+
+
 def _add(
     tensors: dict[str, tuple[tuple[int, ...], bytes]],
     sizes: dict[str, list[int]],
@@ -267,3 +312,96 @@ def emit_init_weights(
         "first_32_hex": hex_preview(bc["raw"], 32),
         "goal": "init only (later train is not a claim today)",
     }
+
+def apply_dry_step(
+    sparkbc_path: str | Path,
+    dest: str | Path,
+    *,
+    step_n: int | None = None,
+    source: str = "",
+    command: str = "",
+) -> dict[str, Any]:
+    """Dry STEP: bump step_n meta + tiny deterministic tensor delta.
+
+    Still not SGD. trained stays false. Seed is the SPARK_BC bytes.
+    """
+    bc_path = Path(sparkbc_path)
+    out = Path(dest)
+    if not out.is_file():
+        emit_init_weights(
+            bc_path,
+            out,
+            source=source or str(bc_path),
+            command=command
+            or (
+                "dry STEP seed from SPARK_BC "
+                "(not SGD; trained=false)"
+            ),
+        )
+    meta, tensors = read_safetensors(out)
+    prev = 0
+    if meta.get("step_n"):
+        prev = int(meta["step_n"])
+    if step_n is None:
+        n = prev + 1
+    else:
+        n = int(step_n)
+    if n < 1:
+        n = 1
+    if n <= prev:
+        n = prev + 1
+
+    bc = load_sparkbc(bc_path)
+    seed = hashlib.sha256(
+        bc["raw"] + b"dry-step" + n.to_bytes(4, "little")
+    ).digest()
+    u = struct.unpack_from("<I", seed, 0)[0]
+    delta = (u / 4294967295.0) * 1.0e-3
+
+    tname = "spark.embed.weight"
+    if tname not in tensors:
+        raise KeyError("missing tensor %s" % tname)
+    shape, blob = tensors[tname]
+    count = len(blob) // 4
+    values = list(struct.unpack("<%df" % count, blob))
+    values[0] = float(values[0]) + float(delta)
+    tensors[tname] = (shape, _pack_f32(values))
+
+    meta["step_n"] = str(n)
+    meta["trained"] = "false"
+    meta["served"] = "false"
+    meta["op"] = "step"
+    meta["not_sgd"] = "true"
+    meta["sparkbc_sha256"] = bc["sha256"]
+    meta["genome"] = meta.get("genome") or "SPARK_BC"
+    meta["factory"] = meta.get("factory") or "Spark language"
+    meta["note"] = (
+        "dry STEP updated Spark-created weights; "
+        "not SGD; not trained"
+    )
+    base_der = meta.get("derivation") or "SPARK_BC init"
+    meta["derivation"] = (
+        "%s; dry STEP delta on %s[0] from bytecode hash"
+        % (base_der, tname)
+    )
+    if source:
+        meta["source"] = source
+    if command:
+        meta["command"] = command
+
+    write_safetensors(tensors, meta, out)
+    return {
+        "op": "step_weights",
+        "status": "implemented",
+        "path": str(out),
+        "sha256": hashlib.sha256(out.read_bytes()).hexdigest(),
+        "size_bytes": out.stat().st_size,
+        "step_n": n,
+        "delta": delta,
+        "tensor": tname,
+        "trained": False,
+        "not_sgd": True,
+        "sparkbc_sha256": bc["sha256"],
+        "note": meta["note"],
+    }
+

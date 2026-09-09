@@ -29,7 +29,9 @@ Dry ≠ SGD ≠ trained. Later owner-granted train (not the 6000) aims to
    `STEP` `0x28` (plus `MODEL` / `ASK` / `PRINT` / `HALT` as needed).
 4. **`--run-bc`** — `./spark-bootstrap --run-bc ….sparkbc` executes those
    train opcodes as a **dry fixture** (`trained=false`, `ARTIFACT` under
-   `out/train/<job>/`). Dry ≠ trained.
+   `out/train/<job>/`). **STEP** also writes/updates
+   `out/train/<job>/weights.safetensors` (meta `step_n`, tiny bytecode-hash
+   delta; still `trained=false` / `not_sgd=true`). Dry ≠ SGD ≠ trained.
 5. **GAS dry-run vs emit** — `./spark --dry-run file.spark` runs train
    verbs from **source**. GAS does **not emit** `.sparkbc`.
    `./spark --run-bc` is **BLOCKED** (exit 1). Use bootstrap.
@@ -50,7 +52,7 @@ are `u16` little-endian constant-pool indices.
 |------|----------|---------------|----------|--------------|
 | `0x26` | `TRAIN` | `model train` / `model build` | dataset, base, out, method, bind | `[model] {dry train JSON}`; writes `ARTIFACT` under `out/train/<job>/`; `trained=false` |
 | `0x27` | `TRAIN_STATUS` | `model status` | job_id, bind | `[model] {dry status JSON}` |
-| `0x28` | `STEP` | `model step "job-id" -> bind` | job_id, bind | `[model] {dry step JSON}`; updates `ARTIFACT` `step_n` |
+| `0x28` | `STEP` | `model step "job-id" -> bind` | job_id, bind | `[model] {dry step JSON}`; updates `ARTIFACT` `step_n` + `weights.safetensors` |
 
 `backend` is parsed and skipped (HTTP companion); not a BC operand.
 Dry fixture implementation: `bootstrap/dry_train.c`. Execute with
@@ -127,8 +129,15 @@ txt/json dumps there when regenerating the site; do not invent hex.
 ./spark-bootstrap --run-bc docs/examples/spark-builder.sparkbc
 ./spark-bootstrap --run-bc docs/examples/spark-train-step.sparkbc
 # Expect dry JSON + ARTIFACT under out/train/job-dry-001/
-# trained=false; STEP bumps step_n. Not SGD.
-ls -la out/train/job-dry-001/ARTIFACT
+# trained=false; STEP bumps step_n + writes weights.safetensors.
+# Not SGD (apply_dry_step / tools/spark-bc-dump/apply_step.py).
+ls -la out/train/job-dry-001/ARTIFACT \
+  out/train/job-dry-001/weights.safetensors
+
+# Proof STEP weight write (clean job dir first):
+rm -f out/train/job-dry-001/{ARTIFACT,weights.safetensors}
+./spark-bootstrap --run-bc docs/examples/spark-train-step.sparkbc
+# → out/train/job-dry-001/weights.safetensors (meta step_n>=1)
 ```
 
 ### 4) GAS source dry-run (not bytecode emit)
@@ -162,8 +171,8 @@ wrapper `scripts/sparkbc-e2e`). Compiles
 `examples/spark_train_step.spark`, dumps TRAIN/STEP decode, runs
 `./spark-bootstrap --run-bc` dry, asserts
 `out/train/job-dry-001/ARTIFACT` (`not_sgd=true`, `trained=false`,
-`step_n=1`). Not SGD. STEP-updated weights remain a follow-on
-(`feat/sparkbc-step-weights`).
+`step_n=1`). Not SGD. `make test-sparkbc` asserts STEP weights
+(`weights.safetensors`, `step_n>=1`).
 
 ## Published files — sha256
 
@@ -210,7 +219,7 @@ make test-model-lab
 | GAS `./spark --run-bc` | **BLOCKED** — exit 1; use bootstrap |
 | Dry ARTIFACT / `--run-bc` train | **implemented** — fixture; **not** SGD |
 | Init safetensors from SPARK_BC | **implemented** — `trained: false` |
-| STEP-updated weights file | **planned / in flight** (`feat/sparkbc-step-weights`) — not on `main` yet |
+| STEP-updated weights file | **implemented** (`out/train/<job>/weights.safetensors`; dry delta; `trained=false`) |
 | Trained / served / beats Claude | **not** — later owner train-grant |
 | Cloudflare Pages deploy | Prefer Wrangler OAuth (`npx wrangler pages deploy website …`); if CLI/auth absent → **dashboard** upload of `website/` from a known SHA (see [RELEASE.md](RELEASE.md) step 5) |
 
@@ -230,7 +239,7 @@ make test-model-lab
 | Emit init weights from those bytes | **implemented** (init only) |
 | Round-trip hello SPARK_BC | **tested** (`make test-sparkbc`) |
 | Model lab reverse/compile/modify | **tested** (`make test-model-lab`) |
-| STEP-updated weights | **follow-on** (`feat/sparkbc-step-weights`) |
+| STEP-updated weights | **implemented** (dry delta; not SGD) |
 | Trained / served / beats Claude | **not** |
 
 ## Related
