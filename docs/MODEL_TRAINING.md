@@ -214,7 +214,7 @@ test -f out/train/job-dry-001/ARTIFACT
 
 # SPARK_BC STEP stream (TRAIN → STEP → TRAIN_STATUS)
 make sparkbc-e2e
-# compile → dump → --run-bc dry → ARTIFACT (not SGD; weights follow-on)
+# compile → dump → --run-bc dry → ARTIFACT (not SGD; STEP weights via test-sparkbc)
 ```
 
 `make test` never starts GPU jobs or dials the network.
