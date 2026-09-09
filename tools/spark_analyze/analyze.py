@@ -72,7 +72,7 @@ The dump file (`dump.txt`) is the deterministic SoT.
 
 ## Next steps (local)
 
-1. Read `dump.txt` / `ops.json`.
+1. Read `dump.txt` / `dump.json` / `dump.html` / `ops.json`.
 2. Optional: `spark-bc-gui` for a readable pane.
 3. Optional Ask stub: re-run with `--ask` (owned TinyCoder or
    notes — **not** a SaaS reverse-engineering agent).
@@ -404,6 +404,8 @@ def run_analyze(
         "size": bc["size"],
         "ops": len(rows),
         "dump": "dump.txt",
+        "dump_json": "dump.json",
+        "dump_html": "dump.html",
         "ops_json": "ops.json",
         "report": "REPORT.md",
         "screenshot_placeholder": "screenshot.placeholder.md",
