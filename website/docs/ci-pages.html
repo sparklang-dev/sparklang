@@ -98,6 +98,7 @@
         <a href="/docs/model-aspects.html">Model aspects</a>
         <a href="/docs/voice.html">Voice</a>
         <a href="/docs/voice-ask.html">Voice ask</a>
+        <a href="/docs/voice-easy.html">Voice easy</a>
         <a href="/docs/diagrams.html">Diagrams</a>
         <a href="/docs/spark-builder.html">Builder</a>
         <a href="/docs/compile.html">Compile</a>
@@ -121,6 +122,7 @@
         <a href="/docs/programming-guide.html">Programming guide</a>
         <a href="/downloads.html">Downloads</a>
       </nav>      <article class="doc__body">
+        <p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</p>
         <h1 id="ci-cloudflare-pages-contributors">CI + Cloudflare Pages (contributors)</h1>
         <p>How factory docs and gates reach <strong>sparklang.dev</strong>. Spark /
         SparkLang only. Full release cut: <a href="/docs/release.html">RELEASE.md</a>.</p>
@@ -181,7 +183,88 @@
         <h2 id="related">Related</h2>
         <ul class="doc__ul">
         <li><a href="/docs/factory.html">FACTORY.md</a> · <a href="/docs/sparkbc-make.html">SPARKBC_MAKE.md</a></li>
-        <li><a href="/docs/release.html">RELEASE.md</a> · <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a></li>
+        <li>
+        <h1 id="releasemd-spark-buildermd"><a href="/docs/release.html">RELEASE.md</a> · <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a></h1>
+        </li>
+        </ul>
+        <h1 id="ci-cloudflare-pages-contributors">CI + Cloudflare Pages (contributors)</h1>
+        <p>How factory docs and gates reach <strong>sparklang.dev</strong>. Spark /
+        SparkLang only. Full release cut: <a href="/docs/release.html">RELEASE.md</a>.</p>
+        <h2 id="local-docs-regen-check">Local docs regen + check</h2>
+        <pre class="doc__pre"><code class="language-bash">make docs-html    # python3 tools/md_to_doc_html.py --all-stale
+        make docs-check   # regen + --check + tools/test_docs_nav.py
+        </code></pre>
+        <p>Mirror <code class="inline-code">CHANGELOG.md</code> into <code class="inline-code">website/CHANGELOG.html</code> when cutting a
+        docs release (site SoT is HTML under <code class="inline-code">website/</code>). Sync
+        <code class="inline-code">docs/examples/</code> → <code class="inline-code">website/docs/examples/</code> when Builder artifacts
+        change.</p>
+        <h2 id="ci-github-actions">CI (GitHub Actions)</h2>
+        <p>Workflow: <code class="inline-code">.github/workflows/sparkbc.yml</code>.</p>
+        <p>Typical factory jobs (names may grow — read the YAML):</p>
+        <ul class="doc__ul">
+        <li><code class="inline-code">make test-sparkbc</code></li>
+        <li><code class="inline-code">make sparkbc-e2e</code> / related SPARK_BC gates</li>
+        <li>Eval unit gate when present: <code class="inline-code">make test-spark-eval</code></li>
+        <li>Serve API gate when G-lane merges: <code class="inline-code">make test-serve-api</code></li>
+        <li>Voice easy dry: <code class="inline-code">make test-voice-easy</code></li>
+        </ul>
+        <p>PRs should keep these green. Docs-only PRs still run
+        <code class="inline-code">make docs-check</code> locally before push.</p>
+        <h2 id="production-pages-deploy">Production Pages deploy</h2>
+        <p>Project: <strong><code class="inline-code">sparklang-dev</code></strong>. Branch: <strong><code class="inline-code">production</code></strong>.</p>
+        <pre class="doc__pre"><code class="language-bash"># on the tip SHA you are shipping
+        make docs-html
+        # mirror CHANGELOG.html if needed
+        npx wrangler pages deploy website \
+          --project-name=sparklang-dev \
+          --branch=production \
+          --commit-hash=&quot;$(git rev-parse HEAD)&quot;
+        </code></pre>
+        <p><strong>Auth:</strong> Wrangler OAuth on SoapBox is often under
+        <code class="inline-code">~/.config/.wrangler/</code> (leading <strong>dot</strong>). That is not
+        <code class="inline-code">~/.config/wrangler/</code>. Do not invent or print tokens.</p>
+        <p>If CLI/auth absent → Cloudflare dashboard Direct Upload of
+        <code class="inline-code">website/</code> from the known SHA (<a href="/docs/release.html">RELEASE.md</a> §5b).</p>
+        <h3 id="spot-check-after-deploy">Spot-check after deploy</h3>
+        <ul class="doc__ul">
+        <li>https://sparklang.dev/</li>
+        <li>https://sparklang.dev/CHANGELOG.html</li>
+        <li>https://sparklang.dev/docs/factory.html</li>
+        <li>https://sparklang.dev/docs/model-aspects.html</li>
+        <li>https://sparklang.dev/docs/voice-easy.html</li>
+        <li>https://sparklang.dev/docs/voice.html</li>
+        <li>https://sparklang.dev/docs/voice.html</li>
+        <li>https://sparklang.dev/docs/spark-coder.html</li>
+        <li>https://sparklang.dev/docs/weight-gallery.html</li>
+        <li>https://sparklang.dev/weight-playground.html</li>
+        <li>https://sparklang.dev/docs/spark-builder.html</li>
+        <li>https://sparklang.dev/docs/compile.html</li>
+        <li>https://sparklang.dev/docs/decompile.html</li>
+        <li>https://sparklang.dev/docs/llm-decompile.html</li>
+        <li>https://sparklang.dev/docs/knowledge.html</li>
+        <li>https://sparklang.dev/downloads.html</li>
+        </ul>
+        <p>Record the Pages deployment id next to the git tip. Tip ≠ live
+        site: say so if deploy lags.</p>
+        <h2 id="related">Related</h2>
+        <ul class="doc__ul">
+        <li><a href="/docs/factory.html">FACTORY.md</a> · <a href="/docs/sparkbc-make.html">SPARKBC_MAKE.md</a></li>
+        <li><a href="/docs/release.html">RELEASE.md</a> · <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a><blockquote>
+        <blockquote>
+        <blockquote>
+        <blockquote>
+        <blockquote>
+        <blockquote>
+        <blockquote>
+        <p>54714fa (feat(voice): easy train path for owned STT/TTS (tiny + large))</p>
+        </blockquote>
+        </blockquote>
+        </blockquote>
+        </blockquote>
+        </blockquote>
+        </blockquote>
+        </blockquote>
+        </li>
         </ul>
       </article>
       </main>

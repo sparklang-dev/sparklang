@@ -22,11 +22,8 @@ DOC_NAV = """\
         <a href="/docs/factory.html"{fy}>Factory hub</a>
         <a href="/docs/model-aspects.html"{ma}>Model aspects</a>
         <a href="/docs/voice.html"{vo}>Voice</a>
-<<<<<<< HEAD
         <a href="/docs/voice-ask.html"{va}>Voice ask</a>
-=======
         <a href="/docs/voice-easy.html"{ve}>Voice easy</a>
->>>>>>> 54714fa (feat(voice): easy train path for owned STT/TTS (tiny + large))
         <a href="/docs/diagrams.html"{dg}>Diagrams</a>
         <a href="/docs/spark-builder.html"{bc}>Builder</a>
         <a href="/docs/compile.html"{cp}>Compile</a>
@@ -190,11 +187,8 @@ MD_LINK_MAP = {
     "ENCRYPT_GATEWAY.md": "/docs/ai-models.html",
     "IDE.md": "/docs/ide.html",
     "VOICE.md": "/docs/voice.html",
-<<<<<<< HEAD
     "VOICE_ASK.md": "/docs/voice-ask.html",
-=======
     "VOICE_EASY.md": "/docs/voice-easy.html",
->>>>>>> 54714fa (feat(voice): easy train path for owned STT/TTS (tiny + large))
     "MODEL_ASPECTS.md": "/docs/model-aspects.html",
     "SELF_HOST.md": "/docs/self-host.html",
     "SPARK_BC.md": "/docs/spark-bc.html",
@@ -270,17 +264,14 @@ DOC_PAGES = [
     ("vo", "VOICE.md", "voice.html", "Voice — STT / TTS / PSTN",
      "Spark listen/speak companions, dry stubs, gated live STT/TTS "
      "and PSTN. Not production telephony."),
-<<<<<<< HEAD
     ("va", "VOICE_ASK.md", "voice-ask.html",
      "Voice ask — dump / binary Q&A",
      "STT → SPARK_BC dump context → TinyCoder → TTS. "
      "No OpenBin login. Tiny; does not beat Claude."),
-=======
 ("ve", "VOICE_EASY.md", "voice-easy.html",
      "Voice easy — train STT / TTS",
      "Piece-of-cake owned voice heads (tiny CI + large opt-in). "
      "Prefer 5090; never 6000. Not ElevenLabs overnight."),
->>>>>>> 54714fa (feat(voice): easy train path for owned STT/TTS (tiny + large))
     ("dg", "DIAGRAMS.md", "diagrams.html", "Factory diagrams",
      "How Spark tools and LLM assist relate — compile, decompile, "
      "train, serve, shadows. Deterministic SoT; never beat Claude."),
@@ -461,7 +452,7 @@ def render(md_path: Path, out_path: Path, title: str, description: str, current:
     keys = (
         "ab", "ai", "nn", "ide", "sh", "bc", "cp", "dc", "rd", "bm",
         "af", "mk", "th", "mo", "isa", "fy", "kh", "dg", "tl", "sc", "wg",
-        "ar", "tk", "sv", "ev", "ci", "ma", "vo", "va",
+        "ar", "tk", "sv", "ev", "ci", "ma", "vo", "va", "ve",
     )
     nav_kwargs = {
         k: (' aria-current="page"' if current == k else "") for k in keys
