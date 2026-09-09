@@ -5,6 +5,17 @@ language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
 
+## 0.6.45 — 2026-09-09
+
+- **UI polish / smooth feel:** shared design tokens
+  (`website/css/tokens.css` + `tokens.json`) with 150–250ms motion,
+  focus rings, IDE dark chrome vars. Site micro-interactions
+  (hover lift, menu fade, docs TOC, loop strip) respect
+  `prefers-reduced-motion`. Web IDE shell demo at `/ide-web.html`
+  (`ide-shell.css`). Desktop `spark-bc-gui` applies mirrored theme
+  (`tools/spark_bc_gui/theme.py`). Original Spark aesthetic — not a
+  third-party clone; does not beat Claude; never 6000.
+
 ## 0.6.44 — 2026-09-09
 
 - **D-lane layer-0 attention train + serve:** `STEP` /

@@ -1,0 +1,239 @@
+/* Spark web IDE shell — dense engineer layout (demo / docs)
+ * Shares tokens from tokens.css. Desktop GUI mirrors via theme.py.
+ * Original Spark — not a third-party clone.
+ */
+
+.ide-shell {
+  display: grid;
+  grid-template-columns:
+    var(--ide-rail-width) minmax(0, 1fr) var(--ide-tools-width);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  min-height: calc(100vh - var(--header-height));
+  background: var(--ide-bg);
+  color: var(--ide-text);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-tight);
+}
+
+.ide-shell__toolbar {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--ide-bg-elevated);
+  border-bottom: 1px solid var(--ide-border);
+}
+
+.ide-shell__toolbar .ide-btn {
+  appearance: none;
+  border: 1px solid var(--ide-border);
+  background: var(--ide-bg-panel);
+  color: var(--ide-text);
+  font: inherit;
+  font-weight: 600;
+  font-size: var(--font-size-xs);
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition:
+    background var(--motion-fast) var(--ease-out),
+    border-color var(--motion-fast) var(--ease-out),
+    color var(--motion-fast) var(--ease-out),
+    transform var(--motion-fast) var(--ease-out);
+}
+
+.ide-shell__toolbar .ide-btn:hover {
+  border-color: var(--ide-accent);
+  background: var(--ide-accent-soft);
+}
+
+.ide-shell__toolbar .ide-btn:focus-visible {
+  outline: var(--focus-ring-ide);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.ide-shell__toolbar .ide-btn--primary {
+  background: var(--ide-accent);
+  border-color: var(--spark-brand-dark);
+  color: #fff;
+}
+
+.ide-shell__toolbar .ide-btn--primary:hover {
+  background: var(--spark-brand-dark);
+  transform: translateY(-1px);
+}
+
+.ide-shell__rail,
+.ide-shell__tools {
+  background: var(--ide-bg-panel);
+  border-color: var(--ide-border);
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ide-border) transparent;
+  transition: opacity var(--motion-base) var(--ease-out);
+}
+
+.ide-shell__rail {
+  border-right: 1px solid var(--ide-border);
+  padding: var(--space-2);
+}
+
+.ide-shell__tools {
+  border-left: 1px solid var(--ide-border);
+  padding: var(--space-2);
+}
+
+.ide-shell__center {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  min-height: 0;
+  background: var(--ide-bg);
+}
+
+.ide-shell__pane {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-bottom: 1px solid var(--ide-border);
+}
+
+.ide-shell__pane:last-child {
+  border-bottom: none;
+}
+
+.ide-shell__pane-label {
+  margin: 0;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ide-text-muted);
+  background: var(--ide-bg-elevated);
+  border-bottom: 1px solid var(--ide-border-soft);
+}
+
+.ide-shell__code {
+  flex: 1;
+  margin: 0;
+  padding: var(--space-3);
+  overflow: auto;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--ide-text);
+  background: transparent;
+  white-space: pre;
+  tab-size: 2;
+}
+
+.ide-shell__section-title {
+  margin: 0 0 var(--space-2);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ide-text-muted);
+}
+
+.ide-shell__list {
+  list-style: none;
+  margin: 0 0 var(--space-3);
+  padding: 0;
+}
+
+.ide-shell__list a,
+.ide-shell__list button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.4rem 0.5rem;
+  margin: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--ide-text-muted);
+  font: inherit;
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background var(--motion-fast) var(--ease-out),
+    color var(--motion-fast) var(--ease-out);
+}
+
+.ide-shell__list a:hover,
+.ide-shell__list button:hover,
+.ide-shell__list a[aria-current="true"],
+.ide-shell__list button[aria-current="true"] {
+  background: var(--ide-accent-soft);
+  color: var(--ide-text);
+  text-decoration: none;
+}
+
+.ide-shell__list a:focus-visible,
+.ide-shell__list button:focus-visible {
+  outline: var(--focus-ring-ide);
+  outline-offset: 1px;
+}
+
+.ide-shell__status {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+  padding: 0.35rem var(--space-3);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--ide-text-muted);
+  background: var(--ide-bg-elevated);
+  border-top: 1px solid var(--ide-border);
+}
+
+.ide-shell__status strong {
+  color: var(--ide-accent);
+  font-weight: 700;
+}
+
+.ide-shell__note {
+  margin: var(--space-2) 0 0;
+  padding: var(--space-2);
+  border-left: 3px solid var(--ide-accent);
+  background: var(--ide-accent-soft);
+  color: var(--ide-text-muted);
+  font-size: var(--font-size-xs);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+@media (max-width: 960px) {
+  .ide-shell {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto minmax(18rem, 1fr) auto auto;
+  }
+
+  .ide-shell__rail,
+  .ide-shell__tools {
+    border: none;
+    border-bottom: 1px solid var(--ide-border);
+    max-height: 12rem;
+  }
+
+  .ide-shell__center {
+    grid-template-rows: minmax(12rem, 1fr) minmax(12rem, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ide-shell__toolbar .ide-btn,
+  .ide-shell__list a,
+  .ide-shell__list button {
+    transition: none;
+  }
+
+  .ide-shell__toolbar .ide-btn--primary:hover {
+    transform: none;
+  }
+}

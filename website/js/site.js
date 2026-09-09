@@ -390,8 +390,27 @@
     }
   }
 
+  
+  function initMotionPreference() {
+    try {
+      var mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+      function apply() {
+        document.documentElement.classList.toggle(
+          "reduce-motion",
+          !!mq.matches
+        );
+      }
+      apply();
+      if (mq.addEventListener) mq.addEventListener("change", apply);
+      else if (mq.addListener) mq.addListener(apply);
+    } catch (e) {
+      /* ignore */
+    }
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     initSkipLink();
+    initMotionPreference();
     initNavToggle();
     initNavMore();
     initCopyButtons();
