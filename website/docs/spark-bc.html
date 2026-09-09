@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SPARK_BC ISA — Spark</title>
+    <meta name="description" content="Spark bytecode ISA — opcodes, pools, dry-run contracts." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/css/tokens.css?v=bb4433f" />
+    <link rel="stylesheet" href="/css/site.css?v=bb4433f" />
+  </head>
+  <body class="doc-page">
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="site-brand" href="/" aria-label="Spark home">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z" fill="currentColor" />
+          </svg>
+          Spark
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+        </button>
+        <div class="header-nav-wrap">
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <ul class="nav-primary">
+              <li><a href="/learn/">Learn</a></li>
+              <li><a href="/docs/language.html">Docs</a></li>
+              <li><a href="/downloads.html">Download</a></li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">More</button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/factory.html">Factory hub</a></li>
+                  <li><a href="/docs/spark-builder.html">Builder</a></li>
+                  <li><a href="/docs/compile.html">Compile</a></li>
+                  <li><a href="/docs/decompile.html">Decompile</a></li>
+                  <li><a href="/docs/spark-bc.html">Opcodes / ISA</a></li>
+                  <li><a href="/docs/build-models.html">Build models</a></li>
+                  <li><a href="/docs/train-loop.html">Train loop</a></li>
+                  <li><a href="/docs/architecture.html">Architecture</a></li>
+                  <li><a href="/docs/attention-forward.html">Attention honesty</a></li>
+                  <li><a href="/docs/tokenizer.html">Tokenizer</a></li>
+                  <li><a href="/docs/serve.html">Serve</a></li>
+                  <li><a href="/docs/eval.html">Eval</a></li>
+                  <li><a href="/docs/sparkbc-make.html">Make targets</a></li>
+                  <li><a href="/docs/ci-pages.html">CI / Pages</a></li>
+                  <li><a href="/docs/adoption-bar.html">Adoption bar</a></li>
+                  <li><a href="/docs/ai-models.html">AI models</a></li>
+                  <li><a href="/docs/programming-guide.html">Programming guide</a></li>
+                  <li><a href="/docs/ide.html">IDE</a></li>
+                  <li><a href="/docs/self-host.html">Contributor internals</a></li>
+                </ul>
+              </li>
+            </ul>
+            <a href="/playground.html" class="nav-cta">Try</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <div class="shell doc-layout">
+      <aside class="doc-sidebar" aria-label="Table of contents">
+        <p class="doc-sidebar__title">On this page</p>
+        <nav id="doc-toc-list"></nav>
+      </aside>
+      <main class="doc-main">
+      <nav class="doc__nav" aria-label="Docs">
+        <a href="/learn/">Learn</a>
+        <a href="/docs/factory.html">Factory hub</a>
+        <a href="/docs/spark-builder.html">Builder</a>
+        <a href="/docs/compile.html">Compile</a>
+        <a href="/docs/decompile.html">Decompile</a>
+        <a href="/docs/spark-bc.html" aria-current="page">Opcodes / ISA</a>
+        <a href="/docs/build-models.html">Build models</a>
+        <a href="/docs/train-loop.html">Train loop</a>
+        <a href="/docs/architecture.html">Architecture</a>
+        <a href="/docs/tokenizer.html">Tokenizer</a>
+        <a href="/docs/serve.html">Serve</a>
+        <a href="/docs/eval.html">Eval</a>
+        <a href="/docs/sparkbc-make.html">Make targets</a>
+        <a href="/docs/ci-pages.html">CI / Pages</a>
+        <a href="/docs/adoption-bar.html">Adoption bar</a>
+        <a href="/docs/language.html">Language</a>
+        <a href="/docs/programming-guide.html">Programming guide</a>
+        <a href="/downloads.html">Downloads</a>
+      </nav>      <article class="doc__body">
+        <h1 id="spark-bytecode-isa-phase-0">Spark bytecode ISA (Phase 0)</h1>
+        <p><strong>Destination execution SoT</strong> for the self-host lane: <code class="inline-code">.sparkbc</code>
+        runs on <code class="inline-code">bootstrap/bc_vm.c</code> (<code class="inline-code">spark-bootstrap --run-bc</code>).
+        Tree-walk <code class="inline-code">spark_vm_run_file</code> remains a <strong>legacy bridge</strong> until
+        later phases delete it.</p>
+        <p>This is <strong>not</strong> JVM, WASM, or CPython bytecode. Magic is Spark-only.</p>
+        <h2 id="source-of-truth-no-inventing">Source of truth (no inventing)</h2>
+        <p>Every opcode and stdout string traces to:</p>
+        <ol class="doc__ol">
+        <li><a href="/docs/language.html"><code class="inline-code">LANGUAGE.md</code></a> — statement forms</li>
+        <li><code class="inline-code">../examples/hello.spark</code> — <code class="inline-code">model</code> / <code class="inline-code">ask</code> / <code class="inline-code">print</code></li>
+        <li>GAS + C bootstrap dry-run stdout (same model/ask/→/print lines)</li>
+        <li>Existing dry fixtures in <code class="inline-code">bootstrap/vm.c</code> /
+           <code class="inline-code">bootstrap/dry_ask.c</code> <code class="inline-code">spark_pick_ask_reply</code> (copied from
+           <code class="inline-code">pick_ask_reply</code>; do not invent new reply prose)</li>
+        </ol>
+        <p><strong>No inventing.</strong> If a form is not in LANGUAGE.md, not in
+        <code class="inline-code">examples/hello.spark</code>, and not an existing dry helper string: do
+        <strong>not</strong> add an opcode, operand, or fixture. Phase 0 is only the
+        LANGUAGE statement starts already wired for hello, plus a VM
+        terminator.</p>
+        <h2 id="file-layout-little-endian-packed-no-padding">File layout (little-endian, packed, no padding)</h2>
+        <pre class="doc__pre"><code class="inline-code">offset 0  : 4 bytes magic  'S' 'P' 'B' 'C'
+        offset 4  : 1 byte  version 0x01
+                  : u16     nstrings
+                  : nstrings × { u16 nbytes; nbytes UTF-8 bytes }
+                  : u16     nconsts
+                  : nconsts × { u8 kind; u16 payload }
+                  : u32     ncode
+                  : ncode bytes (opcode + operands)
+        </code></pre>
+        <p>Version <strong>must</strong> be <code class="inline-code">0x01</code>. Other versions fail loud.
+        Bad magic / truncated section / unknown opcode / unknown const
+        kind / out-of-range index: <strong>fail loud</strong>, non-zero exit, no silent
+        skip.</p>
+        <h3 id="string-pool">String pool</h3>
+        <p>Quoted strings and identifiers from LANGUAGE / hello. No NUL in
+        the file; the loader appends <code class="inline-code">'\0'</code> for C. Phase 0 hello strings
+        are exactly:</p>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Index</th>
+        <th>Bytes</th>
+        <th>SoT</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td>0</td>
+        <td><code class="inline-code">code</code></td>
+        <td><code class="inline-code">examples/hello.spark</code> <code class="inline-code">model code</code></td>
+        </tr>
+        <tr>
+        <td>1</td>
+        <td><code class="inline-code">Explain gravity in one sentence</code></td>
+        <td>hello <code class="inline-code">ask "…"</code></td>
+        </tr>
+        <tr>
+        <td>2</td>
+        <td><code class="inline-code">text</code></td>
+        <td>hello <code class="inline-code">-&gt; text</code> / <code class="inline-code">print text</code></td>
+        </tr>
+        </tbody>
+        </table></div>
+        <h3 id="constant-pool">Constant pool</h3>
+        <p>Phase 0 kind <strong>only</strong>:</p>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Kind</th>
+        <th>Value</th>
+        <th>Payload</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><code class="inline-code">STR</code></td>
+        <td><code class="inline-code">0</code></td>
+        <td>u16 string-pool index</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <p>No other kinds. Code operands are <strong>u16 constant-pool indices</strong>.
+        A <code class="inline-code">STR</code> const resolves to that string. hello.sparkbc uses three
+        <code class="inline-code">STR</code> consts (0→<code class="inline-code">"code"</code>, 1→prompt, 2→<code class="inline-code">"text"</code>).</p>
+        <h3 id="code-section">Code section</h3>
+        <p>Stream of <code class="inline-code">u8 opcode</code> plus opcode-specific <code class="inline-code">u16le</code> const indices.
+        <code class="inline-code">HALT</code> has no operands. Execution starts at byte 0.</p>
+        <h2 id="stack-frame-model">Stack / frame model</h2>
+        <p><strong>Frame (used in Phase 0):</strong></p>
+        <ul class="doc__ul">
+        <li><code class="inline-code">model_alias</code> — LANGUAGE <code class="inline-code">model &lt;alias&gt;</code> / hello <code class="inline-code">model code</code></li>
+        <li>named bindings — LANGUAGE <code class="inline-code">let</code> / <code class="inline-code">-&gt;</code> bind; hello <code class="inline-code">text</code></li>
+        <li><code class="inline-code">last</code> — last ASK/LET value (same role as bootstrap <code class="inline-code">last_val</code>)</li>
+        </ul>
+        <p><strong>Operand stack:</strong> reserved. Phase 0 hello never pushes or pops.
+        No stack opcodes this phase (would be inventing).</p>
+        <h2 id="opcode-table-phase-0-phase-4">Opcode table (Phase 0 + Phase 4)</h2>
+        <p>Mapped 1:1 to LANGUAGE.md statement starts. Voice merge keeps
+        <code class="inline-code">0x06 EXTRACT</code>, <code class="inline-code">0x07 PIPELINE</code>, <code class="inline-code">0x09 LISTEN</code>, <code class="inline-code">0x0a SPEAK</code>,
+        <code class="inline-code">0x0d VOICE</code>; engine/IDE <code class="inline-code">0x0e–0x1a</code>; review/browser/mitm
+        <code class="inline-code">0x1b–0x1f</code>. Tool/with use <strong>0x20–0x22</strong> (after mitm).</p>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Byte</th>
+        <th>Name</th>
+        <th>LANGUAGE.md</th>
+        <th>Operands (u16 const)</th>
+        <th>Dry-run stdout</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><code class="inline-code">0x00</code></td>
+        <td><code class="inline-code">HALT</code></td>
+        <td><em>VM-only</em> (not a keyword)</td>
+        <td>none</td>
+        <td>then <code class="inline-code">[spark] ok</code></td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">0x01</code></td>
+        <td><code class="inline-code">MODEL</code></td>
+        <td><code class="inline-code">model</code> / <code class="inline-code">use</code></td>
+        <td>alias</td>
+        <td><code class="inline-code">[model] &lt;alias&gt;</code></td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">0x02</code></td>
+        <td><code class="inline-code">ASK</code></td>
+        <td><code class="inline-code">ask</code> / <code class="inline-code">?</code></td>
+        <td>prompt, bind</td>
+        <td><code class="inline-code">[ask] &lt;prompt&gt;</code> / <code class="inline-code">→ &lt;reply&gt;</code></td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">0x03</code></td>
+        <td><code class="inline-code">PRINT</code></td>
+        <td><code class="inline-code">print</code></td>
+        <td>ident</td>
+        <td><code class="inline-code">[print] &lt;value&gt;</code></td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">0x04</code></td>
+        <td><code class="inline-code">LET</code></td>
+        <td><code class="inline-code">let</code></td>
+        <td>name, value</td>
+        <td><code class="inline-code">[let] &lt;name&gt; = &lt;value&gt;</code></td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">0x05</code></td>
+        <td><code class="inline-code">CLASSIFY</code></td>
+        <td><code class="inline-code">classify</code></td>
+        <td>from-text, bind</td>
+        <td><code class="inline-code">[classify] &lt;text&gt;</code> / <code class="inline-code">→ &lt;json&gt;</code></td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">0x06</code></td>
+        <td><code class="inline-code">EXTRACT</code></td>
+        <td><code class="inline-code">extract</code></td>
+        <td>schema, fixture, bind</td>
+        <td><code class="inline-code">[extract] &lt;json&gt;</code></td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">0x07</code></td>
+        <td><code class="inline-code">PIPELINE</code></td>
+        <td><code class="inline-code">pipeline</code></td>
+        <td>none</td>
+        <td><code class="inline-code">[pipeline] step</code></td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">0x09</code></td>
+        <td><code class="inline-code">LISTEN</code></td>
+        <td><code class="inline-code">listen</code></td>
+        <td>path, bind</td>
+        <td><code class="inline-code">[listen] &lt;transcript&gt;</code></td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">0x0a</code></td>
+        <td><code class="inline-code">SPEAK</code></td>
+        <td><code class="inline-code">speak</code> / <code class="inline-code">say</code></td>
+        <td>text, path</td>
+        <td><code class="inline-code">[speak] wrote &lt;path&gt;</code></td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">0x0d</code></td>
+        <td><code class="inline-code">VOICE</code></td>
+        <td><code class="inline-code">voice</code></td>
+        <td>none</td>
+        <td><code class="inline-code">[voice] session …</code></td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">0x0e</code>–<code class="inline-code">0x1a</code></td>
+        <td><em>engine/IDE</em></td>
+        <td><code class="inline-code">engine</code> / <code class="inline-code">ide</code></td>
+        <td>per family</td>
+        <td>dry engine/IDE JSON</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">0x1b</code>–<code class="inline-code">0x1f</code></td>
+        <td><em>review/browser/mitm</em></td>
+        <td><code class="inline-code">review</code> / <code class="inline-code">browser</code> / <code class="inline-code">mitm</code></td>
+        <td>per family</td>
+        <td>dry review/browser/mitm</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">0x20</code></td>
+        <td><code class="inline-code">TOOL</code></td>
+        <td><code class="inline-code">tool</code></td>
+        <td>name</td>
+        <td><code class="inline-code">[tool] registered &lt;name&gt;</code></td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">0x21</code></td>
+        <td><code class="inline-code">WITH</code></td>
+        <td><code class="inline-code">with tools</code></td>
+        <td>scope</td>
+        <td><code class="inline-code">[with] {"op":"with_tools",…}</code></td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">0x22</code></td>
+        <td><code class="inline-code">WITH_END</code></td>
+        <td><code class="inline-code">}</code> clears tools</td>
+        <td>none</td>
+        <td><em>(no line; <code class="inline-code">vm.c</code> 1559–1562)</em></td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">0x23</code></td>
+        <td><code class="inline-code">EMBED</code></td>
+        <td><code class="inline-code">embed</code></td>
+        <td>text, bind</td>
+        <td><code class="inline-code">[embed] &lt;text&gt;</code> / <code class="inline-code">→ &lt;json&gt;</code></td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">0x24</code></td>
+        <td><code class="inline-code">RETRIEVE</code></td>
+        <td><code class="inline-code">retrieve</code></td>
+        <td>query, bind</td>
+        <td><code class="inline-code">[retrieve] &lt;query&gt;</code> / <code class="inline-code">→ &lt;json&gt;</code></td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">0x25</code></td>
+        <td><code class="inline-code">EXPECT</code></td>
+        <td><code class="inline-code">expect</code></td>
+        <td>mode, name, want</td>
+        <td><code class="inline-code">[expect] pass &lt;mode&gt; &lt;name&gt;</code> or exit 1</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">0x26</code></td>
+        <td><code class="inline-code">TRAIN</code></td>
+        <td><code class="inline-code">model train</code> / <code class="inline-code">model build</code></td>
+        <td>dataset, base, out, method, bind</td>
+        <td><code class="inline-code">[model] {dry train JSON}</code></td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">0x27</code></td>
+        <td><code class="inline-code">TRAIN_STATUS</code></td>
+        <td><code class="inline-code">model status</code></td>
+        <td>job_id, bind</td>
+        <td><code class="inline-code">[model] {dry status JSON}</code></td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">0x28</code></td>
+        <td><code class="inline-code">STEP</code></td>
+        <td><code class="inline-code">model step</code></td>
+        <td>job_id, bind</td>
+        <td><code class="inline-code">[model] {dry step JSON}</code></td>
+        </tr>
+        </tbody>
+        </table></div>
+        <p><code class="inline-code">TRAIN</code> / <code class="inline-code">STEP</code> / <code class="inline-code">TRAIN_STATUS</code> are the <strong>training program in the binary</strong>.
+        They encode job submit, one dry loop tick, and status —
+        dumpable hex + mnemonics. Dry fixture via <code class="inline-code">bootstrap/dry_train.c</code>
+        (JSON + <code class="inline-code">ARTIFACT</code> marker). Execute with
+        <code class="inline-code">./spark-bootstrap --run-bc</code> or <code class="inline-code">./spark --run-bc</code>
+        (GAS thin fork → bootstrap bc_vm). GAS <code class="inline-code">--compile</code> wraps bootstrap emit; C lowering remains SoT. GAS does <strong>not reimplement</strong>
+        <code class="inline-code">.sparkbc</code> — use bootstrap <code class="inline-code">--compile</code>.
+        Emitting TRAIN/STEP ≠ a trained model. <code class="inline-code">backend</code> is parsed and skipped
+        (HTTP companion); not an operand.</p>
+        <p><code class="inline-code">EXPECT</code> want is a literal, or <code class="inline-code">@fixture:path</code> when the source used
+        <code class="inline-code">fixture "path"</code>. Missing binding / missing fixture / mismatch →
+        non-zero exit. Shared validator: <code class="inline-code">bootstrap/dry_expect.c</code>.</p>
+        <p><code class="inline-code">EMBED</code> / <code class="inline-code">RETRIEVE</code> dry replies come from <code class="inline-code">bootstrap/dry_rag.c</code>
+        (same fixtures as <code class="inline-code">examples/fixtures/rag/</code>). Live GAS forks
+        <code class="inline-code">./spark-rag-http</code>.</p>
+        <p><strong>GAS-first (no opcode yet):</strong> <code class="inline-code">http get</code> / <code class="inline-code">http post</code> — dry fixture
+        files via <code class="inline-code">./spark-http --dry</code> (or bootstrap <code class="inline-code">dry_http.c</code>); live forks
+        <code class="inline-code">./spark-http --live</code>. See LANGUAGE.md. Do <strong>not</strong> invent BC operands
+        until an opcode lands.</p>
+        <p><strong>In SPARK_BC:</strong> <code class="inline-code">model train</code> / <code class="inline-code">model build</code> → <code class="inline-code">0x26 TRAIN</code>;
+        <code class="inline-code">model step</code> → <code class="inline-code">0x28 STEP</code>; <code class="inline-code">model status</code> → <code class="inline-code">0x27 TRAIN_STATUS</code>.
+        See above. Companion <code class="inline-code">./spark-train-http</code> stays the live HTTP job
+        path. Emitting the opcode is the training <strong>program</strong>, not trained
+        weights.</p>
+        <p><strong>GAS-first (no opcode yet):</strong> <code class="inline-code">model analyze</code> / <code class="inline-code">compare</code> /
+        <code class="inline-code">improve</code> / <code class="inline-code">plan</code> run in <code class="inline-code">asm/model_ops.s</code>. See
+        <a href="/docs/model-training.html">MODEL_TRAINING.md</a>.</p>
+        <p><code class="inline-code">LET</code> is in the table so the ISA is not hello-only
+        (LANGUAGE.md <code class="inline-code">let</code> / <code class="inline-code">print</code> / <code class="inline-code">set</code>). hello.sparkbc does <strong>not</strong>
+        emit <code class="inline-code">LET</code>. Handler matches <code class="inline-code">bootstrap/vm.c</code> <code class="inline-code">op_let</code> (print +
+        bind + last). <code class="inline-code">set</code> is GAS-only in bootstrap — not an opcode here.</p>
+        <p><code class="inline-code">HALT</code> ends the program. Documented as VM-only; not a <code class="inline-code">.spark</code>
+        keyword.</p>
+        <h3 id="classify-phase-4-first-family">CLASSIFY (Phase 4 first family)</h3>
+        <p>LANGUAGE form in <code class="inline-code">selfhost/fixtures/classify_dry.spark</code> (one line):</p>
+        <pre class="doc__pre"><code class="inline-code">classify Intent { support, sales, spam } from &quot;…&quot; min_confidence 0.7 -&gt; intent
+        classify multi Tags { support, sales, spam } from &quot;…&quot; -&gt; tags
+        </code></pre>
+        <p><strong>Encoded operands (proven by dry-run SoT):</strong> two <code class="inline-code">u16</code> const
+        indices, same shape as <code class="inline-code">ASK</code>:</p>
+        <ol class="doc__ol">
+        <li><strong>from-text</strong> — the <code class="inline-code">from</code> STRING. GAS / <code class="inline-code">vm.c</code> <code class="inline-code">op_classify</code>
+           uses only <code class="inline-code">extract_quote</code> of that string.</li>
+        <li><strong>bind</strong> — IDENT after <code class="inline-code">-&gt;</code>. Bound value is the dry JSON.</li>
+        </ol>
+        <p><strong>Not encoded (same as <code class="inline-code">vm.c</code>):</strong> schema name (<code class="inline-code">Intent</code> / <code class="inline-code">Tags</code>),
+        <code class="inline-code">multi</code>, <code class="inline-code">{ support, sales, spam }</code> labels, <code class="inline-code">min_confidence</code>.
+        C compile still <strong>parses</strong> those tokens from classify_dry and
+        discards them. Do not invent a label-list operand.</p>
+        <p>Dry JSON is <code class="inline-code">spark_pick_classify</code> / <code class="inline-code">vm.c</code> <code class="inline-code">pick_classify</code> (copied
+        to <code class="inline-code">bootstrap/dry_classify.c</code>): buy/price → sales; broken/help/
+        support → support; spam → spam; else support. Strings are the
+        existing <code class="inline-code">DRY_SALES</code> / <code class="inline-code">DRY_SUPPORT</code> / <code class="inline-code">DRY_SPAM</code> fixtures. No new
+        prose.</p>
+        <p>GAS classify_dry body (compare SoT; banner may differ):</p>
+        <pre class="doc__pre"><code class="inline-code">[model] fast
+        [classify] My account is locked
+          → {&quot;label&quot;:&quot;support&quot;,&quot;confidence&quot;:0.91,&quot;reasons&quot;:[&quot;dry-run&quot;]}
+        [classify] Please help me buy a card
+          → {&quot;label&quot;:&quot;sales&quot;,&quot;confidence&quot;:0.88,&quot;reasons&quot;:[&quot;dry-run&quot;]}
+        [print] {&quot;label&quot;:&quot;support&quot;,&quot;confidence&quot;:0.91,&quot;reasons&quot;:[&quot;dry-run&quot;]}
+        [print] {&quot;label&quot;:&quot;sales&quot;,&quot;confidence&quot;:0.88,&quot;reasons&quot;:[&quot;dry-run&quot;]}
+        [spark] ok
+        </code></pre>
+        <h3 id="extract">EXTRACT</h3>
+        <p>LANGUAGE form in <code class="inline-code">selfhost/fixtures/extract_dry.spark</code>:</p>
+        <pre class="doc__pre"><code class="inline-code">extract Person { name: string, age: int }
+          from &quot;…&quot; fixture &quot;examples/fixtures/extract/person.json&quot; -&gt; person
+        </code></pre>
+        <p><strong>Encoded operands:</strong> three <code class="inline-code">u16</code> const indices.</p>
+        <ol class="doc__ol">
+        <li><strong>schema</strong> — the declaration re-serialized to one line,
+           <code class="inline-code">extract NAME { f: type, g?: type }</code>. The compiler joins the
+           block's tokens; source newlines and commas both separate fields,
+           so the encoded text is canonical regardless of layout.</li>
+        <li><strong>fixture</strong> — the <code class="inline-code">fixture</code> STRING. Required: a compile without
+           one is an error, because dry-run has no other source of values.</li>
+        <li><strong>bind</strong> — IDENT after <code class="inline-code">-&gt;</code>.</li>
+        </ol>
+        <p>The schema travels as text, not a packed field table, so
+        <code class="inline-code">bootstrap/dry_extract.c</code> is the single validator shared by the GAS
+        VM, the bootstrap interpreter, and this VM. All three therefore
+        accept and reject exactly the same inputs — <code class="inline-code">run_sparkbc.sh</code> compares
+        bodies byte-for-byte.</p>
+        <p><strong>Not encoded:</strong> the <code class="inline-code">from</code> STRING. It is the prompt a live model
+        would receive, and live extract is not wired; encoding it would imply
+        a capability that does not exist.</p>
+        <p><code class="inline-code">op_extract</code> (<code class="inline-code">bc_vm.c</code>) parses the schema, loads the fixture from
+        disk, validates, then prints <code class="inline-code">[extract] &lt;json&gt;</code> and binds. A missing
+        fixture or a failed field check returns non-zero — it does not fall
+        back to a built-in value.</p>
+        <h3 id="tool-with-with-end-phase-4-second-family">TOOL / WITH / WITH_END (Phase 4 second family)</h3>
+        <p>LANGUAGE form in <code class="inline-code">examples/tool_agent.spark</code> (same bytes as
+        <code class="inline-code">bootstrap/fixtures/tool_agent.spark</code>):</p>
+        <pre class="doc__pre"><code class="inline-code">tool weather(city: string) -&gt; string { &quot;stub:local&quot; }
+        with tools [weather] { ask &quot;…&quot; -&gt; answer }
+        print answer
+        </code></pre>
+        <p><strong>Cited <code class="inline-code">vm.c</code> before encoding:</strong></p>
+        <ul class="doc__ul">
+        <li><code class="inline-code">op_tool</code> (~588) — name before <code class="inline-code">(</code>, print
+          <code class="inline-code">[tool] registered %s</code>. Signature / <code class="inline-code">{ "stub:local" }</code> ignored.</li>
+        <li><code class="inline-code">op_with</code> (~608) — requires <code class="inline-code">tools</code>, prior registration, <code class="inline-code">[list]</code>;
+          copies bytes between <code class="inline-code">[</code> and <code class="inline-code">]</code> into <code class="inline-code">tools_scope</code>; sets
+          <code class="inline-code">tools_active = 1</code>; prints the existing JSON line.</li>
+        <li><code class="inline-code">}</code> (~1559–1562) — <code class="inline-code">tools_active = 0</code>; no stdout. That is
+          <code class="inline-code">WITH_END</code> (not invented: LANGUAGE + this clear).</li>
+        <li><code class="inline-code">op_ask</code> (~468–471) — when <code class="inline-code">tools_active &amp;&amp; tool_reg_len</code>: reply
+          is the existing <code class="inline-code">[tool:NAME] stub:local</code> (not <code class="inline-code">pick_ask_reply</code>).</li>
+        </ul>
+        <p><strong>Encoded operands (proven by that fixture + dry-run):</strong></p>
+        <ol class="doc__ol">
+        <li><code class="inline-code">TOOL</code> — one <code class="inline-code">u16</code> const: tool <strong>name</strong> (<code class="inline-code">weather</code>).</li>
+        <li><code class="inline-code">WITH</code> — one <code class="inline-code">u16</code> const: list text between <code class="inline-code">[</code> and <code class="inline-code">]</code>
+           (<code class="inline-code">weather</code> for <code class="inline-code">[weather]</code>).</li>
+        <li><code class="inline-code">WITH_END</code> — no operands.</li>
+        </ol>
+        <p><strong>Not encoded (same as <code class="inline-code">vm.c</code>):</strong> <code class="inline-code">(city: string)</code>, <code class="inline-code">-&gt; string</code>,
+        <code class="inline-code">{ "stub:local" }</code> body. C compile parses those tokens and
+        discards them. Do not invent a signature operand.</p>
+        <p>GAS tool_agent body (compare SoT; banner may differ):</p>
+        <pre class="doc__pre"><code class="inline-code">[model] code
+        [tool] registered weather
+        [with] {&quot;op&quot;:&quot;with_tools&quot;,&quot;tools&quot;:&quot;weather&quot;,&quot;active&quot;:true}
+        [ask] What's the weather hint for Springfield?
+          → [tool:weather] stub:local
+        [print] [tool:weather] stub:local
+        [spark] ok
+        </code></pre>
+        <h2 id="dry-run-semantics-stdout-contract">Dry-run semantics (stdout contract)</h2>
+        <p><code class="inline-code">--run-bc</code> is dry-run only (no network). Lines for model / ask /
+        arrow / print <strong>must</strong> be byte-identical to GAS
+        <code class="inline-code">./spark --dry-run examples/hello.spark</code> and bootstrap
+        <code class="inline-code">./spark-bootstrap --dry-run examples/hello.spark</code>.</p>
+        <p>GAS hello:</p>
+        <pre class="doc__pre"><code class="inline-code">[spark] dry-run via assembly VM (machine code)
+        [model] code
+        [ask] Explain gravity in one sentence
+          → Gravity pulls masses together.
+        [print] Gravity pulls masses together.
+        [spark] ok
+        </code></pre>
+        <p>Bytecode banner (allowed distinct line):</p>
+        <pre class="doc__pre"><code class="inline-code">[spark] dry-run via bytecode VM
+        </code></pre>
+        <p>then the same <code class="inline-code">[model]</code> / <code class="inline-code">[ask]</code> / <code class="inline-code">→</code> / <code class="inline-code">[print]</code> / <code class="inline-code">[spark] ok</code>.</p>
+        <p>ASK reply: <code class="inline-code">spark_pick_ask_reply</code> — <code class="inline-code">contains_ci</code> <code class="inline-code">"gravity"</code> →
+        <code class="inline-code">"Gravity pulls masses together."</code> (existing fixture; not invented).</p>
+        <p>PRINT of a bound name: <code class="inline-code">[print] &lt;value&gt;\n</code> (<code class="inline-code">vm.c</code> <code class="inline-code">op_print</code>).
+        Unbound name prints the ident (same as <code class="inline-code">vm.c</code>).
+        MODEL: <code class="inline-code">[model] &lt;alias&gt;\n</code>.</p>
+        <h2 id="hellosparkbc-hex-layout">hello.sparkbc hex / layout</h2>
+        <p>Packer (encoding, not a compiler): <code class="inline-code">bootstrap/bc_pack_hello.c</code> +
+        <code class="inline-code">bootstrap/bc_write.c</code>. Reconstruct by packing the three strings
+        and four ops above, or <code class="inline-code">make spark-bc-pack-hello</code> and write the
+        golden. Phase 3 C <code class="inline-code">--compile</code> must emit the same bytes for hello.</p>
+        <p>Packed size of the golden: <strong>79 bytes</strong> (magic+ver 5 + nstrings 2 +
+        strings 2+4 + 2+31 + 2+4 + nconsts 2 + 3×3 + ncode 4 + 12 code).
+        Code section starts at <strong>file offset 67</strong>.</p>
+        <p>Code bytes:</p>
+        <pre class="doc__pre"><code class="inline-code">01 00 00          MODEL const0
+        02 01 00 02 00    ASK   const1 const2
+        03 02 00          PRINT const2
+        00                HALT
+        </code></pre>
+        <h2 id="builder-spark-created-binary-weights">Builder (Spark-created binary + weights)</h2>
+        <p><strong>SPARK_BC is the orchestration ISA — not neural weights.</strong> Full
+        engineer reproduction (programs, commands, sha256 table, GAS
+        <code class="inline-code">--compile</code> / <code class="inline-code">--run-bc</code>, model lab, Pages deploy):
+        <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</p>
+        <p>Spark compiling Spark: <code class="inline-code">selfhost/compile.spark</code> →
+        <code class="inline-code">docs/examples/spark-self.sparkbc</code> (sha256
+        <code class="inline-code">a33f3232752c2fdd75db728773cb589a4eaf8e0bb70ac2539d2519b2dc7df6e8</code>).
+        Train slice: <code class="inline-code">selfhost/compile_train.spark</code> →
+        <code class="inline-code">docs/examples/spark-selfhost-train.sparkbc</code> (<code class="inline-code">TRAIN</code> /
+        <code class="inline-code">TRAIN_STATUS</code>; sha256
+        <code class="inline-code">0b524a96338e13c75efd431853ca33cc8ef227483d3ead0fbb56342da23f9d2b</code>).
+        Builder: <code class="inline-code">examples/spark_builder.spark</code> →
+        <code class="inline-code">docs/examples/spark-builder.sparkbc</code> (sha256
+        <code class="inline-code">e89b27c86618cbbb87d2d59209fb5c0450c0513105c88c622de367f3a8e29f9a</code>).
+        STEP proof: <code class="inline-code">examples/spark_train_step.spark</code> →
+        <code class="inline-code">docs/examples/spark-train-step.sparkbc</code> (<code class="inline-code">TRAIN</code> → <code class="inline-code">STEP</code>
+        <code class="inline-code">0x28</code> → <code class="inline-code">TRAIN_STATUS</code>; sha256
+        <code class="inline-code">d08925b52bf8c840de626c9cfec619d4dbae5a674b94bb8c7c5837eb1ac64551</code>).
+        Dumps: <code class="inline-code">examples/spark-builder-bc.txt</code>,
+        <code class="inline-code">examples/spark-self-bc.txt</code>,
+        <code class="inline-code">examples/spark-train-step-bc.txt</code>.
+        Init weights from those bytes:
+        <code class="inline-code">docs/examples/spark-self.init.safetensors</code> (sha256
+        <code class="inline-code">60b9b7297cb5e2d8362702144a9d9c15487e65dd11783ba7d499499b500198cf</code>).
+        Focused e2e: <code class="inline-code">make sparkbc-e2e</code> (compile → dump TRAIN/STEP →
+        <code class="inline-code">--run-bc</code> → assert <code class="inline-code">ARTIFACT</code>; STEP = multi-outer CPU SGD). STEP
+        weights + loss drop via <code class="inline-code">make test-sparkbc</code>.
+        Factory page: <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.
+        TRAIN accept is still a dry marker. <code class="inline-code">STEP</code> applies multi-outer CPU
+        SGD (<code class="inline-code">trained=true</code> / <code class="inline-code">not_sgd=false</code> only after grads;
+        <code class="inline-code">checkpoint.json</code> loss curve). <strong>Not beat Claude.</strong>
+        No 6000 train. <code class="inline-code">./spark --compile</code> and <code class="inline-code">./spark --run-bc</code> thin-wrap
+        bootstrap (C lowering / bc_vm remain SoT).</p>
+        <h2 id="out-of-scope-do-not-add">Out of scope (do not add)</h2>
+        <p>include, <code class="inline-code">set</code>, live ask. Phase 3 C <code class="inline-code">--compile</code> lowers
+        hello/mini. Phase 4 adds classify, tool/with, extract, pipeline,
+        voice, engine/IDE, review/browser/mitm per table above.
+        Spark-hosted compiler is still out of scope. Later phases may grow
+        the ISA from LANGUAGE.md only.</p>
+      </article>
+      </main>
+    </div>
+
+    <footer class="site-footer">
+      <div class="shell footer-inner">
+        <span>Spark programming language</span>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="/learn/">Learn</a>
+          <a href="/docs/language.html">Reference</a>
+          <a href="/downloads.html">Downloads</a>
+          <a href="/playground.html">Playground</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="/js/site.js"></script>
+  </body>
+</html>

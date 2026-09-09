@@ -380,11 +380,19 @@ make test-model-lab
 
 - Builder page live on production Pages:
   https://sparklang.dev/docs/spark-builder.html
+- **Factory hub:** [FACTORY.md](FACTORY.md) /
+  https://sparklang.dev/docs/factory.html
 - Engineer factory docs: [COMPILE.md](COMPILE.md) ·
   [DECOMPILE.md](DECOMPILE.md) ·
   [BUILD_MODELS.md](BUILD_MODELS.md) ·
+  [TRAIN_LOOP.md](TRAIN_LOOP.md) ·
+  [ARCHITECTURE.md](ARCHITECTURE.md) ·
   [ATTENTION_FORWARD.md](ATTENTION_FORWARD.md) ·
-  [SPARKBC_MAKE.md](SPARKBC_MAKE.md)
+  [TOKENIZER.md](TOKENIZER.md) ·
+  [SERVE.md](SERVE.md) ·
+  [EVAL.md](EVAL.md) ·
+  [SPARKBC_MAKE.md](SPARKBC_MAKE.md) ·
+  [CI_PAGES.md](CI_PAGES.md)
 - [SPARK_BC.md](SPARK_BC.md)
 - [MODEL_LAB.md](MODEL_LAB.md)
 - [AI_MODELS.md](AI_MODELS.md)

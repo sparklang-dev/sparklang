@@ -33,10 +33,22 @@
               <li class="nav-more">
                 <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">More</button>
                 <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/factory.html">Factory hub</a></li>
+                  <li><a href="/docs/spark-builder.html">Builder</a></li>
+                  <li><a href="/docs/compile.html">Compile</a></li>
+                  <li><a href="/docs/decompile.html">Decompile</a></li>
+                  <li><a href="/docs/spark-bc.html">Opcodes / ISA</a></li>
+                  <li><a href="/docs/build-models.html">Build models</a></li>
+                  <li><a href="/docs/train-loop.html">Train loop</a></li>
+                  <li><a href="/docs/architecture.html">Architecture</a></li>
+                  <li><a href="/docs/attention-forward.html">Attention honesty</a></li>
+                  <li><a href="/docs/tokenizer.html">Tokenizer</a></li>
+                  <li><a href="/docs/serve.html">Serve</a></li>
+                  <li><a href="/docs/eval.html">Eval</a></li>
+                  <li><a href="/docs/sparkbc-make.html">Make targets</a></li>
+                  <li><a href="/docs/ci-pages.html">CI / Pages</a></li>
                   <li><a href="/docs/adoption-bar.html">Adoption bar</a></li>
                   <li><a href="/docs/ai-models.html">AI models</a></li>
-                  <li><a href="/docs/spark-builder.html">Builder</a></li>
-                  <li><a href="/docs/native-network-web.html">Network + web</a></li>
                   <li><a href="/docs/programming-guide.html">Programming guide</a></li>
                   <li><a href="/docs/ide.html">IDE</a></li>
                   <li><a href="/docs/self-host.html">Contributor internals</a></li>
@@ -57,15 +69,22 @@
       <main class="doc-main">
       <nav class="doc__nav" aria-label="Docs">
         <a href="/learn/">Learn</a>
-        <a href="/docs/adoption-bar.html">Adoption bar</a>
-        <a href="/docs/ai-models.html">AI models</a>
-        <a href="/docs/model-training.html">Model training</a>
+        <a href="/docs/factory.html">Factory hub</a>
         <a href="/docs/spark-builder.html" aria-current="page">Builder</a>
-        <a href="/docs/native-network-web.html">Network + web</a>
+        <a href="/docs/compile.html">Compile</a>
+        <a href="/docs/decompile.html">Decompile</a>
+        <a href="/docs/spark-bc.html">Opcodes / ISA</a>
+        <a href="/docs/build-models.html">Build models</a>
+        <a href="/docs/train-loop.html">Train loop</a>
+        <a href="/docs/architecture.html">Architecture</a>
+        <a href="/docs/tokenizer.html">Tokenizer</a>
+        <a href="/docs/serve.html">Serve</a>
+        <a href="/docs/eval.html">Eval</a>
+        <a href="/docs/sparkbc-make.html">Make targets</a>
+        <a href="/docs/ci-pages.html">CI / Pages</a>
+        <a href="/docs/adoption-bar.html">Adoption bar</a>
+        <a href="/docs/language.html">Language</a>
         <a href="/docs/programming-guide.html">Programming guide</a>
-        <a href="/docs/language.html">Language reference</a>
-        <a href="/docs/ide.html">IDE</a>
-        <a href="/docs/self-host.html">Contributor internals</a>
         <a href="/downloads.html">Downloads</a>
       </nav>      <article class="doc__body">
         <h1 id="builder-spark-bc-factory">Builder — SPARK_BC factory</h1>
@@ -106,7 +125,7 @@
         (larger fixture; loss curve in <code class="inline-code">checkpoint.json</code>; loss must drop or
         fail loud). <strong>Does not beat Claude.</strong> No 6000 / GPU-1 train. Do not
         import Claude or Grok weights.</p>
-        <p><strong>ISA SoT:</strong> <a href="/docs/self-host.html">SPARK_BC.md</a>.</p>
+        <p><strong>ISA SoT:</strong> <a href="/docs/spark-bc.html">SPARK_BC.md</a>.</p>
         <h2 id="factory-story-end-to-end">Factory story (end-to-end)</h2>
         <ol class="doc__ol">
         <li><strong>Seed programs</strong> — compiler slice, train slice, builder, STEP proof,
@@ -137,7 +156,7 @@
         <a href="/learn/build-model.html">Build a Model</a> →
         <a href="/docs/spark-builder.html">/docs/spark-builder.html</a>.</p>
         <h2 id="opcodes-train-family">Opcodes (train family)</h2>
-        <p>From <a href="/docs/self-host.html">SPARK_BC.md</a> / <a href="/docs/language.html">LANGUAGE.md</a>. Operands
+        <p>From <a href="/docs/spark-bc.html">SPARK_BC.md</a> / <a href="/docs/language.html">LANGUAGE.md</a>. Operands
         are <code class="inline-code">u16</code> little-endian constant-pool indices.</p>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
@@ -447,7 +466,7 @@
         <h2 id="model-lab-in-tree">Model lab (in tree)</h2>
         <p>Flagship: <code class="inline-code">examples/model_lab.spark</code> — reverse / inspect → compile plan →
         train → modify (<code class="inline-code">keep_existing</code>) → abstain / SoT. Runbook:
-        <code class="inline-code">MODEL_LAB.md</code>.</p>
+        <a href="/docs/model-training.html">MODEL_LAB.md</a>.</p>
         <pre class="doc__pre"><code class="language-bash">./spark --dry-run examples/model_lab.spark
         make test-model-lab
         </code></pre>
@@ -587,8 +606,21 @@
         <ul class="doc__ul">
         <li>Builder page live on production Pages:
           https://sparklang.dev/docs/spark-builder.html</li>
-        <li><a href="/docs/self-host.html">SPARK_BC.md</a></li>
-        <li><code class="inline-code">MODEL_LAB.md</code></li>
+        <li><strong>Factory hub:</strong> <a href="/docs/factory.html">FACTORY.md</a> /
+          https://sparklang.dev/docs/factory.html</li>
+        <li>Engineer factory docs: <a href="/docs/compile.html">COMPILE.md</a> ·
+          <a href="/docs/decompile.html">DECOMPILE.md</a> ·
+          <a href="/docs/build-models.html">BUILD_MODELS.md</a> ·
+          <a href="/docs/train-loop.html">TRAIN_LOOP.md</a> ·
+          <a href="/docs/architecture.html">ARCHITECTURE.md</a> ·
+          <a href="/docs/attention-forward.html">ATTENTION_FORWARD.md</a> ·
+          <a href="/docs/tokenizer.html">TOKENIZER.md</a> ·
+          <a href="/docs/serve.html">SERVE.md</a> ·
+          <a href="/docs/eval.html">EVAL.md</a> ·
+          <a href="/docs/sparkbc-make.html">SPARKBC_MAKE.md</a> ·
+          <a href="/docs/ci-pages.html">CI_PAGES.md</a></li>
+        <li><a href="/docs/spark-bc.html">SPARK_BC.md</a></li>
+        <li><a href="/docs/model-training.html">MODEL_LAB.md</a></li>
         <li><a href="/docs/ai-models.html">AI_MODELS.md</a></li>
         <li><a href="/docs/language.html">LANGUAGE.md</a></li>
         <li><a href="/docs/self-host.html">SELF_HOST.md</a></li>

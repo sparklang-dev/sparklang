@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Tokenizer — BPE seed vocab — Spark</title>
-    <meta name="description" content="From-nothing byte-level BPE seed vocab for Spark." />
+    <title>CI + Cloudflare Pages — Spark</title>
+    <meta name="description" content="Contributor CI gates and production Pages deploy how-to." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
     <link rel="stylesheet" href="/css/tokens.css?v=bb4433f" />
@@ -77,7 +77,7 @@
         <a href="/docs/build-models.html">Build models</a>
         <a href="/docs/train-loop.html">Train loop</a>
         <a href="/docs/architecture.html">Architecture</a>
-        <a href="/docs/tokenizer.html" aria-current="page">Tokenizer</a>
+        <a href="/docs/tokenizer.html">Tokenizer</a>
         <a href="/docs/serve.html">Serve</a>
         <a href="/docs/eval.html">Eval</a>
         <a href="/docs/sparkbc-make.html">Make targets</a>
@@ -87,67 +87,58 @@
         <a href="/docs/programming-guide.html">Programming guide</a>
         <a href="/downloads.html">Downloads</a>
       </nav>      <article class="doc__body">
-        <h1 id="byte-level-bpe-tokenizer-seed-from-nothing">Byte-level BPE tokenizer seed (from nothing)</h1>
-        <p>Spark trains a <strong>deterministic byte-level BPE</strong> vocab from a tiny
-        <strong>in-repo</strong> fixture — not FineWeb, not HuggingFace downloads.</p>
-        <div class="doc__table-wrap"><table class="doc__table">
-        <thead>
-        <tr>
-        <th>Piece</th>
-        <th>Path</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-        <td>Trainer</td>
-        <td><code class="inline-code">python/sparklang/tokenize/</code></td>
-        </tr>
-        <tr>
-        <td>Pinned corpus</td>
-        <td><code class="inline-code">examples/fixtures/tokenize/seed_corpus.txt</code> (LF ASCII)</td>
-        </tr>
-        <tr>
-        <td>Vocab artifact</td>
-        <td><code class="inline-code">docs/examples/spark-bpe-vocab.json</code></td>
-        </tr>
-        <tr>
-        <td>Hash sidecar</td>
-        <td><code class="inline-code">docs/examples/spark-bpe-vocab.json.sha256</code></td>
-        </tr>
-        <tr>
-        <td>Determinism gate</td>
-        <td><code class="inline-code">tools/spark-bpe-seed/test_bpe.py</code> / <code class="inline-code">make test-bpe-seed</code></td>
-        </tr>
-        </tbody>
-        </table></div>
-        <p>Format <code class="inline-code">spark-bpe-v1</code>: 256 byte base + N merges (default <strong>64</strong> →
-        vocab size <strong>320</strong>). Tie-break on equal pair counts is
-        lexicographically smaller <code class="inline-code">(left, right)</code> token id.</p>
-        <p>Packing this vocab into a SPARK_BC string/const pool is <strong>optional
-        later</strong> — the minimum ship is the reproducible JSON + sha256 under
-        <code class="inline-code">docs/examples/</code>.</p>
-        <h2 id="reproduce">Reproduce</h2>
-        <pre class="doc__pre"><code class="language-bash"># Train (writes JSON + .sha256 sidecar)
-        PYTHONPATH=python python3 -m sparklang.tokenize train \
-          --corpus examples/fixtures/tokenize/seed_corpus.txt \
-          --merges 64 \
-          --out docs/examples/spark-bpe-vocab.json
-
-        # Verify committed hash matches a fresh train
-        PYTHONPATH=python python3 -m sparklang.tokenize verify
-
-        # Determinism gate (trains twice + checks committed)
-        make test-bpe-seed
+        <h1 id="ci-cloudflare-pages-contributors">CI + Cloudflare Pages (contributors)</h1>
+        <p>How factory docs and gates reach <strong>sparklang.dev</strong>. Spark /
+        SparkLang only. Full release cut: <a href="/docs/release.html">RELEASE.md</a>.</p>
+        <h2 id="local-docs-regen-check">Local docs regen + check</h2>
+        <pre class="doc__pre"><code class="language-bash">make docs-html    # python3 tools/md_to_doc_html.py --all-stale
+        make docs-check   # regen + --check + tools/test_docs_nav.py
         </code></pre>
-        <p>Pinned hashes (LF corpus; do not change without re-emitting):</p>
-        <pre class="doc__pre"><code class="inline-code">corpus_sha256=63b47d211ddfcecf241fff0976294216c233448a5ef6ef67fe6668b733d32fdf
-        vocab_sha256=c20f899bbd552b2773447838be31827952d8494c110613c9ade1cb8a07c21226
-        </code></pre>
-        <h2 id="never">Never</h2>
+        <p>Mirror <code class="inline-code">CHANGELOG.md</code> into <code class="inline-code">website/CHANGELOG.html</code> when cutting a
+        docs release (site SoT is HTML under <code class="inline-code">website/</code>). Sync
+        <code class="inline-code">docs/examples/</code> → <code class="inline-code">website/docs/examples/</code> when Builder artifacts
+        change.</p>
+        <h2 id="ci-github-actions">CI (GitHub Actions)</h2>
+        <p>Workflow: <code class="inline-code">.github/workflows/sparkbc.yml</code>.</p>
+        <p>Typical factory jobs (names may grow — read the YAML):</p>
         <ul class="doc__ul">
-        <li>Download FineWeb / large web dumps for this seed</li>
-        <li>Rely on platform CRLF (corpus is LF-only; <code class="inline-code">.gitattributes</code> pins it)</li>
-        <li>Claim this tiny BPE beats a production LLM tokenizer</li>
+        <li><code class="inline-code">make test-sparkbc</code></li>
+        <li><code class="inline-code">make sparkbc-e2e</code> / related SPARK_BC gates</li>
+        <li>Eval unit gate when present: <code class="inline-code">make test-spark-eval</code></li>
+        <li>Serve API gate when G-lane merges: <code class="inline-code">make test-serve-api</code></li>
+        </ul>
+        <p>PRs should keep these green. Docs-only PRs still run
+        <code class="inline-code">make docs-check</code> locally before push.</p>
+        <h2 id="production-pages-deploy">Production Pages deploy</h2>
+        <p>Project: <strong><code class="inline-code">sparklang-dev</code></strong>. Branch: <strong><code class="inline-code">production</code></strong>.</p>
+        <pre class="doc__pre"><code class="language-bash"># on the tip SHA you are shipping
+        make docs-html
+        # mirror CHANGELOG.html if needed
+        npx wrangler pages deploy website \
+          --project-name=sparklang-dev \
+          --branch=production \
+          --commit-hash=&quot;$(git rev-parse HEAD)&quot;
+        </code></pre>
+        <p><strong>Auth:</strong> Wrangler OAuth on SoapBox is often under
+        <code class="inline-code">~/.config/.wrangler/</code> (leading <strong>dot</strong>). That is not
+        <code class="inline-code">~/.config/wrangler/</code>. Do not invent or print tokens.</p>
+        <p>If CLI/auth absent → Cloudflare dashboard Direct Upload of
+        <code class="inline-code">website/</code> from the known SHA (<a href="/docs/release.html">RELEASE.md</a> §5b).</p>
+        <h3 id="spot-check-after-deploy">Spot-check after deploy</h3>
+        <ul class="doc__ul">
+        <li>https://sparklang.dev/</li>
+        <li>https://sparklang.dev/CHANGELOG.html</li>
+        <li>https://sparklang.dev/docs/factory.html</li>
+        <li>https://sparklang.dev/docs/spark-builder.html</li>
+        <li>https://sparklang.dev/docs/compile.html</li>
+        <li>https://sparklang.dev/downloads.html</li>
+        </ul>
+        <p>Record the Pages deployment id next to the git tip. Tip ≠ live
+        site: say so if deploy lags.</p>
+        <h2 id="related">Related</h2>
+        <ul class="doc__ul">
+        <li><a href="/docs/factory.html">FACTORY.md</a> · <a href="/docs/sparkbc-make.html">SPARKBC_MAKE.md</a></li>
+        <li><a href="/docs/release.html">RELEASE.md</a> · <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a></li>
         </ul>
       </article>
       </main>

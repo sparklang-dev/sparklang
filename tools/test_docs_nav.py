@@ -39,12 +39,20 @@ class TestDocsNav(unittest.TestCase):
     def test_factory_md_sources_exist(self) -> None:
         """H-lane markdown sources are present under docs/."""
         for name in (
+            "FACTORY.md",
             "COMPILE.md",
             "DECOMPILE.md",
             "BUILD_MODELS.md",
+            "TRAIN_LOOP.md",
+            "ARCHITECTURE.md",
             "ATTENTION_FORWARD.md",
+            "SERVE.md",
+            "EVAL.md",
             "SPARKBC_MAKE.md",
+            "CI_PAGES.md",
+            "TOKENIZER.md",
             "SPARK_BC.md",
+            "SPARK_BUILDER.md",
         ):
             path = ROOT / "docs" / name
             self.assertTrue(path.is_file(), msg=name)

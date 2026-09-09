@@ -73,70 +73,68 @@
 <p>All notable user-facing releases of <strong>SparkLang</strong> (the Spark programming
 language) are listed here. Site and installers track
 <code class="inline-code">website/downloads/manifest.json</code>.</p>
+<h2>0.6.36 — 2026-09-09</h2>
+<ul>
+<li><strong>Factory docs (H-lane, full map):</strong> engineer Pages for the whole
+  SPARK_BC factory — compile/assemble, decompile/inspect, opcodes
+  (ISA), build models + weights/checkpoints, tokenizer/BPE, train
+  loop (outer/inner SGD; scale fixture linked), architecture
+  (embed/RMSNorm/lm_head/MLP; attention honest/partial), serve
+  forward + HTTP/stdio API (G-lane linked), eval harness (E-lane
+  Claude baseline linked; <strong>never</strong> beat Claude), makefile targets,
+  CI/Pages contributor how-to. Hub: <a href="/docs/factory.html">FACTORY.md</a>
+  → <code class="inline-code">/docs/factory.html</code>. Also: <code class="inline-code">/docs/compile.html</code>,
+  <code class="inline-code">/docs/decompile.html</code>, <code class="inline-code">/docs/spark-bc.html</code>,
+  <code class="inline-code">/docs/build-models.html</code>, <code class="inline-code">/docs/train-loop.html</code>,
+  <code class="inline-code">/docs/architecture.html</code>, <code class="inline-code">/docs/attention-forward.html</code>,
+  <code class="inline-code">/docs/tokenizer.html</code>, <code class="inline-code">/docs/serve.html</code>, <code class="inline-code">/docs/eval.html</code>,
+  <code class="inline-code">/docs/sparkbc-make.html</code>, <code class="inline-code">/docs/ci-pages.html</code>.
+  Regen/check: <code class="inline-code">make docs-html</code> / <code class="inline-code">make docs-check</code>.</li>
+</ul>
 <h2>0.6.35 — 2026-09-09</h2>
 <ul>
-<li><strong>Serve HTTP / stdio API (G-lane):</strong>
-  <code class="inline-code">./spark-serve-api</code> wraps the existing tiny CPU
-  forward for local JSON predict (next-token) and embeddings from Spark
-  safetensors. Endpoints: <code class="inline-code">GET /health</code>,
-  <code class="inline-code">GET /version</code>,
-  <code class="inline-code">POST /v1/predict</code>,
-  <code class="inline-code">POST /v1/embeddings</code> (also
-  <code class="inline-code">--stdio</code>). Gate:
-  <code class="inline-code">make test-serve-api</code>.
-  <strong>Not production.</strong> Never 6000. Docs:
-  <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> §6c,
+<li><strong>Serve HTTP / stdio API (G-lane):</strong> <code class="inline-code">./spark-serve-api</code> wraps the
+  existing tiny CPU forward for local JSON predict (next-token) and
+  embeddings from Spark safetensors. Endpoints: <code class="inline-code">GET /health</code>,
+  <code class="inline-code">GET /version</code>, <code class="inline-code">POST /v1/predict</code>, <code class="inline-code">POST /v1/embeddings</code> (also
+  <code class="inline-code">--stdio</code>). Gate: <code class="inline-code">make test-serve-api</code>. <strong>Not production.</strong> Never
+  6000. Docs: <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> §6c,
   <a href="/docs/release.html">RELEASE.md</a>.</li>
 </ul>
 <h2>0.6.34 — 2026-09-09</h2>
 <ul>
 <li><strong>Scale fixture / dims (F-lane):</strong> larger CE JSONL
-  (<code class="inline-code">examples/fixtures/train/dataset_scale.jsonl</code>,
-  145 pairs, longer sequences) +
-  <code class="inline-code">scale_config.json</code>. Opt-in arch knobs
-  <code class="inline-code">--dim</code> /
-  <code class="inline-code">--n-layer</code> on
-  <code class="inline-code">apply_step.py</code> /
-  <code class="inline-code">emit_init_weights</code> /
-  <code class="inline-code">apply_sgd_step</code>
-  (CPU-fast bounds dim≤128, n_layer≤8).
-  <code class="inline-code">make spark-sgd-proof</code> stays tiny for GHA;
-  <code class="inline-code">make spark-sgd-proof-scale</code> is local opt-in
-  (defaults dim=64 n_layer=4). Tests: fixture load + shape check +
-  one-outer smoke (not overnight). <strong>Not beat Claude.</strong>
-  Never 6000. Docs:
-  <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</li>
+  (<code class="inline-code">examples/fixtures/train/dataset_scale.jsonl</code>, 145 pairs,
+  longer sequences) + <code class="inline-code">scale_config.json</code>. Opt-in arch knobs
+  <code class="inline-code">--dim</code> / <code class="inline-code">--n-layer</code> on <code class="inline-code">apply_step.py</code> /
+  <code class="inline-code">emit_init_weights</code> / <code class="inline-code">apply_sgd_step</code> (CPU-fast bounds
+  dim≤128, n_layer≤8). <code class="inline-code">make spark-sgd-proof</code> stays tiny for
+  GHA; <code class="inline-code">make spark-sgd-proof-scale</code> is local opt-in
+  (defaults dim=64 n_layer=4). Tests: fixture load + shape
+  check + one-outer smoke (not overnight). <strong>Not beat Claude.</strong>
+  Never 6000. Docs: <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</li>
 </ul>
 <h2>0.6.33 — 2026-09-09</h2>
 <ul>
-<li><strong>Claude eval baseline (honest):</strong>
-  <code class="inline-code">make spark-eval-claude</code> /
-  <code class="inline-code">CLAUDE=auto|on|off</code> runs Spark frozen probes plus an
-  optional Anthropic Messages baseline <strong>only if</strong> credentials already
-  exist on the box. No key →
-  <code class="inline-code">skipped_no_credentials</code> (clear status).
-  Side-by-side comparison table;
-  <code class="inline-code">beats_claude</code> always <strong>false</strong>.
+<li><strong>Claude eval baseline (honest):</strong> <code class="inline-code">make spark-eval-claude</code> /
+  <code class="inline-code">CLAUDE=auto|on|off</code> runs Spark frozen probes plus an optional
+  Anthropic Messages baseline <strong>only if</strong> credentials already exist
+  on the box. No key → <code class="inline-code">skipped_no_credentials</code> (clear status).
+  Side-by-side comparison table; <code class="inline-code">beats_claude</code> always <strong>false</strong>.
   Never invents keys. Never claims beat Claude. Never 6000.
   Gate: <code class="inline-code">make test-spark-eval</code>. Docs: Eval honesty in
   <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</li>
 </ul>
 <h2>0.6.32 — 2026-09-09</h2>
 <ul>
-<li><strong>Multi-outer CPU SGD + checkpoint:</strong> <code class="inline-code">STEP</code> /
-  <code class="inline-code">apply_sgd_step</code>
+<li><strong>Multi-outer CPU SGD + checkpoint:</strong> <code class="inline-code">STEP</code> / <code class="inline-code">apply_sgd_step</code>
   runs outer×inner CE on a larger train fixture (36 pairs), optional
-  embed grads, writes <code class="inline-code">checkpoint.json</code> with an honest
-  <code class="inline-code">loss_curve</code>.
-  Defaults: <code class="inline-code">--outer 4 --inner 8</code>. Gate:
-  <code class="inline-code">make test-sparkbc</code>,
-  <code class="inline-code">make sparkbc-e2e</code>,
-  <code class="inline-code">make spark-sgd-proof</code> (SGD then
-  measurement-only <code class="inline-code">spark-eval</code>).
-  <strong>Not beat Claude.</strong> Never 6000.</li>
+  embed grads, writes <code class="inline-code">checkpoint.json</code> with an honest <code class="inline-code">loss_curve</code>.
+  Defaults: <code class="inline-code">--outer 4 --inner 8</code>. Gate: <code class="inline-code">make test-sparkbc</code>,
+  <code class="inline-code">make sparkbc-e2e</code>, <code class="inline-code">make spark-sgd-proof</code> (SGD then
+  measurement-only <code class="inline-code">spark-eval</code>). <strong>Not beat Claude.</strong> Never 6000.</li>
 <li><strong>Serve MLP0:</strong> tiny CPU forward uses layer-0 SwiGLU MLP when
-  tensors exist (<code class="inline-code">embed→mlp0→norm→lm_head</code>). Still not
-  production.</li>
+  tensors exist (<code class="inline-code">embed→mlp0→norm→lm_head</code>). Still not production.</li>
 <li>Docs: <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</li>
 </ul>
 <h2>0.6.31 — 2026-09-08</h2>
@@ -154,15 +152,11 @@ language) are listed here. Site and installers track
 </ul>
 <h2>0.6.30 — 2026-09-09</h2>
 <ul>
-<li><strong>Tiny CPU serve forward:</strong> <code class="inline-code">dump.py --serve</code> /
-  <code class="inline-code">./spark-serve</code>
+<li><strong>Tiny CPU serve forward:</strong> <code class="inline-code">dump.py --serve</code> / <code class="inline-code">./spark-serve</code>
   load Spark safetensors (or emit init), run one embed→RMSNorm→lm_head
-  matmul on CPU, write <code class="inline-code">SERVE</code> with
-  <code class="inline-code">forward=true</code> and honest
+  matmul on CPU, write <code class="inline-code">SERVE</code> with <code class="inline-code">forward=true</code> and honest
   <code class="inline-code">trained</code> from weights meta. Not a production LLM. Gate:
-  <code class="inline-code">make test-sparkbc</code>. Docs:
-
-  <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</li>
+  <code class="inline-code">make test-sparkbc</code>. Docs: <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</li>
 </ul>
 <h2>0.6.29 — 2026-09-08</h2>
 <ul>
@@ -172,7 +166,7 @@ language) are listed here. Site and installers track
   propagates). Docs un-BLOCK GAS wrappers. Gates:
   <code class="inline-code">make test-sparkbc</code>, <code class="inline-code">make sparkbc-e2e</code>. Not SGD.</li>
 <li><strong>Docs:</strong> <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> /
-  <a href="/docs/spark-builder.html">SPARK_BC.md</a>. CI:
+  <a href="docs/SPARK_BC.md">SPARK_BC.md</a>. CI:
   <code class="inline-code">.github/workflows/sparkbc.yml</code> (#10).</li>
 </ul>
 <h2>0.6.28 — 2026-09-08</h2>
@@ -203,10 +197,10 @@ language) are listed here. Site and installers track
   <code class="inline-code">tools/md_to_doc_html.py --all-stale</code>; Learn + homepage link
   Builder; CHANGELOG.html mirrored. Pages:
   <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> /
-  <code class="inline-code">/docs/spark-builder.html</code>, <a href="/docs/spark-builder.html">SPARK_BC.md</a>,
+  <code class="inline-code">/docs/spark-builder.html</code>, <a href="docs/SPARK_BC.md">SPARK_BC.md</a>,
   <a href="/docs/release.html">RELEASE.md</a> step 5,
-  <a href="/docs/adoption-bar.html">ADOPTION_BAR.md</a>,
-  <a href="/docs/roadmap.html">ROADMAP.md</a>.</li>
+  <a href="docs/ADOPTION_BAR.md">ADOPTION_BAR.md</a>,
+  <a href="docs/ROADMAP.md">ROADMAP.md</a>.</li>
 <li><strong>SPARK_BC e2e gate:</strong> <code class="inline-code">make sparkbc-e2e</code> / <code class="inline-code">make test-sparkbc-e2e</code>
   (<code class="inline-code">tools/spark-bc-dump/run_e2e_gate.sh</code>, wrapper
   <code class="inline-code">scripts/sparkbc-e2e</code>). Compiles
@@ -215,13 +209,13 @@ language) are listed here. Site and installers track
   <code class="inline-code">out/train/job-dry-001/ARTIFACT</code> (<code class="inline-code">not_sgd=true</code>,
   <code class="inline-code">trained=false</code>, <code class="inline-code">step_n=1</code>). Not SGD. STEP also writes
   <code class="inline-code">weights.safetensors</code> (dry delta; <code class="inline-code">trained=false</code>). Docs:
-  <a href="/docs/spark-builder.html">SPARK_BC.md</a>,
+  <a href="docs/SPARK_BC.md">SPARK_BC.md</a>,
   <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>,
-  <a href="/docs/model-training.html">MODEL_LAB.md</a>,
-  <a href="/docs/model-training.html">MODEL_TRAINING.md</a>,
-  <a href="/docs/language.html">LANGUAGE.md</a>,
-  <a href="/docs/self-host.html">SELF_HOST.md</a>,
-  <a href="/docs/programming-guide.html">PROGRAMMING_GUIDE.md</a>.</li>
+  <a href="docs/MODEL_LAB.md">MODEL_LAB.md</a>,
+  <a href="docs/MODEL_TRAINING.md">MODEL_TRAINING.md</a>,
+  <a href="docs/LANGUAGE.md">LANGUAGE.md</a>,
+  <a href="docs/SELF_HOST.md">SELF_HOST.md</a>,
+  <a href="docs/PROGRAMMING_GUIDE.md">PROGRAMMING_GUIDE.md</a>.</li>
 </ul>
 <h2>0.6.26 — 2026-09-08</h2>
 <ul>
@@ -259,7 +253,7 @@ language) are listed here. Site and installers track
   <code class="inline-code">examples/model_lab.spark</code> also keeps SoT + <code class="inline-code">head abstain</code> so
   inventable facts still IDK. Companion <code class="inline-code">./spark-model-lab</code>. Gate:
   <code class="inline-code">make test-model-lab</code>. Not a new foundation LLM. Docs:
-  <a href="/docs/model-training.html">MODEL_LAB.md</a>.</li>
+  <a href="docs/MODEL_LAB.md">MODEL_LAB.md</a>.</li>
 </ul>
 <h2>0.6.24 — 2026-09-08</h2>
 <ul>
@@ -552,7 +546,7 @@ language) are listed here. Site and installers track
 <h2>Earlier</h2>
 <p>See <a href="https://github.com/sparklang-dev/sparklang/releases">GitHub releases</a> and
 commit history on <code class="inline-code">main</code> for prior notes.</p>
-        </article>
+</article>
       </main>
     </div>
 

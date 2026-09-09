@@ -321,14 +321,27 @@ expect contains status fixture "examples/fixtures/train/want_succeeded.txt"</cod
           </article>
           <article class="card">
             <h3 class="card__title">
+              <a href="/docs/factory.html">Factory docs hub</a>
+            </h3>
+            <p class="card__body">
+              Engineer map: compile, decompile, opcodes, TRAIN/STEP,
+              train loop, architecture, tokenizer, serve, eval, make,
+              CI/Pages. Honest — does not beat Claude.
+            </p>
+            <a class="card__link" href="/docs/factory.html"
+              >Open factory map →</a
+            >
+          </article>
+          <article class="card">
+            <h3 class="card__title">
               <a href="/docs/spark-builder.html">Builder — SPARK_BC factory</a>
             </h3>
             <p class="card__body">
               Spark compiles Spark to SPARK_BC (<code class="inline-code">TRAIN</code>
               / <code class="inline-code">STEP</code> /
               <code class="inline-code">TRAIN_STATUS</code>), dumps hex, emits
-              Spark-created init weights. Dry ≠ trained. GAS does not emit
-              <code class="inline-code">.sparkbc</code>.
+              Spark-created init weights. Dry ≠ trained. GAS
+              <code class="inline-code">--compile</code> wraps bootstrap.
             </p>
             <a class="card__link" href="/docs/spark-builder.html"
               >Factory guide →</a

@@ -79,7 +79,8 @@ Do not call sparkasm “SPARK_BC decompile.”
 
 ## Related
 
+- [ARCHITECTURE.md](ARCHITECTURE.md) · [SERVE.md](SERVE.md)
 - [Build models](BUILD_MODELS.md) · [Compile](COMPILE.md)
 - [SPARK_BUILDER.md](SPARK_BUILDER.md) § serve
-- [SPARKBC_MAKE.md](SPARKBC_MAKE.md) · [ABSTAIN_HEADS.md](ABSTAIN_HEADS.md)
-  (IDK heads — separate product surface)
+- [SPARKBC_MAKE.md](SPARKBC_MAKE.md) · [FACTORY.md](FACTORY.md)
+- [ABSTAIN_HEADS.md](ABSTAIN_HEADS.md) (IDK heads — separate product surface)

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Compile — SPARK_BC — Spark</title>
+    <meta name="description" content="Compile Spark to SPARK_BC via bootstrap, GAS wrappers, and sparkasm — engineer makefile map." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/css/tokens.css?v=bb4433f" />
+    <link rel="stylesheet" href="/css/site.css?v=bb4433f" />
+  </head>
+  <body class="doc-page">
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="site-brand" href="/" aria-label="Spark home">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z" fill="currentColor" />
+          </svg>
+          Spark
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+        </button>
+        <div class="header-nav-wrap">
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <ul class="nav-primary">
+              <li><a href="/learn/">Learn</a></li>
+              <li><a href="/docs/language.html">Docs</a></li>
+              <li><a href="/downloads.html">Download</a></li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">More</button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/factory.html">Factory hub</a></li>
+                  <li><a href="/docs/spark-builder.html">Builder</a></li>
+                  <li><a href="/docs/compile.html">Compile</a></li>
+                  <li><a href="/docs/decompile.html">Decompile</a></li>
+                  <li><a href="/docs/spark-bc.html">Opcodes / ISA</a></li>
+                  <li><a href="/docs/build-models.html">Build models</a></li>
+                  <li><a href="/docs/train-loop.html">Train loop</a></li>
+                  <li><a href="/docs/architecture.html">Architecture</a></li>
+                  <li><a href="/docs/attention-forward.html">Attention honesty</a></li>
+                  <li><a href="/docs/tokenizer.html">Tokenizer</a></li>
+                  <li><a href="/docs/serve.html">Serve</a></li>
+                  <li><a href="/docs/eval.html">Eval</a></li>
+                  <li><a href="/docs/sparkbc-make.html">Make targets</a></li>
+                  <li><a href="/docs/ci-pages.html">CI / Pages</a></li>
+                  <li><a href="/docs/adoption-bar.html">Adoption bar</a></li>
+                  <li><a href="/docs/ai-models.html">AI models</a></li>
+                  <li><a href="/docs/programming-guide.html">Programming guide</a></li>
+                  <li><a href="/docs/ide.html">IDE</a></li>
+                  <li><a href="/docs/self-host.html">Contributor internals</a></li>
+                </ul>
+              </li>
+            </ul>
+            <a href="/playground.html" class="nav-cta">Try</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <div class="shell doc-layout">
+      <aside class="doc-sidebar" aria-label="Table of contents">
+        <p class="doc-sidebar__title">On this page</p>
+        <nav id="doc-toc-list"></nav>
+      </aside>
+      <main class="doc-main">
+      <nav class="doc__nav" aria-label="Docs">
+        <a href="/learn/">Learn</a>
+        <a href="/docs/factory.html">Factory hub</a>
+        <a href="/docs/spark-builder.html">Builder</a>
+        <a href="/docs/compile.html" aria-current="page">Compile</a>
+        <a href="/docs/decompile.html">Decompile</a>
+        <a href="/docs/spark-bc.html">Opcodes / ISA</a>
+        <a href="/docs/build-models.html">Build models</a>
+        <a href="/docs/train-loop.html">Train loop</a>
+        <a href="/docs/architecture.html">Architecture</a>
+        <a href="/docs/tokenizer.html">Tokenizer</a>
+        <a href="/docs/serve.html">Serve</a>
+        <a href="/docs/eval.html">Eval</a>
+        <a href="/docs/sparkbc-make.html">Make targets</a>
+        <a href="/docs/ci-pages.html">CI / Pages</a>
+        <a href="/docs/adoption-bar.html">Adoption bar</a>
+        <a href="/docs/language.html">Language</a>
+        <a href="/docs/programming-guide.html">Programming guide</a>
+        <a href="/downloads.html">Downloads</a>
+      </nav>      <article class="doc__body">
+        <h1 id="compile-spark-spark-bc-gas-sparkasm">Compile — Spark → SPARK_BC / GAS / sparkasm</h1>
+        <p>Engineer guide for <strong>emitting</strong> bytecode and related objects.
+        Product name: <strong>Spark / SparkLang</strong> only.</p>
+        <p>This page does <strong>not</strong> reimplement the compiler. It points at
+        makefile targets and in-tree tools. ISA detail:
+        <a href="/docs/spark-bc.html">SPARK_BC.md</a>. Factory story:
+        <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</p>
+        <h2 id="what-compile-means-here">What “compile” means here</h2>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Path</th>
+        <th>Input</th>
+        <th>Output</th>
+        <th>SoT</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><strong>C bootstrap</strong></td>
+        <td><code class="inline-code">.spark</code></td>
+        <td><code class="inline-code">.sparkbc</code> (<code class="inline-code">SPBC</code> magic)</td>
+        <td><code class="inline-code">./spark-bootstrap --compile</code></td>
+        </tr>
+        <tr>
+        <td><strong>GAS wrapper</strong></td>
+        <td><code class="inline-code">.spark</code></td>
+        <td>same <code class="inline-code">.sparkbc</code></td>
+        <td><code class="inline-code">./spark --compile</code> thin-forks bootstrap</td>
+        </tr>
+        <tr>
+        <td><strong>sparkasm</strong></td>
+        <td><code class="inline-code">.sasm</code> / peer asm</td>
+        <td>ELF objects / tests</td>
+        <td><code class="inline-code">make -C sparkasm</code> — <strong>not</strong> SPARK_BC</td>
+        </tr>
+        <tr>
+        <td><strong>Tensor asm check</strong></td>
+        <td><code class="inline-code">control.sparkasm</code></td>
+        <td>shape check only</td>
+        <td><code class="inline-code">make test-sparkasm-control</code> — <strong>not</strong> a tensor VM</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <p>SPARK_BC is an <strong>orchestration ISA</strong> (opcodes like <code class="inline-code">TRAIN</code> /
+        <code class="inline-code">STEP</code> / <code class="inline-code">HALT</code>). It is <strong>not</strong> neural weights, not CUDA, not a
+        HuggingFace export.</p>
+        <h2 id="bootstrap-emit-sot">Bootstrap emit (SoT)</h2>
+        <pre class="doc__pre"><code class="language-bash">make spark-bootstrap   # or: make sparkc
+        ./spark-bootstrap --compile examples/hello.spark -o /tmp/hello.sparkbc
+        ./spark-bootstrap --compile examples/spark_train_step.spark \
+          -o /tmp/spark-train-step.sparkbc
+        </code></pre>
+        <p>C lowering (<code class="inline-code">bootstrap/</code> + <code class="inline-code">selfhost/lex.c</code>) remains the encode
+        SoT. Published bytes live under <code class="inline-code">docs/examples/*.sparkbc</code> — rebuild
+        with the commands in <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>; do not
+        invent hex.</p>
+        <h2 id="gas-spark---compile">GAS <code class="inline-code">./spark --compile</code></h2>
+        <pre class="doc__pre"><code class="language-bash">make spark
+        ./spark --compile examples/spark_builder.spark \
+          -o /tmp/spark-builder.sparkbc
+        </code></pre>
+        <p>Implemented as a <strong>thin wrap</strong> of <code class="inline-code">./spark-bootstrap</code> (exit status
+        propagates). GAS does <strong>not</strong> reimplement <code class="inline-code">.sparkbc</code> packing.</p>
+        <p>Source dry-run (not bytecode):</p>
+        <pre class="doc__pre"><code class="language-bash">./spark --dry-run examples/hello.spark
+        </code></pre>
+        <h2 id="sparkasm-peer-assembler">sparkasm (peer assembler)</h2>
+        <pre class="doc__pre"><code class="language-bash">make sparkasm
+        make test-sparkasm
+        </code></pre>
+        <p>Assembles Spark-asm IR → objects/binaries under <code class="inline-code">sparkasm/</code>.
+        <strong>Separate</strong> from SPARK_BC. See <code class="inline-code">sparkasm/README.md</code> and
+        <a href="/docs/self-host.html">SELF_HOST.md</a>.</p>
+        <p>Optional SPARK_BC → sasm emit probe (not the default factory
+        path):</p>
+        <pre class="doc__pre"><code class="language-bash">make spark-bc-emit
+        make test-bc-emit
+        </code></pre>
+        <h2 id="tensor-assembly-source-control">Tensor-assembly source (control)</h2>
+        <p><code class="inline-code">examples/models/control.sparkasm</code> documents a tiny GQA + SwiGLU
+        forward <strong>as macros</strong>. It is <strong>readable source + shape check</strong>,
+        not a running attention VM:</p>
+        <pre class="doc__pre"><code class="language-bash">make test-sparkasm-control
+        </code></pre>
+        <p>Honest status is in the file header and on
+        <a href="/docs/attention-forward.html">Attention / forward</a>.</p>
+        <h2 id="product-wrapper">Product wrapper</h2>
+        <pre class="doc__pre"><code class="language-bash">make spark-bc
+        ./scripts/spark-bc   # phase-6 product wrapper; see scripts/spark-bc
+        </code></pre>
+        <p>Prefer <code class="inline-code">--compile</code> on bootstrap or GAS for engineer reproduction.</p>
+        <h2 id="gates">Gates</h2>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Target</th>
+        <th>What it proves</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><code class="inline-code">make test-sparkbc</code></td>
+        <td>compile + <code class="inline-code">--run-bc</code> vs GAS dry oracle + dump tests</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">make sparkbc-e2e</code></td>
+        <td>TRAIN→STEP→ARTIFACT focused gate</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">make test-bc-emit</code></td>
+        <td>bc_emit + pack hello + sparkasm path</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <p>Full target list: <a href="/docs/sparkbc-make.html">SPARKBC_MAKE.md</a>.</p>
+        <h2 id="related">Related</h2>
+        <ul class="doc__ul">
+        <li><a href="/docs/decompile.html">Decompile / dump</a></li>
+        <li><a href="/docs/build-models.html">Build models (TRAIN/STEP)</a></li>
+        <li><a href="/docs/spark-bc.html">SPARK_BC.md</a> · <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a></li>
+        </ul>
+      </article>
+      </main>
+    </div>
+
+    <footer class="site-footer">
+      <div class="shell footer-inner">
+        <span>Spark programming language</span>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="/learn/">Learn</a>
+          <a href="/docs/language.html">Reference</a>
+          <a href="/downloads.html">Downloads</a>
+          <a href="/playground.html">Playground</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="/js/site.js"></script>
+  </body>
+</html>

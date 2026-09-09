@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Factory documentation hub — Spark</title>
+    <meta name="description" content="Map of SparkLang SPARK_BC factory docs — compile through eval, serve, CI/Pages. Does not beat Claude." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/css/tokens.css?v=bb4433f" />
+    <link rel="stylesheet" href="/css/site.css?v=bb4433f" />
+  </head>
+  <body class="doc-page">
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="site-brand" href="/" aria-label="Spark home">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z" fill="currentColor" />
+          </svg>
+          Spark
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+        </button>
+        <div class="header-nav-wrap">
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <ul class="nav-primary">
+              <li><a href="/learn/">Learn</a></li>
+              <li><a href="/docs/language.html">Docs</a></li>
+              <li><a href="/downloads.html">Download</a></li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">More</button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/factory.html">Factory hub</a></li>
+                  <li><a href="/docs/spark-builder.html">Builder</a></li>
+                  <li><a href="/docs/compile.html">Compile</a></li>
+                  <li><a href="/docs/decompile.html">Decompile</a></li>
+                  <li><a href="/docs/spark-bc.html">Opcodes / ISA</a></li>
+                  <li><a href="/docs/build-models.html">Build models</a></li>
+                  <li><a href="/docs/train-loop.html">Train loop</a></li>
+                  <li><a href="/docs/architecture.html">Architecture</a></li>
+                  <li><a href="/docs/attention-forward.html">Attention honesty</a></li>
+                  <li><a href="/docs/tokenizer.html">Tokenizer</a></li>
+                  <li><a href="/docs/serve.html">Serve</a></li>
+                  <li><a href="/docs/eval.html">Eval</a></li>
+                  <li><a href="/docs/sparkbc-make.html">Make targets</a></li>
+                  <li><a href="/docs/ci-pages.html">CI / Pages</a></li>
+                  <li><a href="/docs/adoption-bar.html">Adoption bar</a></li>
+                  <li><a href="/docs/ai-models.html">AI models</a></li>
+                  <li><a href="/docs/programming-guide.html">Programming guide</a></li>
+                  <li><a href="/docs/ide.html">IDE</a></li>
+                  <li><a href="/docs/self-host.html">Contributor internals</a></li>
+                </ul>
+              </li>
+            </ul>
+            <a href="/playground.html" class="nav-cta">Try</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <div class="shell doc-layout">
+      <aside class="doc-sidebar" aria-label="Table of contents">
+        <p class="doc-sidebar__title">On this page</p>
+        <nav id="doc-toc-list"></nav>
+      </aside>
+      <main class="doc-main">
+      <nav class="doc__nav" aria-label="Docs">
+        <a href="/learn/">Learn</a>
+        <a href="/docs/factory.html" aria-current="page">Factory hub</a>
+        <a href="/docs/spark-builder.html">Builder</a>
+        <a href="/docs/compile.html">Compile</a>
+        <a href="/docs/decompile.html">Decompile</a>
+        <a href="/docs/spark-bc.html">Opcodes / ISA</a>
+        <a href="/docs/build-models.html">Build models</a>
+        <a href="/docs/train-loop.html">Train loop</a>
+        <a href="/docs/architecture.html">Architecture</a>
+        <a href="/docs/tokenizer.html">Tokenizer</a>
+        <a href="/docs/serve.html">Serve</a>
+        <a href="/docs/eval.html">Eval</a>
+        <a href="/docs/sparkbc-make.html">Make targets</a>
+        <a href="/docs/ci-pages.html">CI / Pages</a>
+        <a href="/docs/adoption-bar.html">Adoption bar</a>
+        <a href="/docs/language.html">Language</a>
+        <a href="/docs/programming-guide.html">Programming guide</a>
+        <a href="/downloads.html">Downloads</a>
+      </nav>      <article class="doc__body">
+        <h1 id="spark-factory-documentation-hub">Spark factory documentation (hub)</h1>
+        <p>Engineer map for the <strong>Spark / SparkLang</strong> SPARK_BC factory on
+        <a href="https://sparklang.dev/">sparklang.dev</a>. Does <strong>not</strong> reimplement
+        SGD, attention, or serve APIs — links code + makefile targets.
+        <strong>Never</strong> claims beat Claude. <strong>Never</strong> trains on the RTX PRO 6000.</p>
+        <p>Reproduction story: <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</p>
+        <h2 id="map-everything">Map (everything)</h2>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Topic</th>
+        <th>Doc</th>
+        <th>Site</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td>Compile / assemble</td>
+        <td><a href="/docs/compile.html">COMPILE.md</a></td>
+        <td><a href="/docs/compile.html">/docs/compile.html</a></td>
+        </tr>
+        <tr>
+        <td>Decompile / dump / inspect</td>
+        <td><a href="/docs/decompile.html">DECOMPILE.md</a></td>
+        <td><a href="/docs/decompile.html">/docs/decompile.html</a></td>
+        </tr>
+        <tr>
+        <td>Opcode ISA (TRAIN/STEP/…)</td>
+        <td><a href="/docs/spark-bc.html">SPARK_BC.md</a></td>
+        <td><a href="/docs/spark-bc.html">/docs/spark-bc.html</a></td>
+        </tr>
+        <tr>
+        <td>Build models + weights</td>
+        <td><a href="/docs/build-models.html">BUILD_MODELS.md</a></td>
+        <td><a href="/docs/build-models.html">/docs/build-models.html</a></td>
+        </tr>
+        <tr>
+        <td>Train loop (outer/inner)</td>
+        <td><a href="/docs/train-loop.html">TRAIN_LOOP.md</a></td>
+        <td><a href="/docs/train-loop.html">/docs/train-loop.html</a></td>
+        </tr>
+        <tr>
+        <td>Architecture pieces</td>
+        <td><a href="/docs/architecture.html">ARCHITECTURE.md</a></td>
+        <td><a href="/docs/architecture.html">/docs/architecture.html</a></td>
+        </tr>
+        <tr>
+        <td>Attention / MLP honesty</td>
+        <td><a href="/docs/attention-forward.html">ATTENTION_FORWARD.md</a></td>
+        <td><a href="/docs/attention-forward.html">/docs/attention-forward.html</a></td>
+        </tr>
+        <tr>
+        <td>Tokenizer / BPE</td>
+        <td><a href="/docs/tokenizer.html">TOKENIZER.md</a></td>
+        <td><a href="/docs/tokenizer.html">/docs/tokenizer.html</a></td>
+        </tr>
+        <tr>
+        <td>Serve forward + HTTP</td>
+        <td><a href="/docs/serve.html">SERVE.md</a></td>
+        <td><a href="/docs/serve.html">/docs/serve.html</a></td>
+        </tr>
+        <tr>
+        <td>Eval harness</td>
+        <td><a href="/docs/eval.html">EVAL.md</a></td>
+        <td><a href="/docs/eval.html">/docs/eval.html</a></td>
+        </tr>
+        <tr>
+        <td>Makefile targets</td>
+        <td><a href="/docs/sparkbc-make.html">SPARKBC_MAKE.md</a></td>
+        <td><a href="/docs/sparkbc-make.html">/docs/sparkbc-make.html</a></td>
+        </tr>
+        <tr>
+        <td>CI + Pages how-to</td>
+        <td><a href="/docs/ci-pages.html">CI_PAGES.md</a></td>
+        <td><a href="/docs/ci-pages.html">/docs/ci-pages.html</a></td>
+        </tr>
+        <tr>
+        <td>Full factory E2E</td>
+        <td><a href="/docs/spark-builder.html">SPARK_BUILDER.md</a></td>
+        <td><a href="/docs/spark-builder.html">/docs/spark-builder.html</a></td>
+        </tr>
+        <tr>
+        <td>Adoption honesty</td>
+        <td><a href="/docs/adoption-bar.html">ADOPTION_BAR.md</a></td>
+        <td><a href="/docs/adoption-bar.html">/docs/adoption-bar.html</a></td>
+        </tr>
+        </tbody>
+        </table></div>
+        <h2 id="quick-start-stranger-with-the-repo">Quick start (stranger with the repo)</h2>
+        <pre class="doc__pre"><code class="language-bash">make spark-bootstrap spark
+        make test-sparkbc
+        make sparkbc-e2e
+        make spark-sgd-proof
+        make spark-eval
+        make docs-check
+        </code></pre>
+        <h2 id="sibling-factory-lanes-do-not-steal">Sibling factory lanes (do not steal)</h2>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Lane</th>
+        <th>Scope</th>
+        <th>Docs stance</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><strong>D</strong></td>
+        <td>Attention train/serve math</td>
+        <td>Document as planned until on <code class="inline-code">main</code></td>
+        </tr>
+        <tr>
+        <td><strong>E</strong></td>
+        <td>Claude eval harness</td>
+        <td><strong>Merged</strong> — see <a href="/docs/eval.html">EVAL.md</a></td>
+        </tr>
+        <tr>
+        <td><strong>F</strong></td>
+        <td>Scale fixtures / dim knobs</td>
+        <td><strong>Merged</strong> — see <a href="/docs/train-loop.html">TRAIN_LOOP.md</a> / <code class="inline-code">spark-sgd-proof-scale</code></td>
+        </tr>
+        <tr>
+        <td><strong>G</strong></td>
+        <td>Serve HTTP/API</td>
+        <td><strong>Merged</strong> — see <a href="/docs/serve.html">SERVE.md</a> / <code class="inline-code">make spark-serve-api</code></td>
+        </tr>
+        </tbody>
+        </table></div>
+        <h2 id="honesty-bar">Honesty bar</h2>
+        <ul class="doc__ul">
+        <li>Multi-outer CPU SGD + MLP0 serve + frozen eval — <strong>yes</strong> on tip.</li>
+        <li>Beat Claude — <strong>no</strong>.</li>
+        <li>Full attention forward in serve — <strong>no</strong> (tensors allocated).</li>
+        <li>6000 train — <strong>never</strong>.</li>
+        </ul>
+      </article>
+      </main>
+    </div>
+
+    <footer class="site-footer">
+      <div class="shell footer-inner">
+        <span>Spark programming language</span>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="/learn/">Learn</a>
+          <a href="/docs/language.html">Reference</a>
+          <a href="/downloads.html">Downloads</a>
+          <a href="/playground.html">Playground</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="/js/site.js"></script>
+  </body>
+</html>

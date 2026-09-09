@@ -71,6 +71,7 @@ EOF
 
    - `https://sparklang.dev/`
    - `https://sparklang.dev/CHANGELOG.html`
+   - `https://sparklang.dev/docs/factory.html`
    - `https://sparklang.dev/docs/spark-builder.html`
    - `https://sparklang.dev/downloads.html`
 

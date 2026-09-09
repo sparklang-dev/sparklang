@@ -18,21 +18,22 @@ CSS_V = "bb4433f"
 DOC_NAV = """\
       <nav class="doc__nav" aria-label="Docs">
         <a href="/learn/">Learn</a>
-        <a href="/docs/adoption-bar.html"{ab}>Adoption bar</a>
-        <a href="/docs/ai-models.html"{ai}>AI models</a>
-        <a href="/docs/model-training.html"{ai}>Model training</a>
+        <a href="/docs/factory.html"{fy}>Factory hub</a>
         <a href="/docs/spark-builder.html"{bc}>Builder</a>
         <a href="/docs/compile.html"{cp}>Compile</a>
         <a href="/docs/decompile.html"{dc}>Decompile</a>
+        <a href="/docs/spark-bc.html"{isa}>Opcodes / ISA</a>
         <a href="/docs/build-models.html"{bm}>Build models</a>
-        <a href="/docs/attention-forward.html"{af}>Attention / serve</a>
+        <a href="/docs/train-loop.html"{tl}>Train loop</a>
+        <a href="/docs/architecture.html"{ar}>Architecture</a>
+        <a href="/docs/tokenizer.html"{tk}>Tokenizer</a>
+        <a href="/docs/serve.html"{sv}>Serve</a>
+        <a href="/docs/eval.html"{ev}>Eval</a>
         <a href="/docs/sparkbc-make.html"{mk}>Make targets</a>
-        <a href="/docs/spark-bc.html"{isa}>SPARK_BC ISA</a>
-        <a href="/docs/native-network-web.html"{nn}>Network + web</a>
+        <a href="/docs/ci-pages.html"{ci}>CI / Pages</a>
+        <a href="/docs/adoption-bar.html"{ab}>Adoption bar</a>
+        <a href="/docs/language.html">Language</a>
         <a href="/docs/programming-guide.html">Programming guide</a>
-        <a href="/docs/language.html">Language reference</a>
-        <a href="/docs/ide.html"{ide}>IDE</a>
-        <a href="/docs/self-host.html"{sh}>Contributor internals</a>
         <a href="/downloads.html">Downloads</a>
       </nav>"""
 
@@ -72,16 +73,22 @@ HEADER = """\
               <li class="nav-more">
                 <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">More</button>
                 <ul class="nav-more__menu" hidden>
-                  <li><a href="/docs/adoption-bar.html">Adoption bar</a></li>
-                  <li><a href="/docs/ai-models.html">AI models</a></li>
+                  <li><a href="/docs/factory.html">Factory hub</a></li>
                   <li><a href="/docs/spark-builder.html">Builder</a></li>
                   <li><a href="/docs/compile.html">Compile</a></li>
                   <li><a href="/docs/decompile.html">Decompile</a></li>
+                  <li><a href="/docs/spark-bc.html">Opcodes / ISA</a></li>
                   <li><a href="/docs/build-models.html">Build models</a></li>
-                  <li><a href="/docs/attention-forward.html">Attention / serve</a></li>
+                  <li><a href="/docs/train-loop.html">Train loop</a></li>
+                  <li><a href="/docs/architecture.html">Architecture</a></li>
+                  <li><a href="/docs/attention-forward.html">Attention honesty</a></li>
+                  <li><a href="/docs/tokenizer.html">Tokenizer</a></li>
+                  <li><a href="/docs/serve.html">Serve</a></li>
+                  <li><a href="/docs/eval.html">Eval</a></li>
                   <li><a href="/docs/sparkbc-make.html">Make targets</a></li>
-                  <li><a href="/docs/spark-bc.html">SPARK_BC ISA</a></li>
-                  <li><a href="/docs/native-network-web.html">Network + web</a></li>
+                  <li><a href="/docs/ci-pages.html">CI / Pages</a></li>
+                  <li><a href="/docs/adoption-bar.html">Adoption bar</a></li>
+                  <li><a href="/docs/ai-models.html">AI models</a></li>
                   <li><a href="/docs/programming-guide.html">Programming guide</a></li>
                   <li><a href="/docs/ide.html">IDE</a></li>
                   <li><a href="/docs/self-host.html">Contributor internals</a></li>
@@ -148,23 +155,34 @@ MD_LINK_MAP = {
     "SPARK_BUILDER.md": "/docs/spark-builder.html",
     "NATIVE_NETWORK_WEB.md": "/docs/native-network-web.html",
     "TOKENIZER.md": "/docs/tokenizer.html",
+    "FACTORY.md": "/docs/factory.html",
     "COMPILE.md": "/docs/compile.html",
     "DECOMPILE.md": "/docs/decompile.html",
     "BUILD_MODELS.md": "/docs/build-models.html",
+    "TRAIN_LOOP.md": "/docs/train-loop.html",
+    "ARCHITECTURE.md": "/docs/architecture.html",
     "ATTENTION_FORWARD.md": "/docs/attention-forward.html",
+    "SERVE.md": "/docs/serve.html",
+    "EVAL.md": "/docs/eval.html",
     "SPARKBC_MAKE.md": "/docs/sparkbc-make.html",
+    "CI_PAGES.md": "/docs/ci-pages.html",
     "MODEL_LAB.md": "/docs/model-training.html",
     "ABSTAIN_HEADS.md": "/docs/abstain-heads.html",
 }
 
 # (current_key, md_name, html_name, title, description)
 DOC_PAGES = [
+    ("fy", "FACTORY.md", "factory.html", "Factory documentation hub",
+     "Map of SparkLang SPARK_BC factory docs — compile through "
+     "eval, serve, CI/Pages. Does not beat Claude."),
     ("ab", "ADOPTION_BAR.md", "adoption-bar.html", "Adoption bar",
      "SparkLang adoption checklist — done, next, won't."),
     ("", "ROADMAP.md", "roadmap.html", "Roadmap",
      "SparkLang roadmap — done, next, won't."),
     ("", "RELEASE.md", "release.html", "Release process",
      "How SparkLang versions and GitHub Releases are cut."),
+    ("", "CI_PAGES.md", "ci-pages.html", "CI + Cloudflare Pages",
+     "Contributor CI gates and production Pages deploy how-to."),
     ("ai", "AI_MODELS.md", "ai-models.html", "AI models",
      "What SparkLang means for model train, analyze, compare, "
      "improve, plan, live ask, and embed/retrieve."),
@@ -187,10 +205,23 @@ DOC_PAGES = [
      "Build models — TRAIN / STEP",
      "TRAIN, STEP, ARTIFACT, weights, and checkpoints on CPU "
      "fixtures. Does not beat Claude."),
+    ("tl", "TRAIN_LOOP.md", "train-loop.html",
+     "Train loop — outer / inner SGD",
+     "Multi-outer CPU SGD, fixtures, checkpoints, loss curves."),
+    ("ar", "ARCHITECTURE.md", "architecture.html",
+     "Architecture pieces",
+     "Embed, RMSNorm, lm_head, MLP/SwiGLU, attention honesty."),
     ("af", "ATTENTION_FORWARD.md", "attention-forward.html",
      "Attention / MLP / serve",
      "Honest status: init attn tensors, MLP0 serve forward, "
      "attention math planned — not beat Claude."),
+    ("tk", "TOKENIZER.md", "tokenizer.html", "Tokenizer — BPE seed vocab",
+     "From-nothing byte-level BPE seed vocab for Spark."),
+    ("sv", "SERVE.md", "serve.html", "Serve forward + HTTP",
+     "Tiny CPU SERVE forward; HTTP/API when G-lane merges."),
+    ("ev", "EVAL.md", "eval.html", "Eval harness",
+     "Frozen spark-eval probes + optional Claude baseline. "
+     "Never claims beat Claude."),
     ("mk", "SPARKBC_MAKE.md", "sparkbc-make.html",
      "SPARK_BC makefile targets",
      "test-sparkbc, sparkbc-e2e, spark-sgd-proof, spark-eval, "
@@ -210,8 +241,6 @@ DOC_PAGES = [
     ("nn", "NATIVE_NETWORK_WEB.md", "native-network-web.html",
      "Native network + web",
      "Network/web ops — de-emphasized vs http get/post roadmap."),
-    ("", "TOKENIZER.md", "tokenizer.html", "Tokenizer — BPE seed vocab",
-     "From-nothing byte-level BPE seed vocab for Spark."),
 ]
 
 
@@ -283,7 +312,10 @@ def render(md_path: Path, out_path: Path, title: str, description: str, current:
         extensions=["tables", "fenced_code", "sane_lists"],
     )
     body = decorate_html(body)
-    keys = ("ab", "ai", "nn", "ide", "sh", "bc", "cp", "dc", "bm", "af", "mk", "isa")
+    keys = (
+        "ab", "ai", "nn", "ide", "sh", "bc", "cp", "dc", "bm", "af",
+        "mk", "isa", "fy", "tl", "ar", "tk", "sv", "ev", "ci",
+    )
     nav_kwargs = {
         k: (' aria-current="page"' if current == k else "") for k in keys
     }

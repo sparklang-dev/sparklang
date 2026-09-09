@@ -15,14 +15,20 @@ ISA: [SPARK_BC.md](SPARK_BC.md). Story:
 | `make test-sparkbc-e2e` | Focused TRAIN→STEP→ARTIFACT (`tools/spark-bc-dump/run_e2e_gate.sh`) |
 | `make sparkbc-e2e` | Alias for `test-sparkbc-e2e` |
 | `make spark-sgd-proof` | Multi-outer CPU SGD → `checkpoint.json` loss drop → `make spark-eval WEIGHTS=…` |
+| `make spark-sgd-proof-scale` | Local opt-in larger JSONL + dim/n_layer (F-lane; not default CI) |
 | `make spark-eval` | Frozen copy/recall + next-token probes; exit 0 = harness ran (**not** beat Claude) |
+| `make spark-eval-claude` | Same + optional Anthropic baseline (E-lane; skip if no key) |
+| `make test-spark-eval` | Unit gate for eval harness |
+| `make docs-html` / `make docs-check` | Regen `website/docs/*` + nav link check |
+| `make spark-serve-api` / `make test-serve-api` | G-lane HTTP/stdio predict + embeddings |
 
 ```bash
 make test-sparkbc
 make sparkbc-e2e
 make spark-sgd-proof
 make spark-eval
-make spark-eval WEIGHTS=out/train/sgd-proof/weights.safetensors
+make spark-eval-claude
+make docs-check
 ```
 
 ## Build / tools
@@ -43,11 +49,12 @@ make spark-eval WEIGHTS=out/train/sgd-proof/weights.safetensors
 ## Docs / site regen
 
 ```bash
-python3 tools/md_to_doc_html.py --all-stale
-# optional: mirror CHANGELOG.md → website/CHANGELOG.html for Pages
+make docs-html
+make docs-check
+# Mirror CHANGELOG.md → website/CHANGELOG.html for Pages when cutting
 ```
 
-Release steps: [RELEASE.md](RELEASE.md).
+Release + Pages: [CI_PAGES.md](CI_PAGES.md) · [RELEASE.md](RELEASE.md).
 
 ## Scripts (not always phony targets)
 
@@ -73,5 +80,5 @@ SPARK_BC gates on PRs. Prefer green `test-sparkbc` +
 
 ## Related
 
-- [Compile](COMPILE.md) · [Decompile](DECOMPILE.md)
-- [Build models](BUILD_MODELS.md) · [Attention / forward](ATTENTION_FORWARD.md)
+- [FACTORY.md](FACTORY.md) · [COMPILE.md](COMPILE.md) · [EVAL.md](EVAL.md)
+- [CI_PAGES.md](CI_PAGES.md) · [TRAIN_LOOP.md](TRAIN_LOOP.md)

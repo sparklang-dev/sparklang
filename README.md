@@ -39,11 +39,18 @@ build, dry vs live, syntax with real `examples/`, layout, debug, tests.
 | **[Abstain / IDK heads](docs/ABSTAIN_HEADS.md)** | SELECT-before-SAMPLE; flagship `examples/no_invent.spark` |
 | **[Program with Spark](docs/PROGRAMMING_GUIDE.md)** | Canonical how-to |
 | **[Builder / SPARK_BC](docs/SPARK_BUILDER.md)** | Factory: compile → TRAIN/STEP → dump → serve |
+| **[Factory hub](docs/FACTORY.md)** | Full engineer map (all factory docs) |
 | **[Compile](docs/COMPILE.md)** | Bootstrap / GAS / sparkasm emit map |
 | **[Decompile](docs/DECOMPILE.md)** | Dump / inspect SPARK_BC |
 | **[Build models](docs/BUILD_MODELS.md)** | TRAIN / STEP / ARTIFACT / checkpoints |
-| **[Attention / serve](docs/ATTENTION_FORWARD.md)** | Honest MLP0 vs attn (planned) |
+| **[Train loop](docs/TRAIN_LOOP.md)** | Outer/inner SGD, fixtures, loss curves |
+| **[Architecture](docs/ARCHITECTURE.md)** | Embed / RMSNorm / lm_head / MLP / attn honesty |
+| **[Attention / serve](docs/ATTENTION_FORWARD.md)** | MLP0 vs attn (planned) |
+| **[Tokenizer](docs/TOKENIZER.md)** | Byte-level BPE seed vocab |
+| **[Serve](docs/SERVE.md)** | Tiny CPU SERVE + HTTP when G merges |
+| **[Eval](docs/EVAL.md)** | spark-eval + Claude baseline (no win claim) |
 | **[Make targets](docs/SPARKBC_MAKE.md)** | `test-sparkbc`, `sparkbc-e2e`, `spark-sgd-proof`, … |
+| **[CI / Pages](docs/CI_PAGES.md)** | Contributor CI + production Pages |
 | **[AI playbooks](docs/AI_PLAYBOOKS.md)** | Coding playbooks + explicit model line |
 | **[IDE](docs/IDE.md)** | Verified `ide` ops + interim Cursor editor |
 | [LANGUAGE.md](docs/LANGUAGE.md) | Full statement reference |
