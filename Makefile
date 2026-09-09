@@ -16,7 +16,8 @@ NVML_LIB ?= /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1
 	test-engine-layout test-ide-paint spark-bootstrap sparkc \
 	test-bootstrap test-sparkbc test-sparkbc-e2e sparkbc-e2e \
 	spark-bc spark-bc-pack-hello sparkasm \
-	test-sparkasm docs-docx function-catalog playbooks-catalog
+	test-sparkasm test-sparkasm-control docs-docx function-catalog \
+	playbooks-catalog
 
 all: spark companions
 
@@ -629,12 +630,19 @@ spark-bc: spark-bootstrap
 	chmod +x scripts/spark-bc
 
 # --- C: Spark-native assembler (isolated; not GAS SoT) ---
-.PHONY: sparkasm test-sparkasm
+.PHONY: sparkasm test-sparkasm test-sparkasm-control
 sparkasm:
 	$(MAKE) -C sparkasm
 
 test-sparkasm:
 	$(MAKE) -C sparkasm test
+
+# Tensor-assembly source shape check (control.sparkasm). Not a tensor VM.
+test-sparkasm-control:
+	PYTHONPATH=python python3 -m sparklang.model_lab.sparkasm_check \
+		examples/models/control.sparkasm
+	PYTHONPATH=python python3 -m unittest \
+		sparklang.model_lab.test_sparkasm_check -v
 
 # --- A: self-host seed (lexer aid; not B VM, not C assembler) ---
 .PHONY: selfhost-lex test-selfhost-lex
