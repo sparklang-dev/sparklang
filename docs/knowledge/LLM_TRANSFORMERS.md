@@ -13,7 +13,7 @@ Text is not fed as characters forever. A **tokenizer** maps strings
 to integer **token ids** from a finite vocabulary (often 32k–200k).
 
 - **BPE** (byte-pair encoding) merges frequent byte/char pairs
-  ([Sennrich et al., 2016](https://arxiv.org/abs/1508.07909)).
+  ([Sennrich et al.](https://arxiv.org/abs/1508.07909)).
 - **WordPiece** / Unigram variants appear in BERT-family stacks.
 - Spark’s from-nothing path: [TOKENIZER.md](TOKENIZER.md)
   (byte-level BPE seed vocab).
@@ -23,12 +23,12 @@ and weird splits on code identifiers.
 
 ## Embeddings
 
-Each token id indexes a learned vector (the **embedding**). Classic
-distributed word vectors:
-[Word2Vec](https://arxiv.org/abs/1301.3781) (Mikolov et al.).
-Modern LLMs learn token (and often position) embeddings jointly with
-the stack. Similarity in vector space ≈ related meaning *on average*
-— not a proof of truth.
+Each token id indexes a learned vector (the **embedding**). Modern
+distributed word vectors (e.g.
+[Word2Vec](https://arxiv.org/abs/1301.3781), Mikolov et al.) set the
+pattern; today’s LLMs learn token (and often position) embeddings
+jointly with the stack. Similarity in vector space ≈ related meaning
+*on average* — not a proof of truth.
 
 Retrieval / RAG stacks embed *chunks* the same way and nearest-neighbor
 search them. Spark `embed` / `retrieve` language surface is the
@@ -36,13 +36,14 @@ product hook; see [AI_MODELS.md](AI_MODELS.md).
 
 ## Transformers & attention
 
-The **Transformer** ([Vaswani et al., 2017 — Attention Is All You
+The modern-era **Transformer**
+([Vaswani et al. — Attention Is All You
 Need](https://proceedings.neurips.cc/paper_files/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf))
 replaces recurrence with **self-attention**. Scaled dot-product:
 
 `Attention(Q, K, V) = softmax(Q K^T / sqrt(d_k)) V`
 
-Readable walkthrough: [The Annotated Transformer](http://nlp.seas.harvard.edu/2018/04/03/attention.html)
+Readable walkthrough: [The Annotated Transformer](https://nlp.seas.harvard.edu/annotated-transformer/)
 (Harvard NLP).
 
 **Multi-head attention** runs several QKV projections in parallel so

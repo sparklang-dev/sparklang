@@ -129,7 +129,7 @@
         to integer <strong>token ids</strong> from a finite vocabulary (often 32k–200k).</p>
         <ul class="doc__ul">
         <li><strong>BPE</strong> (byte-pair encoding) merges frequent byte/char pairs
-          (<a href="https://arxiv.org/abs/1508.07909">Sennrich et al., 2016</a>).</li>
+          (<a href="https://arxiv.org/abs/1508.07909">Sennrich et al.</a>).</li>
         <li><strong>WordPiece</strong> / Unigram variants appear in BERT-family stacks.</li>
         <li>Spark’s from-nothing path: <a href="/docs/tokenizer.html">TOKENIZER.md</a>
           (byte-level BPE seed vocab).</li>
@@ -137,21 +137,22 @@
         <p>Token boundaries affect everything downstream: cost, context length,
         and weird splits on code identifiers.</p>
         <h2 id="embeddings">Embeddings</h2>
-        <p>Each token id indexes a learned vector (the <strong>embedding</strong>). Classic
-        distributed word vectors:
-        <a href="https://arxiv.org/abs/1301.3781">Word2Vec</a> (Mikolov et al.).
-        Modern LLMs learn token (and often position) embeddings jointly with
-        the stack. Similarity in vector space ≈ related meaning <em>on average</em>
-        — not a proof of truth.</p>
+        <p>Each token id indexes a learned vector (the <strong>embedding</strong>). Modern
+        distributed word vectors (e.g.
+        <a href="https://arxiv.org/abs/1301.3781">Word2Vec</a>, Mikolov et al.) set the
+        pattern; today’s LLMs learn token (and often position) embeddings
+        jointly with the stack. Similarity in vector space ≈ related meaning
+        <em>on average</em> — not a proof of truth.</p>
         <p>Retrieval / RAG stacks embed <em>chunks</em> the same way and nearest-neighbor
         search them. Spark <code class="inline-code">embed</code> / <code class="inline-code">retrieve</code> language surface is the
         product hook; see <a href="/docs/ai-models.html">AI_MODELS.md</a>.</p>
         <h2 id="transformers-attention">Transformers &amp; attention</h2>
-        <p>The <strong>Transformer</strong> (<a href="https://proceedings.neurips.cc/paper_files/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf">Vaswani et al., 2017 — Attention Is All You
+        <p>The modern-era <strong>Transformer</strong>
+        (<a href="https://proceedings.neurips.cc/paper_files/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf">Vaswani et al. — Attention Is All You
         Need</a>)
         replaces recurrence with <strong>self-attention</strong>. Scaled dot-product:</p>
         <p><code class="inline-code">Attention(Q, K, V) = softmax(Q K^T / sqrt(d_k)) V</code></p>
-        <p>Readable walkthrough: <a href="http://nlp.seas.harvard.edu/2018/04/03/attention.html">The Annotated Transformer</a>
+        <p>Readable walkthrough: <a href="https://nlp.seas.harvard.edu/annotated-transformer/">The Annotated Transformer</a>
         (Harvard NLP).</p>
         <p><strong>Multi-head attention</strong> runs several QKV projections in parallel so
         the model can mix different subspaces. Decoder-only LLMs (GPT-style)
