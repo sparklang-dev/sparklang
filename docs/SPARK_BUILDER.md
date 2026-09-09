@@ -197,6 +197,29 @@ wrapper `scripts/sparkbc-e2e`). Compiles
 `step_n=1`). Not SGD. `make test-sparkbc` asserts STEP weights
 (`weights.safetensors`, `step_n>=1`).
 
+
+## Eval harness (measure later — not beat Claude)
+
+Frozen tiny probes live under `examples/eval/` (copy/recall +
+next-token fixtures). Runner: `tools/spark-eval/run.py`.
+
+```bash
+make spark-eval
+# optional Spark weights (init or later train artifact):
+make spark-eval WEIGHTS=docs/examples/spark-self.init.safetensors
+# or: SPARK_EVAL_WEIGHTS=/path/to/weights.safetensors make spark-eval
+```
+
+- **Dry** (default): oracle fixture path — prints scores, exits **0**.
+- **Weights**: teacher-forced / next-token accuracy on
+  `spark.embed` + `spark.lm_head` (CPU only; never the 6000).
+- Suite JSON: `examples/eval/suite.json` (`claim: none`).
+
+**How to compare later (honest):** run the **same** frozen suite
+against Spark weights and against any other system offline; record
+both score tables side by side. This harness **does not** claim
+beat Claude, does not call Claude, and does not print a winner.
+
 ## Published files — sha256
 
 Hashes from `sha256sum` on disk at doc authoring time (`51e4dbd` tree).
@@ -268,6 +291,7 @@ make test-sparkasm-control
 | STEP-updated weights file | **implemented** (`out/train/<job>/weights.safetensors`; dry delta; `trained=false`) |
 | Tiny CPU serve forward | **implemented** (`dump.py --serve` → `SERVE` with `forward=true`; `trained` from weights meta; not production) |
 | Control tensor-assembly source + shape check | **implemented** — `examples/models/control.sparkasm`; JIT/train **not** |
+| Eval harness (`make spark-eval`) | **implemented** — frozen probes; scores only; **not** beat Claude |
 | Trained / beats Claude / production LLM | **not** — later owner train-grant |
 | Cloudflare Pages deploy | Prefer Wrangler OAuth (`npx wrangler pages deploy website …`); if CLI/auth absent → **dashboard** upload of `website/` from a known SHA (see [RELEASE.md](RELEASE.md) step 5) |
 
@@ -291,6 +315,7 @@ make test-sparkasm-control
 | STEP-updated weights | **implemented** (dry delta; not SGD) |
 | Tiny CPU serve forward | **implemented** (`SERVE`; `forward=true`; not production) |
 | Control `.sparkasm` + shape check | **implemented** (source docs; no tensor VM) |
+| Eval harness (`make spark-eval`) | **implemented** (dry or weights; no win claim) |
 | Trained / beats Claude | **not** |
 
 ## Related

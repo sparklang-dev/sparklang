@@ -4,6 +4,15 @@ All notable user-facing releases of **SparkLang** (the Spark programming
 language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
+## 0.6.33 — 2026-09-09
+
+- **Eval harness (beat-Claude goal, no win claim):** frozen
+  copy/recall + next-token probes under `examples/eval/`; runner
+  `tools/spark-eval/run.py`; `make spark-eval` (dry default or
+  `WEIGHTS=` / `SPARK_EVAL_WEIGHTS`). Prints scores; exit 0 =
+  harness ran. Docs: how to compare later — **does not** claim
+  beat Claude. Independent of SGD. [SPARK_BUILDER.md](docs/SPARK_BUILDER.md).
+
 ## 0.6.32 — 2026-09-09
 
 - **Control tensor-assembly source:** readable
