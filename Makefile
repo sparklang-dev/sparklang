@@ -19,13 +19,29 @@ NVML_LIB ?= /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1
 	spark-bc spark-bc-pack-hello sparkasm \
 	test-sparkasm test-sparkasm-control docs-docx function-catalog \
 	playbooks-catalog spark-eval spark-eval-claude test-spark-eval \
-	spark-sgd-proof spark-sgd-proof-scale docs-html docs-check
+	spark-sgd-proof spark-sgd-proof-scale docs-html docs-check \
+	sdk-pack dist test-sdk-pack spark-bc-gui
 
 all: spark companions
 
 # Open Spark IDE (Cursor + Bifrost workspace). Not an ELF subcommand.
 ide:
 	./tools/open-spark-ide.sh
+
+# Graphical SPARK_BC compile / decompile (tkinter; needs a display).
+spark-bc-gui: spark-bootstrap
+	PYTHONPATH=tools:python ./tools/spark_bc_gui/launch.sh
+
+# Downloadable runtime + SDK + IDE + GUI pack (out/sdk-pack/).
+sdk-pack: spark-bootstrap
+	bash ./tools/package_sdk_ide.sh
+
+dist: sdk-pack
+
+# Headless pack manifest + GUI core smoke (no display required).
+test-sdk-pack: spark-bootstrap
+	PYTHONPATH=tools:python python3 \
+		tools/spark_bc_gui/test_gui_pack.py -v
 
 # Professional .docx from on-disk markdown (pandoc + reference.docx).
 # No invented content — TOC/headers/ops-index from existing MD only.

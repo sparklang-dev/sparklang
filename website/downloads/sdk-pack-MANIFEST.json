@@ -1,0 +1,63 @@
+{
+  "name": "sparklang-sdk-0.6.38",
+  "version": "0.6.38",
+  "tarball": "sparklang-sdk-0.6.38.tar.gz",
+  "sha256": "d57bc7c969ac72074900dd25c2044094052ab244f7b796ff4450bc13e11b7eb5",
+  "size_bytes": 547630,
+  "required_paths": [
+    "bin/spark-bootstrap",
+    "bin/sparkc",
+    "bin/spark-bc-gui",
+    "bin/spark-ide",
+    "bin/spark-helper-compile",
+    "bin/spark-helper-decompile",
+    "bin/spark-helper-opcodes",
+    "bin/spark-helper-fixture-lint",
+    "bin/spark-shadow-copy",
+    "bin/spark-shadow-build",
+    "bin/spark-shadow-verify",
+    "runtime/python/sparklang/__init__.py",
+    "runtime/python/sparklang/model_lab/bc_dump.py",
+    "runtime/tools/spark-bc-dump/dump.py",
+    "sdk/docs/SPARK_BC.md",
+    "sdk/include/spark_rt.h",
+    "sdk/examples/spark_builder.spark",
+    "ide/spark-ide-extension/package.json",
+    "ide/spark.code-workspace",
+    "ide/open-spark-ide.sh",
+    "gui/spark_bc_gui/app.py",
+    "gui/spark_bc_gui/core.py",
+    "tools/spark_bc_gui/__main__.py",
+    "helpers/compile.sh",
+    "helpers/decompile.sh",
+    "helpers/opcode_sheet.py",
+    "helpers/fixture_lint.py",
+    "shadows/shadow_copy.sh",
+    "shadows/shadow_build.sh",
+    "shadows/shadow_verify.sh",
+    "tools/spark-bc-dump/dump.py",
+    "tools/spark_helpers/compile.sh",
+    "tools/spark_shadows/shadow_copy.sh",
+    "bootstrap/main.c",
+    "README.txt"
+  ],
+  "sparkbc_examples": [
+    "spark-builder.sparkbc",
+    "spark-self.sparkbc",
+    "spark-selfhost-train.sparkbc",
+    "spark-train-step.sparkbc"
+  ],
+  "launch": {
+    "gui": "./bin/spark-bc-gui",
+    "ide": "./bin/spark-ide",
+    "compile": "./bin/spark-helper-compile <file.spark> [out.sparkbc]",
+    "decompile": "./bin/spark-helper-decompile <file.sparkbc>",
+    "shadow": "./bin/spark-shadow-copy <name> && ./bin/spark-shadow-build <name>"
+  },
+  "notes": [
+    "CPU runtime only \u2014 never RTX PRO 6000",
+    "Does not claim beat Claude",
+    "GUI uses real --compile + bc_dump.format_dump",
+    "Includes helpers + shadows + BC dump tools"
+  ]
+}

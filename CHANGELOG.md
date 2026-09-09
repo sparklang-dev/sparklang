@@ -5,6 +5,18 @@ language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
 
+## 0.6.38 — 2026-09-09
+
+- **SDK + IDE + GUI download pack (I-lane):** `make sdk-pack` /
+  `make dist` builds `out/sdk-pack/sparklang-sdk-*.tar.gz` with CPU
+  runtime (`spark-bootstrap`), SDK docs/headers/examples, VS Code /
+  Cursor IDE extension + `bin/spark-ide`, graphical SPARK_BC
+  compile/decompile (`bin/spark-bc-gui`), plus **helpers**,
+  **shadow** copy/build/verify, and assorted tools (BC dump,
+  opcode sheet, fixture lint). Gate: `make test-sdk-pack`. Docs:
+  [sdk-ide-download.html](website/docs/sdk-ide-download.html).
+  **Not beat Claude.** Never 6000.
+
 ## 0.6.37 — 2026-09-09
 
 - **Factory diagrams (H-lane):** Mermaid overview of Spark tools
