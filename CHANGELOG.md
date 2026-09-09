@@ -5,6 +5,19 @@ language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
 
+## 0.6.55 — 2026-09-09
+
+- **Grounded generation / anti-guess:** `./spark-ground` forces
+  verify-before-speak — wrong expect / fixture / dump / schema →
+  abstain (exit 2). Thin `adapter-attach` manifest for Qwen-class +
+  Spark-owned modify hooks (`keep_special_training`; full external
+  SFT opt-in on **5090**, never **6000**). Stdlib JSON Schema subset
+  (no xgrammar dep). Docs: [SAFETY_LIMITS.md](docs/knowledge/SAFETY_LIMITS.md)
+  → [/docs/knowledge-safety.html](/docs/knowledge-safety.html).
+  Gate: `make test-ground`. Does **not** claim impossible to lie;
+  does **not** beat Claude. Playbook:
+  `examples/grounded_ask.spark`.
+
 ## 0.6.54 — 2026-09-09
 
 - **Decompile compete path:** richer SPARK_BC dump (sections,

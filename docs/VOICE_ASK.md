@@ -88,8 +88,25 @@ PYTHONPATH=python:tools python3 -m unittest \
   tools.spark_ask.test_voice_ask -v
 ```
 
+## Grounding / anti-guess
+
+Dump facts are the SoT for opcode / sha answers. For inventable
+prices or free generate, use forced grounding — abstain unless
+expect / fixture / dump match:
+
+```bash
+./spark-ground ask --prompt "…" --dump dump.txt \
+  --candidate "…"   # miss → exit 2
+make test-ground
+```
+
+See [knowledge/SAFETY_LIMITS.md](knowledge/SAFETY_LIMITS.md)
+(Grounded generation / anti-guess). Recompile ≠ semantics.
+Does **not** beat Claude.
+
 ## Related
 
 - Loop UX: [/workflow.html](/workflow.html)
 - Analyze project folder: `helpers/spark-analyze` (when present)
 - [SPARK_CODER.md](SPARK_CODER.md) · [TOOLS_HELPERS.md](TOOLS_HELPERS.md)
+- [knowledge/SAFETY_LIMITS.md](knowledge/SAFETY_LIMITS.md)

@@ -261,10 +261,19 @@
         <p><code class="inline-code">make sdk-pack</code> includes <code class="inline-code">models/spark-coder/</code> (weights + arch +
         checkpoint) and <code class="inline-code">bin/spark-code</code> when present after
         <code class="inline-code">make spark-coder-train</code>. Large pack is opt-in local only.</p>
+        <h2 id="grounding-anti-guess">Grounding / anti-guess</h2>
+        <p>TinyCoder still <strong>guesses</strong> next bytes. For operator Q&amp;A that must
+        not invent facts, wrap answers with <code class="inline-code">./spark-ground</code> (expect /
+        fixture / dump / schema) or language <code class="inline-code">expect</code> + abstain heads.
+        External Qwen-class adapt stays attach-only via
+        <code class="inline-code">model modify</code> / <code class="inline-code">spark-ground adapter-attach</code>; full SFT is opt-in
+        on <strong>5090</strong>, never <strong>6000</strong>.</p>
+        <p>Docs: <a href="/docs/knowledge-safety.html">knowledge/SAFETY_LIMITS.md</a>.</p>
         <h2 id="related">Related</h2>
         <ul class="doc__ul">
         <li><a href="/docs/build-models.html">BUILD_MODELS.md</a> · <a href="/docs/train-loop.html">TRAIN_LOOP.md</a></li>
         <li><a href="/docs/factory.html">FACTORY.md</a> · <a href="/docs/ai-models.html">AI_MODELS.md</a></li>
+        <li><a href="/docs/knowledge-safety.html">knowledge/SAFETY_LIMITS.md</a></li>
         <li>Factory scale: <code class="inline-code">make spark-sgd-proof-scale</code></li>
         </ul>
       </article>

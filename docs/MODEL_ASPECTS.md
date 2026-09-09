@@ -101,7 +101,7 @@ Jump: [Ears](#ears--stt--audio-in) · [Eyes](#eyes--vision--image-in) ·
 | Ears / STT | **implemented** (surface) | Dry stub; live sidecar / whisper / gated HTTP |
 | Eyes / vision | **planned** | Stub module only — **no** `look` opcode on tip |
 | Speaking / TTS | **implemented** (surface) | Dry WAV marker; live PCM synth / gated HTTP |
-| Behaviors / policies | **partial** | `spark_reply_pack`, abstain heads, expect; no full SM |
+| Behaviors / policies | **partial** | `spark_reply_pack`, abstain, expect, `./spark-ground`; no full SM |
 | Train / adaptation | **implemented** (CPU/5090) | STEP SGD + owned TinyCoder (M #30) — never 6000 |
 | Eval / honesty | **implemented** | `make spark-eval`; optional Claude baseline — **not** beat Claude |
 | Runtime serve | **implemented** | `spark-serve` / `spark-serve-api` attn0+MLP0 CPU |
@@ -479,6 +479,7 @@ tools, SoT, abstain, expect, reply locking, train/eval feedback.
 | Intent routing | `classify` dry fixtures + live ask | Heuristic / gateway — not a trained NLU stack claim |
 | Reply locking | `spark_reply_pack` (`replies.json` + `gate.json`) | Overlay scripts on text-only bases; **not** neural TTS |
 | Inventable safety | SoT refs or IDK / abstain heads | Fail loud — never fabricate |
+| Grounded / anti-guess | `./spark-ground` verify-before-speak | Wrong expect → abstain (exit 2); not “impossible to lie” |
 | Tool use | `tool name(…) { stub }` + `with tools […]` | Dry returns `[tool:…] stub:local`; no agentic loop claim |
 | Shell escape | `shell` / `run` allowlist dry; live `--allow-shell` | Never `system()` |
 | Expect / eval gate | `expect equal` / `contains` | Pass/fail on scripts |
@@ -544,6 +545,8 @@ flowchart TB
 ### Links
 
 [LANGUAGE.md](LANGUAGE.md) · [VOICE.md](VOICE.md) ·
+[knowledge/SAFETY_LIMITS.md](knowledge/SAFETY_LIMITS.md)
+(grounded / anti-guess) ·
 [ADOPTION_BAR.md](ADOPTION_BAR.md) · [SPARK_CODER.md](SPARK_CODER.md).
 
 ---
