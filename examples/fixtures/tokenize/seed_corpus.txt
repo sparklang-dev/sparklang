@@ -1,0 +1,15 @@
+# SparkLang pinned BPE seed corpus (byte-level). Do not replace with
+# FineWeb or any download. Keep small and frozen so vocab hashes stay
+# stable. ASCII only; LF newlines.
+spark spark spark spark
+hello world hello world hello
+model train model step model status
+ask ask ask classify extract pipeline
+builder compile run-bc train step
+byte level bpe from nothing seed
+the laundry place store hours prices
+calls back rachel voice dry run
+sparklang.dev programming language
+aaaaaaaa bbbbbbbb cccccccc
+ab ab ab ab cd cd cd ef ef
+token token merge merge pair pair

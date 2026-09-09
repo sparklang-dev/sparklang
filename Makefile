@@ -11,7 +11,7 @@ NVML_LIB ?= /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1
 .PHONY: all clean test test-hdl test-e2e-browser test-examples machine-proof \
 	examples-run corpus corpus-agg spark-cuda spark-net spark-binary \
 	spark-lift spark-section-dump companions browser-scaffold \
-	test-model-lab spark-model-lab \
+	test-model-lab spark-model-lab test-bpe-seed \
 	browser-mitm-analyze ide test-engine-paint test-engine-css \
 	test-engine-layout test-ide-paint spark-bootstrap sparkc \
 	test-bootstrap test-sparkbc test-sparkbc-e2e sparkbc-e2e \
@@ -357,11 +357,17 @@ machine-proof: spark
 
 test: spark companions spark-bootstrap test-sparkbc test-ai-playbooks \
 	test-extract test-expect test-host-embed test-abstain test-model-lab \
+	test-bpe-seed \
 	test-shell \
 	test-ask-gateway
 	./tests/run_dry.sh
 	./tests/hdl_check.sh
 	./bootstrap/tests/run_bootstrap.sh
+
+# Deterministic byte-level BPE seed (pinned fixture; no downloads).
+.PHONY: test-bpe-seed
+test-bpe-seed:
+	PYTHONPATH=python python3 tools/spark-bpe-seed/test_bpe.py
 
 # HDL: real iverilog compile of hdl/*.v, or honest SKIP with reason
 .PHONY: test-hdl
