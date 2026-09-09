@@ -73,6 +73,21 @@
 <p>All notable user-facing releases of <strong>SparkLang</strong> (the Spark programming
 language) are listed here. Site and installers track
 <code>website/downloads/manifest.json</code>.</p>
+<h2>0.6.28 — 2026-09-08</h2>
+<ul>
+<li><strong>STEP→weights:</strong> Dry <code class="inline-code">--run-bc</code>
+  <code class="inline-code">STEP</code> (<code class="inline-code">0x28</code>)
+  writes/updates
+  <code class="inline-code">out/train/&lt;job&gt;/weights.safetensors</code>
+  (meta <code class="inline-code">step_n</code>, tiny bytecode-hash delta;
+  <code class="inline-code">trained=false</code> /
+  <code class="inline-code">not_sgd=true</code>). Helper
+  <code class="inline-code">tools/spark-bc-dump/apply_step.py</code> /
+  <code class="inline-code">apply_dry_step</code>.
+  <code class="inline-code">make test-sparkbc</code> asserts
+  <code class="inline-code">step_n&gt;=1</code>. Docs:
+  <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</li>
+</ul>
 <h2>0.6.27 — 2026-09-08</h2>
 <ul>
 <li><strong>SPARK_BC factory docs (full E2E):</strong> Engineer reproduction guide so
@@ -93,8 +108,8 @@ language) are listed here. Site and installers track
   <code class="inline-code">make sparkbc-e2e</code>, sha256 table for published
   <code class="inline-code">docs/examples/*</code>, GAS emit/<code class="inline-code">--run-bc</code>
   <strong>BLOCKED</strong>, dry ≠ SGD ≠ trained, STEP→weights
-  <strong>in flight</strong>
-  (<code class="inline-code">feat/sparkbc-step-weights</code>), Pages deploy =
+  <strong>implemented</strong>
+  (<code class="inline-code">weights.safetensors</code>; dry), Pages deploy =
   Wrangler OAuth preferred + CF dashboard fallback when CLI/auth absent.
   Site: regen <code class="inline-code">website/docs/*</code> via
   <code class="inline-code">tools/md_to_doc_html.py --all-stale</code>; Learn +
@@ -117,8 +132,9 @@ language) are listed here. Site and installers track
   (<code class="inline-code">not_sgd=true</code>,
   <code class="inline-code">trained=false</code>,
   <code class="inline-code">step_n=1</code>). Not SGD.
-  STEP-updated weights remain a follow-on
-  (<code class="inline-code">feat/sparkbc-step-weights</code>).
+  STEP also writes
+  <code class="inline-code">weights.safetensors</code> (dry delta;
+  <code class="inline-code">trained=false</code>).
   Docs: <a href="/docs/spark-builder.html">SPARK_BUILDER</a>,
   <a href="/docs/model-training.html">MODEL_TRAINING</a>,
   <a href="/docs/language.html">LANGUAGE</a>,

@@ -156,10 +156,13 @@ echo "PASS ARTIFACT ($MARKER)"
 
 # Optional: SPARKBC_E2E_REQUIRE_STEP_WEIGHTS=1 also asserts weights here.
 # Default gate stays ARTIFACT-only. Do not invent SGD.
+WEIGHTS="out/train/job-dry-001/weights.safetensors"
 if [[ -n "${SPARKBC_E2E_REQUIRE_STEP_WEIGHTS:-}" ]]; then
-  echo "FAIL sparkbc-e2e: SPARKBC_E2E_REQUIRE_STEP_WEIGHTS set but"
-  echo "  step-weights are not on main yet (follow-on lane)."
-  exit 1
+  if [[ ! -f "$WEIGHTS" ]]; then
+    echo "FAIL sparkbc-e2e: missing $WEIGHTS"
+    exit 1
+  fi
+  echo "PASS STEP weights ($WEIGHTS)"
 fi
 
-echo "OK sparkbc-e2e (ARTIFACT + TRAIN/STEP stream; weights follow-on)"
+echo "OK sparkbc-e2e (ARTIFACT + TRAIN/STEP stream; STEP weights via test-sparkbc)"

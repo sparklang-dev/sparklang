@@ -345,7 +345,7 @@
 
         # SPARK_BC STEP stream (TRAIN → STEP → TRAIN_STATUS)
         make sparkbc-e2e
-        # compile → dump → --run-bc dry → ARTIFACT (not SGD; weights follow-on)
+        # compile → dump → --run-bc dry → ARTIFACT (not SGD; STEP weights via test-sparkbc)
         </code></pre>
         <p><code class="inline-code">make test</code> never starts GPU jobs or dials the network.</p>
         <h2 id="product-story">Product story</h2>
