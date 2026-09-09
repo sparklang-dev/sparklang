@@ -13,7 +13,13 @@ import sys
 
 sys.path.insert(0, str(ROOT / "python"))
 
-from sparklang.spark_coder.arch import PROFILE, default_arch
+from sparklang.spark_coder.arch import (
+    PROFILE,
+    arch_for_scale,
+    default_arch,
+    resolve_scale,
+    scale_table,
+)
 from sparklang.spark_coder.device import (
     _name_forbidden,
     _name_preferred,
@@ -72,9 +78,57 @@ class TestSparkCoder(unittest.TestCase):
         """Arch profile is spark-coder, not a vendor base."""
         arch = default_arch()
         self.assertEqual(arch["profile"], PROFILE)
+        self.assertEqual(arch["scale"], "tiny")
+        self.assertTrue(arch["ci_default"])
         self.assertEqual(arch["brain"], "owned-weights")
         self.assertFalse(arch["beats_claude"])
         self.assertEqual(arch["never"], "rtx-pro-6000")
+
+    def test_scale_tiny_vs_large(self) -> None:
+        """Tiny is CI default; large is larger opt-in dims."""
+        tiny = arch_for_scale("tiny")
+        large = arch_for_scale("large")
+        self.assertEqual(tiny["dim"], 32)
+        self.assertEqual(tiny["n_layer"], 2)
+        self.assertEqual(large["dim"], 64)
+        self.assertEqual(large["n_layer"], 4)
+        self.assertFalse(large["ci_default"])
+        self.assertEqual(resolve_scale("LARGE"), "large")
+        rows = scale_table()
+        self.assertEqual([r["scale"] for r in rows], ["tiny", "large"])
+        for row in rows:
+            self.assertFalse(row["beats_claude"])
+            self.assertEqual(row["never"], "rtx-pro-6000")
+        with self.assertRaises(ValueError):
+            resolve_scale("xl")
+
+    def test_large_init_dims(self) -> None:
+        """--scale large emit uses dim64/n_layer4 (no full CI train)."""
+        tmp = Path(tempfile.mkdtemp(prefix="spark-coder-lg-"))
+        try:
+            result = train_spark_coder(
+                sparkbc=BC,
+                dataset=DATA,
+                out_dir=tmp / "large",
+                outer=1,
+                inner=2,
+                lr=0.2,
+                max_pos=8,
+                also_factory_step=False,
+                device="cpu",
+                scale="large",
+            )
+            self.assertEqual(result["scale"], "large")
+            arch = json.loads(
+                Path(result["arch"]).read_text(encoding="utf-8")
+            )
+            self.assertEqual(arch["dim"], 64)
+            self.assertEqual(arch["n_layer"], 4)
+            self.assertFalse(arch["beats_claude"])
+            model = TinyCoder.from_weights(result["path"])
+            self.assertEqual(model.dim, 64)
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)
 
     def test_device_never_6000(self) -> None:
         """6000 is forbidden; 5090 is preferred."""

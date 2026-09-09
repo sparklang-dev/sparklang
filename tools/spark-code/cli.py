@@ -41,9 +41,29 @@ def _cmd_train(args: argparse.Namespace) -> int:
         lr=args.lr,
         also_factory_step=not args.skip_factory_step,
         device=args.device,
+        scale=args.scale,
     )
     print(json.dumps(result, indent=2))
     return 0 if result.get("trained") else 1
+
+
+def _cmd_scales(_args: argparse.Namespace) -> int:
+    """Print tiny vs large honesty table as JSON."""
+    from sparklang.spark_coder.arch import scale_table
+
+    print(
+        json.dumps(
+            {
+                "ok": True,
+                "scales": scale_table(),
+                "beats_claude": False,
+                "never": "rtx-pro-6000",
+                "prefer_device": "rtx-5090",
+            },
+            indent=2,
+        )
+    )
+    return 0
 
 
 def _cmd_generate(args: argparse.Namespace) -> int:
@@ -135,11 +155,13 @@ def _cmd_status(args: argparse.Namespace) -> int:
                 "ok": True,
                 "path": str(weights),
                 "trained": model.meta.get("trained"),
+                "scale": model.meta.get("scale", "tiny"),
                 "profile": model.meta.get("profile", "spark-coder"),
                 "brain": model.meta.get("brain", "owned-weights"),
                 "arch": model.arch_json(),
                 "beats_claude": False,
-                "device": "cpu",
+                "prefer_device": "rtx-5090",
+                "never": "rtx-pro-6000",
             },
             indent=2,
         )
@@ -153,18 +175,25 @@ def main(argv: list[str] | None = None) -> int:
         prog="spark-code",
         description=(
             "Owned Spark coding model (TinyCoder). "
-            "Not Claude/HF. CPU only. Never 6000."
+            "Not Claude/HF. Prefer RTX 5090; never 6000. "
+            "Does not beat Claude."
         ),
     )
     sub = ap.add_subparsers(dest="cmd", required=True)
 
-    p_tr = sub.add_parser("train", help="CPU SGD train")
+    p_tr = sub.add_parser("train", help="SGD train (tiny|large)")
     p_tr.add_argument("--sparkbc", default=DEFAULT_BC)
     p_tr.add_argument("--dataset", default=DEFAULT_DATA)
     p_tr.add_argument("--out", default=DEFAULT_OUT)
     p_tr.add_argument("--outer", type=int, default=6)
     p_tr.add_argument("--inner", type=int, default=8)
     p_tr.add_argument("--lr", type=float, default=0.12)
+    p_tr.add_argument(
+        "--scale",
+        default="tiny",
+        choices=("tiny", "large"),
+        help="tiny=CI/default; large=opt-in dim64/n_layer4",
+    )
     p_tr.add_argument(
         "--device",
         default="auto",
@@ -177,6 +206,11 @@ def main(argv: list[str] | None = None) -> int:
         help="skip apply_sgd_step factory companion",
     )
     p_tr.set_defaults(func=_cmd_train)
+
+    p_sc = sub.add_parser(
+        "scales", help="honesty table tiny vs large"
+    )
+    p_sc.set_defaults(func=_cmd_scales)
 
     p_gen = sub.add_parser("generate", help="greedy generate")
     p_gen.add_argument(

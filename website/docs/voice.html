@@ -322,6 +322,33 @@
         </tr>
         </tbody>
         </table></div>
+        <h2 id="tiny-vs-large-voice-weight-play">Tiny vs large (voice / weight play)</h2>
+        <p>Voice model write/copy and weight playgrounds follow the <strong>same</strong>
+        scale honesty as spark-coder + F-lane factory:</p>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Scale</th>
+        <th>Default</th>
+        <th>How</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><strong>tiny</strong></td>
+        <td>CI / dry demos</td>
+        <td>Stub WAV, tiny STT (<code class="inline-code">tiny.en</code>), tiny coder/SGD fixtures</td>
+        </tr>
+        <tr>
+        <td><strong>large</strong></td>
+        <td>Opt-in local</td>
+        <td><code class="inline-code">make spark-coder-train-large</code> / <code class="inline-code">make spark-sgd-proof-scale</code>; prefer <strong>RTX 5090</strong></td>
+        </tr>
+        </tbody>
+        </table></div>
+        <p><strong>Never</strong> route voice/weight <strong>train</strong> to RTX PRO <strong>6000</strong> (voice-only
+        GPU for CallsBack.ai). Larger stubs still <strong>do not</strong> beat Claude.
+        Details: <a href="/docs/spark-coder.html">SPARK_CODER.md</a> · <a href="/docs/train-loop.html">TRAIN_LOOP.md</a>.</p>
         <h2 id="production-gaps-honest-not-sold-as-telephony">Production gaps (honest — not sold as telephony)</h2>
         <p>Spark voice is a <strong>language/demo surface</strong>, not a production call center.</p>
         <p><strong>Not shipped as production:</strong> barge-in; end-of-utterance / silence;

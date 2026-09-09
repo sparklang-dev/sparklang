@@ -193,6 +193,20 @@ export TELNYX_CONNECTION_ID=…
 | `templates/voice_models/` | manifest skeleton |
 | `spark.toml` `[pstn]` | enabled=false |
 
+## Tiny vs large (voice / weight play)
+
+Voice model write/copy and weight playgrounds follow the **same**
+scale honesty as spark-coder + F-lane factory:
+
+| Scale | Default | How |
+|-------|---------|-----|
+| **tiny** | CI / dry demos | Stub WAV, tiny STT (`tiny.en`), tiny coder/SGD fixtures |
+| **large** | Opt-in local | `make spark-coder-train-large` / `make spark-sgd-proof-scale`; prefer **RTX 5090** |
+
+**Never** route voice/weight **train** to RTX PRO **6000** (voice-only
+GPU for CallsBack.ai). Larger stubs still **do not** beat Claude.
+Details: [SPARK_CODER.md](SPARK_CODER.md) · [TRAIN_LOOP.md](TRAIN_LOOP.md).
+
 ## Production gaps (honest — not sold as telephony)
 
 Spark voice is a **language/demo surface**, not a production call center.

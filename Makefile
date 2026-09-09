@@ -22,7 +22,7 @@ NVML_LIB ?= /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1
 	spark-sgd-proof spark-sgd-proof-scale docs-html docs-check \
 	sdk-pack dist test-sdk-pack spark-bc-gui \
 	helpers tools-test test-senses \
-	spark-coder-train test-spark-coder
+	spark-coder-train spark-coder-train-large test-spark-coder
 
 all: spark companions
 
@@ -517,13 +517,15 @@ test-spark-eval:
 # Owned Spark coding model (M-lane): TinyCoder written+trained here.
 # Prefers RTX 5090 when available; CPU fallback. Never 6000.
 # Not a HF/Claude wrapper. Not beat Claude.
-.PHONY: spark-coder-train test-spark-coder
+# Tiny = CI/default. Large = opt-in (dim 64 / n_layer 4).
+.PHONY: spark-coder-train spark-coder-train-large test-spark-coder
 spark-coder-train: spark-bootstrap
 	@mkdir -p models/spark-coder
 	@rm -f models/spark-coder/weights.safetensors \
 	  models/spark-coder/checkpoint.json \
 	  models/spark-coder/factory_step_checkpoint.json
 	./spark-code train \
+	  --scale $${SPARK_CODER_SCALE:-tiny} \
 	  --sparkbc docs/examples/spark-train-step.sparkbc \
 	  --dataset examples/fixtures/coder/dataset.jsonl \
 	  --out models/spark-coder \
@@ -536,6 +538,29 @@ spark-coder-train: spark-bootstrap
 	@test -f models/spark-coder/weights.safetensors
 	@test -f models/spark-coder/checkpoint.json
 	@test -f models/spark-coder/arch.json
+
+# Opt-in large coder: dim 64 / n_layer 4. Prefer 5090. Never 6000.
+# Not GHA default. Still does not beat Claude.
+spark-coder-train-large: spark-bootstrap
+	@mkdir -p models/spark-coder-large
+	@rm -f models/spark-coder-large/weights.safetensors \
+	  models/spark-coder-large/checkpoint.json \
+	  models/spark-coder-large/factory_step_checkpoint.json
+	./spark-code train \
+	  --scale large \
+	  --sparkbc docs/examples/spark-train-step.sparkbc \
+	  --dataset examples/fixtures/coder/dataset.jsonl \
+	  --out models/spark-coder-large \
+	  --outer $${SPARK_CODER_OUTER:-6} \
+	  --inner $${SPARK_CODER_INNER:-8} \
+	  --lr $${SPARK_CODER_LR:-0.12} \
+	  --device $${SPARK_CODER_DEVICE:-auto}
+	@test -f models/spark-coder-large/weights.safetensors
+	@test -f models/spark-coder-large/arch.json
+	@python3 -c "import json; a=json.load(open('models/spark-coder-large/arch.json')); \
+	  assert a['scale']=='large' and a['dim']>=64 and a['n_layer']>=4; \
+	  assert a['beats_claude'] is False; assert a['never']=='rtx-pro-6000'; \
+	  print('large ok dim', a['dim'], 'n_layer', a['n_layer'], 'never', a['never'])"
 
 test-spark-coder: spark-bootstrap
 	PYTHONPATH=python python3 -m unittest \
