@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Thin wrapper → tools/spark-bc-dump/run_e2e_gate.sh
+# Prefer: make sparkbc-e2e / make test-sparkbc-e2e
+set -euo pipefail
+HERE="$(cd "$(dirname "$0")" && pwd)"
+ROOT="$(cd "$HERE/.." && pwd)"
+exec "$ROOT/tools/spark-bc-dump/run_e2e_gate.sh"

@@ -220,6 +220,10 @@
         <td>browser dry E2E (no display)</td>
         </tr>
         <tr>
+        <td><code class="inline-code">make sparkbc-e2e</code></td>
+        <td>SPARK_BC TRAIN→STEP→ARTIFACT (dry; not SGD)</td>
+        </tr>
+        <tr>
         <td><code class="inline-code">make ide</code></td>
         <td>interim Cursor workspace open (not product IDE)</td>
         </tr>
@@ -735,6 +739,10 @@
         <td>Dry E2E</td>
         <td><code class="inline-code">make test-e2e-browser</code></td>
         </tr>
+        <tr>
+        <td>SPARK_BC STEP e2e</td>
+        <td><code class="inline-code">make sparkbc-e2e</code></td>
+        </tr>
         </tbody>
         </table></div>
         <p>Also dry examples: <code class="inline-code">browser_ca.spark</code>, <code class="inline-code">browser_h2.spark</code>,
@@ -892,6 +900,7 @@
         <pre class="doc__pre"><code class="language-bash">make test
         make test-examples
         make test-e2e-browser
+        make sparkbc-e2e
         make test-ide-paint   # PPM paint wire (not a .spark op)
         </code></pre>
         <p><code class="inline-code">make test</code> stays offline for ask/vendor speech. If <code class="inline-code">./spark</code> disappears
@@ -1100,6 +1109,7 @@
         make -C sparkasm test
         make test-selfhost-lex
         make test-sparkbc
+        make sparkbc-e2e
         ./spark-bootstrap --compile examples/hello.spark -o /tmp/hello.sparkbc
         ./spark-bootstrap --run-bc /tmp/hello.sparkbc
         # make test-ide-paint   # PPM + status strip (not a .spark op)

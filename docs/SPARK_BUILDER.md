@@ -152,11 +152,18 @@ ls -la out/train/job-dry-001/ARTIFACT
 ```bash
 make test-sparkbc      # compile → --run-bc body vs GAS dry (oracle)
 make test-model-lab    # examples/model_lab.spark dry + expects
+make sparkbc-e2e       # TRAIN→STEP→ARTIFACT focused gate
+# alias: make test-sparkbc-e2e
 ```
 
-Focused TRAIN→STEP→ARTIFACT gate (`make sparkbc-e2e`) may land from a
-sibling lane — until then, use the manual `--compile` / dump /
-`--run-bc` / `ls ARTIFACT` steps above.
+Focused TRAIN→STEP→ARTIFACT gate: `make sparkbc-e2e` /
+`make test-sparkbc-e2e` (`tools/spark-bc-dump/run_e2e_gate.sh`,
+wrapper `scripts/sparkbc-e2e`). Compiles
+`examples/spark_train_step.spark`, dumps TRAIN/STEP decode, runs
+`./spark-bootstrap --run-bc` dry, asserts
+`out/train/job-dry-001/ARTIFACT` (`not_sgd=true`, `trained=false`,
+`step_n=1`). Not SGD. STEP-updated weights remain a follow-on
+(`feat/sparkbc-step-weights`).
 
 ## Published files — sha256
 
@@ -216,17 +223,20 @@ make test-model-lab
 | Selfhost train seed `.sparkbc` | **implemented** (`compile_train.spark`) |
 | STEP proof stream TRAIN→STEP→TRAIN_STATUS | **implemented** (`spark_train_step.spark`) |
 | Execute TRAIN / STEP from published `.sparkbc` | **implemented** (`--run-bc`; dry; `trained=false`) |
+| Focused e2e gate (compile→dump→run-bc→ARTIFACT) | **implemented** (`make sparkbc-e2e` / `make test-sparkbc-e2e`) |
 | GAS `./spark --dry-run` train verbs | **implemented** (source, not bytecode) |
 | GAS emit `.sparkbc` / `--run-bc` | **BLOCKED** |
 | Hex dump + decode | **implemented** (`tools/spark-bc-dump/dump.py`) |
 | Emit init weights from those bytes | **implemented** (init only) |
 | Round-trip hello SPARK_BC | **tested** (`make test-sparkbc`) |
 | Model lab reverse/compile/modify | **tested** (`make test-model-lab`) |
-| STEP-updated weights | **follow-on** (sibling branch) |
+| STEP-updated weights | **follow-on** (`feat/sparkbc-step-weights`) |
 | Trained / served / beats Claude | **not** |
 
 ## Related
 
+- Builder page live on production Pages:
+  https://sparklang.dev/docs/spark-builder.html
 - [SPARK_BC.md](SPARK_BC.md)
 - [MODEL_LAB.md](MODEL_LAB.md)
 - [AI_MODELS.md](AI_MODELS.md)

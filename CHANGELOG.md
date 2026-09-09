@@ -13,12 +13,12 @@ language) are listed here. Site and installers track
   (`selfhost/compile.spark`, `compile_train.spark`,
   `examples/spark_builder.spark`, `spark_train_step.spark`,
   `model_lab.spark`), `--compile` / `--run-bc` / GAS `--dry-run` /
-  dump / `make test-sparkbc` / `make test-model-lab`, sha256 table
-  for published `docs/examples/*`, GAS emit/`--run-bc` **BLOCKED**,
-  dry ≠ SGD ≠ trained, STEP→weights **in flight**
-  (`feat/sparkbc-step-weights`), Pages deploy = Wrangler OAuth
-  preferred + CF dashboard fallback when CLI/auth absent. Site: regen
-  `website/docs/*` via
+  dump / `make test-sparkbc` / `make test-model-lab` /
+  `make sparkbc-e2e`, sha256 table for published `docs/examples/*`,
+  GAS emit/`--run-bc` **BLOCKED**, dry ≠ SGD ≠ trained,
+  STEP→weights **in flight** (`feat/sparkbc-step-weights`), Pages
+  deploy = Wrangler OAuth preferred + CF dashboard fallback when
+  CLI/auth absent. Site: regen `website/docs/*` via
   `tools/md_to_doc_html.py --all-stale`; Learn + homepage link
   Builder; CHANGELOG.html mirrored. Pages:
   [SPARK_BUILDER.md](docs/SPARK_BUILDER.md) /
@@ -26,6 +26,21 @@ language) are listed here. Site and installers track
   [RELEASE.md](docs/RELEASE.md) step 5,
   [ADOPTION_BAR.md](docs/ADOPTION_BAR.md),
   [ROADMAP.md](docs/ROADMAP.md).
+- **SPARK_BC e2e gate:** `make sparkbc-e2e` / `make test-sparkbc-e2e`
+  (`tools/spark-bc-dump/run_e2e_gate.sh`, wrapper
+  `scripts/sparkbc-e2e`). Compiles
+  `examples/spark_train_step.spark`, dumps TRAIN/STEP decode,
+  runs `./spark-bootstrap --run-bc` dry, asserts
+  `out/train/job-dry-001/ARTIFACT` (`not_sgd=true`,
+  `trained=false`, `step_n=1`). Not SGD. STEP-updated weights
+  remain a follow-on (`feat/sparkbc-step-weights`). Docs:
+  [SPARK_BC.md](docs/SPARK_BC.md),
+  [SPARK_BUILDER.md](docs/SPARK_BUILDER.md),
+  [MODEL_LAB.md](docs/MODEL_LAB.md),
+  [MODEL_TRAINING.md](docs/MODEL_TRAINING.md),
+  [LANGUAGE.md](docs/LANGUAGE.md),
+  [SELF_HOST.md](docs/SELF_HOST.md),
+  [PROGRAMMING_GUIDE.md](docs/PROGRAMMING_GUIDE.md).
 
 ## 0.6.26 — 2026-09-08
 

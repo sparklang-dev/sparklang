@@ -186,6 +186,9 @@
         <code class="inline-code">examples/spark_train_step.spark</code> →
         <code class="inline-code">docs/examples/spark-train-step.sparkbc</code> (sha256
         <code class="inline-code">d08925b52bf8c840de626c9cfec619d4dbae5a674b94bb8c7c5837eb1ac64551</code>).
+        Focused gate: <code class="inline-code">make sparkbc-e2e</code> (compile → dump TRAIN/STEP →
+        <code class="inline-code">--run-bc</code> dry → assert <code class="inline-code">ARTIFACT</code>). Not SGD. Step-updated
+        weights are a follow-on lane (<code class="inline-code">feat/sparkbc-step-weights</code>).
         Dry ≠ trained.</p>
         <p>Optional <strong><code class="inline-code">method "…"</code></strong> selects the training algorithm
         (<code class="inline-code">spark_distill_cpu</code> | <code class="inline-code">spark_pref_pack</code> | <code class="inline-code">spark_playbook_fit</code> |

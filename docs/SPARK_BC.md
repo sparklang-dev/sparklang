@@ -352,6 +352,9 @@ Dumps: [spark-builder-bc.txt](examples/spark-builder-bc.txt),
 Init weights from those bytes:
 `docs/examples/spark-self.init.safetensors` (sha256
 `60b9b7297cb5e2d8362702144a9d9c15487e65dd11783ba7d499499b500198cf`).
+Focused e2e: `make sparkbc-e2e` (compile → dump TRAIN/STEP →
+`--run-bc` dry → assert `ARTIFACT`; not SGD; weights follow-on).
+Factory page: [SPARK_BUILDER.md](SPARK_BUILDER.md).
 Not trained. Emitting TRAIN/STEP ≠ trained. Dry ≠ SGD ≠ trained.
 STEP→weights **in flight**. Later train aims to beat Claude. GAS
 does not emit `.sparkbc` — use bootstrap `--compile`.

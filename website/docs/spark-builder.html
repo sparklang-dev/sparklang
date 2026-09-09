@@ -261,10 +261,17 @@
         <h3 id="6-automated-gates-already-on-main">6) Automated gates already on main</h3>
         <pre class="doc__pre"><code class="language-bash">make test-sparkbc      # compile → --run-bc body vs GAS dry (oracle)
         make test-model-lab    # examples/model_lab.spark dry + expects
+        make sparkbc-e2e       # TRAIN→STEP→ARTIFACT focused gate
+        # alias: make test-sparkbc-e2e
         </code></pre>
-        <p>Focused TRAIN→STEP→ARTIFACT gate (<code class="inline-code">make sparkbc-e2e</code>) may land from a
-        sibling lane — until then, use the manual <code class="inline-code">--compile</code> / dump /
-        <code class="inline-code">--run-bc</code> / <code class="inline-code">ls ARTIFACT</code> steps above.</p>
+        <p>Focused TRAIN→STEP→ARTIFACT gate: <code class="inline-code">make sparkbc-e2e</code> /
+        <code class="inline-code">make test-sparkbc-e2e</code> (<code class="inline-code">tools/spark-bc-dump/run_e2e_gate.sh</code>,
+        wrapper <code class="inline-code">scripts/sparkbc-e2e</code>). Compiles
+        <code class="inline-code">examples/spark_train_step.spark</code>, dumps TRAIN/STEP decode, runs
+        <code class="inline-code">./spark-bootstrap --run-bc</code> dry, asserts
+        <code class="inline-code">out/train/job-dry-001/ARTIFACT</code> (<code class="inline-code">not_sgd=true</code>, <code class="inline-code">trained=false</code>,
+        <code class="inline-code">step_n=1</code>). Not SGD. STEP-updated weights remain a follow-on
+        (<code class="inline-code">feat/sparkbc-step-weights</code>).</p>
         <h2 id="published-files-sha256">Published files — sha256</h2>
         <p>Hashes from <code class="inline-code">sha256sum</code> on disk at doc authoring time (<code class="inline-code">51e4dbd</code> tree).
         Re-run <code class="inline-code">sha256sum</code> after recompile; mismatch means drift — update this
@@ -400,6 +407,10 @@
         <td><strong>implemented</strong> (<code class="inline-code">--run-bc</code>; dry; <code class="inline-code">trained=false</code>)</td>
         </tr>
         <tr>
+        <td>Focused e2e gate (compile→dump→run-bc→ARTIFACT)</td>
+        <td><strong>implemented</strong> (<code class="inline-code">make sparkbc-e2e</code> / <code class="inline-code">make test-sparkbc-e2e</code>)</td>
+        </tr>
+        <tr>
         <td>GAS <code class="inline-code">./spark --dry-run</code> train verbs</td>
         <td><strong>implemented</strong> (source, not bytecode)</td>
         </tr>
@@ -425,7 +436,7 @@
         </tr>
         <tr>
         <td>STEP-updated weights</td>
-        <td><strong>follow-on</strong> (sibling branch)</td>
+        <td><strong>follow-on</strong> (<code class="inline-code">feat/sparkbc-step-weights</code>)</td>
         </tr>
         <tr>
         <td>Trained / served / beats Claude</td>
@@ -435,6 +446,8 @@
         </table></div>
         <h2 id="related">Related</h2>
         <ul class="doc__ul">
+        <li>Builder page live on production Pages:
+          https://sparklang.dev/docs/spark-builder.html</li>
         <li><a href="/docs/self-host.html">SPARK_BC.md</a></li>
         <li><code class="inline-code">MODEL_LAB.md</code></li>
         <li><a href="/docs/ai-models.html">AI_MODELS.md</a></li>

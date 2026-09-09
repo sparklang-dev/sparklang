@@ -75,6 +75,7 @@ make machine-proof   # file(1) + objdump of _start
 | `make test-host-embed` | Python / JS / C host embed + `--embed` handshake |
 | `make test-shell` | Live `--allow-shell` argv `execve` (echo\|true\|false) |
 | `make test-e2e-browser` | browser dry E2E (no display) |
+| `make sparkbc-e2e` | SPARK_BC TRAIN→STEP→ARTIFACT (dry; not SGD) |
 | `make ide` | interim Cursor workspace open (not product IDE) |
 | `make clean` | remove ELF + companion binaries |
 
@@ -593,6 +594,7 @@ mitm har export -> har
 | Dry | `./spark --dry-run examples/browser_main.spark` |
 | Live product | `cd ../spark-browser && make run` → `./spark --live browser/run.spark` |
 | Dry E2E | `make test-e2e-browser` |
+| SPARK_BC STEP e2e | `make sparkbc-e2e` |
 
 Also dry examples: `browser_ca.spark`, `browser_h2.spark`,
 `browser_quic.spark`, `browser_cdp.spark`, `browser_mitm.spark`,
@@ -682,6 +684,7 @@ Do not assume every stderr line means a non-zero process exit without checking `
 make test
 make test-examples
 make test-e2e-browser
+make sparkbc-e2e
 make test-ide-paint   # PPM paint wire (not a .spark op)
 ```
 
@@ -875,6 +878,7 @@ make test-bootstrap
 make -C sparkasm test
 make test-selfhost-lex
 make test-sparkbc
+make sparkbc-e2e
 ./spark-bootstrap --compile examples/hello.spark -o /tmp/hello.sparkbc
 ./spark-bootstrap --run-bc /tmp/hello.sparkbc
 # make test-ide-paint   # PPM + status strip (not a .spark op)

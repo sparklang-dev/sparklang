@@ -74,29 +74,57 @@
 language) are listed here. Site and installers track
 <code>website/downloads/manifest.json</code>.</p>
 <h2>0.6.27 — 2026-09-08</h2>
-
 <ul>
-<li><strong>SPARK_BC factory docs (full E2E):</strong> Engineer reproduction guide so</li>
+<li><strong>SPARK_BC factory docs (full E2E):</strong> Engineer reproduction guide so
+  a stranger can rebuild every published artifact from docs alone —
+  SPARK_BC vs neural weights, opcodes <code class="inline-code">TRAIN</code>
+  <code class="inline-code">0x26</code> /
+  <code class="inline-code">TRAIN_STATUS</code> <code class="inline-code">0x27</code> /
+  <code class="inline-code">STEP</code> <code class="inline-code">0x28</code>, programs
+  (<code class="inline-code">selfhost/compile.spark</code>,
+  <code class="inline-code">compile_train.spark</code>,
+  <code class="inline-code">examples/spark_builder.spark</code>,
+  <code class="inline-code">spark_train_step.spark</code>,
+  <code class="inline-code">model_lab.spark</code>),
+  <code class="inline-code">--compile</code> / <code class="inline-code">--run-bc</code> /
+  GAS <code class="inline-code">--dry-run</code> / dump /
+  <code class="inline-code">make test-sparkbc</code> /
+  <code class="inline-code">make test-model-lab</code> /
+  <code class="inline-code">make sparkbc-e2e</code>, sha256 table for published
+  <code class="inline-code">docs/examples/*</code>, GAS emit/<code class="inline-code">--run-bc</code>
+  <strong>BLOCKED</strong>, dry ≠ SGD ≠ trained, STEP→weights
+  <strong>in flight</strong>
+  (<code class="inline-code">feat/sparkbc-step-weights</code>), Pages deploy =
+  Wrangler OAuth preferred + CF dashboard fallback when CLI/auth absent.
+  Site: regen <code class="inline-code">website/docs/*</code> via
+  <code class="inline-code">tools/md_to_doc_html.py --all-stale</code>; Learn +
+  homepage link Builder; CHANGELOG.html mirrored. Pages:
+  <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> /
+  <code class="inline-code">/docs/spark-builder.html</code>,
+  <a href="/docs/self-host.html">SPARK_BC.md</a>,
+  <a href="/docs/release.html">RELEASE.md</a> step 5,
+  <a href="/docs/adoption-bar.html">ADOPTION_BAR.md</a>,
+  <a href="/docs/roadmap.html">ROADMAP.md</a>.</li>
+<li><strong>SPARK_BC e2e gate:</strong>
+  <code class="inline-code">make sparkbc-e2e</code> /
+  <code class="inline-code">make test-sparkbc-e2e</code>
+  (<code class="inline-code">tools/spark-bc-dump/run_e2e_gate.sh</code>,
+  wrapper <code class="inline-code">scripts/sparkbc-e2e</code>).
+  Compiles <code class="inline-code">examples/spark_train_step.spark</code>,
+  dumps TRAIN/STEP decode, runs
+  <code class="inline-code">./spark-bootstrap --run-bc</code> dry,
+  asserts <code class="inline-code">out/train/job-dry-001/ARTIFACT</code>
+  (<code class="inline-code">not_sgd=true</code>,
+  <code class="inline-code">trained=false</code>,
+  <code class="inline-code">step_n=1</code>). Not SGD.
+  STEP-updated weights remain a follow-on
+  (<code class="inline-code">feat/sparkbc-step-weights</code>).
+  Docs: <a href="/docs/spark-builder.html">SPARK_BUILDER</a>,
+  <a href="/docs/model-training.html">MODEL_TRAINING</a>,
+  <a href="/docs/language.html">LANGUAGE</a>,
+  <a href="/docs/self-host.html">SELF_HOST</a>,
+  <a href="/docs/programming-guide.html">PROGRAMMING_GUIDE</a>.</li>
 </ul>
-<p>  a stranger can rebuild every published artifact from docs alone —</p>
-<p>  SPARK_BC vs neural weights, opcodes <code class="inline-code">TRAIN</code> <code class="inline-code">0x26</code> /</p>
-<p>  <code class="inline-code">TRAIN_STATUS</code> <code class="inline-code">0x27</code> / <code class="inline-code">STEP</code> <code class="inline-code">0x28</code>, programs</p>
-<p>  (<code class="inline-code">selfhost/compile.spark</code>, <code class="inline-code">compile_train.spark</code>,</p>
-<p>  <code class="inline-code">examples/spark_builder.spark</code>, <code class="inline-code">spark_train_step.spark</code>,</p>
-<p>  <code class="inline-code">model_lab.spark</code>), <code class="inline-code">--compile</code> / <code class="inline-code">--run-bc</code> / GAS <code class="inline-code">--dry-run</code> /</p>
-<p>  dump / <code class="inline-code">make test-sparkbc</code> / <code class="inline-code">make test-model-lab</code>, sha256 table</p>
-<p>  for published <code class="inline-code">docs/examples/*</code>, GAS emit/<code class="inline-code">--run-bc</code> <strong>BLOCKED</strong>,</p>
-<p>  dry ≠ SGD ≠ trained, STEP→weights <strong>in flight</strong></p>
-<p>  (<code class="inline-code">feat/sparkbc-step-weights</code>), Pages deploy = Wrangler OAuth preferred + CF dashboard fallback when CLI/auth absent.</p>
-<p>  (no wrangler on box). Site: regen <code class="inline-code">website/docs/*</code> via</p>
-<p>  <code class="inline-code">tools/md_to_doc_html.py --all-stale</code>; Learn + homepage link</p>
-<p>  Builder; CHANGELOG.html mirrored. Pages:</p>
-<p>  <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> /</p>
-<p>  <code class="inline-code">/docs/spark-builder.html</code>, <a href="/docs/self-host.html">SPARK_BC.md</a>,</p>
-<p>  <a href="/docs/release.html">RELEASE.md</a> step 5,</p>
-<p>  <a href="/docs/adoption-bar.html">ADOPTION_BAR.md</a>,</p>
-<p>  <a href="/docs/roadmap.html">ROADMAP.md</a>.</p>
-
 <h2>0.6.26 — 2026-09-08</h2>
 <ul>
 <li><strong>Builder / SPARK_BC factory:</strong> Spark compiles Spark to SPARK_BC

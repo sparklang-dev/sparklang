@@ -14,7 +14,8 @@ NVML_LIB ?= /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1
 	test-model-lab spark-model-lab \
 	browser-mitm-analyze ide test-engine-paint test-engine-css \
 	test-engine-layout test-ide-paint spark-bootstrap sparkc \
-	test-bootstrap test-sparkbc spark-bc spark-bc-pack-hello sparkasm \
+	test-bootstrap test-sparkbc test-sparkbc-e2e sparkbc-e2e \
+	spark-bc spark-bc-pack-hello sparkasm \
 	test-sparkasm docs-docx function-catalog playbooks-catalog
 
 all: spark companions
@@ -584,11 +585,20 @@ spark-bc-pack-hello: bootstrap/bc_pack_hello.c bootstrap/bc_write.c \
 	$(CC) -O2 -Wall -Wextra -o spark-bc-pack-hello \
 		bootstrap/bc_pack_hello.c bootstrap/bc_write.c
 
-.PHONY: test-sparkbc spark-bc-emit test-bc-emit spark-bc
+.PHONY: test-sparkbc test-sparkbc-e2e sparkbc-e2e \
+	spark-bc-emit test-bc-emit spark-bc
 test-sparkbc: spark-bootstrap spark
 	chmod +x bootstrap/tests/run_sparkbc.sh
 	./bootstrap/tests/run_sparkbc.sh
 	PYTHONPATH=python python3 tools/spark-bc-dump/test_dump.py
+
+# Focused TRAIN→STEP→TRAIN_STATUS e2e: compile → dump → --run-bc →
+# ARTIFACT. Not SGD. Step-weights file is a follow-on lane.
+test-sparkbc-e2e: spark-bootstrap
+	chmod +x tools/spark-bc-dump/run_e2e_gate.sh
+	./tools/spark-bc-dump/run_e2e_gate.sh
+
+sparkbc-e2e: test-sparkbc-e2e
 
 spark-bc-emit: bootstrap/bc_emit_sasm.c bootstrap/bc_read.c \
 	bootstrap/dry_ask.c bootstrap/dry_auto_model.c \
