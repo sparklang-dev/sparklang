@@ -1,0 +1,44 @@
+{
+  "op": "checkpoint",
+  "mode": "cpu-sgd",
+  "status": "implemented",
+  "step_n": 1,
+  "loss_before": 5.5416472240145405,
+  "loss_after": 5.538808543479141,
+  "loss_curve": [
+    {
+      "outer": 0,
+      "loss": 5.5416472240145405,
+      "phase": "start"
+    },
+    {
+      "outer": 1,
+      "loss": 5.540228850353919,
+      "phase": "after_outer"
+    },
+    {
+      "outer": 2,
+      "loss": 5.538808543479141,
+      "phase": "after_outer"
+    }
+  ],
+  "outer_steps": 2,
+  "inner_steps": 4,
+  "lr": 0.08,
+  "lr_embed": 0.02,
+  "train_embed": true,
+  "dataset": "examples/fixtures/coder/dataset.jsonl",
+  "dataset_n": 48,
+  "arch_dim": 32,
+  "arch_n_layer": 2,
+  "weights": "models/spark-coder/weights.safetensors",
+  "weights_sha256": "543b334ff1bb6bf7f3e53ee90f3673e8734aa04926441430eaa9f672c215b65e",
+  "trained": true,
+  "not_sgd": false,
+  "sgd": true,
+  "beats_claude": false,
+  "device": "cpu",
+  "never": "rtx-pro-6000",
+  "sparkbc_sha256": "d08925b52bf8c840de626c9cfec619d4dbae5a674b94bb8c7c5837eb1ac64551",
+  "note": "CPU multi-outer SGD updated lm_head+embed; trained=true; not_sgd=false; not beat Claude"
+}

@@ -5,6 +5,19 @@ language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
 
+## 0.6.42 — 2026-09-09
+
+- **Owned Spark coder (M-lane):** in-repo TinyCoder
+  (`python/sparklang/spark_coder/`) — layers, embed, MLP, lm_head —
+  trained with CPU SGD (optional **RTX 5090** torch path; **never**
+  RTX PRO 6000) on authored coding fixtures
+  (`examples/fixtures/coder/`). CLI `./spark-code` train / generate /
+  prove / tool-loop. Packaged under `models/spark-coder/` and SDK
+  pack when trained. Docs: [SPARK_CODER.md](docs/SPARK_CODER.md) →
+  `/docs/spark-coder.html`. Gate: `make test-spark-coder` /
+  `make spark-coder-train`. **Not** a HF/Claude/Bifrost brain.
+  Does **not** beat Claude.
+
 ## 0.6.41 — 2026-09-09
 
 - **Helpers / shadows / tools (K-lane):** enhances I-lane minimal

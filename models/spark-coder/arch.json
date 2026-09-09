@@ -1,0 +1,17 @@
+{
+  "profile": "spark-coder",
+  "vocab": 256,
+  "dim": 32,
+  "n_layer": 2,
+  "n_head": 4,
+  "n_kv": 2,
+  "head_dim": 8,
+  "mlp": 128,
+  "genome": "SPARK_BC",
+  "factory": "Spark language",
+  "beats_claude": false,
+  "device": "cpu",
+  "never": "rtx-pro-6000",
+  "brain": "owned-weights",
+  "note": "TinyCoder written+trained in sparklang; not a downloaded base model"
+}

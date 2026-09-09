@@ -49,3 +49,7 @@ jobs:
 
       - name: make sdk-pack
         run: make sdk-pack
+
+      # Owned TinyCoder (M-lane)
+      - name: make test-spark-coder
+        run: make test-spark-coder

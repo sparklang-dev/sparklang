@@ -1,0 +1,6 @@
+# Owned spark-coder fixture — ask/print (compiles via bootstrap).
+# Not an external model output.
+
+ask "hello from spark-coder" -> msg
+
+print msg

@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Tools &amp; helpers — Spark</title>
-    <meta name="description" content="K-lane helpers, shadows, and spark_kit — compile/run/inspect, shadow build, opcode sheet. Never beat Claude." />
+    <title>Spark coder — owned TinyCoder — Spark</title>
+    <meta name="description" content="In-repo TinyCoder layers + SGD on coding fixtures. Not HF/Claude. Never 6000; 5090 OK. Does not beat Claude." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
     <link rel="stylesheet" href="/css/tokens.css?v=sparkcoder042" />
@@ -86,94 +86,101 @@
         <a href="/docs/spark-bc.html">Opcodes / ISA</a>
         <a href="/docs/build-models.html">Build models</a>
         <a href="/docs/train-loop.html">Train loop</a>
-        <a href="/docs/spark-coder.html">Spark coder</a>
+        <a href="/docs/spark-coder.html" aria-current="page">Spark coder</a>
         <a href="/docs/architecture.html">Architecture</a>
         <a href="/docs/tokenizer.html">Tokenizer</a>
         <a href="/docs/serve.html">Serve</a>
         <a href="/docs/eval.html">Eval</a>
         <a href="/docs/sparkbc-make.html">Make targets</a>
-        <a href="/docs/tools-helpers.html" aria-current="page">Tools & helpers</a>
+        <a href="/docs/tools-helpers.html">Tools & helpers</a>
         <a href="/docs/ci-pages.html">CI / Pages</a>
         <a href="/docs/adoption-bar.html">Adoption bar</a>
         <a href="/docs/language.html">Language</a>
         <a href="/docs/programming-guide.html">Programming guide</a>
         <a href="/downloads.html">Downloads</a>
       </nav>      <article class="doc__body">
-        <h1 id="tools-helpers-k-lane">Tools &amp; helpers (K-lane)</h1>
-        <p>Ergonomic CLIs, shadow safety, and a small downloadable kit for the
-        Spark / SparkLang SPARK_BC factory. Does <strong>not</strong> reimplement attention
-        (D) or the serve HTTP API (G). <strong>Never</strong> 6000. Does <strong>not</strong> beat Claude.</p>
-        <p>Hub: <a href="/docs/factory.html">FACTORY.md</a>. Make map: <a href="/docs/sparkbc-make.html">SPARKBC_MAKE.md</a>. Diagrams: <a href="/docs/diagrams.html">DIAGRAMS.md</a>.</p>
-        <h2 id="quick-invoke">Quick invoke</h2>
-        <pre class="doc__pre"><code class="language-bash">make helpers          # chmod + list helpers
-        make tools-test       # unit/smoke for kit + shadows
-        make sdk-pack         # stage dist/spark-sdk/ (+ I overlay)
-        ./helpers/spark-check-env
-        ./helpers/spark-run examples/spark_builder.spark
-        ./helpers/spark-bc-pp docs/examples/spark-train-step.sparkbc
-        ./helpers/spark-bc-diff a.sparkbc b.sparkbc
-        ./helpers/spark-train-proof          # make spark-sgd-proof
-        SCALE=1 ./helpers/spark-train-proof  # scale opt-in
-        ./helpers/spark-shadow build-dir
-        ./helpers/spark-shadow copy out/train/sgd-proof/weights.safetensors
-        ./helpers/spark-shadow verify ORIG SHADOW
-        </code></pre>
-        <h2 id="layout">Layout</h2>
+        <h1 id="spark-coder-owned-tinycoder-m-lane">Spark coder — owned TinyCoder (M-lane)</h1>
+        <p><strong>Written and trained in this repo.</strong> Not a HuggingFace / Claude /
+        OpenAI / Bifrost / vLLM wrapper. Prefers <strong>RTX 5090</strong> for GPU SGD
+        when available; CPU otherwise. <strong>Never</strong> the RTX PRO 6000. Does
+        <strong>not</strong> beat Claude.</p>
+        <h2 id="what-it-is">What it is</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
+        <th>Piece</th>
         <th>Path</th>
-        <th>Role</th>
         </tr>
         </thead>
         <tbody>
         <tr>
-        <td><code class="inline-code">helpers/</code></td>
-        <td>one-shot compile/run/inspect, train proof, env check, BC pp/diff, shadow CLI</td>
+        <td>Layers (embed, MLP, RMSNorm, lm_head)</td>
+        <td><code class="inline-code">python/sparklang/spark_coder/layers.py</code></td>
         </tr>
         <tr>
-        <td><code class="inline-code">shadows/</code></td>
-        <td>docs for <code class="inline-code">build/shadow/</code> dual-path experiments</td>
+        <td>Model + greedy generate</td>
+        <td><code class="inline-code">python/sparklang/spark_coder/model.py</code></td>
         </tr>
         <tr>
-        <td><code class="inline-code">tools/spark_kit/</code></td>
-        <td>hexdump, opcode sheet, fixture lint, vocab inspect, bc_diff</td>
+        <td>CPU SGD train on coding JSONL</td>
+        <td><code class="inline-code">python/sparklang/spark_coder/train.py</code></td>
         </tr>
         <tr>
-        <td><code class="inline-code">tools/spark_shadow/</code></td>
-        <td>Python behind <code class="inline-code">spark-shadow</code></td>
+        <td>Optional compile tool-loop</td>
+        <td><code class="inline-code">python/sparklang/spark_coder/tools_loop.py</code></td>
         </tr>
         <tr>
-        <td><code class="inline-code">tools/package_helpers_k.sh</code></td>
-        <td><code class="inline-code">make sdk-pack</code> stager → <code class="inline-code">dist/spark-sdk/</code></td>
+        <td>CLI</td>
+        <td><code class="inline-code">./spark-code</code> → <code class="inline-code">tools/spark-code/cli.py</code></td>
         </tr>
         <tr>
-        <td><code class="inline-code">dist/spark-sdk/</code></td>
-        <td>downloadable helpers tree + <code class="inline-code">MANIFEST-helpers-k.json</code></td>
+        <td>Coding fixtures (authored)</td>
+        <td><code class="inline-code">examples/fixtures/coder/dataset.jsonl</code></td>
+        </tr>
+        <tr>
+        <td>Packaged weights</td>
+        <td><code class="inline-code">models/spark-coder/weights.safetensors</code></td>
         </tr>
         </tbody>
         </table></div>
-        <h2 id="tool-kit-clis">Tool kit CLIs</h2>
-        <pre class="doc__pre"><code class="language-bash">PYTHONPATH=python:tools python3 -m spark_kit.opcode_sheet
-        PYTHONPATH=python:tools python3 -m spark_kit.hexdump_bc \
-          docs/examples/spark-train-step.sparkbc
-        PYTHONPATH=python:tools python3 -m spark_kit.fixture_lint \
-          examples/fixtures/train/dataset.jsonl
-        PYTHONPATH=python:tools python3 -m spark_kit.vocab_inspect
-        PYTHONPATH=python:tools python3 -m spark_kit.bc_diff a.sparkbc b.sparkbc
+        <p>Seed weights come from Spark factory <code class="inline-code">emit_init_weights</code> on a
+        SPARK_BC program (<code class="inline-code">docs/examples/spark-train-step.sparkbc</code>). Training
+        is owned CE SGD (loss must drop) plus an optional factory
+        <code class="inline-code">apply_sgd_step</code> companion. The <strong>brain</strong> is those tensors — tools
+        only compile/verify.</p>
+        <h2 id="quick-start">Quick start</h2>
+        <pre class="doc__pre"><code class="language-bash">make spark-bootstrap
+        make spark-coder-train          # writes models/spark-coder/
+        ./spark-code status
+        ./spark-code generate --prompt &quot;Say exactly: spark&quot; --max-new 8
+        ./spark-code prove
+        make test-spark-coder
         </code></pre>
-        <h2 id="sibling-lanes">Sibling lanes</h2>
+        <p>Tool loop (owned model ranks authored candidates, then compiles):</p>
+        <pre class="doc__pre"><code class="language-bash">./spark-code tool-loop \
+          --task &quot;print hello spark&quot; \
+          --candidate examples/coder/print_hello.spark \
+          --candidate examples/coder/train_step_slice.spark \
+          --work out/spark-coder/tool-loop
+        </code></pre>
+        <h2 id="honest-capability">Honest capability</h2>
         <ul class="doc__ul">
-        <li><strong>I</strong> (SDK/IDE/GUI pack) — K is additive <code class="inline-code">helpers/</code> + <code class="inline-code">tools/spark_*</code>;
-          <code class="inline-code">package_helpers_k.sh</code> overlays I’s <code class="inline-code">out/sdk-pack/stage/</code> when present.</li>
-        <li><strong>H/J</strong> — docs; this page is the Tools &amp; helpers section to link.</li>
-        <li><strong>D/G</strong> — not touched here.</li>
+        <li>Tiny byte-level LM (vocab 256, dim 32, last-token pool) —
+          <strong>useful for coding next-byte / short mnemonic tasks after
+          overfit</strong>, not a production assistant.</li>
+        <li>Proves: loss drop, ≥50% accuracy on authored prove fixtures, and
+          real <code class="inline-code">--compile</code> of fixture <code class="inline-code">.spark</code> programs.</li>
+        <li>Does <strong>not</strong> claim beat Claude or full program synthesis from
+          scratch at Claude quality.</li>
         </ul>
-        <h2 id="honesty">Honesty</h2>
+        <h2 id="sdk-pack">SDK pack</h2>
+        <p><code class="inline-code">make sdk-pack</code> includes <code class="inline-code">models/spark-coder/</code> (weights + arch +
+        checkpoint) and <code class="inline-code">bin/spark-code</code> when present after
+        <code class="inline-code">make spark-coder-train</code>.</p>
+        <h2 id="related">Related</h2>
         <ul class="doc__ul">
-        <li>Helpers wrap existing makefile / <code class="inline-code">spark-bootstrap</code> / <code class="inline-code">bc_dump</code> paths.</li>
-        <li>Shadow verify compares SHA-256 (and optional recompile).</li>
-        <li>Eval / train proofs remain measurement-only — <strong>not</strong> beat Claude.</li>
+        <li><a href="/docs/build-models.html">BUILD_MODELS.md</a> · <a href="/docs/train-loop.html">TRAIN_LOOP.md</a></li>
+        <li><a href="/docs/factory.html">FACTORY.md</a> · <a href="/docs/ai-models.html">AI_MODELS.md</a></li>
         </ul>
       </article>
       </main>

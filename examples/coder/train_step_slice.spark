@@ -1,0 +1,9 @@
+# Owned spark-coder fixture — TRAIN/STEP slice for compile proof.
+
+model code
+
+model train dataset "examples/fixtures/coder/dataset.jsonl" base "coder" out "out/train/coder-001" -> job
+
+model step "coder-001" -> step
+
+print job

@@ -21,7 +21,8 @@ NVML_LIB ?= /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1
 	playbooks-catalog spark-eval spark-eval-claude test-spark-eval \
 	spark-sgd-proof spark-sgd-proof-scale docs-html docs-check \
 	sdk-pack dist test-sdk-pack spark-bc-gui \
-	helpers tools-test test-senses
+	helpers tools-test test-senses \
+	spark-coder-train test-spark-coder
 
 all: spark companions
 
@@ -512,6 +513,33 @@ spark-eval-claude:
 .PHONY: test-spark-eval
 test-spark-eval:
 	PYTHONPATH=python python3 tools/spark-eval/test_eval.py
+
+# Owned Spark coding model (M-lane): TinyCoder written+trained here.
+# Prefers RTX 5090 when available; CPU fallback. Never 6000.
+# Not a HF/Claude wrapper. Not beat Claude.
+.PHONY: spark-coder-train test-spark-coder
+spark-coder-train: spark-bootstrap
+	@mkdir -p models/spark-coder
+	@rm -f models/spark-coder/weights.safetensors \
+	  models/spark-coder/checkpoint.json \
+	  models/spark-coder/factory_step_checkpoint.json
+	./spark-code train \
+	  --sparkbc docs/examples/spark-train-step.sparkbc \
+	  --dataset examples/fixtures/coder/dataset.jsonl \
+	  --out models/spark-coder \
+	  --outer 10 --inner 10 --lr 0.2 \
+	  --device auto
+	./spark-code prove \
+	  --weights models/spark-coder/weights.safetensors \
+	  --fixtures examples/fixtures/coder/prove.json \
+	  --min-acc 0.5
+	@test -f models/spark-coder/weights.safetensors
+	@test -f models/spark-coder/checkpoint.json
+	@test -f models/spark-coder/arch.json
+
+test-spark-coder: spark-bootstrap
+	PYTHONPATH=python python3 -m unittest \
+	  sparklang.spark_coder.test_spark_coder -v
 
 # Multi-outer CPU SGD proof + measurement-only eval on those weights.
 # Never claims beat Claude. CPU only. Tiny fixture = GHA/CI default.

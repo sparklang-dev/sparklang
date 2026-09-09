@@ -7,8 +7,8 @@
     <meta name="description" content="Map of SparkLang SPARK_BC factory docs — compile through eval, serve, CI/Pages. Does not beat Claude." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
-    <link rel="stylesheet" href="/css/tokens.css?v=modelaspects040" />
-    <link rel="stylesheet" href="/css/site.css?v=modelaspects040" />
+    <link rel="stylesheet" href="/css/tokens.css?v=sparkcoder042" />
+    <link rel="stylesheet" href="/css/site.css?v=sparkcoder042" />
   </head>
   <body class="doc-page">
     <header class="site-header">
@@ -44,6 +44,7 @@
                   <li><a href="/docs/spark-bc.html">Opcodes / ISA</a></li>
                   <li><a href="/docs/build-models.html">Build models</a></li>
                   <li><a href="/docs/train-loop.html">Train loop</a></li>
+                  <li><a href="/docs/spark-coder.html">Spark coder</a></li>
                   <li><a href="/docs/architecture.html">Architecture</a></li>
                   <li><a href="/docs/attention-forward.html">Attention honesty</a></li>
                   <li><a href="/docs/tokenizer.html">Tokenizer</a></li>
@@ -85,6 +86,7 @@
         <a href="/docs/spark-bc.html">Opcodes / ISA</a>
         <a href="/docs/build-models.html">Build models</a>
         <a href="/docs/train-loop.html">Train loop</a>
+        <a href="/docs/spark-coder.html">Spark coder</a>
         <a href="/docs/architecture.html">Architecture</a>
         <a href="/docs/tokenizer.html">Tokenizer</a>
         <a href="/docs/serve.html">Serve</a>
@@ -189,6 +191,11 @@
         <td><a href="/docs/eval.html">/docs/eval.html</a></td>
         </tr>
         <tr>
+        <td><strong>Spark coder (owned)</strong></td>
+        <td><a href="/docs/spark-coder.html">SPARK_CODER.md</a></td>
+        <td><a href="/docs/spark-coder.html">/docs/spark-coder.html</a></td>
+        </tr>
+        <tr>
         <td>Makefile targets</td>
         <td><a href="/docs/sparkbc-make.html">SPARKBC_MAKE.md</a></td>
         <td><a href="/docs/sparkbc-make.html">/docs/sparkbc-make.html</a></td>
@@ -271,7 +278,12 @@
         <tr>
         <td><strong>K</strong></td>
         <td>Helpers / shadows / kit</td>
-        <td>See <a href="/docs/tools-helpers.html">TOOLS_HELPERS.md</a> — enhances I minimal helpers</td>
+        <td><strong>Merged</strong> (#27) — <a href="/docs/tools-helpers.html">TOOLS_HELPERS.md</a></td>
+        </tr>
+        <tr>
+        <td><strong>M</strong></td>
+        <td>Owned spark-coder TinyCoder</td>
+        <td><strong>This lane</strong> — <a href="/docs/spark-coder.html">SPARK_CODER.md</a></td>
         </tr>
         <tr>
         <td><strong>L</strong></td>
@@ -287,7 +299,8 @@
         <li>Eyes / vision runtime — <strong>no</strong> (planned stub only).</li>
         <li>Beat Claude — <strong>no</strong>.</li>
         <li>Full attention forward in serve — <strong>no</strong> (tensors allocated).</li>
-        <li>6000 train — <strong>never</strong>.</li>
+        <li>RTX PRO <strong>6000</strong> train — <strong>never</strong> (voice-only).</li>
+        <li>RTX <strong>5090</strong> — OK for factory GPU train when used.</li>
         </ul>
       </article>
       </main>

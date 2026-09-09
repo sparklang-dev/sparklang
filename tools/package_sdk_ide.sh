@@ -201,6 +201,19 @@ exec bash "$ROOT/helpers/spark-shadow" "$@"
 EOF
   chmod +x "$DEST/bin/spark-shadow"
 fi
+# Owned spark-coder (M-lane) — weights + CLI when trained
+if [[ -f models/spark-coder/weights.safetensors ]]; then
+  mkdir -p "$DEST/models/spark-coder"
+  cp -a models/spark-coder/. "$DEST/models/spark-coder/"
+fi
+if [[ -x spark-code ]]; then
+  cp -a spark-code "$DEST/bin/spark-code"
+  mkdir -p "$DEST/tools/spark-code"
+  cp -a tools/spark-code/cli.py "$DEST/tools/spark-code/"
+fi
+if [[ -f docs/SPARK_CODER.md ]]; then
+  cp -a docs/SPARK_CODER.md "$DEST/sdk/docs/"
+fi
 # Bin wrappers (scripts, not symlinks — $0 must stay under bin/)
 cat >"$DEST/bin/spark-helper-compile" <<'EOF'
 #!/usr/bin/env bash
@@ -310,6 +323,10 @@ Quick start
   # Graphical compiler / decompiler (requires a display + python3-tk)
   ./bin/spark-bc-gui
 
+  # Owned spark-coder (if models/spark-coder shipped)
+  ./bin/spark-code status
+  ./bin/spark-code generate --prompt "Say exactly: spark" --max-new 8
+
   # Helpers
   ./bin/spark-helper-compile sdk/examples/spark_builder.spark /tmp/x.sparkbc
   ./bin/spark-helper-decompile /tmp/x.sparkbc
@@ -324,8 +341,10 @@ Quick start
   ./bin/spark-ide
 
 CPU only. Never RTX PRO 6000. Does not claim beat Claude.
+Owned coder brain = models/spark-coder (not Claude/HF).
 
 Docs: https://sparklang.dev/docs/sdk-ide-download.html
+       https://sparklang.dev/docs/spark-coder.html
 EOF
 
 # Expected-path manifest (consumed by tests + website)
@@ -410,6 +429,7 @@ payload = {
         "Does not claim beat Claude",
         "GUI uses real --compile + bc_dump.format_dump",
         "Includes helpers + shadows + BC dump tools",
+        "spark-coder owned weights when models/spark-coder present",
     ],
 }
 manifest_path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
