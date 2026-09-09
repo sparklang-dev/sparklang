@@ -20,13 +20,9 @@ NVML_LIB ?= /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1
 	test-sparkasm test-sparkasm-control docs-docx function-catalog \
 	playbooks-catalog spark-eval spark-eval-claude test-spark-eval \
 	spark-sgd-proof spark-sgd-proof-scale docs-html docs-check \
-<<<<<<< HEAD
 	sdk-pack dist test-sdk-pack spark-bc-gui \
 	helpers tools-test test-senses \
 	spark-coder-train test-spark-coder
-=======
-	sdk-pack dist test-sdk-pack spark-bc-gui
->>>>>>> 563f2bf (feat(sparkbc): D-lane layer-0 attention train + serve)
 
 all: spark companions
 
@@ -504,7 +500,6 @@ spark-eval-claude:
 test-spark-eval:
 	PYTHONPATH=python python3 tools/spark-eval/test_eval.py
 
-<<<<<<< HEAD
 # Owned Spark coding model (M-lane): TinyCoder written+trained here.
 # Prefers RTX 5090 when available; CPU fallback. Never 6000.
 # Not a HF/Claude wrapper. Not beat Claude.
@@ -532,10 +527,7 @@ test-spark-coder: spark-bootstrap
 	PYTHONPATH=python python3 -m unittest \
 	  sparklang.spark_coder.test_spark_coder -v
 
-# Multi-outer CPU SGD proof + measurement-only eval on those weights.
-=======
 # Multi-outer CPU SGD + layer-0 attn proof + measurement-only eval.
->>>>>>> 563f2bf (feat(sparkbc): D-lane layer-0 attention train + serve)
 # Never claims beat Claude. CPU only. Tiny fixture = GHA/CI default.
 # Asserts frozen probe scores >0 after attn train (not a Claude win).
 .PHONY: spark-sgd-proof
