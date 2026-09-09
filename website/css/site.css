@@ -245,6 +245,52 @@ code {
   font-weight: 600;
 }
 
+.nav-more__hub {
+  list-style: none;
+  border-bottom: 1px solid var(--spark-border);
+  margin-bottom: 0.25rem;
+  padding-bottom: 0.15rem;
+}
+
+.nav-more__hub a {
+  font-weight: 600;
+  color: var(--spark-text);
+}
+
+.nav-sub {
+  list-style: none;
+  padding: 0.2rem 0 0.35rem;
+}
+
+.nav-sub + .nav-sub {
+  border-top: 1px solid var(--spark-border);
+  margin-top: 0.15rem;
+  padding-top: 0.35rem;
+}
+
+.nav-sub__label {
+  display: block;
+  padding: 0.2rem 0.85rem 0.15rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--spark-text-muted);
+  opacity: 0.9;
+}
+
+.nav-sub__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-more__menu {
+  min-width: 14.5rem;
+  max-height: min(70vh, 32rem);
+  overflow-y: auto;
+}
+
 .site-nav .nav-cta {
   margin-left: var(--space-2);
   padding: 0.45rem 0.9rem;
@@ -1377,6 +1423,24 @@ pre.mermaid svg {
 
   .nav-more__menu a[aria-current="page"] {
     color: var(--spark-header-text);
+  }
+
+  .nav-sub__label {
+    color: var(--spark-header-muted);
+    opacity: 0.85;
+    padding-left: 1rem;
+  }
+
+  .nav-more__menu a {
+    padding-left: 1.35rem;
+  }
+
+  .nav-more__hub a {
+    color: var(--spark-header-text);
+  }
+
+  .nav-sub + .nav-sub {
+    border-top-color: rgba(255, 255, 255, 0.1);
   }
 
   .site-nav .nav-cta {
