@@ -23,7 +23,41 @@ Installers: https://sparklang.dev/downloads.html
 EOF
 ```
 
-5. Deploy Pages (`website/`) so Changelog + Downloads match the tag.
+5. **Deploy Cloudflare Pages (`website/`) via Wrangler CLI** (OAuth
+   session — not `CLOUDFLARE_*` env). From the repo root, after the
+   release commit is on `main` (or you have checked out that SHA):
+
+   ```bash
+   # Regenerate stale doc HTML if markdown changed
+   python3 tools/md_to_doc_html.py --all-stale
+   # Mirror CHANGELOG.md → website/CHANGELOG.html; sync
+   # docs/examples/ → website/docs/examples/ when Builder artifacts
+   # changed.
+
+   npx wrangler pages deploy website \
+     --project-name=sparklang-dev \
+     --branch=production \
+     --commit-hash="$(git rev-parse HEAD)"
+   ```
+
+   **Auth gotcha:** Wrangler OAuth on SoapBox lives under
+   `~/.config/.wrangler/` (leading **dot** on `.wrangler`), with
+   `pages:write`. That is **not** `~/.config/wrangler/` (no leading
+   dot). If deploy fails with auth / missing credentials, check the
+   dotted path first — do not invent or print tokens.
+
+   After deploy, spot-check and record the Pages deployment id next
+   to the git SHA (example: production deployment `80b7d3ee` for
+   `51e4dbd…`):
+
+   - `https://sparklang.dev/`
+   - `https://sparklang.dev/CHANGELOG.html`
+   - `https://sparklang.dev/docs/spark-builder.html`
+   - `https://sparklang.dev/downloads.html`
+
+   Tip ≠ pin: if the live site lags git, say so — do not claim
+   sparklang.dev equals an unpushed local tree.
+
 6. Sync the public mirror so `sparklang-dev/sparklang` matches the
    tagged tree.
 
