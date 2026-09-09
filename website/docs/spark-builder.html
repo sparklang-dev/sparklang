@@ -327,17 +327,33 @@
         # optional Spark weights (init or later train artifact):
         make spark-eval WEIGHTS=docs/examples/spark-self.init.safetensors
         # or: SPARK_EVAL_WEIGHTS=/path/to/weights.safetensors make spark-eval
+        # optional Claude API baseline (skips if no key on box):
+        make spark-eval-claude
+        # or: make spark-eval CLAUDE=auto
         </code></pre>
         <ul class="doc__ul">
         <li><strong>Dry</strong> (default): oracle fixture path — prints scores, exits <strong>0</strong>.</li>
         <li><strong>Weights</strong>: teacher-forced / next-token accuracy on
           <code class="inline-code">spark.embed</code> + <code class="inline-code">spark.lm_head</code> (CPU only; never the 6000).</li>
+        <li><strong>Claude baseline (optional):</strong> <code class="inline-code">CLAUDE=auto</code> / <code class="inline-code">make spark-eval-claude</code>
+          calls Anthropic <strong>only</strong> when a key already exists
+          (<code class="inline-code">SPARK_EVAL_CLAUDE_API_KEY</code>, <code class="inline-code">ANTHROPIC_API_KEY</code>, <code class="inline-code">CLAUDE_API_KEY</code>,
+          or <code class="inline-code">SPARK_EVAL_CLAUDE_KEY_FILE</code>). Otherwise status
+          <code class="inline-code">skipped_no_credentials</code>. <code class="inline-code">CLAUDE=on</code> fails closed if missing.
+          Never invents keys. Never uses the 6000.</li>
         <li>Suite JSON: <code class="inline-code">examples/eval/suite.json</code> (<code class="inline-code">claim: none</code>).</li>
+        <li>Gate: <code class="inline-code">make test-spark-eval</code>.</li>
         </ul>
-        <p><strong>How to compare later (honest):</strong> run the <strong>same</strong> frozen suite
-        against Spark weights and against any other system offline; record
-        both score tables side by side. This harness <strong>does not</strong> claim
-        beat Claude, does not call Claude, and does not print a winner.</p>
+        <h3 id="eval-honesty-spark-sparklang">Eval honesty (Spark / SparkLang)</h3>
+        <ul class="doc__ul">
+        <li>Product name in docs and scores: <strong>Spark</strong> / <strong>SparkLang</strong> only.</li>
+        <li>Harness output always sets <code class="inline-code">claim: none</code> and <code class="inline-code">beats_claude: false</code>.</li>
+        <li>Side-by-side Spark vs Claude scores are <strong>measurement</strong>, not a
+          marketing win. A higher Spark score on tiny fixtures <strong>does not</strong>
+          authorize “beats Claude.”</li>
+        <li>Dry Spark oracle scores are fixture plumbing, not model quality.</li>
+        <li>Weights-mode scores of <code class="inline-code">0.0</code> are honest misses until proven otherwise.</li>
+        </ul>
         <h2 id="published-files-sha256">Published files — sha256</h2>
         <p>Hashes from <code class="inline-code">sha256sum</code> on disk at doc authoring time (<code class="inline-code">51e4dbd</code> tree).
         Re-run <code class="inline-code">sha256sum</code> after recompile; mismatch means drift — update this

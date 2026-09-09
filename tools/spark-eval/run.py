@@ -2,8 +2,10 @@
 """Spark eval harness — frozen copy/recall + next-token probes.
 
 Dry fixture (default) or Spark safetensors via --weights /
-SPARK_EVAL_WEIGHTS. Prints scores; exits 0 on harness success.
-Does not claim beat Claude. Never uses GPU-1 / the 6000.
+SPARK_EVAL_WEIGHTS. Optional Claude API baseline when credentials
+already exist on the box (--claude auto|on|off). Prints scores;
+exits 0 on harness success. Does not claim beat Claude. Never uses
+GPU-1 / the 6000. Never invents API keys.
 """
 
 from __future__ import annotations
@@ -19,8 +21,15 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "python"))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from claude_baseline import (  # noqa: E402
+    comparison_table,
+    run_claude_baseline,
+)
 
 SUITE_DEFAULT = ROOT / "examples" / "eval" / "suite.json"
+_CLAUDE_MODES = ("off", "auto", "on")
 
 
 def _load_jsonl(path: Path) -> list[dict[str, Any]]:
@@ -194,11 +203,30 @@ def score_next_token_weights(
     return ok / float(len(rows))
 
 
+def _normalize_claude_mode(raw: str | None) -> str:
+    """Map CLI/env to off|auto|on."""
+    if raw is None or not str(raw).strip():
+        return "off"
+    mode = str(raw).strip().lower()
+    if mode in ("0", "false", "no"):
+        return "off"
+    if mode in ("1", "true", "yes"):
+        return "on"
+    if mode not in _CLAUDE_MODES:
+        raise ValueError(
+            "claude mode must be off|auto|on (got %r)" % raw
+        )
+    return mode
+
+
 def run_suite(
     suite_path: Path,
     weights_path: Path | None,
+    *,
+    claude_mode: str = "off",
 ) -> dict[str, Any]:
     """Run frozen suite; return result dict with scores."""
+    claude_mode = _normalize_claude_mode(claude_mode)
     suite = json.loads(suite_path.read_text(encoding="utf-8"))
     mode = "weights" if weights_path else "dry"
     weights: dict[str, Any] | None = None
@@ -213,7 +241,8 @@ def run_suite(
                 raise KeyError("weights missing %s" % need)
 
     results: list[dict[str, Any]] = []
-    for probe in suite.get("probes", []):
+    probes = list(suite.get("probes", []))
+    for probe in probes:
         name = str(probe["name"])
         kind = str(probe["kind"])
         fix = ROOT / str(probe["fixture"])
@@ -246,32 +275,50 @@ def run_suite(
                 "metric": probe.get("metric", kind),
                 "n": len(rows),
                 "score": round(float(score), 6),
+                "system": "spark",
             }
         )
+
+    def _rows_for(fixture_rel: str) -> list[dict[str, Any]]:
+        return _load_jsonl(ROOT / fixture_rel)
+
+    claude = run_claude_baseline(
+        probes,
+        _rows_for,
+        mode=claude_mode,
+    )
+    compare = comparison_table(results, claude)
 
     out: dict[str, Any] = {
         "harness": "spark-eval",
         "suite": str(suite_path.relative_to(ROOT)),
         "mode": mode,
-        "claim": suite.get("claim", "none"),
+        "claim": "none",
+        "beats_claude": False,
         "note": (
-            "Scores only — does not claim beat Claude. "
-            "Compare later with the same suite offline."
+            "Scores only — Spark / SparkLang does not claim beat "
+            "Claude. Optional Claude baseline is measurement."
         ),
         "probes": results,
+        "claude_baseline": claude,
+        "comparison": compare,
     }
     if weights_path is not None:
         out["weights"] = str(weights_path)
         out["trained"] = meta.get("trained", "unknown")
         out["sparkbc_sha256"] = meta.get("sparkbc_sha256", "")
+    # Suite claim field is informational only; harness never upgrades.
+    if suite.get("claim") not in (None, "none"):
+        out["suite_claim_ignored"] = suite.get("claim")
     return out
 
 
 def main() -> int:
-    """CLI: dry or weights; print JSON scores; exit 0."""
+    """CLI: dry/weights + optional Claude; print JSON; exit 0/2."""
     ap = argparse.ArgumentParser(
         description=(
             "Spark frozen eval probes (copy/recall, next-token). "
+            "Optional Claude baseline if credentials exist. "
             "Exit 0 = harness ran; not a win claim."
         )
     )
@@ -287,6 +334,12 @@ def main() -> int:
         default=None,
         help="Spark safetensors (else dry fixture)",
     )
+    ap.add_argument(
+        "--claude",
+        default=None,
+        help="Claude baseline: off|auto|on (default off; "
+        "env SPARK_EVAL_CLAUDE)",
+    )
     args = ap.parse_args()
     weights = args.weights
     env_w = os.environ.get("SPARK_EVAL_WEIGHTS", "").strip()
@@ -299,8 +352,19 @@ def main() -> int:
         )
         return 2
 
+    claude_raw = args.claude
+    if claude_raw is None:
+        claude_raw = os.environ.get("SPARK_EVAL_CLAUDE", "off")
     try:
-        result = run_suite(args.suite, weights)
+        claude_mode = _normalize_claude_mode(claude_raw)
+    except ValueError as exc:
+        print("spark-eval: %s" % exc, file=sys.stderr)
+        return 2
+
+    try:
+        result = run_suite(
+            args.suite, weights, claude_mode=claude_mode
+        )
     except (
         OSError,
         KeyError,
@@ -310,16 +374,51 @@ def main() -> int:
         print("spark-eval: %s" % exc, file=sys.stderr)
         return 2
 
+    claude = result.get("claude_baseline") or {}
+    if claude_mode == "on" and claude.get("status") not in (
+        "ran",
+    ):
+        err = claude.get("error") or claude.get("status")
+        print(
+            "spark-eval: Claude baseline required but %s" % err,
+            file=sys.stderr,
+        )
+        print(json.dumps(result, indent=2, sort_keys=False))
+        return 2
+
     print(json.dumps(result, indent=2, sort_keys=False))
     print("---")
     for p in result["probes"]:
         print(
-            "score %-16s %.4f  (n=%d, %s)"
+            "spark %-16s %.4f  (n=%d, %s)"
             % (p["name"], p["score"], p["n"], p["metric"])
         )
+    cstat = claude.get("status", "off")
+    print("claude_baseline status=%s" % cstat)
+    if cstat == "ran":
+        for p in claude.get("probes") or []:
+            print(
+                "claude %-15s %.4f  (n=%d, %s)"
+                % (p["name"], p["score"], p["n"], p["metric"])
+            )
+        for row in (result.get("comparison") or {}).get(
+            "rows"
+        ) or []:
+            print(
+                "compare %-14s spark=%s claude=%s"
+                % (
+                    row["name"],
+                    row.get("spark_score"),
+                    row.get("claude_score"),
+                )
+            )
     print(
-        "mode=%s claim=%s — not beat Claude"
-        % (result["mode"], result["claim"])
+        "mode=%s claim=%s beats_claude=%s — not beat Claude"
+        % (
+            result["mode"],
+            result["claim"],
+            result.get("beats_claude"),
+        )
     )
     return 0
 

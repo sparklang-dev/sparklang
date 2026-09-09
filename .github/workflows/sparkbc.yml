@@ -28,3 +28,10 @@ jobs:
 
       - name: make spark-eval
         run: make spark-eval
+
+      - name: make test-spark-eval
+        run: make test-spark-eval
+
+      # Claude baseline auto-skips without secrets (honest status).
+      - name: make spark-eval-claude
+        run: make spark-eval-claude
