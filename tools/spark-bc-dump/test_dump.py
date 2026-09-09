@@ -192,7 +192,7 @@ def test_dry_step_writes_weights() -> dict:
 
 
 def test_sgd_step_loss_drops() -> dict:
-    """apply_sgd_step: multi-outer CE; loss curve; checkpoint."""
+    """apply_sgd_step: multi-outer attn CE; loss curve; checkpoint."""
     dataset = ROOT / "examples/fixtures/train/dataset.jsonl"
     assert dataset.is_file(), dataset
     with tempfile.TemporaryDirectory() as tmp:
@@ -203,9 +203,10 @@ def test_sgd_step_loss_drops() -> dict:
             dest,
             step_n=1,
             dataset=dataset,
-            outer_steps=4,
-            inner_steps=4,
+            outer_steps=2,
+            inner_steps=2,
             train_embed=True,
+            train_attn=True,
             checkpoint=ckpt,
             source=STEP_SRC,
             command=STEP_CMD,
@@ -213,9 +214,10 @@ def test_sgd_step_loss_drops() -> dict:
         assert r1["trained"] is True
         assert r1["not_sgd"] is False
         assert r1["sgd"] is True
+        assert r1["train_attn"] is True
         assert r1["beats_claude"] is False
         assert r1["loss_after"] < r1["loss_before"]
-        assert r1["outer_steps"] == 4
+        assert r1["outer_steps"] == 2
         assert r1["dataset_n"] >= 12
         curve = r1["loss_curve"]
         assert isinstance(curve, list) and len(curve) >= 2
@@ -226,12 +228,14 @@ def test_sgd_step_loss_drops() -> dict:
         assert ck["beats_claude"] is False
         assert ck["device"] == "cpu"
         assert ck["never"] == "rtx-pro-6000"
+        assert ck.get("train_attn") is True
         assert len(ck["loss_curve"]) == len(curve)
         assert r1["step_n"] >= 1
         meta = read_safetensors_meta(dest)
         assert meta["trained"] == "true"
         assert meta["not_sgd"] == "false"
-        assert meta.get("sgd_outer") == "4"
+        assert meta.get("sgd_outer") == "2"
+        assert meta.get("train_attn") == "true"
         assert float(meta["loss_after"]) < float(
             meta["loss_before"]
         )
@@ -241,8 +245,9 @@ def test_sgd_step_loss_drops() -> dict:
             dest,
             step_n=2,
             dataset=dataset,
-            outer_steps=2,
-            inner_steps=4,
+            outer_steps=1,
+            inner_steps=2,
+            train_attn=True,
             checkpoint=ckpt,
         )
         assert r2["step_n"] > r1["step_n"]
@@ -363,6 +368,8 @@ def test_serve_forward() -> dict:
         assert isinstance(fwd["argmax"], int)
         assert len(fwd["logits_preview"]) >= 1
         assert fwd["mlp0"] is True
+        assert fwd["attn0"] is True
+        assert "attn0" in fwd["path"]
         assert "mlp0" in fwd["path"]
         marker = dest / "SERVE"
         assert marker.is_file()

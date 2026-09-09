@@ -20,9 +20,13 @@ NVML_LIB ?= /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1
 	test-sparkasm test-sparkasm-control docs-docx function-catalog \
 	playbooks-catalog spark-eval spark-eval-claude test-spark-eval \
 	spark-sgd-proof spark-sgd-proof-scale docs-html docs-check \
+<<<<<<< HEAD
 	sdk-pack dist test-sdk-pack spark-bc-gui \
 	helpers tools-test test-senses \
 	spark-coder-train test-spark-coder
+=======
+	sdk-pack dist test-sdk-pack spark-bc-gui
+>>>>>>> 563f2bf (feat(sparkbc): D-lane layer-0 attention train + serve)
 
 all: spark companions
 
@@ -35,10 +39,8 @@ spark-bc-gui: spark-bootstrap
 	PYTHONPATH=tools:python ./tools/spark_bc_gui/launch.sh
 
 # Downloadable runtime + SDK + IDE + GUI pack (out/sdk-pack/).
-# K-lane overlay: also stage dist/spark-sdk/ helpers/shadows/kit.
-sdk-pack: spark-bootstrap helpers
+sdk-pack: spark-bootstrap
 	bash ./tools/package_sdk_ide.sh
-	bash ./tools/package_helpers_k.sh
 
 dist: sdk-pack
 
@@ -52,7 +54,7 @@ test-sdk-pack: spark-bootstrap
 docs-docx:
 	python3 tools/docs_docx.py --rebuild-reference
 
-.PHONY: docs-html docs-check test-senses helpers tools-test
+.PHONY: docs-html docs-check test-senses
 docs-html:
 	python3 tools/md_to_doc_html.py --all-stale
 	mkdir -p website/docs/images
@@ -66,18 +68,6 @@ docs-check: docs-html
 test-senses:
 	PYTHONPATH=python python3 -m unittest \
 		sparklang.senses.test_senses -v
-
-# K-lane: helpers, shadows, spark_kit (enhances I-lane minimal helpers).
-helpers:
-	chmod +x helpers/spark-* tools/package_helpers_k.sh
-	@echo "helpers:"
-	@ls -1 helpers/spark-*
-	@echo "shadows: see shadows/README.md (build/shadow/)"
-	@echo "kit: tools/spark_kit/  module: tools/spark_shadow/"
-
-tools-test: helpers
-	PYTHONPATH=python:tools python3 -m unittest \
-		spark_kit.test_kit -v
 
 function-catalog:
 	python3 tools/gen_function_catalog.py
@@ -514,6 +504,7 @@ spark-eval-claude:
 test-spark-eval:
 	PYTHONPATH=python python3 tools/spark-eval/test_eval.py
 
+<<<<<<< HEAD
 # Owned Spark coding model (M-lane): TinyCoder written+trained here.
 # Prefers RTX 5090 when available; CPU fallback. Never 6000.
 # Not a HF/Claude wrapper. Not beat Claude.
@@ -542,7 +533,11 @@ test-spark-coder: spark-bootstrap
 	  sparklang.spark_coder.test_spark_coder -v
 
 # Multi-outer CPU SGD proof + measurement-only eval on those weights.
+=======
+# Multi-outer CPU SGD + layer-0 attn proof + measurement-only eval.
+>>>>>>> 563f2bf (feat(sparkbc): D-lane layer-0 attention train + serve)
 # Never claims beat Claude. CPU only. Tiny fixture = GHA/CI default.
+# Asserts frozen probe scores >0 after attn train (not a Claude win).
 .PHONY: spark-sgd-proof
 spark-sgd-proof: spark-bootstrap
 	@mkdir -p out/train/sgd-proof
@@ -552,15 +547,25 @@ spark-sgd-proof: spark-bootstrap
 	  --weights out/train/sgd-proof/weights.safetensors \
 	  --checkpoint out/train/sgd-proof/checkpoint.json \
 	  --dataset examples/fixtures/train/dataset.jsonl \
-	  --outer 4 --inner 8 --step 1 \
+	  --outer 4 --inner 8 --lr 0.08 --step 1 \
 	  --command 'make spark-sgd-proof'
 	@python3 -c "import json; c=json.load(open('out/train/sgd-proof/checkpoint.json')); \
 	  print('loss_curve', [(p['outer'], round(p['loss'],6)) for p in c['loss_curve']]); \
 	  print('loss', c['loss_before'], '->', c['loss_after']); \
-	  print('beats_claude', c['beats_claude'], 'device', c['device']); \
+	  print('train_attn', c.get('train_attn'), 'beats_claude', c['beats_claude'], 'device', c['device']); \
 	  assert c['loss_after'] < c['loss_before']; \
+	  assert c.get('train_attn') is True; \
 	  assert c['beats_claude'] is False"
 	@$(MAKE) spark-eval WEIGHTS=out/train/sgd-proof/weights.safetensors
+	@PYTHONPATH=python python3 -c "from pathlib import Path; \
+	  import importlib.util as u; \
+	  s=u.spec_from_file_location('ev','tools/spark-eval/run.py'); \
+	  m=u.module_from_spec(s); s.loader.exec_module(m); \
+	  r=m.run_suite(m.SUITE_DEFAULT, Path('out/train/sgd-proof/weights.safetensors')); \
+	  sc={p['name']:p['score'] for p in r['probes']}; \
+	  print('proof_scores', sc); \
+	  assert sc.get('copy_recall',0)>0 and sc.get('next_token',0)>0, sc; \
+	  print('eval_nonzero_ok beats_claude=False')"
 
 # Opt-in local scale proof: larger JSONL + dim/n_layer knobs.
 # Still CPU-fast; not overnight; not GHA default. Not beat Claude.

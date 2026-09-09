@@ -124,16 +124,64 @@ def _predict_next(
     weights: dict[str, Any],
     context: str,
 ) -> str:
-    """Greedy next UTF-8 byte from mean-pool → lm_head."""
-    embed = weights["spark.embed.weight"]
-    lm = weights["spark.lm_head.weight"]
+    """Greedy next UTF-8 byte via attn0 when present, else mean-pool."""
     ids = _bytes_of(context)
-    hidden = _mean_pool(embed, ids)
-    pred = _argmax_lm(hidden, lm)
+    # Prefer layer-0 attention path (matches serve / SGD attn).
+    need = (
+        "spark.layers.0.attn_norm.weight",
+        "spark.layers.0.q.weight",
+        "spark.layers.0.k.weight",
+        "spark.layers.0.v.weight",
+        "spark.layers.0.o.weight",
+        "spark.final_norm.weight",
+        "spark.embed.weight",
+        "spark.lm_head.weight",
+    )
+    if all(k in weights for k in need):
+        pred = _predict_next_attn(weights, ids)
+    else:
+        embed = weights["spark.embed.weight"]
+        lm = weights["spark.lm_head.weight"]
+        hidden = _mean_pool(embed, ids)
+        pred = _argmax_lm(hidden, lm)
     try:
         return bytes([pred]).decode("utf-8")
     except UnicodeDecodeError:
         return chr(pred) if pred < 128 else "?"
+
+
+def _predict_next_attn(
+    weights: dict[str, Any],
+    ids: list[int],
+) -> int:
+    """Last-query causal attn → final_norm → lm_head argmax."""
+    sys.path.insert(0, str(ROOT / "python"))
+    from sparklang.model_lab import attn as attn_mod
+
+    embed = weights["spark.embed.weight"]
+    lm = weights["spark.lm_head.weight"]
+    vocab, dim = embed["shape"]
+    n_head = 4 if dim % 4 == 0 else 1
+    hd = dim // n_head
+    k_rows = weights["spark.layers.0.k.weight"]["shape"][0]
+    n_kv = max(1, int(k_rows) // hd)
+    tok = [int(t) % vocab for t in ids] or [0]
+    xs = attn_mod.embed_rows(embed["data"], dim, vocab, tok)
+    y, _c = attn_mod.attn_last_forward(
+        xs,
+        weights["spark.layers.0.attn_norm.weight"]["data"],
+        weights["spark.layers.0.q.weight"]["data"],
+        weights["spark.layers.0.k.weight"]["data"],
+        weights["spark.layers.0.v.weight"]["data"],
+        weights["spark.layers.0.o.weight"]["data"],
+        dim=dim,
+        n_head=n_head,
+        n_kv=n_kv,
+    )
+    y = attn_mod.rms_norm(
+        y, weights["spark.final_norm.weight"]["data"]
+    )
+    return _argmax_lm(y, lm)
 
 
 def score_copy_recall_dry(rows: list[dict[str, Any]]) -> float:

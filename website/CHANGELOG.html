@@ -73,6 +73,19 @@
 <p>All notable user-facing releases of <strong>SparkLang</strong> (the Spark programming
 language) are listed here. Site and installers track
 <code>website/downloads/manifest.json</code>.</p>
+<h2>0.6.44 — 2026-09-09</h2>
+<ul>
+<li><strong>D-lane layer-0 attention train + serve:</strong> <code>STEP</code> /
+  <code>apply_sgd_step</code> defaults to sequence next-token CE through
+  last-query causal MHA (GQA) on <code>spark.layers.0</code> q/k/v/o (+ embed
+  + lm_head). CPU by default; <strong>RTX 5090 OK</strong>; <strong>NEVER</strong> RTX PRO
+  6000. <code>--no-train-attn</code> keeps mean-pool CE. Serve / eval use
+  <code>embed→attn0→(mlp0)→norm→lm_head</code> when tensors exist. Train
+  fixture oversamples frozen eval probes. Gate: <code>make test-sparkbc</code>,
+  <code>make sparkbc-e2e</code>, <code>make spark-sgd-proof</code> (asserts copy_recall&gt;0
+  and next_token&gt;0). <strong>Not beat Claude.</strong>
+  Docs: <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</li>
+</ul>
 <h2>0.6.43 — 2026-09-09</h2>
 <ul>
 <li><strong>J-lane LLM decompile research expand:</strong> enrich

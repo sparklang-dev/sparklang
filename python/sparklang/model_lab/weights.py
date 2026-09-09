@@ -576,6 +576,131 @@ def _write_checkpoint(
     )
 
 
+def _arch_heads(dim: int, k_rows: int) -> tuple[int, int, int]:
+    """Return (n_head, n_kv, head_dim) for layer-0 tensors."""
+    n_head = 4 if dim % 4 == 0 else 1
+    hd = dim // n_head
+    n_kv = max(1, int(k_rows) // hd)
+    return n_head, n_kv, hd
+
+
+def _batch_ce_attn(
+    w: list[float],
+    embed: list[float],
+    attn_norm: list[float],
+    wq: list[float],
+    wk: list[float],
+    wv: list[float],
+    wo: list[float],
+    final_norm: list[float],
+    dim: int,
+    vocab: int,
+    n_head: int,
+    n_kv: int,
+    pairs: list[tuple[str, str]],
+    *,
+    train_embed: bool = True,
+    max_seq: int = 24,
+) -> tuple[
+    float,
+    list[float],
+    list[float] | None,
+    list[float],
+    list[float],
+    list[float],
+    list[float],
+    float,
+]:
+    """Sequence next-token CE via layer-0 last-query attention."""
+    from sparklang.model_lab import attn as attn_mod
+
+    gw = [0.0] * len(w)
+    g_emb: list[float] | None = (
+        [0.0] * len(embed) if train_embed else None
+    )
+    g_wq = [0.0] * len(wq)
+    g_wk = [0.0] * len(wk)
+    g_wv = [0.0] * len(wv)
+    g_wo = [0.0] * len(wo)
+    total = 0.0
+    n_tok = 0
+    for user, asst in pairs:
+        ctx = list(user.encode("utf-8") or b"\0")
+        tgt = list(asst.encode("utf-8") or b"\0")
+        for i, want in enumerate(tgt):
+            prefix = ctx + tgt[:i]
+            if len(prefix) > max_seq:
+                prefix = prefix[-max_seq:]
+            if not prefix:
+                prefix = [0]
+            ids = [b % vocab for b in prefix]
+            target = int(want) % vocab
+            xs = attn_mod.embed_rows(embed, dim, vocab, ids)
+            y, cache = attn_mod.attn_last_forward(
+                xs,
+                attn_norm,
+                wq,
+                wk,
+                wv,
+                wo,
+                dim=dim,
+                n_head=n_head,
+                n_kv=n_kv,
+            )
+            # final RMSNorm (w fixed for tiny stub)
+            mean_sq = sum(v * v for v in y) / float(dim)
+            inv = 1.0 / math.sqrt(mean_sq + 1e-5)
+            h = [y[j] * inv * final_norm[j] for j in range(dim)]
+            logits = attn_mod.logits_from_hidden(
+                w, dim, vocab, h
+            )
+            probs = _softmax(logits)
+            total += -math.log(max(probs[target], 1e-12))
+            n_tok += 1
+            dlogits = list(probs)
+            dlogits[target] -= 1.0
+            dh = [0.0] * dim
+            for v in range(vocab):
+                base = v * dim
+                dv = dlogits[v]
+                for j in range(dim):
+                    gw[base + j] += dv * h[j]
+                    dh[j] += dv * w[base + j]
+            # final_norm bwd → dy
+            dy = attn_mod._rms_norm_bwd(y, final_norm, dh)
+            grads = attn_mod.attn_last_backward(dy, cache)
+            for j in range(len(g_wq)):
+                g_wq[j] += grads["g_wq"][j]  # type: ignore[index]
+                g_wo[j] += grads["g_wo"][j]  # type: ignore[index]
+            for j in range(len(g_wk)):
+                g_wk[j] += grads["g_wk"][j]  # type: ignore[index]
+                g_wv[j] += grads["g_wv"][j]  # type: ignore[index]
+            if g_emb is not None:
+                dxs = grads["dxs"]  # type: ignore[assignment]
+                for t, tid in enumerate(ids):
+                    base = (tid % vocab) * dim
+                    for j in range(dim):
+                        g_emb[base + j] += dxs[t][j]
+    if n_tok < 1:
+        raise RuntimeError("attn CE saw zero tokens")
+    n = float(n_tok)
+    loss = total / n
+    for arr in (gw, g_wq, g_wk, g_wv, g_wo):
+        for i in range(len(arr)):
+            arr[i] /= n
+    if g_emb is not None:
+        for i in range(len(g_emb)):
+            g_emb[i] /= n
+    gnorm = math.sqrt(sum(g * g for g in gw))
+    gnorm += math.sqrt(sum(g * g for g in g_wq))
+    gnorm += math.sqrt(sum(g * g for g in g_wk))
+    gnorm += math.sqrt(sum(g * g for g in g_wv))
+    gnorm += math.sqrt(sum(g * g for g in g_wo))
+    if g_emb is not None:
+        gnorm += math.sqrt(sum(g * g for g in g_emb))
+    return loss, gw, g_emb, g_wq, g_wk, g_wv, g_wo, gnorm
+
+
 def apply_sgd_step(
     sparkbc_path: str | Path,
     dest: str | Path,
@@ -586,7 +711,9 @@ def apply_sgd_step(
     inner_steps: int = 8,
     outer_steps: int = 4,
     train_embed: bool = True,
+    train_attn: bool = True,
     lr_embed: float | None = None,
+    lr_attn: float | None = None,
     checkpoint: str | Path | None = None,
     source: str = "",
     command: str = "",
@@ -595,8 +722,9 @@ def apply_sgd_step(
 ) -> dict[str, Any]:
     """Multi-outer CPU SGD on Spark tensors (tiny; not beat Claude).
 
-    Fixture JSONL → mean-pool embed → CE on lm_head (optional embed
-    grads). Records a loss_curve and writes checkpoint.json. Sets
+    Fixture JSONL → layer-0 causal attn (default) or mean-pool
+    embed → CE on lm_head (+ optional embed / attn grads).
+    Records a loss_curve and writes checkpoint.json. Sets
     trained=true / not_sgd=false only when loss drops. Optional
     dim / n_layer only apply when seeding new weights (CPU-fast
     scale; CI keeps defaults). CPU only — never the voice GPU /
@@ -660,18 +788,78 @@ def apply_sgd_step(
     before_w = list(w)
     before_e = list(embed)
     lr_e = float(lr) * 0.25 if lr_embed is None else float(lr_embed)
+    lr_a = float(lr) * 0.5 if lr_attn is None else float(lr_attn)
     n_outer = max(1, int(outer_steps))
     n_inner = max(1, int(inner_steps))
     do_embed = bool(train_embed)
+    do_attn = bool(train_attn)
 
-    loss_before, _gw0, _ge0, g0 = _batch_ce(
-        w,
-        embed,
-        dim,
-        vocab,
-        pairs,
-        train_embed=do_embed,
-    )
+    layer = "spark.layers.0"
+    attn_names = {
+        "norm": layer + ".attn_norm.weight",
+        "q": layer + ".q.weight",
+        "k": layer + ".k.weight",
+        "v": layer + ".v.weight",
+        "o": layer + ".o.weight",
+    }
+    final_name = "spark.final_norm.weight"
+    attn_pack: dict[str, Any] | None = None
+    if do_attn:
+        missing = [
+            n for n in attn_names.values() if n not in tensors
+        ]
+        if missing or final_name not in tensors:
+            raise KeyError(
+                "SGD attn needs layer-0 q/k/v/o + norms; "
+                "missing %s" % (missing or [final_name])
+            )
+        k_shape = tensors[attn_names["k"]][0]
+        n_head, n_kv, _hd = _arch_heads(dim, int(k_shape[0]))
+        attn_pack = {
+            "norm": _unpack_f32(tensors[attn_names["norm"]][1]),
+            "q": _unpack_f32(tensors[attn_names["q"]][1]),
+            "k": _unpack_f32(tensors[attn_names["k"]][1]),
+            "v": _unpack_f32(tensors[attn_names["v"]][1]),
+            "o": _unpack_f32(tensors[attn_names["o"]][1]),
+            "final": _unpack_f32(tensors[final_name][1]),
+            "n_head": n_head,
+            "n_kv": n_kv,
+            "q_shape": tensors[attn_names["q"]][0],
+            "k_shape": tensors[attn_names["k"]][0],
+            "v_shape": tensors[attn_names["v"]][0],
+            "o_shape": tensors[attn_names["o"]][0],
+        }
+        before_q = list(attn_pack["q"])
+
+    def _ce_once() -> tuple[Any, ...]:
+        if do_attn and attn_pack is not None:
+            return _batch_ce_attn(
+                w,
+                embed,
+                attn_pack["norm"],
+                attn_pack["q"],
+                attn_pack["k"],
+                attn_pack["v"],
+                attn_pack["o"],
+                attn_pack["final"],
+                dim,
+                vocab,
+                int(attn_pack["n_head"]),
+                int(attn_pack["n_kv"]),
+                pairs,
+                train_embed=do_embed,
+            )
+        loss, gw, g_emb, gnorm = _batch_ce(
+            w,
+            embed,
+            dim,
+            vocab,
+            pairs,
+            train_embed=do_embed,
+        )
+        return loss, gw, g_emb, None, None, None, None, gnorm
+
+    loss_before, *_rest0, g0 = _ce_once()
     if g0 <= 0.0:
         raise RuntimeError(
             "SGD STEP stub fail: zero grad before update"
@@ -682,14 +870,16 @@ def apply_sgd_step(
     ]
     for outer in range(n_outer):
         for _ in range(n_inner):
-            loss_i, gw, g_emb, gnorm = _batch_ce(
-                w,
-                embed,
-                dim,
-                vocab,
-                pairs,
-                train_embed=do_embed,
-            )
+            (
+                loss_i,
+                gw,
+                g_emb,
+                g_wq,
+                g_wk,
+                g_wv,
+                g_wo,
+                gnorm,
+            ) = _ce_once()
             if gnorm <= 0.0:
                 raise RuntimeError(
                     "SGD STEP stub fail: zero grad mid-loop "
@@ -700,14 +890,18 @@ def apply_sgd_step(
             if do_embed and g_emb is not None:
                 for i in range(len(embed)):
                     embed[i] -= lr_e * g_emb[i]
-        loss_o, _gwo, _geo, _go = _batch_ce(
-            w,
-            embed,
-            dim,
-            vocab,
-            pairs,
-            train_embed=do_embed,
-        )
+            if (
+                do_attn
+                and attn_pack is not None
+                and g_wq is not None
+            ):
+                for i in range(len(attn_pack["q"])):
+                    attn_pack["q"][i] -= lr_a * g_wq[i]
+                    attn_pack["o"][i] -= lr_a * g_wo[i]
+                for i in range(len(attn_pack["k"])):
+                    attn_pack["k"][i] -= lr_a * g_wk[i]
+                    attn_pack["v"][i] -= lr_a * g_wv[i]
+        loss_o, *_r, _go = _ce_once()
         loss_curve.append(
             {
                 "outer": outer + 1,
@@ -724,7 +918,13 @@ def apply_sgd_step(
         abs(embed[i] - before_e[i]) > 1e-12
         for i in range(len(embed))
     )
-    if not (moved_w or (do_embed and moved_e)):
+    moved_a = False
+    if do_attn and attn_pack is not None:
+        moved_a = any(
+            abs(attn_pack["q"][i] - before_q[i]) > 1e-12
+            for i in range(len(before_q))
+        )
+    if not (moved_w or (do_embed and moved_e) or moved_a):
         raise RuntimeError(
             "SGD STEP stub fail: weights unchanged"
         )
@@ -737,12 +937,34 @@ def apply_sgd_step(
     tensors[head_name] = (head_shape, _pack_f32(w))
     if do_embed:
         tensors[embed_name] = (emb_shape, _pack_f32(embed))
+    if do_attn and attn_pack is not None:
+        tensors[attn_names["q"]] = (
+            attn_pack["q_shape"],
+            _pack_f32(attn_pack["q"]),
+        )
+        tensors[attn_names["k"]] = (
+            attn_pack["k_shape"],
+            _pack_f32(attn_pack["k"]),
+        )
+        tensors[attn_names["v"]] = (
+            attn_pack["v_shape"],
+            _pack_f32(attn_pack["v"]),
+        )
+        tensors[attn_names["o"]] = (
+            attn_pack["o_shape"],
+            _pack_f32(attn_pack["o"]),
+        )
     bc = load_sparkbc(bc_path)
     ckpt_path = (
         Path(checkpoint)
         if checkpoint
         else out.parent / "checkpoint.json"
     )
+    parts = [head_name]
+    if do_embed:
+        parts.append(embed_name)
+    if do_attn:
+        parts.append(layer + ".q/k/v/o")
     meta["step_n"] = str(n)
     meta["trained"] = "true"
     meta["not_sgd"] = "false"
@@ -753,16 +975,14 @@ def apply_sgd_step(
     meta["loss_after"] = "%.8g" % loss_after
     meta["dataset"] = str(data_path)
     meta["dataset_n"] = str(len(pairs))
-    meta["sgd_tensor"] = (
-        "%s+%s" % (head_name, embed_name)
-        if do_embed
-        else head_name
-    )
+    meta["sgd_tensor"] = "+".join(parts)
     meta["sgd_lr"] = "%.6g" % float(lr)
     meta["sgd_lr_embed"] = "%.6g" % lr_e
+    meta["sgd_lr_attn"] = "%.6g" % lr_a
     meta["sgd_inner"] = str(n_inner)
     meta["sgd_outer"] = str(n_outer)
     meta["train_embed"] = "true" if do_embed else "false"
+    meta["train_attn"] = "true" if do_attn else "false"
     meta["arch_dim"] = str(dim)
     meta["arch_n_layer"] = str(
         sum(
@@ -783,20 +1003,21 @@ def apply_sgd_step(
         "does not beat Claude"
     )
     meta["note"] = (
-        "CPU multi-outer SGD updated lm_head"
-        + ("+embed" if do_embed else "")
+        "CPU multi-outer SGD updated "
+        + meta["sgd_tensor"]
         + "; trained=true; not_sgd=false; not beat Claude"
     )
     base_der = meta.get("derivation") or "SPARK_BC init"
     meta["derivation"] = (
         "%s; multi-outer CPU SGD CE on %s "
-        "(outer=%d inner=%d; fixture JSONL n=%d)"
+        "(outer=%d inner=%d; fixture JSONL n=%d; attn=%s)"
         % (
             base_der,
             meta["sgd_tensor"],
             n_outer,
             n_inner,
             len(pairs),
+            "true" if do_attn else "false",
         )
     )
     if source:
@@ -817,7 +1038,9 @@ def apply_sgd_step(
         "inner_steps": n_inner,
         "lr": float(lr),
         "lr_embed": lr_e,
+        "lr_attn": lr_a,
         "train_embed": do_embed,
+        "train_attn": do_attn,
         "dataset": str(data_path),
         "dataset_n": len(pairs),
         "arch_dim": dim,
@@ -849,6 +1072,7 @@ def apply_sgd_step(
         "trained": True,
         "not_sgd": False,
         "sgd": True,
+        "train_attn": do_attn,
         "loss_before": loss_before,
         "loss_after": loss_after,
         "loss_curve": loss_curve,

@@ -1,8 +1,9 @@
 """Tiny CPU serve forward from SPARK_BC / Spark safetensors.
 
 Loads Spark-created weights (or emits init), runs embed→optional
-layer-0 MLP→norm→lm_head on CPU, writes SERVE with forward=true and
-honest trained. Not a production LLM. Never the voice GPU / 6000.
+layer-0 attn→optional MLP→norm→lm_head on CPU, writes SERVE with
+forward=true and honest trained. Not a production LLM. Never the
+voice GPU / 6000.
 """
 
 from __future__ import annotations
@@ -108,11 +109,54 @@ def _mlp_block(
     return [hidden[i] + down[i] for i in range(dim)], True
 
 
+def _attn_block(
+    hidden_seq: list[list[float]],
+    tensors: dict[str, tuple[tuple[int, ...], bytes]],
+    layer: int = 0,
+) -> tuple[list[float], bool, dict[str, Any]]:
+    """Optional layer-N last-query causal MHA; returns last hidden."""
+    from sparklang.model_lab import attn as attn_mod
+
+    p = "spark.layers.%d" % layer
+    need = (
+        p + ".attn_norm.weight",
+        p + ".q.weight",
+        p + ".k.weight",
+        p + ".v.weight",
+        p + ".o.weight",
+    )
+    if any(k not in tensors for k in need):
+        dim = len(hidden_seq[0])
+        acc = [0.0] * dim
+        for row in hidden_seq:
+            for i in range(dim):
+                acc[i] += row[i]
+        scale = 1.0 / float(len(hidden_seq))
+        return [v * scale for v in acc], False, {}
+    dim = len(hidden_seq[0])
+    k_shape = tensors[need[2]][0]
+    n_head = 4 if dim % 4 == 0 else 1
+    hd = dim // n_head
+    n_kv = max(1, int(k_shape[0]) // hd)
+    y, _cache = attn_mod.attn_last_forward(
+        hidden_seq,
+        _unpack_f32(tensors[need[0]][1]),
+        _unpack_f32(tensors[need[1]][1]),
+        _unpack_f32(tensors[need[2]][1]),
+        _unpack_f32(tensors[need[3]][1]),
+        _unpack_f32(tensors[need[4]][1]),
+        dim=dim,
+        n_head=n_head,
+        n_kv=n_kv,
+    )
+    return y, True, {"n_head": n_head, "n_kv": n_kv}
+
+
 def _hidden_from_tokens(
     tensors: dict[str, tuple[tuple[int, ...], bytes]],
     token_ids: list[int],
 ) -> dict[str, Any]:
-    """Mean-pool embed → optional mlp0 → final_norm (no lm_head)."""
+    """Embed → optional attn0 → optional mlp0 → final_norm."""
     embed_shape, embed_raw = tensors["spark.embed.weight"]
     norm_shape, norm_raw = tensors["spark.final_norm.weight"]
     vocab, dim = int(embed_shape[0]), int(embed_shape[1])
@@ -121,28 +165,31 @@ def _hidden_from_tokens(
     embed = _unpack_f32(embed_raw)
     norm_w = _unpack_f32(norm_raw)
     ids = [int(t) % vocab for t in token_ids] or [0]
-    acc = [0.0] * dim
+    seq: list[list[float]] = []
     for tid in ids:
-        row = _row(embed, dim, tid)
-        for i in range(dim):
-            acc[i] += row[i]
-    scale = 1.0 / float(len(ids))
-    hidden = [v * scale for v in acc]
+        seq.append(_row(embed, dim, tid))
+    hidden, used_attn, attn_meta = _attn_block(seq, tensors, 0)
     hidden, used_mlp = _mlp_block(hidden, tensors, 0)
     hidden = _rms_norm(hidden, norm_w)
-    path = (
-        "embed_mean_pool->mlp0->rms_norm"
-        if used_mlp
-        else "embed_mean_pool->rms_norm"
-    )
-    return {
+    parts = ["embed"]
+    if used_attn:
+        parts.append("attn0")
+    else:
+        parts.append("mean_pool")
+    if used_mlp:
+        parts.append("mlp0")
+    parts.append("rms_norm")
+    out = {
         "token_ids": ids,
         "hidden": hidden,
         "hidden_dim": dim,
         "vocab": vocab,
+        "attn0": used_attn,
         "mlp0": used_mlp,
-        "path": path,
+        "path": "->".join(parts),
     }
+    out.update(attn_meta)
+    return out
 
 
 def run_tiny_embed(
@@ -156,6 +203,7 @@ def run_tiny_embed(
         "hidden_dim": h["hidden_dim"],
         "vocab": h["vocab"],
         "embedding": [round(v, 6) for v in h["hidden"]],
+        "attn0": h.get("attn0", False),
         "mlp0": h["mlp0"],
         "path": h["path"],
     }
@@ -165,7 +213,7 @@ def run_tiny_forward(
     tensors: dict[str, tuple[tuple[int, ...], bytes]],
     token_ids: list[int],
 ) -> dict[str, Any]:
-    """CPU embed → optional layer-0 MLP → final_norm → lm_head.
+    """CPU embed → optional attn0 → optional MLP0 → norm → lm_head.
 
     Real matmuls + logits, not a marker-only stub. Not production.
     """
@@ -188,6 +236,7 @@ def run_tiny_forward(
         ],
         "argmax": argmax,
         "logit_max": round(logits[argmax], 6),
+        "attn0": h.get("attn0", False),
         "mlp0": h["mlp0"],
         "path": path,
     }
@@ -255,8 +304,9 @@ def emit_serve_stub(
         "production": False,
         "forward_result": fwd,
         "note": (
-            "tiny CPU forward (embed→optional mlp0→norm→lm_head); "
-            "not a production LLM; trained follows weights meta"
+            "tiny CPU forward (embed→optional attn0→optional "
+            "mlp0→norm→lm_head); not a production LLM; "
+            "trained follows weights meta"
         ),
         "marker": str(marker),
     }
