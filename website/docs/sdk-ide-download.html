@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SDK + IDE download — SparkLang</title>
+    <meta
+      name="description"
+      content="Download the SparkLang runtime, SDK, IDE extension, and graphical SPARK_BC compile/decompile app."
+    />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/css/tokens.css?v=pos060" />
+    <link rel="stylesheet" href="/css/site.css?v=pos060" />
+  </head>
+  <body class="doc-page">
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="site-brand" href="/" aria-label="SparkLang home">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+            <path
+              d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z"
+              fill="currentColor"
+            />
+          </svg>
+          Spark
+        </a>
+        <button
+          class="nav-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="site-nav"
+          aria-label="Open menu"
+        >
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+        </button>
+        <div class="header-nav-wrap">
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <ul class="nav-primary">
+              <li><a href="/learn/">Learn</a></li>
+              <li><a href="/docs/language.html">Docs</a></li>
+              <li><a href="/downloads.html">Download</a></li>
+              <li class="nav-more">
+                <button
+                  type="button"
+                  class="nav-more__toggle"
+                  aria-expanded="false"
+                  aria-haspopup="true"
+                >
+                  More
+                </button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/ai-models.html">AI models</a></li>
+                  <li>
+                    <a href="/docs/programming-guide.html">Programming guide</a>
+                  </li>
+                  <li><a href="/docs/ide.html">IDE</a></li>
+                  <li>
+                    <a href="/docs/sdk-ide-download.html">SDK + IDE pack</a>
+                  </li>
+                  <li>
+                    <a href="/docs/self-host.html">Contributor internals</a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+            <a href="/playground.html" class="nav-cta">Try</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <div class="shell doc-layout">
+      <aside class="doc-sidebar" aria-label="Table of contents">
+        <p class="doc-sidebar__title">On this page</p>
+        <nav id="doc-toc-list"></nav>
+      </aside>
+      <main class="doc-main">
+        <nav class="doc__nav" aria-label="Docs">
+          <a href="/learn/">Learn</a>
+          <a href="/docs/programming-guide.html">Programming guide</a>
+          <a href="/docs/language.html">Language reference</a>
+          <a href="/docs/ide.html">IDE</a>
+          <a href="/docs/sdk-ide-download.html" aria-current="page"
+            >SDK + IDE pack</a
+          >
+          <a href="/downloads.html">Downloads</a>
+        </nav>
+        <article class="doc__body">
+          <h1 id="sdk-ide-pack">SDK + IDE + GUI download pack</h1>
+          <p>
+          One tarball ships the <strong>SparkLang</strong> CPU runtime, SDK
+          docs/APIs, VS Code / Cursor language extension, and a
+          <strong>graphical</strong> SPARK_BC compile / decompile app. Not
+          CLI-only. Pack version tracks CHANGELOG (0.6.36+). CPU only — never
+          RTX PRO 6000. Does <strong>not</strong> claim beat Claude.
+          </p>
+
+          <h2 id="get-the-pack">Get the pack</h2>
+          <ol>
+            <li>
+              Build locally:
+              <code class="inline-code">make sdk-pack</code> (alias
+              <code class="inline-code">make dist</code>).
+            </li>
+            <li>
+              Artifact:
+              <code class="inline-code">out/sdk-pack/sparklang-sdk-*.tar.gz</code>
+              plus
+              <code class="inline-code">out/sdk-pack/MANIFEST.json</code>.
+            </li>
+            <li>
+              Site mirror (when under size cap):
+              <a href="/downloads/sdk-pack-MANIFEST.json"
+                ><code class="inline-code"
+                  >/downloads/sdk-pack-MANIFEST.json</code
+                ></a
+              >
+              and the matching
+              <code class="inline-code">sparklang-sdk-*.tar.gz</code> under
+              <a href="/downloads.html">Downloads</a>.
+            </li>
+          </ol>
+          <pre class="doc__pre"><code class="language-bash">git clone https://github.com/sparklang-dev/sparklang.git
+cd sparklang
+make sdk-pack
+tar -tzf out/sdk-pack/sparklang-sdk-*.tar.gz | head
+tar -xzf out/sdk-pack/sparklang-sdk-*.tar.gz
+cd sparklang-sdk-*</code></pre>
+
+          <h2 id="what-is-inside">What is inside</h2>
+          <div class="doc__table-wrap">
+            <table class="doc__table">
+              <thead>
+                <tr>
+                  <th>Path</th>
+                  <th>Contents</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code class="inline-code">bin/spark-bootstrap</code></td>
+                  <td>
+                    CPU runtime —
+                    <code class="inline-code">--compile</code> /
+                    <code class="inline-code">--run-bc</code>
+                  </td>
+                </tr>
+                <tr>
+                  <td><code class="inline-code">bin/spark-bc-gui</code></td>
+                  <td>
+                    Graphical compile + decompile (tkinter; real
+                    <code class="inline-code">--compile</code> +
+                    <code class="inline-code">bc_dump</code>)
+                  </td>
+                </tr>
+                <tr>
+                  <td><code class="inline-code">bin/spark-ide</code></td>
+                  <td>
+                    Opens the Spark workspace and installs the language
+                    extension in Cursor or VS Code
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <code class="inline-code">bin/spark-helper-*</code>
+                  </td>
+                  <td>
+                    Compile, decompile, opcode sheet, fixture lint helpers
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <code class="inline-code">bin/spark-shadow-*</code>
+                  </td>
+                  <td>
+                    Shadow copy / build / verify for isolated rebuilds
+                  </td>
+                </tr>
+                <tr>
+                  <td><code class="inline-code">helpers/</code></td>
+                  <td>Helper scripts (also under <code class="inline-code">tools/spark_helpers</code>)</td>
+                </tr>
+                <tr>
+                  <td><code class="inline-code">shadows/</code></td>
+                  <td>Shadow utilities (also <code class="inline-code">tools/spark_shadows</code>)</td>
+                </tr>
+                <tr>
+                  <td><code class="inline-code">tools/</code></td>
+                  <td>BC dump, helpers, shadows, eval notes</td>
+                </tr>
+                <tr>
+                  <td><code class="inline-code">runtime/</code></td>
+                  <td>
+                    Python package, dump tools, published
+                    <code class="inline-code">.sparkbc</code> examples
+                  </td>
+                </tr>
+                <tr>
+                  <td><code class="inline-code">sdk/</code></td>
+                  <td>Docs, <code class="inline-code">spark_rt.h</code>, examples, APIs</td>
+                </tr>
+                <tr>
+                  <td><code class="inline-code">ide/</code></td>
+                  <td>VS Code / Cursor extension + workspace</td>
+                </tr>
+                <tr>
+                  <td><code class="inline-code">gui/</code></td>
+                  <td>GUI sources</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2 id="helpers-shadows">Helpers and shadows</h2>
+          <pre class="doc__pre"><code class="language-bash">./bin/spark-helper-compile sdk/examples/spark_builder.spark /tmp/x.sparkbc
+./bin/spark-helper-decompile /tmp/x.sparkbc | head
+./bin/spark-helper-opcodes
+./bin/spark-helper-fixture-lint examples/fixtures/train/dataset.jsonl
+
+./bin/spark-shadow-copy mybuild
+./bin/spark-shadow-build mybuild
+./bin/spark-shadow-verify mybuild   # may exit 2 on golden mismatch</code></pre>
+          <p>
+            Helpers wrap the same real
+            <code class="inline-code">--compile</code> /
+            <code class="inline-code">bc_dump</code> paths as the GUI.
+            Shadows mirror sources under
+            <code class="inline-code">out/shadow/&lt;name&gt;/</code> for
+            isolated rebuilds. If sibling K merges a richer tools tree,
+            <code class="inline-code">make sdk-pack</code> copies
+            <code class="inline-code">tools/spark_kit</code> (or
+            <code class="inline-code">tools/helpers</code> /
+            <code class="inline-code">tools/shadows</code>) when present.
+          </p>
+
+          <h2 id="launch-gui">Launch the graphical compiler / decompiler</h2>
+          <p>Needs a display and Python 3 with tkinter (<code class="inline-code">python3-tk</code> on Debian/Ubuntu).</p>
+          <pre class="doc__pre"><code class="language-bash"># From the unpacked pack:
+./bin/spark-bc-gui
+
+# From a source checkout:
+make spark-bc-gui
+# or:
+PYTHONPATH=tools:python ./tools/spark_bc_gui/launch.sh</code></pre>
+          <p>
+            In the window: edit <code class="inline-code">.spark</code> source →
+            <strong>Compile → .sparkbc</strong>, or open a
+            <code class="inline-code">.sparkbc</code> → readable dump
+            (disassemble / inspect). The GUI calls the same bootstrap
+            <code class="inline-code">--compile</code> and
+            <code class="inline-code">sparklang.model_lab.bc_dump</code> paths
+            as the CLI — not a mock.
+          </p>
+
+          <h2 id="launch-ide">Launch the IDE</h2>
+          <pre class="doc__pre"><code class="language-bash">./bin/spark-ide
+# or from source:
+make ide</code></pre>
+          <p>
+            See also
+            <a href="/docs/ide.html">IDE status</a> for language ops already
+            wired in-tree.
+          </p>
+
+          <h2 id="verify">Verify</h2>
+          <pre class="doc__pre"><code class="language-bash">make test-sdk-pack   # headless: pack paths + compile/decompile smoke</code></pre>
+
+          <p>
+            Related:
+            <a href="/docs/spark-builder.html">SPARK_BC builder</a> ·
+            <a href="/downloads.html">All downloads</a>.
+          </p>
+        </article>
+      </main>
+    </div>
+    <script src="/js/site.js?v=pos060" defer></script>
+  </body>
+</html>

@@ -38,3 +38,7 @@ jobs:
 
       - name: make test-serve-api
         run: make test-serve-api
+
+      # SDK + IDE + GUI download pack (manifest paths + headless core).
+      - name: make test-sdk-pack
+        run: make test-sdk-pack

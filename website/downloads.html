@@ -165,6 +165,35 @@
           <span id="manifest-updated"></span>
         </p>
 
+        <h2 id="sdk-ide-gui-pack">SDK + IDE + GUI pack (recommended for developers)</h2>
+        <p>
+          One tarball with the <strong>CPU runtime</strong>,
+          <strong>SDK</strong> (docs, headers, examples, Python APIs),
+          <strong>IDE</strong> (VS Code / Cursor extension + workspace), a
+          <strong>graphical</strong> SPARK_BC compile / decompile app
+          (<code class="inline-code">./bin/spark-bc-gui</code>), plus
+          <strong>helpers</strong>, <strong>shadows</strong>, and BC dump
+          tools.
+          Full page:
+          <a href="/docs/sdk-ide-download.html">SDK + IDE download</a>.
+        </p>
+        <pre class="doc__pre"><code class="language-bash">make sdk-pack    # or: make dist
+# → out/sdk-pack/sparklang-sdk-*.tar.gz
+tar -xzf out/sdk-pack/sparklang-sdk-*.tar.gz
+cd sparklang-sdk-*
+./bin/spark-bc-gui              # graphical compile + decompile
+./bin/spark-helper-compile …    # CLI helper
+./bin/spark-shadow-copy mybuild # isolated rebuild
+./bin/spark-ide                 # Cursor / VS Code + extension</code></pre>
+        <p>
+          Manifest mirror:
+          <a href="/downloads/sdk-pack-MANIFEST.json"
+            ><code class="inline-code">sdk-pack-MANIFEST.json</code></a
+          >
+          (tarball mirrored when under size cap). CPU only — never RTX PRO
+          6000. Does not claim beat Claude.
+        </p>
+
         <h2 id="ai-quick-start-linux">AI quick start — Linux</h2>
         <p>
           <strong>Graphical:</strong> download the
