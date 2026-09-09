@@ -75,7 +75,7 @@
 <p>All notable user-facing releases of <strong>SparkLang</strong> (the Spark programming
 language) are listed here. Site and installers track
 <code>website/downloads/manifest.json</code>.</p>
-<h2>0.6.45 — 2026-09-09</h2>
+<h2>0.6.46 — 2026-09-09</h2>
 <ul>
 <li><strong>Docs honesty after D+M:</strong> rebase
   <a href="docs/ATTENTION_FORWARD.md">ATTENTION_FORWARD.md</a>,
@@ -86,6 +86,17 @@ language) are listed here. Site and installers track
   merged D (#28) layer-0 attn train+serve and M (#30) owned
   TinyCoder. Still <strong>not</strong> beat Claude; never 6000; no RoPE /
   multi-layer / KV-cache claim.</li>
+</ul>
+<h2>0.6.45 — 2026-09-09</h2>
+<ul>
+<li><strong>UI polish / smooth feel:</strong> shared design tokens
+  (<code>website/css/tokens.css</code> + <code>tokens.json</code>) with 150–250ms motion,
+  focus rings, IDE dark chrome vars. Site micro-interactions
+  (hover lift, menu fade, docs TOC, loop strip) respect
+  <code>prefers-reduced-motion</code>. Web IDE shell demo at <code>/ide-web.html</code>
+  (<code>ide-shell.css</code>). Desktop <code>spark-bc-gui</code> applies mirrored theme
+  (<code>tools/spark_bc_gui/theme.py</code>). Original Spark aesthetic — not a
+  third-party clone; does not beat Claude; never 6000.</li>
 </ul>
 <h2>0.6.44 — 2026-09-09</h2>
 <ul>
