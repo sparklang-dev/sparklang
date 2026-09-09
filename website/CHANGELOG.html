@@ -73,6 +73,24 @@
 <p>All notable user-facing releases of <strong>SparkLang</strong> (the Spark programming
 language) are listed here. Site and installers track
 <code class="inline-code">website/downloads/manifest.json</code>.</p>
+<h2>0.6.32 — 2026-09-09</h2>
+<ul>
+<li><strong>Multi-outer CPU SGD + checkpoint:</strong> <code class="inline-code">STEP</code> /
+  <code class="inline-code">apply_sgd_step</code>
+  runs outer×inner CE on a larger train fixture (36 pairs), optional
+  embed grads, writes <code class="inline-code">checkpoint.json</code> with an honest
+  <code class="inline-code">loss_curve</code>.
+  Defaults: <code class="inline-code">--outer 4 --inner 8</code>. Gate:
+  <code class="inline-code">make test-sparkbc</code>,
+  <code class="inline-code">make sparkbc-e2e</code>,
+  <code class="inline-code">make spark-sgd-proof</code> (SGD then
+  measurement-only <code class="inline-code">spark-eval</code>).
+  <strong>Not beat Claude.</strong> Never 6000.</li>
+<li><strong>Serve MLP0:</strong> tiny CPU forward uses layer-0 SwiGLU MLP when
+  tensors exist (<code class="inline-code">embed→mlp0→norm→lm_head</code>). Still not
+  production.</li>
+<li>Docs: <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</li>
+</ul>
 <h2>0.6.31 — 2026-09-08</h2>
 <ul>
 <li><strong>STEP CPU SGD (B-lane):</strong> <code class="inline-code">--run-bc</code> <code class="inline-code">STEP</code> (<code class="inline-code">0x28</code>) runs real

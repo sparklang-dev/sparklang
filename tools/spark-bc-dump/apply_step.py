@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""CPU SGD STEP weight update for bootstrap --run-bc."""
+"""CPU multi-outer SGD STEP weight update for bootstrap --run-bc."""
 
 from __future__ import annotations
 
@@ -15,11 +15,12 @@ from sparklang.model_lab.weights import apply_sgd_step
 
 
 def main() -> int:
-    """Apply one real CPU SGD STEP to Spark-created safetensors."""
+    """Apply multi-outer CPU SGD STEP to Spark-created safetensors."""
     ap = argparse.ArgumentParser(
         description=(
-            "CPU SGD on Spark lm_head from fixture JSONL "
-            "(trained=true; not_sgd=false; not beat Claude)"
+            "CPU multi-outer SGD on Spark lm_head(+embed) from "
+            "fixture JSONL (trained=true; not_sgd=false; "
+            "not beat Claude; never 6000)"
         )
     )
     ap.add_argument("--sparkbc", required=True, help="SPARK_BC seed")
@@ -43,13 +44,29 @@ def main() -> int:
         "--lr",
         type=float,
         default=0.08,
-        help="SGD learning rate",
+        help="SGD learning rate for lm_head",
     )
     ap.add_argument(
         "--inner",
         type=int,
-        default=12,
-        help="inner SGD iterations per STEP",
+        default=8,
+        help="inner SGD iterations per outer",
+    )
+    ap.add_argument(
+        "--outer",
+        type=int,
+        default=4,
+        help="outer epochs per STEP (loss curve points)",
+    )
+    ap.add_argument(
+        "--no-train-embed",
+        action="store_true",
+        help="update lm_head only (default also trains embed)",
+    )
+    ap.add_argument(
+        "--checkpoint",
+        default="",
+        help="checkpoint.json path (default: beside weights)",
     )
     ap.add_argument(
         "--source",
@@ -69,6 +86,9 @@ def main() -> int:
         dataset=args.dataset,
         lr=args.lr,
         inner_steps=args.inner,
+        outer_steps=args.outer,
+        train_embed=not args.no_train_embed,
+        checkpoint=args.checkpoint or None,
         source=args.source,
         command=args.command,
     )
@@ -89,6 +109,12 @@ def main() -> int:
     ):
         print(
             "error: SGD STEP loss did not drop",
+            file=sys.stderr,
+        )
+        return 2
+    if result.get("beats_claude") is not False:
+        print(
+            "error: beats_claude must stay false",
             file=sys.stderr,
         )
         return 2

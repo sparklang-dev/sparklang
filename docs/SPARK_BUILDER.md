@@ -11,13 +11,14 @@ files under `docs/examples/`.
 |----------|------------|---------------------|
 | **SPARK_BC** (`.sparkbc`) | Orchestration **ISA** — packed magic `SPBC`, string/const pools, opcode stream (`MODEL` / `ASK` / `PRINT` / `TRAIN` / `STEP` / `TRAIN_STATUS` / `HALT`, …) | Neural weights, a tensor ISA, HuggingFace, CUDA kernels |
 | **Init safetensors** | Spark-created tensors **derived from** those bytecode bytes (Xavier / fan-in; embed rows mix in magic + opcodes + strings) | A Claude-beating checkpoint, an imported hub weight dump |
-| **STEP weights** | Tiny **CPU SGD** on Spark `lm_head` from fixture JSONL (`trained=true`, `not_sgd=false`) | A production LLM; beating Claude |
+| **STEP weights** | Multi-outer **CPU SGD** on Spark `lm_head`(+embed) from fixture JSONL (`trained=true`, `not_sgd=false`, `checkpoint.json` loss curve) | A production LLM; beating Claude |
 
 Bytecode is the **training program + orchestration**. Init tensors stay
 `trained: false` until `STEP` runs. Emitting `TRAIN` alone ≠ trained.
-`STEP` now applies **real CPU SGD** on tiny Spark tensors (fixture
-batch; loss must drop or fail loud). **Does not beat Claude.** No
-6000 / GPU-1 train. Do not import Claude or Grok weights.
+`STEP` now applies **multi-outer CPU SGD** on tiny Spark tensors
+(larger fixture; loss curve in `checkpoint.json`; loss must drop or
+fail loud). **Does not beat Claude.** No 6000 / GPU-1 train. Do not
+import Claude or Grok weights.
 
 **ISA SoT:** [SPARK_BC.md](SPARK_BC.md).
 
@@ -33,10 +34,11 @@ batch; loss must drop or fail loud). **Does not beat Claude.** No
 4. **`--run-bc`** — `./spark-bootstrap --run-bc ….sparkbc` **or**
    `./spark --run-bc ….sparkbc` (GAS thin fork → bootstrap bc_vm)
    runs `TRAIN` as a dry job accept (`trained=false` until STEP),
-   then **`STEP` as tiny CPU SGD** on Spark safetensors
-   (`ARTIFACT` + `weights.safetensors`; `trained=true` /
-   `not_sgd=false` only after real grads; loss must drop). Helper:
-   `tools/spark-bc-dump/apply_step.py` → `apply_sgd_step`.
+   then **`STEP` as multi-outer CPU SGD** on Spark safetensors
+   (`ARTIFACT` + `weights.safetensors` + `checkpoint.json`;
+   `trained=true` / `not_sgd=false` only after real grads; loss must
+   drop). Helper: `tools/spark-bc-dump/apply_step.py` →
+   `apply_sgd_step` (outer×inner CE; optional embed grads).
    **Not beat Claude.** No 6000.
 5. **GAS dry-run + wrappers** — `./spark --dry-run file.spark` runs
    train verbs from **source**. `./spark --run-bc` and
@@ -141,14 +143,17 @@ txt/json dumps there when regenerating the site; do not invent hex.
 ./spark --run-bc docs/examples/spark-train-step.sparkbc
 # TRAIN accept is still a dry job marker; STEP runs CPU SGD.
 # trained=true / not_sgd=false only after apply_sgd_step grads.
-# tools/spark-bc-dump/apply_step.py → apply_sgd_step (not hash toy).
+# tools/spark-bc-dump/apply_step.py → apply_sgd_step
+# (multi-outer CE + checkpoint.json; not hash toy).
 ls -la out/train/job-dry-001/ARTIFACT \
-  out/train/job-dry-001/weights.safetensors
+  out/train/job-dry-001/weights.safetensors \
+  out/train/job-dry-001/checkpoint.json
 
 # Proof STEP SGD (clean job dir first):
-rm -f out/train/job-dry-001/{ARTIFACT,weights.safetensors}
+rm -f out/train/job-dry-001/{ARTIFACT,weights.safetensors,checkpoint.json}
 ./spark --run-bc docs/examples/spark-train-step.sparkbc
 # → weights.safetensors (step_n>=1, loss_after < loss_before)
+# → checkpoint.json (loss_curve; beats_claude=false)
 ```
 
 ### 4) GAS source dry-run (not bytecode emit)
@@ -188,7 +193,8 @@ PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
   --command './spark-bootstrap --compile examples/spark_builder.spark -o docs/examples/spark-builder.sparkbc' \
   --serve /tmp/serve-dry-001
 # → /tmp/serve-dry-001/SERVE (forward=true, trained=false)
-#    + weights.safetensors (init if missing)
+#    path embed_mean_pool->mlp0->rms_norm->lm_head when layer-0
+#    MLP tensors exist; + weights.safetensors (init if missing)
 # Or: ./spark-serve docs/examples/spark-builder.sparkbc /tmp/serve-dry-001
 ```
 
@@ -198,8 +204,16 @@ wrapper `scripts/sparkbc-e2e`). Compiles
 `examples/spark_train_step.spark`, dumps TRAIN/STEP decode, runs
 `./spark-bootstrap --run-bc` **and** `./spark --run-bc`, asserts
 `out/train/job-dry-001/ARTIFACT` (`not_sgd=false`, `trained=true`,
-`step_n=1`). `make test-sparkbc` asserts STEP weights +
-`loss_after < loss_before` (real SGD, not hash toy). **Not beat Claude.**
+`step_n=1`) + `checkpoint.json`. `make test-sparkbc` asserts STEP
+weights + `loss_after < loss_before` (multi-outer SGD). **Not beat
+Claude.**
+
+Scale proof (SGD then measurement-only eval):
+
+```bash
+make spark-sgd-proof
+# → prints loss curve + make spark-eval WEIGHTS=… (scores only)
+```
 
 
 ## Eval harness (measure later — not beat Claude)
@@ -269,9 +283,9 @@ make test-model-lab
 | GAS `./spark --run-bc` | **implemented** — thin fork → bootstrap bc_vm |
 | Dry ARTIFACT / `--run-bc` TRAIN accept | **implemented** — fixture until STEP |
 | Init safetensors from SPARK_BC | **implemented** — `trained: false` until STEP |
-| STEP CPU SGD weights | **implemented** (`weights.safetensors`; `trained=true`; `not_sgd=false`; loss must drop) |
-| Tiny CPU serve forward | **implemented** (`dump.py --serve` → `SERVE` with `forward=true`; `trained` from weights meta; not production) |
-| Beats Claude / production LLM | **not** — multi-stage later; tiny SGD ≠ Claude |
+| STEP CPU SGD weights | **implemented** (multi-outer; `weights.safetensors` + `checkpoint.json` loss curve; `trained=true`; `not_sgd=false`; loss must drop) |
+| Tiny CPU serve forward | **implemented** (`dump.py --serve` → `SERVE` with `forward=true`; optional layer-0 MLP; `trained` from weights meta; not production) |
+| Beats Claude / production LLM | **not** — multi-stage later; multi-outer SGD ≠ Claude |
 
 | Cloudflare Pages deploy | Prefer Wrangler OAuth (`npx wrangler pages deploy website …`); if CLI/auth absent → **dashboard** upload of `website/` from a known SHA (see [RELEASE.md](RELEASE.md) step 5) |
 

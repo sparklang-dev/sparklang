@@ -5,6 +5,18 @@ language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
 
+## 0.6.32 — 2026-09-09
+
+- **Multi-outer CPU SGD + checkpoint:** `STEP` / `apply_sgd_step`
+  runs outer×inner CE on a larger train fixture (36 pairs), optional
+  embed grads, writes `checkpoint.json` with an honest `loss_curve`.
+  Defaults: `--outer 4 --inner 8`. Gate: `make test-sparkbc`,
+  `make sparkbc-e2e`, `make spark-sgd-proof` (SGD then
+  measurement-only `spark-eval`). **Not beat Claude.** Never 6000.
+- **Serve MLP0:** tiny CPU forward uses layer-0 SwiGLU MLP when
+  tensors exist (`embed→mlp0→norm→lm_head`). Still not production.
+- Docs: [SPARK_BUILDER.md](docs/SPARK_BUILDER.md).
+
 ## 0.6.31 — 2026-09-08
 
 - **STEP CPU SGD (B-lane):** `--run-bc` `STEP` (`0x28`) runs real

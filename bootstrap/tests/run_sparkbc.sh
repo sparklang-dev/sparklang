@@ -573,9 +573,11 @@ print('first32', ' '.join('%02x' % b for b in bc['raw'][:32]))
        echo "$step_run" | grep -q 'cpu-sgd' &&
        test -f "$marker" &&
        test -f "$weights" &&
+       test -f "out/train/job-dry-001/checkpoint.json" &&
        grep -q 'step_n=1' "$marker" &&
        grep -q 'trained=true' "$marker" &&
        grep -q 'not_sgd=false' "$marker" &&
+       grep -q 'checkpoint=' "$marker" &&
        grep -q 'weights=' "$marker"; then
       echo "PASS sparkbc_train_step"
     else

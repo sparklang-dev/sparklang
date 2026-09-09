@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # SparkBC e2e gate: compile spark_train_step → dump TRAIN/STEP →
 # bootstrap --run-bc → GAS ./spark --run-bc → assert ARTIFACT.
-# STEP runs tiny CPU SGD (trained=true). Not beat Claude.
+# STEP runs multi-outer CPU SGD (trained=true). Not beat Claude.
 #
 # STEP weights + loss drop are covered by make test-sparkbc.
 # This gate asserts ARTIFACT + opcode stream.
@@ -184,7 +184,26 @@ grep -q 'step_n=1' "$MARKER" || {
   cat "$MARKER"
   exit 1
 }
-echo "PASS ARTIFACT ($MARKER)"
+grep -q 'checkpoint=' "$MARKER" || {
+  echo "FAIL sparkbc-e2e: ARTIFACT missing checkpoint="
+  cat "$MARKER"
+  exit 1
+}
+CKPT="out/train/job-dry-001/checkpoint.json"
+if [[ ! -f "$CKPT" ]]; then
+  echo "FAIL sparkbc-e2e: missing $CKPT"
+  exit 1
+fi
+PYTHONPATH=python python3 -c "
+import json
+c=json.load(open('$CKPT'))
+assert c['loss_after'] < c['loss_before'], c
+assert c['beats_claude'] is False, c
+assert c['device'] == 'cpu', c
+assert len(c.get('loss_curve') or []) >= 2, c
+print('checkpoint loss', c['loss_before'], '->', c['loss_after'])
+"
+echo "PASS ARTIFACT ($MARKER) + checkpoint"
 
 # Optional: SPARKBC_E2E_REQUIRE_STEP_WEIGHTS=1 also asserts weights here.
 WEIGHTS="out/train/job-dry-001/weights.safetensors"

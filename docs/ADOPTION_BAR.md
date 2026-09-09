@@ -31,7 +31,7 @@ Not Apache Spark. Not AdaCore SPARK.
 | Packet capture / MITM / browser automation | **won't (focus)** | Still in LANGUAGE; de-emphasized on landing — prefer LSP + highlighting |
 | Homegrown IDE as product chrome | **won't (focus) / keep tree** | Prefer LSP for editor story; language `ide` ops + IDE tree **kept**. Hard-delete OWNER-CONFIRM **revoked** 2026-09-02 (rename yes; delete no) |
 | Model-build as training claim | **won't** | Blueprint / eval sugar only; demoted on landing |
-| SPARK_BC Builder factory | **done (tiny SGD)** | Spark → `--compile` → `.sparkbc` with `TRAIN`/`STEP`/`TRAIN_STATUS`; `--run-bc` TRAIN dry + STEP CPU SGD (bootstrap or GAS); Spark-created init + post-STEP `trained=true` / `not_sgd=false` when grads apply. GAS wrappers **implemented**. **Not beat Claude.** Page: [SPARK_BUILDER.md](SPARK_BUILDER.md) / `/docs/spark-builder.html` |
+| SPARK_BC Builder factory | **done (multi-outer SGD)** | Spark → `--compile` → `.sparkbc` with `TRAIN`/`STEP`/`TRAIN_STATUS`; `--run-bc` TRAIN dry + STEP multi-outer CPU SGD (bootstrap or GAS); `checkpoint.json` loss curve; post-STEP `trained=true` / `not_sgd=false` when grads apply. Serve optional MLP0. GAS wrappers **implemented**. **Not beat Claude.** Page: [SPARK_BUILDER.md](SPARK_BUILDER.md) / `/docs/spark-builder.html` |
 | Production receptionist workflow | **goal** | `examples/receptionist_goal.spark` marked `[goal]` — dry sketch, not a live claim |
 
 ## Escape hatch (P0 design)
