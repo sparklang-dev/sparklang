@@ -135,6 +135,7 @@ MD_LINK_MAP = {
     "SPARK_BC.md": "/docs/self-host.html",
     "SPARK_BUILDER.md": "/docs/spark-builder.html",
     "NATIVE_NETWORK_WEB.md": "/docs/native-network-web.html",
+    "TOKENIZER.md": "/docs/tokenizer.html",
 }
 
 
@@ -326,6 +327,13 @@ def main() -> int:
             "Native network + web",
             "Network/web ops — de-emphasized vs http get/post roadmap.",
             "nn",
+        )
+        render(
+            docs / "TOKENIZER.md",
+            out / "tokenizer.html",
+            "Tokenizer — BPE seed vocab",
+            "From-nothing byte-level BPE seed vocab for Spark.",
+            "",
         )
     return 0
 
