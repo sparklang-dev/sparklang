@@ -22,6 +22,15 @@ SPARK_BC is an **orchestration ISA** (opcodes like `TRAIN` /
 `STEP` / `HALT`). It is **not** neural weights, not CUDA, not a
 HuggingFace export.
 
+## Compile path diagram
+
+![Compile path](/docs/images/diagram-compile-path.svg)
+
+*Caption: `.spark` → bootstrap/GAS → `.sparkbc` → run/train/serve.
+Full decompile diagrams + screenshots:
+[DECOMPILE.md](DECOMPILE.md). LLM assist layout:
+[research/LLM_DECOMPILE.md](research/LLM_DECOMPILE.md).*
+
 ## Bootstrap emit (SoT)
 
 ```bash

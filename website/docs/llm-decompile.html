@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LLM decompile research — Spark</title>
+    <meta name="description" content="Survey of LLM decompile tools vs Spark SPARK_BC deterministic dump — citations, limits, no beat Claude." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/css/tokens.css?v=jlane039" />
+    <link rel="stylesheet" href="/css/site.css?v=jlane039" />
+  </head>
+  <body class="doc-page">
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="site-brand" href="/" aria-label="Spark home">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z" fill="currentColor" />
+          </svg>
+          Spark
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+        </button>
+        <div class="header-nav-wrap">
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <ul class="nav-primary">
+              <li><a href="/learn/">Learn</a></li>
+              <li><a href="/docs/language.html">Docs</a></li>
+              <li><a href="/downloads.html">Download</a></li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">More</button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/factory.html">Factory hub</a></li>
+                  <li><a href="/docs/diagrams.html">Diagrams</a></li>
+                  <li><a href="/docs/spark-builder.html">Builder</a></li>
+                  <li><a href="/docs/compile.html">Compile</a></li>
+                  <li><a href="/docs/decompile.html">Decompile</a></li>
+                  <li><a href="/docs/llm-decompile.html">LLM research</a></li>
+                  <li><a href="/docs/spark-bc.html">Opcodes / ISA</a></li>
+                  <li><a href="/docs/build-models.html">Build models</a></li>
+                  <li><a href="/docs/train-loop.html">Train loop</a></li>
+                  <li><a href="/docs/architecture.html">Architecture</a></li>
+                  <li><a href="/docs/attention-forward.html">Attention honesty</a></li>
+                  <li><a href="/docs/tokenizer.html">Tokenizer</a></li>
+                  <li><a href="/docs/serve.html">Serve</a></li>
+                  <li><a href="/docs/eval.html">Eval</a></li>
+                  <li><a href="/docs/sparkbc-make.html">Make targets</a></li>
+                  <li><a href="/docs/ci-pages.html">CI / Pages</a></li>
+                  <li><a href="/docs/adoption-bar.html">Adoption bar</a></li>
+                  <li><a href="/docs/ai-models.html">AI models</a></li>
+                  <li><a href="/docs/programming-guide.html">Programming guide</a></li>
+                  <li><a href="/docs/ide.html">IDE</a></li>
+                  <li><a href="/docs/self-host.html">Contributor internals</a></li>
+                </ul>
+              </li>
+            </ul>
+            <a href="/playground.html" class="nav-cta">Try</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <div class="shell doc-layout">
+      <aside class="doc-sidebar" aria-label="Table of contents">
+        <p class="doc-sidebar__title">On this page</p>
+        <nav id="doc-toc-list"></nav>
+      </aside>
+      <main class="doc-main">
+      <nav class="doc__nav" aria-label="Docs">
+        <a href="/learn/">Learn</a>
+        <a href="/docs/factory.html">Factory hub</a>
+        <a href="/docs/diagrams.html">Diagrams</a>
+        <a href="/docs/spark-builder.html">Builder</a>
+        <a href="/docs/compile.html">Compile</a>
+        <a href="/docs/decompile.html">Decompile</a>
+        <a href="/docs/llm-decompile.html" aria-current="page">LLM research</a>
+        <a href="/docs/spark-bc.html">Opcodes / ISA</a>
+        <a href="/docs/build-models.html">Build models</a>
+        <a href="/docs/train-loop.html">Train loop</a>
+        <a href="/docs/architecture.html">Architecture</a>
+        <a href="/docs/tokenizer.html">Tokenizer</a>
+        <a href="/docs/serve.html">Serve</a>
+        <a href="/docs/eval.html">Eval</a>
+        <a href="/docs/sparkbc-make.html">Make targets</a>
+        <a href="/docs/ci-pages.html">CI / Pages</a>
+        <a href="/docs/adoption-bar.html">Adoption bar</a>
+        <a href="/docs/language.html">Language</a>
+        <a href="/docs/programming-guide.html">Programming guide</a>
+        <a href="/downloads.html">Downloads</a>
+      </nav>      <article class="doc__body">
+        <h1 id="research-llms-that-can-decompile-and-how-that-relates-to-spark">Research: LLMs that can decompile (and how that relates to Spark)</h1>
+        <p>Engineer-grade survey for <strong>Spark / SparkLang</strong>. Verified with public
+        papers and tools (2024–2026). Honest about limits.</p>
+        <p><strong>SoT for SPARK_BC remains deterministic</strong> (<code class="inline-code">--compile</code>, <code class="inline-code">dump.py</code>,
+        <code class="inline-code">--run-bc</code>). Optional LLM assist is a <strong>later lane</strong> for naming /
+        comments / drafts — never the authority for bytecode bytes.</p>
+        <p>Companion how-to: <a href="/docs/decompile.html">DECOMPILE.md</a>
+        (<a href="/docs/decompile.html">/docs/decompile.html</a>).
+        Mermaid overview: <a href="/docs/diagrams.html">DIAGRAMS.md</a>
+        (<a href="/docs/diagrams.html">/docs/diagrams.html</a>).</p>
+        <p>Does <strong>not</strong> beat Claude. <strong>Never</strong> 6000. <strong>Never</strong> claim any LLM
+        perfectly decompiles SPARK_BC.</p>
+        <h2 id="diagrams-function-layout">Diagrams (function layout)</h2>
+        <h3 id="deterministic-spark-vs-llm-assist">Deterministic Spark vs LLM assist</h3>
+        <p><img class="doc__img" alt="Deterministic vs LLM" src="/docs/images/diagram-deterministic-vs-llm.svg" /></p>
+        <p><em>Caption: Spark SoT (left) vs optional LLM assist (right). Assist may
+        suggest names or draft source; it must not pack or silently rewrite
+        <code class="inline-code">.sparkbc</code>.</em></p>
+        <h3 id="how-llms-typically-assist-compile-decompile">How LLMs typically assist compile / decompile</h3>
+        <p><img class="doc__img" alt="LLM assist flows" src="/docs/images/diagram-llm-compile-decompile.svg" /></p>
+        <p><em>Caption: Industry pattern — decompile: bytes/asm → LLM guess →
+        human verify. Compile assist: intent → LLM draft → </em><em>Spark</em><em>
+        deterministic <code class="inline-code">--compile</code> → dump/<code class="inline-code">--run-bc</code> check. Orange = guessed;
+        green = SoT or human gate.</em></p>
+        <h3 id="spark-tool-paths-context">Spark tool paths (context)</h3>
+        <p><img class="doc__img" alt="Compile path" src="/docs/images/diagram-compile-path.svg" /></p>
+        <p><img class="doc__img" alt="Decompile path" src="/docs/images/diagram-decompile-path.svg" /></p>
+        <p><em>Caption: Same diagrams as the <a href="/docs/decompile.html">decompile how-to</a> —
+        where helpers / GUI sit relative to SPARK_BC.</em></p>
+        <h2 id="survey-cited">Survey (cited)</h2>
+        <h3 id="specialized-decompile-llms">Specialized decompile LLMs</h3>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Project</th>
+        <th>What it is</th>
+        <th>Notes / limits</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><strong>LLM4Decompile</strong></td>
+        <td>Open LLM series (≈1.3B–33B) trained for binary→C; End + Ref (refine Ghidra)</td>
+        <td>EMNLP 2024. Stronger re-exec than GPT-4o/Ghidra on HumanEval-Decompile / ExeBench in paper — still far from perfect; obfuscation resists both LLM and Ghidra. <a href="https://arxiv.org/abs/2403.05286">arXiv:2403.05286</a> · <a href="https://aclanthology.org/2024.emnlp-main.203.pdf">ACL PDF</a> · <a href="https://github.com/albertan017/LLM4Decompile">GitHub</a></td>
+        </tr>
+        <tr>
+        <td><strong>Nova</strong></td>
+        <td>Generative LLM for assembly (hierarchical attention + contrastive learning)</td>
+        <td>ICLR 2025. Improves binary code recovery / similarity vs prior; not a SPARK_BC tool. <a href="https://openreview.net/forum?id=4ytRL3HJrq">OpenReview</a> · <a href="https://github.com/lt-asset/nova">GitHub lt-asset/nova</a></td>
+        </tr>
+        <tr>
+        <td><strong>SK2Decompile</strong></td>
+        <td>Two-phase “skeleton → skin” (structure then identifiers) on LLM4Decompile-class bases</td>
+        <td>arXiv 2025-09. Separates structure recovery from naming; RL objectives for compilability vs naming. <a href="https://arxiv.org/abs/2509.22114">arXiv:2509.22114</a></td>
+        </tr>
+        <tr>
+        <td><strong>Decompile-Bench</strong></td>
+        <td>~2M binary–source function pairs + eval set</td>
+        <td>NeurIPS 2025 poster track. Fine-tuning improves re-exec ≈20% on their metrics — still partial. <a href="https://arxiv.org/abs/2505.12668">arXiv:2505.12668</a></td>
+        </tr>
+        <tr>
+        <td><strong>AutoDecompiler</strong></td>
+        <td>RL multi-turn refine with compile/exec feedback</td>
+        <td>arXiv 2026. Treats decompile as iterative repair, not one-shot. <a href="https://arxiv.org/pdf/2606.16162">arXiv PDF</a></td>
+        </tr>
+        <tr>
+        <td><strong>D-LIFT / Idioms / Ref-Decomp / DecLLM</strong></td>
+        <td>Pseudo-code refine, context, iterative repair</td>
+        <td>Cited in AutoDecompiler / SK2 surveys; functional correctness often fails ~half of HumanEval-Decompile-class tasks in reported baselines</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <h3 id="traditional-decompiler-general-llm-assistants">Traditional decompiler + general LLM assistants</h3>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Tool / pattern</th>
+        <th>Role</th>
+        <th>Cite</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><strong>Ghidra / IDA / Binary Ninja</strong></td>
+        <td>Deterministic (or heuristic) decompile → pseudocode</td>
+        <td>Industry SoT for native RE; LLM papers refine <em>their</em> output</td>
+        </tr>
+        <tr>
+        <td><strong>GhidraMCP / ReVa / Better-Ghidra-MCP / GhidraGPT</strong></td>
+        <td>MCP or plugin bridges so Claude/GPT/Codex rename, comment, explain</td>
+        <td>e.g. <a href="https://github.com/LaurieWired/GhidraMCP">LaurieWired/GhidraMCP</a>, <a href="https://github.com/cyberkaida/reverse-engineering-assistant">cyberkaida/reverse-engineering-assistant</a>, <a href="https://github.com/TheFlashBold/Better-Ghidra-MCP">Better-Ghidra-MCP</a>, <a href="https://github.com/weirdmachine64/GhidraGPT">GhidraGPT</a></td>
+        </tr>
+        <tr>
+        <td><strong>Claude / GPT / Codex as RE assistants</strong></td>
+        <td>Read dump/pseudocode; suggest names, summaries, patches</td>
+        <td>Useful for readability; <strong>not</strong> proven SPARK_BC→<code class="inline-code">.spark</code> fidelity</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <h3 id="bytecode-other-re-note">Bytecode / other RE note</h3>
+        <p>Native x86/ARM C recovery dominates the literature. JVM/Python/WASM
+        and custom ISAs (including <strong>SPARK_BC</strong>) are <strong>under-covered</strong>. Do
+        not assume LLM4Decompile-style models transfer to Spark orchestration
+        opcodes without new data and evals.</p>
+        <h2 id="how-this-maps-to-spark-spark-bc">How this maps to Spark SPARK_BC</h2>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Layer</th>
+        <th>Spark today</th>
+        <th>LLM role (optional later)</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td>Pack / unpack bytes</td>
+        <td><code class="inline-code">--compile</code> / <code class="inline-code">dump.py</code></td>
+        <td><strong>None</strong> as SoT</td>
+        </tr>
+        <tr>
+        <td>Mnemonic listing</td>
+        <td>Deterministic opcode tables</td>
+        <td>Could annotate comments</td>
+        </tr>
+        <tr>
+        <td>Behavior</td>
+        <td><code class="inline-code">--run-bc</code>, STEP, serve</td>
+        <td>Could explain JSON lines</td>
+        </tr>
+        <tr>
+        <td>Source recovery</td>
+        <td><strong>Not implemented</strong></td>
+        <td>Guessed <code class="inline-code">.spark</code> would need human + recompile gate</td>
+        </tr>
+        <tr>
+        <td>Naming</td>
+        <td>String pool as compiled</td>
+        <td>LLM rename suggestions only</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <p><strong>Deterministic disasm vs LLM naming:</strong> Spark dump is the ground
+        truth of what is in the file. An LLM may invent prettier names that
+        are wrong. Always recompile and re-dump to verify.</p>
+        <h2 id="recommendations-for-spark">Recommendations for Spark</h2>
+        <ol class="doc__ol">
+        <li>Keep <strong>deterministic decompiler/inspect</strong> (<code class="inline-code">dump.py</code>, <code class="inline-code">--run-bc</code>)
+           as SoT.</li>
+        <li>Optional later: LLM assist lane that consumes <strong>dump text</strong> only
+           (comments / rename proposals) — never silent rewrite of <code class="inline-code">.sparkbc</code>.</li>
+        <li>Do <strong>not</strong> claim Spark “beats” LLM4Decompile / Nova / Claude on
+           native binary benchmarks — different problem, different metrics.</li>
+        <li>If evaluating assist: measure dump→suggested-name accuracy and
+           recompile round-trip — not marketing re-exec slogans.</li>
+        <li><strong>Never</strong> route SPARK_BC factory train to GPU 6000.</li>
+        </ol>
+        <h2 id="operator-brief-short">Operator brief (short)</h2>
+        <ul class="doc__ul">
+        <li>Specialized models (LLM4Decompile, Nova, SK2, AutoDecompiler) help
+          <strong>native</strong> binary→C with partial re-exec; none are SPARK_BC SoT.</li>
+        <li>General LLMs + Ghidra plugins excel at <strong>annotation</strong>, not guaranteed
+          recovery.</li>
+        <li>Spark path: compile/dump/run deterministic; LLM optional for docs-
+          level assist only.</li>
+        <li>Honest bar: no perfect SPARK_BC decompile claim; no beat Claude; no
+          6000.</li>
+        </ul>
+        <h2 id="related">Related</h2>
+        <ul class="doc__ul">
+        <li><a href="/docs/decompile.html">DECOMPILE.md</a> · <a href="/docs/compile.html">COMPILE.md</a></li>
+        <li><a href="/docs/factory.html">FACTORY.md</a> · <a href="/docs/spark-bc.html">SPARK_BC.md</a></li>
+        </ul>
+      </article>
+      </main>
+    </div>
+
+    <footer class="site-footer">
+      <div class="shell footer-inner">
+        <span>Spark programming language</span>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="/learn/">Learn</a>
+          <a href="/docs/language.html">Reference</a>
+          <a href="/downloads.html">Downloads</a>
+          <a href="/playground.html">Playground</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="/js/site.js"></script>
+  </body>
+</html>

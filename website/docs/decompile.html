@@ -7,8 +7,8 @@
     <meta name="description" content="Dump, inspect, and disassemble SPARK_BC and related binaries — hex mnemonics, not source recovery." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
-    <link rel="stylesheet" href="/css/tokens.css?v=diagrams037" />
-    <link rel="stylesheet" href="/css/site.css?v=diagrams037" />
+    <link rel="stylesheet" href="/css/tokens.css?v=jlane039" />
+    <link rel="stylesheet" href="/css/site.css?v=jlane039" />
   </head>
   <body class="doc-page">
     <header class="site-header">
@@ -38,6 +38,7 @@
                   <li><a href="/docs/spark-builder.html">Builder</a></li>
                   <li><a href="/docs/compile.html">Compile</a></li>
                   <li><a href="/docs/decompile.html">Decompile</a></li>
+                  <li><a href="/docs/llm-decompile.html">LLM research</a></li>
                   <li><a href="/docs/spark-bc.html">Opcodes / ISA</a></li>
                   <li><a href="/docs/build-models.html">Build models</a></li>
                   <li><a href="/docs/train-loop.html">Train loop</a></li>
@@ -75,6 +76,7 @@
         <a href="/docs/spark-builder.html">Builder</a>
         <a href="/docs/compile.html">Compile</a>
         <a href="/docs/decompile.html" aria-current="page">Decompile</a>
+        <a href="/docs/llm-decompile.html">LLM research</a>
         <a href="/docs/spark-bc.html">Opcodes / ISA</a>
         <a href="/docs/build-models.html">Build models</a>
         <a href="/docs/train-loop.html">Train loop</a>
@@ -90,67 +92,121 @@
         <a href="/downloads.html">Downloads</a>
       </nav>      <article class="doc__body">
         <h1 id="decompile-inspect-disassemble">Decompile / inspect / disassemble</h1>
-        <p>How to <strong>read</strong> SPARK_BC and related binaries. Spark / SparkLang
-        only. No invented hex — dump tools read real files from <code class="inline-code">--compile</code>.</p>
-        <p>Flow diagrams (tools + LLM assist vs SoT): <a href="/docs/diagrams.html">DIAGRAMS.md</a>.
-        <strong>J-lane</strong> may publish dedicated decompile research pages and CLI
-        capture galleries under <code class="inline-code">website/docs/images/</code> — when merged, prefer
-        those for screenshots; do not fork conflicting dump SoT here.</p>
-        <h2 id="spark-bc-hex-mnemonic-dump-primary">SPARK_BC hex + mnemonic dump (primary)</h2>
+        <p>How to <strong>read</strong> SPARK_BC with Spark / SparkLang tools — step by
+        step, with screenshots and tool-layout diagrams. Dump tools read
+        <strong>real</strong> <code class="inline-code">.sparkbc</code> from <code class="inline-code">--compile</code>. This page is <strong>inspect /
+        disasm</strong>, not lossless source recovery.</p>
+        <p>Related research: <a href="/docs/llm-decompile.html">LLM decompile research</a>
+        (site: <a href="/docs/llm-decompile.html">/docs/llm-decompile.html</a>).
+        Mermaid factory overview: <a href="/docs/diagrams.html">DIAGRAMS.md</a>
+        (<a href="/docs/diagrams.html">/docs/diagrams.html</a>).</p>
+        <p><strong>Never</strong> claim an LLM perfectly decompiles SPARK_BC. <strong>Never</strong>
+        6000. Does <strong>not</strong> beat Claude.</p>
+        <h2 id="tool-function-diagrams">Tool-function diagrams</h2>
+        <h3 id="compile-path">Compile path</h3>
+        <p><img class="doc__img" alt="Compile path: source to SPARK_BC to run/train/serve" src="/docs/images/diagram-compile-path.svg" /></p>
+        <p><em>Caption: <code class="inline-code">.spark</code> → bootstrap / GAS assembler → <code class="inline-code">.sparkbc</code>
+        (SPARK_BC) → <code class="inline-code">--run-bc</code> / TRAIN·STEP / serve. Helpers, published
+        shadow-builds, and the SDK GUI wrap the same SoT — they do not
+        invent bytecode.</em></p>
+        <h3 id="decompile-path">Decompile path</h3>
+        <p><img class="doc__img" alt="Decompile path: BC to dump to readable view" src="/docs/images/diagram-decompile-path.svg" /></p>
+        <p><em>Caption: <code class="inline-code">.sparkbc</code> → <code class="inline-code">dump.py</code> (disasm/inspect) → readable hex +
+        mnemonics (or stub JSON / <code class="inline-code">--run-bc</code>). Optional edit is of the
+        <code class="inline-code">.spark</code> source, then </em><em>recompile</em><em> — dashed because dump is not a
+        lossless BC→source decompiler.</em></p>
+        <h3 id="helpers-shadow-build-sdkide-gui">Helpers · shadow-build · SDK/IDE GUI</h3>
+        <p><img class="doc__img" alt="Helpers shadow-build and GUI placement" src="/docs/images/diagram-helpers-gui.svg" /></p>
+        <p><em>Caption: Deterministic SPARK_BC SoT in the center. Helpers
+        (<code class="inline-code">Makefile</code>, <code class="inline-code">sparkc</code>, tests), shadow-build
+        (<code class="inline-code">docs/examples/*.sparkbc</code>), and SDK/IDE GUI (<code class="inline-code">spark-bc-gui</code>) sit
+        around it and call the same compile/dump paths.</em></p>
+        <h3 id="deterministic-tools-vs-llm-assist">Deterministic tools vs LLM assist</h3>
+        <p><img class="doc__img" alt="Deterministic Spark vs optional LLM assist" src="/docs/images/diagram-deterministic-vs-llm.svg" /></p>
+        <p><em>Caption: Left = Spark SoT (compile, dump, run). Right = optional
+        LLM assist later (names/comments/drafts) — </em><em>never</em><em> the SoT for
+        <code class="inline-code">.sparkbc</code> bytes. See the research note for citations.</em></p>
+        <h2 id="step-by-step-cli-primary-today">Step-by-step — CLI (primary today)</h2>
+        <h3 id="1-build-tools-once">1. Build tools (once)</h3>
+        <pre class="doc__pre"><code class="language-bash">make spark-bootstrap spark
+        </code></pre>
+        <p><code class="inline-code">sparkc</code> is a symlink to <code class="inline-code">spark-bootstrap</code>. GAS <code class="inline-code">./spark --compile</code>
+        thin-forks the same packer.</p>
+        <h3 id="2-dump-a-published-sparkbc">2. Dump a published <code class="inline-code">.sparkbc</code></h3>
         <pre class="doc__pre"><code class="language-bash">PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
           docs/examples/spark-train-step.sparkbc \
           --source examples/spark_train_step.spark \
           --command './spark-bootstrap --compile examples/spark_train_step.spark -o docs/examples/spark-train-step.sparkbc' \
           -o /tmp/spark-train-step-bc.txt
         </code></pre>
-        <ul class="doc__ul">
-        <li>Loader / formatters: <code class="inline-code">python/sparklang/model_lab/bc_dump.py</code></li>
-        <li>CLI: <code class="inline-code">tools/spark-bc-dump/dump.py</code></li>
-        <li>Unit coverage: <code class="inline-code">tools/spark-bc-dump/test_dump.py</code> (via
-          <code class="inline-code">make test-sparkbc</code>)</li>
-        </ul>
-        <p>Published dump text (for strangers without a rebuild):
-        <code class="inline-code">docs/examples/*-bc.txt</code>. Site mirrors under
-        <code class="inline-code">website/docs/examples/</code> when synced.</p>
-        <h3 id="stub-json-builder-metadata">Stub JSON (builder metadata)</h3>
+        <p><img class="doc__img" alt="CLI dump of SPARK_BC" src="/docs/images/decompile-cli-dump.png" /></p>
+        <p><em>Caption: Real terminal capture of <code class="inline-code">tools/spark-bc-dump/dump.py</code> on
+        <code class="inline-code">docs/examples/spark-train-step.sparkbc</code> — magic <code class="inline-code">SPBC</code>, pools,
+        opcode listing. Not invented hex.</em></p>
+        <p>Loader / formatters: <code class="inline-code">python/sparklang/model_lab/bc_dump.py</code>.
+        Units: <code class="inline-code">tools/spark-bc-dump/test_dump.py</code> via <code class="inline-code">make test-sparkbc</code>.</p>
+        <p>Published dump text (no rebuild): <code class="inline-code">docs/examples/*-bc.txt</code> (site:
+        <code class="inline-code">website/docs/examples/</code>).</p>
+        <h3 id="3-stub-json-builder-metadata">3. Stub JSON (builder metadata)</h3>
         <pre class="doc__pre"><code class="language-bash">PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
           docs/examples/spark-builder.sparkbc --stub -o /tmp/stub.json
         </code></pre>
-        <h3 id="init-weights-from-bytecode-not-trained">Init weights from bytecode (not trained)</h3>
+        <p><img class="doc__img" alt="CLI --stub JSON" src="/docs/images/decompile-cli-stub.png" /></p>
+        <p><em>Caption: Real <code class="inline-code">--stub</code> JSON from <code class="inline-code">spark-builder.sparkbc</code> — status,
+        sha256, magic, version. Still inspect metadata, not source recovery.</em></p>
+        <h3 id="4-inspect-behavior-with---run-bc">4. Inspect behavior with <code class="inline-code">--run-bc</code></h3>
+        <pre class="doc__pre"><code class="language-bash">./spark-bootstrap --run-bc docs/examples/spark-train-step.sparkbc
+        ./spark --run-bc docs/examples/spark-train-step.sparkbc   # GAS → bc_vm
+        </code></pre>
+        <p><img class="doc__img" alt="CLI --run-bc dry VM" src="/docs/images/decompile-cli-runbc.png" /></p>
+        <p><em>Caption: Real <code class="inline-code">./spark-bootstrap --run-bc</code> dry bytecode VM lines.
+        TRAIN/STEP contracts: <a href="/docs/spark-bc.html">SPARK_BC.md</a>.</em></p>
+        <h3 id="5-cli-help-flags">5. CLI help (flags)</h3>
+        <p><img class="doc__img" alt="CLI dump.py --help" src="/docs/images/decompile-cli-help.png" /></p>
+        <p><em>Caption: Captured <code class="inline-code">dump.py --help</code> — <code class="inline-code">--stub</code>, <code class="inline-code">--weights</code>,
+        <code class="inline-code">--serve</code> (tiny CPU forward; not production LLM).</em></p>
+        <h3 id="6-init-weights-from-bytecode-not-trained">6. Init weights from bytecode (not trained)</h3>
         <pre class="doc__pre"><code class="language-bash">PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
           docs/examples/spark-self.sparkbc \
           --weights /tmp/spark-self.init.safetensors
         </code></pre>
         <p>Emits Spark-created Xavier init (<code class="inline-code">trained: false</code>). See
         <a href="/docs/build-models.html">BUILD_MODELS.md</a>.</p>
-        <h2 id="run-bytecode-inspect-behavior">Run bytecode (inspect behavior)</h2>
-        <pre class="doc__pre"><code class="language-bash">./spark-bootstrap --run-bc docs/examples/spark-train-step.sparkbc
-        ./spark --run-bc docs/examples/spark-train-step.sparkbc   # GAS → bc_vm
+        <h2 id="graphical-path-sdk-pack-i-lane">Graphical path (SDK pack — I-lane)</h2>
+        <p>I-lane ships <code class="inline-code">tools/spark_bc_gui</code> / <code class="inline-code">bin/spark-bc-gui</code> (tkinter) that
+        calls real <code class="inline-code">--compile</code> + <code class="inline-code">bc_dump.format_dump</code>. Prefer the SDK pack
+        from <a href="/downloads.html">Downloads</a> / <code class="inline-code">make sdk-pack</code>. CLI remains the
+        documented primary path on this page.</p>
+        <p>When the SDK pack is installed:</p>
+        <pre class="doc__pre"><code class="language-bash">./bin/spark-bc-gui
+        # or: PYTHONPATH=tools:python python3 -m spark_bc_gui
         </code></pre>
-        <p>Dry stdout contracts are in <a href="/docs/spark-bc.html">SPARK_BC.md</a>. TRAIN /
-        STEP JSON lines + <code class="inline-code">ARTIFACT</code> under <code class="inline-code">out/train/&lt;job&gt;/</code>.</p>
+        <p>Buttons: <strong>Compile → .sparkbc</strong>, <strong>Decompile .sparkbc</strong>, open
+        source / <code class="inline-code">.sparkbc</code>, save dump, load sample. See also
+        <a href="/docs/sdk-ide-download.html">sdk-ide-download</a>.</p>
+        <p><img class="doc__img" alt="Annotated SPARK_BC GUI" src="/docs/images/decompile-gui-sparkbc.png" /></p>
+        <p><em>Caption: Annotated layout matching <code class="inline-code">tools/spark_bc_gui</code> chrome.
+        Right pane text is </em><em>real</em><em> <code class="inline-code">dump.py</code> output (same capture as the
+        CLI screenshot). Interactive Tk GUI ships with the SDK download
+        pack — headed capture was blocked; this mock is labeled honestly.</em></p>
         <h2 id="model-lab-reverse-inspect">Model lab reverse / inspect</h2>
-        <p>GAS-first (no SPARK_BC opcode yet):</p>
         <pre class="doc__pre"><code class="language-bash">./spark --dry-run examples/model_lab.spark
         make test-model-lab
         </code></pre>
         <p><code class="inline-code">model reverse</code> / <code class="inline-code">inspect</code> read local <code class="inline-code">config.json</code> + safetensors
-        <strong>index names</strong> only — no tensor body theft. Runbook:
+        <strong>index names</strong> only — no tensor body theft.
         <a href="/docs/model-training.html">MODEL_LAB.md</a>.</p>
         <h2 id="elf-machine-disassembly-not-spark-bc">ELF / machine disassembly (not SPARK_BC)</h2>
-        <p>For native companions / machine-proof paths (programming guide):</p>
-        <pre class="doc__pre"><code class="language-bash">make machine-proof   # ELF64 + _start disassembly when binary exists
+        <pre class="doc__pre"><code class="language-bash">make machine-proof   # ELF64 + _start when binary exists
         </code></pre>
-        <p>Language surface <code class="inline-code">binary</code> / decompile artifacts may land under
-        <code class="inline-code">out/decompile/&lt;basename&gt;/</code> (<code class="inline-code">ALL_SECTIONS.disasm</code>, etc.) — that
-        path is <strong>ELF section dump</strong>, not SPARK_BC decode. Do not confuse
-        with <code class="inline-code">tools/spark-bc-dump</code>.</p>
+        <p>Language <code class="inline-code">binary</code> artifacts under <code class="inline-code">out/decompile/&lt;basename&gt;/</code>
+        (<code class="inline-code">ALL_SECTIONS.disasm</code>, …) are <strong>ELF section dumps</strong>, not SPARK_BC
+        decode. Do not confuse with <code class="inline-code">tools/spark-bc-dump</code>.</p>
         <h2 id="sparkasm-objects">sparkasm objects</h2>
         <pre class="doc__pre"><code class="language-bash">make -C sparkasm test
         </code></pre>
-        <p>Disassemble assembled objects with host <code class="inline-code">objdump</code> if needed; there
-        is no Spark-branded SPARK_BC↔ELF round-trip claim beyond
-        <code class="inline-code">test-bc-emit</code>.</p>
+        <p>Host <code class="inline-code">objdump</code> on assembled objects if needed — no Spark-branded
+        SPARK_BC↔ELF round-trip claim beyond <code class="inline-code">test-bc-emit</code>.</p>
         <h2 id="what-is-not-decompile">What is not “decompile”</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
@@ -165,12 +221,16 @@
         <td><strong>implemented</strong> (<code class="inline-code">dump.py</code>)</td>
         </tr>
         <tr>
-        <td>Recover original <code class="inline-code">.spark</code> source losslessly</td>
-        <td><strong>not</strong> — dump is inspect, not a source decompiler</td>
+        <td>Recover original <code class="inline-code">.spark</code> losslessly</td>
+        <td><strong>not</strong> — inspect, not source decompiler</td>
+        </tr>
+        <tr>
+        <td>LLM perfectly decompiles SPARK_BC</td>
+        <td><strong>never claimed</strong></td>
         </tr>
         <tr>
         <td>Attention head activation maps</td>
-        <td><strong>not</strong> — serve skips attn; see <a href="/docs/attention-forward.html">ATTENTION_FORWARD.md</a></td>
+        <td><strong>not</strong> — see <a href="/docs/attention-forward.html">ATTENTION_FORWARD.md</a></td>
         </tr>
         <tr>
         <td>Closed-weight model theft</td>
@@ -182,6 +242,9 @@
         <ul class="doc__ul">
         <li><a href="/docs/compile.html">Compile</a> · <a href="/docs/build-models.html">Build models</a></li>
         <li><a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> · <a href="/docs/spark-bc.html">SPARK_BC.md</a></li>
+        <li><a href="/docs/factory.html">Factory hub</a> · <a href="/docs/llm-decompile.html">LLM decompile research</a></li>
+        <li>Screenshots + diagrams: <code class="inline-code">website/docs/images/decompile-*</code>,
+          <code class="inline-code">website/docs/images/diagram-*</code></li>
         </ul>
       </article>
       </main>

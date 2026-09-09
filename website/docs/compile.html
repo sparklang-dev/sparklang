@@ -7,8 +7,8 @@
     <meta name="description" content="Compile Spark to SPARK_BC via bootstrap, GAS wrappers, and sparkasm — engineer makefile map." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
-    <link rel="stylesheet" href="/css/tokens.css?v=diagrams037" />
-    <link rel="stylesheet" href="/css/site.css?v=diagrams037" />
+    <link rel="stylesheet" href="/css/tokens.css?v=jlane039" />
+    <link rel="stylesheet" href="/css/site.css?v=jlane039" />
   </head>
   <body class="doc-page">
     <header class="site-header">
@@ -38,6 +38,7 @@
                   <li><a href="/docs/spark-builder.html">Builder</a></li>
                   <li><a href="/docs/compile.html">Compile</a></li>
                   <li><a href="/docs/decompile.html">Decompile</a></li>
+                  <li><a href="/docs/llm-decompile.html">LLM research</a></li>
                   <li><a href="/docs/spark-bc.html">Opcodes / ISA</a></li>
                   <li><a href="/docs/build-models.html">Build models</a></li>
                   <li><a href="/docs/train-loop.html">Train loop</a></li>
@@ -75,6 +76,7 @@
         <a href="/docs/spark-builder.html">Builder</a>
         <a href="/docs/compile.html" aria-current="page">Compile</a>
         <a href="/docs/decompile.html">Decompile</a>
+        <a href="/docs/llm-decompile.html">LLM research</a>
         <a href="/docs/spark-bc.html">Opcodes / ISA</a>
         <a href="/docs/build-models.html">Build models</a>
         <a href="/docs/train-loop.html">Train loop</a>
@@ -137,6 +139,12 @@
         <p>SPARK_BC is an <strong>orchestration ISA</strong> (opcodes like <code class="inline-code">TRAIN</code> /
         <code class="inline-code">STEP</code> / <code class="inline-code">HALT</code>). It is <strong>not</strong> neural weights, not CUDA, not a
         HuggingFace export.</p>
+        <h2 id="compile-path-diagram">Compile path diagram</h2>
+        <p><img class="doc__img" alt="Compile path" src="/docs/images/diagram-compile-path.svg" /></p>
+        <p><em>Caption: <code class="inline-code">.spark</code> → bootstrap/GAS → <code class="inline-code">.sparkbc</code> → run/train/serve.
+        Full decompile diagrams + screenshots:
+        <a href="/docs/decompile.html">DECOMPILE.md</a>. LLM assist layout:
+        <a href="/docs/llm-decompile.html">research/LLM_DECOMPILE.md</a>.</em></p>
         <h2 id="bootstrap-emit-sot">Bootstrap emit (SoT)</h2>
         <pre class="doc__pre"><code class="language-bash">make spark-bootstrap   # or: make sparkc
         ./spark-bootstrap --compile examples/hello.spark -o /tmp/hello.sparkbc
