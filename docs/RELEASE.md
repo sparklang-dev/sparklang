@@ -95,3 +95,7 @@ Product name in docs/site is **SparkLang**.
 - Dry-run remains the default story; live gateway is optional.
 - Builder factory honesty: init ≠ trained; GAS `--compile`/`--run-bc` wrap bootstrap
   — see [SPARK_BUILDER.md](SPARK_BUILDER.md).
+- Local serve API (G-lane): `./spark-serve-api --weights … --http`
+  exposes `/health`, `/version`, `/v1/predict`, `/v1/embeddings` on
+  CPU only (wraps tiny forward; not production). Gate:
+  `make test-serve-api`. See Builder §6c.

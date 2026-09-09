@@ -307,6 +307,33 @@
         #    MLP tensors exist; + weights.safetensors (init if missing)
         # Or: ./spark-serve docs/examples/spark-builder.sparkbc /tmp/serve-dry-001
         </code></pre>
+        <h3 id="6c-serve-http-stdio-api-g-lane">6c) Serve HTTP / stdio API (G-lane)</h3>
+        <p>Wraps the same tiny CPU forward behind a local JSON API
+        (predict next-token + embeddings). Attention forward (D-lane) is
+        not required — uses whatever tensors <code class="inline-code">serve.py</code> already runs.
+        <strong>Not production. Never 6000.</strong></p>
+        <pre class="doc__pre"><code class="language-bash"># one-shot SERVE dir first (or point --weights at any Spark .safetensors)
+        ./spark-serve docs/examples/spark-builder.sparkbc /tmp/serve-dry-001
+        make spark-serve-api
+        ./spark-serve-api --weights /tmp/serve-dry-001/weights.safetensors \
+          --http --host 127.0.0.1 --port 8765
+
+        curl -s http://127.0.0.1:8765/health
+        curl -s http://127.0.0.1:8765/version
+        curl -s -X POST http://127.0.0.1:8765/v1/predict \
+          -H 'Content-Type: application/json' \
+          -d '{&quot;token_ids&quot;:[72,105]}'
+        curl -s -X POST http://127.0.0.1:8765/v1/embeddings \
+          -H 'Content-Type: application/json' \
+          -d '{&quot;text&quot;:&quot;Hi&quot;}'
+
+        # stdio (one JSON object per line):
+        echo '{&quot;op&quot;:&quot;predict&quot;,&quot;token_ids&quot;:[1,2]}' | \
+          ./spark-serve-api --weights /tmp/serve-dry-001/weights.safetensors \
+          --stdio
+
+        make test-serve-api
+        </code></pre>
         <p>Focused TRAIN→STEP→ARTIFACT gate: <code class="inline-code">make sparkbc-e2e</code> /
         <code class="inline-code">make test-sparkbc-e2e</code> (<code class="inline-code">tools/spark-bc-dump/run_e2e_gate.sh</code>,
         wrapper <code class="inline-code">scripts/sparkbc-e2e</code>). Compiles
@@ -467,6 +494,10 @@
         <td><strong>implemented</strong> (<code class="inline-code">dump.py --serve</code> → <code class="inline-code">SERVE</code> with <code class="inline-code">forward=true</code>; optional layer-0 MLP; <code class="inline-code">trained</code> from weights meta; not production)</td>
         </tr>
         <tr>
+        <td>Serve HTTP / stdio API</td>
+        <td><strong>implemented</strong> (<code class="inline-code">./spark-serve-api</code> — <code class="inline-code">/health</code> <code class="inline-code">/version</code> <code class="inline-code">/v1/predict</code> <code class="inline-code">/v1/embeddings</code>; gate <code class="inline-code">make test-serve-api</code>; not production)</td>
+        </tr>
+        <tr>
         <td>Beats Claude / production LLM</td>
         <td><strong>not</strong> — multi-stage later; multi-outer SGD ≠ Claude</td>
         </tr>
@@ -541,6 +572,10 @@
         <tr>
         <td>Tiny CPU serve forward</td>
         <td><strong>implemented</strong> (<code class="inline-code">SERVE</code>; <code class="inline-code">forward=true</code>; not production)</td>
+        </tr>
+        <tr>
+        <td>Serve HTTP / stdio API (G-lane)</td>
+        <td><strong>implemented</strong> (<code class="inline-code">spark-serve-api</code>; predict + embeddings; not production)</td>
         </tr>
         <tr>
         <td>Beats Claude</td>

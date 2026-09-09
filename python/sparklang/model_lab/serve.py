@@ -108,26 +108,18 @@ def _mlp_block(
     return [hidden[i] + down[i] for i in range(dim)], True
 
 
-def run_tiny_forward(
+def _hidden_from_tokens(
     tensors: dict[str, tuple[tuple[int, ...], bytes]],
     token_ids: list[int],
 ) -> dict[str, Any]:
-    """CPU embed → optional layer-0 MLP → final_norm → lm_head.
-
-    Real matmuls + logits, not a marker-only stub. Not production.
-    """
+    """Mean-pool embed → optional mlp0 → final_norm (no lm_head)."""
     embed_shape, embed_raw = tensors["spark.embed.weight"]
-    head_shape, head_raw = tensors["spark.lm_head.weight"]
     norm_shape, norm_raw = tensors["spark.final_norm.weight"]
     vocab, dim = int(embed_shape[0]), int(embed_shape[1])
-    if head_shape != (vocab, dim):
-        raise ValueError("lm_head shape mismatch")
     if norm_shape != (dim,):
         raise ValueError("final_norm shape mismatch")
     embed = _unpack_f32(embed_raw)
-    head = _unpack_f32(head_raw)
     norm_w = _unpack_f32(norm_raw)
-
     ids = [int(t) % vocab for t in token_ids] or [0]
     acc = [0.0] * dim
     for tid in ids:
@@ -138,16 +130,57 @@ def run_tiny_forward(
     hidden = [v * scale for v in acc]
     hidden, used_mlp = _mlp_block(hidden, tensors, 0)
     hidden = _rms_norm(hidden, norm_w)
-    logits = _matmul_vec(head, vocab, dim, hidden)
-    argmax = max(range(vocab), key=lambda i: logits[i])
-    preview_n = min(8, vocab)
     path = (
-        "embed_mean_pool->mlp0->rms_norm->lm_head"
+        "embed_mean_pool->mlp0->rms_norm"
         if used_mlp
-        else "embed_mean_pool->rms_norm->lm_head"
+        else "embed_mean_pool->rms_norm"
     )
     return {
         "token_ids": ids,
+        "hidden": hidden,
+        "hidden_dim": dim,
+        "vocab": vocab,
+        "mlp0": used_mlp,
+        "path": path,
+    }
+
+
+def run_tiny_embed(
+    tensors: dict[str, tuple[tuple[int, ...], bytes]],
+    token_ids: list[int],
+) -> dict[str, Any]:
+    """CPU embedding vector (post-norm hidden). Not production."""
+    h = _hidden_from_tokens(tensors, token_ids)
+    return {
+        "token_ids": h["token_ids"],
+        "hidden_dim": h["hidden_dim"],
+        "vocab": h["vocab"],
+        "embedding": [round(v, 6) for v in h["hidden"]],
+        "mlp0": h["mlp0"],
+        "path": h["path"],
+    }
+
+
+def run_tiny_forward(
+    tensors: dict[str, tuple[tuple[int, ...], bytes]],
+    token_ids: list[int],
+) -> dict[str, Any]:
+    """CPU embed → optional layer-0 MLP → final_norm → lm_head.
+
+    Real matmuls + logits, not a marker-only stub. Not production.
+    """
+    head_shape, head_raw = tensors["spark.lm_head.weight"]
+    h = _hidden_from_tokens(tensors, token_ids)
+    vocab, dim = int(h["vocab"]), int(h["hidden_dim"])
+    if head_shape != (vocab, dim):
+        raise ValueError("lm_head shape mismatch")
+    head = _unpack_f32(head_raw)
+    logits = _matmul_vec(head, vocab, dim, h["hidden"])
+    argmax = max(range(vocab), key=lambda i: logits[i])
+    preview_n = min(8, vocab)
+    path = h["path"] + "->lm_head"
+    return {
+        "token_ids": h["token_ids"],
         "hidden_dim": dim,
         "vocab": vocab,
         "logits_preview": [
@@ -155,7 +188,7 @@ def run_tiny_forward(
         ],
         "argmax": argmax,
         "logit_max": round(logits[argmax], 6),
-        "mlp0": used_mlp,
+        "mlp0": h["mlp0"],
         "path": path,
     }
 

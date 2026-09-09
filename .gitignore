@@ -18,6 +18,7 @@ out/browser/ca/
 /spark-abstain
 /spark-model-lab
 /spark-serve
+/spark-serve-api
 /spark-http
 /spark-lift
 /spark-mitm-ca
