@@ -6,11 +6,14 @@ SGD, attention, or serve APIs — links code + makefile targets.
 **Never** claims beat Claude. **Never** trains on the RTX PRO 6000.
 
 Reproduction story: [SPARK_BUILDER.md](SPARK_BUILDER.md).
+**Diagrams:** [DIAGRAMS.md](DIAGRAMS.md) — tool map, shadows, LLM
+assist vs deterministic SoT.
 
 ## Map (everything)
 
 | Topic | Doc | Site |
 |-------|-----|------|
+| **Diagrams (tools + LLM)** | [DIAGRAMS.md](DIAGRAMS.md) | [/docs/diagrams.html](/docs/diagrams.html) |
 | Compile / assemble | [COMPILE.md](COMPILE.md) | [/docs/compile.html](/docs/compile.html) |
 | Decompile / dump / inspect | [DECOMPILE.md](DECOMPILE.md) | [/docs/decompile.html](/docs/decompile.html) |
 | Opcode ISA (TRAIN/STEP/…) | [SPARK_BC.md](SPARK_BC.md) | [/docs/spark-bc.html](/docs/spark-bc.html) |
@@ -45,6 +48,8 @@ make docs-check
 | **E** | Claude eval harness | **Merged** — see [EVAL.md](EVAL.md) |
 | **F** | Scale fixtures / dim knobs | **Merged** — see [TRAIN_LOOP.md](TRAIN_LOOP.md) / `spark-sgd-proof-scale` |
 | **G** | Serve HTTP/API | **Merged** — see [SERVE.md](SERVE.md) / `make spark-serve-api` |
+| **H** | Website + factory docs | **Merged** (#23) — this hub + [DIAGRAMS.md](DIAGRAMS.md) |
+| **J** | Decompile research / captures | **Not merged yet** — when live, link from [DECOMPILE.md](DECOMPILE.md); flow diagrams stay in [DIAGRAMS.md](DIAGRAMS.md) |
 
 ## Honesty bar
 

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Factory diagrams — Spark</title>
+    <meta name="description" content="How Spark tools and LLM assist relate — compile, decompile, train, serve, shadows. Deterministic SoT; never beat Claude." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/css/tokens.css?v=diagrams037" />
+    <link rel="stylesheet" href="/css/site.css?v=diagrams037" />
+  </head>
+  <body class="doc-page">
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="site-brand" href="/" aria-label="Spark home">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z" fill="currentColor" />
+          </svg>
+          Spark
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+        </button>
+        <div class="header-nav-wrap">
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <ul class="nav-primary">
+              <li><a href="/learn/">Learn</a></li>
+              <li><a href="/docs/language.html">Docs</a></li>
+              <li><a href="/downloads.html">Download</a></li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">More</button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/factory.html">Factory hub</a></li>
+                  <li><a href="/docs/diagrams.html">Diagrams</a></li>
+                  <li><a href="/docs/spark-builder.html">Builder</a></li>
+                  <li><a href="/docs/compile.html">Compile</a></li>
+                  <li><a href="/docs/decompile.html">Decompile</a></li>
+                  <li><a href="/docs/spark-bc.html">Opcodes / ISA</a></li>
+                  <li><a href="/docs/build-models.html">Build models</a></li>
+                  <li><a href="/docs/train-loop.html">Train loop</a></li>
+                  <li><a href="/docs/architecture.html">Architecture</a></li>
+                  <li><a href="/docs/attention-forward.html">Attention honesty</a></li>
+                  <li><a href="/docs/tokenizer.html">Tokenizer</a></li>
+                  <li><a href="/docs/serve.html">Serve</a></li>
+                  <li><a href="/docs/eval.html">Eval</a></li>
+                  <li><a href="/docs/sparkbc-make.html">Make targets</a></li>
+                  <li><a href="/docs/ci-pages.html">CI / Pages</a></li>
+                  <li><a href="/docs/adoption-bar.html">Adoption bar</a></li>
+                  <li><a href="/docs/ai-models.html">AI models</a></li>
+                  <li><a href="/docs/programming-guide.html">Programming guide</a></li>
+                  <li><a href="/docs/ide.html">IDE</a></li>
+                  <li><a href="/docs/self-host.html">Contributor internals</a></li>
+                </ul>
+              </li>
+            </ul>
+            <a href="/playground.html" class="nav-cta">Try</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <div class="shell doc-layout">
+      <aside class="doc-sidebar" aria-label="Table of contents">
+        <p class="doc-sidebar__title">On this page</p>
+        <nav id="doc-toc-list"></nav>
+      </aside>
+      <main class="doc-main">
+      <nav class="doc__nav" aria-label="Docs">
+        <a href="/learn/">Learn</a>
+        <a href="/docs/factory.html">Factory hub</a>
+        <a href="/docs/diagrams.html" aria-current="page">Diagrams</a>
+        <a href="/docs/spark-builder.html">Builder</a>
+        <a href="/docs/compile.html">Compile</a>
+        <a href="/docs/decompile.html">Decompile</a>
+        <a href="/docs/spark-bc.html">Opcodes / ISA</a>
+        <a href="/docs/build-models.html">Build models</a>
+        <a href="/docs/train-loop.html">Train loop</a>
+        <a href="/docs/architecture.html">Architecture</a>
+        <a href="/docs/tokenizer.html">Tokenizer</a>
+        <a href="/docs/serve.html">Serve</a>
+        <a href="/docs/eval.html">Eval</a>
+        <a href="/docs/sparkbc-make.html">Make targets</a>
+        <a href="/docs/ci-pages.html">CI / Pages</a>
+        <a href="/docs/adoption-bar.html">Adoption bar</a>
+        <a href="/docs/language.html">Language</a>
+        <a href="/docs/programming-guide.html">Programming guide</a>
+        <a href="/downloads.html">Downloads</a>
+      </nav>      <article class="doc__body">
+        <h1 id="factory-diagrams-tools-llm-assist">Factory diagrams — tools + LLM assist</h1>
+        <p>Engineer overview diagrams for the <strong>Spark / SparkLang</strong> SPARK_BC
+        factory. Deterministic tooling is SoT. LLMs may <strong>assist</strong> authors;
+        they do <strong>not</strong> replace <code class="inline-code">--compile</code>, <code class="inline-code">dump.py</code>, or <code class="inline-code">bc_vm</code>.
+        <strong>Never</strong> beat Claude. <strong>Never</strong> 6000 train.</p>
+        <p>Hub: <a href="/docs/factory.html">FACTORY.md</a>. Builder: <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</p>
+        <p><strong>J-lane:</strong> dedicated decompile research pages / CLI capture galleries
+        may land separately. When merged, prefer those pages for screenshot
+        galleries — this file keeps <strong>flow</strong> diagrams only (no conflicting
+        SoT). Until then, the site is not diagram-empty.</p>
+        <h2 id="1-how-spark-tools-function">1) How Spark tools function</h2>
+        <p>End-to-end factory: source → bytecode → inspect → train → serve →
+        measure. Helpers that <strong>shadow</strong> (thin-wrap) SoT stay labeled.</p>
+        <pre class="mermaid">flowchart TB
+          subgraph sources["Sources"]
+            SP[".spark programs"]
+            ASM["sparkasm / control.sparkasm<br/>shape check only"]
+          end
+
+          subgraph compile["Compile — deterministic SoT"]
+            BOOT["./spark-bootstrap --compile"]
+            GAS["./spark --compile<br/>shadow: thin fork → bootstrap"]
+            BC[".sparkbc SPBC ISA"]
+          end
+
+          subgraph inspect["Decompile / inspect"]
+            DUMP["tools/spark-bc-dump/dump.py<br/>hex + mnemonics"]
+            RUNBC["--run-bc → bc_vm dry"]
+          end
+
+          subgraph train["Build / train"]
+            TRAIN["TRAIN 0x26 dry ARTIFACT"]
+            STEP["STEP 0x28 CPU SGD"]
+            WTS["weights.safetensors<br/>+ checkpoint.json"]
+          end
+
+          subgraph serve["Serve"]
+            SERVEF["dump.py --serve / spark-serve<br/>MLP0 forward"]
+            API["spark-serve-api<br/>shadow: HTTP/stdio over serve.py"]
+          end
+
+          subgraph measure["Eval helpers"]
+            EVAL["make spark-eval"]
+            CLAUDE["spark-eval-claude<br/>optional baseline; never win claim"]
+          end
+
+          SP --> BOOT
+          SP --> GAS
+          GAS -.->|wraps| BOOT
+          BOOT --> BC
+          BC --> DUMP
+          BC --> RUNBC
+          BC --> TRAIN
+          TRAIN --> STEP
+          STEP --> WTS
+          BC --> SERVEF
+          WTS --> SERVEF
+          SERVEF --> API
+          WTS --> EVAL
+          EVAL --> CLAUDE
+          ASM -.->|not SPARK_BC| DUMP</pre>
+        <h3 id="tool-roles-same-story-in-words">Tool roles (same story in words)</h3>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Role</th>
+        <th>SoT / tool</th>
+        <th>Shadow / helper</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td>Compile</td>
+        <td><code class="inline-code">./spark-bootstrap --compile</code></td>
+        <td><code class="inline-code">./spark --compile</code> forks bootstrap</td>
+        </tr>
+        <tr>
+        <td>Assemble (peer)</td>
+        <td><code class="inline-code">make sparkasm</code> / <code class="inline-code">test-sparkasm-control</code></td>
+        <td>Not SPARK_BC emit</td>
+        </tr>
+        <tr>
+        <td>Decompile / dump</td>
+        <td><code class="inline-code">tools/spark-bc-dump/dump.py</code></td>
+        <td>Published <code class="inline-code">*-bc.txt</code> mirrors</td>
+        </tr>
+        <tr>
+        <td>Run BC</td>
+        <td><code class="inline-code">./spark-bootstrap --run-bc</code></td>
+        <td><code class="inline-code">./spark --run-bc</code> → bc_vm</td>
+        </tr>
+        <tr>
+        <td>Train program</td>
+        <td>opcodes <code class="inline-code">0x26</code> / <code class="inline-code">0x28</code> / <code class="inline-code">0x27</code></td>
+        <td><code class="inline-code">apply_step.py</code> helper</td>
+        </tr>
+        <tr>
+        <td>Serve forward</td>
+        <td><code class="inline-code">serve.py</code> / <code class="inline-code">dump.py --serve</code></td>
+        <td><code class="inline-code">./spark-serve</code>, <code class="inline-code">./spark-serve-api</code></td>
+        </tr>
+        <tr>
+        <td>Eval</td>
+        <td><code class="inline-code">tools/spark-eval/run.py</code></td>
+        <td>Claude baseline optional</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <p>Detail pages: <a href="/docs/compile.html">COMPILE.md</a> · <a href="/docs/decompile.html">DECOMPILE.md</a> ·
+        <a href="/docs/build-models.html">BUILD_MODELS.md</a> · <a href="/docs/train-loop.html">TRAIN_LOOP.md</a> ·
+        <a href="/docs/serve.html">SERVE.md</a> · <a href="/docs/eval.html">EVAL.md</a> · <a href="/docs/sparkbc-make.html">SPARKBC_MAKE.md</a>.</p>
+        <h2 id="2-helpers-and-shadows">2) Helpers and shadows</h2>
+        <p>“Shadow” here means a <strong>thin wrapper</strong> that must not invent a second
+        encode/decode path. Exit status and bytes stay owned by the SoT.</p>
+        <pre class="mermaid">flowchart LR
+          subgraph sot["Source of truth"]
+            C["bootstrap C lowering<br/>bc_write / bc_vm"]
+            P["python model_lab<br/>bc_dump / serve / SGD"]
+          end
+
+          subgraph shadows["Shadows / companions"]
+            G1["GAS ./spark --compile"]
+            G2["GAS ./spark --run-bc"]
+            S1["./spark-serve"]
+            S2["./spark-serve-api"]
+            H1["./spark-train-http<br/>live job companion"]
+          end
+
+          G1 -->|fork| C
+          G2 -->|fork| C
+          S1 -->|calls| P
+          S2 -->|wraps| P
+          H1 -.->|not BC operand| P</pre>
+        <p>Do <strong>not</strong> treat a shadow as a richer ISA. If GAS and bootstrap
+        disagree, bootstrap wins for <code class="inline-code">.sparkbc</code>.</p>
+        <h2 id="3-llms-in-compile-vs-decompile-assist">3) LLMs in compile vs decompile assist</h2>
+        <p>Spark’s public claim is <strong>deterministic factory tooling</strong>. Optional
+        LLM lanes (IDE ask, playbooks, gateway <code class="inline-code">ask</code>) help humans write or
+        read — they are <strong>not</strong> the compiler or the dump SoT.</p>
+        <pre class="mermaid">flowchart TB
+          subgraph human["Human / IDE"]
+            EDIT["Edit .spark / read dump"]
+          end
+
+          subgraph llm["Optional LLM assist — not SoT"]
+            CA["Compile assist<br/>draft .spark, explain LANGUAGE"]
+            DA["Decompile assist<br/>narrate hex/mnemonics"]
+            ASK["ask / playbooks / gateway<br/>optional live"]
+          end
+
+          subgraph spark["Spark deterministic SoT"]
+            COMP["bootstrap --compile"]
+            DUMP["dump.py format_dump"]
+            VM["bc_vm --run-bc"]
+          end
+
+          EDIT --> CA
+          EDIT --> DA
+          CA -.->|may suggest source| EDIT
+          DA -.->|may explain text| EDIT
+          EDIT -->|must still| COMP
+          COMP --> DUMP
+          COMP --> VM
+          ASK -.->|never writes .sparkbc| COMP</pre>
+        <h3 id="honesty-table">Honesty table</h3>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Action</th>
+        <th>Deterministic Spark</th>
+        <th>LLM assist OK?</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td>Emit <code class="inline-code">.sparkbc</code> bytes</td>
+        <td><strong>required</strong> (<code class="inline-code">--compile</code>)</td>
+        <td>May draft <code class="inline-code">.spark</code> only</td>
+        </tr>
+        <tr>
+        <td>Hex / opcode dump</td>
+        <td><strong>required</strong> (<code class="inline-code">dump.py</code>)</td>
+        <td>May explain a real dump</td>
+        </tr>
+        <tr>
+        <td>Invent hex / opcodes</td>
+        <td><strong>forbidden</strong></td>
+        <td><strong>forbidden</strong></td>
+        </tr>
+        <tr>
+        <td>STEP SGD / loss curve</td>
+        <td>CPU <code class="inline-code">apply_sgd_step</code></td>
+        <td>Not a substitute</td>
+        </tr>
+        <tr>
+        <td>Claim beat Claude</td>
+        <td><strong>never</strong></td>
+        <td><strong>never</strong></td>
+        </tr>
+        <tr>
+        <td>Train on RTX PRO 6000</td>
+        <td><strong>never</strong></td>
+        <td><strong>never</strong></td>
+        </tr>
+        </tbody>
+        </table></div>
+        <h2 id="4-ascii-fallback-no-js">4) ASCII fallback (no JS)</h2>
+        <pre class="doc__pre"><code class="inline-code">.spark ──► spark-bootstrap --compile ──► .sparkbc
+                        ▲
+           ./spark --compile (shadow wrap)
+
+        .sparkbc ──► dump.py ──► hex/mnemonics
+                 ──► --run-bc ──► TRAIN/STEP/ARTIFACT
+                 ──► serve.py ──► SERVE / spark-serve-api
+
+        LLM assist ──► helps edit/explain ──✗──► does not replace SoT
+        </code></pre>
+        <h2 id="related">Related</h2>
+        <ul class="doc__ul">
+        <li><a href="/docs/factory.html">FACTORY.md</a> · <a href="/docs/spark-bc.html">SPARK_BC.md</a></li>
+        <li><a href="/docs/decompile.html">DECOMPILE.md</a> (J-lane captures when merged)</li>
+        <li><a href="/docs/ci-pages.html">CI_PAGES.md</a></li>
+        </ul>
+      </article>
+      </main>
+    </div>
+
+    <footer class="site-footer">
+      <div class="shell footer-inner">
+        <span>Spark programming language</span>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="/learn/">Learn</a>
+          <a href="/docs/language.html">Reference</a>
+          <a href="/downloads.html">Downloads</a>
+          <a href="/playground.html">Playground</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="/js/site.js"></script>
+  </body>
+</html>

@@ -3,6 +3,11 @@
 How to **read** SPARK_BC and related binaries. Spark / SparkLang
 only. No invented hex — dump tools read real files from `--compile`.
 
+Flow diagrams (tools + LLM assist vs SoT): [DIAGRAMS.md](DIAGRAMS.md).
+**J-lane** may publish dedicated decompile research pages and CLI
+capture galleries under `website/docs/images/` — when merged, prefer
+those for screenshots; do not fork conflicting dump SoT here.
+
 ## SPARK_BC hex + mnemonic dump (primary)
 
 ```bash

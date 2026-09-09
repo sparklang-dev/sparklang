@@ -178,8 +178,28 @@
     document.body.insertBefore(skip, document.body.firstChild);
   }
 
+  function initMermaid() {
+    var blocks = qsa("pre.mermaid");
+    if (!blocks.length) return;
+    var s = document.createElement("script");
+    s.src = "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js";
+    s.async = true;
+    s.onload = function () {
+      if (window.mermaid && window.mermaid.initialize) {
+        window.mermaid.initialize({
+          startOnLoad: false,
+          securityLevel: "strict",
+          theme: "neutral",
+        });
+        window.mermaid.run({ nodes: blocks });
+      }
+    };
+    document.head.appendChild(s);
+  }
+
   function initCopyButtons() {
     qsa("pre.doc__pre, pre.terminal, pre.code-block").forEach(function (pre) {
+      if (pre.classList.contains("mermaid")) return;
       if (pre.querySelector(".copy-btn")) return;
       var code = pre.querySelector("code");
       var text = code ? code.textContent : pre.textContent;
@@ -375,6 +395,7 @@
     initNavToggle();
     initNavMore();
     initCopyButtons();
+    initMermaid();
     initDocToc();
     initTrySpark();
     initModelWizard();

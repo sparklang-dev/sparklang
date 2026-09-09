@@ -13,12 +13,13 @@ from pathlib import Path
 import markdown
 
 ROOT = Path(__file__).resolve().parents[1]
-CSS_V = "bb4433f"
+CSS_V = "diagrams037"
 
 DOC_NAV = """\
       <nav class="doc__nav" aria-label="Docs">
         <a href="/learn/">Learn</a>
         <a href="/docs/factory.html"{fy}>Factory hub</a>
+        <a href="/docs/diagrams.html"{dg}>Diagrams</a>
         <a href="/docs/spark-builder.html"{bc}>Builder</a>
         <a href="/docs/compile.html"{cp}>Compile</a>
         <a href="/docs/decompile.html"{dc}>Decompile</a>
@@ -74,6 +75,7 @@ HEADER = """\
                 <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">More</button>
                 <ul class="nav-more__menu" hidden>
                   <li><a href="/docs/factory.html">Factory hub</a></li>
+                  <li><a href="/docs/diagrams.html">Diagrams</a></li>
                   <li><a href="/docs/spark-builder.html">Builder</a></li>
                   <li><a href="/docs/compile.html">Compile</a></li>
                   <li><a href="/docs/decompile.html">Decompile</a></li>
@@ -156,6 +158,7 @@ MD_LINK_MAP = {
     "NATIVE_NETWORK_WEB.md": "/docs/native-network-web.html",
     "TOKENIZER.md": "/docs/tokenizer.html",
     "FACTORY.md": "/docs/factory.html",
+    "DIAGRAMS.md": "/docs/diagrams.html",
     "COMPILE.md": "/docs/compile.html",
     "DECOMPILE.md": "/docs/decompile.html",
     "BUILD_MODELS.md": "/docs/build-models.html",
@@ -175,6 +178,9 @@ DOC_PAGES = [
     ("fy", "FACTORY.md", "factory.html", "Factory documentation hub",
      "Map of SparkLang SPARK_BC factory docs — compile through "
      "eval, serve, CI/Pages. Does not beat Claude."),
+    ("dg", "DIAGRAMS.md", "diagrams.html", "Factory diagrams",
+     "How Spark tools and LLM assist relate — compile, decompile, "
+     "train, serve, shadows. Deterministic SoT; never beat Claude."),
     ("ab", "ADOPTION_BAR.md", "adoption-bar.html", "Adoption bar",
      "SparkLang adoption checklist — done, next, won't."),
     ("", "ROADMAP.md", "roadmap.html", "Roadmap",
@@ -287,6 +293,19 @@ def decorate_html(body: str) -> str:
         return '<pre class="doc__pre"><code>'
 
     body = re.sub(r"<pre><code(?: class=\"language-([^\"]+)\")?>", fence, body)
+
+    def mermaid_block(m: re.Match[str]) -> str:
+        """Turn mermaid fences into renderable <pre class=mermaid>."""
+        raw = html.unescape(m.group(1)).strip("\n")
+        return f'<pre class="mermaid">{raw}</pre>'
+
+    body = re.sub(
+        r'<pre class="doc__pre"><code class="language-mermaid">'
+        r"(.*?)</code></pre>",
+        mermaid_block,
+        body,
+        flags=re.S,
+    )
     body = re.sub(r"<code>([^<]*)</code>", r'<code class="inline-code">\1</code>', body)
 
     def heading(m: re.Match[str]) -> str:
@@ -314,7 +333,7 @@ def render(md_path: Path, out_path: Path, title: str, description: str, current:
     body = decorate_html(body)
     keys = (
         "ab", "ai", "nn", "ide", "sh", "bc", "cp", "dc", "bm", "af",
-        "mk", "isa", "fy", "tl", "ar", "tk", "sv", "ev", "ci",
+        "mk", "isa", "fy", "dg", "tl", "ar", "tk", "sv", "ev", "ci",
     )
     nav_kwargs = {
         k: (' aria-current="page"' if current == k else "") for k in keys

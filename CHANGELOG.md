@@ -5,6 +5,16 @@ language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
 
+## 0.6.37 — 2026-09-09
+
+- **Factory diagrams (H-lane):** Mermaid overview of Spark tools
+  (compile / decompile / build / train / serve / helpers /
+  shadows) and LLM assist vs deterministic SoT. Page:
+  [DIAGRAMS.md](docs/DIAGRAMS.md) → `/docs/diagrams.html`. Mermaid
+  render via `website/js/site.js` (CDN). J-lane decompile research
+  captures cross-linked when/if merged — no conflicting SoT.
+  **Not beat Claude.** Never 6000.
+
 ## 0.6.36 — 2026-09-09
 
 - **Factory docs (H-lane, full map):** engineer Pages for the whole
