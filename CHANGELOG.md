@@ -5,6 +5,18 @@ language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
 
+## 0.6.49 — 2026-09-09
+
+- **Spark IDE functions:** `spark-bc-gui` is a three-pane IDE
+  (browse files/opcodes/weights | source↔dump split | ask/weights
+  play/helpers/report). Real compile/decompile/dump, factual Ask with
+  optional `spark_ask` hook, CPU tensor play, markdown report export,
+  one-click helpers/shadows. Weights pane prefers `weight_gallery.catalog` when present. Reuses `theme.py` / site tokens from
+  0.6.45 theme — **not** an OpenBin clone. Web demos:
+  [/docs/ide-shell.html](website/docs/ide-shell.html) and
+  [/ide-web.html](website/ide-web.html). Gate: `make test-sdk-pack`.
+  Docs: [IDE.md](docs/IDE.md). **Not beat Claude.** Never 6000.
+
 ## 0.6.48 — 2026-09-09
 
 - **Weight gallery (tiny → xl):** catalog init / SGD / checkpoints /

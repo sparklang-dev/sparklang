@@ -65,6 +65,89 @@ class TestGuiCore(unittest.TestCase):
             )
             self.assertIn("magic: SPBC", dump)
 
+    def test_browse_opcodes_and_sync(self) -> None:
+        """Browse opcode list + source↔dump sync map."""
+        from spark_bc_gui import core
+
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "browse.sparkbc"
+            result = core.compile_source_text(
+                core.sample_source(),
+                out=out,
+                root=ROOT,
+            )
+            rows = core.browse_opcodes(result["out"], root=ROOT)
+            self.assertGreater(len(rows), 0)
+            self.assertIn("dump_needle", rows[0])
+            sync = core.sync_map(
+                core.sample_source(),
+                result["out"],
+                root=ROOT,
+            )
+            self.assertEqual(len(sync), len(rows))
+            linked = [m for m in sync if m.get("source_line")]
+            self.assertGreater(len(linked), 0)
+
+    def test_ask_factual_and_report(self) -> None:
+        """Factual Ask + markdown report export (headless)."""
+        from spark_bc_gui import core
+
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "ask.sparkbc"
+            result = core.compile_source_text(
+                core.sample_source(),
+                out=out,
+                root=ROOT,
+            )
+            dump = core.decompile_sparkbc(result["out"], root=ROOT)
+            ops = core.browse_opcodes(result["out"], root=ROOT)
+            ans = core.ask_over_dump(
+                "list opcodes",
+                dump_text=dump,
+                ops=ops,
+                sha256=result["sha256"],
+                sparkbc=result["out"],
+                root=ROOT,
+            )
+            self.assertEqual(ans["engine"], "factual")
+            self.assertIn("Opcodes", ans["answer"])
+            self.assertFalse(ans.get("beats_claude"))
+            md = core.export_report_markdown(
+                dump_text=dump,
+                ops=ops,
+                sha256=result["sha256"],
+                sparkbc_path=result["out"],
+                ask_notes="Q: list opcodes\nA: ok",
+            )
+            self.assertIn("# Spark IDE analysis", md)
+            self.assertIn(result["sha256"], md)
+            self.assertIn("beats_claude: false", md)
+
+    def test_weights_list_and_play(self) -> None:
+        """List safetensors and play one tensor on CPU."""
+        from spark_bc_gui import core
+
+        files = core.list_weight_files(ROOT)
+        self.assertGreater(len(files), 0)
+        path = files[0]["path"]
+        summary = core.summarize_weights(path, root=ROOT)
+        self.assertGreater(summary["count"], 0)
+        name = summary["tensors"][0]["name"]
+        play = core.play_tensor(path, name, root=ROOT)
+        self.assertEqual(play["name"], name)
+        self.assertEqual(play["device"], "cpu")
+        self.assertIn("never RTX PRO 6000", play["note"])
+
+    def test_helper_opcodes_sheet(self) -> None:
+        """One-click helper: opcode sheet runs headless."""
+        from spark_bc_gui import core
+
+        helpers = core.list_helpers(ROOT)
+        self.assertTrue(any(h["key"] == "opcodes" for h in helpers))
+        result = core.run_helper("opcodes", root=ROOT)
+        self.assertTrue(result["ok"])
+        self.assertIn("HALT", result["stdout"])
+
 
 class TestSdkPack(unittest.TestCase):
     """``make sdk-pack`` layout + MANIFEST required paths."""

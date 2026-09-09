@@ -212,6 +212,9 @@ DOC_PAGES = [
      "SparkLang roadmap — done, next, won't."),
     ("", "RELEASE.md", "release.html", "Release process",
      "How SparkLang versions and GitHub Releases are cut."),
+    ("ide", "IDE.md", "ide.html", "IDE — language ops + GUI",
+     "Spark language ide ops, tkinter Spark IDE GUI "
+     "(browse/compile/ask/weights), and web shell demo."),
     ("", "CI_PAGES.md", "ci-pages.html", "CI + Cloudflare Pages",
      "Contributor CI gates and production Pages deploy how-to."),
     ("ai", "AI_MODELS.md", "ai-models.html", "AI models",

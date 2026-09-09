@@ -7,8 +7,10 @@ Today’s `./spark` ELF is the **GAS scaffold** for IDE ops (`asm/`).
 thin C bootstrap (B); Spark-native assembler (C). GAS is disposable —
 not forever SoT. Do **not** start a Rust/Python VM from this lane.
 
-**Honesty:** not Electron / not PyQt / not a full IDE product chrome.
-Verified ops only — no invented menus or debugger.
+**Honesty:** not Electron / not a VS Code fork. The downloadable
+**tkinter Spark IDE** (`spark-bc-gui`) is a real three-pane shell with
+browse / compile / dump / ask / weights / report / helpers — not
+invented menus. Language `ide` ops remain on the GAS scaffold.
 
 | Path | What it is | Status |
 |------|------------|--------|
@@ -17,10 +19,41 @@ Verified ops only — no invented menus or debugger.
 | `ide keys` / `ide key` | Keymap loop (quit/save/run/open/show) | **Works** — §1b |
 | Paint bind | status path strip + gutter + AI strip → PPM | **Works** — `b029a4a` |
 | Cursor workspace | `make ide` interim editor host | **Works** — not the product |
+| Spark IDE GUI | `make spark-bc-gui` / `bin/spark-bc-gui` | **Works** — §0 |
+| Web IDE demo | `/docs/ide-shell.html` layout mirror | **Works** — demo |
 | CLI `./spark --dry-run` / `--live` | Primary runtime today | **Works** |
 | Electron / VS Code fork | — | **Not the product** |
-| PyQt IDE shell | — | **Not built** |
+| PyQt IDE shell | — | **Not built** (tkinter ships) |
 | Runtime rewrite | A+B+C **DECIDED**; GAS scaffold | **In progress** — see SELF_HOST.md |
+
+---
+
+## 0. Spark IDE GUI (functions first)
+
+`tools/spark_bc_gui` — dark engineer chrome, **Spark palette** (not an
+OpenBin clone). Lessons from public IDE pane workflows only.
+
+| Action | Behavior |
+|--------|----------|
+| Browse Files | Open `.spark` / `.sparkbc` from examples + docs |
+| Browse Opcodes | Jump dump `code+N`; sync-highlight source when string-linked |
+| Browse Weights | List `models/**/*.safetensors` / `out/**` |
+| Compile / Decompile / Dump | Real `spark-bootstrap --compile` + `bc_dump` |
+| Split view | Source ↔ dump; best-effort sync via string pool |
+| Ask | Text ask over dump (factual + optional `spark_ask` hook) |
+| Weights play | CPU mean/min/max/sample — never 6000 |
+| Report | Export markdown analysis stub |
+| Helpers / shadows | One-click opcode sheet, compile/decompile, shadow copy |
+
+```bash
+make spark-bc-gui          # display required
+make test-sdk-pack         # headless core + pack gate
+# Web layout demo (static):
+#   website/docs/ide-shell.html
+```
+
+Gate: `tools/spark_bc_gui/test_gui_pack.py`. Pack ships
+`bin/spark-bc-gui`. **Not beat Claude.**
 
 ---
 
