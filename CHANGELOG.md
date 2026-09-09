@@ -5,6 +5,14 @@ language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
 
+## 0.6.57 — 2026-09-09
+
+- **Makefile restore:** `spark-ground` / `make test-ground` and
+  `decompile-bench` / `decompile-roundtrip` / `test-decompile-compete`
+  were dropped from the tip Makefile in the nav-subcategories land
+  (#48). Targets + companions/`test`/`clean` wiring restored. Does
+  not beat Claude.
+
 ## 0.6.56 — 2026-09-09
 
 - **Nav + knowledge subcategories:** Hive / Forge / Bench dropdowns

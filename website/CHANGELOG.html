@@ -158,6 +158,10 @@
         <article class="doc__body">
 <h1>Changelog</h1>
 <p>All notable user-facing releases of <strong>SparkLang</strong> (the Spark programming language) are listed here. Site and installers track <code>website/downloads/manifest.json</code>.</p>
+<h2>0.6.57 — 2026-09-09</h2>
+<ul>
+<li><strong>Makefile restore:</strong> <code>spark-ground</code> / <code>make test-ground</code> and <code>decompile-bench</code> / <code>decompile-roundtrip</code> / <code>test-decompile-compete</code> were dropped from the tip Makefile in the nav-subcategories land (#48). Targets + companions/<code>test</code>/<code>clean</code> wiring restored. Does not beat Claude.</li>
+</ul>
 <h2>0.6.56 — 2026-09-09</h2>
 <ul>
 <li><strong>Nav + knowledge subcategories:</strong> Hive / Forge / Bench dropdowns nest labeled subgroups (Foundations·Systems·Safety/Eval·RE; Senses·Models·Train; Language·Runtime·Ops). Knowledge hub cards and knowledge-safety follow the same hierarchy; Grounding links <code>./spark-ground</code> anti-guess. Shared SoT <code>tools/site_primary_nav.py</code> + <code>make sync-nav</code> / <code>docs-html</code>. Mobile keeps nested labels inside drawers. Does not beat Claude.</li>
