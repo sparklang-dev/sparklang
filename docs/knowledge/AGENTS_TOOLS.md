@@ -5,7 +5,7 @@ retrievers, browsers), observe results, and continue until it stops
 or abstains. Classic framing: **ReAct** (reason + act)
 ([Yao et al., 2022](https://arxiv.org/abs/2210.03629)).
 
-![Agent tool loop](/docs/images/diagram-knowledge-agents.svg)
+![Agent tool loop](/docs/images/diagram-knowledge-agents.svg?v=0.6.58)
 
 ## Why tools
 

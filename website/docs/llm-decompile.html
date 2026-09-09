@@ -256,19 +256,19 @@
         SoT; never treat “it recompiled” as SPARK_BC truth.</p>
         <h2 id="diagrams-function-layout">Diagrams (function layout)</h2>
         <h3 id="deterministic-spark-vs-llm-assist">Deterministic Spark vs LLM assist</h3>
-        <p><img class="doc__img" alt="Deterministic vs LLM" src="/docs/images/diagram-deterministic-vs-llm.svg" /></p>
+        <p><img class="doc__img" alt="Deterministic vs LLM" src="/docs/images/diagram-deterministic-vs-llm.svg?v=0.6.58" /></p>
         <p><em>Caption: Spark SoT (left) vs optional LLM assist (right). Assist may
         suggest names or draft source; it must not pack or silently rewrite
         <code class="inline-code">.sparkbc</code>.</em></p>
         <h3 id="how-llms-typically-assist-compile-decompile">How LLMs typically assist compile / decompile</h3>
-        <p><img class="doc__img" alt="LLM assist flows" src="/docs/images/diagram-llm-compile-decompile.svg" /></p>
+        <p><img class="doc__img" alt="LLM assist flows" src="/docs/images/diagram-llm-compile-decompile.svg?v=0.6.58" /></p>
         <p><em>Caption: Industry pattern — decompile: bytes/asm → LLM guess →
         human verify. Compile assist: intent → LLM draft → </em><em>Spark</em><em>
         deterministic <code class="inline-code">--compile</code> → dump/<code class="inline-code">--run-bc</code> check. Orange = guessed;
         green = SoT or human gate.</em></p>
         <h3 id="spark-tool-paths-context">Spark tool paths (context)</h3>
-        <p><img class="doc__img" alt="Compile path" src="/docs/images/diagram-compile-path.svg" /></p>
-        <p><img class="doc__img" alt="Decompile path" src="/docs/images/diagram-decompile-path.svg" /></p>
+        <p><img class="doc__img" alt="Compile path" src="/docs/images/diagram-compile-path.svg?v=0.6.58" /></p>
+        <p><img class="doc__img" alt="Decompile path" src="/docs/images/diagram-decompile-path.svg?v=0.6.58" /></p>
         <p><em>Caption: Same diagrams as the <a href="/docs/decompile.html">decompile how-to</a> —
         where helpers / GUI sit relative to SPARK_BC.</em></p>
         <h2 id="two-different-llm-decompile-shapes">Two different LLM “decompile” shapes</h2>

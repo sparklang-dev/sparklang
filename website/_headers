@@ -13,14 +13,14 @@
 
 /docs/images/*.svg
   Content-Type: image/svg+xml
-  Cache-Control: public, max-age=86400
+  Cache-Control: public, max-age=3600, must-revalidate
 
 /docs/images/*.png
   Content-Type: image/png
-  Cache-Control: public, max-age=86400
+  Cache-Control: public, max-age=3600, must-revalidate
 
 /docs/images/*
-  Cache-Control: public, max-age=86400
+  Cache-Control: public, max-age=3600, must-revalidate
 
 # Pretty URLs (/docs/decompile) and *.html — Cache-Control only.
 # Let Pages set Content-Type for HTML; do not blanket /docs/*.

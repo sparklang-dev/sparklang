@@ -4,7 +4,7 @@ Spark already ships a deep research page — **this card does not replace
 it**. It orients the knowledge hive and stresses one lesson: **recompile
 success is not semantic fidelity**.
 
-![Recompile ≠ semantics](/docs/images/diagram-knowledge-recompile.svg)
+![Recompile ≠ semantics](/docs/images/diagram-knowledge-recompile.svg?v=0.6.58)
 
 ## Read first (canonical)
 

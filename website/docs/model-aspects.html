@@ -427,8 +427,8 @@
         </table></div>
         <hr class="doc__hr" />
         <h2 id="system-diagram-ears-brain-voice-tools">System diagram — ears → brain → voice ↔ tools</h2>
-        <p><img class="doc__img" alt="Ears to brain to voice" src="/docs/images/diagram-ears-brain-voice.svg" /></p>
-        <p><img class="doc__img" alt="Agentic sensory loop" src="/docs/images/diagram-agentic-sensory-loop.svg" /></p>
+        <p><img class="doc__img" alt="Ears to brain to voice" src="/docs/images/diagram-ears-brain-voice.svg?v=0.6.58" /></p>
+        <p><img class="doc__img" alt="Agentic sensory loop" src="/docs/images/diagram-agentic-sensory-loop.svg?v=0.6.58" /></p>
         <pre class="mermaid">flowchart LR
           EAR["Ears — listen / STT<br/>spark-stt-tts"]
           TOK["Tokenizer / bindings"]
@@ -447,7 +447,7 @@
         again. Eyes stay <strong>dashed</strong>: planned contract only.</p>
         <hr class="doc__hr" />
         <h2 id="ears-stt-audio-in">Ears — STT / audio in</h2>
-        <p><img class="doc__img" alt="Ears dataflow" src="/docs/images/diagram-sense-ears.svg" /></p>
+        <p><img class="doc__img" alt="Ears dataflow" src="/docs/images/diagram-sense-ears.svg?v=0.6.58" /></p>
         <h3 id="plain-language">Plain language</h3>
         <p><strong>Ears</strong> turn sound into text the rest of Spark can bind (<code class="inline-code">-&gt;</code>) and
         pipe (<code class="inline-code">|</code>). Without ears, agent demos stay keyboard-only.</p>
@@ -606,7 +606,7 @@
         <a href="/docs/ci-pages.html">CI_PAGES.md</a>.</p>
         <hr class="doc__hr" />
         <h2 id="eyes-vision-image-in">Eyes — vision / image in</h2>
-        <p><img class="doc__img" alt="Eyes planned stub" src="/docs/images/diagram-sense-eyes.svg" /></p>
+        <p><img class="doc__img" alt="Eyes planned stub" src="/docs/images/diagram-sense-eyes.svg?v=0.6.58" /></p>
         <h3 id="plain-language">Plain language</h3>
         <p><strong>Eyes</strong> would turn images into captions or visual tokens the brain
         can use. Spark tip does <strong>not</strong> have working eyes.</p>
@@ -683,7 +683,7 @@
         <a href="/docs/factory.html">FACTORY.md</a> · Adoption: <a href="/docs/adoption-bar.html">ADOPTION_BAR.md</a>.</p>
         <hr class="doc__hr" />
         <h2 id="speaking-tts-audio-out">Speaking — TTS / audio out</h2>
-        <p><img class="doc__img" alt="Speaking dataflow" src="/docs/images/diagram-sense-speaking.svg" /></p>
+        <p><img class="doc__img" alt="Speaking dataflow" src="/docs/images/diagram-sense-speaking.svg?v=0.6.58" /></p>
         <h3 id="plain-language">Plain language</h3>
         <p><strong>Speaking</strong> turns text (or the last bound value) into audio the user
         can hear — or a dry WAV marker CI can hash.</p>
@@ -801,7 +801,7 @@
         (reply pack) · templates under <code class="inline-code">templates/voice_models/</code>.</p>
         <hr class="doc__hr" />
         <h2 id="thinking-llm-forward-generation">Thinking — LLM forward / generation</h2>
-        <p><img class="doc__img" alt="Thinking forward path" src="/docs/images/diagram-sense-thinking.svg" /></p>
+        <p><img class="doc__img" alt="Thinking forward path" src="/docs/images/diagram-sense-thinking.svg?v=0.6.58" /></p>
         <h3 id="plain-language">Plain language</h3>
         <p><strong>Thinking</strong> is how Spark turns tokens into the next token / ask text
         — either the <strong>owned tiny CPU serve path</strong> or an <strong>optional live
@@ -946,8 +946,8 @@
         <a href="/docs/ai-models.html#live-gateway-integration-wired-today">ASK_LIVE.md</a>.</p>
         <hr class="doc__hr" />
         <h2 id="behaviors-policies-tools-turn-taking">Behaviors — policies, tools, turn-taking</h2>
-        <p><img class="doc__img" alt="Behavior and tool loop" src="/docs/images/diagram-behavior-tool-loop.svg" /></p>
-        <p><img class="doc__img" alt="Behaviors detail" src="/docs/images/diagram-sense-behaviors.svg" /></p>
+        <p><img class="doc__img" alt="Behavior and tool loop" src="/docs/images/diagram-behavior-tool-loop.svg?v=0.6.58" /></p>
+        <p><img class="doc__img" alt="Behaviors detail" src="/docs/images/diagram-sense-behaviors.svg?v=0.6.58" /></p>
         <h3 id="plain-language">Plain language</h3>
         <p><strong>Behaviors</strong> are the policies and control flow around the model —
         not the tensor math. This is where agentic systems win or fail:
@@ -1224,7 +1224,7 @@
         <p>Decompile research context (OpenBin cited carefully):
         <a href="/docs/llm-decompile.html">research/LLM_DECOMPILE.md</a> →
         <a href="/docs/llm-decompile.html">/docs/llm-decompile.html</a>.</p>
-        <p><img class="doc__img" alt="Spark vs external ask/voice" src="/docs/images/diagram-spark-vs-external-stacks.svg" /></p>
+        <p><img class="doc__img" alt="Spark vs external ask/voice" src="/docs/images/diagram-spark-vs-external-stacks.svg?v=0.6.58" /></p>
         <hr class="doc__hr" />
         <h2 id="how-to-lab-15-minutes">How-to lab (15 minutes)</h2>
         <p>Prove the sensory map without inventing live vendor calls:</p>

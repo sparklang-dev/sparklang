@@ -72,7 +72,7 @@ SoT; never treat “it recompiled” as SPARK_BC truth.
 
 ### Deterministic Spark vs LLM assist
 
-![Deterministic vs LLM](/docs/images/diagram-deterministic-vs-llm.svg)
+![Deterministic vs LLM](/docs/images/diagram-deterministic-vs-llm.svg?v=0.6.58)
 
 *Caption: Spark SoT (left) vs optional LLM assist (right). Assist may
 suggest names or draft source; it must not pack or silently rewrite
@@ -80,7 +80,7 @@ suggest names or draft source; it must not pack or silently rewrite
 
 ### How LLMs typically assist compile / decompile
 
-![LLM assist flows](/docs/images/diagram-llm-compile-decompile.svg)
+![LLM assist flows](/docs/images/diagram-llm-compile-decompile.svg?v=0.6.58)
 
 *Caption: Industry pattern — decompile: bytes/asm → LLM guess →
 human verify. Compile assist: intent → LLM draft → **Spark**
@@ -89,9 +89,9 @@ green = SoT or human gate.*
 
 ### Spark tool paths (context)
 
-![Compile path](/docs/images/diagram-compile-path.svg)
+![Compile path](/docs/images/diagram-compile-path.svg?v=0.6.58)
 
-![Decompile path](/docs/images/diagram-decompile-path.svg)
+![Decompile path](/docs/images/diagram-decompile-path.svg?v=0.6.58)
 
 *Caption: Same diagrams as the [decompile how-to](../DECOMPILE.md) —
 where helpers / GUI sit relative to SPARK_BC.*

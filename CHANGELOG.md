@@ -12,7 +12,9 @@ language) are listed here. Site and installers track
   `/docs/images/*`. With `nosniff`, browsers refused PNG/SVG
   screenshots (bytes 200, MIME wrong / dual-typed SVG). Fix:
   explicit `image/png` + `image/svg+xml` under `/docs/images/`;
-  `/docs/*` is Cache-Control only. Does not beat Claude.
+  `/docs/*` is Cache-Control only. Image `src` cache-busted
+  `?v=0.6.58` so poisoned edge MIME clears without zone purge.
+  Does not beat Claude.
 
 ## 0.6.57 — 2026-09-09
 

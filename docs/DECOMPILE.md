@@ -26,7 +26,7 @@ Ghidra/IDA/…” without measured scoreboard JSON.
 
 ### Compile path
 
-![Compile path: source to SPARK_BC to run/train/serve](/docs/images/diagram-compile-path.svg)
+![Compile path: source to SPARK_BC to run/train/serve](/docs/images/diagram-compile-path.svg?v=0.6.58)
 
 *Caption: `.spark` → bootstrap / GAS assembler → `.sparkbc`
 (SPARK_BC) → `--run-bc` / TRAIN·STEP / serve. Helpers, published
@@ -35,7 +35,7 @@ invent bytecode.*
 
 ### Decompile path
 
-![Decompile path: BC to dump to readable view](/docs/images/diagram-decompile-path.svg)
+![Decompile path: BC to dump to readable view](/docs/images/diagram-decompile-path.svg?v=0.6.58)
 
 *Caption: `.sparkbc` → `dump.py` (disasm/inspect) → readable hex +
 mnemonics (or stub JSON / `--run-bc`). Optional edit is of the
@@ -44,7 +44,7 @@ lossless BC→source decompiler.*
 
 ### Helpers · shadow-build · SDK/IDE GUI
 
-![Helpers shadow-build and GUI placement](/docs/images/diagram-helpers-gui.svg)
+![Helpers shadow-build and GUI placement](/docs/images/diagram-helpers-gui.svg?v=0.6.58)
 
 *Caption: Deterministic SPARK_BC SoT in the center. Helpers
 (`Makefile`, `sparkc`, tests), shadow-build
@@ -53,7 +53,7 @@ around it and call the same compile/dump paths.*
 
 ### Deterministic tools vs LLM assist
 
-![Deterministic Spark vs optional LLM assist](/docs/images/diagram-deterministic-vs-llm.svg)
+![Deterministic Spark vs optional LLM assist](/docs/images/diagram-deterministic-vs-llm.svg?v=0.6.58)
 
 *Caption: Left = Spark SoT (compile, dump, run). Right = optional
 LLM assist later (names/comments/drafts) — **never** the SoT for
@@ -80,7 +80,7 @@ PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
   -o /tmp/spark-train-step-bc.txt
 ```
 
-![CLI dump of SPARK_BC](/docs/images/decompile-cli-dump.png)
+![CLI dump of SPARK_BC](/docs/images/decompile-cli-dump.png?v=0.6.58)
 
 *Caption: Real terminal capture of `tools/spark-bc-dump/dump.py` on
 `docs/examples/spark-train-step.sparkbc` — magic `SPBC`, pools,
@@ -112,7 +112,7 @@ PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
   docs/examples/spark-builder.sparkbc --stub -o /tmp/stub.json
 ```
 
-![CLI --stub JSON](/docs/images/decompile-cli-stub.png)
+![CLI --stub JSON](/docs/images/decompile-cli-stub.png?v=0.6.58)
 
 *Caption: Real `--stub` JSON from `spark-builder.sparkbc` — status,
 sha256, magic, version. Still inspect metadata, not source recovery.*
@@ -124,14 +124,14 @@ sha256, magic, version. Still inspect metadata, not source recovery.*
 ./spark --run-bc docs/examples/spark-train-step.sparkbc   # GAS → bc_vm
 ```
 
-![CLI --run-bc dry VM](/docs/images/decompile-cli-runbc.png)
+![CLI --run-bc dry VM](/docs/images/decompile-cli-runbc.png?v=0.6.58)
 
 *Caption: Real `./spark-bootstrap --run-bc` dry bytecode VM lines.
 TRAIN/STEP contracts: [SPARK_BC.md](SPARK_BC.md).*
 
 ### 5. CLI help (flags)
 
-![CLI dump.py --help](/docs/images/decompile-cli-help.png)
+![CLI dump.py --help](/docs/images/decompile-cli-help.png?v=0.6.58)
 
 *Caption: Captured `dump.py --help` — `--stub`, `--weights`,
 `--serve` (tiny CPU forward; not production LLM).*
@@ -165,7 +165,7 @@ Buttons: **Compile → .sparkbc**, **Decompile .sparkbc**, open
 source / `.sparkbc`, save dump, load sample. See also
 [sdk-ide-download](/docs/sdk-ide-download.html).
 
-![Annotated SPARK_BC GUI](/docs/images/decompile-gui-sparkbc.png)
+![Annotated SPARK_BC GUI](/docs/images/decompile-gui-sparkbc.png?v=0.6.58)
 
 *Caption: Annotated layout matching `tools/spark_bc_gui` chrome.
 Right pane text is **real** `dump.py` output (same capture as the

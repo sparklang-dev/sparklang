@@ -72,7 +72,7 @@ If CLI/auth absent → Cloudflare dashboard Direct Upload of
 - https://sparklang.dev/data/decompile-scoreboard.json
 - https://sparklang.dev/downloads.html
 - **Images MIME (required):**
-  `curl -sI https://sparklang.dev/docs/images/decompile-cli-dump.png`
+  `curl -sI https://sparklang.dev/docs/images/decompile-cli-dump.png?v=0.6.58`
   must show `Content-Type: image/png` (not `text/html`).
   SVG: `…/diagram-spark-loop.svg` → `image/svg+xml` only
   (no dual `text/html`). `nosniff` + wrong MIME = blank screenshots.

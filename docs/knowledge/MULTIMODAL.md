@@ -3,7 +3,7 @@
 Language models eat **tokens**. Multimodal systems add encoders that
 map audio or images into that shared space (or into tool side-channels).
 
-![Multimodal I/O schematic](/docs/images/diagram-knowledge-multimodal.svg)
+![Multimodal I/O schematic](/docs/images/diagram-knowledge-multimodal.svg?v=0.6.58)
 
 ## Speech → text (STT / ASR)
 
