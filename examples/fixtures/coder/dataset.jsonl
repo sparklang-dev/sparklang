@@ -1,0 +1,48 @@
+{"messages":[{"role":"user","content":"sparkasm exit 42"},{"role":"assistant","content":".global _start\n.text\n_start:\n\tmov\trax, 60\n\tmov\trdi, 42\n\tsyscall\n"}]}
+{"messages":[{"role":"user","content":"write TRAIN then STEP program"},{"role":"assistant","content":"model train dataset \"examples/fixtures/coder/dataset.jsonl\" base \"coder\" out \"out/train/coder-001\" -> job\nmodel step \"coder-001\" -> step\n"}]}
+{"messages":[{"role":"user","content":"print hello spark"},{"role":"assistant","content":"ask \"hello from spark-coder\" -> msg\nprint msg\n"}]}
+{"messages":[{"role":"user","content":"opcode TRAIN"},{"role":"assistant","content":"STEP"}]}
+{"messages":[{"role":"user","content":"opcode TRAIN"},{"role":"assistant","content":"STEP"}]}
+{"messages":[{"role":"user","content":"opcode TRAIN"},{"role":"assistant","content":"STEP"}]}
+{"messages":[{"role":"user","content":"opcode STEP"},{"role":"assistant","content":"TRAIN"}]}
+{"messages":[{"role":"user","content":"SPARK_B"},{"role":"assistant","content":"C"}]}
+{"messages":[{"role":"user","content":"SPARK_B"},{"role":"assistant","content":"C"}]}
+{"messages":[{"role":"user","content":"SPARK_B"},{"role":"assistant","content":"C"}]}
+{"messages":[{"role":"user","content":"mov rax,"},{"role":"assistant","content":" 60"}]}
+{"messages":[{"role":"user","content":"mov rax,"},{"role":"assistant","content":" 60"}]}
+{"messages":[{"role":"user","content":"mov rax,"},{"role":"assistant","content":" 60"}]}
+{"messages":[{"role":"user","content":"mov rdi,"},{"role":"assistant","content":" 42"}]}
+{"messages":[{"role":"user","content":"mov rdi,"},{"role":"assistant","content":" 42"}]}
+{"messages":[{"role":"user","content":"mov rdi,"},{"role":"assistant","content":" 42"}]}
+{"messages":[{"role":"user","content":"syscall exit"},{"role":"assistant","content":"syscall"}]}
+{"messages":[{"role":"user","content":".global"},{"role":"assistant","content":" _start"}]}
+{"messages":[{"role":"user","content":"spark coder profile"},{"role":"assistant","content":"spark-coder"}]}
+{"messages":[{"role":"user","content":"spark coder profile"},{"role":"assistant","content":"spark-coder"}]}
+{"messages":[{"role":"user","content":"spark coder profile"},{"role":"assistant","content":"spark-coder"}]}
+{"messages":[{"role":"user","content":"device for train"},{"role":"assistant","content":"cpu"}]}
+{"messages":[{"role":"user","content":"device for train"},{"role":"assistant","content":"cpu"}]}
+{"messages":[{"role":"user","content":"device for train"},{"role":"assistant","content":"cpu"}]}
+{"messages":[{"role":"user","content":"beats claude?"},{"role":"assistant","content":"false"}]}
+{"messages":[{"role":"user","content":"genome"},{"role":"assistant","content":"SPARK_BC"}]}
+{"messages":[{"role":"user","content":"builder ask"},{"role":"assistant","content":"ask \"Inspect Spark SPARK_BC\" -> plan\nprint plan\n"}]}
+{"messages":[{"role":"user","content":"compile sparkbc"},{"role":"assistant","content":"--compile"}]}
+{"messages":[{"role":"user","content":"run bytecode"},{"role":"assistant","content":"--run-bc"}]}
+{"messages":[{"role":"user","content":"loss should go"},{"role":"assistant","content":"down"}]}
+{"messages":[{"role":"user","content":"sgd on"},{"role":"assistant","content":"cpu"}]}
+{"messages":[{"role":"user","content":"never train on"},{"role":"assistant","content":"6000"}]}
+{"messages":[{"role":"user","content":"lm_head predicts"},{"role":"assistant","content":"next"}]}
+{"messages":[{"role":"user","content":"embed mean"},{"role":"assistant","content":"pool"}]}
+{"messages":[{"role":"user","content":"mlp0 is"},{"role":"assistant","content":"owned"}]}
+{"messages":[{"role":"user","content":"weights file"},{"role":"assistant","content":"weights.safetensors"}]}
+{"messages":[{"role":"user","content":"arch file"},{"role":"assistant","content":"arch.json"}]}
+{"messages":[{"role":"user","content":"Say exactly: spark"},{"role":"assistant","content":"spark"}]}
+{"messages":[{"role":"user","content":"Say exactly: spark"},{"role":"assistant","content":"spark"}]}
+{"messages":[{"role":"user","content":"Say exactly: spark"},{"role":"assistant","content":"spark"}]}
+{"messages":[{"role":"user","content":"Say exactly: STEP"},{"role":"assistant","content":"STEP"}]}
+{"messages":[{"role":"user","content":"Say exactly: STEP"},{"role":"assistant","content":"STEP"}]}
+{"messages":[{"role":"user","content":"Say exactly: STEP"},{"role":"assistant","content":"STEP"}]}
+{"messages":[{"role":"user","content":"Say exactly: TRAIN"},{"role":"assistant","content":"TRAIN"}]}
+{"messages":[{"role":"user","content":"exit status forty-two"},{"role":"assistant","content":"42"}]}
+{"messages":[{"role":"user","content":"linux exit syscall"},{"role":"assistant","content":"60"}]}
+{"messages":[{"role":"user","content":"text section"},{"role":"assistant","content":".text"}]}
+{"messages":[{"role":"user","content":"start label"},{"role":"assistant","content":"_start:"}]}

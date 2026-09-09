@@ -1,0 +1,115 @@
+{
+  "profile": "spark-coder",
+  "trained": true,
+  "not_sgd": false,
+  "sgd": true,
+  "beats_claude": false,
+  "device": "cuda:5090",
+  "gpu_name": "NVIDIA GeForce RTX 5090",
+  "device_pick": {
+    "device": "cuda",
+    "torch_device": "cuda:1",
+    "index": 1,
+    "name": "NVIDIA GeForce RTX 5090",
+    "reason": "5090 preferred",
+    "never": "rtx-pro-6000",
+    "refused": [
+      {
+        "index": 0,
+        "name": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+        "why": "6000"
+      }
+    ]
+  },
+  "never": "rtx-pro-6000",
+  "brain": "owned-weights",
+  "loss_before": 5.620311260223389,
+  "loss_after": 2.041017532348633,
+  "loss_curve": [
+    {
+      "outer": 0,
+      "loss": 5.620311260223389,
+      "phase": "start",
+      "device": "NVIDIA GeForce RTX 5090"
+    },
+    {
+      "outer": 1,
+      "loss": 3.814472198486328,
+      "device": "NVIDIA GeForce RTX 5090"
+    },
+    {
+      "outer": 2,
+      "loss": 3.007906675338745,
+      "device": "NVIDIA GeForce RTX 5090"
+    },
+    {
+      "outer": 3,
+      "loss": 2.6064400672912598,
+      "device": "NVIDIA GeForce RTX 5090"
+    },
+    {
+      "outer": 4,
+      "loss": 2.357725143432617,
+      "device": "NVIDIA GeForce RTX 5090"
+    },
+    {
+      "outer": 5,
+      "loss": 2.187459945678711,
+      "device": "NVIDIA GeForce RTX 5090"
+    },
+    {
+      "outer": 6,
+      "loss": 2.0628013610839844,
+      "device": "NVIDIA GeForce RTX 5090"
+    },
+    {
+      "outer": 7,
+      "loss": 1.968820333480835,
+      "device": "NVIDIA GeForce RTX 5090"
+    },
+    {
+      "outer": 8,
+      "loss": 1.8961758613586426,
+      "device": "NVIDIA GeForce RTX 5090"
+    },
+    {
+      "outer": 9,
+      "loss": 1.8384418487548828,
+      "device": "NVIDIA GeForce RTX 5090"
+    },
+    {
+      "outer": 10,
+      "loss": 1.7913000583648682,
+      "device": "NVIDIA GeForce RTX 5090"
+    },
+    {
+      "outer": "first_byte",
+      "loss": 0.7216895818710327,
+      "phase": "prove_overfit",
+      "device": "NVIDIA GeForce RTX 5090"
+    }
+  ],
+  "n_pairs_expanded": 768,
+  "weights": "models/spark-coder/weights.safetensors",
+  "weights_sha256": "91e9dcb4bf50311b8b6e30cb71be1a2a7a0c298b05b1bdbd6b921c9cae0eead6",
+  "outer": 10,
+  "inner": 10,
+  "lr": 0.2,
+  "arch": {
+    "profile": "spark-coder",
+    "vocab": 256,
+    "dim": 32,
+    "n_layer": 2,
+    "n_head": 4,
+    "n_kv": 2,
+    "head_dim": 8,
+    "mlp": 128,
+    "genome": "SPARK_BC",
+    "factory": "Spark language",
+    "beats_claude": false,
+    "device": "cpu",
+    "never": "rtx-pro-6000",
+    "brain": "owned-weights",
+    "note": "TinyCoder written+trained in sparklang; not a downloaded base model"
+  }
+}

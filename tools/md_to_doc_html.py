@@ -13,7 +13,7 @@ from pathlib import Path
 import markdown
 
 ROOT = Path(__file__).resolve().parents[1]
-CSS_V = "modelaspects040"
+CSS_V = "sparkcoder042"
 
 DOC_NAV = """\
       <nav class="doc__nav" aria-label="Docs">
@@ -29,6 +29,7 @@ DOC_NAV = """\
         <a href="/docs/spark-bc.html"{isa}>Opcodes / ISA</a>
         <a href="/docs/build-models.html"{bm}>Build models</a>
         <a href="/docs/train-loop.html"{tl}>Train loop</a>
+        <a href="/docs/spark-coder.html"{sc}>Spark coder</a>
         <a href="/docs/architecture.html"{ar}>Architecture</a>
         <a href="/docs/tokenizer.html"{tk}>Tokenizer</a>
         <a href="/docs/serve.html"{sv}>Serve</a>
@@ -89,6 +90,7 @@ HEADER = """\
                   <li><a href="/docs/spark-bc.html">Opcodes / ISA</a></li>
                   <li><a href="/docs/build-models.html">Build models</a></li>
                   <li><a href="/docs/train-loop.html">Train loop</a></li>
+                  <li><a href="/docs/spark-coder.html">Spark coder</a></li>
                   <li><a href="/docs/architecture.html">Architecture</a></li>
                   <li><a href="/docs/attention-forward.html">Attention honesty</a></li>
                   <li><a href="/docs/tokenizer.html">Tokenizer</a></li>
@@ -173,6 +175,7 @@ MD_LINK_MAP = {
     "LLM_DECOMPILE.md": "/docs/llm-decompile.html",
     "BUILD_MODELS.md": "/docs/build-models.html",
     "TRAIN_LOOP.md": "/docs/train-loop.html",
+    "SPARK_CODER.md": "/docs/spark-coder.html",
     "ARCHITECTURE.md": "/docs/architecture.html",
     "ATTENTION_FORWARD.md": "/docs/attention-forward.html",
     "SERVE.md": "/docs/serve.html",
@@ -236,6 +239,10 @@ DOC_PAGES = [
     ("tl", "TRAIN_LOOP.md", "train-loop.html",
      "Train loop — outer / inner SGD",
      "Multi-outer CPU SGD, fixtures, checkpoints, loss curves."),
+    ("sc", "SPARK_CODER.md", "spark-coder.html",
+     "Spark coder — owned TinyCoder",
+     "In-repo TinyCoder layers + SGD on coding fixtures. "
+     "Not HF/Claude. Never 6000; 5090 OK. Does not beat Claude."),
     ("ar", "ARCHITECTURE.md", "architecture.html",
      "Architecture pieces",
      "Embed, RMSNorm, lm_head, MLP/SwiGLU, attention honesty."),
@@ -360,8 +367,8 @@ def render(md_path: Path, out_path: Path, title: str, description: str, current:
     body = decorate_html(body)
     keys = (
         "ab", "ai", "nn", "ide", "sh", "bc", "cp", "dc", "rd", "bm",
-        "af", "mk", "th", "isa", "fy", "dg", "tl", "ar", "tk", "sv", "ev",
-        "ci", "ma", "vo",
+        "af", "mk", "th", "isa", "fy", "dg", "tl", "sc", "ar", "tk",
+        "sv", "ev", "ci", "ma", "vo",
     )
     nav_kwargs = {
         k: (' aria-current="page"' if current == k else "") for k in keys
