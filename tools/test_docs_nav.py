@@ -72,11 +72,33 @@ class TestDocsNav(unittest.TestCase):
             path = ROOT / "docs" / name
             self.assertTrue(path.is_file(), msg=name)
 
+    def test_rewrite_keeps_docs_images(self) -> None:
+        """Markdown images under images/ map to /docs/images/."""
+        from tools.md_to_doc_html import rewrite_md_links
+
+        out = rewrite_md_links(
+            "![Ears](images/diagram-sense-ears.svg)\n"
+            "See [VOICE.md](VOICE.md)\n"
+        )
+        self.assertIn(
+            "![Ears](/docs/images/diagram-sense-ears.svg)",
+            out,
+        )
+        self.assertIn("[VOICE.md](/docs/voice.html)", out)
+        self.assertNotIn("!`", out)
+
     def test_model_aspect_svgs_exist(self) -> None:
         """L-lane sensory diagrams are present under docs/images/."""
         for name in (
             "diagram-ears-brain-voice.svg",
             "diagram-behavior-tool-loop.svg",
+            "diagram-agentic-sensory-loop.svg",
+            "diagram-sense-ears.svg",
+            "diagram-sense-eyes.svg",
+            "diagram-sense-speaking.svg",
+            "diagram-sense-thinking.svg",
+            "diagram-sense-behaviors.svg",
+            "diagram-spark-vs-external-stacks.svg",
         ):
             path = ROOT / "docs" / "images" / name
             self.assertTrue(path.is_file(), msg=name)

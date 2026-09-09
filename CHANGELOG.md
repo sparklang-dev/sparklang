@@ -5,6 +5,24 @@ language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
 
+## 0.6.52 — 2026-09-09
+
+- **Sensory mapping 100× (Model aspects):** expand
+  [MODEL_ASPECTS.md](docs/MODEL_ASPECTS.md) →
+  [/docs/model-aspects.html](/docs/model-aspects.html) with hero
+  explainer, deep Ears/Eyes/Speaking/Thinking/Behaviors sections
+  (dataflows, opcodes/CLI/make, tiny vs large / never 6000, gaps),
+  agentic system loop SVG, Spark vs OpenBin Ask vs phone-voice
+  comparison (local SoT — not clones), 15-min how-to lab. Keeps
+  summary status table. New diagrams under `docs/images/diagram-*sense*`
+  + `diagram-agentic-sensory-loop.svg` +
+  `diagram-spark-vs-external-stacks.svg`. Cross-links Knowledge hive,
+  Voice ask, Methods vs OpenBin. Forge nav lists Model aspects.
+  **Honest:** eyes planned stub only; not beat Claude; never 6000;
+  no OpenBin/phone clone. Also fix `md_to_doc_html.py` so
+  `![…](images/*.svg)` publishes as `<img>` under `/docs/images/`
+  (was incorrectly rewritten to inline code).
+
 ## 0.6.51 — 2026-09-09
 
 - **Project-loop analyze (OpenBin methods → Spark-native):**

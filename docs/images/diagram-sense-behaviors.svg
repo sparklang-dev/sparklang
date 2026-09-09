@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 300" role="img" aria-labelledby="title desc">
+  <title id="title">Behaviors policies and tools</title>
+  <desc id="desc">Input through policy ask tools output with train and eval measurement.</desc>
+  <defs>
+    <marker id="ab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#334155"/>
+    </marker>
+  </defs>
+  <rect width="880" height="300" fill="#f8fafc"/>
+  <text x="24" y="36" font-family="ui-sans-serif,system-ui,sans-serif" font-size="16" font-weight="700" fill="#0f172a">Behaviors  policies, tools, turn-taking</text>
+  <text x="24" y="58" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#64748b">.spark SoT · dry tools stub:local · helpers ` policy</text>
+
+  <rect x="40" y="100" width="120" height="56" rx="10" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+  <text x="100" y="134" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#0c4a6e">Input</text>
+
+  <rect x="200" y="100" width="150" height="56" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="275" y="125" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#78350f">Policy</text>
+  <text x="275" y="143" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="10" fill="#92400e">pack · abstain · expect</text>
+
+  <rect x="390" y="100" width="130" height="56" rx="10" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+  <text x="455" y="134" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#064e3b">ask / classify</text>
+
+  <rect x="560" y="100" width="130" height="56" rx="10" fill="#fae8ff" stroke="#a21caf" stroke-width="2"/>
+  <text x="625" y="134" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#701a75">Output</text>
+
+  <rect x="390" y="200" width="130" height="56" rx="10" fill="#f1f5f9" stroke="#475569" stroke-width="2"/>
+  <text x="455" y="225" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" font-weight="700" fill="#1e293b">with tools</text>
+  <text x="455" y="243" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="10" fill="#334155">stub:local dry</text>
+
+  <rect x="40" y="200" width="130" height="56" rx="10" fill="#d1fae5" stroke="#059669" stroke-width="2"/>
+  <text x="105" y="234" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" font-weight="700" fill="#064e3b">Train STEP</text>
+
+  <rect x="200" y="200" width="130" height="56" rx="10" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+  <text x="265" y="225" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" font-weight="700" fill="#7f1d1d">Eval</text>
+  <text x="265" y="243" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="10" fill="#991b1b">not beat Claude</text>
+
+  <line x1="160" y1="128" x2="200" y2="128" stroke="#334155" stroke-width="2" marker-end="url(#ab)"/>
+  <line x1="350" y1="128" x2="390" y2="128" stroke="#334155" stroke-width="2" marker-end="url(#ab)"/>
+  <line x1="520" y1="128" x2="560" y2="128" stroke="#334155" stroke-width="2" marker-end="url(#ab)"/>
+  <line x1="455" y1="156" x2="455" y2="200" stroke="#334155" stroke-width="2" marker-end="url(#ab)"/>
+  <path d="M 390 228 L 360 228 L 360 128 L 390 128" stroke="#334155" stroke-width="1.5" fill="none" marker-end="url(#ab)"/>
+  <line x1="170" y1="228" x2="200" y2="228" stroke="#334155" stroke-width="2" marker-end="url(#ab)"/>
+</svg>

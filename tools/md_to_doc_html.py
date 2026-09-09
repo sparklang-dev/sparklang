@@ -370,6 +370,19 @@ def slugify(text: str) -> str:
 
 
 def rewrite_md_links(src: str) -> str:
+    def repl_img(m: re.Match[str]) -> str:
+        alt, target = m.group(1), m.group(2)
+        if target.startswith("http") or target.startswith("/"):
+            return m.group(0)
+        if target.startswith("images/"):
+            return f"![{alt}](/docs/{target})"
+        name = Path(target).name
+        if name.endswith((".svg", ".png", ".jpg", ".jpeg", ".webp", ".gif")):
+            return f"![{alt}](/docs/images/{name})"
+        return m.group(0)
+
+    src = re.sub(r"!\[([^\]]*)\]\(([^)]+)\)", repl_img, src)
+
     def repl(m: re.Match[str]) -> str:
         label, target = m.group(1), m.group(2)
         base = target.split("#", 1)[0]
@@ -387,7 +400,7 @@ def rewrite_md_links(src: str) -> str:
             return f"`{target}`"
         return m.group(0)
 
-    return re.sub(r"\[([^\]]+)\]\(([^)]+)\)", repl, src)
+    return re.sub(r"(?<!!)\[([^\]]+)\]\(([^)]+)\)", repl, src)
 
 
 def decorate_html(body: str) -> str:
