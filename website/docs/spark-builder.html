@@ -283,6 +283,16 @@
         make sparkbc-e2e       # TRAIN→STEP→ARTIFACT focused gate
         # alias: make test-sparkbc-e2e
         </code></pre>
+        <h3 id="6b-tiny-cpu-serve-forward-not-production-llm">6b) Tiny CPU serve forward (not production LLM)</h3>
+        <pre class="doc__pre"><code class="language-bash">PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
+          docs/examples/spark-builder.sparkbc \
+          --source examples/spark_builder.spark \
+          --command './spark-bootstrap --compile examples/spark_builder.spark -o docs/examples/spark-builder.sparkbc' \
+          --serve /tmp/serve-dry-001
+        # → /tmp/serve-dry-001/SERVE (forward=true, trained=false)
+        #    + weights.safetensors (init if missing)
+        # Or: ./spark-serve docs/examples/spark-builder.sparkbc /tmp/serve-dry-001
+        </code></pre>
         <p>Focused TRAIN→STEP→ARTIFACT gate: <code class="inline-code">make sparkbc-e2e</code> /
         <code class="inline-code">make test-sparkbc-e2e</code> (<code class="inline-code">tools/spark-bc-dump/run_e2e_gate.sh</code>,
         wrapper <code class="inline-code">scripts/sparkbc-e2e</code>). Compiles
@@ -387,7 +397,11 @@
         <td><strong>implemented</strong> (<code class="inline-code">out/train/&lt;job&gt;/weights.safetensors</code>; dry delta; <code class="inline-code">trained=false</code>)</td>
         </tr>
         <tr>
-        <td>Trained / served / beats Claude</td>
+        <td>Tiny CPU serve forward</td>
+        <td><strong>implemented</strong> (<code class="inline-code">dump.py --serve</code> → <code class="inline-code">SERVE</code> with <code class="inline-code">forward=true</code>; <code class="inline-code">trained</code> from weights meta; not production)</td>
+        </tr>
+        <tr>
+        <td>Trained / beats Claude / production LLM</td>
         <td><strong>not</strong> — later owner train-grant</td>
         </tr>
         <tr>
@@ -462,7 +476,11 @@
         <td><strong>implemented</strong> (dry delta; not SGD)</td>
         </tr>
         <tr>
-        <td>Trained / served / beats Claude</td>
+        <td>Tiny CPU serve forward</td>
+        <td><strong>implemented</strong> (<code class="inline-code">SERVE</code>; <code class="inline-code">forward=true</code>; not production)</td>
+        </tr>
+        <tr>
+        <td>Trained / beats Claude</td>
         <td><strong>not</strong></td>
         </tr>
         </tbody>

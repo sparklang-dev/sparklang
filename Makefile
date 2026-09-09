@@ -11,7 +11,7 @@ NVML_LIB ?= /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1
 .PHONY: all clean test test-hdl test-e2e-browser test-examples machine-proof \
 	examples-run corpus corpus-agg spark-cuda spark-net spark-binary \
 	spark-lift spark-section-dump companions browser-scaffold \
-	test-model-lab spark-model-lab test-bpe-seed \
+	test-model-lab spark-model-lab spark-serve test-bpe-seed \
 	browser-mitm-analyze ide test-engine-paint test-engine-css \
 	test-engine-layout test-ide-paint spark-bootstrap sparkc \
 	test-bootstrap test-sparkbc test-sparkbc-e2e sparkbc-e2e \
@@ -199,7 +199,7 @@ asm/engine_js.o: asm/engine_js.s
 companions: spark-cuda-probe spark-net-capture \
 	spark-binary-probe spark-section-dump spark-lift spark-ask-http \
 	spark-ask-probe spark-rag-http spark-http spark-extract spark-expect \
-	spark-train-http spark-abstain spark-model-lab spark-shell \
+	spark-train-http spark-abstain spark-model-lab spark-serve spark-shell \
 	spark-browser-host spark-mitm-quic \
 	spark-mitm-quic-divert spark-mitm-ca spark-mitm-h2 spark-browser-cdp spark-pstn-dial \
 	spark-enc-gateway spark-stt-tts spark-review-url spark-engine-show \
@@ -274,6 +274,10 @@ spark-abstain: tools/spark-abstain/spark_abstain.sh \
 spark-model-lab: tools/spark-model-lab/spark_model_lab.sh \
 	tools/spark-model-lab/cli.py
 	install -m 755 tools/spark-model-lab/spark_model_lab.sh $@
+
+spark-serve: tools/spark-bc-dump/spark_serve.sh \
+	tools/spark-bc-dump/dump.py
+	install -m 755 tools/spark-bc-dump/spark_serve.sh $@
 
 # Gateway probe credential dry/live check (public AI gateway).
 spark-ask-probe: tools/ask/spark_ask_probe.c

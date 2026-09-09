@@ -38,7 +38,14 @@ def main(argv: list[str] | None = None) -> int:
     )
     p.add_argument(
         "--serve",
-        help="write dry SERVE marker dir (not production LLM)",
+        help=(
+            "write SERVE dir after tiny CPU forward "
+            "(not production LLM)"
+        ),
+    )
+    p.add_argument(
+        "--serve-weights",
+        help="optional safetensors for --serve (else init)",
     )
     args = p.parse_args(argv)
     src = args.source or args.sparkbc
@@ -49,6 +56,7 @@ def main(argv: list[str] | None = None) -> int:
             args.serve,
             source=src,
             command=cmd,
+            weights_path=args.serve_weights,
         )
         text = json.dumps(payload, indent=2) + "\n"
     elif args.weights:
