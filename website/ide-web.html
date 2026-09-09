@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Spark IDE (web shell) — SparkLang</title>
+    <meta
+      name="description"
+      content="Static demo of Spark’s dense IDE shell: rail · editor/dump · tools. Desktop spark-bc-gui uses the same design tokens. Not a third-party clone."
+    />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/css/tokens.css?v=polish0909" />
+    <link rel="stylesheet" href="/css/site.css?v=polish0909" />
+    <link rel="stylesheet" href="/css/ide-shell.css?v=polish0909" />
+  </head>
+  <body>
+    <a class="skip-link" href="#ide-main">Skip to IDE</a>
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="site-brand" href="/" aria-label="SparkLang home">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+            <path
+              d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z"
+              fill="currentColor"
+            />
+          </svg>
+          Spark
+        </a>
+        <div class="header-nav-wrap">
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <ul class="nav-primary">
+              <li><a href="/workflow.html">Loop</a></li>
+              <li><a href="/docs/ide.html">IDE docs</a></li>
+              <li>
+                <a href="/ide-web.html" aria-current="page">IDE web</a>
+              </li>
+              <li><a href="/downloads.html">Download</a></li>
+            </ul>
+            <a href="/playground.html" class="nav-cta">Try</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <div id="ide-main" class="ide-shell" role="application" aria-label="Spark IDE demo">
+      <div class="ide-shell__toolbar">
+        <button type="button" class="ide-btn ide-btn--primary">
+          Compile → .sparkbc
+        </button>
+        <button type="button" class="ide-btn">Decompile</button>
+        <button type="button" class="ide-btn">Dump</button>
+        <button type="button" class="ide-btn">Ask</button>
+        <button type="button" class="ide-btn">Weights</button>
+        <button type="button" class="ide-btn">Report</button>
+      </div>
+
+      <aside class="ide-shell__rail" aria-label="Files and opcodes">
+        <p class="ide-shell__section-title">Files</p>
+        <ul class="ide-shell__list">
+          <li>
+            <a href="#src" aria-current="true">examples/hello.spark</a>
+          </li>
+          <li><a href="#src">selfhost/compile.spark</a></li>
+          <li><a href="#dump">out/hello.sparkbc</a></li>
+        </ul>
+        <p class="ide-shell__section-title">Opcodes</p>
+        <ul class="ide-shell__list">
+          <li><button type="button">TRAIN 0x26</button></li>
+          <li><button type="button">STEP 0x28</button></li>
+          <li><button type="button">ARTIFACT 0x2A</button></li>
+        </ul>
+        <p class="ide-shell__note">
+          Demo shell only — wire real actions via desktop
+          <code>spark-bc-gui</code> / IDE functions lane. Tokens shared
+          with the site.
+        </p>
+      </aside>
+
+      <div class="ide-shell__center">
+        <section class="ide-shell__pane" id="src" aria-label="Source">
+          <p class="ide-shell__pane-label">.spark source</p>
+          <pre class="ide-shell__code"># SparkLang — sample
+model status
+print "hello from Spark"
+</pre>
+        </section>
+        <section class="ide-shell__pane" id="dump" aria-label="Dump">
+          <p class="ide-shell__pane-label">SPARK_BC dump</p>
+          <pre class="ide-shell__code">; SPARK_BC dump (demo)
+; magic SPARK_BC  version 1
+0000  PRINT
+0001  HALT
+</pre>
+        </section>
+      </div>
+
+      <aside class="ide-shell__tools" aria-label="Tools">
+        <p class="ide-shell__section-title">Tools</p>
+        <ul class="ide-shell__list">
+          <li><button type="button">Compile</button></li>
+          <li><button type="button">Decompile</button></li>
+          <li><button type="button">Helpers / shadows</button></li>
+          <li><button type="button">Weight gallery</button></li>
+          <li><button type="button">Voice ask</button></li>
+        </ul>
+        <p class="ide-shell__section-title">Honesty</p>
+        <p class="ide-shell__note">
+          Owned tiny models only. Not LoRA theater. Does not beat
+          Claude. Never trains on the RTX PRO 6000.
+        </p>
+      </aside>
+
+      <div class="ide-shell__status">
+        <span><strong>Ready</strong></span>
+        <span>· theme tokens polish0909</span>
+        <span>· dense IDE chrome</span>
+      </div>
+    </div>
+
+    <script src="/js/site.js?v=polish0909" defer></script>
+  </body>
+</html>

@@ -36,9 +36,10 @@ body {
   color: var(--spark-text);
   background: var(--spark-bg);
   font-family: var(--font-sans);
-  font-size: 1rem;
-  line-height: 1.6;
+  font-size: var(--font-size-root);
+  line-height: var(--line-height-body);
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 a {
@@ -57,9 +58,16 @@ a:focus-visible,
 .copy-btn:focus-visible,
 .try-editor textarea:focus-visible,
 .try-toolbar select:focus-visible,
-.wizard-controls select:focus-visible {
-  outline: 2px solid var(--spark-brand);
-  outline-offset: 2px;
+.wizard-controls select:focus-visible,
+.loop-strip__step:focus-visible,
+.gallery-card:focus-visible,
+.nav-primary a:focus-visible,
+.nav-more__toggle:focus-visible,
+.nav-cta:focus-visible,
+.fc-toolbar input:focus-visible,
+.fc-toolbar select:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
 }
 
 .shell {
@@ -159,7 +167,8 @@ code {
   font-family: inherit;
   line-height: 1.4;
   white-space: nowrap;
-  transition: color 0.15s ease;
+  transition: color var(--motion-fast) var(--ease-out),
+    background var(--motion-fast) var(--ease-out);
 }
 
 .nav-primary a:hover,
@@ -199,15 +208,17 @@ code {
   position: absolute;
   top: calc(100% + 0.35rem);
   right: 0;
-  min-width: 11rem;
+  min-width: 12rem;
   margin: 0;
-  padding: 0.35rem 0;
+  padding: 0.4rem 0;
   list-style: none;
-  background: #fff;
+  background: var(--spark-bg-elevated);
   border: 1px solid var(--spark-border);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-lg);
   z-index: 120;
+  transform-origin: top right;
+  animation: spark-menu-in var(--motion-base) var(--ease-out);
 }
 
 .nav-more__menu[hidden] {
@@ -244,13 +255,17 @@ code {
   border-radius: var(--radius-sm);
   text-decoration: none;
   white-space: nowrap;
-  transition: background 0.15s ease;
+  transition: background var(--motion-fast) var(--ease-out),
+    box-shadow var(--motion-fast) var(--ease-out),
+    transform var(--motion-fast) var(--ease-out);
 }
 
 .site-nav .nav-cta:hover {
   background: var(--spark-brand-dark);
   color: #fff;
   text-decoration: none;
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
 }
 
 .site-nav .nav-cta[aria-current="page"] {
@@ -278,7 +293,8 @@ code {
   height: 2px;
   background: currentColor;
   border-radius: 1px;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  transition: transform var(--motion-base) var(--ease-out),
+    opacity var(--motion-base) var(--ease-out);
 }
 
 .nav-toggle__bar + .nav-toggle__bar {
@@ -375,7 +391,12 @@ code {
   text-decoration: none;
   border: 1px solid transparent;
   cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
+  transition:
+    background var(--motion-fast) var(--ease-out),
+    border-color var(--motion-fast) var(--ease-out),
+    color var(--motion-fast) var(--ease-out),
+    box-shadow var(--motion-fast) var(--ease-out),
+    transform var(--motion-fast) var(--ease-out);
 }
 
 .btn:hover {
@@ -395,6 +416,8 @@ code {
 .btn--primary:hover {
   background: var(--spark-brand-dark);
   color: #fff;
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
 }
 
 .btn--secondary {
@@ -567,7 +590,9 @@ code {
   border-radius: var(--radius-md);
   padding: var(--space-4);
   background: var(--spark-bg);
-  transition: box-shadow 0.15s, border-color 0.15s;
+  transition: box-shadow var(--motion-fast) var(--ease-out),
+    border-color var(--motion-fast) var(--ease-out),
+    transform var(--motion-fast) var(--ease-out);
 }
 
 .card:hover {
@@ -1017,8 +1042,18 @@ pre.mermaid svg {
   background: var(--spark-bg-subtle);
   border: 1px solid var(--spark-border);
   border-radius: var(--radius-md);
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm);
   color: var(--spark-text-muted);
+  transition:
+    border-color var(--motion-fast) var(--ease-out),
+    box-shadow var(--motion-fast) var(--ease-out),
+    transform var(--motion-fast) var(--ease-out);
+}
+
+.workflow-pipeline__step:hover {
+  border-color: var(--spark-brand);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
 }
 
 .workflow-pipeline__step strong {
@@ -1069,7 +1104,9 @@ pre.mermaid svg {
   background: var(--spark-bg-subtle);
   border: 1px solid var(--spark-border-light);
   border-radius: var(--radius-md);
-  font-size: 0.8125rem;
+  font-size: var(--font-size-xs);
+  scrollbar-width: thin;
+  scrollbar-color: var(--spark-border) transparent;
 }
 
 .doc-sidebar__title {
@@ -1401,9 +1438,16 @@ pre.mermaid svg {
   *::before,
   *::after {
     transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
   }
 
-  .btn:active {
+  .btn:active,
+  .btn--primary:hover,
+  .site-nav .nav-cta:hover,
+  .loop-strip__step:hover,
+  .gallery-card:hover,
+  .workflow-pipeline__step:hover {
     transform: none;
   }
 }
@@ -1626,14 +1670,20 @@ pre.mermaid svg {
   border-radius: var(--radius-md);
   text-decoration: none;
   color: inherit;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition:
+    border-color var(--motion-base) var(--ease-out),
+    box-shadow var(--motion-base) var(--ease-out),
+    transform var(--motion-base) var(--ease-out),
+    background var(--motion-base) var(--ease-out);
 }
 
 .loop-strip__step:hover {
   border-color: var(--spark-brand);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
   text-decoration: none;
   color: inherit;
+  transform: translateY(-2px);
+  background: var(--spark-bg-elevated);
 }
 
 .loop-strip__n {
@@ -1741,15 +1791,21 @@ pre.mermaid svg {
   padding: var(--space-3);
   border: 1px solid var(--spark-border);
   border-radius: var(--radius-md);
-  background: #fff;
+  background: var(--spark-bg-elevated);
   text-decoration: none;
   color: inherit;
+  transition:
+    border-color var(--motion-base) var(--ease-out),
+    box-shadow var(--motion-base) var(--ease-out),
+    transform var(--motion-base) var(--ease-out);
 }
 
 .gallery-card:hover {
   border-color: var(--spark-brand);
+  box-shadow: var(--shadow-md);
   text-decoration: none;
   color: inherit;
+  transform: translateY(-2px);
 }
 
 .gallery-card__title {
@@ -1823,4 +1879,150 @@ pre.mermaid svg {
   color: var(--spark-text);
   font-size: 0.9375rem;
   max-width: 44rem;
+}
+
+/* —— Smooth polish layer (2026-09-09) —— */
+
+@keyframes spark-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes spark-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero--workshop .hero__eyebrow,
+.hero--workshop .hero__title,
+.hero--workshop .hero__lede,
+.hero--workshop .cta-row,
+.hero--workshop .loop-strip {
+  animation: spark-fade-up var(--motion-slow) var(--ease-out) both;
+}
+
+.hero--workshop .hero__title {
+  animation-delay: 40ms;
+}
+
+.hero--workshop .hero__lede {
+  animation-delay: 80ms;
+}
+
+.hero--workshop .cta-row {
+  animation-delay: 120ms;
+}
+
+.hero--workshop .loop-strip {
+  animation-delay: 160ms;
+}
+
+.site-header {
+  backdrop-filter: saturate(1.1) blur(8px);
+  background: color-mix(in srgb, var(--spark-header-bg) 92%, transparent);
+}
+
+@supports not (backdrop-filter: blur(8px)) {
+  .site-header {
+    background: var(--spark-header-bg);
+  }
+}
+
+.btn--primary {
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset;
+}
+
+.nav-more__menu a {
+  transition: background var(--motion-fast) var(--ease-out),
+    color var(--motion-fast) var(--ease-out);
+  border-radius: 0;
+}
+
+.doc__body h2,
+.doc__body h3 {
+  scroll-margin-top: calc(var(--header-height) + 0.75rem);
+  letter-spacing: var(--letter-tight);
+}
+
+.doc__body a {
+  transition: color var(--motion-fast) var(--ease-out);
+}
+
+.honest-note {
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  transition: background var(--motion-fast) var(--ease-out);
+}
+
+.step-detail__num {
+  border-radius: var(--radius-md);
+  transition: background var(--motion-fast) var(--ease-out),
+    transform var(--motion-fast) var(--ease-out);
+}
+
+.step-detail__item:hover .step-detail__num {
+  background: var(--spark-brand);
+  transform: scale(1.04);
+}
+
+.shot-frame,
+.workshop-figure {
+  transition: box-shadow var(--motion-base) var(--ease-out);
+}
+
+.shot-frame:hover,
+.workshop-figure:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.fc-table tbody tr {
+  transition: background var(--motion-fast) var(--ease-out);
+}
+
+.fc-table tbody tr:hover {
+  background: var(--spark-brand-light);
+}
+
+.toc-list a {
+  display: block;
+  padding: 0.2rem 0.35rem;
+  margin-left: -0.35rem;
+  border-radius: var(--radius-sm);
+  transition: background var(--motion-fast) var(--ease-out),
+    color var(--motion-fast) var(--ease-out);
+}
+
+.toc-list a:hover,
+.toc-list a[aria-current="true"] {
+  background: var(--spark-bg);
+  color: var(--spark-brand-dark);
+  text-decoration: none;
+}
+
+/* Mobile docs: roomier tap targets */
+@media (max-width: 768px) {
+  .doc-sidebar {
+    position: static;
+    max-height: none;
+    margin-bottom: var(--space-3);
+  }
+
+  .toc-list a {
+    padding: 0.45rem 0.5rem;
+  }
+
+  .hero--workshop .hero__title {
+    font-size: clamp(1.75rem, 7vw, 2.25rem);
+  }
 }

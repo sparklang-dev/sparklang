@@ -1,9 +1,9 @@
 {
-  "name": "sparklang-sdk-0.6.41",
-  "version": "0.6.41",
-  "tarball": "sparklang-sdk-0.6.41.tar.gz",
-  "sha256": "b16b2090daa599f920bc30be3deac6dbc00efb79b8e79ace390c05a54fd020f3",
-  "size_bytes": 611484,
+  "name": "sparklang-sdk-0.6.45",
+  "version": "0.6.45",
+  "tarball": "sparklang-sdk-0.6.45.tar.gz",
+  "sha256": "8425050cc39811b1fb8d0ef9d964c6b82f2d19cffd1b62ed5ca7e50dd2280c15",
+  "size_bytes": 773053,
   "required_paths": [
     "bin/spark-bootstrap",
     "bin/sparkc",
@@ -58,6 +58,7 @@
     "CPU runtime only \u2014 never RTX PRO 6000",
     "Does not claim beat Claude",
     "GUI uses real --compile + bc_dump.format_dump",
-    "Includes helpers + shadows + BC dump tools"
+    "Includes helpers + shadows + BC dump tools",
+    "spark-coder owned weights when models/spark-coder present"
   ]
 }

@@ -13,6 +13,7 @@ from pathlib import Path
 from tkinter import filedialog, messagebox, scrolledtext, ttk
 
 from . import core
+from . import theme
 
 
 class SparkBcGui(ttk.Frame):
@@ -30,11 +31,15 @@ class SparkBcGui(ttk.Frame):
     def _build(self) -> None:
         """Create toolbar, notebooks, and status."""
         self.master.title("SparkLang — SPARK_BC compile / decompile")
-        self.master.geometry("960x640")
+        self.master.geometry("1040x680")
+        self.master.minsize(720, 480)
         toolbar = ttk.Frame(self)
-        toolbar.pack(fill=tk.X, pady=(0, 6))
+        toolbar.pack(fill=tk.X, pady=(0, 8))
         ttk.Button(
-            toolbar, text="Compile → .sparkbc", command=self.on_compile
+            toolbar,
+            text="Compile → .sparkbc",
+            style="Accent.TButton",
+            command=self.on_compile,
         ).pack(side=tk.LEFT, padx=2)
         ttk.Button(
             toolbar, text="Decompile .sparkbc", command=self.on_decompile
@@ -54,24 +59,29 @@ class SparkBcGui(ttk.Frame):
 
         panes = ttk.Panedwindow(self, orient=tk.HORIZONTAL)
         panes.pack(fill=tk.BOTH, expand=True)
-        left = ttk.Frame(panes)
-        right = ttk.Frame(panes)
+        left = ttk.Frame(panes, padding=(0, 0, 4, 0))
+        right = ttk.Frame(panes, padding=(4, 0, 0, 0))
         panes.add(left, weight=1)
         panes.add(right, weight=1)
-        ttk.Label(left, text=".spark source").pack(anchor=tk.W)
-        self.source = scrolledtext.ScrolledText(
-            left, wrap=tk.NONE, font=("monospace", 11)
-        )
+        ttk.Label(
+            left, text=".spark source", style="Muted.TLabel"
+        ).pack(anchor=tk.W, pady=(0, 4))
+        self.source = scrolledtext.ScrolledText(left, wrap=tk.NONE)
+        theme.style_scrolled_text(self.source)
         self.source.pack(fill=tk.BOTH, expand=True)
-        ttk.Label(right, text="SPARK_BC dump / decompile").pack(
-            anchor=tk.W
-        )
-        self.dump = scrolledtext.ScrolledText(
-            right, wrap=tk.NONE, font=("monospace", 10)
-        )
+        ttk.Label(
+            right,
+            text="SPARK_BC dump / decompile",
+            style="Muted.TLabel",
+        ).pack(anchor=tk.W, pady=(0, 4))
+        self.dump = scrolledtext.ScrolledText(right, wrap=tk.NONE)
+        theme.style_scrolled_text(self.dump)
+        self.dump.configure(font=(theme.FONT_MONO[0], 10))
         self.dump.pack(fill=tk.BOTH, expand=True)
-        self.status = ttk.Label(self, text="Ready")
-        self.status.pack(fill=tk.X, pady=(6, 0))
+        self.status = ttk.Label(
+            self, text="Ready", style="Status.TLabel"
+        )
+        self.status.pack(fill=tk.X, pady=(8, 0))
         self.on_sample()
 
     def _set_status(self, text: str) -> None:
@@ -204,9 +214,7 @@ def main(argv: list[str] | None = None) -> int:
             file=sys.stderr,
         )
         return 2
-    style = ttk.Style(root)
-    if "clam" in style.theme_names():
-        style.theme_use("clam")
+    theme.apply_ttk_theme(root)
     SparkBcGui(root)
     root.mainloop()
     return 0
