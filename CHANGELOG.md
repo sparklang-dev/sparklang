@@ -16,8 +16,9 @@ language) are listed here. Site and installers track
   dump / `make test-sparkbc` / `make test-model-lab`, sha256 table
   for published `docs/examples/*`, GAS emit/`--run-bc` **BLOCKED**,
   dry ≠ SGD ≠ trained, STEP→weights **in flight**
-  (`feat/sparkbc-step-weights`), Pages deploy = human CF dashboard
-  (no wrangler on box). Site: regen `website/docs/*` via
+  (`feat/sparkbc-step-weights`), Pages deploy = Wrangler OAuth
+  preferred + CF dashboard fallback when CLI/auth absent. Site: regen
+  `website/docs/*` via
   `tools/md_to_doc_html.py --all-stale`; Learn + homepage link
   Builder; CHANGELOG.html mirrored. Pages:
   [SPARK_BUILDER.md](docs/SPARK_BUILDER.md) /
