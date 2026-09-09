@@ -5,6 +5,17 @@ language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
 
+## 0.6.54 — 2026-09-09
+
+- **Decompile compete path:** richer SPARK_BC dump (sections,
+  symbols, xrefs, `--json` / `--html`), analysis project folder,
+  loud compile→dump→recompile hash (`make decompile-roundtrip`),
+  `make decompile-bench` scoreboard JSON (wins/ties/losses/N/A —
+  **no** fake “beats all”). Docs
+  [/docs/decompile-compete.html](/docs/decompile-compete.html).
+  External RE tools skipped cleanly if absent. Never 6000; does
+  **not** beat Claude; do not copy OpenBin.
+
 ## 0.6.53 — 2026-09-09
 
 - **Sensory mapping 100× (Model aspects):** expand

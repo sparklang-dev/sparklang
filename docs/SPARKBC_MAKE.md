@@ -14,6 +14,9 @@ ISA: [SPARK_BC.md](SPARK_BC.md). Story:
 | `make test-sparkbc` | `run_sparkbc.sh` + `tools/spark-bc-dump/test_dump.py` (compile, dump, serve, SGD asserts) |
 | `make test-sparkbc-e2e` | Focused TRAIN→STEP→ARTIFACT (`tools/spark-bc-dump/run_e2e_gate.sh`) |
 | `make sparkbc-e2e` | Alias for `test-sparkbc-e2e` |
+| `make test-decompile-compete` | Richer dump symbols/xrefs + analysis project units |
+| `make decompile-roundtrip` | compile→dump→recompile sha256 on published fixtures |
+| `make decompile-bench` | SPARK_BC metrics + `website/data/decompile-scoreboard.json` |
 | `make spark-sgd-proof` | Multi-outer CPU SGD → `checkpoint.json` loss drop → `make spark-eval WEIGHTS=…` |
 | `make spark-sgd-proof-scale` | Local opt-in larger JSONL + dim/n_layer (F-lane; not default CI) |
 | `make spark-coder-train` | Owned TinyCoder **tiny** (CI/default); prefer 5090; never 6000 |

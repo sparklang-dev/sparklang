@@ -1,4 +1,4 @@
-# SPARK_BC dump
+# Selfhost compile SPARK_BC
 # SPARK_BC is orchestration bytecode — not neural weights.
 # Not HuggingFace. Not imported tensors. Spark's own binary.
 #
@@ -34,6 +34,18 @@ nconsts: 3
 ncode: 12
 code_off: 106
 
+## Sections
+magic  off=0 size=4  SPBC
+version  off=4 size=1  u8
+string_pool  off=7 size=84  nstrings=3
+const_pool  off=93 size=9  nconsts=3
+code  off=106 size=12  ncode=12
+
+## Symbols (string pool)
+str0  'code' (4 bytes)
+str1  'Compile seed: emit SPARK_BC from AST; fail loud on unknown Stmt' (63 bytes)
+str2  'compile_job' (11 bytes)
+
 ## String pool
 0: 'code' (4 bytes)
 1: 'Compile seed: emit SPARK_BC from AST; fail loud on unknown Stmt' (63 bytes)
@@ -43,6 +55,16 @@ code_off: 106
 0: kind=0 payload=0 → 'code'
 1: kind=0 payload=1 → 'Compile seed: emit SPARK_BC from AST; fail loud on unknown Stmt'
 2: kind=0 payload=2 → 'compile_job'
+
+## Xrefs (const → ops; str → consts)
+n_ops: 4
+n_const_refs: 4
+const0 → MODEL@0
+const1 → ASK@3
+const2 → ASK@3, PRINT@8
+str0 ← consts 0
+str1 ← consts 1
+str2 ← consts 2
 
 ## Code (opcode + u16le const indices)
 code+0  01 00 00  MODEL (0x01) const0 "code"

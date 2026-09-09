@@ -21,14 +21,12 @@ field explainers (transformers → safety) with original diagrams.
 | **AI knowledge hive** | [KNOWLEDGE.md](KNOWLEDGE.md) | [/docs/knowledge.html](/docs/knowledge.html) |
 | **AI model aspects** | [MODEL_ASPECTS.md](MODEL_ASPECTS.md) | [/docs/model-aspects.html](/docs/model-aspects.html) |
 | Voice / STT / TTS | [VOICE.md](VOICE.md) | [/docs/voice.html](/docs/voice.html) |
-<<<<<<< HEAD
 | **Voice ask (dump Q&A)** | [VOICE_ASK.md](VOICE_ASK.md) | [/docs/voice-ask.html](/docs/voice-ask.html) |
-=======
 | **Voice easy train** | [VOICE_EASY.md](VOICE_EASY.md) | [/docs/voice-easy.html](/docs/voice-easy.html) |
->>>>>>> 54714fa (feat(voice): easy train path for owned STT/TTS (tiny + large))
 | **Diagrams (tools + LLM)** | [DIAGRAMS.md](DIAGRAMS.md) | [/docs/diagrams.html](/docs/diagrams.html) |
 | Compile / assemble | [COMPILE.md](COMPILE.md) | [/docs/compile.html](/docs/compile.html) |
 | Decompile / dump / inspect | [DECOMPILE.md](DECOMPILE.md) | [/docs/decompile.html](/docs/decompile.html) |
+| Decompile compete / scoreboard | [DECOMPILE_COMPETE.md](DECOMPILE_COMPETE.md) | [/docs/decompile-compete.html](/docs/decompile-compete.html) |
 | LLM decompile research | [research/LLM_DECOMPILE.md](research/LLM_DECOMPILE.md) | [/docs/llm-decompile.html](/docs/llm-decompile.html) |
 | Opcode ISA (TRAIN/STEP/…) | [SPARK_BC.md](SPARK_BC.md) | [/docs/spark-bc.html](/docs/spark-bc.html) |
 | Build models + weights | [BUILD_MODELS.md](BUILD_MODELS.md) | [/docs/build-models.html](/docs/build-models.html) |

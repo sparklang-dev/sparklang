@@ -69,6 +69,7 @@
                 <ul class="nav-more__menu" hidden>
                   <li><a href="/docs/compile.html">Compile</a></li>
                   <li><a href="/docs/decompile.html">Decompile</a></li>
+                  <li><a href="/docs/decompile-compete.html">Decompile compete</a></li>
                   <li><a href="/docs/programming-guide.html">Programming guide</a></li>
                   <li><a href="/docs/ide.html">IDE</a></li>
                   <li><a href="/ide-web.html">IDE web shell</a></li>
@@ -103,6 +104,7 @@
         <a href="/docs/spark-builder.html">Builder</a>
         <a href="/docs/compile.html">Compile</a>
         <a href="/docs/decompile.html" aria-current="page">Decompile</a>
+        <a href="/docs/decompile-compete.html">Compete</a>
         <a href="/docs/llm-decompile.html">LLM research</a>
         <a href="/docs/spark-bc.html">Opcodes / ISA</a>
         <a href="/docs/build-models.html">Build models</a>
@@ -133,10 +135,15 @@
         survey, Quarkslab article + RE category (LLM ≠ verified SoT),
         Plain English demystify overview, OpenBin (online product — not
         Spark SoT; third-party trust/IP), recompile ≠ semantic fidelity.
+        <strong>Compete / scoreboard:</strong> <a href="/docs/decompile-compete.html">DECOMPILE_COMPETE.md</a>
+        (<a href="/docs/decompile-compete.html">/docs/decompile-compete.html</a>) —
+        parity matrix + measured <code class="inline-code">make decompile-bench</code> JSON (no fake
+        “beats all”).
         Mermaid factory overview: <a href="/docs/diagrams.html">DIAGRAMS.md</a>
         (<a href="/docs/diagrams.html">/docs/diagrams.html</a>).</p>
         <p><strong>Never</strong> claim an LLM perfectly decompiles SPARK_BC. <strong>Never</strong>
-        6000. Does <strong>not</strong> beat Claude.</p>
+        6000. Does <strong>not</strong> beat Claude. Do <strong>not</strong> publish “beats
+        Ghidra/IDA/…” without measured scoreboard JSON.</p>
         <h2 id="tool-function-diagrams">Tool-function diagrams</h2>
         <h3 id="compile-path">Compile path</h3>
         <p><img class="doc__img" alt="Compile path: source to SPARK_BC to run/train/serve" src="/docs/images/diagram-compile-path.svg" /></p>
@@ -178,8 +185,18 @@
         <p><em>Caption: Real terminal capture of <code class="inline-code">tools/spark-bc-dump/dump.py</code> on
         <code class="inline-code">docs/examples/spark-train-step.sparkbc</code> — magic <code class="inline-code">SPBC</code>, pools,
         opcode listing. Not invented hex.</em></p>
-        <p>Loader / formatters: <code class="inline-code">python/sparklang/model_lab/bc_dump.py</code>.
-        Units: <code class="inline-code">tools/spark-bc-dump/test_dump.py</code> via <code class="inline-code">make test-sparkbc</code>.</p>
+        <p>Loader / formatters: <code class="inline-code">python/sparklang/model_lab/bc_dump.py</code>
+        (sections, string <strong>symbols</strong>, const/op <strong>xrefs</strong>, <code class="inline-code">--json</code> /
+        <code class="inline-code">--html</code> export). Units: <code class="inline-code">tools/spark-bc-dump/test_dump.py</code> via
+        <code class="inline-code">make test-sparkbc</code>; richer dump gate
+        <code class="inline-code">make test-decompile-compete</code>.</p>
+        <p><strong>Round-trip (SoT win, loud):</strong> <code class="inline-code">make decompile-roundtrip</code> —
+        compile → dump → recompile → sha256 match on published fixtures.</p>
+        <p><strong>Analysis project:</strong> <code class="inline-code">tools/spark-bc-dump/analyze_project.py</code>
+        writes <code class="inline-code">dump.txt</code> / <code class="inline-code">dump.json</code> / <code class="inline-code">dump.html</code> / <code class="inline-code">report.md</code> under
+        an output folder (local-only).</p>
+        <p><strong>Bench / scoreboard:</strong> <code class="inline-code">make decompile-bench</code> →
+        <code class="inline-code">website/data/decompile-scoreboard.json</code>.</p>
         <p>Published dump text (no rebuild): <code class="inline-code">docs/examples/*-bc.txt</code> (site:
         <code class="inline-code">website/docs/examples/</code>).</p>
         <h3 id="3-stub-json-builder-metadata">3. Stub JSON (builder metadata)</h3>
@@ -256,8 +273,28 @@
         <td><strong>implemented</strong> (<code class="inline-code">dump.py</code>)</td>
         </tr>
         <tr>
+        <td>Symbols / xrefs / sections / JSON+HTML</td>
+        <td><strong>implemented</strong> (<code class="inline-code">analyze_bc</code>)</td>
+        </tr>
+        <tr>
+        <td>Compile→dump→recompile hash</td>
+        <td><strong>implemented</strong> (<code class="inline-code">decompile-roundtrip</code>)</td>
+        </tr>
+        <tr>
+        <td>Analysis project folder + report</td>
+        <td><strong>implemented</strong> (<code class="inline-code">analyze_project.py</code>)</td>
+        </tr>
+        <tr>
+        <td>Measured compete scoreboard</td>
+        <td><strong>implemented</strong> (<code class="inline-code">decompile-bench</code>)</td>
+        </tr>
+        <tr>
         <td>Recover original <code class="inline-code">.spark</code> losslessly</td>
         <td><strong>not</strong> — inspect, not source decompiler</td>
+        </tr>
+        <tr>
+        <td>Beat Ghidra/IDA on ELF/PE</td>
+        <td><strong>not claimed</strong> (loss / N/A on that domain)</td>
         </tr>
         <tr>
         <td>LLM perfectly decompiles SPARK_BC</td>
@@ -278,6 +315,7 @@
         <li><a href="/docs/compile.html">Compile</a> · <a href="/docs/build-models.html">Build models</a></li>
         <li><a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> · <a href="/docs/spark-bc.html">SPARK_BC.md</a></li>
         <li><a href="/docs/factory.html">Factory hub</a> · <a href="/docs/llm-decompile.html">LLM decompile research</a></li>
+        <li><a href="/docs/decompile-compete.html">Decompile compete / scoreboard</a></li>
         <li>Screenshots + diagrams: <code class="inline-code">website/docs/images/decompile-*</code>,
           <code class="inline-code">website/docs/images/diagram-*</code></li>
         </ul>
