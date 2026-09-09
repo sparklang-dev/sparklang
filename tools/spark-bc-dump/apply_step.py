@@ -18,8 +18,8 @@ def main() -> int:
     """Apply multi-outer CPU SGD STEP to Spark-created safetensors."""
     ap = argparse.ArgumentParser(
         description=(
-            "CPU multi-outer SGD on Spark lm_head(+embed) from "
-            "fixture JSONL (trained=true; not_sgd=false; "
+            "CPU multi-outer SGD on Spark lm_head(+embed+attn0) "
+            "from fixture JSONL (trained=true; not_sgd=false; "
             "not beat Claude; never 6000)"
         )
     )
@@ -62,6 +62,11 @@ def main() -> int:
         "--no-train-embed",
         action="store_true",
         help="update lm_head only (default also trains embed)",
+    )
+    ap.add_argument(
+        "--no-train-attn",
+        action="store_true",
+        help="skip layer-0 attention grads (mean-pool CE only)",
     )
     ap.add_argument(
         "--checkpoint",
@@ -107,6 +112,7 @@ def main() -> int:
         inner_steps=args.inner,
         outer_steps=args.outer,
         train_embed=not args.no_train_embed,
+        train_attn=not args.no_train_attn,
         checkpoint=args.checkpoint or None,
         source=args.source,
         command=args.command,

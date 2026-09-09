@@ -541,8 +541,9 @@ test-spark-coder: spark-bootstrap
 	PYTHONPATH=python python3 -m unittest \
 	  sparklang.spark_coder.test_spark_coder -v
 
-# Multi-outer CPU SGD proof + measurement-only eval on those weights.
+# Multi-outer CPU SGD + layer-0 attn proof + measurement-only eval.
 # Never claims beat Claude. CPU only. Tiny fixture = GHA/CI default.
+# Asserts frozen probe scores >0 after attn train (not a Claude win).
 .PHONY: spark-sgd-proof
 spark-sgd-proof: spark-bootstrap
 	@mkdir -p out/train/sgd-proof
@@ -552,15 +553,25 @@ spark-sgd-proof: spark-bootstrap
 	  --weights out/train/sgd-proof/weights.safetensors \
 	  --checkpoint out/train/sgd-proof/checkpoint.json \
 	  --dataset examples/fixtures/train/dataset.jsonl \
-	  --outer 4 --inner 8 --step 1 \
+	  --outer 4 --inner 8 --lr 0.08 --step 1 \
 	  --command 'make spark-sgd-proof'
 	@python3 -c "import json; c=json.load(open('out/train/sgd-proof/checkpoint.json')); \
 	  print('loss_curve', [(p['outer'], round(p['loss'],6)) for p in c['loss_curve']]); \
 	  print('loss', c['loss_before'], '->', c['loss_after']); \
-	  print('beats_claude', c['beats_claude'], 'device', c['device']); \
+	  print('train_attn', c.get('train_attn'), 'beats_claude', c['beats_claude'], 'device', c['device']); \
 	  assert c['loss_after'] < c['loss_before']; \
+	  assert c.get('train_attn') is True; \
 	  assert c['beats_claude'] is False"
 	@$(MAKE) spark-eval WEIGHTS=out/train/sgd-proof/weights.safetensors
+	@PYTHONPATH=python python3 -c "from pathlib import Path; \
+	  import importlib.util as u; \
+	  s=u.spec_from_file_location('ev','tools/spark-eval/run.py'); \
+	  m=u.module_from_spec(s); s.loader.exec_module(m); \
+	  r=m.run_suite(m.SUITE_DEFAULT, Path('out/train/sgd-proof/weights.safetensors')); \
+	  sc={p['name']:p['score'] for p in r['probes']}; \
+	  print('proof_scores', sc); \
+	  assert sc.get('copy_recall',0)>0 and sc.get('next_token',0)>0, sc; \
+	  print('eval_nonzero_ok beats_claude=False')"
 
 # Opt-in local scale proof: larger JSONL + dim/n_layer knobs.
 # Still CPU-fast; not overnight; not GHA default. Not beat Claude.

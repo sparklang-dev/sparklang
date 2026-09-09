@@ -5,6 +5,19 @@ language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
 
+## 0.6.44 — 2026-09-09
+
+- **D-lane layer-0 attention train + serve:** `STEP` /
+  `apply_sgd_step` defaults to sequence next-token CE through
+  last-query causal MHA (GQA) on `spark.layers.0` q/k/v/o (+ embed
+  + lm_head). CPU by default; **RTX 5090 OK**; **NEVER** RTX PRO
+  6000. `--no-train-attn` keeps mean-pool CE. Serve / eval use
+  `embed→attn0→(mlp0)→norm→lm_head` when tensors exist. Train
+  fixture oversamples frozen eval probes. Gate: `make test-sparkbc`,
+  `make sparkbc-e2e`, `make spark-sgd-proof` (asserts copy_recall>0
+  and next_token>0). **Not beat Claude.**
+  Docs: [SPARK_BUILDER.md](docs/SPARK_BUILDER.md).
+
 ## 0.6.43 — 2026-09-09
 
 - **J-lane LLM decompile research expand:** enrich
@@ -14,7 +27,7 @@ language) are listed here. Site and installers track
   distinct from seq2seq), LLM4Decompile End/Ref + SK² +
   Decompile-Bench dataset / DecompileBench ACL eval, EmergentMind
   survey (ReF, Idioms, SALT, SK², WaDec, SmartHalo, ICL4Decomp;
-  RRR / R2I), AutoDecompiler, DecLLM, HELIOS (NDSS), Interactive
+  RRR / R2I), AutoDecompiler, AsmLLM, HELIOS (NDSS), Interactive
   End-to-End / ReF (MDPI), **When LLM Decompilers Recompile More
   and Preserve Less** (arXiv:2609.05370 — recompile ≠ fidelity),
   Quarkslab AI-assisted RE article **plus** RE category index

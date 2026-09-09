@@ -11,13 +11,16 @@ files under `docs/examples/`.
 |----------|------------|---------------------|
 | **SPARK_BC** (`.sparkbc`) | Orchestration **ISA** — packed magic `SPBC`, string/const pools, opcode stream (`MODEL` / `ASK` / `PRINT` / `TRAIN` / `STEP` / `TRAIN_STATUS` / `HALT`, …) | Neural weights, a tensor ISA, HuggingFace, CUDA kernels |
 | **Init safetensors** | Spark-created tensors **derived from** those bytecode bytes (Xavier / fan-in; embed rows mix in magic + opcodes + strings) | A Claude-beating checkpoint, an imported hub weight dump |
-| **STEP weights** | Multi-outer **CPU SGD** on Spark `lm_head`(+embed) from fixture JSONL (`trained=true`, `not_sgd=false`, `checkpoint.json` loss curve) | A production LLM; beating Claude |
+| **STEP weights** | Multi-outer **CPU SGD** on Spark `lm_head`(+embed+layer-0 attn) from fixture JSONL (`trained=true`, `not_sgd=false`, `checkpoint.json` loss curve; frozen eval can score >0) | A production LLM; beating Claude |
+
 
 Bytecode is the **training program + orchestration**. Init tensors stay
 `trained: false` until `STEP` runs. Emitting `TRAIN` alone ≠ trained.
 `STEP` now applies **multi-outer CPU SGD** on tiny Spark tensors
-(larger fixture; loss curve in `checkpoint.json`; loss must drop or
-fail loud). **Does not beat Claude.** No 6000 / GPU-1 train. Do not
+(layer-0 last-query causal attention + embed + lm_head; larger
+fixture; loss curve in `checkpoint.json`; loss must drop or fail
+loud). Frozen `make spark-eval` probes can score **>0** after that
+train — still **does not beat Claude.** CPU default; RTX 5090 OK; **NEVER** RTX PRO 6000 / GPU-1. Do not
 import Claude or Grok weights.
 
 **ISA SoT:** [SPARK_BC.md](SPARK_BC.md).
@@ -38,7 +41,8 @@ import Claude or Grok weights.
    (`ARTIFACT` + `weights.safetensors` + `checkpoint.json`;
    `trained=true` / `not_sgd=false` only after real grads; loss must
    drop). Helper: `tools/spark-bc-dump/apply_step.py` →
-   `apply_sgd_step` (outer×inner CE; optional embed grads).
+   `apply_sgd_step` (outer×inner sequence CE via layer-0 attn;
+   optional embed grads; `--no-train-attn` for mean-pool CE).
    **Not beat Claude.** No 6000.
 5. **GAS dry-run + wrappers** — `./spark --dry-run file.spark` runs
    train verbs from **source**. `./spark --run-bc` and
@@ -195,8 +199,8 @@ PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
   --command './spark-bootstrap --compile examples/spark_builder.spark -o docs/examples/spark-builder.sparkbc' \
   --serve /tmp/serve-dry-001
 # → /tmp/serve-dry-001/SERVE (forward=true, trained=false)
-#    path embed_mean_pool->mlp0->rms_norm->lm_head when layer-0
-#    MLP tensors exist; + weights.safetensors (init if missing)
+#    path embed->attn0->mlp0->rms_norm->lm_head when layer-0
+#    attn+MLP tensors exist; + weights.safetensors (init if missing)
 # Or: ./spark-serve docs/examples/spark-builder.sparkbc /tmp/serve-dry-001
 ```
 
@@ -238,14 +242,15 @@ wrapper `scripts/sparkbc-e2e`). Compiles
 `./spark-bootstrap --run-bc` **and** `./spark --run-bc`, asserts
 `out/train/job-dry-001/ARTIFACT` (`not_sgd=false`, `trained=true`,
 `step_n=1`) + `checkpoint.json`. `make test-sparkbc` asserts STEP
-weights + `loss_after < loss_before` (multi-outer SGD). **Not beat
-Claude.**
+weights + `loss_after < loss_before` (multi-outer SGD + attn).
+**Not beat Claude.**
 
-Scale proof (SGD then measurement-only eval):
+Attn train proof (SGD then measurement-only eval; scores >0 on
+frozen probes; still not beat Claude):
 
 ```bash
 make spark-sgd-proof
-# → prints loss curve + make spark-eval WEIGHTS=… (scores only)
+# → loss curve + spark-eval; asserts copy_recall>0 and next_token>0
 ```
 
 **Opt-in larger fixture / dims (local; not GHA default):**
@@ -282,8 +287,10 @@ make spark-eval-claude
 ```
 
 - **Dry** (default): oracle fixture path — prints scores, exits **0**.
-- **Weights**: teacher-forced / next-token accuracy on
-  `spark.embed` + `spark.lm_head` (CPU only; never the 6000).
+- **Weights**: teacher-forced / next-token accuracy via layer-0
+  attn when present (else mean-pool) + `lm_head` (CPU only; never
+  the 6000). After `make spark-sgd-proof`, frozen probes score **>0**
+  — still **not** beat Claude.
 - **Claude baseline (optional):** `CLAUDE=auto` / `make spark-eval-claude`
   calls Anthropic **only** when a key already exists
   (`SPARK_EVAL_CLAUDE_API_KEY`, `ANTHROPIC_API_KEY`, `CLAUDE_API_KEY`,
@@ -348,8 +355,8 @@ make test-model-lab
 | GAS `./spark --run-bc` | **implemented** — thin fork → bootstrap bc_vm |
 | Dry ARTIFACT / `--run-bc` TRAIN accept | **implemented** — fixture until STEP |
 | Init safetensors from SPARK_BC | **implemented** — `trained: false` until STEP |
-| STEP CPU SGD weights | **implemented** (multi-outer; `weights.safetensors` + `checkpoint.json` loss curve; `trained=true`; `not_sgd=false`; loss must drop) |
-| Tiny CPU serve forward | **implemented** (`dump.py --serve` → `SERVE` with `forward=true`; optional layer-0 MLP; `trained` from weights meta; not production) |
+| STEP CPU SGD weights | **implemented** (multi-outer; layer-0 attn+embed+lm_head; `weights.safetensors` + `checkpoint.json` loss curve; `trained=true`; `not_sgd=false`; loss must drop; eval probes can be >0) |
+| Tiny CPU serve forward | **implemented** (`dump.py --serve` → `SERVE` with `forward=true`; optional layer-0 attn+MLP; `trained` from weights meta; not production) |
 | Serve HTTP / stdio API | **implemented** (`./spark-serve-api` — `/health` `/version` `/v1/predict` `/v1/embeddings`; gate `make test-serve-api`; not production) |
 | Beats Claude / production LLM | **not** — multi-stage later; multi-outer SGD ≠ Claude |
 
@@ -372,8 +379,8 @@ make test-model-lab
 | Emit init weights from those bytes | **implemented** (init only) |
 | Round-trip hello SPARK_BC | **tested** (`make test-sparkbc`) |
 | Model lab reverse/compile/modify | **tested** (`make test-model-lab`) |
-| STEP real CPU SGD | **implemented** (tiny; loss drop proven; not beat Claude) |
-| Tiny CPU serve forward | **implemented** (`SERVE`; `forward=true`; not production) |
+| STEP real CPU SGD | **implemented** (tiny; attn train; loss drop + eval>0 proven; not beat Claude) |
+| Tiny CPU serve forward | **implemented** (`SERVE`; `forward=true`; attn0+mlp0; not production) |
 | Serve HTTP / stdio API (G-lane) | **implemented** (`spark-serve-api`; predict + embeddings; not production) |
 | Beats Claude | **not** |
 

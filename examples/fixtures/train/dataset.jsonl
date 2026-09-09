@@ -34,3 +34,63 @@
 {"messages":[{"role":"user","content":"sgd"},{"role":"assistant","content":"cpu"}]}
 {"messages":[{"role":"user","content":"eval"},{"role":"assistant","content":"score"}]}
 {"messages":[{"role":"user","content":"score"},{"role":"assistant","content":"eval"}]}
+{"messages":[{"role":"user","content":"spar"},{"role":"assistant","content":"k"}]}
+{"messages":[{"role":"user","content":"hel"},{"role":"assistant","content":"l"}]}
+{"messages":[{"role":"user","content":"SPARK_B"},{"role":"assistant","content":"C"}]}
+{"messages":[{"role":"user","content":"Say exactly: spark"},{"role":"assistant","content":"spark"}]}
+{"messages":[{"role":"user","content":"Copy: hello"},{"role":"assistant","content":"hello"}]}
+{"messages":[{"role":"user","content":"Repeat: bc"},{"role":"assistant","content":"bc"}]}
+{"messages":[{"role":"user","content":"Say exactly: "},{"role":"assistant","content":"spark"}]}
+{"messages":[{"role":"user","content":"Copy: "},{"role":"assistant","content":"hello"}]}
+{"messages":[{"role":"user","content":"Repeat: "},{"role":"assistant","content":"bc"}]}
+{"messages":[{"role":"user","content":"spark"},{"role":"assistant","content":"spark"}]}
+{"messages":[{"role":"user","content":"hello"},{"role":"assistant","content":"hello"}]}
+{"messages":[{"role":"user","content":"bc"},{"role":"assistant","content":"bc"}]}
+{"messages":[{"role":"user","content":"spar"},{"role":"assistant","content":"k"}]}
+{"messages":[{"role":"user","content":"hel"},{"role":"assistant","content":"l"}]}
+{"messages":[{"role":"user","content":"SPARK_B"},{"role":"assistant","content":"C"}]}
+{"messages":[{"role":"user","content":"Say exactly: spark"},{"role":"assistant","content":"spark"}]}
+{"messages":[{"role":"user","content":"Copy: hello"},{"role":"assistant","content":"hello"}]}
+{"messages":[{"role":"user","content":"Repeat: bc"},{"role":"assistant","content":"bc"}]}
+{"messages":[{"role":"user","content":"spar"},{"role":"assistant","content":"k"}]}
+{"messages":[{"role":"user","content":"hel"},{"role":"assistant","content":"l"}]}
+{"messages":[{"role":"user","content":"SPARK_B"},{"role":"assistant","content":"C"}]}
+{"messages":[{"role":"user","content":"Say exactly: spark"},{"role":"assistant","content":"spark"}]}
+{"messages":[{"role":"user","content":"Copy: hello"},{"role":"assistant","content":"hello"}]}
+{"messages":[{"role":"user","content":"Repeat: bc"},{"role":"assistant","content":"bc"}]}
+{"messages":[{"role":"user","content":"spar"},{"role":"assistant","content":"k"}]}
+{"messages":[{"role":"user","content":"hel"},{"role":"assistant","content":"l"}]}
+{"messages":[{"role":"user","content":"SPARK_B"},{"role":"assistant","content":"C"}]}
+{"messages":[{"role":"user","content":"Say exactly: spark"},{"role":"assistant","content":"spark"}]}
+{"messages":[{"role":"user","content":"Copy: hello"},{"role":"assistant","content":"hello"}]}
+{"messages":[{"role":"user","content":"Repeat: bc"},{"role":"assistant","content":"bc"}]}
+{"messages":[{"role":"user","content":"spar"},{"role":"assistant","content":"k"}]}
+{"messages":[{"role":"user","content":"hel"},{"role":"assistant","content":"l"}]}
+{"messages":[{"role":"user","content":"SPARK_B"},{"role":"assistant","content":"C"}]}
+{"messages":[{"role":"user","content":"Say exactly: spark"},{"role":"assistant","content":"spark"}]}
+{"messages":[{"role":"user","content":"Copy: hello"},{"role":"assistant","content":"hello"}]}
+{"messages":[{"role":"user","content":"Repeat: bc"},{"role":"assistant","content":"bc"}]}
+{"messages":[{"role":"user","content":"spar"},{"role":"assistant","content":"k"}]}
+{"messages":[{"role":"user","content":"hel"},{"role":"assistant","content":"l"}]}
+{"messages":[{"role":"user","content":"SPARK_B"},{"role":"assistant","content":"C"}]}
+{"messages":[{"role":"user","content":"Say exactly: spark"},{"role":"assistant","content":"spark"}]}
+{"messages":[{"role":"user","content":"Copy: hello"},{"role":"assistant","content":"hello"}]}
+{"messages":[{"role":"user","content":"Repeat: bc"},{"role":"assistant","content":"bc"}]}
+{"messages":[{"role":"user","content":"spar"},{"role":"assistant","content":"k"}]}
+{"messages":[{"role":"user","content":"hel"},{"role":"assistant","content":"l"}]}
+{"messages":[{"role":"user","content":"SPARK_B"},{"role":"assistant","content":"C"}]}
+{"messages":[{"role":"user","content":"Say exactly: spark"},{"role":"assistant","content":"spark"}]}
+{"messages":[{"role":"user","content":"Copy: hello"},{"role":"assistant","content":"hello"}]}
+{"messages":[{"role":"user","content":"Repeat: bc"},{"role":"assistant","content":"bc"}]}
+{"messages":[{"role":"user","content":"spar"},{"role":"assistant","content":"k"}]}
+{"messages":[{"role":"user","content":"hel"},{"role":"assistant","content":"l"}]}
+{"messages":[{"role":"user","content":"SPARK_B"},{"role":"assistant","content":"C"}]}
+{"messages":[{"role":"user","content":"Say exactly: spark"},{"role":"assistant","content":"spark"}]}
+{"messages":[{"role":"user","content":"Copy: hello"},{"role":"assistant","content":"hello"}]}
+{"messages":[{"role":"user","content":"Repeat: bc"},{"role":"assistant","content":"bc"}]}
+{"messages":[{"role":"user","content":"spar"},{"role":"assistant","content":"k"}]}
+{"messages":[{"role":"user","content":"hel"},{"role":"assistant","content":"l"}]}
+{"messages":[{"role":"user","content":"SPARK_B"},{"role":"assistant","content":"C"}]}
+{"messages":[{"role":"user","content":"Say exactly: spark"},{"role":"assistant","content":"spark"}]}
+{"messages":[{"role":"user","content":"Copy: hello"},{"role":"assistant","content":"hello"}]}
+{"messages":[{"role":"user","content":"Repeat: bc"},{"role":"assistant","content":"bc"}]}

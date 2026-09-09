@@ -127,7 +127,7 @@
         </tr>
         <tr>
         <td><strong>STEP weights</strong></td>
-        <td>Multi-outer <strong>CPU SGD</strong> on Spark <code class="inline-code">lm_head</code>(+embed) from fixture JSONL (<code class="inline-code">trained=true</code>, <code class="inline-code">not_sgd=false</code>, <code class="inline-code">checkpoint.json</code> loss curve)</td>
+        <td>Multi-outer <strong>CPU SGD</strong> on Spark <code class="inline-code">lm_head</code>(+embed+layer-0 attn) from fixture JSONL (<code class="inline-code">trained=true</code>, <code class="inline-code">not_sgd=false</code>, <code class="inline-code">checkpoint.json</code> loss curve; frozen eval can score &gt;0)</td>
         <td>A production LLM; beating Claude</td>
         </tr>
         </tbody>
@@ -135,8 +135,10 @@
         <p>Bytecode is the <strong>training program + orchestration</strong>. Init tensors stay
         <code class="inline-code">trained: false</code> until <code class="inline-code">STEP</code> runs. Emitting <code class="inline-code">TRAIN</code> alone ≠ trained.
         <code class="inline-code">STEP</code> now applies <strong>multi-outer CPU SGD</strong> on tiny Spark tensors
-        (larger fixture; loss curve in <code class="inline-code">checkpoint.json</code>; loss must drop or
-        fail loud). <strong>Does not beat Claude.</strong> No 6000 / GPU-1 train. Do not
+        (layer-0 last-query causal attention + embed + lm_head; larger
+        fixture; loss curve in <code class="inline-code">checkpoint.json</code>; loss must drop or fail
+        loud). Frozen <code class="inline-code">make spark-eval</code> probes can score <strong>&gt;0</strong> after that
+        train — still <strong>does not beat Claude.</strong> CPU default; RTX 5090 OK; <strong>NEVER</strong> RTX PRO 6000 / GPU-1. Do not
         import Claude or Grok weights.</p>
         <p><strong>ISA SoT:</strong> <a href="/docs/spark-bc.html">SPARK_BC.md</a>.</p>
         <h2 id="factory-story-end-to-end">Factory story (end-to-end)</h2>
@@ -155,7 +157,8 @@
            (<code class="inline-code">ARTIFACT</code> + <code class="inline-code">weights.safetensors</code> + <code class="inline-code">checkpoint.json</code>;
            <code class="inline-code">trained=true</code> / <code class="inline-code">not_sgd=false</code> only after real grads; loss must
            drop). Helper: <code class="inline-code">tools/spark-bc-dump/apply_step.py</code> →
-           <code class="inline-code">apply_sgd_step</code> (outer×inner CE; optional embed grads).
+           <code class="inline-code">apply_sgd_step</code> (outer×inner sequence CE via layer-0 attn;
+           optional embed grads; <code class="inline-code">--no-train-attn</code> for mean-pool CE).
            <strong>Not beat Claude.</strong> No 6000.</li>
         <li><strong>GAS dry-run + wrappers</strong> — <code class="inline-code">./spark --dry-run file.spark</code> runs
            train verbs from <strong>source</strong>. <code class="inline-code">./spark --run-bc</code> and
@@ -337,8 +340,8 @@
           --command './spark-bootstrap --compile examples/spark_builder.spark -o docs/examples/spark-builder.sparkbc' \
           --serve /tmp/serve-dry-001
         # → /tmp/serve-dry-001/SERVE (forward=true, trained=false)
-        #    path embed_mean_pool-&gt;mlp0-&gt;rms_norm-&gt;lm_head when layer-0
-        #    MLP tensors exist; + weights.safetensors (init if missing)
+        #    path embed-&gt;attn0-&gt;mlp0-&gt;rms_norm-&gt;lm_head when layer-0
+        #    attn+MLP tensors exist; + weights.safetensors (init if missing)
         # Or: ./spark-serve docs/examples/spark-builder.sparkbc /tmp/serve-dry-001
         </code></pre>
         <h3 id="6c-serve-http-stdio-api-g-lane">6c) Serve HTTP / stdio API (G-lane)</h3>
@@ -375,11 +378,12 @@
         <code class="inline-code">./spark-bootstrap --run-bc</code> <strong>and</strong> <code class="inline-code">./spark --run-bc</code>, asserts
         <code class="inline-code">out/train/job-dry-001/ARTIFACT</code> (<code class="inline-code">not_sgd=false</code>, <code class="inline-code">trained=true</code>,
         <code class="inline-code">step_n=1</code>) + <code class="inline-code">checkpoint.json</code>. <code class="inline-code">make test-sparkbc</code> asserts STEP
-        weights + <code class="inline-code">loss_after &lt; loss_before</code> (multi-outer SGD). <strong>Not beat
-        Claude.</strong></p>
-        <p>Scale proof (SGD then measurement-only eval):</p>
+        weights + <code class="inline-code">loss_after &lt; loss_before</code> (multi-outer SGD + attn).
+        <strong>Not beat Claude.</strong></p>
+        <p>Attn train proof (SGD then measurement-only eval; scores &gt;0 on
+        frozen probes; still not beat Claude):</p>
         <pre class="doc__pre"><code class="language-bash">make spark-sgd-proof
-        # → prints loss curve + make spark-eval WEIGHTS=… (scores only)
+        # → loss curve + spark-eval; asserts copy_recall&gt;0 and next_token&gt;0
         </code></pre>
         <p><strong>Opt-in larger fixture / dims (local; not GHA default):</strong></p>
         <pre class="doc__pre"><code class="language-bash"># 145-pair longer JSONL + dim=64 / n_layer=4 (still CPU-fast)
@@ -407,8 +411,10 @@
         </code></pre>
         <ul class="doc__ul">
         <li><strong>Dry</strong> (default): oracle fixture path — prints scores, exits <strong>0</strong>.</li>
-        <li><strong>Weights</strong>: teacher-forced / next-token accuracy on
-          <code class="inline-code">spark.embed</code> + <code class="inline-code">spark.lm_head</code> (CPU only; never the 6000).</li>
+        <li><strong>Weights</strong>: teacher-forced / next-token accuracy via layer-0
+          attn when present (else mean-pool) + <code class="inline-code">lm_head</code> (CPU only; never
+          the 6000). After <code class="inline-code">make spark-sgd-proof</code>, frozen probes score <strong>&gt;0</strong>
+          — still <strong>not</strong> beat Claude.</li>
         <li><strong>Claude baseline (optional):</strong> <code class="inline-code">CLAUDE=auto</code> / <code class="inline-code">make spark-eval-claude</code>
           calls Anthropic <strong>only</strong> when a key already exists
           (<code class="inline-code">SPARK_EVAL_CLAUDE_API_KEY</code>, <code class="inline-code">ANTHROPIC_API_KEY</code>, <code class="inline-code">CLAUDE_API_KEY</code>,
@@ -521,11 +527,11 @@
         </tr>
         <tr>
         <td>STEP CPU SGD weights</td>
-        <td><strong>implemented</strong> (multi-outer; <code class="inline-code">weights.safetensors</code> + <code class="inline-code">checkpoint.json</code> loss curve; <code class="inline-code">trained=true</code>; <code class="inline-code">not_sgd=false</code>; loss must drop)</td>
+        <td><strong>implemented</strong> (multi-outer; layer-0 attn+embed+lm_head; <code class="inline-code">weights.safetensors</code> + <code class="inline-code">checkpoint.json</code> loss curve; <code class="inline-code">trained=true</code>; <code class="inline-code">not_sgd=false</code>; loss must drop; eval probes can be &gt;0)</td>
         </tr>
         <tr>
         <td>Tiny CPU serve forward</td>
-        <td><strong>implemented</strong> (<code class="inline-code">dump.py --serve</code> → <code class="inline-code">SERVE</code> with <code class="inline-code">forward=true</code>; optional layer-0 MLP; <code class="inline-code">trained</code> from weights meta; not production)</td>
+        <td><strong>implemented</strong> (<code class="inline-code">dump.py --serve</code> → <code class="inline-code">SERVE</code> with <code class="inline-code">forward=true</code>; optional layer-0 attn+MLP; <code class="inline-code">trained</code> from weights meta; not production)</td>
         </tr>
         <tr>
         <td>Serve HTTP / stdio API</td>
@@ -601,11 +607,11 @@
         </tr>
         <tr>
         <td>STEP real CPU SGD</td>
-        <td><strong>implemented</strong> (tiny; loss drop proven; not beat Claude)</td>
+        <td><strong>implemented</strong> (tiny; attn train; loss drop + eval&gt;0 proven; not beat Claude)</td>
         </tr>
         <tr>
         <td>Tiny CPU serve forward</td>
-        <td><strong>implemented</strong> (<code class="inline-code">SERVE</code>; <code class="inline-code">forward=true</code>; not production)</td>
+        <td><strong>implemented</strong> (<code class="inline-code">SERVE</code>; <code class="inline-code">forward=true</code>; attn0+mlp0; not production)</td>
         </tr>
         <tr>
         <td>Serve HTTP / stdio API (G-lane)</td>
