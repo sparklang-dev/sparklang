@@ -7,6 +7,10 @@ Asm: `asm/voice_ops.s`. Companions: `./spark-stt-tts`, `./spark-pstn-dial`.
 Whole-model map (behaviors + ears/eyes/speaking + thinking):
 [MODEL_ASPECTS.md](MODEL_ASPECTS.md).
 
+**Voice ask (dump / binary Q&A):** ears → SPARK_BC context →
+TinyCoder or dump facts → speak — [VOICE_ASK.md](VOICE_ASK.md)
+(`./spark-ask`, `./spark-speak-ask`). No OpenBin login.
+
 Spark stays a generic language; optional vendor voice ids are config only.
 
 ## Syntax

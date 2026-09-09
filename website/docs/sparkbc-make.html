@@ -61,6 +61,7 @@
                   <li><a href="/docs/weight-gallery.html">Weight gallery</a></li>
                   <li><a href="/docs/ai-models.html">AI models</a></li>
                   <li><a href="/docs/voice.html">Voice / STT / TTS</a></li>
+                  <li><a href="/docs/voice-ask.html">Voice ask</a></li>
                 </ul>
               </li>
               <li class="nav-more">
@@ -96,6 +97,7 @@
         <a href="/docs/factory.html">Factory hub</a>
         <a href="/docs/model-aspects.html">Model aspects</a>
         <a href="/docs/voice.html">Voice</a>
+        <a href="/docs/voice-ask.html">Voice ask</a>
         <a href="/docs/diagrams.html">Diagrams</a>
         <a href="/docs/spark-builder.html">Builder</a>
         <a href="/docs/compile.html">Compile</a>
@@ -198,6 +200,10 @@
         <td>K-lane helper CLIs + kit/shadow smoke</td>
         </tr>
         <tr>
+        <td><code class="inline-code">make test-spark-ask</code></td>
+        <td>Voice/text ask loop (dump facts + dry TTS)</td>
+        </tr>
+        <tr>
         <td><code class="inline-code">make sdk-pack</code> / <code class="inline-code">make dist</code></td>
         <td>Stage <code class="inline-code">dist/spark-sdk/</code> (helpers + I overlay when present)</td>
         </tr>
@@ -292,6 +298,10 @@
         <tr>
         <td><code class="inline-code">helpers/spark-shadow</code></td>
         <td>shadow copy, <code class="inline-code">build/shadow/</code>, hash verify</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">./spark-ask</code> / <code class="inline-code">./spark-speak-ask</code></td>
+        <td>voice/text ask over dump / analysis dir</td>
         </tr>
         <tr>
         <td><code class="inline-code">tools/spark_kit/</code></td>

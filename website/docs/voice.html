@@ -61,6 +61,7 @@
                   <li><a href="/docs/weight-gallery.html">Weight gallery</a></li>
                   <li><a href="/docs/ai-models.html">AI models</a></li>
                   <li><a href="/docs/voice.html">Voice / STT / TTS</a></li>
+                  <li><a href="/docs/voice-ask.html">Voice ask</a></li>
                 </ul>
               </li>
               <li class="nav-more">
@@ -96,6 +97,7 @@
         <a href="/docs/factory.html">Factory hub</a>
         <a href="/docs/model-aspects.html">Model aspects</a>
         <a href="/docs/voice.html" aria-current="page">Voice</a>
+        <a href="/docs/voice-ask.html">Voice ask</a>
         <a href="/docs/diagrams.html">Diagrams</a>
         <a href="/docs/spark-builder.html">Builder</a>
         <a href="/docs/compile.html">Compile</a>
@@ -124,6 +126,9 @@
         Asm: <code class="inline-code">asm/voice_ops.s</code>. Companions: <code class="inline-code">./spark-stt-tts</code>, <code class="inline-code">./spark-pstn-dial</code>.</p>
         <p>Whole-model map (behaviors + ears/eyes/speaking + thinking):
         <a href="/docs/model-aspects.html">MODEL_ASPECTS.md</a>.</p>
+        <p><strong>Voice ask (dump / binary Q&amp;A):</strong> ears → SPARK_BC context →
+        TinyCoder or dump facts → speak — <a href="/docs/voice-ask.html">VOICE_ASK.md</a>
+        (<code class="inline-code">./spark-ask</code>, <code class="inline-code">./spark-speak-ask</code>). No OpenBin login.</p>
         <p>Spark stays a generic language; optional vendor voice ids are config only.</p>
         <h2 id="syntax">Syntax</h2>
         <pre class="doc__pre"><code class="inline-code">listen &quot;input.wav&quot; -&gt; transcript

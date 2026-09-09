@@ -61,6 +61,7 @@
                   <li><a href="/docs/weight-gallery.html">Weight gallery</a></li>
                   <li><a href="/docs/ai-models.html">AI models</a></li>
                   <li><a href="/docs/voice.html">Voice / STT / TTS</a></li>
+                  <li><a href="/docs/voice-ask.html">Voice ask</a></li>
                 </ul>
               </li>
               <li class="nav-more">
@@ -96,6 +97,7 @@
         <a href="/docs/factory.html">Factory hub</a>
         <a href="/docs/model-aspects.html" aria-current="page">Model aspects</a>
         <a href="/docs/voice.html">Voice</a>
+        <a href="/docs/voice-ask.html">Voice ask</a>
         <a href="/docs/diagrams.html">Diagrams</a>
         <a href="/docs/spark-builder.html">Builder</a>
         <a href="/docs/compile.html">Compile</a>
@@ -217,6 +219,11 @@
         <td>Dry stub; live sidecar / whisper / gated HTTP</td>
         </tr>
         <tr>
+        <td>Voice ask loop</td>
+        <td><strong>implemented</strong></td>
+        <td><code class="inline-code">./spark-ask</code> / <code class="inline-code">./spark-speak-ask</code> — dump context + TinyCoder; <a href="/docs/voice-ask.html">VOICE_ASK.md</a></td>
+        </tr>
+        <tr>
         <td>Eyes / vision</td>
         <td><strong>planned</strong></td>
         <td>Stub module only — no <code class="inline-code">look</code> opcode on tip</td>
@@ -261,10 +268,15 @@
           BRN["Thinking — tiny CPU forward<br/>embed → attn0 → MLP0 → lm_head"]
           TOOL["Tools / behaviors<br/>classify · ask · reply pack"]
           VOC["Speaking — speak / TTS<br/>PCM or SPARK_TTS_*"]
+          ASKV["Voice ask CLI<br/>spark-ask / spark-speak-ask"]
           EAR --> TOK --> BRN
           BRN --> TOOL
           TOOL --> VOC
+          ASKV --> EAR
+          ASKV --> BRN
+          ASKV --> VOC
           EYE["Eyes — vision<br/>planned stub only"] -.->|not wired| BRN</pre>
+        <p>Dump/binary voice Q&amp;A: <a href="/docs/voice-ask.html">VOICE_ASK.md</a> (no OpenBin login).</p>
         <h2 id="diagram-behavior-tool-loop">Diagram — behavior + tool loop</h2>
         <p>!<code class="inline-code">images/diagram-behavior-tool-loop.svg</code></p>
         <pre class="mermaid">flowchart TB

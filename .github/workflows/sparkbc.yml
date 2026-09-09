@@ -53,3 +53,7 @@ jobs:
       # Owned TinyCoder (M-lane)
       - name: make test-spark-coder
         run: make test-spark-coder
+
+      # Voice ask loop (STT/TTS dry + dump context)
+      - name: make test-spark-ask
+        run: make test-spark-ask

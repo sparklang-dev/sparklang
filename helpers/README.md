@@ -11,6 +11,10 @@ paths. CPU only. Never 6000. Does **not** claim beat Claude.
 | `spark-bc-pp` | `./helpers/spark-bc-pp file.sparkbc` | pretty-print SPARK_BC dump |
 | `spark-bc-diff` | `./helpers/spark-bc-diff a.sparkbc b.sparkbc` | structural + hash diff |
 | `spark-shadow` | `./helpers/spark-shadow …` | shadow copy / build dir / verify |
+| `spark-ask` | `./spark-ask file.sparkbc --text "…"` | dump/text ask (TinyCoder or facts) |
+| `spark-speak-ask` | `./spark-speak-ask file.sparkbc --dry` | voice ask loop (STT→TTS) |
+
+Voice ask docs: [../docs/VOICE_ASK.md](../docs/VOICE_ASK.md).
 
 Shadows: see [../shadows/README.md](../shadows/README.md).
 Tool kit: `tools/spark_kit/` (`make helpers` / `make tools-test`).

@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Roadmap — Spark</title>
-    <meta name="description" content="SparkLang roadmap — done, next, won&#x27;t." />
+    <title>Voice ask — dump / binary Q&amp;A — Spark</title>
+    <meta name="description" content="STT → SPARK_BC dump context → TinyCoder → TTS. No OpenBin login. Tiny; does not beat Claude." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
     <link rel="stylesheet" href="/css/tokens.css?v=knowledge0909" />
@@ -97,7 +97,7 @@
         <a href="/docs/factory.html">Factory hub</a>
         <a href="/docs/model-aspects.html">Model aspects</a>
         <a href="/docs/voice.html">Voice</a>
-        <a href="/docs/voice-ask.html">Voice ask</a>
+        <a href="/docs/voice-ask.html" aria-current="page">Voice ask</a>
         <a href="/docs/diagrams.html">Diagrams</a>
         <a href="/docs/spark-builder.html">Builder</a>
         <a href="/docs/compile.html">Compile</a>
@@ -120,134 +120,139 @@
         <a href="/docs/programming-guide.html">Programming guide</a>
         <a href="/downloads.html">Downloads</a>
       </nav>      <article class="doc__body">
-        <h1 id="sparklang-roadmap">SparkLang roadmap</h1>
-        <p>Prioritized against the adoption bar. Status: <strong>done</strong> / <strong>next</strong> / <strong>won't</strong>
-        (near-term product focus). Details: <a href="/docs/adoption-bar.html">ADOPTION_BAR.md</a>.</p>
-        <h2 id="done-this-era">Done (this era)</h2>
+        <h1 id="spark-voice-ask-binary-dump-qa">Spark voice ask (binary / dump Q&amp;A)</h1>
+        <p>Speak to a <strong>local</strong> SPARK_BC dump or analysis folder —
+        ears (STT) → question → model → speaking (TTS).</p>
+        <p>Inspired by clear “ask the binary” product loops elsewhere;
+        <strong>not</strong> an OpenBin SaaS clone and <strong>not</strong> gated on OpenBin login.
+        OpenBin remains a separate research/lab note
+        (<a href="/docs/llm-decompile.html">research/LLM_DECOMPILE.md</a>).</p>
+        <p>Dump / <code class="inline-code">--compile</code> / <code class="inline-code">--run-bc</code> stay SoT. <strong>Never</strong> 6000.
+        Does <strong>not</strong> beat Claude. No API keys in git.</p>
+        <p>Companions: <code class="inline-code">./spark-stt-tts</code> · brain: owned <code class="inline-code">spark-coder</code>
+        (TinyCoder) and/or dump-fact answers · map:
+        <a href="/docs/model-aspects.html">MODEL_ASPECTS.md</a> · voice surface:
+        <a href="/docs/voice.html">VOICE.md</a>.</p>
+        <h2 id="quick-start">Quick start</h2>
+        <pre class="doc__pre"><code class="language-bash">make helpers
+        make spark-stt-tts          # optional for live STT/TTS
+        # optional tiny brain:
+        make spark-coder-train
+
+        # Text (no mic) — dump facts / TinyCoder
+        ./spark-ask docs/examples/spark-train-step.sparkbc \
+          --text &quot;What opcodes are in this dump?&quot;
+
+        # Voice loop, offline CI (stub STT + stub WAV)
+        ./spark-speak-ask docs/examples/spark-train-step.sparkbc --dry
+
+        # Voice loop, live mic + local synth (needs spark-stt-tts)
+        ./spark-speak-ask docs/examples/spark-train-step.sparkbc --mic
+
+        # Analysis folder from project loop (sibling spark-analyze)
+        ./spark-ask out/analyze/demo --text &quot;How many opcodes?&quot;
+        ./helpers/spark-speak-ask out/analyze/demo --dry
+        </code></pre>
+        <p>Root <code class="inline-code">./spark-ask</code> and <code class="inline-code">./spark-speak-ask</code> are thin aliases of
+        <code class="inline-code">helpers/spark-ask</code> / <code class="inline-code">helpers/spark-speak-ask</code>.</p>
+        <h2 id="modes">Modes</h2>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Flag</th>
+        <th>Behavior</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><code class="inline-code">--text Q</code></td>
+        <td>Skip mic; answer Q</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">--voice</code> / <code class="inline-code">spark-speak-ask</code></td>
+        <td>STT → answer → TTS</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">--dry</code></td>
+        <td>Fixture question + stub WAV (CI / no sidecar)</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">--wav FILE</code></td>
+        <td>Listen from RIFF/WAVE</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">--mic</code></td>
+        <td><code class="inline-code">arecord</code> via <code class="inline-code">./spark-stt-tts</code></td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">--out-wav PATH</code></td>
+        <td>Write spoken answer</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">--play</code></td>
+        <td><code class="inline-code">aplay</code> after live speak</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">--weights PATH</code></td>
+        <td>TinyCoder safetensors</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">--json</code></td>
+        <td>Machine-readable result</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <h2 id="brain-honesty">Brain honesty</h2>
+        <ol class="doc__ol">
+        <li><strong>Dump facts</strong> — opcodes, sha256, magic SPBC, TRAIN presence
+           answered from decoded dump (preferred SoT).</li>
+        <li><strong>TinyCoder</strong> — when <code class="inline-code">models/spark-coder/weights.safetensors</code>
+           exists, inject dump excerpt + question; greedy generate.</li>
+        <li><strong>Weak / missing</strong> — honesty footer: TinyCoder is <strong>tiny</strong>, not
+           OpenBin-level RE Q&amp;A, does <strong>not</strong> beat Claude. Prefer
+           <code class="inline-code">dump.txt</code> / <code class="inline-code">ops.json</code>.</li>
+        </ol>
+        <h2 id="stt-tts-gates">STT / TTS gates</h2>
+        <p>Same gates as <a href="/docs/voice.html">VOICE.md</a>:</p>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Gate</th>
+        <th>Meaning</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td>(default local)</td>
+        <td><code class="inline-code">spark-stt-tts</code> PCM synth; whisper / <code class="inline-code">SPARK_STT_CMD</code> when available</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">SPARK_STT_NET=1</code> + URL</td>
+        <td>HTTP STT</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">SPARK_TTS_NET=1</code> + URL</td>
+        <td>HTTP TTS</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">SPARK_SPEECH_NET=1</code></td>
+        <td>Both</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <p>URL without gate → fail closed (exit 2). Never print Bearer keys.</p>
+        <h2 id="tests">Tests</h2>
+        <pre class="doc__pre"><code class="language-bash">make test-spark-ask
+        # or:
+        PYTHONPATH=python:tools python3 -m unittest \
+          tools.spark_ask.test_voice_ask -v
+        </code></pre>
+        <h2 id="related">Related</h2>
         <ul class="doc__ul">
-        <li>Public MIT repo, SparkLang branding, About disambiguation</li>
-        <li>Changelog + release process doc</li>
-        <li><code class="inline-code">embed</code> / <code class="inline-code">retrieve</code> first-class ops + dry fixtures + <code class="inline-code">spark-rag-http</code></li>
-        <li>Dry-run escape hatch: <code class="inline-code">shell</code> / <code class="inline-code">run</code> allowlist fixtures</li>
-        <li>Live <code class="inline-code">--allow-shell</code>: <code class="inline-code">./spark-shell</code> argv <code class="inline-code">execve</code> (echo|true|false)</li>
-        <li>Host embed: Python + JS (<code class="inline-code">js/sparklang</code>) + C (<code class="inline-code">host/c/sparklang.h</code>);
-          <code class="inline-code">./spark --embed</code> JSON handshake</li>
-        <li>Per-<code class="inline-code">ask</code> <code class="inline-code">[accounting]</code> line (dry zeros; live wall-clock + usage)</li>
-        <li>Live run-level <code class="inline-code">[accounting-run]</code> rollup (<code class="inline-code">spark-ask-http --rollup</code>)</li>
-        <li>Streaming <code class="inline-code">ask</code>: <code class="inline-code">./spark-ask-http --stream</code> SSE + <code class="inline-code">ask stream</code>
-          language form (live); dry prints <code class="inline-code">stream=1</code></li>
-        <li>Live <code class="inline-code">extract</code>: schema validate + retry-on-miss (<code class="inline-code">--retries</code>,
-          <code class="inline-code">--stub-file</code> offline); forks <code class="inline-code">./spark-ask-http</code></li>
-        <li>Positioning: not a Bifrost plugin; dry-run first</li>
-        <li><code class="inline-code">http get</code> / <code class="inline-code">http post</code> + timeout + dry fixture files + live
-          <code class="inline-code">./spark-http</code> with <code class="inline-code">bearer</code> / <code class="inline-code">header</code> + <code class="inline-code">retries</code> / <code class="inline-code">backoff</code></li>
-        <li><strong>SPARK_BC Builder factory (init):</strong> <code class="inline-code">--compile</code> Spark → <code class="inline-code">.sparkbc</code>
-          with <code class="inline-code">TRAIN</code>/<code class="inline-code">STEP</code>/<code class="inline-code">TRAIN_STATUS</code>; bootstrap <code class="inline-code">--run-bc</code> dry;
-          Spark-created init safetensors; published dumps + sha256. See
-          <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>. Dry ≠ trained.</li>
+        <li>Loop UX: <a href="/workflow.html">/workflow.html</a></li>
+        <li>Analyze project folder: <code class="inline-code">helpers/spark-analyze</code> (when present)</li>
+        <li><a href="/docs/spark-coder.html">SPARK_CODER.md</a> · <a href="/docs/tools-helpers.html">TOOLS_HELPERS.md</a></li>
         </ul>
-        <h2 id="next">Next</h2>
-        <div class="doc__table-wrap"><table class="doc__table">
-        <thead>
-        <tr>
-        <th>Track</th>
-        <th>What</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-        <td>Extract</td>
-        <td>~~Schema validation + JSON-mode + retry on miss~~ <strong>done</strong> (live + <code class="inline-code">--retries</code> / stub)</td>
-        </tr>
-        <tr>
-        <td>Ask</td>
-        <td>~~Streaming token/SSE path~~ <strong>done</strong> (<code class="inline-code">--stream</code> / <code class="inline-code">ask stream</code>)</td>
-        </tr>
-        <tr>
-        <td>Eval</td>
-        <td>Expectation pass/fail harness (not only alias compare)</td>
-        </tr>
-        <tr>
-        <td>Escape</td>
-        <td>~~Live <code class="inline-code">--allow-shell</code> argv policy; JS / C host FFI~~ <strong>done</strong></td>
-        </tr>
-        <tr>
-        <td>Accounting</td>
-        <td>~~Wall-clock latency on live ask; run-level rollup~~ <strong>done</strong></td>
-        </tr>
-        <tr>
-        <td>Builder</td>
-        <td>STEP→weights <strong>done</strong> (dry <code class="inline-code">weights.safetensors</code>); later owner train toward beat-Claude — not claimed today</td>
-        </tr>
-        <tr>
-        <td>LSP</td>
-        <td>Prefer editor LSP + highlighting over IDE chrome</td>
-        </tr>
-        <tr>
-        <td>Receptionist</td>
-        <td>Promote <code class="inline-code">examples/receptionist_goal.spark</code> off <code class="inline-code">[goal]</code> when transfer + eval syntax exist</td>
-        </tr>
-        <tr>
-        <td>Releases</td>
-        <td>Cut GitHub Release tags from CHANGELOG (see RELEASE.md); Pages = human CF dashboard (no wrangler)</td>
-        </tr>
-        </tbody>
-        </table></div>
-        <h2 id="done-rename">Done (rename)</h2>
-        <div class="doc__table-wrap"><table class="doc__table">
-        <thead>
-        <tr>
-        <th>Track</th>
-        <th>What</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-        <td>Rename</td>
-        <td>Public <code class="inline-code">sparklang-dev/sparklang</code> live. Site sparklang.dev. CLI remains <code class="inline-code">spark</code>.</td>
-        </tr>
-        </tbody>
-        </table></div>
-        <h2 id="wont-near-term-focus">Won't (near-term focus)</h2>
-        <div class="doc__table-wrap"><table class="doc__table">
-        <thead>
-        <tr>
-        <th>Drop</th>
-        <th>Why</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-        <td>MITM / pcap / browser automation as hero</td>
-        <td>Distracts from AI workflow language</td>
-        </tr>
-        <tr>
-        <td>Homegrown Electron/PyQt IDE as hero chrome</td>
-        <td>Prefer LSP for editor story; <strong>IDE tree kept</strong> (hard-delete OWNER-CONFIRM <strong>revoked</strong> 2026-09-02)</td>
-        </tr>
-        <tr>
-        <td>Model-build as training product</td>
-        <td>Blueprint / eval sugar only</td>
-        </tr>
-        <tr>
-        <td>Production voice/telephony claim</td>
-        <td>Gaps remain (barge-in, EOU, SM, adapters) — gated demo only</td>
-        </tr>
-        <tr>
-        <td>Bifrost-as-identity</td>
-        <td>Gateway optional; any OpenAI-compatible URL</td>
-        </tr>
-        </tbody>
-        </table></div>
-        <h2 id="voice-gaps-honest">Voice gaps (honest)</h2>
-        <p>If not shipping soon, keep voice off the production claim list:</p>
-        <ul class="doc__ul">
-        <li>Barge-in, EOU / silence detection, latency budget</li>
-        <li>Call state machine: transfer / hold / hangup / VM / DTMF / STT retry</li>
-        <li>Named STT / TTS / telephony adapters as stable contracts</li>
-        <li>Concurrency model for multi-call</li>
-        </ul>
-        <p>Dry <code class="inline-code">listen</code> / <code class="inline-code">speak</code> / gated PSTN remain demos. See <a href="/docs/voice.html">VOICE.md</a>.</p>
       </article>
       </main>
     </div>

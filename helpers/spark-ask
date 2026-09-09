@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Spark voice/text ask over a SPARK_BC dump or analysis folder.
+# Ears (STT) → question → TinyCoder/dump facts → speaking (TTS).
+# No OpenBin login. Never 6000. Does not beat Claude.
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$ROOT"
+export PYTHONPATH="${ROOT}/python:${ROOT}/tools:${PYTHONPATH:-}"
+exec python3 "${ROOT}/tools/spark_ask/voice_ask.py" "$@"

@@ -22,6 +22,7 @@ DOC_NAV = """\
         <a href="/docs/factory.html"{fy}>Factory hub</a>
         <a href="/docs/model-aspects.html"{ma}>Model aspects</a>
         <a href="/docs/voice.html"{vo}>Voice</a>
+        <a href="/docs/voice-ask.html"{va}>Voice ask</a>
         <a href="/docs/diagrams.html"{dg}>Diagrams</a>
         <a href="/docs/spark-builder.html"{bc}>Builder</a>
         <a href="/docs/compile.html"{cp}>Compile</a>
@@ -109,6 +110,7 @@ HEADER = """\
                   <li><a href="/docs/weight-gallery.html">Weight gallery</a></li>
                   <li><a href="/docs/ai-models.html">AI models</a></li>
                   <li><a href="/docs/voice.html">Voice / STT / TTS</a></li>
+                  <li><a href="/docs/voice-ask.html">Voice ask</a></li>
                 </ul>
               </li>
               <li class="nav-more">
@@ -183,6 +185,7 @@ MD_LINK_MAP = {
     "ENCRYPT_GATEWAY.md": "/docs/ai-models.html",
     "IDE.md": "/docs/ide.html",
     "VOICE.md": "/docs/voice.html",
+    "VOICE_ASK.md": "/docs/voice-ask.html",
     "MODEL_ASPECTS.md": "/docs/model-aspects.html",
     "SELF_HOST.md": "/docs/self-host.html",
     "SPARK_BC.md": "/docs/spark-bc.html",
@@ -257,6 +260,10 @@ DOC_PAGES = [
     ("vo", "VOICE.md", "voice.html", "Voice — STT / TTS / PSTN",
      "Spark listen/speak companions, dry stubs, gated live STT/TTS "
      "and PSTN. Not production telephony."),
+    ("va", "VOICE_ASK.md", "voice-ask.html",
+     "Voice ask — dump / binary Q&A",
+     "STT → SPARK_BC dump context → TinyCoder → TTS. "
+     "No OpenBin login. Tiny; does not beat Claude."),
     ("dg", "DIAGRAMS.md", "diagrams.html", "Factory diagrams",
      "How Spark tools and LLM assist relate — compile, decompile, "
      "train, serve, shadows. Deterministic SoT; never beat Claude."),
@@ -433,7 +440,7 @@ def render(md_path: Path, out_path: Path, title: str, description: str, current:
     keys = (
         "ab", "ai", "nn", "ide", "sh", "bc", "cp", "dc", "rd", "bm",
         "af", "mk", "th", "isa", "fy", "kh", "dg", "tl", "sc", "wg",
-        "ar", "tk", "sv", "ev", "ci", "ma", "vo",
+        "ar", "tk", "sv", "ev", "ci", "ma", "vo", "va",
     )
     nav_kwargs = {
         k: (' aria-current="page"' if current == k else "") for k in keys
