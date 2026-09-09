@@ -49,6 +49,44 @@ def arch_from_bc(bc: dict[str, Any]) -> dict[str, int]:
     }
 
 
+def resolve_arch(
+    bc: dict[str, Any],
+    *,
+    dim: int | None = None,
+    n_layer: int | None = None,
+) -> dict[str, int]:
+    """Tiny default from SPARK_BC; optional CPU-scale dim/layers.
+
+    Opt-in larger dims stay CPU-fast (CI keeps defaults). Never the
+    voice GPU / RTX PRO 6000.
+    """
+    arch = dict(arch_from_bc(bc))
+    if dim is not None:
+        d = int(dim)
+        if d < 8 or d > 128:
+            raise ValueError(
+                "dim must be in [8, 128] for CPU-fast stub (got %d)"
+                % d
+            )
+        if d % N_HEAD != 0:
+            raise ValueError(
+                "dim %d must be divisible by n_head=%d"
+                % (d, N_HEAD)
+            )
+        arch["dim"] = d
+        arch["head_dim"] = d // N_HEAD
+        arch["mlp"] = d * 4
+    if n_layer is not None:
+        nl = int(n_layer)
+        if nl < 1 or nl > 8:
+            raise ValueError(
+                "n_layer must be in [1, 8] for CPU-fast stub "
+                "(got %d)" % nl
+            )
+        arch["n_layer"] = nl
+    return arch
+
+
 def _stream(seed: bytes, count: int) -> list[float]:
     """Unit stream in (-1, 1) from SHA-256(seed || i)."""
     out: list[float] = []
@@ -181,11 +219,13 @@ def emit_init_weights(
     *,
     source: str,
     command: str,
+    dim: int | None = None,
+    n_layer: int | None = None,
 ) -> dict[str, Any]:
     """Create structured init weights seeded by the full SPARK_BC file."""
     bc = load_sparkbc(sparkbc_path)
     ops = decode_ops(bc)
-    arch = arch_from_bc(bc)
+    arch = resolve_arch(bc, dim=dim, n_layer=n_layer)
     dim = arch["dim"]
     vocab = arch["vocab"]
     n_kv = arch["n_kv"]
@@ -550,13 +590,17 @@ def apply_sgd_step(
     checkpoint: str | Path | None = None,
     source: str = "",
     command: str = "",
+    dim: int | None = None,
+    n_layer: int | None = None,
 ) -> dict[str, Any]:
     """Multi-outer CPU SGD on Spark tensors (tiny; not beat Claude).
 
     Fixture JSONL → mean-pool embed → CE on lm_head (optional embed
     grads). Records a loss_curve and writes checkpoint.json. Sets
-    trained=true / not_sgd=false only when loss drops. CPU only —
-    never the voice GPU / RTX PRO 6000.
+    trained=true / not_sgd=false only when loss drops. Optional
+    dim / n_layer only apply when seeding new weights (CPU-fast
+    scale; CI keeps defaults). CPU only — never the voice GPU /
+    RTX PRO 6000.
     """
     bc_path = Path(sparkbc_path)
     out = Path(dest)
@@ -578,6 +622,8 @@ def apply_sgd_step(
                 "SGD STEP seed from SPARK_BC "
                 "(CPU; not beat Claude)"
             ),
+            dim=dim,
+            n_layer=n_layer,
         )
     meta, tensors = read_safetensors(out)
     prev = 0
@@ -717,6 +763,15 @@ def apply_sgd_step(
     meta["sgd_inner"] = str(n_inner)
     meta["sgd_outer"] = str(n_outer)
     meta["train_embed"] = "true" if do_embed else "false"
+    meta["arch_dim"] = str(dim)
+    meta["arch_n_layer"] = str(
+        sum(
+            1
+            for name in tensors
+            if name.startswith("spark.layers.")
+            and name.endswith(".q.weight")
+        )
+    )
     meta["checkpoint"] = str(ckpt_path)
     meta["device"] = "cpu"
     meta["never_gpu"] = "rtx-pro-6000"
@@ -765,6 +820,8 @@ def apply_sgd_step(
         "train_embed": do_embed,
         "dataset": str(data_path),
         "dataset_n": len(pairs),
+        "arch_dim": dim,
+        "arch_n_layer": int(meta["arch_n_layer"]),
         "weights": str(out),
         "weights_sha256": hashlib.sha256(
             out.read_bytes()
@@ -801,6 +858,8 @@ def apply_sgd_step(
         "grad_norm_before": g0,
         "dataset": str(data_path),
         "dataset_n": len(pairs),
+        "arch_dim": dim,
+        "arch_n_layer": int(meta["arch_n_layer"]),
         "sparkbc_sha256": bc["sha256"],
         "note": meta["note"],
         "beats_claude": False,

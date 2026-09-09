@@ -69,6 +69,25 @@ def main() -> int:
         help="checkpoint.json path (default: beside weights)",
     )
     ap.add_argument(
+        "--dim",
+        type=int,
+        default=None,
+        help=(
+            "optional d_model when seeding new weights "
+            "(8..128, %% n_head); CI keeps default"
+        ),
+    )
+    ap.add_argument(
+        "--n-layer",
+        type=int,
+        default=None,
+        dest="n_layer",
+        help=(
+            "optional n_layers when seeding new weights "
+            "(1..8); CI keeps default"
+        ),
+    )
+    ap.add_argument(
         "--source",
         default="",
         help="optional source label for metadata",
@@ -91,6 +110,8 @@ def main() -> int:
         checkpoint=args.checkpoint or None,
         source=args.source,
         command=args.command,
+        dim=args.dim,
+        n_layer=args.n_layer,
     )
     if result.get("not_sgd") is not False:
         print(

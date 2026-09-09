@@ -1,0 +1,17 @@
+{
+  "name": "spark-sgd-scale",
+  "dataset": "examples/fixtures/train/dataset_scale.jsonl",
+  "dim": 64,
+  "n_layer": 4,
+  "n_head": 4,
+  "n_kv": 2,
+  "outer": 2,
+  "inner": 4,
+  "lr": 0.08,
+  "train_embed": true,
+  "device": "cpu",
+  "never": "rtx-pro-6000",
+  "beats_claude": false,
+  "ci_default": false,
+  "note": "Opt-in local CPU scale proof. GHA / make spark-sgd-proof keeps tiny dataset.jsonl and arch_from_bc defaults."
+}

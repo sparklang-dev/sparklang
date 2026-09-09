@@ -5,6 +5,19 @@ language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
 
+## 0.6.34 — 2026-09-09
+
+- **Scale fixture / dims (F-lane):** larger CE JSONL
+  (`examples/fixtures/train/dataset_scale.jsonl`, 145 pairs,
+  longer sequences) + `scale_config.json`. Opt-in arch knobs
+  `--dim` / `--n-layer` on `apply_step.py` /
+  `emit_init_weights` / `apply_sgd_step` (CPU-fast bounds
+  dim≤128, n_layer≤8). `make spark-sgd-proof` stays tiny for
+  GHA; `make spark-sgd-proof-scale` is local opt-in
+  (defaults dim=64 n_layer=4). Tests: fixture load + shape
+  check + one-outer smoke (not overnight). **Not beat Claude.**
+  Never 6000. Docs: [SPARK_BUILDER.md](docs/SPARK_BUILDER.md).
+
 ## 0.6.33 — 2026-09-09
 
 - **Claude eval baseline (honest):** `make spark-eval-claude` /
