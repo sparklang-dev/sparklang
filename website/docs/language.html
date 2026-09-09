@@ -191,7 +191,7 @@
         Programs are <code class="inline-code">.spark</code> files. They are interpreted by the <strong>Spark VM</strong>, which
         is written in <strong>x86_64 assembly</strong> and shipped as <strong>machine code</strong> (ELF),
         not as a Python/Rust/C interpreter.</p>
-        <h2 id="implementation-tiers-owner-hierarchy">Implementation tiers (owner hierarchy)</h2>
+        <h2 id="implementation-tiers">Implementation tiers</h2>
         <ol class="doc__ol">
         <li><strong>Machine language</strong> — CPU executes the <code class="inline-code">spark</code> binary directly</li>
         <li><strong>Assembly</strong> — <code class="inline-code">asm/spark.s</code> (GAS) → <code class="inline-code">as</code> → <code class="inline-code">ld</code> → ELF</li>
@@ -697,7 +697,7 @@
         - <code class="inline-code">lower</code> — emit/extend Spark that maps to asm VM ops (or <code class="inline-code">.s</code> later)
         - <code class="inline-code">mid</code> — stay on Spark / C-like surface
         - <code class="inline-code">higher</code> — Python/JS-ish <strong>suggestion layer</strong> (<code class="inline-code">out/program.py.txt</code>) — does <strong>not</strong> replace the asm VM</p>
-        <p><strong>Safety:</strong> <code class="inline-code">review url</code> never <code class="inline-code">eval</code>s. Policy <strong>A+B</strong> (owner 2026-08-31):
+        <p><strong>Safety:</strong> <code class="inline-code">review url</code> never <code class="inline-code">eval</code>s. Policy <strong>A+B</strong> (2026-08-31):
         <strong>B</strong> default — <code class="inline-code">file://</code> or bare path → open/read + static scan (no
         network). <strong>A</strong> opt-in — remote <code class="inline-code">http(s)://</code> + <code class="inline-code">--allow-net</code> → curl fetch
         + same static scan. Without <code class="inline-code">--allow-net</code>, remote URLs exit non-zero with

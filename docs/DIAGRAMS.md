@@ -3,19 +3,19 @@
 Engineer overview diagrams for the **Spark / SparkLang** SPARK_BC
 factory. Deterministic tooling is SoT. LLMs may **assist** authors;
 they do **not** replace `--compile`, `dump.py`, or `bc_vm`.
-**Never** beat Claude. **Never** 6000 train.
+GPU / eval honesty: see [FACTORY.md](FACTORY.md) and [EVAL.md](EVAL.md).
 
 Hub: [FACTORY.md](FACTORY.md). Builder: [SPARK_BUILDER.md](SPARK_BUILDER.md).
 Helpers/shadows CLIs: [TOOLS_HELPERS.md](TOOLS_HELPERS.md).
-**Model aspects (L):** [MODEL_ASPECTS.md](MODEL_ASPECTS.md) — sensory
+**Model aspects:** [MODEL_ASPECTS.md](MODEL_ASPECTS.md) — sensory
 mapping 100× (hero, per-sense deep sections, agentic loop + vs
 OpenBin/phone comparison SVGs). Factory tool diagrams on this page
 stay SoT for compile/decompile/helpers — aspects does not replace them.
 
-**J-lane (landed + research expand):** decompile how-to with CLI
+**Decompile how-to + LLM research:** decompile how-to with CLI
 captures + SVG tool diagrams — [DECOMPILE.md](DECOMPILE.md) /
-[/docs/decompile.html](/docs/decompile.html). LLM survey (owner
-cites: DecompAI agent vs seq2seq, LLM4Decompile, EmergentMind,
+[/docs/decompile.html](/docs/decompile.html). LLM survey (cited:
+DecompAI agent vs seq2seq, LLM4Decompile, EmergentMind,
 Quarkslab article + RE category, Plain English overview) —
 [research/LLM_DECOMPILE.md](research/LLM_DECOMPILE.md) /
 [/docs/llm-decompile.html](/docs/llm-decompile.html). This file
@@ -199,5 +199,5 @@ LLM assist ──► helps edit/explain ──✗──► does not replace SoT
 ## Related
 
 - [FACTORY.md](FACTORY.md) · [SPARK_BC.md](SPARK_BC.md)
-- [DECOMPILE.md](DECOMPILE.md) (J-lane captures when merged)
+- [DECOMPILE.md](DECOMPILE.md) (CLI captures + research when published)
 - [CI_PAGES.md](CI_PAGES.md)

@@ -3,7 +3,7 @@
   <desc id="d">Tokens to embeddings through multi-head attention and MLP to next-layer residuals. Original Spark schematic.</desc>
   <rect width="920" height="420" fill="#f8fafc"/>
   <text x="24" y="32" font-family="ui-sans-serif,system-ui,sans-serif" font-size="16" font-weight="700" fill="#0f172a">Transformer block (schematic)</text>
-  <text x="24" y="52" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#64748b">Spark knowledge hive · not a paper figure copy · never beat Claude</text>
+  <text x="24" y="52" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#64748b">Spark knowledge hive · not a paper figure copy</text>
   <rect x="40" y="90" width="120" height="56" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
   <text x="100" y="123" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#0c4a6e">tokens</text>
   <rect x="200" y="90" width="140" height="56" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>

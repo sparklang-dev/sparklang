@@ -14,7 +14,7 @@ Programs are `.spark` files. They are interpreted by the **Spark VM**, which
 is written in **x86_64 assembly** and shipped as **machine code** (ELF),
 not as a Python/Rust/C interpreter.
 
-## Implementation tiers (owner hierarchy)
+## Implementation tiers
 
 1. **Machine language** — CPU executes the `spark` binary directly
 2. **Assembly** — `asm/spark.s` (GAS) → `as` → `ld` → ELF
@@ -570,7 +570,7 @@ implement patch into "out/program.spark"
 - `mid` — stay on Spark / C-like surface
 - `higher` — Python/JS-ish **suggestion layer** (`out/program.py.txt`) — does **not** replace the asm VM
 
-**Safety:** `review url` never `eval`s. Policy **A+B** (owner 2026-08-31):
+**Safety:** `review url` never `eval`s. Policy **A+B** (2026-08-31):
 **B** default — `file://` or bare path → open/read + static scan (no
 network). **A** opt-in — remote `http(s)://` + `--allow-net` → curl fetch
 + same static scan. Without `--allow-net`, remote URLs exit non-zero with

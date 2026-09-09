@@ -184,10 +184,10 @@ MD_LINK_MAP = {
 DOC_PAGES = [
     ("fy", "FACTORY.md", "factory.html", "Factory documentation hub",
      "Map of SparkLang SPARK_BC factory docs — compile through "
-     "eval, serve, CI/Pages. Does not beat Claude."),
+     "eval, serve, CI/Pages."),
     ("kh", "KNOWLEDGE.md", "knowledge.html", "AI knowledge hive",
      "Engineer-grade AI knowledge hub — transformers, training, "
-     "inference, agents, eval honesty. Does not beat Claude."),
+     "inference, agents, and eval honesty."),
     ("kh", "knowledge/LLM_TRANSFORMERS.md", "knowledge-llm.html",
      "LLMs & transformers",
      "Tokens, embeddings, attention, transformers — Spark-framed."),
@@ -205,7 +205,7 @@ DOC_PAGES = [
      "Tool loops, ReAct-style patterns, failure modes."),
     ("kh", "knowledge/EVAL_HONESTY.md", "knowledge-eval.html",
      "Eval honesty",
-     "Benchmarks as instruments — never beat Claude."),
+     "Benchmarks as instruments — measurement, not marketing."),
     ("kh", "knowledge/DECOMPILE_RE.md", "knowledge-decompile.html",
      "Decompile + LLM RE",
      "Recompile ≠ semantics; links llm-decompile research."),
@@ -222,14 +222,14 @@ DOC_PAGES = [
     ("va", "VOICE_ASK.md", "voice-ask.html",
      "Voice ask — dump / binary Q&A",
      "STT → SPARK_BC dump context → TinyCoder → TTS. "
-     "No OpenBin login. Tiny; does not beat Claude."),
-("ve", "VOICE_EASY.md", "voice-easy.html",
+     "No OpenBin login. Tiny owned path."),
+    ("ve", "VOICE_EASY.md", "voice-easy.html",
      "Voice easy — train STT / TTS",
      "Piece-of-cake owned voice heads (tiny CI + large opt-in). "
-     "Prefer 5090; never 6000. Not ElevenLabs overnight."),
+     "Prefer 5090. Not ElevenLabs overnight."),
     ("dg", "DIAGRAMS.md", "diagrams.html", "Factory diagrams",
      "How Spark tools and LLM assist relate — compile, decompile, "
-     "train, serve, shadows. Deterministic SoT; never beat Claude."),
+     "train, serve, shadows. Deterministic SoT."),
     ("ab", "ADOPTION_BAR.md", "adoption-bar.html", "Adoption bar",
      "SparkLang adoption checklist — done, next, won't."),
     ("", "ROADMAP.md", "roadmap.html", "Roadmap",
@@ -266,48 +266,48 @@ DOC_PAGES = [
     ("rd", "research/LLM_DECOMPILE.md", "llm-decompile.html",
      "LLM decompile research",
      "Survey of LLM decompile tools vs Spark SPARK_BC "
-     "deterministic dump — citations, limits, no beat Claude."),
+     "deterministic dump — citations and honest limits."),
     ("bm", "BUILD_MODELS.md", "build-models.html",
      "Build models — TRAIN / STEP",
      "TRAIN, STEP, ARTIFACT, weights, and checkpoints on CPU "
-     "fixtures. Does not beat Claude."),
+     "fixtures."),
     ("tl", "TRAIN_LOOP.md", "train-loop.html",
      "Train loop — outer / inner SGD",
      "Multi-outer CPU SGD, fixtures, checkpoints, loss curves."),
     ("sc", "SPARK_CODER.md", "spark-coder.html",
      "Spark coder — owned TinyCoder",
      "In-repo TinyCoder layers + SGD on coding fixtures. "
-     "Not HF/Claude. Never 6000; 5090 OK. Does not beat Claude."),
+     "Not HF/Claude. Prefers 5090; see coder honesty table."),
     ("wg", "WEIGHT_GALLERY.md", "weight-gallery.html",
      "Weight gallery — view / play / understand",
      "Catalog tiny through xl Spark stub weights; inspect, "
-     "diff, play forward. Opt-in 5090 XL; never 6000."),
+     "diff, play forward. Opt-in 5090 XL."),
     ("ar", "ARCHITECTURE.md", "architecture.html",
      "Architecture pieces",
      "Embed, RMSNorm, lm_head, MLP/SwiGLU, attention honesty."),
     ("af", "ATTENTION_FORWARD.md", "attention-forward.html",
      "Attention / MLP / serve",
      "Honest status: init attn tensors, MLP0 serve forward, "
-     "attention math planned — not beat Claude."),
+     "attention math planned."),
     ("tk", "TOKENIZER.md", "tokenizer.html", "Tokenizer — BPE seed vocab",
      "From-nothing byte-level BPE seed vocab for Spark."),
     ("sv", "SERVE.md", "serve.html", "Serve forward + HTTP",
-     "Tiny CPU SERVE forward; HTTP/API when G-lane merges."),
+     "Tiny CPU SERVE forward plus local HTTP/stdio predict API."),
     ("ev", "EVAL.md", "eval.html", "Eval harness",
      "Frozen spark-eval probes + optional Claude baseline. "
-     "Never claims beat Claude."),
+     "Measurement only — does not claim beat Claude."),
     ("mk", "SPARKBC_MAKE.md", "sparkbc-make.html",
      "SPARK_BC makefile targets",
      "test-sparkbc, sparkbc-e2e, spark-sgd-proof, spark-eval, "
      "helpers, tools-test, sdk-pack, and related factory gates."),
     ("th", "TOOLS_HELPERS.md", "tools-helpers.html",
      "Tools & helpers",
-     "K-lane helpers, shadows, and spark_kit — compile/run/inspect, "
-     "shadow build, opcode sheet. Never beat Claude."),
-("mo", "METHODS_OPENBIN.md", "methods-openbin.html",
+     "Helpers, shadows, and spark_kit — compile/run/inspect, "
+     "shadow build, opcode sheet."),
+    ("mo", "METHODS_OPENBIN.md", "methods-openbin.html",
      "Methods vs OpenBin",
      "What Spark adopted vs rejected from public OpenBin "
-     "methods — local analyze loop, no clone. Never beat Claude."),
+     "methods — local analyze loop, no clone."),
     ("isa", "SPARK_BC.md", "spark-bc.html", "SPARK_BC ISA",
      "Spark bytecode ISA — opcodes, pools, dry-run contracts."),
     ("", "LANGUAGE.md", "language.html", "Language reference",

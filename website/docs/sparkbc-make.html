@@ -251,7 +251,7 @@
         </tr>
         <tr>
         <td><code class="inline-code">make spark-eval-claude</code></td>
-        <td>Same + optional Anthropic baseline (E-lane; skip if no key)</td>
+        <td>Same + optional Anthropic baseline (skip if no key)</td>
         </tr>
         <tr>
         <td><code class="inline-code">make test-spark-eval</code></td>
@@ -267,15 +267,11 @@
         </tr>
         <tr>
         <td><code class="inline-code">make helpers</code> / <code class="inline-code">make tools-test</code></td>
-        <td>K-lane helper CLIs + kit/shadow smoke</td>
+        <td>Helper CLIs + kit/shadow/analyze smoke</td>
         </tr>
         <tr>
         <td><code class="inline-code">make test-spark-ask</code></td>
         <td>Voice/text ask loop (dump facts + dry TTS)</td>
-        </tr>
-        <tr>
-        <td><code class="inline-code">make helpers</code> / <code class="inline-code">make tools-test</code></td>
-        <td>K-lane helper CLIs + kit/shadow/analyze smoke</td>
         </tr>
         <tr>
         <td><code class="inline-code">make test-spark-analyze</code></td>
@@ -283,7 +279,7 @@
         </tr>
         <tr>
         <td><code class="inline-code">make sdk-pack</code> / <code class="inline-code">make dist</code></td>
-        <td>Stage <code class="inline-code">dist/spark-sdk/</code> (helpers + I overlay when present)</td>
+        <td>Stage <code class="inline-code">dist/spark-sdk/</code> (helpers overlay when present)</td>
         </tr>
         <tr>
         <td><code class="inline-code">make voice-easy</code> / <code class="inline-code">make test-voice-easy</code></td>
@@ -356,7 +352,7 @@
         </tr>
         </tbody>
         </table></div>
-        <h2 id="helpers-shadows-k-lane">Helpers / shadows (K-lane)</h2>
+        <h2 id="helpers-shadows">Helpers / shadows</h2>
         <p>See <a href="/docs/tools-helpers.html">TOOLS_HELPERS.md</a>.</p>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
@@ -437,7 +433,7 @@
         </tr>
         <tr>
         <td><code class="inline-code">tools/package_helpers_k.sh</code></td>
-        <td>K-lane <code class="inline-code">dist/spark-sdk/</code> stager</td>
+        <td><code class="inline-code">dist/spark-sdk/</code> helpers stager</td>
         </tr>
         </tbody>
         </table></div>

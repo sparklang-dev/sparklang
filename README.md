@@ -82,7 +82,6 @@ path strip** + AI strip (`make test-ide-paint` — not a language op).
 `ide show` → `./spark-engine-show`. Do not invent ops beyond
 `docs/IDE.md`. **Authoring SoT DECIDED (A+B+C):** self-host (A); thin C
 bootstrap (B); Spark-native assembler (C). GAS = disposable scaffold.
-See `../reports/spark-vm-not-asm-pivot-20260831.md`.
 
 ```bash
 ./spark --dry-run examples/ide_hello.spark
@@ -117,12 +116,11 @@ Spark `.spark` files use explicit model ids only (no alias pick).
 **Cognitive / DX**: fewer lines, fewer glue bugs, faster iteration —
 plus memo-friendly dry-run.
 
-## Lowest practical level (owner hierarchy)
+## Lowest practical level
 
 **Authoring SoT (2026-08-31):** **A + B bootstrap + C** — self-host
 destination; thin C bootstrap; Spark-native assembler. Current GAS tree
-is the **disposable running scaffold**, not forever SoT
-(`../reports/spark-vm-not-asm-pivot-20260831.md`).
+is the **disposable running scaffold**, not forever SoT.
 
 | Tier | What | In this repo (today) |
 |------|------|----------------|

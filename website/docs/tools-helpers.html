@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Tools &amp; helpers — Spark</title>
-    <meta name="description" content="K-lane helpers, shadows, and spark_kit — compile/run/inspect, shadow build, opcode sheet. Never beat Claude." />
+    <meta name="description" content="Helpers, shadows, and spark_kit — compile/run/inspect, shadow build, opcode sheet." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
     <link rel="stylesheet" href="/css/tokens.css?v=navsub0909" />
@@ -178,15 +178,15 @@
         <a href="/docs/programming-guide.html">Programming guide</a>
         <a href="/downloads.html">Downloads</a>
       </nav>      <article class="doc__body">
-        <h1 id="tools-helpers-k-lane">Tools &amp; helpers (K-lane)</h1>
+        <h1 id="tools-helpers">Tools &amp; helpers</h1>
         <p>Ergonomic CLIs, shadow safety, and a small downloadable kit for the
         Spark / SparkLang SPARK_BC factory. Does <strong>not</strong> reimplement attention
-        (D) or the serve HTTP API (G). <strong>Never</strong> 6000. Does <strong>not</strong> beat Claude.</p>
+        train or the serve HTTP API — those live in their own docs.</p>
         <p>Hub: <a href="/docs/factory.html">FACTORY.md</a>. Make map: <a href="/docs/sparkbc-make.html">SPARKBC_MAKE.md</a>. Diagrams: <a href="/docs/diagrams.html">DIAGRAMS.md</a>.</p>
         <h2 id="quick-invoke">Quick invoke</h2>
         <pre class="doc__pre"><code class="language-bash">make helpers          # chmod + list helpers
         make tools-test       # unit/smoke for kit + shadows
-        make sdk-pack         # stage dist/spark-sdk/ (+ I overlay)
+        make sdk-pack         # stage dist/spark-sdk/ (+ helpers overlay)
         ./helpers/spark-check-env
         ./helpers/spark-run examples/spark_builder.spark
         ./helpers/spark-analyze docs/examples/spark-train-step.sparkbc
@@ -233,18 +233,20 @@
         PYTHONPATH=python:tools python3 -m spark_kit.vocab_inspect
         PYTHONPATH=python:tools python3 -m spark_kit.bc_diff a.sparkbc b.sparkbc
         </code></pre>
-        <h2 id="sibling-lanes">Sibling lanes</h2>
+        <h2 id="related-surfaces">Related surfaces</h2>
         <ul class="doc__ul">
-        <li><strong>I</strong> (SDK/IDE/GUI pack) — K is additive <code class="inline-code">helpers/</code> + <code class="inline-code">tools/spark_*</code>;
-          <code class="inline-code">package_helpers_k.sh</code> overlays I’s <code class="inline-code">out/sdk-pack/stage/</code> when present.</li>
-        <li><strong>H/J</strong> — docs; this page is the Tools &amp; helpers section to link.</li>
-        <li><strong>D/G</strong> — not touched here.</li>
+        <li>SDK/IDE/GUI pack — helpers are additive under <code class="inline-code">helpers/</code> +
+          <code class="inline-code">tools/spark_*</code>; <code class="inline-code">package_helpers_k.sh</code> overlays the SDK pack
+          stage when present.</li>
+        <li>Diagrams / decompile docs — this page is the Tools &amp; helpers
+          section to link.</li>
+        <li>Attention train / serve HTTP API — not touched here.</li>
         </ul>
         <h2 id="honesty">Honesty</h2>
         <ul class="doc__ul">
         <li>Helpers wrap existing makefile / <code class="inline-code">spark-bootstrap</code> / <code class="inline-code">bc_dump</code> paths.</li>
         <li>Shadow verify compares SHA-256 (and optional recompile).</li>
-        <li>Eval / train proofs remain measurement-only — <strong>not</strong> beat Claude.</li>
+        <li>Eval / train proofs remain measurement-only (see <a href="/docs/eval.html">EVAL.md</a>).</li>
         </ul>
       </article>
       </main>

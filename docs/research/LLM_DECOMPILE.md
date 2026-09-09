@@ -114,7 +114,7 @@ tools** (objdump, gdb, Ghidra hooks, shell) over x86 Linux ELFs in a
 chat loop. That is **distinct** from LLM4Decompile-class models that
 map linearized assembly → C in one generative pass.
 
-Reddit thread (owner cite):
+Reddit thread:
 https://www.reddit.com/r/ReverseEngineering/comments/1kt2gcb/decompai_an_llmpowered_reverse_engineering_agent/
 
 Honest limits: exploratory RE accelerator for supported binaries —
@@ -166,7 +166,7 @@ Survey honesty: even strong native numbers leave large failure rates;
 LLM output can be more *readable* while less *functionally correct*
 than classical decompilers on some benches. **None of this is a
 SPARK_BC fidelity claim.** See also the Plain English overview
-section below (owner cite).
+section below.
 
 ### Traditional decompiler + general LLM assistants
 
@@ -308,5 +308,5 @@ are wrong. Always recompile and re-dump to verify.
 
 - [DECOMPILE.md](../DECOMPILE.md) · [COMPILE.md](../COMPILE.md)
 - [FACTORY.md](../FACTORY.md) · [SPARK_BC.md](../SPARK_BC.md)
-- [DIAGRAMS.md](../DIAGRAMS.md) (Mermaid; J-lane screenshots live on
+- [DIAGRAMS.md](../DIAGRAMS.md) (Mermaid; screenshots live on
   DECOMPILE)

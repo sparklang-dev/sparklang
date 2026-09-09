@@ -8,7 +8,7 @@
   </defs>
   <rect width="920" height="260" fill="#f8fafc"/>
   <text x="24" y="36" font-family="ui-sans-serif,system-ui,sans-serif" font-size="16" font-weight="700" fill="#0f172a">Thinking  tiny CPU forward (D #28)</text>
-  <text x="24" y="58" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#64748b">Fixture-scale · no RoPE/KV · never beat Claude · never train on 6000</text>
+  <text x="24" y="58" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#64748b">Fixture-scale Â· no RoPE/KV Â· measurement-only</text>
 
   <rect x="40" y="110" width="100" height="60" rx="10" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
   <text x="90" y="145" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#064e3b">embed</text>
