@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LLMs &amp; transformers — Spark</title>
+    <meta name="description" content="Tokens, embeddings, attention, transformers — Spark-framed." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/css/tokens.css?v=knowledge0909" />
+    <link rel="stylesheet" href="/css/site.css?v=knowledge0909" />
+  </head>
+  <body class="doc-page">
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="site-brand" href="/" aria-label="Spark home">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z" fill="currentColor" />
+          </svg>
+          Spark
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+        </button>
+        <div class="header-nav-wrap">
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <ul class="nav-primary">
+              <li><a href="/workflow.html">Loop</a></li>
+              <li><a href="/learn/">Learn</a></li>
+              <li><a href="/docs/knowledge.html">Knowledge</a></li>
+              <li><a href="/docs/language.html">Docs</a></li>
+              <li><a href="/docs/factory.html">Factory</a></li>
+              <li><a href="/downloads.html">Download</a></li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">Hive</button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/knowledge.html">Knowledge hub</a></li>
+                  <li><a href="/docs/knowledge-llm.html">LLMs & transformers</a></li>
+                  <li><a href="/docs/knowledge-training.html">Training</a></li>
+                  <li><a href="/docs/knowledge-inference.html">Inference</a></li>
+                  <li><a href="/docs/knowledge-multimodal.html">Multimodal</a></li>
+                  <li><a href="/docs/knowledge-agents.html">Agents & tools</a></li>
+                  <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                  <li><a href="/docs/knowledge-decompile.html">Decompile + RE</a></li>
+                  <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
+                  <li><a href="/docs/llm-decompile.html">LLM decompile research</a></li>
+                </ul>
+              </li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">Forge</button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/model-aspects.html">Model aspects</a></li>
+                  <li><a href="/docs/diagrams.html">Diagrams</a></li>
+                  <li><a href="/docs/spark-builder.html">Builder</a></li>
+                  <li><a href="/docs/build-models.html">Build models</a></li>
+                  <li><a href="/docs/model-training.html">Model training</a></li>
+                  <li><a href="/docs/train-loop.html">Train loop</a></li>
+                  <li><a href="/docs/spark-coder.html">Spark coder</a></li>
+                  <li><a href="/docs/weight-gallery.html">Weight gallery</a></li>
+                  <li><a href="/docs/ai-models.html">AI models</a></li>
+                  <li><a href="/docs/voice.html">Voice / STT / TTS</a></li>
+                </ul>
+              </li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">Bench</button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/compile.html">Compile</a></li>
+                  <li><a href="/docs/decompile.html">Decompile</a></li>
+                  <li><a href="/docs/programming-guide.html">Programming guide</a></li>
+                  <li><a href="/docs/ide.html">IDE</a></li>
+                  <li><a href="/ide-web.html">IDE web shell</a></li>
+                  <li><a href="/docs/native-network-web.html">Network + web</a></li>
+                  <li><a href="/docs/serve.html">Serve</a></li>
+                  <li><a href="/docs/tools-helpers.html">Tools & helpers</a></li>
+                  <li><a href="/about.html">About</a></li>
+                </ul>
+              </li>
+            </ul>
+            <a href="/playground.html" class="nav-cta">Try</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <div class="shell doc-layout">
+      <aside class="doc-sidebar" aria-label="Table of contents">
+        <p class="doc-sidebar__title">On this page</p>
+        <nav id="doc-toc-list"></nav>
+      </aside>
+      <main class="doc-main">
+      <nav class="doc__nav" aria-label="Docs">
+        <a href="/learn/">Learn</a>
+        <a href="/docs/knowledge.html" aria-current="page">Knowledge hive</a>
+        <a href="/docs/factory.html">Factory hub</a>
+        <a href="/docs/model-aspects.html">Model aspects</a>
+        <a href="/docs/voice.html">Voice</a>
+        <a href="/docs/diagrams.html">Diagrams</a>
+        <a href="/docs/spark-builder.html">Builder</a>
+        <a href="/docs/compile.html">Compile</a>
+        <a href="/docs/decompile.html">Decompile</a>
+        <a href="/docs/llm-decompile.html">LLM research</a>
+        <a href="/docs/spark-bc.html">Opcodes / ISA</a>
+        <a href="/docs/build-models.html">Build models</a>
+        <a href="/docs/train-loop.html">Train loop</a>
+        <a href="/docs/spark-coder.html">Spark coder</a>
+        <a href="/docs/weight-gallery.html">Weight gallery</a>
+        <a href="/docs/architecture.html">Architecture</a>
+        <a href="/docs/tokenizer.html">Tokenizer</a>
+        <a href="/docs/serve.html">Serve</a>
+        <a href="/docs/eval.html">Eval</a>
+        <a href="/docs/sparkbc-make.html">Make targets</a>
+        <a href="/docs/tools-helpers.html">Tools & helpers</a>
+        <a href="/docs/ci-pages.html">CI / Pages</a>
+        <a href="/docs/adoption-bar.html">Adoption bar</a>
+        <a href="/docs/language.html">Language</a>
+        <a href="/docs/programming-guide.html">Programming guide</a>
+        <a href="/downloads.html">Downloads</a>
+      </nav>      <article class="doc__body">
+        <h1 id="llms-transformers-attention-embeddings">LLMs, transformers, attention, embeddings</h1>
+        <p>What a <strong>large language model</strong> is doing under the hood — engineer
+        sketch for Spark readers. Spark’s owned TinyCoder and SPARK_BC
+        attention path are <strong>tiny and honest</strong>; they do not pretend to be
+        frontier LLMs and <strong>do not beat Claude</strong>.</p>
+        <p><img class="doc__img" alt="Transformer block schematic" src="/docs/images/diagram-knowledge-transformer.svg" /></p>
+        <h2 id="tokenization">Tokenization</h2>
+        <p>Text is not fed as characters forever. A <strong>tokenizer</strong> maps strings
+        to integer <strong>token ids</strong> from a finite vocabulary (often 32k–200k).</p>
+        <ul class="doc__ul">
+        <li><strong>BPE</strong> (byte-pair encoding) merges frequent byte/char pairs
+          (<a href="https://arxiv.org/abs/1508.07909">Sennrich et al., 2016</a>).</li>
+        <li><strong>WordPiece</strong> / Unigram variants appear in BERT-family stacks.</li>
+        <li>Spark’s from-nothing path: <a href="/docs/tokenizer.html">TOKENIZER.md</a>
+          (byte-level BPE seed vocab).</li>
+        </ul>
+        <p>Token boundaries affect everything downstream: cost, context length,
+        and weird splits on code identifiers.</p>
+        <h2 id="embeddings">Embeddings</h2>
+        <p>Each token id indexes a learned vector (the <strong>embedding</strong>). Classic
+        distributed word vectors:
+        <a href="https://arxiv.org/abs/1301.3781">Word2Vec</a> (Mikolov et al.).
+        Modern LLMs learn token (and often position) embeddings jointly with
+        the stack. Similarity in vector space ≈ related meaning <em>on average</em>
+        — not a proof of truth.</p>
+        <p>Retrieval / RAG stacks embed <em>chunks</em> the same way and nearest-neighbor
+        search them. Spark <code class="inline-code">embed</code> / <code class="inline-code">retrieve</code> language surface is the
+        product hook; see <a href="/docs/ai-models.html">AI_MODELS.md</a>.</p>
+        <h2 id="transformers-attention">Transformers &amp; attention</h2>
+        <p>The <strong>Transformer</strong> (<a href="https://proceedings.neurips.cc/paper_files/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf">Vaswani et al., 2017 — Attention Is All You
+        Need</a>)
+        replaces recurrence with <strong>self-attention</strong>. Scaled dot-product:</p>
+        <p><code class="inline-code">Attention(Q, K, V) = softmax(Q K^T / sqrt(d_k)) V</code></p>
+        <p>Readable walkthrough: <a href="http://nlp.seas.harvard.edu/2018/04/03/attention.html">The Annotated Transformer</a>
+        (Harvard NLP).</p>
+        <p><strong>Multi-head attention</strong> runs several QKV projections in parallel so
+        the model can mix different subspaces. Decoder-only LLMs (GPT-style)
+        use <strong>causal masks</strong> so position <em>t</em> cannot see future tokens.</p>
+        <pre class="mermaid">flowchart TB
+          tok[token ids] --> emb[embed + position]
+          emb --> mha[multi-head self-attention]
+          mha --> res1[residual + norm]
+          res1 --> ffn[MLP / SwiGLU]
+          ffn --> res2[residual + norm]
+          res2 --> next[next block or lm_head]</pre>
+        <h2 id="spark-honesty-map">Spark honesty map</h2>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Claim</th>
+        <th>Spark status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td>Layer-0 last-query MHA train/serve</td>
+        <td>Yes (D-lane) — <a href="/docs/attention-forward.html">ATTENTION_FORWARD.md</a></td>
+        </tr>
+        <tr>
+        <td>Full RoPE / multi-layer production decode</td>
+        <td>No</td>
+        </tr>
+        <tr>
+        <td>Beat Claude</td>
+        <td><strong>Never</strong></td>
+        </tr>
+        <tr>
+        <td>Train on RTX PRO 6000</td>
+        <td><strong>Never</strong> (voice-only elsewhere)</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <p>Continue: <a href="/docs/knowledge-training.html">Training stack</a> · <a href="/docs/knowledge-inference.html">Inference</a> ·
+        <a href="/docs/architecture.html">Architecture</a> · <a href="/docs/factory.html">Factory</a>.</p>
+      </article>
+      </main>
+    </div>
+
+    <footer class="site-footer">
+      <div class="shell footer-inner">
+        <span>Spark programming language</span>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="/workflow.html">Loop</a>
+          <a href="/learn/">Learn</a>
+          <a href="/docs/knowledge.html">Knowledge</a>
+          <a href="/docs/language.html">Reference</a>
+          <a href="/downloads.html">Downloads</a>
+          <a href="/playground.html">Playground</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="/js/site.js"></script>
+  </body>
+</html>

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 420" role="img" aria-labelledby="t d">
+  <title id="t">Transformer block sketch</title>
+  <desc id="d">Tokens to embeddings through multi-head attention and MLP to next-layer residuals. Original Spark schematic.</desc>
+  <rect width="920" height="420" fill="#f8fafc"/>
+  <text x="24" y="32" font-family="ui-sans-serif,system-ui,sans-serif" font-size="16" font-weight="700" fill="#0f172a">Transformer block (schematic)</text>
+  <text x="24" y="52" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#64748b">Spark knowledge hive · not a paper figure copy · never beat Claude</text>
+  <rect x="40" y="90" width="120" height="56" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+  <text x="100" y="123" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#0c4a6e">tokens</text>
+  <rect x="200" y="90" width="140" height="56" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="270" y="115" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#78350f">embed + pos</text>
+  <text x="270" y="133" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#92400e">vectors</text>
+  <rect x="380" y="70" width="200" height="96" rx="8" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+  <text x="480" y="105" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#064e3b">multi-head attn</text>
+  <text x="480" y="125" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#065f46">Q · K · V → softmax</text>
+  <text x="480" y="143" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#065f46">scaled dot-product</text>
+  <rect x="620" y="90" width="120" height="56" rx="8" fill="#fae8ff" stroke="#a21caf" stroke-width="2"/>
+  <text x="680" y="123" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#701a75">MLP / FFN</text>
+  <rect x="780" y="90" width="100" height="56" rx="8" fill="#f1f5f9" stroke="#475569" stroke-width="2"/>
+  <text x="830" y="123" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#1e293b">out</text>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" fill="#334155"/></marker></defs>
+  <line x1="160" y1="118" x2="200" y2="118" stroke="#334155" stroke-width="2" marker-end="url(#a)"/>
+  <line x1="340" y1="118" x2="380" y2="118" stroke="#334155" stroke-width="2" marker-end="url(#a)"/>
+  <line x1="580" y1="118" x2="620" y2="118" stroke="#334155" stroke-width="2" marker-end="url(#a)"/>
+  <line x1="740" y1="118" x2="780" y2="118" stroke="#334155" stroke-width="2" marker-end="url(#a)"/>
+  <rect x="200" y="220" width="520" height="140" rx="10" fill="#fff" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="220" y="250" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#0f172a">Residual path (sketch)</text>
+  <text x="220" y="278" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#334155">x → LayerNorm → Attn → +x → LayerNorm → MLP → +x</text>
+  <text x="220" y="306" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#64748b">Decoder-only LLMs stack many such blocks, then lm_head → vocab logits.</text>
+  <text x="220" y="334" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#64748b">Cite: Vaswani et al. 2017 · Annotated Transformer (Harvard NLP)</text>
+</svg>

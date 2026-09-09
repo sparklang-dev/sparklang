@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI knowledge hive — Spark</title>
+    <meta name="description" content="Engineer-grade AI knowledge hub — transformers, training, inference, agents, eval honesty. Does not beat Claude." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/css/tokens.css?v=knowledge0909" />
+    <link rel="stylesheet" href="/css/site.css?v=knowledge0909" />
+  </head>
+  <body class="doc-page">
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="site-brand" href="/" aria-label="Spark home">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z" fill="currentColor" />
+          </svg>
+          Spark
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+        </button>
+        <div class="header-nav-wrap">
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <ul class="nav-primary">
+              <li><a href="/workflow.html">Loop</a></li>
+              <li><a href="/learn/">Learn</a></li>
+              <li><a href="/docs/knowledge.html">Knowledge</a></li>
+              <li><a href="/docs/language.html">Docs</a></li>
+              <li><a href="/docs/factory.html">Factory</a></li>
+              <li><a href="/downloads.html">Download</a></li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">Hive</button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/knowledge.html">Knowledge hub</a></li>
+                  <li><a href="/docs/knowledge-llm.html">LLMs & transformers</a></li>
+                  <li><a href="/docs/knowledge-training.html">Training</a></li>
+                  <li><a href="/docs/knowledge-inference.html">Inference</a></li>
+                  <li><a href="/docs/knowledge-multimodal.html">Multimodal</a></li>
+                  <li><a href="/docs/knowledge-agents.html">Agents & tools</a></li>
+                  <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                  <li><a href="/docs/knowledge-decompile.html">Decompile + RE</a></li>
+                  <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
+                  <li><a href="/docs/llm-decompile.html">LLM decompile research</a></li>
+                </ul>
+              </li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">Forge</button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/model-aspects.html">Model aspects</a></li>
+                  <li><a href="/docs/diagrams.html">Diagrams</a></li>
+                  <li><a href="/docs/spark-builder.html">Builder</a></li>
+                  <li><a href="/docs/build-models.html">Build models</a></li>
+                  <li><a href="/docs/model-training.html">Model training</a></li>
+                  <li><a href="/docs/train-loop.html">Train loop</a></li>
+                  <li><a href="/docs/spark-coder.html">Spark coder</a></li>
+                  <li><a href="/docs/weight-gallery.html">Weight gallery</a></li>
+                  <li><a href="/docs/ai-models.html">AI models</a></li>
+                  <li><a href="/docs/voice.html">Voice / STT / TTS</a></li>
+                </ul>
+              </li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">Bench</button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/compile.html">Compile</a></li>
+                  <li><a href="/docs/decompile.html">Decompile</a></li>
+                  <li><a href="/docs/programming-guide.html">Programming guide</a></li>
+                  <li><a href="/docs/ide.html">IDE</a></li>
+                  <li><a href="/ide-web.html">IDE web shell</a></li>
+                  <li><a href="/docs/native-network-web.html">Network + web</a></li>
+                  <li><a href="/docs/serve.html">Serve</a></li>
+                  <li><a href="/docs/tools-helpers.html">Tools & helpers</a></li>
+                  <li><a href="/about.html">About</a></li>
+                </ul>
+              </li>
+            </ul>
+            <a href="/playground.html" class="nav-cta">Try</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <div class="shell doc-layout">
+      <aside class="doc-sidebar" aria-label="Table of contents">
+        <p class="doc-sidebar__title">On this page</p>
+        <nav id="doc-toc-list"></nav>
+      </aside>
+      <main class="doc-main">
+      <nav class="doc__nav" aria-label="Docs">
+        <a href="/learn/">Learn</a>
+        <a href="/docs/knowledge.html" aria-current="page">Knowledge hive</a>
+        <a href="/docs/factory.html">Factory hub</a>
+        <a href="/docs/model-aspects.html">Model aspects</a>
+        <a href="/docs/voice.html">Voice</a>
+        <a href="/docs/diagrams.html">Diagrams</a>
+        <a href="/docs/spark-builder.html">Builder</a>
+        <a href="/docs/compile.html">Compile</a>
+        <a href="/docs/decompile.html">Decompile</a>
+        <a href="/docs/llm-decompile.html">LLM research</a>
+        <a href="/docs/spark-bc.html">Opcodes / ISA</a>
+        <a href="/docs/build-models.html">Build models</a>
+        <a href="/docs/train-loop.html">Train loop</a>
+        <a href="/docs/spark-coder.html">Spark coder</a>
+        <a href="/docs/weight-gallery.html">Weight gallery</a>
+        <a href="/docs/architecture.html">Architecture</a>
+        <a href="/docs/tokenizer.html">Tokenizer</a>
+        <a href="/docs/serve.html">Serve</a>
+        <a href="/docs/eval.html">Eval</a>
+        <a href="/docs/sparkbc-make.html">Make targets</a>
+        <a href="/docs/tools-helpers.html">Tools & helpers</a>
+        <a href="/docs/ci-pages.html">CI / Pages</a>
+        <a href="/docs/adoption-bar.html">Adoption bar</a>
+        <a href="/docs/language.html">Language</a>
+        <a href="/docs/programming-guide.html">Programming guide</a>
+        <a href="/downloads.html">Downloads</a>
+      </nav>      <article class="doc__body">
+        <h1 id="ai-knowledge-hive">AI knowledge hive</h1>
+        <p>Engineer-grade <strong>AI concepts</strong> framed for <strong>Spark / SparkLang</strong> —
+        transformers, training, inference, multimodal, agents, eval honesty,
+        and decompile limits. Original diagrams (not scraped paper figures).
+        Citations point at primary papers and surveys.</p>
+        <p><strong>Never</strong> claims beat Claude. <strong>Never</strong> RTX PRO 6000. Spark factory
+        CPU / 5090 paths stay honest. Not an OpenBin clone.</p>
+        <h2 id="topic-cards">Topic cards</h2>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Topic</th>
+        <th>Page</th>
+        <th>What you get</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td>LLMs &amp; transformers</td>
+        <td><a href="/docs/knowledge-llm.html">knowledge/LLM_TRANSFORMERS.md</a></td>
+        <td>Tokens → embed → attention → MLP; embeddings</td>
+        </tr>
+        <tr>
+        <td>Training stack</td>
+        <td><a href="/docs/knowledge-training.html">knowledge/TRAINING.md</a></td>
+        <td>Pretrain, SFT, RLHF/RLAIF, LoRA/QLoRA, SGD/Adam</td>
+        </tr>
+        <tr>
+        <td>Inference</td>
+        <td><a href="/docs/knowledge-inference.html">knowledge/INFERENCE.md</a></td>
+        <td>Sampling, KV cache, quantization</td>
+        </tr>
+        <tr>
+        <td>Multimodal</td>
+        <td><a href="/docs/knowledge-multimodal.html">knowledge/MULTIMODAL.md</a></td>
+        <td>STT / TTS / vision</td>
+        </tr>
+        <tr>
+        <td>Agents &amp; tools</td>
+        <td><a href="/docs/knowledge-agents.html">knowledge/AGENTS_TOOLS.md</a></td>
+        <td>Tool loops, ReAct-style patterns</td>
+        </tr>
+        <tr>
+        <td>Eval honesty</td>
+        <td><a href="/docs/knowledge-eval.html">knowledge/EVAL_HONESTY.md</a></td>
+        <td>Benchmarks, baselines, no win theater</td>
+        </tr>
+        <tr>
+        <td>Decompile + LLM RE</td>
+        <td><a href="/docs/knowledge-decompile.html">knowledge/DECOMPILE_RE.md</a></td>
+        <td>Link to existing research; recompile ≠ semantics</td>
+        </tr>
+        <tr>
+        <td>Safety &amp; limits</td>
+        <td><a href="/docs/knowledge-safety.html">knowledge/SAFETY_LIMITS.md</a></td>
+        <td>Hallucination, abstain, what Spark won't claim</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <h2 id="spark-cross-links-factory-sot">Spark cross-links (factory SoT)</h2>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Surface</th>
+        <th>Doc</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td>Factory hub</td>
+        <td><a href="/docs/factory.html">FACTORY.md</a></td>
+        </tr>
+        <tr>
+        <td>Workflow loop</td>
+        <td><a href="/workflow.html">/workflow.html</a></td>
+        </tr>
+        <tr>
+        <td>Voice / STT / TTS</td>
+        <td><a href="/docs/voice.html">VOICE.md</a></td>
+        </tr>
+        <tr>
+        <td>Model aspects</td>
+        <td><a href="/docs/model-aspects.html">MODEL_ASPECTS.md</a></td>
+        </tr>
+        <tr>
+        <td>Spark coder</td>
+        <td><a href="/docs/spark-coder.html">SPARK_CODER.md</a></td>
+        </tr>
+        <tr>
+        <td>Train loop</td>
+        <td><a href="/docs/train-loop.html">TRAIN_LOOP.md</a></td>
+        </tr>
+        <tr>
+        <td>Tokenizer / BPE</td>
+        <td><a href="/docs/tokenizer.html">TOKENIZER.md</a></td>
+        </tr>
+        <tr>
+        <td>Attention honesty</td>
+        <td><a href="/docs/attention-forward.html">ATTENTION_FORWARD.md</a></td>
+        </tr>
+        <tr>
+        <td>Eval harness</td>
+        <td><a href="/docs/eval.html">EVAL.md</a></td>
+        </tr>
+        <tr>
+        <td>LLM decompile research</td>
+        <td><a href="/docs/llm-decompile.html">research/LLM_DECOMPILE.md</a></td>
+        </tr>
+        <tr>
+        <td>Tutorials</td>
+        <td><a href="/learn/">/learn/</a></td>
+        </tr>
+        </tbody>
+        </table></div>
+        <h2 id="how-to-read-this-hive">How to read this hive</h2>
+        <ol class="doc__ol">
+        <li>Start with <strong>LLMs &amp; transformers</strong> if you need the math sketch.</li>
+        <li>Jump to <strong>Training</strong> / <strong>Inference</strong> for practice vocabulary.</li>
+        <li>Use <strong>Decompile + LLM RE</strong> before trusting pretty recovered C.</li>
+        <li>Prefer Spark factory docs for <em>what ships</em>; this hive explains <em>the field</em>.</li>
+        </ol>
+        <pre class="mermaid">flowchart LR
+          H[Knowledge hive] --> T[Transformers]
+          H --> TR[Training]
+          H --> I[Inference]
+          H --> M[Multimodal]
+          H --> A[Agents]
+          H --> E[Eval honesty]
+          H --> D[Decompile RE]
+          H --> S[Safety]
+          D --> L[llm-decompile.html]
+          TR --> F[factory / spark-coder]</pre>
+      </article>
+      </main>
+    </div>
+
+    <footer class="site-footer">
+      <div class="shell footer-inner">
+        <span>Spark programming language</span>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="/workflow.html">Loop</a>
+          <a href="/learn/">Learn</a>
+          <a href="/docs/knowledge.html">Knowledge</a>
+          <a href="/docs/language.html">Reference</a>
+          <a href="/downloads.html">Downloads</a>
+          <a href="/playground.html">Playground</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="/js/site.js"></script>
+  </body>
+</html>

@@ -31,6 +31,15 @@ language) are listed here. Site and installers track
 
 ## 0.6.47 — 2026-09-09
 
+- **AI knowledge hive:** engineer-grade explainers at
+  [/docs/knowledge.html](https://sparklang.dev/docs/knowledge.html)
+  (aliases `/docs/knowledge`, `/learn/knowledge`) with topic pages
+  for transformers, training (SFT/RLHF/LoRA), inference (KV/quant),
+  multimodal, agents/tools, eval honesty, decompile+RE (links
+  existing llm-decompile; recompile≠semantics), and safety.
+  Original SVG diagrams; cited papers. Nav: **Knowledge** + **Hive**
+  menu beside Learn / Forge / Bench. Does **not** beat Claude;
+  never 6000; not an OpenBin clone.
 - **Tiny vs large (owner addendum):** spark-coder
   `./spark-code train --scale {tiny,large}` +
   `make spark-coder-train-large` (opt-in dim 64 / n_layer 4).

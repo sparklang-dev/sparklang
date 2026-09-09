@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Training stack — Spark</title>
+    <meta name="description" content="Pretrain, SFT, RLHF/RLAIF, LoRA/QLoRA, SGD/Adam — citations." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/css/tokens.css?v=knowledge0909" />
+    <link rel="stylesheet" href="/css/site.css?v=knowledge0909" />
+  </head>
+  <body class="doc-page">
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="site-brand" href="/" aria-label="Spark home">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z" fill="currentColor" />
+          </svg>
+          Spark
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+        </button>
+        <div class="header-nav-wrap">
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <ul class="nav-primary">
+              <li><a href="/workflow.html">Loop</a></li>
+              <li><a href="/learn/">Learn</a></li>
+              <li><a href="/docs/knowledge.html">Knowledge</a></li>
+              <li><a href="/docs/language.html">Docs</a></li>
+              <li><a href="/docs/factory.html">Factory</a></li>
+              <li><a href="/downloads.html">Download</a></li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">Hive</button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/knowledge.html">Knowledge hub</a></li>
+                  <li><a href="/docs/knowledge-llm.html">LLMs & transformers</a></li>
+                  <li><a href="/docs/knowledge-training.html">Training</a></li>
+                  <li><a href="/docs/knowledge-inference.html">Inference</a></li>
+                  <li><a href="/docs/knowledge-multimodal.html">Multimodal</a></li>
+                  <li><a href="/docs/knowledge-agents.html">Agents & tools</a></li>
+                  <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                  <li><a href="/docs/knowledge-decompile.html">Decompile + RE</a></li>
+                  <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
+                  <li><a href="/docs/llm-decompile.html">LLM decompile research</a></li>
+                </ul>
+              </li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">Forge</button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/model-aspects.html">Model aspects</a></li>
+                  <li><a href="/docs/diagrams.html">Diagrams</a></li>
+                  <li><a href="/docs/spark-builder.html">Builder</a></li>
+                  <li><a href="/docs/build-models.html">Build models</a></li>
+                  <li><a href="/docs/model-training.html">Model training</a></li>
+                  <li><a href="/docs/train-loop.html">Train loop</a></li>
+                  <li><a href="/docs/spark-coder.html">Spark coder</a></li>
+                  <li><a href="/docs/weight-gallery.html">Weight gallery</a></li>
+                  <li><a href="/docs/ai-models.html">AI models</a></li>
+                  <li><a href="/docs/voice.html">Voice / STT / TTS</a></li>
+                </ul>
+              </li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">Bench</button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/compile.html">Compile</a></li>
+                  <li><a href="/docs/decompile.html">Decompile</a></li>
+                  <li><a href="/docs/programming-guide.html">Programming guide</a></li>
+                  <li><a href="/docs/ide.html">IDE</a></li>
+                  <li><a href="/ide-web.html">IDE web shell</a></li>
+                  <li><a href="/docs/native-network-web.html">Network + web</a></li>
+                  <li><a href="/docs/serve.html">Serve</a></li>
+                  <li><a href="/docs/tools-helpers.html">Tools & helpers</a></li>
+                  <li><a href="/about.html">About</a></li>
+                </ul>
+              </li>
+            </ul>
+            <a href="/playground.html" class="nav-cta">Try</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <div class="shell doc-layout">
+      <aside class="doc-sidebar" aria-label="Table of contents">
+        <p class="doc-sidebar__title">On this page</p>
+        <nav id="doc-toc-list"></nav>
+      </aside>
+      <main class="doc-main">
+      <nav class="doc__nav" aria-label="Docs">
+        <a href="/learn/">Learn</a>
+        <a href="/docs/knowledge.html" aria-current="page">Knowledge hive</a>
+        <a href="/docs/factory.html">Factory hub</a>
+        <a href="/docs/model-aspects.html">Model aspects</a>
+        <a href="/docs/voice.html">Voice</a>
+        <a href="/docs/diagrams.html">Diagrams</a>
+        <a href="/docs/spark-builder.html">Builder</a>
+        <a href="/docs/compile.html">Compile</a>
+        <a href="/docs/decompile.html">Decompile</a>
+        <a href="/docs/llm-decompile.html">LLM research</a>
+        <a href="/docs/spark-bc.html">Opcodes / ISA</a>
+        <a href="/docs/build-models.html">Build models</a>
+        <a href="/docs/train-loop.html">Train loop</a>
+        <a href="/docs/spark-coder.html">Spark coder</a>
+        <a href="/docs/weight-gallery.html">Weight gallery</a>
+        <a href="/docs/architecture.html">Architecture</a>
+        <a href="/docs/tokenizer.html">Tokenizer</a>
+        <a href="/docs/serve.html">Serve</a>
+        <a href="/docs/eval.html">Eval</a>
+        <a href="/docs/sparkbc-make.html">Make targets</a>
+        <a href="/docs/tools-helpers.html">Tools & helpers</a>
+        <a href="/docs/ci-pages.html">CI / Pages</a>
+        <a href="/docs/adoption-bar.html">Adoption bar</a>
+        <a href="/docs/language.html">Language</a>
+        <a href="/docs/programming-guide.html">Programming guide</a>
+        <a href="/downloads.html">Downloads</a>
+      </nav>      <article class="doc__body">
+        <h1 id="training-stack-pretrain-sft-rlhfrlaif-lora-optimizers">Training stack — pretrain, SFT, RLHF/RLAIF, LoRA, optimizers</h1>
+        <p>Industry training is a <strong>pipeline</strong>, not one <code class="inline-code">fit()</code> call. Spark’s
+        five CPU reference methods and TinyCoder SGD are a <strong>small parallel
+        universe</strong> — useful for reviewable <code class="inline-code">.spark</code> jobs, not InstructGPT-scale
+        alignment theater.</p>
+        <p><img class="doc__img" alt="Training stack schematic" src="/docs/images/diagram-knowledge-train-stack.svg" /></p>
+        <h2 id="1-pretraining">1. Pretraining</h2>
+        <p>Maximize next-token likelihood on huge corpora (causal language
+        modeling). Optimizer is usually <strong>Adam / AdamW</strong> (adaptive moments)
+        or large-batch variants; classic <strong>SGD</strong> with momentum still appears
+        in teaching stacks and Spark fixtures.</p>
+        <p>Loss sketch: cross-entropy between predicted vocab distribution and
+        the true next token.</p>
+        <h2 id="2-supervised-fine-tuning-sft">2. Supervised fine-tuning (SFT)</h2>
+        <p>Train on <strong>instruction → demonstration</strong> pairs so the base model
+        follows task format. Still CE loss — just on curated data.</p>
+        <h2 id="3-preference-alignment">3. Preference alignment</h2>
+        <p><strong>RLHF</strong> — Reinforcement Learning from Human Feedback
+        (<a href="https://arxiv.org/abs/2203.02155">InstructGPT / Ouyang et al., 2022</a>;
+        Anthropic HH): humans rank outputs → reward model → policy optimize
+        (often PPO) with a KL penalty to the SFT policy.</p>
+        <p><strong>RLAIF</strong> — same loop with <strong>AI</strong> preference labels / constitutions
+        (<a href="https://arxiv.org/abs/2212.08073">Bai et al., Constitutional AI</a>;
+        <a href="https://arxiv.org/abs/2309.00267">Lee et al., RLAIF</a>).</p>
+        <p><strong>DPO</strong> and friends skip an explicit RL loop and optimize preferences
+        directly (<a href="https://arxiv.org/abs/2305.18290">Rafailov et al.</a>).
+        Survey:
+        <a href="https://arxiv.org/abs/2407.16216">LLM alignment techniques</a>.</p>
+        <h2 id="4-lora-qlora-peft">4. LoRA / QLoRA (PEFT)</h2>
+        <p><strong>LoRA</strong> freezes base weights and trains low-rank adapters
+        <code class="inline-code">BA</code> (<a href="https://arxiv.org/abs/2106.09685">Hu et al., 2021</a>).</p>
+        <p><strong>QLoRA</strong> keeps the base in 4-bit (NF4) while training adapters
+        (<a href="https://arxiv.org/abs/2305.14314">Dettmers et al., 2023</a>).</p>
+        <p>Spark homepage honesty: owned methods are <strong>not LoRA theater</strong>. See
+        <a href="/docs/spark-coder.html">SPARK_CODER.md</a> and <a href="/docs/train-loop.html">TRAIN_LOOP.md</a>.</p>
+        <pre class="mermaid">flowchart TB
+          PT[Pretrain CE] --> SFT[SFT demos]
+          SFT --> Pref[RLHF / RLAIF / DPO]
+          Pref --> PEFT[Optional LoRA/QLoRA]
+          PEFT --> Serve[Serve / eval]</pre>
+        <h2 id="spark-cross-links">Spark cross-links</h2>
+        <ul class="doc__ul">
+        <li>Outer/inner SGD fixtures — <a href="/docs/train-loop.html">TRAIN_LOOP.md</a></li>
+        <li>Builder TRAIN opcodes — <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a></li>
+        <li>Model train HTTP — <a href="/docs/model-training.html">MODEL_TRAINING.md</a></li>
+        <li>Factory hub — <a href="/docs/factory.html">FACTORY.md</a></li>
+        </ul>
+        <p>Next: <a href="/docs/knowledge-inference.html">Inference</a> · <a href="/docs/knowledge-eval.html">Eval honesty</a>.</p>
+      </article>
+      </main>
+    </div>
+
+    <footer class="site-footer">
+      <div class="shell footer-inner">
+        <span>Spark programming language</span>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="/workflow.html">Loop</a>
+          <a href="/learn/">Learn</a>
+          <a href="/docs/knowledge.html">Knowledge</a>
+          <a href="/docs/language.html">Reference</a>
+          <a href="/downloads.html">Downloads</a>
+          <a href="/playground.html">Playground</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="/js/site.js"></script>
+  </body>
+</html>

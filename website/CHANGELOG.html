@@ -41,9 +41,25 @@
             <ul class="nav-primary">
               <li><a href="/workflow.html">Loop</a></li>
               <li><a href="/learn/">Learn</a></li>
+              <li><a href="/docs/knowledge.html">Knowledge</a></li>
               <li><a href="/docs/language.html">Docs</a></li>
               <li><a href="/docs/factory.html">Factory</a></li>
               <li><a href="/downloads.html">Download</a></li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">Hive</button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/knowledge.html">Knowledge hub</a></li>
+                  <li><a href="/docs/knowledge-llm.html">LLMs & transformers</a></li>
+                  <li><a href="/docs/knowledge-training.html">Training</a></li>
+                  <li><a href="/docs/knowledge-inference.html">Inference</a></li>
+                  <li><a href="/docs/knowledge-multimodal.html">Multimodal</a></li>
+                  <li><a href="/docs/knowledge-agents.html">Agents & tools</a></li>
+                  <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                  <li><a href="/docs/knowledge-decompile.html">Decompile + RE</a></li>
+                  <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
+                  <li><a href="/docs/llm-decompile.html">LLM decompile research</a></li>
+                </ul>
+              </li>
               <li class="nav-more">
                 <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">Forge</button>
                 <ul class="nav-more__menu" hidden>
@@ -100,6 +116,15 @@ Never 6000.</p>
 
 <h2>0.6.47 — 2026-09-09</h2>
 <ul>
+<li><strong>AI knowledge hive:</strong> engineer-grade explainers at
+  <a href="/docs/knowledge.html">/docs/knowledge.html</a>
+  (aliases <code>/docs/knowledge</code>, <code>/learn/knowledge</code>) with topic pages
+  for transformers, training (SFT/RLHF/LoRA), inference (KV/quant),
+  multimodal, agents/tools, eval honesty, decompile+RE (links
+  existing llm-decompile; recompile≠semantics), and safety.
+  Original SVG diagrams; cited papers. Nav: <strong>Knowledge</strong> + <strong>Hive</strong>
+  menu beside Learn / Forge / Bench. Does <strong>not</strong> beat Claude;
+  never 6000; not an OpenBin clone.</li>
 <li><strong>Tiny vs large (owner addendum):</strong> spark-coder
   <code>./spark-code train --scale {tiny,large}</code> +
   <code>make spark-coder-train-large</code> (opt-in dim 64 / n_layer 4).
