@@ -4,6 +4,17 @@ All notable user-facing releases of **SparkLang** (the Spark programming
 language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
+## 0.6.32 — 2026-09-09
+
+- **Control tensor-assembly source:** readable
+  [`examples/models/control.sparkasm`](examples/models/control.sparkasm)
+  documents the boring decoder control (GQA / RMSNorm / MATMUL / ROPE /
+  ATTN / SILU). Optional shape-check stub
+  `python/sparklang/model_lab/sparkasm_check.py`
+  (`make test-sparkasm-control`). Honest: source + shape check =
+  implemented; tensor VM / JIT / train = **not**. Linked from
+  [SPARK_BUILDER.md](docs/SPARK_BUILDER.md).
+
 ## 0.6.31 — 2026-09-09
 
 - **Byte-level BPE tokenizer seed (from nothing):** deterministic
@@ -18,6 +29,7 @@ language) are listed here. Site and installers track
   [TOKENIZER.md](docs/TOKENIZER.md). Optional later: pack vocab into
   SPARK_BC pool.
 
+
 ## 0.6.30 — 2026-09-09
 
 - **Tiny CPU serve forward:** `dump.py --serve` / `./spark-serve`
@@ -25,6 +37,7 @@ language) are listed here. Site and installers track
   matmul on CPU, write `SERVE` with `forward=true` and honest
   `trained` from weights meta. Not a production LLM. Gate:
   `make test-sparkbc`. Docs: [SPARK_BUILDER.md](docs/SPARK_BUILDER.md).
+
 
 ## 0.6.29 — 2026-09-08
 

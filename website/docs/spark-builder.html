@@ -367,6 +367,54 @@
         <li>Lab verbs stay <strong>GAS-first</strong> (no SPARK_BC opcode yet for reverse /
           compile / modify). Train <strong>does</strong> encode as <code class="inline-code">0x26</code> / <code class="inline-code">0x27</code> / <code class="inline-code">0x28</code>.</li>
         </ul>
+        <h2 id="control-architecture-tensor-assembly-source">Control architecture (tensor-assembly source)</h2>
+        <p>Boring decoder <strong>control</strong> graph as readable Spark tensor-assembly
+        source — GQA / RMSNorm / MATMUL / ROPE / ATTN / SILU macros — for later
+        architecture search. <strong>Not</strong> SPARK_BC. <strong>Not</strong> a tensor VM.</p>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Artifact</th>
+        <th>Role</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><code class="inline-code">examples/models/control.sparkasm</code></td>
+        <td>Source documentation of the control forward graph (dims match tiny <code class="inline-code">weights.py</code> control)</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">python/sparklang/model_lab/sparkasm_check.py</code></td>
+        <td>Optional <strong>shape check</strong> (<code class="inline-code">.dim</code> / <code class="inline-code">.param</code> / GQA invariants)</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <pre class="doc__pre"><code class="language-bash">PYTHONPATH=python python3 -m sparklang.model_lab.sparkasm_check \
+          examples/models/control.sparkasm
+        make test-sparkasm-control
+        </code></pre>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Claim</th>
+        <th>Today</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td>Control <code class="inline-code">.sparkasm</code> source</td>
+        <td><strong>implemented</strong></td>
+        </tr>
+        <tr>
+        <td>Shape-check stub</td>
+        <td><strong>implemented</strong> (<code class="inline-code">make test-sparkasm-control</code>)</td>
+        </tr>
+        <tr>
+        <td>Tensor VM / JIT / train from <code class="inline-code">.sparkasm</code></td>
+        <td><strong>not</strong></td>
+        </tr>
+        </tbody>
+        </table></div>
         <h2 id="gaps-blocked-later">Gaps / BLOCKED / later</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
@@ -399,6 +447,10 @@
         <tr>
         <td>Tiny CPU serve forward</td>
         <td><strong>implemented</strong> (<code class="inline-code">dump.py --serve</code> → <code class="inline-code">SERVE</code> with <code class="inline-code">forward=true</code>; <code class="inline-code">trained</code> from weights meta; not production)</td>
+        </tr>
+        <tr>
+        <td>Control tensor-assembly source + shape check</td>
+        <td><strong>implemented</strong> — <code class="inline-code">examples/models/control.sparkasm</code>; JIT/train <strong>not</strong></td>
         </tr>
         <tr>
         <td>Trained / beats Claude / production LLM</td>
@@ -478,6 +530,10 @@
         <tr>
         <td>Tiny CPU serve forward</td>
         <td><strong>implemented</strong> (<code class="inline-code">SERVE</code>; <code class="inline-code">forward=true</code>; not production)</td>
+        </tr>
+        <tr>
+        <td>Control <code class="inline-code">.sparkasm</code> + shape check</td>
+        <td><strong>implemented</strong> (source docs; no tensor VM)</td>
         </tr>
         <tr>
         <td>Trained / beats Claude</td>

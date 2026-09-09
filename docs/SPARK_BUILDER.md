@@ -234,6 +234,29 @@ make test-model-lab
 - Lab verbs stay **GAS-first** (no SPARK_BC opcode yet for reverse /
   compile / modify). Train **does** encode as `0x26` / `0x27` / `0x28`.
 
+## Control architecture (tensor-assembly source)
+
+Boring decoder **control** graph as readable Spark tensor-assembly
+source — GQA / RMSNorm / MATMUL / ROPE / ATTN / SILU macros — for later
+architecture search. **Not** SPARK_BC. **Not** a tensor VM.
+
+| Artifact | Role |
+|----------|------|
+| `examples/models/control.sparkasm` | Source documentation of the control forward graph (dims match tiny `weights.py` control) |
+| `python/sparklang/model_lab/sparkasm_check.py` | Optional **shape check** (`.dim` / `.param` / GQA invariants) |
+
+```bash
+PYTHONPATH=python python3 -m sparklang.model_lab.sparkasm_check \
+  examples/models/control.sparkasm
+make test-sparkasm-control
+```
+
+| Claim | Today |
+|-------|--------|
+| Control `.sparkasm` source | **implemented** |
+| Shape-check stub | **implemented** (`make test-sparkasm-control`) |
+| Tensor VM / JIT / train from `.sparkasm` | **not** |
+
 ## Gaps / BLOCKED / later
 
 | Item | Status |
@@ -244,6 +267,7 @@ make test-model-lab
 | Init safetensors from SPARK_BC | **implemented** — `trained: false` |
 | STEP-updated weights file | **implemented** (`out/train/<job>/weights.safetensors`; dry delta; `trained=false`) |
 | Tiny CPU serve forward | **implemented** (`dump.py --serve` → `SERVE` with `forward=true`; `trained` from weights meta; not production) |
+| Control tensor-assembly source + shape check | **implemented** — `examples/models/control.sparkasm`; JIT/train **not** |
 | Trained / beats Claude / production LLM | **not** — later owner train-grant |
 | Cloudflare Pages deploy | Prefer Wrangler OAuth (`npx wrangler pages deploy website …`); if CLI/auth absent → **dashboard** upload of `website/` from a known SHA (see [RELEASE.md](RELEASE.md) step 5) |
 
@@ -266,6 +290,7 @@ make test-model-lab
 | Model lab reverse/compile/modify | **tested** (`make test-model-lab`) |
 | STEP-updated weights | **implemented** (dry delta; not SGD) |
 | Tiny CPU serve forward | **implemented** (`SERVE`; `forward=true`; not production) |
+| Control `.sparkasm` + shape check | **implemented** (source docs; no tensor VM) |
 | Trained / beats Claude | **not** |
 
 ## Related

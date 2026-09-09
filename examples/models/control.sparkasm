@@ -1,0 +1,89 @@
+# Spark tensor-assembly SOURCE — control transformer
+#
+# Status (honest):
+#   implemented  — readable source documenting GQA / RMSNorm / MATMUL /
+#                  ROPE / ATTN / SILU for the boring control decoder
+#   implemented  — optional shape check:
+#                  PYTHONPATH=python python3 -m sparklang.model_lab.sparkasm_check \
+#                    examples/models/control.sparkasm
+#   not          — tensor VM / JIT / train / CUDA kernels
+#
+# This is NOT SPARK_BC (.sparkbc orchestration ISA). SPARK_BC programs
+# models; this file documents the neural forward graph as assembly macros.
+# Init weights for the tiny control live under spark.* names in
+# python/sparklang/model_lab/weights.py (Spark-created from SPARK_BC).
+#
+# Product name: Spark only. Do not brand third-party working names here.
+#
+# Check: make test-sparkasm-control
+
+model control
+
+# Tiny control sizes — match weights.py arch defaults (not a 3B claim).
+.dim V = 256          ; vocab
+.dim D = 32           ; model width
+.dim L = 2            ; layers
+.dim H = 4            ; query heads
+.dim KV = 2           ; key/value heads (GQA: H % KV == 0)
+.dim HD = 8           ; head dim (D == H * HD)
+.dim Q = 32           ; H * HD
+.dim K = 16           ; KV * HD
+.dim F = 128          ; MLP inner (D * 4)
+.dim B, S             ; batch, seq — symbolic, bound at run time
+
+.tol matmul f32 acc=f32 rtol=1e-3 atol=1e-4
+
+# Parameters (layer-major). Map to spark.layers.{i}.* in init safetensors.
+.param embed [V, D] f32
+.param w_q [L, D, Q] f32
+.param w_k [L, D, K] f32
+.param w_v [L, D, K] f32
+.param w_o [L, Q, D] f32
+.param w_gate [L, D, F] f32
+.param w_up [L, D, F] f32
+.param w_down [L, F, D] f32
+.param g_attn [L, D] f32
+.param g_mlp [L, D] f32
+.param g_out [D] f32
+.param head [D, V] f32
+
+# One transformer block: pre-norm attn (GQA+RoPE) + SwiGLU MLP.
+.macro block i
+RMSNORM t1, t0, g_attn[i]
+MATMUL  t2, t1, w_q[i] : acc=f32
+MATMUL  t3, t1, w_k[i] : acc=f32
+MATMUL  t4, t1, w_v[i] : acc=f32
+ROPE    t2, t2, pos
+ROPE    t3, t3, pos
+KVPUSH  cache[i], t3, t4
+ATTN    t5, t2, cache[i] : causal gqa=H/KV acc=f32
+MATMUL  t6, t5, w_o[i] : acc=f32
+ADD     t0, t0, t6
+RMSNORM t1, t0, g_mlp[i]
+MATMUL  t7, t1, w_gate[i] : acc=f32
+MATMUL  t8, t1, w_up[i] : acc=f32
+SILU    t7, t7
+MUL     t7, t7, t8
+MATMUL  t9, t7, w_down[i] : acc=f32
+ADD     t0, t0, t9
+.endm
+
+.seg forward
+GATHER t0, embed, tokens          ; [B, S, D]
+.loop i, 0, L
+block i
+.endloop
+RMSNORM t0, t0, g_out
+MATMUL  logits, t0, head : acc=f32
+RET logits
+.endseg
+
+# Ops documented above (no VM yet):
+#   RMSNORM  — root-mean-square norm + learned gain
+#   MATMUL   — matrix multiply (acc dtype on : acc=)
+#   ROPE     — rotary position embedding on Q/K
+#   KVPUSH   — append K/V into layer cache
+#   ATTN     — causal attention; gqa=H/KV grouped-query
+#   SILU     — SiLU / swish gate for SwiGLU
+#   ADD/MUL  — elementwise residual / gated product
+#   GATHER   — embedding lookup
