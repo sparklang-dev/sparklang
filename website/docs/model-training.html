@@ -35,7 +35,7 @@
                 <ul class="nav-more__menu" hidden>
                   <li><a href="/docs/adoption-bar.html">Adoption bar</a></li>
                   <li><a href="/docs/ai-models.html">AI models</a></li>
-                  <li><a href="/docs/abstain-heads.html">Abstain heads</a></li>
+                  <li><a href="/docs/spark-builder.html">Builder</a></li>
                   <li><a href="/docs/native-network-web.html">Network + web</a></li>
                   <li><a href="/docs/programming-guide.html">Programming guide</a></li>
                   <li><a href="/docs/ide.html">IDE</a></li>
@@ -60,7 +60,7 @@
         <a href="/docs/adoption-bar.html">Adoption bar</a>
         <a href="/docs/ai-models.html" aria-current="page">AI models</a>
         <a href="/docs/model-training.html" aria-current="page">Model training</a>
-        <a href="/docs/abstain-heads.html">Abstain heads</a>
+        <a href="/docs/spark-builder.html">Builder</a>
         <a href="/docs/native-network-web.html">Network + web</a>
         <a href="/docs/programming-guide.html">Programming guide</a>
         <a href="/docs/language.html">Language reference</a>
@@ -77,8 +77,7 @@
         sugar. Optional plan export is <code class="inline-code">model plan</code> (markdown). Live gateway
         <code class="inline-code">ask</code> is <strong>optional</strong> for post-train inference checks — SparkLang is
         not a Bifrost plugin.</p>
-        <p>Full language forms: <a href="/docs/language.html">LANGUAGE.md</a>.
-        Abstain / IDK probes (not LoRA): <a href="/docs/abstain-heads.html">ABSTAIN_HEADS.md</a>.</p>
+        <p>Full language forms: <a href="/docs/language.html">LANGUAGE.md</a>.</p>
         <h2 id="verbs">Verbs</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
@@ -95,6 +94,18 @@
         <tr>
         <td><code class="inline-code">model build …</code></td>
         <td><strong>Same as train</strong> (rehabilitated; not blueprint)</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">model reverse</code> / <code class="inline-code">inspect</code></td>
+        <td>Local published architecture (config + index names)</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">model compile</code></td>
+        <td>SPARK_BC plan for the <code class="inline-code">.spark</code> program</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">model modify keep_existing …</code></td>
+        <td>Attach adapters/heads; keep special training</td>
         </tr>
         <tr>
         <td><code class="inline-code">model status ["job-id"] -&gt; status</code></td>
@@ -254,7 +265,7 @@
         </tr>
         <tr>
         <td><code class="inline-code">spark_reply_pack</code></td>
-        <td>Overlay text + spoken replies on a base that has no voice, or lock major behaviors. Inventable facts require SoT — fail loud, never fabricate</td>
+        <td>Overlay <strong>text + spoken</strong> replies on a base that has <strong>no voice</strong>, or lock major behaviors. Inventable facts require SoT — fail loud, never fabricate</td>
         <td><code class="inline-code">replies.json</code> + <code class="inline-code">gate.json</code> + <code class="inline-code">router.pt</code></td>
         </tr>
         </tbody>
@@ -330,18 +341,64 @@
         <h2 id="product-story">Product story</h2>
         <p>Spark ships <strong>multiple</strong> CPU training methods behind one HTTP contract —
         distill, preference pack, playbook fit, FAQ index, <strong>reply pack</strong>.
-        <code class="inline-code">spark_reply_pack</code> teaches <strong>voice and text replies</strong> to a
-        model that has <strong>no voice</strong>, or <strong>changes major behaviors</strong> without LoRA.
-        Inventable rows need a SoT file; missing SoT <strong>fails loud</strong> (no fabricated
-        hours/prices/IDs). Not LoRA-by-default, not a marker file pretending to be weights.</p>
-        <h2 id="voice-text-overlay-spark_reply_pack">Voice + text overlay (<code class="inline-code">spark_reply_pack</code>)</h2>
-        <p>Dataset JSONL may add <code class="inline-code">channel</code>, <code class="inline-code">speak</code>,
-        <code class="inline-code">behavior</code>, <code class="inline-code">lock</code>,
-        <code class="inline-code">inventable</code>, <code class="inline-code">sot_ref</code>,
-        <code class="inline-code">idk</code>. A text-only base still gets a speak channel.
-        Inventable without <code class="inline-code">sot_ref</code> → trainer error
-        (<code class="inline-code">refuse fabricate</code>).
-        Example: <code class="inline-code">examples/model_train_reply.spark</code>.</p>
+        <code class="inline-code">spark_reply_pack</code> is how you teach <strong>voice and text replies</strong> to a
+        model that has <strong>no voice</strong>, or <strong>change major behaviors</strong> (greeting,
+        transfer, IDK) without LoRA. Inventable rows need a SoT file; missing
+        SoT <strong>fails loud</strong> (no fabricated hours/prices/IDs). That is the
+        product story: not LoRA-by-default, not a marker file pretending to be
+        weights. Larger full-SFT / multi-node remain operator backends behind
+        the same contract.</p>
+        <h2 id="voice-text-overlay-spark-reply-pack">Voice + text overlay (<code class="inline-code">spark_reply_pack</code>)</h2>
+        <p>Dataset JSONL may add fields on each chat row:</p>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Field</th>
+        <th>Role</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><code class="inline-code">channel</code></td>
+        <td><code class="inline-code">text</code> | <code class="inline-code">voice</code> | <code class="inline-code">both</code> (default <code class="inline-code">both</code>)</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">speak</code></td>
+        <td>Spoken script (defaults to assistant text)</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">behavior</code></td>
+        <td>Named lock (<code class="inline-code">greeting</code>, <code class="inline-code">hours</code>, <code class="inline-code">transfer</code>, <code class="inline-code">idk</code>, …)</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">lock</code></td>
+        <td><code class="inline-code">true</code> = overlay <strong>wins</strong> over the base model</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">inventable</code></td>
+        <td>Fact that must not be open-decoded</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">sot_ref</code></td>
+        <td><strong>Required</strong> when inventable (path to SoT JSON)</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">idk</code></td>
+        <td>Halt string when SoT is missing at serve time</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">wav</code></td>
+        <td>Optional path reference (not a neural clone)</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <p>A <strong>text-only</strong> base still gets a speak channel: Spark <code class="inline-code">speak reply</code>
+        uses the pack script. This is <strong>not</strong> voice-GPU / LoRA TTS training.</p>
+        <p>Inventable without <code class="inline-code">sot_ref</code> → trainer exit error
+        (<code class="inline-code">refuse fabricate</code>). Gate artifact <code class="inline-code">gate.json</code> always has
+        <code class="inline-code">no_fabricate: true</code> and <code class="inline-code">abstain_on_inventable: true</code>.</p>
+        <p>Example: <code class="inline-code">examples/model_train_reply.spark</code> +
+        <code class="inline-code">examples/fixtures/train/reply_pack.jsonl</code>.</p>
         <h2 id="not-in-mvp">Not in MVP</h2>
         <ul class="doc__ul">
         <li>Auto dataset curation / labeling UI</li>

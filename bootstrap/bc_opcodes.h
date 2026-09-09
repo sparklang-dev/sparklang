@@ -35,6 +35,9 @@
 #define SPBC_OP_EMBED 0x23
 #define SPBC_OP_RETRIEVE 0x24
 #define SPBC_OP_EXPECT 0x25
+#define SPBC_OP_TRAIN 0x26
+#define SPBC_OP_TRAIN_STATUS 0x27
+#define SPBC_OP_STEP 0x28
 #define SPBC_CONST_STR 0
 #define SPBC_MAGIC0 'S'
 #define SPBC_MAGIC1 'P'

@@ -110,6 +110,17 @@ Mapped 1:1 to LANGUAGE.md statement starts. Voice merge keeps
 | `0x23` | `EMBED` | `embed` | text, bind | `[embed] <text>` / `  → <json>` |
 | `0x24` | `RETRIEVE` | `retrieve` | query, bind | `[retrieve] <query>` / `  → <json>` |
 | `0x25` | `EXPECT` | `expect` | mode, name, want | `[expect] pass <mode> <name>` or exit 1 |
+| `0x26` | `TRAIN` | `model train` / `model build` | dataset, base, out, method, bind | `[model] {dry train JSON}` |
+| `0x27` | `TRAIN_STATUS` | `model status` | job_id, bind | `[model] {dry status JSON}` |
+| `0x28` | `STEP` | `model step` | job_id, bind | `[model] {dry step JSON}` |
+
+`TRAIN` / `STEP` / `TRAIN_STATUS` are the **training program in the binary**.
+They encode job submit, one dry loop tick, and status —
+dumpable hex + mnemonics. Dry fixture via `bootstrap/dry_train.c`
+(JSON + `ARTIFACT` marker). Execute with
+`./spark-bootstrap --run-bc`. GAS `./spark --run-bc` is **BLOCKED**.
+Emitting TRAIN/STEP ≠ a trained model. `backend` is parsed and skipped
+(HTTP companion); not an operand.
 
 `EXPECT` want is a literal, or `@fixture:path` when the source used
 `fixture "path"`. Missing binding / missing fixture / mismatch →
@@ -124,12 +135,15 @@ files via `./spark-http --dry` (or bootstrap `dry_http.c`); live forks
 `./spark-http --live`. See LANGUAGE.md. Do **not** invent BC operands
 until an opcode lands.
 
+**In SPARK_BC:** `model train` / `model build` → `0x26 TRAIN`;
+`model step` → `0x28 STEP`; `model status` → `0x27 TRAIN_STATUS`.
+See above. Companion `./spark-train-http` stays the live HTTP job
+path. Emitting the opcode is the training **program**, not trained
+weights.
+
 **GAS-first (no opcode yet):** `model analyze` / `compare` /
-`improve` / `train` / `status` / `plan` / `build` run in
-`asm/model_ops.s` (+ `asm/train_ops.s` live). Dry fixtures under
-`examples/fixtures/train/`; companion `./spark-train-http`. Do **not**
-invent `0x26+` train opcodes until bootstrap parses those forms.
-See [MODEL_TRAINING.md](MODEL_TRAINING.md).
+`improve` / `plan` run in `asm/model_ops.s`. See
+[MODEL_TRAINING.md](MODEL_TRAINING.md).
 
 `LET` is in the table so the ISA is not hello-only
 (LANGUAGE.md `let` / `print` / `set`). hello.sparkbc does **not**
@@ -311,6 +325,20 @@ Code bytes:
 03 02 00          PRINT const2
 00                HALT
 ```
+
+## Builder (Spark-created binary + weights)
+
+Spark compiling Spark: `selfhost/compile.spark` →
+`docs/examples/spark-self.sparkbc`. Train slice:
+`selfhost/compile_train.spark` →
+`docs/examples/spark-selfhost-train.sparkbc` (`TRAIN` /
+`TRAIN_STATUS` in the binary). Dump:
+[spark-self-bc.txt](examples/spark-self-bc.txt).
+Factory page: [SPARK_BUILDER.md](SPARK_BUILDER.md).
+The language also emits **init weights** from those bytes
+(`docs/examples/spark-self.init.safetensors`). Not trained.
+Emitting TRAIN ≠ trained. Later train aims to beat Claude.
+GAS does not emit `.sparkbc` — use bootstrap `--compile`.
 
 ## Out of scope (do not add)
 

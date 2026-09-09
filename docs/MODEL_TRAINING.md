@@ -18,6 +18,9 @@ Full language forms: [LANGUAGE.md](LANGUAGE.md).
 |-----------|---------|
 | `model train … -> job` | Submit a train job (dry fixtures or live backend) |
 | `model build …` | **Same as train** (rehabilitated; not blueprint) |
+| `model reverse` / `inspect` | Local published architecture (config + index names) |
+| `model compile` | SPARK_BC plan for the `.spark` program |
+| `model modify keep_existing …` | Attach adapters/heads; keep special training |
 | `model status ["job-id"] -> status` | Poll job state + artifact paths |
 | `model plan blueprint into "path"` | Optional markdown plan only |
 | `model analyze` / `compare` / `improve` | Eval / heuristic helpers (unchanged) |

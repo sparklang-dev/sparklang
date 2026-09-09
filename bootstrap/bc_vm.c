@@ -10,6 +10,7 @@
 #include "dry_ops.h"
 #include "dry_engine.h"
 #include "dry_ide.h"
+#include "dry_train.h"
 #include "vm.h"
 
 #include <ctype.h>
@@ -268,6 +269,113 @@ static int op_model(BcFrame *fr, const SparkBc *bc, uint32_t *ip)
   strncpy(fr->model_alias, alias, BC_NAME_MAX - 1);
   fr->model_alias[BC_NAME_MAX - 1] = '\0';
   printf("[model] %s\n", fr->model_alias);
+  return 0;
+}
+
+static void job_id_from_out(const char *out, char *job, size_t cap)
+{
+  const char *slash = strrchr(out, '/');
+  const char *base = slash ? slash + 1 : out;
+  if (!base[0])
+    base = "job-dry-001";
+  snprintf(job, cap, "%s", base);
+}
+
+/* TRAIN: dataset, base, out, method, bind. Dry fixture, not SGD. */
+static int op_train(BcFrame *fr, const SparkBc *bc, uint32_t *ip)
+{
+  uint16_t di;
+  uint16_t bi;
+  uint16_t oi;
+  uint16_t mi;
+  uint16_t bdi;
+  const char *dataset;
+  const char *base;
+  const char *out;
+  const char *method;
+  const char *bind;
+  const char *json;
+  char job[128];
+
+  if (take_u16(bc, ip, &di) != 0 || take_u16(bc, ip, &bi) != 0 ||
+      take_u16(bc, ip, &oi) != 0 || take_u16(bc, ip, &mi) != 0 ||
+      take_u16(bc, ip, &bdi) != 0)
+    return 1;
+  if (const_str(bc, di, &dataset) != 0 ||
+      const_str(bc, bi, &base) != 0 ||
+      const_str(bc, oi, &out) != 0 ||
+      const_str(bc, mi, &method) != 0 ||
+      const_str(bc, bdi, &bind) != 0)
+    return 1;
+  job_id_from_out(out, job, sizeof(job));
+  json = spark_pick_train_accept(method, job, dataset, base, out);
+  if (!json) {
+    fprintf(stderr, "error: train fixture miss method=%s job=%s\n",
+            method, job);
+    return 1;
+  }
+  if (spark_write_train_marker(out, job, method) != 0)
+    return 1;
+  printf("[model] %s\n", json);
+  set_last(fr, json);
+  if (bind[0] && vars_put(fr, bind, json) != 0)
+    return 1;
+  return 0;
+}
+
+static int op_train_status(BcFrame *fr, const SparkBc *bc, uint32_t *ip)
+{
+  uint16_t ji;
+  uint16_t bdi;
+  const char *job;
+  const char *bind;
+  const char *json;
+
+  if (take_u16(bc, ip, &ji) != 0 || take_u16(bc, ip, &bdi) != 0)
+    return 1;
+  if (const_str(bc, ji, &job) != 0 || const_str(bc, bdi, &bind) != 0)
+    return 1;
+  json = spark_pick_train_status(job);
+  if (!json) {
+    fprintf(stderr, "error: train status fixture miss job=%s\n",
+            job);
+    return 1;
+  }
+  printf("[model] %s\n", json);
+  set_last(fr, json);
+  if (bind[0] && vars_put(fr, bind, json) != 0)
+    return 1;
+  return 0;
+}
+
+/* STEP: job_id, bind. Dry loop tick — updates ARTIFACT, not SGD. */
+static int op_step(BcFrame *fr, const SparkBc *bc, uint32_t *ip)
+{
+  uint16_t ji;
+  uint16_t bdi;
+  const char *job;
+  const char *bind;
+  const char *json;
+  char out[256];
+  int step_n = 1;
+
+  if (take_u16(bc, ip, &ji) != 0 || take_u16(bc, ip, &bdi) != 0)
+    return 1;
+  if (const_str(bc, ji, &job) != 0 || const_str(bc, bdi, &bind) != 0)
+    return 1;
+  snprintf(out, sizeof(out), "out/train/%s", job);
+  json = spark_pick_train_step(job, step_n);
+  if (!json) {
+    fprintf(stderr, "error: train step fixture miss job=%s\n",
+            job);
+    return 1;
+  }
+  if (spark_bump_train_step(out, job, step_n) != 0)
+    return 1;
+  printf("[model] %s\n", json);
+  set_last(fr, json);
+  if (bind[0] && vars_put(fr, bind, json) != 0)
+    return 1;
   return 0;
 }
 
@@ -1035,6 +1143,12 @@ int spark_bc_run_file(const char *path)
       break;
     if (op == SPBC_OP_MODEL)
       rc = op_model(&fr, &bc, &ip);
+    else if (op == SPBC_OP_TRAIN)
+      rc = op_train(&fr, &bc, &ip);
+    else if (op == SPBC_OP_TRAIN_STATUS)
+      rc = op_train_status(&fr, &bc, &ip);
+    else if (op == SPBC_OP_STEP)
+      rc = op_step(&fr, &bc, &ip);
     else if (op == SPBC_OP_ASK)
       rc = op_ask(&fr, &bc, &ip);
     else if (op == SPBC_OP_PRINT)

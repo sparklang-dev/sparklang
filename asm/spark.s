@@ -463,6 +463,14 @@ needle_analyze_kw: .ascii "analyze\0"
 needle_compare_kw: .ascii "compare\0"
 needle_improve_kw: .ascii "improve\0"
 needle_build_kw:   .ascii "build\0"
+needle_reverse_kw: .ascii "reverse\0"
+needle_inspect_kw: .ascii "inspect\0"
+needle_compile_kw: .ascii "compile\0"
+needle_modify_kw:  .ascii "modify\0"
+needle_train_kw:   .ascii "train\0"
+needle_step_kw:    .ascii "step\0"
+needle_status_kw:  .ascii "status\0"
+needle_plan_kw:    .ascii "plan\0"
 
 # keyword tables (null-terminated, compared after skip spaces)
 kw_ask:     .ascii "ask"
@@ -868,6 +876,9 @@ copy_line:
     inc     r14
     cmp     al, 10
     je      line_ready
+    # Skip CR so CRLF .spark files do not leave a bare ^M statement.
+    cmp     al, 13
+    je      copy_line
     cmp     rcx, MAX_LINE-1
     jge     copy_line
     mov     [rdi+rcx], al
@@ -1851,9 +1862,13 @@ do_model:
     lea     rsi, [rip+msg_model]
     mov     rdx, msg_model_len
     call    write_stdout
-    # analyze|compare|improve|build live in asm/model_ops.s
+    # analyze|compare|improve|train|step|build|reverse|compile|modify
+    # live in asm/model_ops.s
+    # train/step/status = SPARK_BC TRAIN 0x26 / STEP 0x28 /
+    # TRAIN_STATUS 0x27 (GAS interpreter). Bytecode emit BLOCKED —
+    # bootstrap --compile.
     call    model_ops_dispatch
-    # remember plain alias for --live ask
+    # remember plain alias for --live ask (not lab/train verbs)
     lea     rdi, [rip+linebuf]
     lea     rsi, [rip+needle_analyze_kw]
     call    contains
@@ -1871,6 +1886,46 @@ do_model:
     jnz     model_done
     lea     rdi, [rip+linebuf]
     lea     rsi, [rip+needle_build_kw]
+    call    contains
+    test    rax, rax
+    jnz     model_done
+    lea     rdi, [rip+linebuf]
+    lea     rsi, [rip+needle_reverse_kw]
+    call    contains
+    test    rax, rax
+    jnz     model_done
+    lea     rdi, [rip+linebuf]
+    lea     rsi, [rip+needle_inspect_kw]
+    call    contains
+    test    rax, rax
+    jnz     model_done
+    lea     rdi, [rip+linebuf]
+    lea     rsi, [rip+needle_compile_kw]
+    call    contains
+    test    rax, rax
+    jnz     model_done
+    lea     rdi, [rip+linebuf]
+    lea     rsi, [rip+needle_modify_kw]
+    call    contains
+    test    rax, rax
+    jnz     model_done
+    lea     rdi, [rip+linebuf]
+    lea     rsi, [rip+needle_train_kw]
+    call    contains
+    test    rax, rax
+    jnz     model_done
+    lea     rdi, [rip+linebuf]
+    lea     rsi, [rip+needle_step_kw]
+    call    contains
+    test    rax, rax
+    jnz     model_done
+    lea     rdi, [rip+linebuf]
+    lea     rsi, [rip+needle_status_kw]
+    call    contains
+    test    rax, rax
+    jnz     model_done
+    lea     rdi, [rip+linebuf]
+    lea     rsi, [rip+needle_plan_kw]
     call    contains
     test    rax, rax
     jnz     model_done

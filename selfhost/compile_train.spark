@@ -1,0 +1,22 @@
+# selfhost/compile_train.spark — compiler seed train slice (lane A).
+# Not a trainer. --compile encodes model train/status as SPARK_BC.
+# TRAIN 0x26 / TRAIN_STATUS 0x27. Dry fixture paths only.
+# Honest: compile ≠ trained. No GPU. No 6000. No god copy. No Loom.
+#
+# Compile (real bytes — do not overwrite spark-self.sparkbc):
+#   ./spark-bootstrap --compile selfhost/compile_train.spark \
+#     -o docs/examples/spark-selfhost-train.sparkbc
+# Dry-run (bootstrap BC VM):
+#   ./spark-bootstrap --dry-run selfhost/compile_train.spark
+
+model code
+
+ask "Compile seed: emit SPARK_BC TRAIN/TRAIN_STATUS; fail loud" -> compile_job
+
+print compile_job
+
+model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" method "spark_distill_cpu" -> job
+
+model status "job-dry-001" -> status
+
+print job

@@ -1,0 +1,25 @@
+# Builder program slice: inspect Spark's own SPARK_BC.
+# Genome is SPARK_BC -- not HuggingFace, not imported weights.
+# Training lives in the same binary (TRAIN / TRAIN_STATUS ops).
+#
+# Compile (real bytes):
+#   ./spark-bootstrap --compile examples/spark_builder.spark \
+#     -o docs/examples/spark-builder.sparkbc
+# Dry-run (GAS):
+#   ./spark --dry-run examples/spark_builder.spark
+#
+# Honest: SPARK_BC is the training program + orchestration.
+# Init weights stay trained: false. Emitting TRAIN is not a
+# trained model.
+
+model code
+
+ask "Inspect Spark SPARK_BC genome; emit builder stub from our bytes" -> plan
+
+print plan
+
+model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" method "spark_distill_cpu" -> job
+
+model status "job-dry-001" -> status
+
+print job

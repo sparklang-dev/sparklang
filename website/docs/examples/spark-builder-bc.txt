@@ -1,0 +1,77 @@
+# Builder SPARK_BC (train ops in the binary)
+# SPARK_BC is orchestration bytecode — not neural weights.
+# Not HuggingFace. Not imported tensors. Spark's own binary.
+#
+# Source: examples/spark_builder.spark
+# Command: ./spark-bootstrap --compile examples/spark_builder.spark -o docs/examples/spark-builder.sparkbc
+# sha256: e89b27c86618cbbb87d2d59209fb5c0450c0513105c88c622de367f3a8e29f9a
+# size: 272 bytes
+#
+# First 32 hex bytes:
+# 53 50 42 43 01 0a 00 04 00 63 6f 64 65 3f 00 49 6e 73 70 65 63 74 20 53 70 61 72 6b 20 53 50 41
+#
+# File layout (little-endian, docs/SPARK_BC.md):
+#   offset 0  magic 'S''P''B''C'
+#   offset 4  version 0x01
+#   then u16 nstrings, string pool, u16 nconsts,
+#   const pool (u8 kind + u16 payload), u32 ncode, code
+
+## xxd
+00000000: 53 50 42 43 01 0a 00 04 00 63 6f 64 65 3f 00 49  SPBC.....code?.I
+00000010: 6e 73 70 65 63 74 20 53 70 61 72 6b 20 53 50 41  nspect Spark SPA
+00000020: 52 4b 5f 42 43 20 67 65 6e 6f 6d 65 3b 20 65 6d  RK_BC genome; em
+00000030: 69 74 20 62 75 69 6c 64 65 72 20 73 74 75 62 20  it builder stub 
+00000040: 66 72 6f 6d 20 6f 75 72 20 62 79 74 65 73 04 00  from our bytes..
+00000050: 70 6c 61 6e 03 00 6a 6f 62 11 00 73 70 61 72 6b  plan..job..spark
+00000060: 5f 64 69 73 74 69 6c 6c 5f 63 70 75 15 00 6f 75  _distill_cpu..ou
+00000070: 74 2f 74 72 61 69 6e 2f 6a 6f 62 2d 64 72 79 2d  t/train/job-dry-
+00000080: 30 30 31 0c 00 66 69 78 74 75 72 65 2d 62 61 73  001..fixture-bas
+00000090: 65 25 00 65 78 61 6d 70 6c 65 73 2f 66 69 78 74  e%.examples/fixt
+000000a0: 75 72 65 73 2f 74 72 61 69 6e 2f 64 61 74 61 73  ures/train/datas
+000000b0: 65 74 2e 6a 73 6f 6e 6c 06 00 73 74 61 74 75 73  et.jsonl..status
+000000c0: 0b 00 6a 6f 62 2d 64 72 79 2d 30 30 31 0a 00 00  ..job-dry-001...
+000000d0: 00 00 00 01 00 00 02 00 00 03 00 00 04 00 00 05  ................
+000000e0: 00 00 06 00 00 07 00 00 08 00 00 09 00 1f 00 00  ................
+000000f0: 00 01 00 00 02 01 00 02 00 03 02 00 26 07 00 06  ............&...
+00000100: 00 05 00 04 00 03 00 27 09 00 08 00 03 03 00 00  .......'........
+
+## Header
+magic: SPBC
+version: 1
+nstrings: 10
+nconsts: 10
+ncode: 31
+code_off: 241
+
+## String pool
+0: 'code' (4 bytes)
+1: 'Inspect Spark SPARK_BC genome; emit builder stub from our bytes' (63 bytes)
+2: 'plan' (4 bytes)
+3: 'job' (3 bytes)
+4: 'spark_distill_cpu' (17 bytes)
+5: 'out/train/job-dry-001' (21 bytes)
+6: 'fixture-base' (12 bytes)
+7: 'examples/fixtures/train/dataset.jsonl' (37 bytes)
+8: 'status' (6 bytes)
+9: 'job-dry-001' (11 bytes)
+
+## Constant pool (kind 0 = STR → string index)
+0: kind=0 payload=0 → 'code'
+1: kind=0 payload=1 → 'Inspect Spark SPARK_BC genome; emit builder stub from our bytes'
+2: kind=0 payload=2 → 'plan'
+3: kind=0 payload=3 → 'job'
+4: kind=0 payload=4 → 'spark_distill_cpu'
+5: kind=0 payload=5 → 'out/train/job-dry-001'
+6: kind=0 payload=6 → 'fixture-base'
+7: kind=0 payload=7 → 'examples/fixtures/train/dataset.jsonl'
+8: kind=0 payload=8 → 'status'
+9: kind=0 payload=9 → 'job-dry-001'
+
+## Code (opcode + u16le const indices)
+code+0  01 00 00  MODEL (0x01) const0 "code"
+code+3  02 01 00 02 00  ASK (0x02) const1 "Inspect Spark SPARK_BC genome; emit builder stub from our bytes" const2 "plan"
+code+8  03 02 00  PRINT (0x03) const2 "plan"
+code+11  26 07 00 06 00 05 00 04 00 03 00  TRAIN (0x26) const7 "examples/fixtures/train/dataset.jsonl" const6 "fixture-base" const5 "out/train/job-dry-001" const4 "spark_distill_cpu" const3 "job"
+code+22  27 09 00 08 00  TRAIN_STATUS (0x27) const9 "job-dry-001" const8 "status"
+code+27  03 03 00  PRINT (0x03) const3 "job"
+code+30  00  HALT (0x00) 

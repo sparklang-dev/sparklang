@@ -390,6 +390,8 @@ static int opcode_size(uint8_t op)
   case SPBC_OP_EXTRACT:
   case SPBC_OP_EXPECT:
     return 7;
+  case SPBC_OP_TRAIN:
+    return 11;
   case SPBC_OP_ASK:
   case SPBC_OP_LET:
   case SPBC_OP_CLASSIFY:
@@ -405,6 +407,8 @@ static int opcode_size(uint8_t op)
   case SPBC_OP_REVIEW_TEXT:
   case SPBC_OP_BROWSER_RUN:
   case SPBC_OP_BROWSER_GOTO:
+  case SPBC_OP_TRAIN_STATUS:
+  case SPBC_OP_STEP:
     return 5;
   default:
     return 0;

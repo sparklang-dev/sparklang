@@ -1,4 +1,4 @@
-/* Execute SPARK_BC (MODEL ASK PRINT HALT; LET if present). */
+/* Execute SPARK_BC (MODEL ASK PRINT TRAIN STEP TRAIN_STATUS HALT; …). */
 #ifndef SPARK_BC_VM_H
 #define SPARK_BC_VM_H
 

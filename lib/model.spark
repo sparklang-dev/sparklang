@@ -27,6 +27,18 @@ model code
 # @helper model_build_alias: model build is an alias for model train
 # model build -> job
 
+# @helper model_reverse_local: Inspect published config/index (no tensors)
+# model reverse "fixtures/tiny-lm" -> inspect
+# model inspect "fixtures/tiny-lm" -> inspect
+
+# @helper model_compile_bc: Compile this program to SPARK_BC
+# model compile "examples/model_lab.spark" into "out/lab/model_lab.sparkbc" -> bc
+
+# @helper model_modify_keep: Attach adapters/heads; keep special training
+# model modify keep_existing "out/train/existing-lora" \
+#   add "out/train/job-dry-001/adapter.bin" \
+#   head "out/heads/abstain.pt" -> modified
+
 # @helper model_status_job: Poll job + artifact paths
 # model status "job-dry-001" -> status
 

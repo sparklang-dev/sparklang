@@ -3,9 +3,16 @@
 # Gate: spark-bootstrap --compile file.spark -o file.sparkbc
 #
 # Planned lowering (no inventing — LANGUAGE.md hello forms first):
-#   Program → MODEL ASK* PRINT* HALT
+#   Program → MODEL ASK* PRINT* TRAIN* STEP* TRAIN_STATUS* HALT
 #   Ask → ASK prompt_idx bind_idx
 #   Print → PRINT ident_idx
+#   Train → TRAIN dataset base out method bind   (0x26)
+#   Step → STEP job_id bind                        (0x28)
+#   Status → TRAIN_STATUS job_id bind              (0x27)
+#
+# Hello-only bytes stay this file (MODEL/ASK/PRINT/HALT).
+# Train-in-binary slice: selfhost/compile_train.spark
+# Honest: emitting TRAIN ≠ a trained model. Compile ≠ trained.
 #
 model code
 ask "Compile seed: emit SPARK_BC from AST; fail loud on unknown Stmt" -> compile_job

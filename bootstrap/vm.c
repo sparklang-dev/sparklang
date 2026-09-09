@@ -387,9 +387,12 @@ static int op_model(SparkVM *vm, char *line)
   if (strncmp(p, "analyze", 7) == 0 || strncmp(p, "compare", 7) == 0 ||
       strncmp(p, "improve", 7) == 0 || strncmp(p, "build", 5) == 0 ||
       strncmp(p, "train", 5) == 0 || strncmp(p, "status", 6) == 0 ||
-      strncmp(p, "plan", 4) == 0) {
+      strncmp(p, "plan", 4) == 0 || strncmp(p, "reverse", 7) == 0 ||
+      strncmp(p, "inspect", 7) == 0 || strncmp(p, "compile", 7) == 0 ||
+      strncmp(p, "modify", 6) == 0) {
     fprintf(stderr,
-            "error: model analyze|compare|improve|train|status|plan|build "
+            "error: model analyze|compare|improve|train|status|plan|build|"
+            "reverse|inspect|compile|modify "
             "is GAS-only (not in C bootstrap yet)\n");
     return 1;
   }

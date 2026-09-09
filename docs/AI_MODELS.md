@@ -9,7 +9,12 @@ plain `.spark` files you can diff, dry-run, and ship.
 **Default story:** dry-run / offline / no keys. Live `ask` / `embed` /
 `retrieve` via gateway env is **optional** (`./spark --live`).
 
-**Related:** [MODEL_TRAINING.md](MODEL_TRAINING.md) (train jobs) ·
+**Related:** [SPARK_BUILDER.md](SPARK_BUILDER.md) (SPARK_BC seed +
+Spark-created init weights; `TRAIN` `0x26` / `TRAIN_STATUS` `0x27`;
+`compile_train.spark` → `spark-selfhost-train.sparkbc`) ·
+[SPARK_BC.md](SPARK_BC.md) (bytecode ISA) ·
+[MODEL_LAB.md](MODEL_LAB.md) (reverse / compile / modify) ·
+[MODEL_TRAINING.md](MODEL_TRAINING.md) (train jobs) ·
 [ABSTAIN_HEADS.md](ABSTAIN_HEADS.md) (IDK / abstain heads) ·
 [MODEL_ANALYSIS.md](MODEL_ANALYSIS.md) (eval methodology) ·
 [AI_PLAYBOOKS.md](AI_PLAYBOOKS.md) (coding playbooks) ·
@@ -22,6 +27,10 @@ plain `.spark` files you can diff, dry-run, and ship.
 | Goal | Spark today | Honest limits |
 |------|-------------|---------------|
 | **Train / build** real jobs | `model train` / `model build` → job; `model status` | Dry fixtures; live `./spark-train-http`. **`spark_reply_pack`** overlays voice+text on text-only bases and refuses inventable rows without SoT — see [MODEL_TRAINING.md](MODEL_TRAINING.md) |
+| **Reverse / inspect** | `model reverse` / `model inspect` → architecture JSON | Local `config.json` + index names only; [MODEL_LAB.md](MODEL_LAB.md) |
+| **Compile program** | `model compile "….spark" into "….sparkbc"` | SPARK_BC of the **program**, not a transformer compiler |
+| **Builder from SPARK_BC** | `--compile` Spark → `.sparkbc` (incl. `0x26`/`0x27`); dump; emit init weights; bootstrap `--run-bc` dry train | Spark-created **init**, not trained; GAS does not emit `.sparkbc`; later train aims to beat Claude; [SPARK_BUILDER.md](SPARK_BUILDER.md) |
+| **Modify existing** | `model modify keep_existing …` | Attach adapters/heads; **never** delete special training |
 | **Abstain / IDK heads** | `head abstain|train|attach|ask` | Probe on frozen local LLM; SELECT before SAMPLE; [ABSTAIN_HEADS.md](ABSTAIN_HEADS.md) |
 | **Analyze** reachable models | `model analyze "…" -> report` | Dry-run = fixtures under `examples/fixtures/models/`; not live leaderboards |
 | **Compare** on your suite | `model compare […] on suite "…" -> comparison` | Same fixture metrics; optional `make model-probe` for read-only discovery |
