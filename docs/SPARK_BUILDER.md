@@ -100,6 +100,7 @@ and [spark-selfhost-train.sparkbc](examples/spark-selfhost-train.sparkbc)
 ./spark --dry-run examples/spark_builder.spark
 ./spark-bootstrap --run-bc docs/examples/spark-builder.sparkbc
 ./spark-bootstrap --run-bc docs/examples/spark-train-step.sparkbc
+make sparkbc-e2e   # compile → dump TRAIN/STEP → --run-bc → ARTIFACT
 ```
 
 `./spark-bootstrap --run-bc` **executes** train opcodes from the
@@ -107,6 +108,9 @@ binary: `TRAIN` (`0x26`), optional `STEP` (`0x28`), then
 `TRAIN_STATUS` (`0x27`). Dry JSON plus an `ARTIFACT` marker under
 `out/train/<job>/` (STEP updates `step_n`). That is a **dry fixture**
 (`trained=false`), not SGD and not a trained model. Dry ≠ trained.
+`make sparkbc-e2e` is the focused proof for the STEP stream
+(ARTIFACT + opcode order). It does **not** require a STEP-updated
+weights file — that is a follow-on on `feat/sparkbc-step-weights`.
 
 GAS `./spark` has **no SPARK_BC emit path** and **no** `--run-bc`.
 Proof (must fail):
@@ -148,11 +152,13 @@ is in the `.sparkbc`; the tensors are still init.
 | Selfhost train seed `.sparkbc` | **implemented** (`compile_train.spark` → `spark-selfhost-train.sparkbc`) |
 | STEP proof stream TRAIN→STEP→TRAIN_STATUS | **implemented** (`spark_train_step.spark` → `spark-train-step.sparkbc`) |
 | Execute TRAIN / STEP from published `.sparkbc` | **implemented** (`./spark-bootstrap --run-bc`; dry; `trained=false`) |
+| Focused e2e gate (compile→dump→run-bc→ARTIFACT) | **implemented** (`make sparkbc-e2e` / `make test-sparkbc-e2e`) |
 | GAS `./spark --dry-run` train verbs | **implemented** (source, not bytecode) |
 | GAS emit `.sparkbc` / `--run-bc` | **BLOCKED** (use bootstrap `--compile` / `--run-bc`) |
 | Dry ARTIFACT from TRAIN | **implemented** (fixture; not SGD) |
 | Hex dump + decode | **implemented** |
 | Emit init weights from those bytes | **implemented** (init only) |
+| STEP-updated weights file | **follow-on** (`feat/sparkbc-step-weights`; not this gate) |
 | Round-trip hello SPARK_BC | **tested against oracle** (`make test-sparkbc`) |
 | Trained / served / beats Claude | **not** |
 

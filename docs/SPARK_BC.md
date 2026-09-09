@@ -337,6 +337,8 @@ Spark compiling Spark: `selfhost/compile.spark` →
 `docs/examples/spark-train-step.sparkbc` (`TRAIN` → `STEP`
 `0x28` → `TRAIN_STATUS`; sha256
 `d08925b52bf8c840de626c9cfec619d4dbae5a674b94bb8c7c5837eb1ac64551`).
+Focused e2e: `make sparkbc-e2e` (compile → dump TRAIN/STEP →
+`--run-bc` dry → assert `ARTIFACT`; not SGD; weights follow-on).
 Dump: [spark-self-bc.txt](examples/spark-self-bc.txt).
 Factory page: [SPARK_BUILDER.md](SPARK_BUILDER.md).
 The language also emits **init weights** from those bytes

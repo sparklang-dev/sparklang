@@ -189,6 +189,8 @@
         <li><strong>Gates met:</strong> <code class="inline-code">make test-sparkbc</code> (compile → <code class="inline-code">--run-bc</code> body equals
           GAS dry-run after banner for hello/mini/classify/extract/pipeline/
           tool/listen/speak + engine/IDE + review/browser/mitm fixtures).
+          <code class="inline-code">make sparkbc-e2e</code> (TRAIN→STEP→TRAIN_STATUS: compile → dump →
+          <code class="inline-code">--run-bc</code> dry → <code class="inline-code">ARTIFACT</code>; not SGD; weights follow-on).
           <code class="inline-code">make test-bc-emit</code> (bc_vm ↔ spark-bc-emit parity on same <code class="inline-code">.sparkbc</code>
           goldens).</li>
         <li><code class="inline-code">--dry-run</code> tries compile+<code class="inline-code">bc_vm</code> first; on compile failure falls
@@ -374,6 +376,7 @@
         <pre class="doc__pre"><code class="language-bash"># Phase 0 — bytecode on B (destination runner for hello)
         ./spark-bootstrap --run-bc selfhost/fixtures/hello.sparkbc
         make test-sparkbc
+        make sparkbc-e2e   # TRAIN→STEP→ARTIFACT (dry; not SGD)
 
         # Phase 2 — lex on B (same goldens as ./selfhost/spark-lex)
         ./spark-bootstrap --lex selfhost/fixtures/mini.spark

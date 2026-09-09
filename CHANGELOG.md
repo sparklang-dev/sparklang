@@ -4,6 +4,24 @@ All notable user-facing releases of **SparkLang** (the Spark programming
 language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
+## 0.6.27 — 2026-09-08
+
+- **SPARK_BC e2e gate:** `make sparkbc-e2e` / `make test-sparkbc-e2e`
+  (`tools/spark-bc-dump/run_e2e_gate.sh`, wrapper
+  `scripts/sparkbc-e2e`). Compiles
+  `examples/spark_train_step.spark`, dumps TRAIN/STEP decode,
+  runs `./spark-bootstrap --run-bc` dry, asserts
+  `out/train/job-dry-001/ARTIFACT` (`not_sgd=true`,
+  `trained=false`, `step_n=1`). Not SGD. STEP-updated weights
+  remain a follow-on (`feat/sparkbc-step-weights`). Docs:
+  [SPARK_BC.md](docs/SPARK_BC.md),
+  [SPARK_BUILDER.md](docs/SPARK_BUILDER.md),
+  [MODEL_LAB.md](docs/MODEL_LAB.md),
+  [MODEL_TRAINING.md](docs/MODEL_TRAINING.md),
+  [LANGUAGE.md](docs/LANGUAGE.md),
+  [SELF_HOST.md](docs/SELF_HOST.md),
+  [PROGRAMMING_GUIDE.md](docs/PROGRAMMING_GUIDE.md).
+
 ## 0.6.26 — 2026-09-08
 
 - **Builder / SPARK_BC factory:** Spark compiles Spark to SPARK_BC
