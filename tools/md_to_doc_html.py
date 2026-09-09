@@ -30,6 +30,7 @@ DOC_NAV = """\
         <a href="/docs/build-models.html"{bm}>Build models</a>
         <a href="/docs/train-loop.html"{tl}>Train loop</a>
         <a href="/docs/spark-coder.html"{sc}>Spark coder</a>
+        <a href="/docs/weight-gallery.html"{wg}>Weight gallery</a>
         <a href="/docs/architecture.html"{ar}>Architecture</a>
         <a href="/docs/tokenizer.html"{tk}>Tokenizer</a>
         <a href="/docs/serve.html"{sv}>Serve</a>
@@ -88,6 +89,7 @@ HEADER = """\
                   <li><a href="/docs/model-training.html">Model training</a></li>
                   <li><a href="/docs/train-loop.html">Train loop</a></li>
                   <li><a href="/docs/spark-coder.html">Spark coder</a></li>
+                  <li><a href="/docs/weight-gallery.html">Weight gallery</a></li>
                   <li><a href="/docs/ai-models.html">AI models</a></li>
                   <li><a href="/docs/voice.html">Voice / STT / TTS</a></li>
                 </ul>
@@ -177,6 +179,7 @@ MD_LINK_MAP = {
     "BUILD_MODELS.md": "/docs/build-models.html",
     "TRAIN_LOOP.md": "/docs/train-loop.html",
     "SPARK_CODER.md": "/docs/spark-coder.html",
+    "WEIGHT_GALLERY.md": "/docs/weight-gallery.html",
     "ARCHITECTURE.md": "/docs/architecture.html",
     "ATTENTION_FORWARD.md": "/docs/attention-forward.html",
     "SERVE.md": "/docs/serve.html",
@@ -244,6 +247,10 @@ DOC_PAGES = [
      "Spark coder — owned TinyCoder",
      "In-repo TinyCoder layers + SGD on coding fixtures. "
      "Not HF/Claude. Never 6000; 5090 OK. Does not beat Claude."),
+    ("wg", "WEIGHT_GALLERY.md", "weight-gallery.html",
+     "Weight gallery — view / play / understand",
+     "Catalog tiny through xl Spark stub weights; inspect, "
+     "diff, play forward. Opt-in 5090 XL; never 6000."),
     ("ar", "ARCHITECTURE.md", "architecture.html",
      "Architecture pieces",
      "Embed, RMSNorm, lm_head, MLP/SwiGLU, attention honesty."),
@@ -368,8 +375,8 @@ def render(md_path: Path, out_path: Path, title: str, description: str, current:
     body = decorate_html(body)
     keys = (
         "ab", "ai", "nn", "ide", "sh", "bc", "cp", "dc", "rd", "bm",
-        "af", "mk", "th", "isa", "fy", "dg", "tl", "sc", "ar", "tk",
-        "sv", "ev", "ci", "ma", "vo",
+        "af", "mk", "th", "isa", "fy", "dg", "tl", "sc", "wg", "ar",
+        "tk", "sv", "ev", "ci", "ma", "vo",
     )
     nav_kwargs = {
         k: (' aria-current="page"' if current == k else "") for k in keys

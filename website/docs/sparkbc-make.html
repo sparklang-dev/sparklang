@@ -42,6 +42,7 @@
                   <li><a href="/docs/model-training.html">Model training</a></li>
                   <li><a href="/docs/train-loop.html">Train loop</a></li>
                   <li><a href="/docs/spark-coder.html">Spark coder</a></li>
+                  <li><a href="/docs/weight-gallery.html">Weight gallery</a></li>
                   <li><a href="/docs/ai-models.html">AI models</a></li>
                   <li><a href="/docs/voice.html">Voice / STT / TTS</a></li>
                 </ul>
@@ -87,6 +88,7 @@
         <a href="/docs/build-models.html">Build models</a>
         <a href="/docs/train-loop.html">Train loop</a>
         <a href="/docs/spark-coder.html">Spark coder</a>
+        <a href="/docs/weight-gallery.html">Weight gallery</a>
         <a href="/docs/architecture.html">Architecture</a>
         <a href="/docs/tokenizer.html">Tokenizer</a>
         <a href="/docs/serve.html">Serve</a>
@@ -141,6 +143,18 @@
         <tr>
         <td><code class="inline-code">make spark-coder-train-large</code></td>
         <td>Opt-in <strong>large</strong> coder (dim 64 / n_layer 4); not GHA default</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">make weight-gallery</code></td>
+        <td>Catalog + emit scale/large samples + website catalog JSON</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">make test-weights-play</code></td>
+        <td>Weight gallery unit + CLI play/diff/stats</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">make weight-gallery-xl</code></td>
+        <td>Opt-in XL emit (prefer 5090; never 6000)</td>
         </tr>
         <tr>
         <td><code class="inline-code">make spark-eval</code></td>

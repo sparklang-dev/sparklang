@@ -5,6 +5,17 @@ language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
 
+## 0.6.48 — 2026-09-09
+
+- **Weight gallery (tiny → xl):** catalog init / SGD / checkpoints /
+  scale fixtures / spark-coder / large+xl multi-layer stubs.
+  CLI `tools/spark-weights/cli.py` (inspect, play, diff, stats,
+  generate). Docs [/docs/weight-gallery.html](/docs/weight-gallery.html)
+  + [/weight-playground.html](/weight-playground.html).
+  `make weight-gallery` / `make test-weights-play`;
+  `make weight-gallery-xl` prefers **5090**, **never** 6000.
+  Stub weights only — not production LLMs; does **not** beat Claude.
+
 ## 0.6.47 — 2026-09-09
 
 - **Tiny vs large (owner addendum):** spark-coder
