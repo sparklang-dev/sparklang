@@ -154,12 +154,13 @@
         Selfhost train seed: <code class="inline-code">selfhost/compile_train.spark</code> →
         <code class="inline-code">docs/examples/spark-selfhost-train.sparkbc</code>. Bootstrap
         <code class="inline-code">./spark-bootstrap --run-bc</code> <strong>or</strong> GAS <code class="inline-code">./spark --run-bc</code> runs that
-        binary (dry; <code class="inline-code">trained=false</code>). GAS <code class="inline-code">./spark --dry-run</code> runs train
-        verbs from source; GAS <code class="inline-code">--compile</code> wraps bootstrap emit. Emitting
-        TRAIN/STEP ≠ a trained model. See <a href="/docs/self-host.html">SPARK_BC.md</a> and
-        <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> (sha256 table + reproduce
-        commands). STEP→weights is <strong>implemented</strong>
-        (<code class="inline-code">out/train/&lt;job&gt;/weights.safetensors</code>; dry; <code class="inline-code">trained=false</code>).</p>
+        binary (TRAIN accept dry; STEP = tiny CPU SGD). GAS <code class="inline-code">./spark --dry-run</code>
+        runs train verbs from source; GAS <code class="inline-code">--compile</code> wraps bootstrap emit.
+        Emitting TRAIN/STEP ≠ beating Claude. See <a href="/docs/self-host.html">SPARK_BC.md</a>
+        and <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> (sha256 table + reproduce
+        commands). STEP→weights is <strong>CPU SGD</strong>
+        (<code class="inline-code">out/train/&lt;job&gt;/weights.safetensors</code>; <code class="inline-code">trained=true</code> /
+        <code class="inline-code">not_sgd=false</code> when grads apply; not beat Claude).</p>
         <p>Training methodology: <a href="/docs/model-training.html">MODEL_TRAINING.md</a>.
         Eval helpers: <a href="/docs/ai-models.html">MODEL_ANALYSIS.md</a>.
         Lab pipeline: <code class="inline-code">MODEL_LAB.md</code>.</p>
@@ -175,21 +176,24 @@
 
         model train dataset &quot;examples/fixtures/train/dataset.jsonl&quot; base &quot;fixture-base&quot; out &quot;out/train/job-dry-001&quot; backend &quot;http&quot; method &quot;spark_distill_cpu&quot; -&gt; job
         model build -&gt; job                               # same as train
-        model step &quot;job-dry-001&quot; -&gt; step                 # dry loop tick (0x28)
+        model step &quot;job-dry-001&quot; -&gt; step                 # CPU SGD tick (0x28)
         model status &quot;job-dry-001&quot; -&gt; status             # polls that job id
         </code></pre>
         <h3 id="model-step-spark-bc-step-0x28"><code class="inline-code">model step</code> (SPARK_BC <code class="inline-code">STEP</code> <code class="inline-code">0x28</code>)</h3>
-        <p>One dry training-loop tick in the binary — not SGD and not trained.
-        Syntax: <code class="inline-code">model step "job-id" -&gt; bind</code>. Compiles to <code class="inline-code">STEP</code> (job_id,
-        bind). Bootstrap <code class="inline-code">--run-bc</code> prints <code class="inline-code">"op":"step"</code> JSON and updates
-        <code class="inline-code">ARTIFACT</code> with <code class="inline-code">step_n</code>. Proof: TRAIN → STEP → TRAIN_STATUS in
+        <p>One training-loop tick in the binary — <strong>tiny CPU SGD</strong> on Spark
+        tensors (fixture JSONL → CE on <code class="inline-code">lm_head</code>). Syntax:
+        <code class="inline-code">model step "job-id" -&gt; bind</code>. Compiles to <code class="inline-code">STEP</code> (job_id, bind).
+        Bootstrap <code class="inline-code">--run-bc</code> prints <code class="inline-code">"op":"step"</code> / <code class="inline-code">mode=cpu-sgd</code> JSON,
+        updates <code class="inline-code">ARTIFACT</code> (<code class="inline-code">trained=true</code>, <code class="inline-code">not_sgd=false</code>), and writes
+        <code class="inline-code">weights.safetensors</code> when grads apply (fails loud if stub).
+        <strong>Not beat Claude.</strong> Proof: TRAIN → STEP → TRAIN_STATUS in
         <code class="inline-code">examples/spark_train_step.spark</code> →
         <code class="inline-code">docs/examples/spark-train-step.sparkbc</code> (sha256
         <code class="inline-code">d08925b52bf8c840de626c9cfec619d4dbae5a674b94bb8c7c5837eb1ac64551</code>).
         Focused gate: <code class="inline-code">make sparkbc-e2e</code> (compile → dump TRAIN/STEP →
-        <code class="inline-code">--run-bc</code> dry → assert <code class="inline-code">ARTIFACT</code>). Not SGD. Step-updated
-        weights are <strong>implemented</strong> (<code class="inline-code">weights.safetensors</code>; dry delta; not SGD).
-        Dry ≠ trained.</p>
+        <code class="inline-code">--run-bc</code> → assert <code class="inline-code">ARTIFACT</code>). Step-updated weights are
+        <strong>CPU SGD</strong> (<code class="inline-code">weights.safetensors</code>; <code class="inline-code">trained=true</code>;
+        <code class="inline-code">not_sgd=false</code>; loss must drop). Tiny; <strong>not beat Claude</strong>.</p>
         <p>Optional <strong><code class="inline-code">method "…"</code></strong> selects the training algorithm
         (<code class="inline-code">spark_distill_cpu</code> | <code class="inline-code">spark_pref_pack</code> | <code class="inline-code">spark_playbook_fit</code> |
         <code class="inline-code">spark_faq_index</code> | <code class="inline-code">spark_reply_pack</code>).

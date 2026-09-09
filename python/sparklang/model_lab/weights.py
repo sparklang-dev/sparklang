@@ -321,9 +321,9 @@ def apply_dry_step(
     source: str = "",
     command: str = "",
 ) -> dict[str, Any]:
-    """Dry STEP: bump step_n meta + tiny deterministic tensor delta.
+    """Legacy dry STEP: bytecode-hash delta only (not SGD).
 
-    Still not SGD. trained stays false. Seed is the SPARK_BC bytes.
+    Kept for unit regression. Live STEP path uses apply_sgd_step.
     """
     bc_path = Path(sparkbc_path)
     out = Path(dest)
@@ -403,5 +403,271 @@ def apply_dry_step(
         "not_sgd": True,
         "sparkbc_sha256": bc["sha256"],
         "note": meta["note"],
+    }
+
+
+def _unpack_f32(blob: bytes) -> list[float]:
+    """Decode little-endian F32 blob to Python floats."""
+    count = len(blob) // 4
+    return list(struct.unpack("<%df" % count, blob))
+
+
+def _load_jsonl_pairs(path: Path) -> list[tuple[str, str]]:
+    """Read user/assistant pairs from fixture dataset.jsonl."""
+    pairs: list[tuple[str, str]] = []
+    text = path.read_text(encoding="utf-8")
+    for line in text.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        row = json.loads(line)
+        msgs = row.get("messages") or []
+        user = ""
+        asst = ""
+        for msg in msgs:
+            role = str(msg.get("role") or "")
+            content = str(msg.get("content") or "")
+            if role == "user":
+                user = content
+            elif role == "assistant":
+                asst = content
+        if user and asst:
+            pairs.append((user, asst))
+    if not pairs:
+        raise ValueError("empty train dataset: %s" % path)
+    return pairs
+
+
+def _mean_pool_embed(
+    embed: list[float], dim: int, text: str
+) -> list[float]:
+    """Bag-of-bytes mean of embed rows (CPU; no GPU)."""
+    raw = text.encode("utf-8") or b"\0"
+    h = [0.0] * dim
+    for byte in raw:
+        base = (byte % VOCAB) * dim
+        for j in range(dim):
+            h[j] += embed[base + j]
+    n = float(len(raw))
+    return [v / n for v in h]
+
+
+def _logits_from_w(
+    w: list[float], dim: int, vocab: int, h: list[float]
+) -> list[float]:
+    """y = W @ h for W shaped (vocab, dim)."""
+    out: list[float] = []
+    for v in range(vocab):
+        base = v * dim
+        s = 0.0
+        for j in range(dim):
+            s += w[base + j] * h[j]
+        out.append(s)
+    return out
+
+
+def _softmax(xs: list[float]) -> list[float]:
+    """Numerically stable softmax."""
+    m = max(xs)
+    ex = [math.exp(x - m) for x in xs]
+    z = sum(ex) or 1.0
+    return [e / z for e in ex]
+
+
+def _batch_ce(
+    w: list[float],
+    embed: list[float],
+    dim: int,
+    vocab: int,
+    pairs: list[tuple[str, str]],
+) -> tuple[float, list[float], float]:
+    """Mean CE loss + mean dW over pairs. Returns (loss, gw, gnorm)."""
+    gw = [0.0] * len(w)
+    total = 0.0
+    for user, asst in pairs:
+        h = _mean_pool_embed(embed, dim, user)
+        target = (asst.encode("utf-8") or b"\0")[0] % vocab
+        logits = _logits_from_w(w, dim, vocab, h)
+        probs = _softmax(logits)
+        total += -math.log(max(probs[target], 1e-12))
+        dlogits = list(probs)
+        dlogits[target] -= 1.0
+        for v in range(vocab):
+            base = v * dim
+            dv = dlogits[v]
+            for j in range(dim):
+                gw[base + j] += dv * h[j]
+    n = float(len(pairs))
+    loss = total / n
+    for i in range(len(gw)):
+        gw[i] /= n
+    gnorm = math.sqrt(sum(g * g for g in gw))
+    return loss, gw, gnorm
+
+
+def apply_sgd_step(
+    sparkbc_path: str | Path,
+    dest: str | Path,
+    *,
+    step_n: int | None = None,
+    dataset: str | Path | None = None,
+    lr: float = 0.08,
+    inner_steps: int = 12,
+    source: str = "",
+    command: str = "",
+) -> dict[str, Any]:
+    """Real CPU SGD on Spark-created tensors (tiny; not beat Claude).
+
+    Reads fixture JSONL, mean-pools embed bytes, CE on lm_head,
+    applies gradients. Sets trained=true / not_sgd=false only when
+    loss drops and grad norm is nonzero. Fails loud otherwise.
+    """
+    bc_path = Path(sparkbc_path)
+    out = Path(dest)
+    data_path = Path(
+        dataset or "examples/fixtures/train/dataset.jsonl"
+    )
+    if not data_path.is_file():
+        raise FileNotFoundError(
+            "SGD STEP needs dataset: %s" % data_path
+        )
+    pairs = _load_jsonl_pairs(data_path)
+    if not out.is_file():
+        emit_init_weights(
+            bc_path,
+            out,
+            source=source or str(bc_path),
+            command=command
+            or (
+                "SGD STEP seed from SPARK_BC "
+                "(CPU; not beat Claude)"
+            ),
+        )
+    meta, tensors = read_safetensors(out)
+    prev = 0
+    if meta.get("step_n"):
+        prev = int(meta["step_n"])
+    if step_n is None:
+        n = prev + 1
+    else:
+        n = int(step_n)
+    if n < 1:
+        n = 1
+    if n <= prev:
+        n = prev + 1
+
+    embed_name = "spark.embed.weight"
+    head_name = "spark.lm_head.weight"
+    if embed_name not in tensors or head_name not in tensors:
+        raise KeyError(
+            "SGD STEP needs %s and %s" % (embed_name, head_name)
+        )
+    emb_shape, emb_blob = tensors[embed_name]
+    head_shape, head_blob = tensors[head_name]
+    if len(emb_shape) != 2 or len(head_shape) != 2:
+        raise ValueError("unexpected tensor ranks for SGD")
+    vocab = int(emb_shape[0])
+    dim = int(emb_shape[1])
+    if head_shape != (vocab, dim):
+        raise ValueError(
+            "lm_head shape %s != (%d, %d)"
+            % (head_shape, vocab, dim)
+        )
+    embed = _unpack_f32(emb_blob)
+    w = _unpack_f32(head_blob)
+    before = list(w)
+
+    loss_before, _gw0, g0 = _batch_ce(
+        w, embed, dim, vocab, pairs
+    )
+    if g0 <= 0.0:
+        raise RuntimeError(
+            "SGD STEP stub fail: zero grad before update"
+        )
+
+    for _ in range(max(1, int(inner_steps))):
+        loss_i, gw, gnorm = _batch_ce(
+            w, embed, dim, vocab, pairs
+        )
+        if gnorm <= 0.0:
+            raise RuntimeError(
+                "SGD STEP stub fail: zero grad mid-loop "
+                "(loss=%s)" % loss_i
+            )
+        for i in range(len(w)):
+            w[i] -= float(lr) * gw[i]
+
+    loss_after, _gw1, g1 = _batch_ce(
+        w, embed, dim, vocab, pairs
+    )
+    moved = any(abs(w[i] - before[i]) > 1e-12 for i in range(len(w)))
+    if not moved:
+        raise RuntimeError(
+            "SGD STEP stub fail: weights unchanged"
+        )
+    if not (loss_after < loss_before):
+        raise RuntimeError(
+            "SGD STEP stub fail: loss did not drop "
+            "(before=%s after=%s)" % (loss_before, loss_after)
+        )
+    if g1 < 0.0:
+        raise RuntimeError("SGD STEP stub fail: bad grad norm")
+
+    tensors[head_name] = (head_shape, _pack_f32(w))
+    bc = load_sparkbc(bc_path)
+    meta["step_n"] = str(n)
+    meta["trained"] = "true"
+    meta["not_sgd"] = "false"
+    meta["sgd"] = "true"
+    meta["served"] = "false"
+    meta["op"] = "step"
+    meta["loss_before"] = "%.8g" % loss_before
+    meta["loss_after"] = "%.8g" % loss_after
+    meta["dataset"] = str(data_path)
+    meta["sgd_tensor"] = head_name
+    meta["sgd_lr"] = "%.6g" % float(lr)
+    meta["sgd_inner"] = str(int(inner_steps))
+    meta["sparkbc_sha256"] = bc["sha256"]
+    meta["genome"] = meta.get("genome") or "SPARK_BC"
+    meta["factory"] = meta.get("factory") or "Spark language"
+    meta["goal"] = (
+        "tiny CPU SGD on Spark tensors; "
+        "does not beat Claude"
+    )
+    meta["note"] = (
+        "CPU SGD STEP updated lm_head from fixture batch; "
+        "trained=true; not_sgd=false; not beat Claude"
+    )
+    base_der = meta.get("derivation") or "SPARK_BC init"
+    meta["derivation"] = (
+        "%s; real CPU SGD CE on %s "
+        "(embed mean-pool; fixture JSONL)"
+        % (base_der, head_name)
+    )
+    if source:
+        meta["source"] = source
+    if command:
+        meta["command"] = command
+
+    write_safetensors(tensors, meta, out)
+    return {
+        "op": "step_weights",
+        "status": "implemented",
+        "mode": "cpu-sgd",
+        "path": str(out),
+        "sha256": hashlib.sha256(out.read_bytes()).hexdigest(),
+        "size_bytes": out.stat().st_size,
+        "step_n": n,
+        "tensor": head_name,
+        "trained": True,
+        "not_sgd": False,
+        "sgd": True,
+        "loss_before": loss_before,
+        "loss_after": loss_after,
+        "grad_norm_before": g0,
+        "dataset": str(data_path),
+        "sparkbc_sha256": bc["sha256"],
+        "note": meta["note"],
+        "beats_claude": False,
     }
 

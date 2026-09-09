@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # SparkBC e2e gate: compile spark_train_step → dump TRAIN/STEP →
-# bootstrap --run-bc dry → GAS ./spark --run-bc → assert ARTIFACT.
-# Not SGD. Not trained.
+# bootstrap --run-bc → GAS ./spark --run-bc → assert ARTIFACT.
+# STEP runs tiny CPU SGD (trained=true). Not beat Claude.
 #
-# STEP weights are covered by make test-sparkbc (weights.safetensors).
-# This gate asserts ARTIFACT + opcode stream only.
+# STEP weights + loss drop are covered by make test-sparkbc.
+# This gate asserts ARTIFACT + opcode stream.
 #
 # Usage (from repo root):
 #   make sparkbc-e2e
@@ -101,7 +101,7 @@ print("dump", dump_path)
 PY
 echo "PASS dump decode"
 
-echo "=== sparkbc-e2e: --run-bc dry ==="
+echo "=== sparkbc-e2e: --run-bc (CPU SGD STEP) ==="
 rm -f "$MARKER"
 step_run="$("$BOOT" --run-bc "$STEP_PUB" 2>&1)" || {
   echo "FAIL sparkbc-e2e: --run-bc exit non-zero"
@@ -127,11 +127,11 @@ echo "$step_run" | grep -q 'job-dry-001' || {
   echo "FAIL sparkbc-e2e: missing job-dry-001"
   exit 1
 }
-echo "$step_run" | grep -q 'dry-run' || {
-  echo "FAIL sparkbc-e2e: missing dry-run mode"
+echo "$step_run" | grep -q 'cpu-sgd' || {
+  echo "FAIL sparkbc-e2e: missing cpu-sgd mode"
   exit 1
 }
-echo "PASS --run-bc dry"
+echo "PASS --run-bc cpu-sgd"
 
 echo "=== sparkbc-e2e: GAS ./spark --run-bc ==="
 GAS="${ROOT}/spark"
@@ -147,7 +147,7 @@ gas_run="$("$GAS" --run-bc "$STEP_PUB" 2>&1)" || {
 }
 echo "$gas_run" | grep -q '"op":"train"' || {
   echo "FAIL sparkbc-e2e: GAS missing train JSON"
-  echo "$gas_run" | head -16
+  echo "$gas_run" | head -8
   exit 1
 }
 echo "$gas_run" | grep -q '"op":"step"' || {
@@ -162,20 +162,20 @@ if [[ ! -f "$MARKER" ]]; then
   echo "FAIL sparkbc-e2e: GAS --run-bc missing $MARKER"
   exit 1
 fi
-echo "PASS GAS --run-bc dry"
+echo "PASS GAS --run-bc"
 
 echo "=== sparkbc-e2e: ARTIFACT ==="
 if [[ ! -f "$MARKER" ]]; then
   echo "FAIL sparkbc-e2e: missing $MARKER"
   exit 1
 fi
-grep -q 'not_sgd=true' "$MARKER" || {
-  echo "FAIL sparkbc-e2e: ARTIFACT missing not_sgd=true"
+grep -q 'not_sgd=false' "$MARKER" || {
+  echo "FAIL sparkbc-e2e: ARTIFACT missing not_sgd=false"
   cat "$MARKER"
   exit 1
 }
-grep -q 'trained=false' "$MARKER" || {
-  echo "FAIL sparkbc-e2e: ARTIFACT missing trained=false"
+grep -q 'trained=true' "$MARKER" || {
+  echo "FAIL sparkbc-e2e: ARTIFACT missing trained=true"
   cat "$MARKER"
   exit 1
 }
@@ -187,7 +187,6 @@ grep -q 'step_n=1' "$MARKER" || {
 echo "PASS ARTIFACT ($MARKER)"
 
 # Optional: SPARKBC_E2E_REQUIRE_STEP_WEIGHTS=1 also asserts weights here.
-# Default gate stays ARTIFACT-only. Do not invent SGD.
 WEIGHTS="out/train/job-dry-001/weights.safetensors"
 if [[ -n "${SPARKBC_E2E_REQUIRE_STEP_WEIGHTS:-}" ]]; then
   if [[ ! -f "$WEIGHTS" ]]; then
@@ -197,4 +196,4 @@ if [[ -n "${SPARKBC_E2E_REQUIRE_STEP_WEIGHTS:-}" ]]; then
   echo "PASS STEP weights ($WEIGHTS)"
 fi
 
-echo "OK sparkbc-e2e (ARTIFACT + TRAIN/STEP stream; STEP weights via test-sparkbc)"
+echo "OK sparkbc-e2e (ARTIFACT + TRAIN/STEP; CPU SGD via test-sparkbc)"

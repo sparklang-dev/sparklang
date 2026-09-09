@@ -20,6 +20,7 @@ from sparklang.model_lab.bc_dump import (
 from sparklang.model_lab.builder import emit_base, emit_serve, emit_stub
 from sparklang.model_lab.weights import (
     apply_dry_step,
+    apply_sgd_step,
     emit_init_weights,
     read_safetensors_meta,
 )
@@ -163,7 +164,7 @@ def test_train_step_opcode() -> list[str]:
 
 
 def test_dry_step_writes_weights() -> dict:
-    """apply_dry_step leaves step_n>=1 and trained=false."""
+    """Legacy apply_dry_step: step_n bump, still not SGD."""
     with tempfile.TemporaryDirectory() as tmp:
         dest = Path(tmp) / "weights.safetensors"
         r1 = apply_dry_step(
@@ -187,8 +188,45 @@ def test_dry_step_writes_weights() -> dict:
         return r1
 
 
+def test_sgd_step_loss_drops() -> dict:
+    """apply_sgd_step: real CE grads; loss drops; weights move."""
+    dataset = ROOT / "examples/fixtures/train/dataset.jsonl"
+    assert dataset.is_file(), dataset
+    with tempfile.TemporaryDirectory() as tmp:
+        dest = Path(tmp) / "weights.safetensors"
+        r1 = apply_sgd_step(
+            STEP_BC,
+            dest,
+            step_n=1,
+            dataset=dataset,
+            source=STEP_SRC,
+            command=STEP_CMD,
+        )
+        assert r1["trained"] is True
+        assert r1["not_sgd"] is False
+        assert r1["sgd"] is True
+        assert r1["beats_claude"] is False
+        assert r1["loss_after"] < r1["loss_before"]
+        assert r1["step_n"] >= 1
+        meta = read_safetensors_meta(dest)
+        assert meta["trained"] == "true"
+        assert meta["not_sgd"] == "false"
+        assert float(meta["loss_after"]) < float(
+            meta["loss_before"]
+        )
+        sha1 = r1["sha256"]
+        r2 = apply_sgd_step(
+            STEP_BC, dest, step_n=2, dataset=dataset
+        )
+        assert r2["step_n"] > r1["step_n"]
+        assert r2["sha256"] != sha1
+        assert r2["loss_after"] < r2["loss_before"]
+        return r1
+
+
 def test_serve_forward() -> dict:
     """Tiny CPU SERVE: forward=true, trained honest, not production."""
+
     with tempfile.TemporaryDirectory() as tmp:
         dest = Path(tmp) / "serve-dry-001"
         payload = emit_serve(
@@ -236,10 +274,12 @@ def main() -> int:
     test_builder_weights_stay_init()
     sops = test_train_step_opcode()
     step_w = test_dry_step_writes_weights()
+    sgd_w = test_sgd_step_loss_drops()
     serve = test_serve_forward()
     print(
         "ok sha256=%s n_tensors=%d first32=%s train_ops=%s "
-        "step_ops=%s step_n=%s serve=%s forward=%s"
+        "step_ops=%s step_n=%s sgd_loss=%s->%s serve=%s "
+        "forward=%s"
         % (
             self_info["bc"]["sha256"][:12],
             self_info["weights"]["n_tensors"],
@@ -247,6 +287,8 @@ def main() -> int:
             " ".join(bops),
             " ".join(sops),
             step_w["step_n"],
+            "%.4f" % sgd_w["loss_before"],
+            "%.4f" % sgd_w["loss_after"],
             serve["job_id"],
             serve["forward"],
         )

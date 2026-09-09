@@ -351,7 +351,7 @@ static int op_train_status(BcFrame *fr, const SparkBc *bc, uint32_t *ip)
   return 0;
 }
 
-/* STEP: job_id, bind. Dry loop tick — ARTIFACT + Spark weights, not SGD. */
+/* STEP: job_id, bind. CPU SGD on Spark tensors + ARTIFACT. */
 static int op_step(BcFrame *fr, const SparkBc *bc, uint32_t *ip)
 {
   uint16_t ji;

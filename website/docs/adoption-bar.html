@@ -173,8 +173,8 @@
         </tr>
         <tr>
         <td>SPARK_BC Builder factory</td>
-        <td><strong>done (init)</strong></td>
-        <td>Spark → <code class="inline-code">--compile</code> → <code class="inline-code">.sparkbc</code> with <code class="inline-code">TRAIN</code>/<code class="inline-code">STEP</code>/<code class="inline-code">TRAIN_STATUS</code>; <code class="inline-code">--run-bc</code> dry fixture (bootstrap or GAS); Spark-created init safetensors. Dry ≠ trained. GAS <code class="inline-code">--run-bc</code> / <code class="inline-code">--compile</code> wrappers <strong>implemented</strong>. STEP→weights <strong>implemented</strong> (<code class="inline-code">out/train/&lt;job&gt;/weights.safetensors</code>; dry delta; <code class="inline-code">trained=false</code>). Control tensor-assembly source + shape check <strong>implemented</strong> (<code class="inline-code">examples/models/control.sparkasm</code>); JIT/train <strong>not</strong>. Later train aims to beat Claude — not claimed today. Page: <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> / <code class="inline-code">/docs/spark-builder.html</code></td>
+        <td><strong>done (tiny SGD)</strong></td>
+        <td>Spark → <code class="inline-code">--compile</code> → <code class="inline-code">.sparkbc</code> with <code class="inline-code">TRAIN</code>/<code class="inline-code">STEP</code>/<code class="inline-code">TRAIN_STATUS</code>; <code class="inline-code">--run-bc</code> TRAIN dry + STEP CPU SGD (bootstrap or GAS); Spark-created init + post-STEP <code class="inline-code">trained=true</code> / <code class="inline-code">not_sgd=false</code> when grads apply. GAS wrappers <strong>implemented</strong>. <strong>Not beat Claude.</strong> Page: <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> / <code class="inline-code">/docs/spark-builder.html</code></td>
         </tr>
         <tr>
         <td>Production receptionist workflow</td>

@@ -4,40 +4,19 @@ All notable user-facing releases of **SparkLang** (the Spark programming
 language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
-## 0.6.33 — 2026-09-09
 
-- **Eval harness (beat-Claude goal, no win claim):** frozen
-  copy/recall + next-token probes under `examples/eval/`; runner
-  `tools/spark-eval/run.py`; `make spark-eval` (dry default or
-  `WEIGHTS=` / `SPARK_EVAL_WEIGHTS`). Prints scores; exit 0 =
-  harness ran. Docs: how to compare later — **does not** claim
-  beat Claude. Independent of SGD. [SPARK_BUILDER.md](docs/SPARK_BUILDER.md).
+## 0.6.31 — 2026-09-08
 
-## 0.6.32 — 2026-09-09
-
-- **Control tensor-assembly source:** readable
-  [`examples/models/control.sparkasm`](examples/models/control.sparkasm)
-  documents the boring decoder control (GQA / RMSNorm / MATMUL / ROPE /
-  ATTN / SILU). Optional shape-check stub
-  `python/sparklang/model_lab/sparkasm_check.py`
-  (`make test-sparkasm-control`). Honest: source + shape check =
-  implemented; tensor VM / JIT / train = **not**. Linked from
+- **STEP CPU SGD (B-lane):** `--run-bc` `STEP` (`0x28`) runs real
+  CPU SGD on Spark-created `lm_head` from
+  `examples/fixtures/train/dataset.jsonl` (mean-pool embed → CE).
+  Writes `weights.safetensors` with `trained=true` /
+  `not_sgd=false` only when loss drops and grads apply; fails loud
+  otherwise. Helper `apply_sgd_step` /
+  `tools/spark-bc-dump/apply_step.py`. Gates:
+  `make test-sparkbc` (loss drop), `make sparkbc-e2e`. **Not beat
+  Claude.** No 6000 / GPU-1. Docs:
   [SPARK_BUILDER.md](docs/SPARK_BUILDER.md).
-
-## 0.6.31 — 2026-09-09
-
-- **Byte-level BPE tokenizer seed (from nothing):** deterministic
-  trainer in `python/sparklang/tokenize/` trains on the pinned
-  fixture `examples/fixtures/tokenize/seed_corpus.txt` (no FineWeb /
-  downloads). Emits `docs/examples/spark-bpe-vocab.json` +
-  `.sha256` sidecar. Vocab sha256:
-  `c20f899bbd552b2773447838be31827952d8494c110613c9ade1cb8a07c21226`.
-  Reproduce:
-  `PYTHONPATH=python python3 -m sparklang.tokenize train`.
-  Gate: `make test-bpe-seed`. Docs:
-  [TOKENIZER.md](docs/TOKENIZER.md). Optional later: pack vocab into
-  SPARK_BC pool.
-
 
 ## 0.6.30 — 2026-09-09
 
@@ -437,3 +416,4 @@ language) are listed here. Site and installers track
 
 See [GitHub releases](https://github.com/sparklang-dev/sparklang/releases) and
 commit history on `main` for prior notes.
+

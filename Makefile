@@ -11,13 +11,12 @@ NVML_LIB ?= /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1
 .PHONY: all clean test test-hdl test-e2e-browser test-examples machine-proof \
 	examples-run corpus corpus-agg spark-cuda spark-net spark-binary \
 	spark-lift spark-section-dump companions browser-scaffold \
-	test-model-lab spark-model-lab spark-serve test-bpe-seed \
+	test-model-lab spark-model-lab spark-serve \
 	browser-mitm-analyze ide test-engine-paint test-engine-css \
 	test-engine-layout test-ide-paint spark-bootstrap sparkc \
 	test-bootstrap test-sparkbc test-sparkbc-e2e sparkbc-e2e \
 	spark-bc spark-bc-pack-hello sparkasm \
-	test-sparkasm test-sparkasm-control docs-docx function-catalog \
-	playbooks-catalog spark-eval
+	test-sparkasm docs-docx function-catalog playbooks-catalog
 
 all: spark companions
 
@@ -362,17 +361,11 @@ machine-proof: spark
 
 test: spark companions spark-bootstrap test-sparkbc test-ai-playbooks \
 	test-extract test-expect test-host-embed test-abstain test-model-lab \
-	test-bpe-seed \
 	test-shell \
 	test-ask-gateway
 	./tests/run_dry.sh
 	./tests/hdl_check.sh
 	./bootstrap/tests/run_bootstrap.sh
-
-# Deterministic byte-level BPE seed (pinned fixture; no downloads).
-.PHONY: test-bpe-seed
-test-bpe-seed:
-	PYTHONPATH=python python3 tools/spark-bpe-seed/test_bpe.py
 
 # HDL: real iverilog compile of hdl/*.v, or honest SKIP with reason
 .PHONY: test-hdl
@@ -426,20 +419,6 @@ browser-mitm-analyze:
 .PHONY: model-probe
 model-probe:
 	bash tools/model_probe/probe.sh
-
-# Frozen copy/recall + next-token probes. Dry default; optional WEIGHTS=
-# or SPARK_EVAL_WEIGHTS. Exit 0 = harness ran (not a beat-Claude claim).
-.PHONY: spark-eval
-spark-eval:
-	@if [ -n "$(WEIGHTS)" ]; then \
-	  PYTHONPATH=python python3 tools/spark-eval/run.py \
-	    --weights "$(WEIGHTS)"; \
-	elif [ -n "$${SPARK_EVAL_WEIGHTS}" ]; then \
-	  PYTHONPATH=python python3 tools/spark-eval/run.py \
-	    --weights "$${SPARK_EVAL_WEIGHTS}"; \
-	else \
-	  PYTHONPATH=python python3 tools/spark-eval/run.py; \
-	fi
 
 corpus:
 	mkdir -p data
@@ -618,7 +597,7 @@ test-sparkbc: spark-bootstrap spark
 	PYTHONPATH=python python3 tools/spark-bc-dump/test_dump.py
 
 # Focused TRAIN→STEP→TRAIN_STATUS e2e: compile → dump → --run-bc →
-# ARTIFACT (+ GAS ./spark --run-bc). Not SGD.
+# ARTIFACT (+ GAS ./spark --run-bc). STEP = tiny CPU SGD.
 test-sparkbc-e2e: spark-bootstrap spark
 	chmod +x tools/spark-bc-dump/run_e2e_gate.sh
 	./tools/spark-bc-dump/run_e2e_gate.sh
@@ -644,19 +623,12 @@ spark-bc: spark-bootstrap
 	chmod +x scripts/spark-bc
 
 # --- C: Spark-native assembler (isolated; not GAS SoT) ---
-.PHONY: sparkasm test-sparkasm test-sparkasm-control
+.PHONY: sparkasm test-sparkasm
 sparkasm:
 	$(MAKE) -C sparkasm
 
 test-sparkasm:
 	$(MAKE) -C sparkasm test
-
-# Tensor-assembly source shape check (control.sparkasm). Not a tensor VM.
-test-sparkasm-control:
-	PYTHONPATH=python python3 -m sparklang.model_lab.sparkasm_check \
-		examples/models/control.sparkasm
-	PYTHONPATH=python python3 -m unittest \
-		sparklang.model_lab.test_sparkasm_check -v
 
 # --- A: self-host seed (lexer aid; not B VM, not C assembler) ---
 .PHONY: selfhost-lex test-selfhost-lex

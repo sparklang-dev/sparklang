@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Dry STEP weight bump for bootstrap --run-bc (not SGD)."""
+"""CPU SGD STEP weight update for bootstrap --run-bc."""
 
 from __future__ import annotations
 
@@ -11,15 +11,15 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "python"))
 
-from sparklang.model_lab.weights import apply_dry_step
+from sparklang.model_lab.weights import apply_sgd_step
 
 
 def main() -> int:
-    """Apply one dry STEP update to Spark-created safetensors."""
+    """Apply one real CPU SGD STEP to Spark-created safetensors."""
     ap = argparse.ArgumentParser(
         description=(
-            "Bump step_n + tiny bytecode-hash delta on "
-            "Spark-created weights (trained=false; not SGD)"
+            "CPU SGD on Spark lm_head from fixture JSONL "
+            "(trained=true; not_sgd=false; not beat Claude)"
         )
     )
     ap.add_argument("--sparkbc", required=True, help="SPARK_BC seed")
@@ -35,6 +35,23 @@ def main() -> int:
         help="target step_n (default: previous+1)",
     )
     ap.add_argument(
+        "--dataset",
+        default="examples/fixtures/train/dataset.jsonl",
+        help="JSONL train fixture (user/assistant pairs)",
+    )
+    ap.add_argument(
+        "--lr",
+        type=float,
+        default=0.08,
+        help="SGD learning rate",
+    )
+    ap.add_argument(
+        "--inner",
+        type=int,
+        default=12,
+        help="inner SGD iterations per STEP",
+    )
+    ap.add_argument(
         "--source",
         default="",
         help="optional source label for metadata",
@@ -45,13 +62,36 @@ def main() -> int:
         help="optional command label for metadata",
     )
     args = ap.parse_args()
-    result = apply_dry_step(
+    result = apply_sgd_step(
         args.sparkbc,
         args.weights,
         step_n=args.step,
+        dataset=args.dataset,
+        lr=args.lr,
+        inner_steps=args.inner,
         source=args.source,
         command=args.command,
     )
+    if result.get("not_sgd") is not False:
+        print(
+            "error: SGD STEP did not clear not_sgd",
+            file=sys.stderr,
+        )
+        return 2
+    if result.get("trained") is not True:
+        print(
+            "error: SGD STEP did not set trained=true",
+            file=sys.stderr,
+        )
+        return 2
+    if not (
+        result["loss_after"] < result["loss_before"]
+    ):
+        print(
+            "error: SGD STEP loss did not drop",
+            file=sys.stderr,
+        )
+        return 2
     print(json.dumps(result, separators=(",", ":")))
     return 0
 
