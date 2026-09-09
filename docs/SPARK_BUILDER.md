@@ -273,6 +273,7 @@ make test-model-lab
 - Builder page live on production Pages:
   https://sparklang.dev/docs/spark-builder.html
 - [SPARK_BC.md](SPARK_BC.md)
+- [TOKENIZER.md](TOKENIZER.md) — from-nothing byte-level BPE seed vocab
 - [MODEL_LAB.md](MODEL_LAB.md)
 - [AI_MODELS.md](AI_MODELS.md)
 - [LANGUAGE.md](LANGUAGE.md)

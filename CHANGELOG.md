@@ -4,6 +4,20 @@ All notable user-facing releases of **SparkLang** (the Spark programming
 language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
+## 0.6.31 — 2026-09-09
+
+- **Byte-level BPE tokenizer seed (from nothing):** deterministic
+  trainer in `python/sparklang/tokenize/` trains on the pinned
+  fixture `examples/fixtures/tokenize/seed_corpus.txt` (no FineWeb /
+  downloads). Emits `docs/examples/spark-bpe-vocab.json` +
+  `.sha256` sidecar. Vocab sha256:
+  `c20f899bbd552b2773447838be31827952d8494c110613c9ade1cb8a07c21226`.
+  Reproduce:
+  `PYTHONPATH=python python3 -m sparklang.tokenize train`.
+  Gate: `make test-bpe-seed`. Docs:
+  [TOKENIZER.md](docs/TOKENIZER.md). Optional later: pack vocab into
+  SPARK_BC pool.
+
 ## 0.6.30 — 2026-09-09
 
 - **Tiny CPU serve forward:** `dump.py --serve` / `./spark-serve`

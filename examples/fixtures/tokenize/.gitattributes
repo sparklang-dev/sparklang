@@ -1,0 +1,3 @@
+examples/fixtures/tokenize/seed_corpus.txt text eol=lf
+docs/examples/spark-bpe-vocab.json text eol=lf
+docs/examples/spark-bpe-vocab.json.sha256 text eol=lf
