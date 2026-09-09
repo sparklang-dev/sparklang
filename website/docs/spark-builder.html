@@ -301,6 +301,24 @@
         <code class="inline-code">out/train/job-dry-001/ARTIFACT</code> (<code class="inline-code">not_sgd=true</code>, <code class="inline-code">trained=false</code>,
         <code class="inline-code">step_n=1</code>). Not SGD. <code class="inline-code">make test-sparkbc</code> asserts STEP weights
         (<code class="inline-code">weights.safetensors</code>, <code class="inline-code">step_n&gt;=1</code>).</p>
+        <h2 id="eval-harness-measure-later-not-beat-claude">Eval harness (measure later — not beat Claude)</h2>
+        <p>Frozen tiny probes live under <code class="inline-code">examples/eval/</code> (copy/recall +
+        next-token fixtures). Runner: <code class="inline-code">tools/spark-eval/run.py</code>.</p>
+        <pre class="doc__pre"><code class="language-bash">make spark-eval
+        # optional Spark weights (init or later train artifact):
+        make spark-eval WEIGHTS=docs/examples/spark-self.init.safetensors
+        # or: SPARK_EVAL_WEIGHTS=/path/to/weights.safetensors make spark-eval
+        </code></pre>
+        <ul class="doc__ul">
+        <li><strong>Dry</strong> (default): oracle fixture path — prints scores, exits <strong>0</strong>.</li>
+        <li><strong>Weights</strong>: teacher-forced / next-token accuracy on
+          <code class="inline-code">spark.embed</code> + <code class="inline-code">spark.lm_head</code> (CPU only; never the 6000).</li>
+        <li>Suite JSON: <code class="inline-code">examples/eval/suite.json</code> (<code class="inline-code">claim: none</code>).</li>
+        </ul>
+        <p><strong>How to compare later (honest):</strong> run the <strong>same</strong> frozen suite
+        against Spark weights and against any other system offline; record
+        both score tables side by side. This harness <strong>does not</strong> claim
+        beat Claude, does not call Claude, and does not print a winner.</p>
         <h2 id="published-files-sha256">Published files — sha256</h2>
         <p>Hashes from <code class="inline-code">sha256sum</code> on disk at doc authoring time (<code class="inline-code">51e4dbd</code> tree).
         Re-run <code class="inline-code">sha256sum</code> after recompile; mismatch means drift — update this
@@ -453,6 +471,10 @@
         <td><strong>implemented</strong> — <code class="inline-code">examples/models/control.sparkasm</code>; JIT/train <strong>not</strong></td>
         </tr>
         <tr>
+        <td>Eval harness (<code class="inline-code">make spark-eval</code>)</td>
+        <td><strong>implemented</strong> — frozen probes; scores only; <strong>not</strong> beat Claude</td>
+        </tr>
+        <tr>
         <td>Trained / beats Claude / production LLM</td>
         <td><strong>not</strong> — later owner train-grant</td>
         </tr>
@@ -534,6 +556,10 @@
         <tr>
         <td>Control <code class="inline-code">.sparkasm</code> + shape check</td>
         <td><strong>implemented</strong> (source docs; no tensor VM)</td>
+        </tr>
+        <tr>
+        <td>Eval harness (<code class="inline-code">make spark-eval</code>)</td>
+        <td><strong>implemented</strong> (dry or weights; no win claim)</td>
         </tr>
         <tr>
         <td>Trained / beats Claude</td>

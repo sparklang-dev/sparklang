@@ -17,7 +17,7 @@ NVML_LIB ?= /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1
 	test-bootstrap test-sparkbc test-sparkbc-e2e sparkbc-e2e \
 	spark-bc spark-bc-pack-hello sparkasm \
 	test-sparkasm test-sparkasm-control docs-docx function-catalog \
-	playbooks-catalog
+	playbooks-catalog spark-eval
 
 all: spark companions
 
@@ -426,6 +426,20 @@ browser-mitm-analyze:
 .PHONY: model-probe
 model-probe:
 	bash tools/model_probe/probe.sh
+
+# Frozen copy/recall + next-token probes. Dry default; optional WEIGHTS=
+# or SPARK_EVAL_WEIGHTS. Exit 0 = harness ran (not a beat-Claude claim).
+.PHONY: spark-eval
+spark-eval:
+	@if [ -n "$(WEIGHTS)" ]; then \
+	  PYTHONPATH=python python3 tools/spark-eval/run.py \
+	    --weights "$(WEIGHTS)"; \
+	elif [ -n "$${SPARK_EVAL_WEIGHTS}" ]; then \
+	  PYTHONPATH=python python3 tools/spark-eval/run.py \
+	    --weights "$${SPARK_EVAL_WEIGHTS}"; \
+	else \
+	  PYTHONPATH=python python3 tools/spark-eval/run.py; \
+	fi
 
 corpus:
 	mkdir -p data

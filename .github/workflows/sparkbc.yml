@@ -25,3 +25,6 @@ jobs:
 
       - name: make sparkbc-e2e
         run: make sparkbc-e2e
+
+      - name: make spark-eval
+        run: make spark-eval
