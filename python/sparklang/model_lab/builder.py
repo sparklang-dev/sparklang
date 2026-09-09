@@ -1,7 +1,7 @@
 """Builder whose genome is SPARK_BC bytes — not imported weights.
 
 Implemented: decode a real .sparkbc, emit stub + init weights,
-dry serve stub. Planned: owner train-grant toward beat-Claude.
+tiny CPU serve forward. Planned: owner train-grant toward beat-Claude.
 """
 
 from __future__ import annotations
@@ -14,7 +14,7 @@ from sparklang.model_lab.bc_dump import (
     hex_preview,
     load_sparkbc,
 )
-from sparklang.model_lab.serve import emit_serve_stub
+from sparklang.model_lab.serve import emit_serve_forward
 from sparklang.model_lab.weights import emit_init_weights
 
 
@@ -61,7 +61,8 @@ def emit_stub(
             "dump hex + decoded ops",
             "emit this stub from those bytes",
             "emit structured Xavier init weights from those bytes",
-            "dry serve stub (SERVE marker; not production LLM)",
+            "tiny CPU serve forward (SERVE; forward=true; "
+            "not production LLM)",
         ],
         "planned": [
             "Spark-hosted compiler (self-host Stage 4 still C)",
@@ -98,12 +99,14 @@ def emit_serve(
     source: str,
     command: str,
     job_id: str = "serve-dry-001",
+    weights_path: str | Path | None = None,
 ) -> dict[str, Any]:
-    """Dry SERVE marker from SPARK_BC. Not production inference."""
-    return emit_serve_stub(
+    """Tiny CPU SERVE forward from SPARK_BC. Not production LLM."""
+    return emit_serve_forward(
         sparkbc_path,
         dest_dir,
         source=source,
         command=command,
         job_id=job_id,
+        weights_path=weights_path,
     )

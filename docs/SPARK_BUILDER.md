@@ -175,6 +175,19 @@ make sparkbc-e2e       # TRAIN→STEP→ARTIFACT focused gate
 # alias: make test-sparkbc-e2e
 ```
 
+### 6b) Tiny CPU serve forward (not production LLM)
+
+```bash
+PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
+  docs/examples/spark-builder.sparkbc \
+  --source examples/spark_builder.spark \
+  --command './spark-bootstrap --compile examples/spark_builder.spark -o docs/examples/spark-builder.sparkbc' \
+  --serve /tmp/serve-dry-001
+# → /tmp/serve-dry-001/SERVE (forward=true, trained=false)
+#    + weights.safetensors (init if missing)
+# Or: ./spark-serve docs/examples/spark-builder.sparkbc /tmp/serve-dry-001
+```
+
 Focused TRAIN→STEP→ARTIFACT gate: `make sparkbc-e2e` /
 `make test-sparkbc-e2e` (`tools/spark-bc-dump/run_e2e_gate.sh`,
 wrapper `scripts/sparkbc-e2e`). Compiles
@@ -230,7 +243,8 @@ make test-model-lab
 | Dry ARTIFACT / `--run-bc` train | **implemented** — fixture; **not** SGD |
 | Init safetensors from SPARK_BC | **implemented** — `trained: false` |
 | STEP-updated weights file | **implemented** (`out/train/<job>/weights.safetensors`; dry delta; `trained=false`) |
-| Trained / served / beats Claude | **not** — later owner train-grant |
+| Tiny CPU serve forward | **implemented** (`dump.py --serve` → `SERVE` with `forward=true`; `trained` from weights meta; not production) |
+| Trained / beats Claude / production LLM | **not** — later owner train-grant |
 | Cloudflare Pages deploy | Prefer Wrangler OAuth (`npx wrangler pages deploy website …`); if CLI/auth absent → **dashboard** upload of `website/` from a known SHA (see [RELEASE.md](RELEASE.md) step 5) |
 
 ## Status
@@ -251,7 +265,8 @@ make test-model-lab
 | Round-trip hello SPARK_BC | **tested** (`make test-sparkbc`) |
 | Model lab reverse/compile/modify | **tested** (`make test-model-lab`) |
 | STEP-updated weights | **implemented** (dry delta; not SGD) |
-| Trained / served / beats Claude | **not** |
+| Tiny CPU serve forward | **implemented** (`SERVE`; `forward=true`; not production) |
+| Trained / beats Claude | **not** |
 
 ## Related
 
