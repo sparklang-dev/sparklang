@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>SPARK_BC makefile targets — Spark</title>
-    <meta name="description" content="test-sparkbc, sparkbc-e2e, spark-sgd-proof, spark-eval, and related factory gates." />
+    <meta name="description" content="test-sparkbc, sparkbc-e2e, spark-sgd-proof, spark-eval, helpers, tools-test, sdk-pack, and related factory gates." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
     <link rel="stylesheet" href="/css/tokens.css?v=modelaspects040" />
@@ -50,6 +50,7 @@
                   <li><a href="/docs/serve.html">Serve</a></li>
                   <li><a href="/docs/eval.html">Eval</a></li>
                   <li><a href="/docs/sparkbc-make.html">Make targets</a></li>
+                  <li><a href="/docs/tools-helpers.html">Tools & helpers</a></li>
                   <li><a href="/docs/ci-pages.html">CI / Pages</a></li>
                   <li><a href="/docs/adoption-bar.html">Adoption bar</a></li>
                   <li><a href="/docs/ai-models.html">AI models</a></li>
@@ -89,6 +90,7 @@
         <a href="/docs/serve.html">Serve</a>
         <a href="/docs/eval.html">Eval</a>
         <a href="/docs/sparkbc-make.html" aria-current="page">Make targets</a>
+        <a href="/docs/tools-helpers.html">Tools & helpers</a>
         <a href="/docs/ci-pages.html">CI / Pages</a>
         <a href="/docs/adoption-bar.html">Adoption bar</a>
         <a href="/docs/language.html">Language</a>
@@ -150,6 +152,14 @@
         <td><code class="inline-code">make spark-serve-api</code> / <code class="inline-code">make test-serve-api</code></td>
         <td>G-lane HTTP/stdio predict + embeddings</td>
         </tr>
+        <tr>
+        <td><code class="inline-code">make helpers</code> / <code class="inline-code">make tools-test</code></td>
+        <td>K-lane helper CLIs + kit/shadow smoke</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">make sdk-pack</code> / <code class="inline-code">make dist</code></td>
+        <td>Stage <code class="inline-code">dist/spark-sdk/</code> (helpers + I overlay when present)</td>
+        </tr>
         </tbody>
         </table></div>
         <pre class="doc__pre"><code class="language-bash">make test-sparkbc
@@ -158,6 +168,8 @@
         make spark-eval
         make spark-eval-claude
         make docs-check
+        make tools-test
+        make sdk-pack
         </code></pre>
         <h2 id="build-tools">Build / tools</h2>
         <div class="doc__table-wrap"><table class="doc__table">
@@ -210,6 +222,42 @@
         </tr>
         </tbody>
         </table></div>
+        <h2 id="helpers-shadows-k-lane">Helpers / shadows (K-lane)</h2>
+        <p>See <a href="/docs/tools-helpers.html">TOOLS_HELPERS.md</a>.</p>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Path</th>
+        <th>Role</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><code class="inline-code">helpers/spark-run</code></td>
+        <td>compile → run-bc → dump</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">helpers/spark-train-proof</code></td>
+        <td>wrap <code class="inline-code">spark-sgd-proof</code> (<code class="inline-code">SCALE=1</code> → scale)</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">helpers/spark-check-env</code></td>
+        <td>env / fixture / import check</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">helpers/spark-bc-pp</code> / <code class="inline-code">spark-bc-diff</code></td>
+        <td>pretty-print / diff <code class="inline-code">.sparkbc</code></td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">helpers/spark-shadow</code></td>
+        <td>shadow copy, <code class="inline-code">build/shadow/</code>, hash verify</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">tools/spark_kit/</code></td>
+        <td>hexdump, opcode sheet, fixture lint, vocab inspect</td>
+        </tr>
+        </tbody>
+        </table></div>
         <h2 id="docs-site-regen">Docs / site regen</h2>
         <pre class="doc__pre"><code class="language-bash">make docs-html
         make docs-check
@@ -245,12 +293,17 @@
         <td><code class="inline-code">tools/spark-eval/run.py</code></td>
         <td>Eval harness</td>
         </tr>
+        <tr>
+        <td><code class="inline-code">tools/package_helpers_k.sh</code></td>
+        <td>K-lane <code class="inline-code">dist/spark-sdk/</code> stager</td>
+        </tr>
         </tbody>
         </table></div>
         <h2 id="ci">CI</h2>
         <p>GitHub Actions workflow <code class="inline-code">.github/workflows/sparkbc.yml</code> runs the
-        SPARK_BC gates on PRs. Prefer green <code class="inline-code">test-sparkbc</code> +
-        <code class="inline-code">sparkbc-e2e</code> before claiming factory docs match tip.</p>
+        SPARK_BC gates on PRs (includes <code class="inline-code">make tools-test</code> + <code class="inline-code">make sdk-pack</code>).
+        Prefer green <code class="inline-code">test-sparkbc</code> + <code class="inline-code">sparkbc-e2e</code> before claiming factory
+        docs match tip.</p>
         <h2 id="never">Never</h2>
         <ul class="doc__ul">
         <li>Claim <code class="inline-code">spark-eval</code> scores beat Claude.</li>
@@ -261,6 +314,7 @@
         <ul class="doc__ul">
         <li><a href="/docs/factory.html">FACTORY.md</a> · <a href="/docs/compile.html">COMPILE.md</a> · <a href="/docs/eval.html">EVAL.md</a></li>
         <li><a href="/docs/ci-pages.html">CI_PAGES.md</a> · <a href="/docs/train-loop.html">TRAIN_LOOP.md</a></li>
+        <li><a href="/docs/tools-helpers.html">TOOLS_HELPERS.md</a></li>
         </ul>
       </article>
       </main>

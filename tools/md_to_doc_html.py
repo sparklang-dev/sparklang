@@ -34,6 +34,7 @@ DOC_NAV = """\
         <a href="/docs/serve.html"{sv}>Serve</a>
         <a href="/docs/eval.html"{ev}>Eval</a>
         <a href="/docs/sparkbc-make.html"{mk}>Make targets</a>
+        <a href="/docs/tools-helpers.html"{th}>Tools & helpers</a>
         <a href="/docs/ci-pages.html"{ci}>CI / Pages</a>
         <a href="/docs/adoption-bar.html"{ab}>Adoption bar</a>
         <a href="/docs/language.html">Language</a>
@@ -94,6 +95,7 @@ HEADER = """\
                   <li><a href="/docs/serve.html">Serve</a></li>
                   <li><a href="/docs/eval.html">Eval</a></li>
                   <li><a href="/docs/sparkbc-make.html">Make targets</a></li>
+                  <li><a href="/docs/tools-helpers.html">Tools & helpers</a></li>
                   <li><a href="/docs/ci-pages.html">CI / Pages</a></li>
                   <li><a href="/docs/adoption-bar.html">Adoption bar</a></li>
                   <li><a href="/docs/ai-models.html">AI models</a></li>
@@ -176,6 +178,7 @@ MD_LINK_MAP = {
     "SERVE.md": "/docs/serve.html",
     "EVAL.md": "/docs/eval.html",
     "SPARKBC_MAKE.md": "/docs/sparkbc-make.html",
+    "TOOLS_HELPERS.md": "/docs/tools-helpers.html",
     "CI_PAGES.md": "/docs/ci-pages.html",
     "MODEL_LAB.md": "/docs/model-training.html",
     "ABSTAIN_HEADS.md": "/docs/abstain-heads.html",
@@ -250,7 +253,11 @@ DOC_PAGES = [
     ("mk", "SPARKBC_MAKE.md", "sparkbc-make.html",
      "SPARK_BC makefile targets",
      "test-sparkbc, sparkbc-e2e, spark-sgd-proof, spark-eval, "
-     "and related factory gates."),
+     "helpers, tools-test, sdk-pack, and related factory gates."),
+    ("th", "TOOLS_HELPERS.md", "tools-helpers.html",
+     "Tools & helpers",
+     "K-lane helpers, shadows, and spark_kit — compile/run/inspect, "
+     "shadow build, opcode sheet. Never beat Claude."),
     ("isa", "SPARK_BC.md", "spark-bc.html", "SPARK_BC ISA",
      "Spark bytecode ISA — opcodes, pools, dry-run contracts."),
     ("", "LANGUAGE.md", "language.html", "Language reference",
@@ -353,7 +360,7 @@ def render(md_path: Path, out_path: Path, title: str, description: str, current:
     body = decorate_html(body)
     keys = (
         "ab", "ai", "nn", "ide", "sh", "bc", "cp", "dc", "rd", "bm",
-        "af", "mk", "isa", "fy", "dg", "tl", "ar", "tk", "sv", "ev",
+        "af", "mk", "th", "isa", "fy", "dg", "tl", "ar", "tk", "sv", "ev",
         "ci", "ma", "vo",
     )
     nav_kwargs = {

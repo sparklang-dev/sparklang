@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tools &amp; helpers — Spark</title>
+    <meta name="description" content="K-lane helpers, shadows, and spark_kit — compile/run/inspect, shadow build, opcode sheet. Never beat Claude." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/css/tokens.css?v=modelaspects040" />
+    <link rel="stylesheet" href="/css/site.css?v=modelaspects040" />
+  </head>
+  <body class="doc-page">
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="site-brand" href="/" aria-label="Spark home">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z" fill="currentColor" />
+          </svg>
+          Spark
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+        </button>
+        <div class="header-nav-wrap">
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <ul class="nav-primary">
+              <li><a href="/learn/">Learn</a></li>
+              <li><a href="/docs/language.html">Docs</a></li>
+              <li><a href="/downloads.html">Download</a></li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">More</button>
+                <ul class="nav-more__menu" hidden>
+                  <li><a href="/docs/factory.html">Factory hub</a></li>
+                  <li><a href="/docs/model-aspects.html">Model aspects</a></li>
+                  <li><a href="/docs/voice.html">Voice / STT / TTS</a></li>
+                  <li><a href="/docs/diagrams.html">Diagrams</a></li>
+                  <li><a href="/docs/spark-builder.html">Builder</a></li>
+                  <li><a href="/docs/compile.html">Compile</a></li>
+                  <li><a href="/docs/decompile.html">Decompile</a></li>
+                  <li><a href="/docs/llm-decompile.html">LLM research</a></li>
+                  <li><a href="/docs/spark-bc.html">Opcodes / ISA</a></li>
+                  <li><a href="/docs/build-models.html">Build models</a></li>
+                  <li><a href="/docs/train-loop.html">Train loop</a></li>
+                  <li><a href="/docs/architecture.html">Architecture</a></li>
+                  <li><a href="/docs/attention-forward.html">Attention honesty</a></li>
+                  <li><a href="/docs/tokenizer.html">Tokenizer</a></li>
+                  <li><a href="/docs/serve.html">Serve</a></li>
+                  <li><a href="/docs/eval.html">Eval</a></li>
+                  <li><a href="/docs/sparkbc-make.html">Make targets</a></li>
+                  <li><a href="/docs/tools-helpers.html">Tools & helpers</a></li>
+                  <li><a href="/docs/ci-pages.html">CI / Pages</a></li>
+                  <li><a href="/docs/adoption-bar.html">Adoption bar</a></li>
+                  <li><a href="/docs/ai-models.html">AI models</a></li>
+                  <li><a href="/docs/programming-guide.html">Programming guide</a></li>
+                  <li><a href="/docs/ide.html">IDE</a></li>
+                  <li><a href="/docs/self-host.html">Contributor internals</a></li>
+                </ul>
+              </li>
+            </ul>
+            <a href="/playground.html" class="nav-cta">Try</a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <div class="shell doc-layout">
+      <aside class="doc-sidebar" aria-label="Table of contents">
+        <p class="doc-sidebar__title">On this page</p>
+        <nav id="doc-toc-list"></nav>
+      </aside>
+      <main class="doc-main">
+      <nav class="doc__nav" aria-label="Docs">
+        <a href="/learn/">Learn</a>
+        <a href="/docs/factory.html">Factory hub</a>
+        <a href="/docs/model-aspects.html">Model aspects</a>
+        <a href="/docs/voice.html">Voice</a>
+        <a href="/docs/diagrams.html">Diagrams</a>
+        <a href="/docs/spark-builder.html">Builder</a>
+        <a href="/docs/compile.html">Compile</a>
+        <a href="/docs/decompile.html">Decompile</a>
+        <a href="/docs/llm-decompile.html">LLM research</a>
+        <a href="/docs/spark-bc.html">Opcodes / ISA</a>
+        <a href="/docs/build-models.html">Build models</a>
+        <a href="/docs/train-loop.html">Train loop</a>
+        <a href="/docs/architecture.html">Architecture</a>
+        <a href="/docs/tokenizer.html">Tokenizer</a>
+        <a href="/docs/serve.html">Serve</a>
+        <a href="/docs/eval.html">Eval</a>
+        <a href="/docs/sparkbc-make.html">Make targets</a>
+        <a href="/docs/tools-helpers.html" aria-current="page">Tools & helpers</a>
+        <a href="/docs/ci-pages.html">CI / Pages</a>
+        <a href="/docs/adoption-bar.html">Adoption bar</a>
+        <a href="/docs/language.html">Language</a>
+        <a href="/docs/programming-guide.html">Programming guide</a>
+        <a href="/downloads.html">Downloads</a>
+      </nav>      <article class="doc__body">
+        <h1 id="tools-helpers-k-lane">Tools &amp; helpers (K-lane)</h1>
+        <p>Ergonomic CLIs, shadow safety, and a small downloadable kit for the
+        Spark / SparkLang SPARK_BC factory. Does <strong>not</strong> reimplement attention
+        (D) or the serve HTTP API (G). <strong>Never</strong> 6000. Does <strong>not</strong> beat Claude.</p>
+        <p>Hub: <a href="/docs/factory.html">FACTORY.md</a>. Make map: <a href="/docs/sparkbc-make.html">SPARKBC_MAKE.md</a>. Diagrams: <a href="/docs/diagrams.html">DIAGRAMS.md</a>.</p>
+        <h2 id="quick-invoke">Quick invoke</h2>
+        <pre class="doc__pre"><code class="language-bash">make helpers          # chmod + list helpers
+        make tools-test       # unit/smoke for kit + shadows
+        make sdk-pack         # stage dist/spark-sdk/ (+ I overlay)
+        ./helpers/spark-check-env
+        ./helpers/spark-run examples/spark_builder.spark
+        ./helpers/spark-bc-pp docs/examples/spark-train-step.sparkbc
+        ./helpers/spark-bc-diff a.sparkbc b.sparkbc
+        ./helpers/spark-train-proof          # make spark-sgd-proof
+        SCALE=1 ./helpers/spark-train-proof  # scale opt-in
+        ./helpers/spark-shadow build-dir
+        ./helpers/spark-shadow copy out/train/sgd-proof/weights.safetensors
+        ./helpers/spark-shadow verify ORIG SHADOW
+        </code></pre>
+        <h2 id="layout">Layout</h2>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Path</th>
+        <th>Role</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><code class="inline-code">helpers/</code></td>
+        <td>one-shot compile/run/inspect, train proof, env check, BC pp/diff, shadow CLI</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">shadows/</code></td>
+        <td>docs for <code class="inline-code">build/shadow/</code> dual-path experiments</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">tools/spark_kit/</code></td>
+        <td>hexdump, opcode sheet, fixture lint, vocab inspect, bc_diff</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">tools/spark_shadow/</code></td>
+        <td>Python behind <code class="inline-code">spark-shadow</code></td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">tools/package_helpers_k.sh</code></td>
+        <td><code class="inline-code">make sdk-pack</code> stager → <code class="inline-code">dist/spark-sdk/</code></td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">dist/spark-sdk/</code></td>
+        <td>downloadable helpers tree + <code class="inline-code">MANIFEST-helpers-k.json</code></td>
+        </tr>
+        </tbody>
+        </table></div>
+        <h2 id="tool-kit-clis">Tool kit CLIs</h2>
+        <pre class="doc__pre"><code class="language-bash">PYTHONPATH=python:tools python3 -m spark_kit.opcode_sheet
+        PYTHONPATH=python:tools python3 -m spark_kit.hexdump_bc \
+          docs/examples/spark-train-step.sparkbc
+        PYTHONPATH=python:tools python3 -m spark_kit.fixture_lint \
+          examples/fixtures/train/dataset.jsonl
+        PYTHONPATH=python:tools python3 -m spark_kit.vocab_inspect
+        PYTHONPATH=python:tools python3 -m spark_kit.bc_diff a.sparkbc b.sparkbc
+        </code></pre>
+        <h2 id="sibling-lanes">Sibling lanes</h2>
+        <ul class="doc__ul">
+        <li><strong>I</strong> (SDK/IDE/GUI pack) — K is additive <code class="inline-code">helpers/</code> + <code class="inline-code">tools/spark_*</code>;
+          <code class="inline-code">package_helpers_k.sh</code> overlays I’s <code class="inline-code">out/sdk-pack/stage/</code> when present.</li>
+        <li><strong>H/J</strong> — docs; this page is the Tools &amp; helpers section to link.</li>
+        <li><strong>D/G</strong> — not touched here.</li>
+        </ul>
+        <h2 id="honesty">Honesty</h2>
+        <ul class="doc__ul">
+        <li>Helpers wrap existing makefile / <code class="inline-code">spark-bootstrap</code> / <code class="inline-code">bc_dump</code> paths.</li>
+        <li>Shadow verify compares SHA-256 (and optional recompile).</li>
+        <li>Eval / train proofs remain measurement-only — <strong>not</strong> beat Claude.</li>
+        </ul>
+      </article>
+      </main>
+    </div>
+
+    <footer class="site-footer">
+      <div class="shell footer-inner">
+        <span>Spark programming language</span>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="/learn/">Learn</a>
+          <a href="/docs/language.html">Reference</a>
+          <a href="/downloads.html">Downloads</a>
+          <a href="/playground.html">Playground</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="/js/site.js"></script>
+  </body>
+</html>

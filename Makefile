@@ -20,7 +20,8 @@ NVML_LIB ?= /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1
 	test-sparkasm test-sparkasm-control docs-docx function-catalog \
 	playbooks-catalog spark-eval spark-eval-claude test-spark-eval \
 	spark-sgd-proof spark-sgd-proof-scale docs-html docs-check \
-	sdk-pack dist test-sdk-pack spark-bc-gui
+	sdk-pack dist test-sdk-pack spark-bc-gui \
+	helpers tools-test test-senses
 
 all: spark companions
 
@@ -33,8 +34,10 @@ spark-bc-gui: spark-bootstrap
 	PYTHONPATH=tools:python ./tools/spark_bc_gui/launch.sh
 
 # Downloadable runtime + SDK + IDE + GUI pack (out/sdk-pack/).
-sdk-pack: spark-bootstrap
+# K-lane overlay: also stage dist/spark-sdk/ helpers/shadows/kit.
+sdk-pack: spark-bootstrap helpers
 	bash ./tools/package_sdk_ide.sh
+	bash ./tools/package_helpers_k.sh
 
 dist: sdk-pack
 
@@ -48,7 +51,7 @@ test-sdk-pack: spark-bootstrap
 docs-docx:
 	python3 tools/docs_docx.py --rebuild-reference
 
-.PHONY: docs-html docs-check test-senses
+.PHONY: docs-html docs-check test-senses helpers tools-test
 docs-html:
 	python3 tools/md_to_doc_html.py --all-stale
 	mkdir -p website/docs/images
@@ -62,6 +65,18 @@ docs-check: docs-html
 test-senses:
 	PYTHONPATH=python python3 -m unittest \
 		sparklang.senses.test_senses -v
+
+# K-lane: helpers, shadows, spark_kit (enhances I-lane minimal helpers).
+helpers:
+	chmod +x helpers/spark-* tools/package_helpers_k.sh
+	@echo "helpers:"
+	@ls -1 helpers/spark-*
+	@echo "shadows: see shadows/README.md (build/shadow/)"
+	@echo "kit: tools/spark_kit/  module: tools/spark_shadow/"
+
+tools-test: helpers
+	PYTHONPATH=python:tools python3 -m unittest \
+		spark_kit.test_kit -v
 
 function-catalog:
 	python3 tools/gen_function_catalog.py

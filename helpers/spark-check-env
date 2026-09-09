@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+# Pack / check env for SparkLang SPARK_BC factory helpers.
+# Never 6000. Does not claim beat Claude.
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$ROOT"
+fail=0
+
+check() {
+  local label="$1"
+  shift
+  if "$@"; then
+    echo "OK  $label"
+  else
+    echo "FAIL $label"
+    fail=1
+  fi
+}
+
+echo "==> spark-check-env (root=$ROOT)"
+check "python3" command -v python3 >/dev/null
+check "make" command -v make >/dev/null
+check "cc" command -v cc >/dev/null
+if [[ -x "$ROOT/spark-bootstrap" ]] || [[ -x "$ROOT/bin/spark-bootstrap" ]]; then
+  echo "OK  spark-bootstrap binary"
+else
+  echo "WARN spark-bootstrap missing (run: make spark-bootstrap)"
+fi
+check "python package" test -f "$ROOT/python/sparklang/model_lab/bc_dump.py"
+check "train fixture" test -f "$ROOT/examples/fixtures/train/dataset.jsonl"
+check "example sparkbc" test -f "$ROOT/docs/examples/spark-train-step.sparkbc"
+check "helpers present" test -x "$ROOT/helpers/spark-run"
+check "spark_kit present" test -f "$ROOT/tools/spark_kit/opcode_sheet.py"
+check "shadows README" test -f "$ROOT/shadows/README.md"
+
+export PYTHONPATH="${ROOT}/python:${PYTHONPATH:-}"
+if python3 -c "from sparklang.model_lab.bc_dump import load_sparkbc" 2>/dev/null; then
+  echo "OK  import sparklang.model_lab.bc_dump"
+else
+  echo "FAIL import sparklang.model_lab.bc_dump"
+  fail=1
+fi
+
+if [[ -d "$ROOT/dist/spark-sdk" ]]; then
+  echo "OK  dist/spark-sdk/ exists"
+else
+  echo "WARN dist/spark-sdk/ absent (run: make sdk-pack)"
+fi
+
+echo "device=cpu never=rtx-pro-6000 beats_claude=false"
+exit "$fail"

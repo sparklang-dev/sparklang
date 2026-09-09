@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Diff two real .sparkbc files (hash + opcode / string summary).
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+A="${1:?usage: spark-bc-diff <a.sparkbc> <b.sparkbc>}"
+B="${2:?usage: spark-bc-diff <a.sparkbc> <b.sparkbc>}"
+export PYTHONPATH="${ROOT}/python:${ROOT}/tools:${PYTHONPATH:-}"
+exec python3 -m spark_kit.bc_diff "$A" "$B"

@@ -21,6 +21,8 @@ ISA: [SPARK_BC.md](SPARK_BC.md). Story:
 | `make test-spark-eval` | Unit gate for eval harness |
 | `make docs-html` / `make docs-check` | Regen `website/docs/*` + nav link check |
 | `make spark-serve-api` / `make test-serve-api` | G-lane HTTP/stdio predict + embeddings |
+| `make helpers` / `make tools-test` | K-lane helper CLIs + kit/shadow smoke |
+| `make sdk-pack` / `make dist` | Stage `dist/spark-sdk/` (helpers + I overlay when present) |
 
 ```bash
 make test-sparkbc
@@ -29,6 +31,8 @@ make spark-sgd-proof
 make spark-eval
 make spark-eval-claude
 make docs-check
+make tools-test
+make sdk-pack
 ```
 
 ## Build / tools
@@ -45,6 +49,19 @@ make docs-check
 | `make test-model-lab` | `examples/model_lab.spark` dry + expects |
 | `make test-bootstrap` | Bootstrap VM suite |
 | `make test-bpe-seed` | Tokenizer BPE seed (when present) |
+
+## Helpers / shadows (K-lane)
+
+See [TOOLS_HELPERS.md](TOOLS_HELPERS.md).
+
+| Path | Role |
+|------|------|
+| `helpers/spark-run` | compile → run-bc → dump |
+| `helpers/spark-train-proof` | wrap `spark-sgd-proof` (`SCALE=1` → scale) |
+| `helpers/spark-check-env` | env / fixture / import check |
+| `helpers/spark-bc-pp` / `spark-bc-diff` | pretty-print / diff `.sparkbc` |
+| `helpers/spark-shadow` | shadow copy, `build/shadow/`, hash verify |
+| `tools/spark_kit/` | hexdump, opcode sheet, fixture lint, vocab inspect |
 
 ## Docs / site regen
 
@@ -65,12 +82,14 @@ Release + Pages: [CI_PAGES.md](CI_PAGES.md) · [RELEASE.md](RELEASE.md).
 | `bootstrap/tests/run_sparkbc.sh` | Oracle compare for `test-sparkbc` |
 | `tools/spark-bc-dump/apply_step.py` | CPU SGD helper used by `spark-sgd-proof` |
 | `tools/spark-eval/run.py` | Eval harness |
+| `tools/package_helpers_k.sh` | K-lane `dist/spark-sdk/` stager |
 
 ## CI
 
 GitHub Actions workflow `.github/workflows/sparkbc.yml` runs the
-SPARK_BC gates on PRs. Prefer green `test-sparkbc` +
-`sparkbc-e2e` before claiming factory docs match tip.
+SPARK_BC gates on PRs (includes `make tools-test` + `make sdk-pack`).
+Prefer green `test-sparkbc` + `sparkbc-e2e` before claiming factory
+docs match tip.
 
 ## Never
 
@@ -82,3 +101,4 @@ SPARK_BC gates on PRs. Prefer green `test-sparkbc` +
 
 - [FACTORY.md](FACTORY.md) · [COMPILE.md](COMPILE.md) · [EVAL.md](EVAL.md)
 - [CI_PAGES.md](CI_PAGES.md) · [TRAIN_LOOP.md](TRAIN_LOOP.md)
+- [TOOLS_HELPERS.md](TOOLS_HELPERS.md)
