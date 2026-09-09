@@ -83,6 +83,7 @@
           <li><a href="/learn/first-program.html">Your First Program</a></li>
           <li><a href="/learn/ai-in-5-minutes.html">AI in 5 Minutes</a></li>
           <li><a href="/learn/build-model.html" aria-current="page">Build a Model</a></li>
+          <li><a href="/docs/spark-builder.html">Builder factory</a></li>
         </ul>
       </aside>
 
@@ -134,6 +135,22 @@
             HTTP training. Optional
             <code class="inline-code">ask</code> after train still uses
             <code class="inline-code">AI_GATEWAY_URL</code> when you want it.
+          </p>
+
+          <h2 id="spark-bc-factory">SPARK_BC factory</h2>
+          <p>
+            Beyond HTTP train jobs: Spark compiles Spark to
+            <strong>SPARK_BC</strong> (orchestration ISA, not neural weights)
+            with <code class="inline-code">TRAIN</code>
+            <code class="inline-code">0x26</code> /
+            <code class="inline-code">STEP</code>
+            <code class="inline-code">0x28</code> /
+            <code class="inline-code">TRAIN_STATUS</code>
+            <code class="inline-code">0x27</code>, then emits Spark-created
+            <strong>init</strong> safetensors. Dry fixture ≠ SGD ≠ trained.
+            GAS does not emit <code class="inline-code">.sparkbc</code>.
+            Full reproduce commands + sha256 table:
+            <a href="/docs/spark-builder.html">Builder — SPARK_BC factory</a>.
           </p>
 
           <h2 id="model-reference">Train ops (dry fixtures)</h2>

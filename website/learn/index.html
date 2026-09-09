@@ -65,6 +65,7 @@
           <li><a href="/learn/ai-in-5-minutes.html">AI in 5 Minutes</a></li>
           <li><a href="/learn/function-catalog.html">Function Catalog</a></li>
           <li><a href="/learn/build-model.html">Build a Model</a></li>
+          <li><a href="/docs/spark-builder.html">Builder factory</a></li>
         </ul>
       </aside>
 
@@ -116,6 +117,17 @@
                 model train, status, expect — interactive wizard.
               </p>
             </article>
+            <article class="card">
+              <h3 class="card__title">
+                <a href="/docs/spark-builder.html">5. Builder factory</a>
+              </h3>
+              <p class="card__body">
+                SPARK_BC seed, TRAIN/STEP/STATUS opcodes,
+                <code class="inline-code">--compile</code> /
+                <code class="inline-code">--run-bc</code>, init weights,
+                sha256 proofs. Dry ≠ trained.
+              </p>
+            </article>
           </div>
 
           <h2 id="beyond-trail">Beyond the 5-minute trail</h2>
@@ -151,8 +163,13 @@
           <h2 id="reference">Reference &amp; tools</h2>
           <ul class="doc__ul">
             <li>
-              <a href="/docs/spark-builder.html">Builder</a> — Spark compiles
-              Spark to SPARK_BC and emits init weights
+              <a href="/docs/spark-builder.html">Builder</a> — full SPARK_BC
+              factory E2E: opcodes <code class="inline-code">0x26</code> /
+              <code class="inline-code">0x28</code> /
+              <code class="inline-code">0x27</code>,
+              <code class="inline-code">--compile</code> /
+              <code class="inline-code">--run-bc</code>, init weights,
+              sha256 proofs; dry ≠ trained; GAS emit BLOCKED
             </li>
             <li>
               <a href="/docs/ai-models.html">AI models</a> — analyze, compare,

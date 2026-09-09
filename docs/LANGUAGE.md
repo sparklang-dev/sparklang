@@ -3,7 +3,8 @@
 **Programming how-to:**
 [PROGRAMMING_GUIDE.md](PROGRAMMING_GUIDE.md) ·
 **AI models (user-facing):** [AI_MODELS.md](AI_MODELS.md) ·
-**Builder / bytecode:** [SPARK_BUILDER.md](SPARK_BUILDER.md) ·
+**Builder / bytecode:** [SPARK_BUILDER.md](SPARK_BUILDER.md)
+(full E2E factory reproduce — opcodes, sha256, GAS BLOCKED) ·
 **IDE status:** [IDE.md](IDE.md) (verified
 `ide new|open|save|run|buffer|ask|show` + `ide keys` / `ide key`;
 paint = PPM wire, not a language op; show = real `spark-engine-show`)
@@ -108,7 +109,9 @@ Selfhost train seed: `selfhost/compile_train.spark` →
 `trained=false`). GAS `./spark --dry-run` runs train verbs from
 source; GAS does **not emit** `.sparkbc`. Emitting TRAIN/STEP ≠ a
 trained model. See [SPARK_BC.md](SPARK_BC.md) and
-[SPARK_BUILDER.md](SPARK_BUILDER.md).
+[SPARK_BUILDER.md](SPARK_BUILDER.md) (sha256 table + reproduce
+commands). STEP→weights is **in flight**
+(`feat/sparkbc-step-weights`), not on `main` yet.
 
 Training methodology: [MODEL_TRAINING.md](MODEL_TRAINING.md).
 Eval helpers: [MODEL_ANALYSIS.md](MODEL_ANALYSIS.md).

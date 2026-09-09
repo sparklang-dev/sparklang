@@ -172,6 +172,11 @@
         <td>Blueprint / eval sugar only; demoted on landing</td>
         </tr>
         <tr>
+        <td>SPARK_BC Builder factory</td>
+        <td><strong>done (init)</strong></td>
+        <td>Spark → <code class="inline-code">--compile</code> → <code class="inline-code">.sparkbc</code> with <code class="inline-code">TRAIN</code>/<code class="inline-code">STEP</code>/<code class="inline-code">TRAIN_STATUS</code>; bootstrap <code class="inline-code">--run-bc</code> dry fixture; Spark-created init safetensors. Dry ≠ trained. GAS emit / <code class="inline-code">--run-bc</code> <strong>BLOCKED</strong>. STEP→weights <strong>in flight</strong>. Later train aims to beat Claude — not claimed today. Page: <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> / <code class="inline-code">/docs/spark-builder.html</code></td>
+        </tr>
+        <tr>
         <td>Production receptionist workflow</td>
         <td><strong>goal</strong></td>
         <td><code class="inline-code">examples/receptionist_goal.spark</code> marked <code class="inline-code">[goal]</code> — dry sketch, not a live claim</td>

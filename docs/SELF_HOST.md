@@ -223,6 +223,12 @@ Never auto-escalate to Opus / `judge`. Do not retarget Bifrost CEL.
 make test-sparkbc
 make sparkbc-e2e   # TRAIN→STEP→ARTIFACT (dry; not SGD)
 
+# Builder factory (TRAIN/STEP dry) — docs/SPARK_BUILDER.md
+./spark-bootstrap --compile examples/spark_train_step.spark \
+  -o docs/examples/spark-train-step.sparkbc
+./spark-bootstrap --run-bc docs/examples/spark-train-step.sparkbc
+# ARTIFACT under out/train/job-dry-001/ — trained=false; not SGD
+
 # Phase 2 — lex on B (same goldens as ./selfhost/spark-lex)
 ./spark-bootstrap --lex selfhost/fixtures/mini.spark
 make test-selfhost-lex

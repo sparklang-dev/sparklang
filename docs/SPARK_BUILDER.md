@@ -1,63 +1,99 @@
 # Builder — SPARK_BC factory
 
-Spark compiles Spark to **SPARK_BC**. The same factory emits:
+Engineer reproduction guide. A stranger with this repo and a built
+`./spark-bootstrap` + `./spark` can re-create every published artifact
+from the commands below. Do not invent hashes — cite `sha256sum` of
+files under `docs/examples/`.
 
-1. **Orchestration + training program** — opcodes in the `.sparkbc`
-   (including `TRAIN` / `STEP` / `TRAIN_STATUS`)
-2. **Init weights** — Spark-created safetensors derived from those
-   bytes
+## What Spark emits (two different things)
 
-The seed is our instruction binary, not an imported checkpoint.
+| Artifact | What it is | What it is **not** |
+|----------|------------|---------------------|
+| **SPARK_BC** (`.sparkbc`) | Orchestration **ISA** — packed magic `SPBC`, string/const pools, opcode stream (`MODEL` / `ASK` / `PRINT` / `TRAIN` / `STEP` / `TRAIN_STATUS` / `HALT`, …) | Neural weights, a tensor ISA, HuggingFace, CUDA kernels |
+| **Init safetensors** | Spark-created tensors **derived from** those bytecode bytes (Xavier / fan-in; embed rows mix in magic + opcodes + strings) | A trained model, SGD output, an imported Claude / Grok / hub checkpoint |
 
-**ISA:** [SPARK_BC.md](SPARK_BC.md). Bytecode is not neural weights
-and not a second tensor ISA.
+Bytecode is the **training program + orchestration**. Tensors today are
+**init only** (`trained: false`). Emitting `TRAIN` / `STEP` ≠ trained.
+Dry ≠ SGD ≠ trained. Later owner-granted train (not the 6000) aims to
+**beat Claude**. Do not import Claude or Grok weights.
 
-Honest today: **init / Spark-created**. Not trained. Not served.
-Emitting a train segment ≠ a trained model. Later train (owner
-grant, not the 6000) aims to beat **Claude**. Do not import Claude
-or Grok weights.
+**ISA SoT:** [SPARK_BC.md](SPARK_BC.md).
 
-## Pipeline (implemented)
+## Factory story (end-to-end)
 
-1. Compiler seed: `selfhost/compile.spark`. Train slice seed:
-   `selfhost/compile_train.spark`. Builder program (includes
-   `model train` / `model status`): `examples/spark_builder.spark`.
-   Loop tick (`model step`): `examples/spark_train_step.spark`
-   → TRAIN → STEP → TRAIN_STATUS in one stream.
-2. Compile → real SPARK_BC, including train ops:
+1. **Seed programs** — compiler slice, train slice, builder, STEP proof,
+   optional model lab (see [Programs](#programs)).
+2. **`--compile`** — only `./spark-bootstrap --compile … -o ….sparkbc`
+   writes SPARK_BC. That is the factory emit path.
+3. **Opcodes in the binary** — `TRAIN` `0x26`, `TRAIN_STATUS` `0x27`,
+   `STEP` `0x28` (plus `MODEL` / `ASK` / `PRINT` / `HALT` as needed).
+4. **`--run-bc`** — `./spark-bootstrap --run-bc ….sparkbc` executes those
+   train opcodes as a **dry fixture** (`trained=false`, `ARTIFACT` under
+   `out/train/<job>/`). Dry ≠ trained.
+5. **GAS dry-run vs emit** — `./spark --dry-run file.spark` runs train
+   verbs from **source**. GAS does **not emit** `.sparkbc`.
+   `./spark --run-bc` is **BLOCKED** (exit 1). Use bootstrap.
+6. **Dump + init weights** — hex/mnemonic dump of the real file; emit
+   `spark-self.init.safetensors` from those bytes (no HF load).
+7. **Later beat Claude** — owner train-grant path. **Not today.**
+
+**Learn trail:** [/learn/](/learn/) →
+[Build a Model](/learn/build-model.html) →
+[/docs/spark-builder.html](/docs/spark-builder.html).
+
+## Opcodes (train family)
+
+From [SPARK_BC.md](SPARK_BC.md) / [LANGUAGE.md](LANGUAGE.md). Operands
+are `u16` little-endian constant-pool indices.
+
+| Byte | Mnemonic | LANGUAGE form | Operands | Dry behavior |
+|------|----------|---------------|----------|--------------|
+| `0x26` | `TRAIN` | `model train` / `model build` | dataset, base, out, method, bind | `[model] {dry train JSON}`; writes `ARTIFACT` under `out/train/<job>/`; `trained=false` |
+| `0x27` | `TRAIN_STATUS` | `model status` | job_id, bind | `[model] {dry status JSON}` |
+| `0x28` | `STEP` | `model step "job-id" -> bind` | job_id, bind | `[model] {dry step JSON}`; updates `ARTIFACT` `step_n` |
+
+`backend` is parsed and skipped (HTTP companion); not a BC operand.
+Dry fixture implementation: `bootstrap/dry_train.c`. Execute with
+`./spark-bootstrap --run-bc`. GAS `./spark --run-bc` is **BLOCKED**.
+
+## Programs
+
+| Source | Role | Published `.sparkbc` |
+|--------|------|----------------------|
+| `selfhost/compile.spark` | Compiler seed (MODEL / ASK / PRINT / HALT) | `docs/examples/spark-self.sparkbc` |
+| `selfhost/compile_train.spark` | Selfhost train seed (`TRAIN` + `TRAIN_STATUS`) | `docs/examples/spark-selfhost-train.sparkbc` |
+| `examples/spark_builder.spark` | Builder program (`train` + `status`) | `docs/examples/spark-builder.sparkbc` |
+| `examples/spark_train_step.spark` | STEP proof (`TRAIN` → `STEP` → `TRAIN_STATUS`) | `docs/examples/spark-train-step.sparkbc` |
+| `examples/model_lab.spark` | Lab: reverse / compile / train / modify + abstain (GAS-first for reverse/compile/modify) | *(no published lab `.sparkbc` — C `--compile` of lab verbs fails loud; use `make test-model-lab`)* |
+
+## Reproduce from a clean tree
+
+Requires: `make` (or at least `spark-bootstrap` + `spark`), Python 3 for
+the dump tool.
+
+### 1) Compile → published paths
 
 ```bash
 ./spark-bootstrap --compile examples/spark_builder.spark \
   -o docs/examples/spark-builder.sparkbc
-```
 
-Compiler-seed slice (MODEL / ASK / PRINT / HALT only):
-
-```bash
 ./spark-bootstrap --compile selfhost/compile.spark \
   -o docs/examples/spark-self.sparkbc
-```
 
-Selfhost seed **with** train ops (`TRAIN` / `TRAIN_STATUS`):
-
-```bash
 ./spark-bootstrap --compile selfhost/compile_train.spark \
   -o docs/examples/spark-selfhost-train.sparkbc
-```
 
-STEP proof stream (`TRAIN` → `STEP` → `TRAIN_STATUS`):
-
-```bash
 ./spark-bootstrap --compile examples/spark_train_step.spark \
   -o docs/examples/spark-train-step.sparkbc
 ```
 
-Published proof:
-[spark-train-step.sparkbc](examples/spark-train-step.sparkbc)
-(sha256
-`d08925b52bf8c840de626c9cfec619d4dbae5a674b94bb8c7c5837eb1ac64551`).
+Verify bytes match the published hashes (see [Published files](#published-files--sha256)):
 
-3. Dump hex + decode, then emit weights from **those** bytes:
+```bash
+sha256sum docs/examples/spark-*.sparkbc
+```
+
+### 2) Dump hex + decode (+ init weights from compiler seed)
 
 ```bash
 PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
@@ -68,6 +104,13 @@ PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
   -o docs/examples/spark-builder-bc.txt
 
 PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
+  docs/examples/spark-train-step.sparkbc \
+  --source examples/spark_train_step.spark \
+  --command './spark-bootstrap --compile examples/spark_train_step.spark -o docs/examples/spark-train-step.sparkbc' \
+  --label 'Train-step SPARK_BC (TRAIN → STEP → TRAIN_STATUS)' \
+  -o docs/examples/spark-train-step-bc.txt
+
+PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
   docs/examples/spark-self.sparkbc \
   --source selfhost/compile.spark \
   --command './spark-bootstrap --compile selfhost/compile.spark -o docs/examples/spark-self.sparkbc' \
@@ -75,73 +118,101 @@ PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
   -o docs/examples/spark-self-builder.json
 ```
 
-`asm/spark.s` is the GAS VM (ELF). `./spark --dry-run` **executes**
-train verbs from `.spark` source. GAS does **not emit** `.sparkbc`
-(**BLOCKED** — use bootstrap `--compile`).
+Site mirrors of dumps live under `website/docs/examples/`. Copy
+txt/json dumps there when regenerating the site; do not invent hex.
 
-## Bytecode dump
+### 3) Execute bytecode (dry fixture)
 
-Published: [spark-builder-bc.txt](examples/spark-builder-bc.txt)
-(TRAIN in the stream),
-[spark-self-bc.txt](examples/spark-self-bc.txt) (compiler seed),
-and [spark-selfhost-train.sparkbc](examples/spark-selfhost-train.sparkbc)
-(`selfhost/compile_train.spark`).
+```bash
+./spark-bootstrap --run-bc docs/examples/spark-builder.sparkbc
+./spark-bootstrap --run-bc docs/examples/spark-train-step.sparkbc
+# Expect dry JSON + ARTIFACT under out/train/job-dry-001/
+# trained=false; STEP bumps step_n. Not SGD.
+ls -la out/train/job-dry-001/ARTIFACT
+```
 
-- Magic `SPBC`, version 1, string pool, const pool, opcode stream
-- Hex from `xxd` of the compiled file — not invented
-- Builder ops: `MODEL` `ASK` `PRINT` `TRAIN` `STEP` `TRAIN_STATUS`
-  `HALT`
-- `TRAIN` is opcode **`0x26`**. `TRAIN_STATUS` is **`0x27`**.
-  Loop tick `STEP` is **`0x28`** — syntax
-  `model step "job-id" -> bind` (see
-  [spark-train-step.sparkbc](examples/spark-train-step.sparkbc)).
+### 4) GAS source dry-run (not bytecode emit)
 
 ```bash
 ./spark --dry-run examples/spark_builder.spark
-./spark-bootstrap --run-bc docs/examples/spark-builder.sparkbc
-./spark-bootstrap --run-bc docs/examples/spark-train-step.sparkbc
-make sparkbc-e2e   # compile → dump TRAIN/STEP → --run-bc → ARTIFACT
+./spark --dry-run examples/spark_train_step.spark
+./spark --dry-run examples/model_lab.spark
 ```
 
-`./spark-bootstrap --run-bc` **executes** train opcodes from the
-binary: `TRAIN` (`0x26`), optional `STEP` (`0x28`), then
-`TRAIN_STATUS` (`0x27`). Dry JSON plus an `ARTIFACT` marker under
-`out/train/<job>/` (STEP updates `step_n`). That is a **dry fixture**
-(`trained=false`), not SGD and not a trained model. Dry ≠ trained.
-`make sparkbc-e2e` is the focused proof for the STEP stream
-(ARTIFACT + opcode order). It does **not** require a STEP-updated
-weights file — that is a follow-on on `feat/sparkbc-step-weights`.
-
-GAS `./spark` has **no SPARK_BC emit path** and **no** `--run-bc`.
-Proof (must fail):
+### 5) GAS BLOCKED paths (must fail)
 
 ```bash
 ./spark --run-bc docs/examples/spark-builder.sparkbc
 # exits 1: need --dry-run|--live <file.spark>
+# GAS has no SPARK_BC emit and no --run-bc.
 ```
 
-GAS still runs `model train` from **`.spark` source**
-(`./spark --dry-run examples/spark_builder.spark`). That is not
-bytecode execution and does not write a `.sparkbc`.
+### 6) Automated gates already on main
 
-`model_lab.spark` lab verbs (`reverse` / `compile` / `modify`) stay
-**GAS-first** — no SPARK_BC opcode yet. C `--compile` of that file
-fails loud. Train **does** run from SPARK_BC on bootstrap.
+```bash
+make test-sparkbc      # compile → --run-bc body vs GAS dry (oracle)
+make test-model-lab    # examples/model_lab.spark dry + expects
+make sparkbc-e2e       # TRAIN→STEP→ARTIFACT focused gate
+# alias: make test-sparkbc-e2e
+```
 
-## Weights
+Focused TRAIN→STEP→ARTIFACT gate: `make sparkbc-e2e` /
+`make test-sparkbc-e2e` (`tools/spark-bc-dump/run_e2e_gate.sh`,
+wrapper `scripts/sparkbc-e2e`). Compiles
+`examples/spark_train_step.spark`, dumps TRAIN/STEP decode, runs
+`./spark-bootstrap --run-bc` dry, asserts
+`out/train/job-dry-001/ARTIFACT` (`not_sgd=true`, `trained=false`,
+`step_n=1`). Not SGD. STEP-updated weights remain a follow-on
+(`feat/sparkbc-step-weights`).
 
-`docs/examples/spark-self.init.safetensors` — **Spark-created init**.
+## Published files — sha256
 
-- Named control-model tensors: `embed`, per-layer `q/k/v/o`,
-  `mlp_up/gate/down`, RMS-style `*.norm.weight`, `lm_head`
-- Shapes from SPARK_BC (`ncode`, string count) — small on purpose
-- Xavier / fan-in scale
-- Embed rows mix in the real bytecode (magic, opcodes, strings)
-- Written by our safetensors packer — no HuggingFace load
-- **No imported weights** — not Claude, Grok, or a hub checkpoint
+Hashes from `sha256sum` on disk at doc authoring time (`51e4dbd` tree).
+Re-run `sha256sum` after recompile; mismatch means drift — update this
+table from disk, do not invent.
 
-**trained: false.** Not a foundation model. The training **program**
-is in the `.sparkbc`; the tensors are still init.
+| File | sha256 |
+|------|--------|
+| [spark-builder.sparkbc](examples/spark-builder.sparkbc) | `e89b27c86618cbbb87d2d59209fb5c0450c0513105c88c622de367f3a8e29f9a` |
+| [spark-self.sparkbc](examples/spark-self.sparkbc) | `a33f3232752c2fdd75db728773cb589a4eaf8e0bb70ac2539d2519b2dc7df6e8` |
+| [spark-selfhost-train.sparkbc](examples/spark-selfhost-train.sparkbc) | `0b524a96338e13c75efd431853ca33cc8ef227483d3ead0fbb56342da23f9d2b` |
+| [spark-train-step.sparkbc](examples/spark-train-step.sparkbc) | `d08925b52bf8c840de626c9cfec619d4dbae5a674b94bb8c7c5837eb1ac64551` |
+| [spark-builder-bc.txt](examples/spark-builder-bc.txt) | `dab100c553b8e9f0fc22a3dec02add952d53716566934326a2900364a66610bd` |
+| [spark-self-bc.txt](examples/spark-self-bc.txt) | `f9d0021a839c050d37338c2397ab1bd9f2794713ba08f9dfbbfb0e584ce52716` |
+| [spark-train-step-bc.txt](examples/spark-train-step-bc.txt) | `6b603e771bb621e3a0534b1c2501867da1bbae286c7104186f7d7d7c7f636036` |
+| [spark-self.init.safetensors](examples/spark-self.init.safetensors) | `60b9b7297cb5e2d8362702144a9d9c15487e65dd11783ba7d499499b500198cf` |
+| [spark-self-builder.json](examples/spark-self-builder.json) | `44fb6a04e174c562a2dd7efab7307f4500bf8dc91675b3325c9a4aff39e02623` |
+
+## Model lab (in tree)
+
+Flagship: `examples/model_lab.spark` — reverse / inspect → compile plan →
+train → modify (`keep_existing`) → abstain / SoT. Runbook:
+[MODEL_LAB.md](MODEL_LAB.md).
+
+```bash
+./spark --dry-run examples/model_lab.spark
+make test-model-lab
+```
+
+- `model reverse` / `inspect` — local `config.json` + safetensors **index**
+  names only (no tensor body load; no closed-weight theft).
+- `model compile` — SPARK_BC **plan** for the `.spark` program (dry stub
+  under `out/lab/`). Real bytes: `./spark-bootstrap --compile`.
+- `model modify` — attach only; `keep_special_training: true`.
+- Lab verbs stay **GAS-first** (no SPARK_BC opcode yet for reverse /
+  compile / modify). Train **does** encode as `0x26` / `0x27` / `0x28`.
+
+## Gaps / BLOCKED / later
+
+| Item | Status |
+|------|--------|
+| GAS emit `.sparkbc` | **BLOCKED** — use `./spark-bootstrap --compile` |
+| GAS `./spark --run-bc` | **BLOCKED** — exit 1; use bootstrap |
+| Dry ARTIFACT / `--run-bc` train | **implemented** — fixture; **not** SGD |
+| Init safetensors from SPARK_BC | **implemented** — `trained: false` |
+| STEP-updated weights file | **planned / in flight** (`feat/sparkbc-step-weights`) — not on `main` yet |
+| Trained / served / beats Claude | **not** — later owner train-grant |
+| Cloudflare Pages deploy | Prefer Wrangler OAuth (`npx wrangler pages deploy website …`); if CLI/auth absent → **dashboard** upload of `website/` from a known SHA (see [RELEASE.md](RELEASE.md) step 5) |
 
 ## Status
 
@@ -149,17 +220,17 @@ is in the `.sparkbc`; the tensors are still init.
 |-------|--------|
 | Compile Spark → SPARK_BC | **implemented** (`--compile`) |
 | Train / step / status ops in the binary | **implemented** (`0x26` / `0x28` / `0x27`) |
-| Selfhost train seed `.sparkbc` | **implemented** (`compile_train.spark` → `spark-selfhost-train.sparkbc`) |
-| STEP proof stream TRAIN→STEP→TRAIN_STATUS | **implemented** (`spark_train_step.spark` → `spark-train-step.sparkbc`) |
-| Execute TRAIN / STEP from published `.sparkbc` | **implemented** (`./spark-bootstrap --run-bc`; dry; `trained=false`) |
+| Selfhost train seed `.sparkbc` | **implemented** (`compile_train.spark`) |
+| STEP proof stream TRAIN→STEP→TRAIN_STATUS | **implemented** (`spark_train_step.spark`) |
+| Execute TRAIN / STEP from published `.sparkbc` | **implemented** (`--run-bc`; dry; `trained=false`) |
 | Focused e2e gate (compile→dump→run-bc→ARTIFACT) | **implemented** (`make sparkbc-e2e` / `make test-sparkbc-e2e`) |
 | GAS `./spark --dry-run` train verbs | **implemented** (source, not bytecode) |
-| GAS emit `.sparkbc` / `--run-bc` | **BLOCKED** (use bootstrap `--compile` / `--run-bc`) |
-| Dry ARTIFACT from TRAIN | **implemented** (fixture; not SGD) |
-| Hex dump + decode | **implemented** |
+| GAS emit `.sparkbc` / `--run-bc` | **BLOCKED** |
+| Hex dump + decode | **implemented** (`tools/spark-bc-dump/dump.py`) |
 | Emit init weights from those bytes | **implemented** (init only) |
-| STEP-updated weights file | **follow-on** (`feat/sparkbc-step-weights`; not this gate) |
-| Round-trip hello SPARK_BC | **tested against oracle** (`make test-sparkbc`) |
+| Round-trip hello SPARK_BC | **tested** (`make test-sparkbc`) |
+| Model lab reverse/compile/modify | **tested** (`make test-model-lab`) |
+| STEP-updated weights | **follow-on** (`feat/sparkbc-step-weights`) |
 | Trained / served / beats Claude | **not** |
 
 ## Related
@@ -172,4 +243,5 @@ is in the `.sparkbc`; the tensors are still init.
 - [LANGUAGE.md](LANGUAGE.md)
 - [SELF_HOST.md](SELF_HOST.md)
 - [MODEL_TRAINING.md](MODEL_TRAINING.md)
-- [RELEASE.md](RELEASE.md) (Pages deploy CLI)
+- [ADOPTION_BAR.md](ADOPTION_BAR.md)
+- [RELEASE.md](RELEASE.md)

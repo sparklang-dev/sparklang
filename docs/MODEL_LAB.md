@@ -53,9 +53,11 @@ Real SPARK_BC bytes: `./spark-bootstrap --compile file.spark -o out.sparkbc`
 ([SELF_HOST.md](SELF_HOST.md)). Dry `model compile` writes a plan stub
 under `out/lab/`.
 
-Factory (SPARK_BC dump + Spark-created init weights):
-[SPARK_BUILDER.md](SPARK_BUILDER.md). Seed is Spark compiling Spark.
-Later train aims to beat Claude. Not trained today.
+Factory (SPARK_BC dump + Spark-created init weights + TRAIN/STEP
+opcodes): [SPARK_BUILDER.md](SPARK_BUILDER.md) — full E2E reproduce
+commands, published sha256 table, GAS BLOCKED, dry ≠ trained.
+Seed is Spark compiling Spark. Later train aims to beat Claude.
+Not trained today. STEP→weights is a follow-on lane.
 
 Focused TRAIN→STEP→TRAIN_STATUS proof:
 

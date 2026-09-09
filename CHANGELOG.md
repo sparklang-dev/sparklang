@@ -6,6 +6,26 @@ language) are listed here. Site and installers track
 
 ## 0.6.27 — 2026-09-08
 
+- **SPARK_BC factory docs (full E2E):** Engineer reproduction guide so
+  a stranger can rebuild every published artifact from docs alone —
+  SPARK_BC vs neural weights, opcodes `TRAIN` `0x26` /
+  `TRAIN_STATUS` `0x27` / `STEP` `0x28`, programs
+  (`selfhost/compile.spark`, `compile_train.spark`,
+  `examples/spark_builder.spark`, `spark_train_step.spark`,
+  `model_lab.spark`), `--compile` / `--run-bc` / GAS `--dry-run` /
+  dump / `make test-sparkbc` / `make test-model-lab` /
+  `make sparkbc-e2e`, sha256 table for published `docs/examples/*`,
+  GAS emit/`--run-bc` **BLOCKED**, dry ≠ SGD ≠ trained,
+  STEP→weights **in flight** (`feat/sparkbc-step-weights`), Pages
+  deploy = Wrangler OAuth preferred + CF dashboard fallback when
+  CLI/auth absent. Site: regen `website/docs/*` via
+  `tools/md_to_doc_html.py --all-stale`; Learn + homepage link
+  Builder; CHANGELOG.html mirrored. Pages:
+  [SPARK_BUILDER.md](docs/SPARK_BUILDER.md) /
+  `/docs/spark-builder.html`, [SPARK_BC.md](docs/SPARK_BC.md),
+  [RELEASE.md](docs/RELEASE.md) step 5,
+  [ADOPTION_BAR.md](docs/ADOPTION_BAR.md),
+  [ROADMAP.md](docs/ROADMAP.md).
 - **SPARK_BC e2e gate:** `make sparkbc-e2e` / `make test-sparkbc-e2e`
   (`tools/spark-bc-dump/run_e2e_gate.sh`, wrapper
   `scripts/sparkbc-e2e`). Compiles

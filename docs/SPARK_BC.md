@@ -328,24 +328,37 @@ Code bytes:
 
 ## Builder (Spark-created binary + weights)
 
+**SPARK_BC is the orchestration ISA — not neural weights.** Full
+engineer reproduction (programs, commands, sha256 table, GAS
+BLOCKED, model lab, Pages deploy): [SPARK_BUILDER.md](SPARK_BUILDER.md).
+
 Spark compiling Spark: `selfhost/compile.spark` →
-`docs/examples/spark-self.sparkbc`. Train slice:
-`selfhost/compile_train.spark` →
+`docs/examples/spark-self.sparkbc` (sha256
+`a33f3232752c2fdd75db728773cb589a4eaf8e0bb70ac2539d2519b2dc7df6e8`).
+Train slice: `selfhost/compile_train.spark` →
 `docs/examples/spark-selfhost-train.sparkbc` (`TRAIN` /
-`TRAIN_STATUS` in the binary). STEP proof stream:
-`examples/spark_train_step.spark` →
+`TRAIN_STATUS`; sha256
+`0b524a96338e13c75efd431853ca33cc8ef227483d3ead0fbb56342da23f9d2b`).
+Builder: `examples/spark_builder.spark` →
+`docs/examples/spark-builder.sparkbc` (sha256
+`e89b27c86618cbbb87d2d59209fb5c0450c0513105c88c622de367f3a8e29f9a`).
+STEP proof: `examples/spark_train_step.spark` →
 `docs/examples/spark-train-step.sparkbc` (`TRAIN` → `STEP`
 `0x28` → `TRAIN_STATUS`; sha256
 `d08925b52bf8c840de626c9cfec619d4dbae5a674b94bb8c7c5837eb1ac64551`).
+Dumps: [spark-builder-bc.txt](examples/spark-builder-bc.txt),
+[spark-self-bc.txt](examples/spark-self-bc.txt),
+[spark-train-step-bc.txt](examples/spark-train-step-bc.txt).
+Init weights from those bytes:
+`docs/examples/spark-self.init.safetensors` (sha256
+`60b9b7297cb5e2d8362702144a9d9c15487e65dd11783ba7d499499b500198cf`).
 Focused e2e: `make sparkbc-e2e` (compile → dump TRAIN/STEP →
 `--run-bc` dry → assert `ARTIFACT`; not SGD; weights follow-on).
-Dump: [spark-self-bc.txt](examples/spark-self-bc.txt).
 Factory page: [SPARK_BUILDER.md](SPARK_BUILDER.md).
-The language also emits **init weights** from those bytes
-(`docs/examples/spark-self.init.safetensors`). Not trained.
-Emitting TRAIN/STEP ≠ trained. Dry ≠ trained. Later train aims
-to beat Claude. GAS does not emit `.sparkbc` — use bootstrap
-`--compile`.
+Not trained. Emitting TRAIN/STEP ≠ trained. Dry ≠ SGD ≠ trained.
+STEP→weights **in flight**. Later train aims to beat Claude. GAS
+does not emit `.sparkbc` — use bootstrap `--compile`.
+`./spark --run-bc` is **BLOCKED**.
 
 ## Out of scope (do not add)
 
