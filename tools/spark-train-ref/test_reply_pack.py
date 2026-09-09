@@ -10,7 +10,11 @@ _REF = Path(__file__).resolve().parent
 if str(_REF) not in sys.path:
     sys.path.insert(0, str(_REF))
 
-from reply_pack import load_reply_rows, train_reply_pack  # noqa: E402
+from reply_pack import (  # noqa: E402
+    load_reply_rows,
+    reply_or_idk,
+    train_reply_pack,
+)
 
 ROOT = Path(__file__).resolve().parents[2]
 GOOD = ROOT / "examples/fixtures/train/reply_pack.jsonl"
@@ -52,6 +56,15 @@ def main() -> int:
         if '"overlay_voice_on_text_base": true' not in replies:
             print("FAIL: overlay_voice_on_text_base")
             return 1
+    if reply_or_idk("Who is the mayor of Springfield?") != "I don't know.":
+        print("FAIL: reply_or_idk should IDK")
+        return 1
+    if reply_or_idk("hi") is not None:
+        print("FAIL: greeting should route")
+        return 1
+    if reply_or_idk("what are your hours", sot_ok=True) is not None:
+        print("FAIL: sot_ok should route")
+        return 1
     print("PASS spark_reply_pack")
     return 0
 

@@ -192,7 +192,8 @@
         is rejected. Prefer <code class="inline-code">SPARK_GATEWAY_KEY</code>;
         <code class="inline-code">OPENAI_API_KEY</code> is wire-compat only. Public tunnel uses a probe credential; HTTP 401 → credential unavailable (no invented routing).
         <code class="inline-code">make test</code> never hits the network; <code class="inline-code">make test-ask-gateway</code> is offline
-        <code class="inline-code">--dry</code> on the companion.</p>
+        <code class="inline-code">--dry</code> on the companion. Inventable live/dry prompts
+        <strong>IDK</strong> unless <code class="inline-code">--sot-ok</code>.</p>
         <p><strong>Accounting:</strong> dry-run prints
         <code class="inline-code">[accounting] latency_ms=0 … note=dry-run</code> (zeros; never invents
         tokens). Live <code class="inline-code">./spark-ask-http</code> prints wall-clock <code class="inline-code">latency_ms</code>

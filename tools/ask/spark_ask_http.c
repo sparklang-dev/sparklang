@@ -20,6 +20,8 @@
 #include <time.h>
 #include <unistd.h>
 
+#include "bootstrap/ground_or_idk.h"
+
 
 #define MAX_BODY (1 << 20)
 #define MAX_PROMPT (1 << 18)
@@ -804,10 +806,14 @@ static void usage(void)
 		"(OPENAI_API_KEY = wire-compat only)\n"
 		"--dry: no network; print model; no key\n"
 		"--stream: SSE token deltas (live); dry prints stream=1\n"
+		"--sot-ok: inventable facts already grounded (SoT)\n"
+		"--no-ground: opt out of default ground-or-IDK\n"
 		"--rollup: print [accounting-run] from account jsonl "
 		"(no network)\n"
 		"--account-file PATH / SPARK_ACCOUNT_FILE "
-		"(default /tmp/spark-ask-account.jsonl)\n");
+		"(default /tmp/spark-ask-account.jsonl)\n"
+		"Env: SPARK_ASK_GROUND=0 opt out; SPARK_ASK_SOT_OK=1 "
+		"same as --sot-ok; SPARK_ASK_IDK IDK string\n");
 	exit(2);
 }
 
@@ -831,6 +837,28 @@ static void print_accounting(const char *json, int dry, long latency_ms,
 		printf("[accounting] note=no usage field in gateway "
 		       "response\n");
 	append_account(acct, latency_ms, pt, ct, tt);
+}
+
+static void emit_grounded_idk(const char *out_path)
+{
+	const char *idk = spark_idk_text();
+	size_t n;
+	FILE *of;
+
+	fputs(idk, stdout);
+	n = strlen(idk);
+	if (n == 0 || idk[n - 1] != '\n')
+		fputc('\n', stdout);
+	printf("[ask-http] grounded=idk reason=no_sot\n");
+	if (out_path) {
+		of = fopen(out_path, "wb");
+		if (!of)
+			die("cannot write --out");
+		fputs(idk, of);
+		if (n == 0 || idk[n - 1] != '\n')
+			fputc('\n', of);
+		fclose(of);
+	}
 }
 
 static const char *resolve_model(const char *model, const char *prompt)
@@ -864,6 +892,7 @@ int main(int argc, char **argv)
 	char content[MAX_RESP];
 	struct url_parts u;
 	int i, status, n, dry = 0, stream = 0, rollup = 0;
+	int sot_ok = 0, no_ground = 0;
 	const char *acct_cli = NULL;
 	const char *json_part;
 	FILE *of;
@@ -885,6 +914,10 @@ int main(int argc, char **argv)
 			acct_cli = argv[++i];
 		else if (strcmp(argv[i], "--dry") == 0)
 			dry = 1;
+		else if (strcmp(argv[i], "--sot-ok") == 0)
+			sot_ok = 1;
+		else if (strcmp(argv[i], "--no-ground") == 0)
+			no_ground = 1;
 		else if (strcmp(argv[i], "--stream") == 0)
 			stream = 1;
 		else if (strcmp(argv[i], "--rollup") == 0)
@@ -914,8 +947,19 @@ int main(int argc, char **argv)
 			       : "http://127.0.0.1:4000");
 		printf("[ask-http] dry prompt_bytes=%zu stream=%d\n",
 		       strlen(prompt), stream);
+		if (!no_ground && spark_ground_should_idk(prompt, sot_ok))
+			emit_grounded_idk(out_path);
 		printf("[ask-http] dry ok (no network)\n");
 		print_accounting(NULL, 1, 0, acct_cli);
+		free(prompt_owned);
+		return 0;
+	}
+
+	if (!no_ground && spark_ground_should_idk(prompt, sot_ok)) {
+		emit_grounded_idk(out_path);
+		printf("[accounting] latency_ms=0 prompt_tokens=0 "
+		       "completion_tokens=0 total_tokens=0 "
+		       "note=grounded-idk\n");
 		free(prompt_owned);
 		return 0;
 	}

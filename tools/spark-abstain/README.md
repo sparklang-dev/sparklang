@@ -45,11 +45,14 @@ See [docs/ABSTAIN_HEADS.md](../../docs/ABSTAIN_HEADS.md).
   --weights out/heads/abstain.pt \
   --out /path/to/hf-model/spark_abstain_manifest.json
 
-# Live ask: synthetic hidden (CI) or HF when SPARK_ABSTAIN_HF=1
+# Live ask: outer verify-or-refuse is ON by default (IDK without SoT)
 ./spark-abstain --live ask \
   --prompt "What is gravity?" \
   --weights out/heads/abstain.pt \
   --hidden /tmp/hidden.pt
+# Inventable → IDK unless --sot-ok (or SPARK_ASK_SOT_OK=1)
+./spark-abstain --live ask \
+  --prompt "Who is the mayor of Springfield?"
 SPARK_ABSTAIN_STUB=1 ./spark-abstain --live ask \
   --prompt "Who is the mayor of Springfield?"
 

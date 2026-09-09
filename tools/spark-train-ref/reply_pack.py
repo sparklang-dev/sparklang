@@ -10,7 +10,6 @@ Artifacts: replies.json + gate.json + router.pt + checkpoint.json.
 from __future__ import annotations
 
 import json
-import re
 import time
 from pathlib import Path
 from typing import Any
@@ -19,23 +18,9 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-from common import tokenize, write_marker
+from common import looks_inventable, tokenize, write_marker
 
 METHOD = "spark_reply_pack"
-_PRICE = re.compile(r"\$\s*\d|\d+\.\d{2}")
-_PHONE = re.compile(r"\b\d{3}[-.\s]?\d{3}[-.\s]?\d{4}\b")
-_INVENTABLE = (
-    "mayor of",
-    "who is the current",
-    "price at",
-    "dryer start",
-    "card balance",
-    "serial number",
-    "right now",
-    "hours",
-    "open until",
-    "how much",
-)
 
 CHANNELS = ("text", "voice", "both")
 
@@ -56,12 +41,19 @@ class Router(nn.Module):
         return self.head(pooled)
 
 
-def looks_inventable(text: str) -> bool:
-    """True when free generate would invent without a SoT."""
-    low = (text or "").lower()
-    if _PRICE.search(low) or _PHONE.search(low):
-        return True
-    return any(m in low for m in _INVENTABLE)
+def reply_or_idk(
+    prompt: str,
+    *,
+    sot_ok: bool = False,
+    idk: str = "I don't know.",
+) -> str | None:
+    """Serve-time gate: inventable without SoT → IDK string.
+
+    Returns None when the caller may route the pack reply.
+    """
+    if looks_inventable(prompt) and not sot_ok:
+        return idk
+    return None
 
 
 def load_reply_rows(dataset_path: Path) -> list[dict[str, Any]]:

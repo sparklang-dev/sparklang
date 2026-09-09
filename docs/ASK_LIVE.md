@@ -10,6 +10,15 @@ not a claim of full IDE chrome, full ES, or Google.com browsing. Spark is a
 OpenAI-compatible gateway) is one optional backend when you set
 `AI_GATEWAY_URL`.
 
+**Ground or IDK (default on):** inventable prompts (prices, hours,
+weather, mayors, live IDs) never hit the gateway unless
+`--sot-ok` / `SPARK_ASK_SOT_OK=1`. The companion prints
+`I don't know.` and `[ask-http] grounded=idk reason=no_sot`.
+Opt out: `--no-ground` or `SPARK_ASK_GROUND=0`. Coding
+playbooks (`explain` / `reply with`) and closed math still
+continue. This is a keyword gate, not a proof of “no
+hallucination forever.”
+
 ## Env
 
 | Var | Role |
@@ -18,6 +27,9 @@ OpenAI-compatible gateway) is one optional backend when you set
 | `SPARK_GATEWAY_KEY` | **Preferred** gateway Bearer (`sk-*` / `sk-bf-*`) |
 | `OPENAI_API_KEY` | Wire-compat Bearer name only — not an OpenAI.com primary CTA |
 | `SPARK_MODEL` | Optional fallback when `--model` omitted |
+| `SPARK_ASK_GROUND=0` | Opt out of default inventable IDK (live + dry) |
+| `SPARK_ASK_SOT_OK=1` | Same as `--sot-ok` — SoT already verified |
+| `SPARK_ASK_IDK` | IDK string (default `I don't know.`) |
 
 Pass an **explicit** model id (HF id / path / configured gateway model
 string). `--model auto` is **rejected** — Spark does not pick Bifrost-style

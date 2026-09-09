@@ -58,6 +58,13 @@ grep -q '"reason":"margin"' /tmp/spark-ab-mar.txt
 grep -q '"reason":"outer_verify"' /tmp/spark-ab-outer.txt
 grep -q '"halted":true' /tmp/spark-ab-outer.txt
 
+# Default live ask IDKs inventable facts (no weights needed)
+./spark-abstain --live ask \
+  --prompt "Who is the mayor of Springfield?" \
+  >/tmp/spark-ab-outer-default.txt
+grep -q '"mode":"outer"' /tmp/spark-ab-outer-default.txt
+grep -q "I don't know." /tmp/spark-ab-outer-default.txt
+
 # Live CPU train on fixture (real .pt, not a marker stub)
 rm -rf out/heads-test
 mkdir -p out/heads-test
@@ -131,7 +138,7 @@ h = synthetic_backbone_hidden(
 torch.save(torch.tensor(h), Path("out/heads-test/h768.pt"))
 print("ok")
 PY
-./spark-abstain --live ask \
+./spark-abstain --live ask --no-outer-verify \
   --prompt "Who is the mayor of Springfield?" \
   --weights out/heads-test/abstain768.pt \
   --hidden out/heads-test/h768.pt \
@@ -178,7 +185,7 @@ h = toy_backbone_hidden(
 torch.save(torch.tensor(h), Path("out/heads-test/h16.pt"))
 print("ok")
 PY
-./spark-abstain --live ask \
+./spark-abstain --live ask --no-outer-verify \
   --prompt "Who is the mayor of Springfield?" \
   --weights out/heads-test/abstain16.pt \
   --hidden out/heads-test/h16.pt \
@@ -211,7 +218,7 @@ grep -q '"object": "spark.hidden"\|"object":"spark.hidden"' \
 grep -q '"source": "toy_stub"\|"source":"toy_stub"' \
   /tmp/spark-ab-stub-http.json
 SPARK_ABSTAIN_VLLM_URL=http://127.0.0.1:18765 \
-  ./spark-abstain --live ask \
+  ./spark-abstain --live ask --no-outer-verify \
   --prompt "Who is the mayor of Springfield?" \
   --weights out/heads-test/abstain16.pt \
   >/tmp/spark-ab-ask-vllm.txt

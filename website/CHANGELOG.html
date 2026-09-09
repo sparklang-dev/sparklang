@@ -73,6 +73,17 @@
 <p>All notable user-facing releases of <strong>SparkLang</strong> (the Spark programming
 language) are listed here. Site and installers track
 <code>website/downloads/manifest.json</code>.</p>
+<h2>0.6.24 — 2026-09-08</h2>
+<ul>
+<li><strong>Ground or IDK (default on):</strong>
+  inventable facts (prices, hours, weather, mayors, live IDs)
+  emit <strong>I don't know.</strong> unless SoT /
+  <code class="inline-code">--sot-ok</code> — no gateway sample.
+  Opt out: <code class="inline-code">--no-ground</code> /
+  <code class="inline-code">SPARK_ASK_GROUND=0</code>.
+  Gate: <code class="inline-code">make test-ask-gateway</code>
+  (<code class="inline-code">PASS dry_grounded_idk</code>).</li>
+</ul>
 <h2>0.6.23 — 2026-09-08</h2>
 <ul>
 <li><strong><code class="inline-code">spark_reply_pack</code>:</strong>

@@ -207,6 +207,11 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="run inventable outer verify-or-refuse helper",
     )
+    ap.add_argument(
+        "--no-outer-verify",
+        action="store_true",
+        help="disable default inventable outer refuse on live ask",
+    )
     args = ap.parse_args(argv)
     live = bool(args.live)
 
@@ -377,7 +382,7 @@ def main(argv: list[str] | None = None) -> int:
             margin_min=args.margin_min,
             entropy=args.entropy,
             margin=args.margin,
-            outer_verify=bool(args.outer_verify),
+            outer_verify=not bool(args.no_outer_verify),
             sot_ok=bool(args.sot_ok),
         )
         _write_out(dumps_compact(result), args.out)

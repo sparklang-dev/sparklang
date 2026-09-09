@@ -224,8 +224,10 @@ spark-lift: tools/binary/spark_lift.c
 
 # Live OpenAI-compatible ask (AI_GATEWAY_URL).
 # Offline dry gate: make test-ask-gateway (no network).
-spark-ask-http: tools/ask/spark_ask_http.c
-	$(CC) -O2 -Wall -Wextra -o $@ tools/ask/spark_ask_http.c
+spark-ask-http: tools/ask/spark_ask_http.c bootstrap/ground_or_idk.c \
+	bootstrap/ground_or_idk.h
+	$(CC) -O2 -Wall -Wextra -I. -o $@ tools/ask/spark_ask_http.c \
+		bootstrap/ground_or_idk.c
 
 # Gated argv exec for language shell/run (allowlist; never system()).
 spark-shell: tools/shell/spark_shell.c
@@ -519,7 +521,7 @@ test-shell: spark spark-shell
 	./tools/shell/run_shell_gate.sh
 
 .PHONY: test-abstain
-test-abstain: spark spark-abstain
+test-abstain: spark spark-abstain spark-expect spark-http
 	chmod +x tools/spark-abstain/run_abstain_gate.sh
 	./tools/spark-abstain/run_abstain_gate.sh
 

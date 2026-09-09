@@ -5,9 +5,15 @@ from __future__ import annotations
 import json
 import os
 import re
+import sys
 from pathlib import Path
 
 os.environ.setdefault("CUDA_VISIBLE_DEVICES", "")
+
+_PY = Path(__file__).resolve().parents[2] / "python"
+if str(_PY) not in sys.path:
+    sys.path.insert(0, str(_PY))
+from sparklang.abstain.inventable import looks_inventable
 
 _WORD = re.compile(r"[a-z0-9']+", re.I)
 
@@ -36,6 +42,20 @@ def load_pairs(dataset_path: Path) -> list[tuple[str, str]]:
             if role == "user":
                 user = content
             elif role == "assistant" and user:
+                sot = str(row.get("sot_ref") or "").strip()
+                blob = f"{user}\n{content}"
+                if looks_inventable(blob):
+                    sot_path = Path(sot) if sot else None
+                    if not sot_path or not sot_path.is_file():
+                        raise ValueError(
+                            "refuse fabricate: inventable row "
+                            f"needs sot_ref file (user={user!r})"
+                        )
+                    if sot_path.stat().st_size < 2:
+                        raise ValueError(
+                            "refuse fabricate: sot_ref empty: "
+                            f"{sot}"
+                        )
                 out.append((user, content))
                 user = ""
     if not out:

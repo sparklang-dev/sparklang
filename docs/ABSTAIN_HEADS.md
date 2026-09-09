@@ -115,7 +115,8 @@ inventable tokens.
 | `SPARK_ABSTAIN_STUB=1` + `--live ask` | Dry inventable heuristics | **Not** real `p(abstain\|h)` |
 | `./spark-abstain --live train\|export\|attach` | CPU torch / files | Real `.pt` / JSONL |
 | `./spark-abstain --live ask` (no stub) | SELECT-before-SAMPLE | Needs weights + hidden source |
-| `--outer-verify` / `SPARK_ABSTAIN_OUTER_VERIFY=1` | Inventable refuse without SoT | No head required when refuse fires |
+| `--outer-verify` / default live ask | Inventable refuse without SoT (**on**) | No head required when refuse fires |
+| `SPARK_ABSTAIN_OUTER_VERIFY=0` / `--no-outer-verify` | Opt out of default outer refuse | Head path only |
 
 Dry never invents trained weights. Live refuse gateway short names.
 
@@ -352,7 +353,7 @@ export SPARK_ABSTAIN_SAMPLE_URL=http://127.0.0.1:8000
 | `SPARK_ABSTAIN_VLLM_URL` | `/spark_hidden` base |
 | `SPARK_ABSTAIN_SAMPLE_URL` | OpenAI-compat SAMPLE after continue |
 | `SPARK_ABSTAIN_ENTROPY_MAX` / `MARGIN_MIN` | Shared secondary trips |
-| `SPARK_ABSTAIN_OUTER_VERIFY=1` | Inventable outer refuse |
+| `SPARK_ABSTAIN_OUTER_VERIFY=0` | Disable default inventable outer refuse |
 | `SPARK_ABSTAIN_SOT_OK=1` | SoT already verified |
 | `SPARK_ABSTAIN_ALLOW_TINY_DOWNLOAD=1` | Owner tiny HF download (CI OFF) |
 

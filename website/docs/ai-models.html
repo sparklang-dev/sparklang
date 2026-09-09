@@ -136,7 +136,7 @@
         <tr>
         <td><strong>Call models live (optional)</strong></td>
         <td><code class="inline-code">ask "…" -&gt; reply</code> with <code class="inline-code">./spark --live</code></td>
-        <td>Needs <code class="inline-code">AI_GATEWAY_URL</code> + key; companion <code class="inline-code">./spark-ask-http</code></td>
+        <td>Needs <code class="inline-code">AI_GATEWAY_URL</code> + key; companion <code class="inline-code">./spark-ask-http</code>. Inventable prompts IDK unless <code class="inline-code">--sot-ok</code></td>
         </tr>
         <tr>
         <td><strong>Embed / retrieve</strong></td>
@@ -224,7 +224,8 @@
         </tr>
         </tbody>
         </table></div>
-        <p>Pass an <strong>explicit</strong> model id (HF / path / configured name). No Bifrost-style alias pick.</p>
+        <p>Pass an <strong>explicit</strong> model id (HF / path / configured name). No Bifrost-style alias pick.
+        Inventable live prompts <strong>IDK</strong> unless <code class="inline-code">--sot-ok</code>.</p>
         <pre class="doc__pre"><code class="language-bash">export AI_GATEWAY_URL=http://127.0.0.1:4000
         export SPARK_GATEWAY_KEY=sk-…   # never commit; preferred over OPENAI_API_KEY
         ./spark --live examples/ask_live.spark

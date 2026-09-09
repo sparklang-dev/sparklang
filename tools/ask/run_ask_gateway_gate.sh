@@ -73,6 +73,61 @@ run_dry dry_named_fast fast "Reply with exactly one word: pong" fast
 run_refuse_auto
 run_dry_stream
 
+run_grounded_idk() {
+  local out
+  out="$(./spark-ask-http --dry --model fixtures/tiny-lm \
+    --prompt "Who is the mayor of Springfield?" 2>&1)" || {
+    echo "FAIL dry_grounded_idk (exit $?)"
+    echo "$out" | head -20
+    fail=1
+    return
+  }
+  echo "$out" | grep -q "I don't know." || {
+    echo "FAIL dry_grounded_idk (missing IDK)"
+    echo "$out" | head -20
+    fail=1
+    return
+  }
+  echo "$out" | grep -q "grounded=idk reason=no_sot" || {
+    echo "FAIL dry_grounded_idk (missing grounded line)"
+    echo "$out" | head -20
+    fail=1
+    return
+  }
+  echo "$out" | grep -q "dry ok (no network)" || {
+    echo "FAIL dry_grounded_idk (missing dry ok)"
+    fail=1
+    return
+  }
+  echo "PASS dry_grounded_idk"
+}
+
+run_grounded_sot_ok() {
+  local out
+  out="$(./spark-ask-http --dry --sot-ok --model fixtures/tiny-lm \
+    --prompt "Who is the mayor of Springfield?" 2>&1)" || {
+    echo "FAIL dry_sot_ok (exit $?)"
+    echo "$out" | head -20
+    fail=1
+    return
+  }
+  if echo "$out" | grep -q "grounded=idk"; then
+    echo "FAIL dry_sot_ok (should continue with --sot-ok)"
+    echo "$out" | head -20
+    fail=1
+    return
+  fi
+  echo "$out" | grep -q "dry ok (no network)" || {
+    echo "FAIL dry_sot_ok (missing dry ok)"
+    fail=1
+    return
+  }
+  echo "PASS dry_sot_ok"
+}
+
+run_grounded_idk
+run_grounded_sot_ok
+
 # Rollup from fixture jsonl (no network, no invent).
 run_rollup() {
   local tf out
