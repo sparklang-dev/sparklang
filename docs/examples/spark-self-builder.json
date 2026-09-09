@@ -1,0 +1,141 @@
+{
+  "op": "builder",
+  "status": "implemented",
+  "genome": "SPARK_BC",
+  "note": "SPARK_BC seed plus Spark-created init weights. Not trained. SPARK_BC is not neural weights.",
+  "source": "selfhost/compile.spark",
+  "command": "./spark-bootstrap --compile selfhost/compile.spark -o docs/examples/spark-self.sparkbc",
+  "sparkbc": "docs/examples/spark-self.sparkbc",
+  "sha256": "a33f3232752c2fdd75db728773cb589a4eaf8e0bb70ac2539d2519b2dc7df6e8",
+  "size_bytes": 118,
+  "magic": "SPBC",
+  "version": 1,
+  "first_32_hex": "53 50 42 43 01 03 00 04 00 63 6f 64 65 3f 00 43 6f 6d 70 69 6c 65 20 73 65 65 64 3a 20 65 6d 69",
+  "nstrings": 3,
+  "nconsts": 3,
+  "ncode": 12,
+  "opcodes": [
+    "MODEL",
+    "ASK",
+    "PRINT",
+    "HALT"
+  ],
+  "trained": false,
+  "served": false,
+  "implemented": [
+    "compile .spark -> .sparkbc (spark-bootstrap --compile)",
+    "TRAIN / TRAIN_STATUS ops in SPARK_BC (training program)",
+    "execute TRAIN/TRAIN_STATUS from .sparkbc (dry fixture)",
+    "dump hex + decoded ops",
+    "emit this stub from those bytes",
+    "emit structured Xavier init weights from those bytes"
+  ],
+  "planned": [
+    "Spark-hosted compiler (self-host Stage 4 still C)",
+    "train from this Spark-created init (owner train-grant)",
+    "serve a model grown from this seed"
+  ],
+  "weights": {
+    "op": "emit_weights",
+    "status": "implemented",
+    "path": "docs/examples/spark-self.init.safetensors",
+    "sha256": "60b9b7297cb5e2d8362702144a9d9c15487e65dd11783ba7d499499b500198cf",
+    "size_bytes": 191775,
+    "arch": {
+      "vocab": 256,
+      "dim": 32,
+      "n_layer": 2,
+      "n_head": 4,
+      "n_kv": 2,
+      "head_dim": 8,
+      "mlp": 128
+    },
+    "tensors": {
+      "spark.embed.weight": [
+        256,
+        32
+      ],
+      "spark.lm_head.weight": [
+        256,
+        32
+      ],
+      "spark.final_norm.weight": [
+        32
+      ],
+      "spark.layers.0.attn_norm.weight": [
+        32
+      ],
+      "spark.layers.0.q.weight": [
+        32,
+        32
+      ],
+      "spark.layers.0.k.weight": [
+        16,
+        32
+      ],
+      "spark.layers.0.v.weight": [
+        16,
+        32
+      ],
+      "spark.layers.0.o.weight": [
+        32,
+        32
+      ],
+      "spark.layers.0.mlp_norm.weight": [
+        32
+      ],
+      "spark.layers.0.mlp_up.weight": [
+        128,
+        32
+      ],
+      "spark.layers.0.mlp_gate.weight": [
+        128,
+        32
+      ],
+      "spark.layers.0.mlp_down.weight": [
+        32,
+        128
+      ],
+      "spark.layers.1.attn_norm.weight": [
+        32
+      ],
+      "spark.layers.1.q.weight": [
+        32,
+        32
+      ],
+      "spark.layers.1.k.weight": [
+        16,
+        32
+      ],
+      "spark.layers.1.v.weight": [
+        16,
+        32
+      ],
+      "spark.layers.1.o.weight": [
+        32,
+        32
+      ],
+      "spark.layers.1.mlp_norm.weight": [
+        32
+      ],
+      "spark.layers.1.mlp_up.weight": [
+        128,
+        32
+      ],
+      "spark.layers.1.mlp_gate.weight": [
+        128,
+        32
+      ],
+      "spark.layers.1.mlp_down.weight": [
+        32,
+        128
+      ]
+    },
+    "n_tensors": 21,
+    "trained": false,
+    "derivation": "full SPARK_BC bytes -> sha256 seed; Xavier/fan-in named tensors; embed rows mix magic/opcode/string bytes",
+    "sparkbc_sha256": "a33f3232752c2fdd75db728773cb589a4eaf8e0bb70ac2539d2519b2dc7df6e8",
+    "first_32_hex": "53 50 42 43 01 03 00 04 00 63 6f 64 65 3f 00 43 6f 6d 70 69 6c 65 20 73 65 65 64 3a 20 65 6d 69",
+    "goal": "init only (later train is not a claim today)"
+  }
+}

@@ -458,6 +458,140 @@ for auto_tag in use_auto_fast use_auto_code; do
   fi
 done
 
+# TRAIN / TRAIN_STATUS must *run* from the published SPARK_BC, not
+# only encode. Dry fixture + ARTIFACT marker. Not SGD. Not trained.
+pub_bc="docs/examples/spark-builder.sparkbc"
+marker="out/train/job-dry-001/ARTIFACT"
+builder_tmp="$(mktemp)"
+./spark-bootstrap --compile examples/spark_builder.spark \
+  -o "$builder_tmp" || {
+  echo "FAIL sparkbc_builder_train: compile"
+  fail=1
+}
+if [[ "$fail" -eq 0 && ! -f "$pub_bc" ]]; then
+  echo "FAIL sparkbc_builder_train: missing $pub_bc"
+  fail=1
+fi
+if [[ "$fail" -eq 0 ]] && ! cmp -s "$builder_tmp" "$pub_bc"; then
+  echo "FAIL sparkbc_builder_train: compile != $pub_bc"
+  fail=1
+fi
+rm -f "$marker"
+if [[ "$fail" -eq 0 ]]; then
+  builder_run="$(./spark-bootstrap --run-bc "$pub_bc" 2>&1)" || {
+    echo "FAIL sparkbc_builder_train: run-bc"
+    echo "$builder_run" | head -12
+    fail=1
+  }
+fi
+if [[ "$fail" -eq 0 ]]; then
+  if PYTHONPATH=python python3 -c "
+from sparklang.model_lab.bc_dump import decode_ops, load_sparkbc
+bc = load_sparkbc('$pub_bc')
+ops = [o['name'] for o in decode_ops(bc)]
+assert 'TRAIN' in ops, ops
+assert 'TRAIN_STATUS' in ops, ops
+assert 0x26 in bc['code'], bc['code'][:16]
+assert 0x27 in bc['code'], 'no TRAIN_STATUS'
+print('decoded', ' '.join(ops), 'sha256', bc['sha256'][:12])
+"; then
+    if echo "$builder_run" | grep -q '"op":"train"' &&
+       echo "$builder_run" | grep -q '"op":"status"' &&
+       echo "$builder_run" | grep -q 'job-dry-001' &&
+       echo "$builder_run" | grep -q 'dry-run' &&
+       test -f "$marker" &&
+       grep -q 'not_sgd=true' "$marker" &&
+       grep -q 'trained=false' "$marker"; then
+      echo "PASS sparkbc_builder_train"
+    else
+      echo "FAIL sparkbc_builder_train: run/status/marker miss"
+      echo "$builder_run" | head -16
+      fail=1
+    fi
+  else
+    echo "FAIL sparkbc_builder_train: TRAIN opcode missing"
+    fail=1
+  fi
+fi
+rm -f "$builder_tmp"
+
+# STEP 0x28: TRAIN → STEP → TRAIN_STATUS in one stream. Dry ≠ SGD.
+step_src="examples/spark_train_step.spark"
+step_pub="docs/examples/spark-train-step.sparkbc"
+step_tmp="$(mktemp)"
+marker="out/train/job-dry-001/ARTIFACT"
+./spark-bootstrap --compile "$step_src" -o "$step_tmp" || {
+  echo "FAIL sparkbc_train_step: compile"
+  fail=1
+}
+if [[ "$fail" -eq 0 && ! -f "$step_pub" ]]; then
+  echo "FAIL sparkbc_train_step: missing $step_pub"
+  fail=1
+fi
+if [[ "$fail" -eq 0 ]] && ! cmp -s "$step_tmp" "$step_pub"; then
+  echo "FAIL sparkbc_train_step: compile != $step_pub"
+  fail=1
+fi
+rm -f "$marker"
+if [[ "$fail" -eq 0 ]]; then
+  step_run="$(./spark-bootstrap --run-bc "$step_pub" 2>&1)" || {
+    echo "FAIL sparkbc_train_step: run-bc"
+    echo "$step_run" | head -12
+    fail=1
+  }
+fi
+if [[ "$fail" -eq 0 ]]; then
+  if PYTHONPATH=python python3 -c "
+from sparklang.model_lab.bc_dump import load_sparkbc
+bc = load_sparkbc('$step_pub')
+code = bc['code']
+assert 0x26 in code and 0x28 in code and 0x27 in code, list(code)
+i26, i28, i27 = code.index(0x26), code.index(0x28), code.index(0x27)
+assert i26 < i28 < i27, (i26, i28, i27)
+print('sha256', bc['sha256'])
+print('first32', ' '.join('%02x' % b for b in bc['raw'][:32]))
+"; then
+    if echo "$step_run" | grep -q '"op":"train"' &&
+       echo "$step_run" | grep -q '"op":"step"' &&
+       echo "$step_run" | grep -q '"op":"status"' &&
+       echo "$step_run" | grep -q 'job-dry-001' &&
+       test -f "$marker" &&
+       grep -q 'step_n=1' "$marker" &&
+       grep -q 'trained=false' "$marker" &&
+       grep -q 'not_sgd=true' "$marker"; then
+      echo "PASS sparkbc_train_step"
+    else
+      echo "FAIL sparkbc_train_step: run/marker miss"
+      echo "$step_run" | head -20
+      fail=1
+    fi
+  else
+    echo "FAIL sparkbc_train_step: opcode order"
+    fail=1
+  fi
+fi
+rm -f "$step_tmp"
+
+# GAS ./spark has no SPARK_BC path. BLOCKED, not silent skip.
+set +e
+gas_bc_out="$(./spark --run-bc "$pub_bc" 2>&1)"
+gas_bc_rc=$?
+set -e
+if [[ "$gas_bc_rc" -eq 0 ]]; then
+  echo "FAIL sparkbc_gas_no_bc: ./spark --run-bc unexpectedly succeeded"
+  fail=1
+elif echo "$gas_bc_out" | grep -q '"op":"train"'; then
+  echo "FAIL sparkbc_gas_no_bc: GAS executed TRAIN from SPARK_BC"
+  echo "$gas_bc_out" | head -8
+  fail=1
+elif echo "$gas_bc_out" | grep -Fq 'need --dry-run|--live'; then
+  echo "PASS sparkbc_gas_no_bc (BLOCKED ./spark --run-bc)"
+else
+  echo "FAIL sparkbc_gas_no_bc: unexpected GAS error"
+  echo "$gas_bc_out" | head -8
+  fail=1
+fi
+
 if [[ "$fail" -ne 0 ]]; then exit 1; fi
 
 echo "OK sparkbc"

@@ -12,6 +12,7 @@ Default loop: dry-run / offline / no keys. Live gateway only when you opt in.
 
 First-class surface: `ask`, `classify`, `extract`, `pipeline`, tools,
 **model train/build/status** (real jobs — dry fixtures first),
+**model reverse/inspect/compile/modify** (lab; keep special training),
 **head abstain/train/attach/ask** (IDK gate on local LLMs),
 **model analyze/compare/improve/plan** (eval helpers),
 **review/builder/implement**, **os design/generate**,
@@ -34,6 +35,7 @@ build, dry vs live, syntax with real `examples/`, layout, debug, tests.
 | Doc | Role |
 |-----|------|
 | **[AI models](docs/AI_MODELS.md)** | Model create/modify; dry-run first; optional live gateway |
+| **[Model lab](docs/MODEL_LAB.md)** | Reverse → compile → build → modify; keep existing LoRA |
 | **[Abstain / IDK heads](docs/ABSTAIN_HEADS.md)** | SELECT-before-SAMPLE; flagship `examples/no_invent.spark` |
 | **[Program with Spark](docs/PROGRAMMING_GUIDE.md)** | Canonical how-to |
 | **[AI playbooks](docs/AI_PLAYBOOKS.md)** | Coding playbooks + explicit model line |

@@ -96,6 +96,8 @@ Emits one JSON object per token on stdout. Kind names match
 | `lexer.spark` | Lexer algorithm seed; dry-runs |
 | `grammar.spark` | Statement grammar catalog; dry-runs |
 | `parser.spark` | AST/parse plan seed; dry-runs |
+| `compile.spark` | Compiler seed catalog (MODEL/ASK/PRINT/HALT) |
+| `compile_train.spark` | Train slice; `--compile` emits TRAIN `0x26` / TRAIN_STATUS `0x27` |
 | `fixtures/mini.spark` | Hello-scale lex input |
 | `fixtures/ops.spark` | PIPE + review path + NUMBER + classify |
 | `fixtures/bootstrap_ops.spark` | Stage 1 B subset: tool/with/extract/listen/speak/pipeline |

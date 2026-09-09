@@ -11,6 +11,7 @@ NVML_LIB ?= /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1
 .PHONY: all clean test test-hdl test-e2e-browser test-examples machine-proof \
 	examples-run corpus corpus-agg spark-cuda spark-net spark-binary \
 	spark-lift spark-section-dump companions browser-scaffold \
+	test-model-lab spark-model-lab \
 	browser-mitm-analyze ide test-engine-paint test-engine-css \
 	test-engine-layout test-ide-paint spark-bootstrap sparkc \
 	test-bootstrap test-sparkbc spark-bc spark-bc-pack-hello sparkasm \
@@ -197,7 +198,7 @@ asm/engine_js.o: asm/engine_js.s
 companions: spark-cuda-probe spark-net-capture \
 	spark-binary-probe spark-section-dump spark-lift spark-ask-http \
 	spark-ask-probe spark-rag-http spark-http spark-extract spark-expect \
-	spark-train-http spark-abstain spark-shell \
+	spark-train-http spark-abstain spark-model-lab spark-shell \
 	spark-browser-host spark-mitm-quic \
 	spark-mitm-quic-divert spark-mitm-ca spark-mitm-h2 spark-browser-cdp spark-pstn-dial \
 	spark-enc-gateway spark-stt-tts spark-review-url spark-engine-show \
@@ -267,6 +268,11 @@ spark-train-http: tools/train/spark_train_http.c bootstrap/dry_train.c \
 spark-abstain: tools/spark-abstain/spark_abstain.sh \
 	tools/spark-abstain/cli.py
 	install -m 755 tools/spark-abstain/spark_abstain.sh $@
+
+# Model lab: reverse local HF config; compile/modify via ./spark.
+spark-model-lab: tools/spark-model-lab/spark_model_lab.sh \
+	tools/spark-model-lab/cli.py
+	install -m 755 tools/spark-model-lab/spark_model_lab.sh $@
 
 # Gateway probe credential dry/live check (public AI gateway).
 spark-ask-probe: tools/ask/spark_ask_probe.c
@@ -349,7 +355,8 @@ machine-proof: spark
 	$(OBJDUMP) -d ./spark | sed -n '/<_start>:/,/^$$/p' | head -20
 
 test: spark companions spark-bootstrap test-sparkbc test-ai-playbooks \
-	test-extract test-expect test-host-embed test-abstain test-shell \
+	test-extract test-expect test-host-embed test-abstain test-model-lab \
+	test-shell \
 	test-ask-gateway
 	./tests/run_dry.sh
 	./tests/hdl_check.sh
@@ -443,6 +450,7 @@ SPARKC_SRCS = bootstrap/main.c bootstrap/vm.c bootstrap/engine_parse.c \
 	bootstrap/engine_render.c bootstrap/dry_ask.c bootstrap/dry_auto_model.c \
 	bootstrap/dry_classify.c bootstrap/dry_rag.c bootstrap/dry_http.c \
 	bootstrap/dry_extract.c bootstrap/dry_expect.c \
+	bootstrap/dry_train.c \
 	bootstrap/dry_engine.c \
 	bootstrap/dry_ide.c bootstrap/dry_ops.c \
 	bootstrap/bc_read.c bootstrap/bc_vm.c bootstrap/bc_write.c \
@@ -451,6 +459,7 @@ spark-bootstrap sparkc: $(SPARKC_SRCS) bootstrap/vm.h \
 	bootstrap/dry_ask.h bootstrap/dry_auto_model.h bootstrap/dry_classify.h \
 	bootstrap/dry_rag.h bootstrap/dry_http.h bootstrap/dry_extract.h \
 	bootstrap/dry_expect.h \
+	bootstrap/dry_train.h \
 	bootstrap/dry_engine.h \
 	bootstrap/dry_ide.h \
 	bootstrap/dry_ops.h \
@@ -525,6 +534,12 @@ test-abstain: spark spark-abstain spark-expect spark-http
 	chmod +x tools/spark-abstain/run_abstain_gate.sh
 	./tools/spark-abstain/run_abstain_gate.sh
 
+.PHONY: test-model-lab
+test-model-lab: spark spark-model-lab spark-abstain spark-expect spark-http
+	chmod +x tools/spark-model-lab/run_lab_gate.sh
+	./tools/spark-model-lab/run_lab_gate.sh
+	PYTHONPATH=python python3 tools/spark-bc-dump/test_dump.py
+
 # Optional: SPARK_ABSTAIN_HF=1 SPARK_ABSTAIN_MODEL=/path ./make …
 .PHONY: smoke-abstain-hf
 smoke-abstain-hf: spark spark-abstain
@@ -573,6 +588,7 @@ spark-bc-pack-hello: bootstrap/bc_pack_hello.c bootstrap/bc_write.c \
 test-sparkbc: spark-bootstrap spark
 	chmod +x bootstrap/tests/run_sparkbc.sh
 	./bootstrap/tests/run_sparkbc.sh
+	PYTHONPATH=python python3 tools/spark-bc-dump/test_dump.py
 
 spark-bc-emit: bootstrap/bc_emit_sasm.c bootstrap/bc_read.c \
 	bootstrap/dry_ask.c bootstrap/dry_auto_model.c \

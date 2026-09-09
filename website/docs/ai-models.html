@@ -35,7 +35,7 @@
                 <ul class="nav-more__menu" hidden>
                   <li><a href="/docs/adoption-bar.html">Adoption bar</a></li>
                   <li><a href="/docs/ai-models.html">AI models</a></li>
-                  <li><a href="/docs/abstain-heads.html">Abstain heads</a></li>
+                  <li><a href="/docs/spark-builder.html">Builder</a></li>
                   <li><a href="/docs/native-network-web.html">Network + web</a></li>
                   <li><a href="/docs/programming-guide.html">Programming guide</a></li>
                   <li><a href="/docs/ide.html">IDE</a></li>
@@ -60,7 +60,7 @@
         <a href="/docs/adoption-bar.html">Adoption bar</a>
         <a href="/docs/ai-models.html" aria-current="page">AI models</a>
         <a href="/docs/model-training.html" aria-current="page">Model training</a>
-        <a href="/docs/abstain-heads.html">Abstain heads</a>
+        <a href="/docs/spark-builder.html">Builder</a>
         <a href="/docs/native-network-web.html">Network + web</a>
         <a href="/docs/programming-guide.html">Programming guide</a>
         <a href="/docs/language.html">Language reference</a>
@@ -76,8 +76,13 @@
         plain <code class="inline-code">.spark</code> files you can diff, dry-run, and ship.</p>
         <p><strong>Default story:</strong> dry-run / offline / no keys. Live <code class="inline-code">ask</code> / <code class="inline-code">embed</code> /
         <code class="inline-code">retrieve</code> via gateway env is <strong>optional</strong> (<code class="inline-code">./spark --live</code>).</p>
-        <p><strong>Related:</strong> <a href="/docs/model-training.html">MODEL_TRAINING.md</a> (train jobs) ·
-        <a href="/docs/abstain-heads.html">ABSTAIN_HEADS.md</a> (IDK / abstain) ·
+        <p><strong>Related:</strong> <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> (SPARK_BC seed +
+        Spark-created init weights; <code class="inline-code">TRAIN</code> <code class="inline-code">0x26</code> / <code class="inline-code">TRAIN_STATUS</code> <code class="inline-code">0x27</code>;
+        <code class="inline-code">compile_train.spark</code> → <code class="inline-code">spark-selfhost-train.sparkbc</code>) ·
+        <a href="/docs/self-host.html">SPARK_BC.md</a> (bytecode ISA) ·
+        <code class="inline-code">MODEL_LAB.md</code> (reverse / compile / modify) ·
+        <a href="/docs/model-training.html">MODEL_TRAINING.md</a> (train jobs) ·
+        <code class="inline-code">ABSTAIN_HEADS.md</code> (IDK / abstain heads) ·
         <a href="/docs/ai-models.html">MODEL_ANALYSIS.md</a> (eval methodology) ·
         <a href="/learn/build-model.html">AI_PLAYBOOKS.md</a> (coding playbooks) ·
         <a href="/docs/language.html">LANGUAGE.md</a> (full statement reference) ·
@@ -99,13 +104,33 @@
         <td>Dry fixtures; live <code class="inline-code">./spark-train-http</code>. <strong><code class="inline-code">spark_reply_pack</code></strong> overlays voice+text on text-only bases and refuses inventable rows without SoT — see <a href="/docs/model-training.html">MODEL_TRAINING.md</a></td>
         </tr>
         <tr>
+        <td><strong>Reverse / inspect</strong></td>
+        <td><code class="inline-code">model reverse</code> / <code class="inline-code">model inspect</code> → architecture JSON</td>
+        <td>Local <code class="inline-code">config.json</code> + index names only; <code class="inline-code">MODEL_LAB.md</code></td>
+        </tr>
+        <tr>
+        <td><strong>Compile program</strong></td>
+        <td><code class="inline-code">model compile "….spark" into "….sparkbc"</code></td>
+        <td>SPARK_BC of the <strong>program</strong>, not a transformer compiler</td>
+        </tr>
+        <tr>
+        <td><strong>Builder from SPARK_BC</strong></td>
+        <td><code class="inline-code">--compile</code> Spark → <code class="inline-code">.sparkbc</code> (incl. <code class="inline-code">0x26</code>/<code class="inline-code">0x27</code>); dump; emit init weights; bootstrap <code class="inline-code">--run-bc</code> dry train</td>
+        <td>Spark-created <strong>init</strong>, not trained; GAS does not emit <code class="inline-code">.sparkbc</code>; later train aims to beat Claude; <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a></td>
+        </tr>
+        <tr>
+        <td><strong>Modify existing</strong></td>
+        <td><code class="inline-code">model modify keep_existing …</code></td>
+        <td>Attach adapters/heads; <strong>never</strong> delete special training</td>
+        </tr>
+        <tr>
         <td><strong>Abstain / IDK heads</strong></td>
         <td><code class="inline-code">head abstain|train|attach|ask</code></td>
-        <td>Probe on frozen local LLM; SELECT before SAMPLE; <a href="/docs/abstain-heads.html">ABSTAIN_HEADS.md</a></td>
+        <td>Probe on frozen local LLM; SELECT before SAMPLE; <code class="inline-code">ABSTAIN_HEADS.md</code></td>
         </tr>
         <tr>
         <td><strong>Analyze</strong> reachable models</td>
-        <td><code class="inline-code">model analyze "alias" -&gt; report</code></td>
+        <td><code class="inline-code">model analyze "…" -&gt; report</code></td>
         <td>Dry-run = fixtures under <code class="inline-code">examples/fixtures/models/</code>; not live leaderboards</td>
         </tr>
         <tr>
@@ -125,8 +150,8 @@
         </tr>
         <tr>
         <td><strong>Name a concrete model</strong></td>
-        <td><code class="inline-code">model "/path/or/org/name"</code></td>
-        <td>Explicit path or hub id only — <strong>no</strong> auto/code/fast alias pick</td>
+        <td><code class="inline-code">model "/path/or/org/name"</code> / attach manifest</td>
+        <td>Explicit path or hub id only — <strong>no</strong> auto/code/fast alias pick, no dry-run invent</td>
         </tr>
         <tr>
         <td><strong>AI coding</strong> with less boilerplate</td>
@@ -136,7 +161,7 @@
         <tr>
         <td><strong>Call models live (optional)</strong></td>
         <td><code class="inline-code">ask "…" -&gt; reply</code> with <code class="inline-code">./spark --live</code></td>
-        <td>Needs <code class="inline-code">AI_GATEWAY_URL</code> + key; companion <code class="inline-code">./spark-ask-http</code>. Inventable prompts IDK unless <code class="inline-code">--sot-ok</code></td>
+        <td>Needs <code class="inline-code">AI_GATEWAY_URL</code> + key; companion <code class="inline-code">./spark-ask-http</code></td>
         </tr>
         <tr>
         <td><strong>Embed / retrieve</strong></td>
@@ -157,11 +182,11 @@
         model status &quot;job-dry-001&quot; -&gt; status
         </code></pre>
         <p>Example eval helpers (dry-run):</p>
-        <pre class="doc__pre"><code class="language-spark">model code
+        <pre class="doc__pre"><code class="language-spark">model &quot;fixtures/tiny-lm&quot;
 
-        model analyze &quot;fast&quot; -&gt; report
+        model analyze &quot;fixtures/tiny-lm&quot; -&gt; report
 
-        model compare [&quot;fast&quot;, &quot;code&quot;, &quot;best&quot;]
+        model compare [&quot;fixtures/tiny-lm&quot;, &quot;fixtures/other-lm&quot;]
           on suite &quot;examples/eval_suite.json&quot; -&gt; comparison
 
         model improve from report prefer quality -&gt; blueprint
@@ -177,7 +202,8 @@
           <code class="inline-code">examples/eval_suite.json</code>; banner says numbers are not live Elo scores</li>
         <li><strong><code class="inline-code">ask</code> / <code class="inline-code">classify</code> / <code class="inline-code">extract</code> / <code class="inline-code">embed</code> / <code class="inline-code">retrieve</code></strong> — heuristic
           stubs / fixtures (<code class="inline-code">examples/fixtures/rag/</code> for RAG)</li>
-        <li><strong><code class="inline-code">use auto</code></strong> — keeps prior configured model; prints <code class="inline-code">[model] prior … (no alias pick)</code></li>
+        <li><strong><code class="inline-code">use auto</code></strong> — keeps prior configured model; prints
+          <code class="inline-code">[model] prior … (no alias pick)</code> — never invents gateway aliases</li>
         <li><strong>Playbooks</strong> — goldens under <code class="inline-code">bootstrap/fixtures/playbooks/</code>;
           <code class="inline-code">make test-ai-playbooks</code></li>
         <li><strong>IDE</strong> — <code class="inline-code">ide new|open|save|run|buffer|ask|show</code> + keymap traces under
@@ -199,7 +225,7 @@
         <tbody>
         <tr>
         <td><strong>OpenAI-compatible gateway</strong> (<code class="inline-code">AI_GATEWAY_URL</code>)</td>
-        <td>Chat + embeddings; alias routing (<code class="inline-code">fast</code>, <code class="inline-code">code</code>, <code class="inline-code">best</code>, <code class="inline-code">auto</code>→fast|code, <code class="inline-code">embed-rag</code>, <code class="inline-code">embed</code>, …). Bifrost is one example backend, not a Spark requirement.</td>
+        <td>Chat + embeddings with an <strong>explicit</strong> model id (HF / path / configured string). Bifrost is one optional backend, not a Spark requirement.</td>
         <td><strong><code class="inline-code">SPARK_GATEWAY_KEY</code></strong> preferred; <code class="inline-code">OPENAI_API_KEY</code> wire-compat only; <code class="inline-code">./spark-ask-http</code> / <code class="inline-code">./spark-rag-http --embed</code></td>
         </tr>
         <tr>
@@ -209,7 +235,7 @@
         </tr>
         <tr>
         <td><strong>Model probe</strong> (optional)</td>
-        <td>Read-only alias + local vLLM port discovery</td>
+        <td>Read-only configured models + local vLLM port discovery</td>
         <td><code class="inline-code">make model-probe</code>; <code class="inline-code">SPARK_ALLOW_NET=1</code></td>
         </tr>
         <tr>
@@ -224,8 +250,10 @@
         </tr>
         </tbody>
         </table></div>
-        <p>Pass an <strong>explicit</strong> model id (HF / path / configured name). No Bifrost-style alias pick.
-        Inventable live prompts <strong>IDK</strong> unless <code class="inline-code">--sot-ok</code>.</p>
+        <p>Pass an <strong>explicit</strong> model id in <code class="inline-code">.spark</code> / <code class="inline-code">--model</code> — never invent one
+        from task-text heuristics, and do not treat Spark as a Bifrost alias
+        picker. Inventable live prompts <strong>IDK</strong> unless <code class="inline-code">--sot-ok</code>
+        (see <a href="/docs/ai-models.html#live-gateway-integration-wired-today">ASK_LIVE.md</a>).</p>
         <pre class="doc__pre"><code class="language-bash">export AI_GATEWAY_URL=http://127.0.0.1:4000
         export SPARK_GATEWAY_KEY=sk-…   # never commit; preferred over OPENAI_API_KEY
         ./spark --live examples/ask_live.spark
@@ -271,7 +299,8 @@
         <p>Governed ledger / product-specific projects stay outside public Spark
         examples — use generic <code class="inline-code">project "docs"</code> in docs and fixtures.</p>
         <h2 id="ai-coding-spark-ide">AI coding + Spark IDE</h2>
-        <p><strong>Less code:</strong> set an explicit <code class="inline-code">model "…"</code>; copy a playbook from
+        <p><strong>Less code:</strong> set an explicit <code class="inline-code">model "…"</code> (or <code class="inline-code">include "lib/ai.spark"</code>
+        and add one); copy a playbook from
         <a href="/learn/build-model.html">AI_PLAYBOOKS.md</a> instead of hand-rolling SDK loops.</p>
         <p><strong>Readable diffs:</strong> one <code class="inline-code">.spark</code> file per workflow — <code class="inline-code">pipeline</code>, <code class="inline-code">classify</code>,
         <code class="inline-code">extract</code>, <code class="inline-code">review</code>, <code class="inline-code">builder</code>, <code class="inline-code">implement</code> — not scattered Python modules.</p>

@@ -1,11 +1,14 @@
-/* dry_train.c — fixture strings for model train / status dry-run. */
+/* dry_train.c — fixture strings for model train / status / step. */
 #include "dry_train.h"
 
+#include <errno.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/stat.h>
 
 static char accept_buf[1536];
 static char status_buf[1024];
+static char step_buf[1024];
 
 static int method_ok(const char *method)
 {
@@ -80,4 +83,144 @@ const char *spark_pick_train_status(const char *job_id)
 	    (int)sizeof(status_buf))
 		return NULL;
 	return status_buf;
+}
+
+const char *spark_pick_train_step(const char *job_id, int step_n)
+{
+	if (!job_id || !job_id[0])
+		job_id = "job-dry-001";
+	if (!dry_job_ok(job_id))
+		return NULL;
+	if (step_n < 1)
+		step_n = 1;
+	if (snprintf(step_buf, sizeof(step_buf),
+		     "{\"op\":\"step\",\"mode\":\"dry-run\","
+		     "\"job_id\":\"%s\",\"step\":%d,"
+		     "\"state\":\"stepped\",\"backend\":\"http\","
+		     "\"artifacts\":{"
+		     "\"marker\":\"out/train/%s/ARTIFACT\"},"
+		     "\"note\":\"dry-run STEP — not SGD; not trained\"}",
+		     job_id, step_n, job_id) >= (int)sizeof(step_buf))
+		return NULL;
+	return step_buf;
+}
+
+static int mkdir_p(const char *path)
+{
+	char buf[512];
+	size_t i;
+	size_t n;
+
+	if (!path || !path[0])
+		return -1;
+	n = strlen(path);
+	if (n >= sizeof(buf))
+		return -1;
+	memcpy(buf, path, n + 1);
+	for (i = 1; i < n; i++) {
+		if (buf[i] != '/')
+			continue;
+		buf[i] = '\0';
+		if (mkdir(buf, 0755) != 0 && errno != EEXIST)
+			return -1;
+		buf[i] = '/';
+	}
+	if (mkdir(buf, 0755) != 0 && errno != EEXIST)
+		return -1;
+	return 0;
+}
+
+int spark_write_train_marker(const char *out_dir, const char *job_id,
+			     const char *method)
+{
+	char path[512];
+	char body[640];
+	int n;
+	FILE *f;
+
+	if (!out_dir || !out_dir[0])
+		return 1;
+	if (!job_id || !job_id[0])
+		job_id = "job-dry-001";
+	if (!method || !method[0])
+		method = "spark_distill_cpu";
+	if (mkdir_p(out_dir) != 0) {
+		fprintf(stderr, "error: train mkdir failed %s\n",
+			out_dir);
+		return 1;
+	}
+	n = snprintf(path, sizeof(path), "%s/ARTIFACT", out_dir);
+	if (n < 0 || n >= (int)sizeof(path))
+		return 1;
+	n = snprintf(body, sizeof(body),
+		     "spark-train-dry %s\n"
+		     "method=%s\n"
+		     "mode=dry-run-fixture\n"
+		     "not_sgd=true\n"
+		     "trained=false\n"
+		     "adapter=%s/adapter.bin\n"
+		     "checkpoint=%s/checkpoint.json\n"
+		     "note=dry fixture -- not SGD; not a trained model\n",
+		     job_id, method, out_dir, out_dir);
+	if (n < 0 || n >= (int)sizeof(body))
+		return 1;
+	f = fopen(path, "w");
+	if (!f) {
+		perror(path);
+		return 1;
+	}
+	if (fwrite(body, 1, (size_t)n, f) != (size_t)n) {
+		fclose(f);
+		fprintf(stderr, "error: train marker write failed\n");
+		return 1;
+	}
+	fclose(f);
+	return 0;
+}
+
+int spark_bump_train_step(const char *out_dir, const char *job_id,
+			  int step_n)
+{
+	char path[512];
+	char body[704];
+	int n;
+	FILE *f;
+
+	if (!out_dir || !out_dir[0])
+		return 1;
+	if (!job_id || !job_id[0])
+		job_id = "job-dry-001";
+	if (step_n < 1)
+		step_n = 1;
+	if (mkdir_p(out_dir) != 0) {
+		fprintf(stderr, "error: train step mkdir failed %s\n",
+			out_dir);
+		return 1;
+	}
+	n = snprintf(path, sizeof(path), "%s/ARTIFACT", out_dir);
+	if (n < 0 || n >= (int)sizeof(path))
+		return 1;
+	n = snprintf(body, sizeof(body),
+		     "spark-train-dry %s\n"
+		     "mode=dry-run-fixture\n"
+		     "not_sgd=true\n"
+		     "trained=false\n"
+		     "step_n=%d\n"
+		     "op=step\n"
+		     "note=dry STEP -- not SGD; not a trained model\n",
+		     job_id, step_n);
+	if (n < 0 || n >= (int)sizeof(body))
+		return 1;
+	f = fopen(path, "w");
+	if (!f) {
+		perror(path);
+		return 1;
+	}
+	if (fwrite(body, 1, (size_t)n, f) != (size_t)n) {
+		fclose(f);
+		fprintf(stderr, "error: train step marker write failed\n");
+		return 1;
+	}
+	fclose(f);
+	return 0;
 }

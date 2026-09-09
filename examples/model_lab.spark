@@ -1,0 +1,61 @@
+# Flagship lab: reverse → compile → build new → modify existing
+# Keep special training. Ground inventable facts (SoT + abstain).
+#
+# Honest scope: this is NOT a new foundation LLM. Reverse reads
+# published local config/index. Compile emits SPARK_BC of this
+# program. Build/train is an adapter or overlay. Modify attaches
+# without deleting existing LoRA / reply-pack / abstain heads.
+#
+# Dry (CI / offline):
+#   ./spark --dry-run examples/model_lab.spark
+#
+# Live reverse (local HF dir you already have):
+#   ./spark-model-lab --live reverse --model /path/to/local-hf
+# Never auto / code / fast. Never closed-weight theft.
+
+model "fixtures/tiny-lm"
+
+# --- 1) Reverse-engineer published architecture -------------------
+model reverse "fixtures/tiny-lm" -> inspect
+
+expect contains inspect "architecture"
+expect contains inspect "hidden_size"
+expect contains inspect "keep_special_training"
+
+# inspect is an alias for reverse
+model inspect "fixtures/tiny-lm" -> inspect2
+expect contains inspect2 "Qwen3ForCausalLM"
+
+# --- 2) Compile this program to SPARK_BC (dry = plan bytes) ------
+model compile "examples/model_lab.spark" into "out/lab/model_lab.sparkbc" -> bc
+
+expect contains bc "sparkbc"
+expect contains bc "compile"
+
+# --- 3) Build a NEW adapter (does not replace existing LoRA) ------
+model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" method "spark_distill_cpu" -> job
+
+model status "job-dry-001" -> status
+
+# --- 4) Modify EXISTING: attach; keep special training ------------
+model modify keep_existing "out/train/existing-lora" add "out/train/job-dry-001/adapter.bin" head "out/heads/abstain.pt" -> modified
+
+expect contains modified "keep_existing"
+expect contains modified "existing-lora"
+expect contains modified "keep_special_training"
+
+# --- 5) Ground: abstain head + SoT before inventable ask ----------
+head abstain internal model "fixture-model" weights "out/heads/abstain.pt" threshold 0.7 idk "I don't know." -> gate
+
+expect contains gate "head_abstain"
+
+http get "https://example.invalid/sot/dryer-start" fixture "examples/fixtures/abstain/sot_dryer_price.json" timeout 5 -> sot
+
+expect contains sot "price_usd"
+expect contains sot "2.50"
+
+head ask "What is the dryer start price at that store right now?" -> inventable
+
+expect contains inventable fixture "examples/fixtures/abstain/want_abstain_true.txt"
+expect contains inventable fixture "examples/fixtures/abstain/want_halted_true.txt"
+expect contains inventable "I don't know."

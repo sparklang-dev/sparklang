@@ -356,6 +356,25 @@ static void emit_op3(uint8_t op, uint16_t a, uint16_t b, uint16_t c)
   code[ncode++] = (uint8_t)((c >> 8) & 0xff);
 }
 
+/* Five string operands (TRAIN: dataset, base, out, method, bind). */
+static void emit_op5(uint8_t op, uint16_t a, uint16_t b, uint16_t c,
+                     uint16_t d, uint16_t e)
+{
+  uint16_t ops[5];
+  size_t i;
+
+  ops[0] = a;
+  ops[1] = b;
+  ops[2] = c;
+  ops[3] = d;
+  ops[4] = e;
+  code[ncode++] = op;
+  for (i = 0; i < 5; i++) {
+    code[ncode++] = (uint8_t)(ops[i] & 0xff);
+    code[ncode++] = (uint8_t)((ops[i] >> 8) & 0xff);
+  }
+}
+
 static int strip_quotes(const char *lex, char *out, size_t cap)
 {
   if (lex[0] == '"') {
@@ -1208,6 +1227,139 @@ static void reset_bc(void)
   ncode = 0;
 }
 
+static int ident_is(Tok *t, const char *s)
+{
+  return t && strcmp(t->kind, "IDENT") == 0 &&
+         strcmp(t->lexeme, s) == 0;
+}
+
+static int take_key_string(const char *key, char *buf, size_t cap,
+                           long line)
+{
+  Tok *t = take();
+  if (!t || strcmp(t->kind, "IDENT") != 0 ||
+      strcmp(t->lexeme, key) != 0) {
+    fprintf(stderr, "error:%ld: compile model train needs %s\n",
+            line, key);
+    return 1;
+  }
+  t = take();
+  if (!t || strcmp(t->kind, "STRING") != 0) {
+    fprintf(stderr,
+            "error:%ld: compile model train needs %s string\n",
+            line, key);
+    return 1;
+  }
+  strip_quotes(t->lexeme, buf, cap);
+  return 0;
+}
+
+/* LANGUAGE.md model train / build / status / step → SPARK_BC ops. */
+static int compile_model_stmt(Tok *kw)
+{
+  Tok *next = peek();
+  char dataset[512];
+  char base[256];
+  char out[256];
+  char method[128];
+  char bind[128];
+  char job_id[128];
+  long line = kw->line;
+
+  snprintf(dataset, sizeof(dataset), "%s",
+           "examples/fixtures/train/dataset.jsonl");
+  snprintf(base, sizeof(base), "%s", "fixture-base");
+  snprintf(out, sizeof(out), "%s", "out/train/job-dry-001");
+  snprintf(method, sizeof(method), "%s", "spark_distill_cpu");
+
+  if (ident_is(next, "train") || ident_is(next, "build")) {
+    take();
+    for (;;) {
+      Tok *k = peek();
+      int rc;
+      if (!ident_is(k, "dataset") && !ident_is(k, "base") &&
+          !ident_is(k, "out") && !ident_is(k, "method") &&
+          !ident_is(k, "backend"))
+        break;
+      if (ident_is(k, "dataset"))
+        rc = take_key_string("dataset", dataset, sizeof(dataset),
+                             line);
+      else if (ident_is(k, "base"))
+        rc = take_key_string("base", base, sizeof(base), line);
+      else if (ident_is(k, "out"))
+        rc = take_key_string("out", out, sizeof(out), line);
+      else if (ident_is(k, "method"))
+        rc = take_key_string("method", method, sizeof(method),
+                             line);
+      else {
+        char skip[64];
+        rc = take_key_string("backend", skip, sizeof(skip), line);
+      }
+      if (rc != 0)
+        return 1;
+    }
+    if (take_arrow_bind(bind, sizeof(bind), line, 1) != 0)
+      return 1;
+    if (!bind[0])
+      snprintf(bind, sizeof(bind), "%s", "job");
+    emit_op5(SPBC_OP_TRAIN, add_str_const(dataset),
+             add_str_const(base), add_str_const(out),
+             add_str_const(method), add_str_const(bind));
+    return 0;
+  }
+  if (ident_is(next, "status")) {
+    Tok *jid;
+    take();
+    jid = take();
+    if (!jid || strcmp(jid->kind, "STRING") != 0) {
+      fprintf(stderr,
+              "error:%ld: compile model status needs job id\n",
+              line);
+      return 1;
+    }
+    strip_quotes(jid->lexeme, job_id, sizeof(job_id));
+    if (take_arrow_bind(bind, sizeof(bind), line, 1) != 0)
+      return 1;
+    if (!bind[0])
+      snprintf(bind, sizeof(bind), "%s", "status");
+    emit_op(SPBC_OP_TRAIN_STATUS, add_str_const(job_id),
+            add_str_const(bind), 1);
+    return 0;
+  }
+  if (ident_is(next, "step")) {
+    Tok *jid;
+    take();
+    jid = take();
+    if (!jid || strcmp(jid->kind, "STRING") != 0) {
+      fprintf(stderr,
+              "error:%ld: compile model step needs job id\n",
+              line);
+      return 1;
+    }
+    strip_quotes(jid->lexeme, job_id, sizeof(job_id));
+    if (take_arrow_bind(bind, sizeof(bind), line, 1) != 0)
+      return 1;
+    if (!bind[0])
+      snprintf(bind, sizeof(bind), "%s", "step");
+    emit_op(SPBC_OP_STEP, add_str_const(job_id),
+            add_str_const(bind), 1);
+    return 0;
+  }
+  {
+    Tok *alias = take();
+    char abuf[128];
+    if (!alias || strcmp(alias->kind, "IDENT") != 0) {
+      fprintf(stderr,
+              "error:%ld: compile model/use needs alias\n",
+              line);
+      return 1;
+    }
+    snprintf(abuf, sizeof(abuf), "%s", alias->lexeme);
+    emit_op(SPBC_OP_MODEL, add_str_const(abuf), 0, 0);
+    return 0;
+  }
+}
+
 int spark_compile_file(const char *path, const char *out_bc)
 {
   SparkBc bc;
@@ -1232,16 +1384,8 @@ int spark_compile_file(const char *path, const char *out_bc)
     if (strcmp(kw->kind, "KEYWORD") == 0 &&
         (strcmp(kw->lexeme, "model") == 0 ||
          strcmp(kw->lexeme, "use") == 0)) {
-      Tok *alias = take();
-      char abuf[128];
-      if (!alias || strcmp(alias->kind, "IDENT") != 0) {
-        fprintf(stderr,
-                "error:%ld: compile model/use needs alias\n",
-                kw->line);
+      if (compile_model_stmt(kw) != 0)
         goto done;
-      }
-      snprintf(abuf, sizeof(abuf), "%s", alias->lexeme);
-      emit_op(SPBC_OP_MODEL, add_str_const(abuf), 0, 0);
       continue;
     }
     if (strcmp(kw->kind, "KEYWORD") == 0 &&

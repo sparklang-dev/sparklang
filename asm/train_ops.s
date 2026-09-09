@@ -1,5 +1,8 @@
 # Spark live model train/status — fork/exec spark-train-http
-# Dry-run stays in asm/model_ops.s; this unit only when --live.
+# Dry-run stays in asm/model_ops.s (SPARK_BC TRAIN 0x26 /
+# STEP 0x28 / TRAIN_STATUS 0x27 fixtures). This unit only when
+# --live. Live HTTP is not SPARK_BC emit (emit BLOCKED in GAS).
+# model step is dry-run only in GAS (no live HTTP step).
 #
 # Submit: write current linebuf → --spark-line (method/dataset/base/out).
 # Status: poll the quoted job id from `model status "…"`, not a hardcode.

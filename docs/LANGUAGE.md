@@ -3,6 +3,7 @@
 **Programming how-to:**
 [PROGRAMMING_GUIDE.md](PROGRAMMING_GUIDE.md) ·
 **AI models (user-facing):** [AI_MODELS.md](AI_MODELS.md) ·
+**Builder / bytecode:** [SPARK_BUILDER.md](SPARK_BUILDER.md) ·
 **IDE status:** [IDE.md](IDE.md) (verified
 `ide new|open|save|run|buffer|ask|show` + `ide keys` / `ide key`;
 paint = PPM wire, not a language op; show = real `spark-engine-show`)
@@ -56,16 +57,62 @@ VM on startup; `./spark` (GAS) still needs a `model`/`use` line in the file.
 
 ## Statements
 
-### `model analyze` / `compare` / `improve` / `train` / `status` / `plan`
+### `model reverse` / `compile` / `train` / `modify` (lab pipeline)
+
+Inspect a **local published** checkpoint, compile the `.spark` program
+to SPARK_BC, **build** a new adapter/head, and **modify** an existing
+stack **without deleting special training**. Flagship:
+`examples/model_lab.spark`. Runbook: [MODEL_LAB.md](MODEL_LAB.md).
+
+This is **not** a new foundation LLM. Reverse reads `config.json` +
+optional `model.safetensors.index.json` (no tensor load). Compile is
+the Spark program → `.sparkbc`. Train/build is adapters, overlays, or
+abstain heads. Modify **attaches** and sets `keep_special_training`.
+
+```
+model reverse "fixtures/tiny-lm" -> inspect
+model inspect "fixtures/tiny-lm" -> inspect   # alias
+
+model compile "examples/model_lab.spark" into "out/lab/model_lab.sparkbc" -> bc
+
+model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" method "spark_distill_cpu" -> job
+model build -> job                               # same as train
+
+model modify keep_existing "out/train/existing-lora" add "out/train/job-dry-001/adapter.bin" head "out/heads/abstain.pt" -> modified
+```
+
+Live reverse (local dir you already have — never closed-weight theft):
+
+```bash
+./spark-model-lab --live reverse --model /path/to/local-hf
+```
+
+Dry: `./spark --dry-run examples/model_lab.spark`. Gate:
+`make test-model-lab`. Inventable facts still use SoT +
+[ABSTAIN_HEADS.md](ABSTAIN_HEADS.md). Never `auto`/`code`/`fast`.
+
+### `model analyze` / `compare` / `improve` / `train` / `step` / `status` / `plan`
 
 Analyze and compare reachable models, propose improvements, **train**
-real jobs (weights/adapters/checkpoints), poll **status**, or export an
-optional markdown **plan**. Dry-run uses **fixtures only** — no GPU and
-no network. **`model build` is an alias for `model train`** (not a
-blueprint file).
+real jobs (weights/adapters/checkpoints), run one dry **step**, poll
+**status**, or export an optional markdown **plan**. Dry-run uses
+**fixtures only** — no GPU and no network. **`model build` is an alias
+for `model train`** (not a blueprint file).
+
+`--compile` encodes `model train` / `model build` as SPARK_BC
+`TRAIN` (`0x26`), `model step` as `STEP` (`0x28`), and `model status`
+as `TRAIN_STATUS` (`0x27`).
+Selfhost train seed: `selfhost/compile_train.spark` →
+`docs/examples/spark-selfhost-train.sparkbc`. Bootstrap
+`./spark-bootstrap --run-bc` runs that binary (dry;
+`trained=false`). GAS `./spark --dry-run` runs train verbs from
+source; GAS does **not emit** `.sparkbc`. Emitting TRAIN/STEP ≠ a
+trained model. See [SPARK_BC.md](SPARK_BC.md) and
+[SPARK_BUILDER.md](SPARK_BUILDER.md).
 
 Training methodology: [MODEL_TRAINING.md](MODEL_TRAINING.md).
 Eval helpers: [MODEL_ANALYSIS.md](MODEL_ANALYSIS.md).
+Lab pipeline: [MODEL_LAB.md](MODEL_LAB.md).
 
 ```
 model analyze "fixtures/tiny-lm" -> report
@@ -80,8 +127,20 @@ model plan blueprint into "out/better-model.md"   # markdown only
 
 model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" method "spark_distill_cpu" -> job
 model build -> job                               # same as train
+model step "job-dry-001" -> step                 # dry loop tick (0x28)
 model status "job-dry-001" -> status             # polls that job id
 ```
+
+### `model step` (SPARK_BC `STEP` `0x28`)
+
+One dry training-loop tick in the binary — not SGD and not trained.
+Syntax: `model step "job-id" -> bind`. Compiles to `STEP` (job_id,
+bind). Bootstrap `--run-bc` prints `"op":"step"` JSON and updates
+`ARTIFACT` with `step_n`. Proof: TRAIN → STEP → TRAIN_STATUS in
+`examples/spark_train_step.spark` →
+`docs/examples/spark-train-step.sparkbc` (sha256
+`d08925b52bf8c840de626c9cfec619d4dbae5a674b94bb8c7c5837eb1ac64551`).
+Dry ≠ trained.
 
 Optional **`method "…"`** selects the training algorithm
 (`spark_distill_cpu` | `spark_pref_pack` | `spark_playbook_fit` |
@@ -92,8 +151,11 @@ has no voice (or locks major behaviors). Inventable facts require
 Default when omitted: `spark_distill_cpu` (env `SPARK_TRAIN_METHOD`
 override). Live GAS passes the statement via
 `./spark-train-http --spark-line`; status uses the **quoted** job id
-(never a hardcoded `job-dry-001`). GAS-first — no SPARK_BC opcode yet
-(see [SPARK_BC.md](SPARK_BC.md)).
+(never a hardcoded `job-dry-001`). SPARK_BC `TRAIN` is **`0x26`**;
+`STEP` is **`0x28`**; `TRAIN_STATUS` is **`0x27`**. Execute with
+`./spark-bootstrap --run-bc`. GAS `./spark --run-bc` exits 1.
+See [SPARK_BC.md](SPARK_BC.md) and
+[SPARK_BUILDER.md](SPARK_BUILDER.md).
 
 **Backends:** `http` (default MVP companion `./spark-train-http`),
 `local-yield` (optional allowlisted `train@` unit), `huggingface`

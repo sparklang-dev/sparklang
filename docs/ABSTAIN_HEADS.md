@@ -91,7 +91,11 @@ head ask "Who is the mayor of Springfield?" -> answer
 inventable facts → inventable / open `head ask` HALTs to IDK when
 there is no SoT on the generate path. Honest scope: architecture
 prevents inventable open-decode; it does not eliminate all
-hallucination forever. Companion playbook (SoT-only slice):
+hallucination forever.
+
+Full reverse → compile → build → modify (keep existing LoRA) plus
+this grounding pattern: `examples/model_lab.spark`
+([MODEL_LAB.md](MODEL_LAB.md)). Companion playbook (SoT-only slice):
 
 ```bash
 ./spark --dry-run examples/head_ask_inventable_verify.spark

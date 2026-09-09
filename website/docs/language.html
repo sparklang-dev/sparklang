@@ -35,6 +35,7 @@
                 <ul class="nav-more__menu" hidden>
                   <li><a href="/docs/adoption-bar.html">Adoption bar</a></li>
                   <li><a href="/docs/ai-models.html">AI models</a></li>
+                  <li><a href="/docs/spark-builder.html">Builder</a></li>
                   <li><a href="/docs/native-network-web.html">Network + web</a></li>
                   <li><a href="/docs/programming-guide.html">Programming guide</a></li>
                   <li><a href="/docs/ide.html">IDE</a></li>
@@ -59,6 +60,7 @@
         <a href="/docs/adoption-bar.html">Adoption bar</a>
         <a href="/docs/ai-models.html">AI models</a>
         <a href="/docs/model-training.html">Model training</a>
+        <a href="/docs/spark-builder.html">Builder</a>
         <a href="/docs/native-network-web.html">Network + web</a>
         <a href="/docs/programming-guide.html">Programming guide</a>
         <a href="/docs/language.html">Language reference</a>
@@ -70,6 +72,7 @@
         <p><strong>Programming how-to:</strong>
         <code class="inline-code">PROGRAMMING_GUIDE.md</code> ·
         <strong>AI models (user-facing):</strong> <a href="/docs/ai-models.html">AI_MODELS.md</a> ·
+        <strong>Builder / bytecode:</strong> <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> ·
         <strong>IDE status:</strong> <a href="/docs/ide.html">IDE.md</a> (verified
         <code class="inline-code">ide new|open|save|run|buffer|ask|show</code> + <code class="inline-code">ide keys</code> / <code class="inline-code">ide key</code>;
         paint = PPM wire, not a language op; show = real <code class="inline-code">spark-engine-show</code>)</p>
@@ -113,14 +116,50 @@
         <p>Optional <strong><code class="inline-code">spark.toml</code></strong> (<code class="inline-code">model = "…"</code>) is read by the <strong>bootstrap</strong>
         VM on startup; <code class="inline-code">./spark</code> (GAS) still needs a <code class="inline-code">model</code>/<code class="inline-code">use</code> line in the file.</p>
         <h2 id="statements">Statements</h2>
-        <h3 id="model-analyze-compare-improve-train-status-plan"><code class="inline-code">model analyze</code> / <code class="inline-code">compare</code> / <code class="inline-code">improve</code> / <code class="inline-code">train</code> / <code class="inline-code">status</code> / <code class="inline-code">plan</code></h3>
+        <h3 id="model-reverse-compile-train-modify-lab-pipeline"><code class="inline-code">model reverse</code> / <code class="inline-code">compile</code> / <code class="inline-code">train</code> / <code class="inline-code">modify</code> (lab pipeline)</h3>
+        <p>Inspect a <strong>local published</strong> checkpoint, compile the <code class="inline-code">.spark</code> program
+        to SPARK_BC, <strong>build</strong> a new adapter/head, and <strong>modify</strong> an existing
+        stack <strong>without deleting special training</strong>. Flagship:
+        <code class="inline-code">examples/model_lab.spark</code>. Runbook: <code class="inline-code">MODEL_LAB.md</code>.</p>
+        <p>This is <strong>not</strong> a new foundation LLM. Reverse reads <code class="inline-code">config.json</code> +
+        optional <code class="inline-code">model.safetensors.index.json</code> (no tensor load). Compile is
+        the Spark program → <code class="inline-code">.sparkbc</code>. Train/build is adapters, overlays, or
+        abstain heads. Modify <strong>attaches</strong> and sets <code class="inline-code">keep_special_training</code>.</p>
+        <pre class="doc__pre"><code class="inline-code">model reverse &quot;fixtures/tiny-lm&quot; -&gt; inspect
+        model inspect &quot;fixtures/tiny-lm&quot; -&gt; inspect   # alias
+
+        model compile &quot;examples/model_lab.spark&quot; into &quot;out/lab/model_lab.sparkbc&quot; -&gt; bc
+
+        model train dataset &quot;examples/fixtures/train/dataset.jsonl&quot; base &quot;fixture-base&quot; out &quot;out/train/job-dry-001&quot; backend &quot;http&quot; method &quot;spark_distill_cpu&quot; -&gt; job
+        model build -&gt; job                               # same as train
+
+        model modify keep_existing &quot;out/train/existing-lora&quot; add &quot;out/train/job-dry-001/adapter.bin&quot; head &quot;out/heads/abstain.pt&quot; -&gt; modified
+        </code></pre>
+        <p>Live reverse (local dir you already have — never closed-weight theft):</p>
+        <pre class="doc__pre"><code class="language-bash">./spark-model-lab --live reverse --model /path/to/local-hf
+        </code></pre>
+        <p>Dry: <code class="inline-code">./spark --dry-run examples/model_lab.spark</code>. Gate:
+        <code class="inline-code">make test-model-lab</code>. Inventable facts still use SoT +
+        <code class="inline-code">ABSTAIN_HEADS.md</code>. Never <code class="inline-code">auto</code>/<code class="inline-code">code</code>/<code class="inline-code">fast</code>.</p>
+        <h3 id="model-analyze-compare-improve-train-step-status-plan"><code class="inline-code">model analyze</code> / <code class="inline-code">compare</code> / <code class="inline-code">improve</code> / <code class="inline-code">train</code> / <code class="inline-code">step</code> / <code class="inline-code">status</code> / <code class="inline-code">plan</code></h3>
         <p>Analyze and compare reachable models, propose improvements, <strong>train</strong>
-        real jobs (weights/adapters/checkpoints), poll <strong>status</strong>, or export an
-        optional markdown <strong>plan</strong>. Dry-run uses <strong>fixtures only</strong> — no GPU and
-        no network. <strong><code class="inline-code">model build</code> is an alias for <code class="inline-code">model train</code></strong> (not a
-        blueprint file).</p>
+        real jobs (weights/adapters/checkpoints), run one dry <strong>step</strong>, poll
+        <strong>status</strong>, or export an optional markdown <strong>plan</strong>. Dry-run uses
+        <strong>fixtures only</strong> — no GPU and no network. <strong><code class="inline-code">model build</code> is an alias
+        for <code class="inline-code">model train</code></strong> (not a blueprint file).</p>
+        <p><code class="inline-code">--compile</code> encodes <code class="inline-code">model train</code> / <code class="inline-code">model build</code> as SPARK_BC
+        <code class="inline-code">TRAIN</code> (<code class="inline-code">0x26</code>), <code class="inline-code">model step</code> as <code class="inline-code">STEP</code> (<code class="inline-code">0x28</code>), and <code class="inline-code">model status</code>
+        as <code class="inline-code">TRAIN_STATUS</code> (<code class="inline-code">0x27</code>).
+        Selfhost train seed: <code class="inline-code">selfhost/compile_train.spark</code> →
+        <code class="inline-code">docs/examples/spark-selfhost-train.sparkbc</code>. Bootstrap
+        <code class="inline-code">./spark-bootstrap --run-bc</code> runs that binary (dry;
+        <code class="inline-code">trained=false</code>). GAS <code class="inline-code">./spark --dry-run</code> runs train verbs from
+        source; GAS does <strong>not emit</strong> <code class="inline-code">.sparkbc</code>. Emitting TRAIN/STEP ≠ a
+        trained model. See <a href="/docs/self-host.html">SPARK_BC.md</a> and
+        <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</p>
         <p>Training methodology: <a href="/docs/model-training.html">MODEL_TRAINING.md</a>.
-        Eval helpers: <a href="/docs/ai-models.html">MODEL_ANALYSIS.md</a>.</p>
+        Eval helpers: <a href="/docs/ai-models.html">MODEL_ANALYSIS.md</a>.
+        Lab pipeline: <code class="inline-code">MODEL_LAB.md</code>.</p>
         <pre class="doc__pre"><code class="inline-code">model analyze &quot;fixtures/tiny-lm&quot; -&gt; report
         model analyze all -&gt; catalog_report
 
@@ -133,20 +172,32 @@
 
         model train dataset &quot;examples/fixtures/train/dataset.jsonl&quot; base &quot;fixture-base&quot; out &quot;out/train/job-dry-001&quot; backend &quot;http&quot; method &quot;spark_distill_cpu&quot; -&gt; job
         model build -&gt; job                               # same as train
+        model step &quot;job-dry-001&quot; -&gt; step                 # dry loop tick (0x28)
         model status &quot;job-dry-001&quot; -&gt; status             # polls that job id
         </code></pre>
+        <h3 id="model-step-spark-bc-step-0x28"><code class="inline-code">model step</code> (SPARK_BC <code class="inline-code">STEP</code> <code class="inline-code">0x28</code>)</h3>
+        <p>One dry training-loop tick in the binary — not SGD and not trained.
+        Syntax: <code class="inline-code">model step "job-id" -&gt; bind</code>. Compiles to <code class="inline-code">STEP</code> (job_id,
+        bind). Bootstrap <code class="inline-code">--run-bc</code> prints <code class="inline-code">"op":"step"</code> JSON and updates
+        <code class="inline-code">ARTIFACT</code> with <code class="inline-code">step_n</code>. Proof: TRAIN → STEP → TRAIN_STATUS in
+        <code class="inline-code">examples/spark_train_step.spark</code> →
+        <code class="inline-code">docs/examples/spark-train-step.sparkbc</code> (sha256
+        <code class="inline-code">d08925b52bf8c840de626c9cfec619d4dbae5a674b94bb8c7c5837eb1ac64551</code>).
+        Dry ≠ trained.</p>
         <p>Optional <strong><code class="inline-code">method "…"</code></strong> selects the training algorithm
         (<code class="inline-code">spark_distill_cpu</code> | <code class="inline-code">spark_pref_pack</code> | <code class="inline-code">spark_playbook_fit</code> |
-        <code class="inline-code">spark_faq_index</code> |
-        <code class="inline-code">spark_reply_pack</code>).
+        <code class="inline-code">spark_faq_index</code> | <code class="inline-code">spark_reply_pack</code>).
         <strong><code class="inline-code">spark_reply_pack</code></strong> overlays text + spoken replies on a base that
         has no voice (or locks major behaviors). Inventable facts require
         <code class="inline-code">sot_ref</code> — missing SoT fails loud; the pack never fabricates.
         Default when omitted: <code class="inline-code">spark_distill_cpu</code> (env <code class="inline-code">SPARK_TRAIN_METHOD</code>
         override). Live GAS passes the statement via
         <code class="inline-code">./spark-train-http --spark-line</code>; status uses the <strong>quoted</strong> job id
-        (never a hardcoded <code class="inline-code">job-dry-001</code>). GAS-first — no SPARK_BC opcode yet
-        (see <a href="/docs/self-host.html">SPARK_BC.md</a>).</p>
+        (never a hardcoded <code class="inline-code">job-dry-001</code>). SPARK_BC <code class="inline-code">TRAIN</code> is <strong><code class="inline-code">0x26</code></strong>;
+        <code class="inline-code">STEP</code> is <strong><code class="inline-code">0x28</code></strong>; <code class="inline-code">TRAIN_STATUS</code> is <strong><code class="inline-code">0x27</code></strong>. Execute with
+        <code class="inline-code">./spark-bootstrap --run-bc</code>. GAS <code class="inline-code">./spark --run-bc</code> exits 1.
+        See <a href="/docs/self-host.html">SPARK_BC.md</a> and
+        <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</p>
         <p><strong>Backends:</strong> <code class="inline-code">http</code> (default MVP companion <code class="inline-code">./spark-train-http</code>),
         <code class="inline-code">local-yield</code> (optional allowlisted <code class="inline-code">train@</code> unit), <code class="inline-code">huggingface</code>
         (reserved — not wired). Env: <code class="inline-code">SPARK_TRAIN_BACKEND</code>, <code class="inline-code">SPARK_TRAIN_URL</code>,
@@ -192,8 +243,8 @@
         is rejected. Prefer <code class="inline-code">SPARK_GATEWAY_KEY</code>;
         <code class="inline-code">OPENAI_API_KEY</code> is wire-compat only. Public tunnel uses a probe credential; HTTP 401 → credential unavailable (no invented routing).
         <code class="inline-code">make test</code> never hits the network; <code class="inline-code">make test-ask-gateway</code> is offline
-        <code class="inline-code">--dry</code> on the companion. Inventable live/dry prompts
-        <strong>IDK</strong> unless <code class="inline-code">--sot-ok</code>.</p>
+        <code class="inline-code">--dry</code> on the companion. Inventable live/dry prompts <strong>IDK</strong> unless
+        <code class="inline-code">--sot-ok</code> (see <a href="/docs/ai-models.html#live-gateway-integration-wired-today">ASK_LIVE.md</a>).</p>
         <p><strong>Accounting:</strong> dry-run prints
         <code class="inline-code">[accounting] latency_ms=0 … note=dry-run</code> (zeros; never invents
         tokens). Live <code class="inline-code">./spark-ask-http</code> prints wall-clock <code class="inline-code">latency_ms</code>
@@ -1025,6 +1076,38 @@
         <h2 id="errors">Errors</h2>
         <p>Human-readable: file open failures, usage, and (when live lands) schema /
         classify mismatch messages. Dry-run uses heuristic stubs so CI needs no keys.</p>
+        <h2 id="numeric-expects-07">Numeric expects (0.7)</h2>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Form</th>
+        <th>Meaning</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><code class="inline-code">expect gte NAME $.path N</code></td>
+        <td>JSON path ≥ N</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">expect lte NAME $.path N</code></td>
+        <td>JSON path ≤ N</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">expect eq NAME $.path V</code></td>
+        <td>JSON equality</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">expect histogram_min NAME CLASS N</code></td>
+        <td>class histogram floor</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">expect score NAME $.path using "URL" &gt;= N</code></td>
+        <td>rubric score (dry fixture)</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <p><code class="inline-code">expect equal</code> / <code class="inline-code">expect contains</code> unchanged.</p>
       </article>
       </main>
     </div>

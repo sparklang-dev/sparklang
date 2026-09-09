@@ -4,6 +4,44 @@ All notable user-facing releases of **SparkLang** (the Spark programming
 language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
+## 0.6.26 — 2026-09-08
+
+- **Builder / SPARK_BC factory:** Spark compiles Spark to SPARK_BC
+  (`selfhost/compile.spark` → `docs/examples/spark-self.sparkbc`)
+  and emits **Spark-created init weights** from those bytes
+  (`docs/examples/spark-self.init.safetensors`). Training is also
+  in the binary: `TRAIN` `0x26` / `STEP` `0x28` /
+  `TRAIN_STATUS` `0x27`. Builder: `examples/spark_builder.spark` →
+  `docs/examples/spark-builder.sparkbc`. Selfhost train seed:
+  `selfhost/compile_train.spark` →
+  `docs/examples/spark-selfhost-train.sparkbc`. STEP proof stream
+  TRAIN→STEP→TRAIN_STATUS: `examples/spark_train_step.spark` →
+  `docs/examples/spark-train-step.sparkbc` (sha256
+  `d08925b52bf8c840de626c9cfec619d4dbae5a674b94bb8c7c5837eb1ac64551`).
+  Syntax: `model step "job-id" -> bind`. Dump:
+  `docs/examples/spark-builder-bc.txt`. Execute from published
+  `.sparkbc`: `./spark-bootstrap --run-bc` (dry fixture + ARTIFACT
+  marker; `trained=false`; not SGD). Dry ≠ trained. GAS
+  `./spark --dry-run` runs train verbs from source; GAS does **not
+  emit** `.sparkbc` and `./spark --run-bc` is **BLOCKED** (use
+  bootstrap `--compile`). Page:
+  [SPARK_BUILDER.md](docs/SPARK_BUILDER.md) /
+  `/docs/spark-builder.html`. Honest: init, not trained. No
+  imported weights. Emitting TRAIN/STEP ≠ a trained model. Later
+  train aims to beat Claude. Companion
+  `tools/spark-bc-dump/dump.py`.
+
+## 0.6.25 — 2026-09-08
+
+- **Model lab pipeline:** `model reverse` / `inspect` (local
+  `config.json` + safetensors index, no tensor load), `model compile`
+  (SPARK_BC plan for the `.spark` program), `model modify`
+  (`keep_existing` + `keep_special_training` — attach only). Flagship
+  `examples/model_lab.spark` also keeps SoT + `head abstain` so
+  inventable facts still IDK. Companion `./spark-model-lab`. Gate:
+  `make test-model-lab`. Not a new foundation LLM. Docs:
+  [MODEL_LAB.md](docs/MODEL_LAB.md).
+
 ## 0.6.24 — 2026-09-08
 
 - **Ground or IDK (default on):** inventable facts (prices, hours,

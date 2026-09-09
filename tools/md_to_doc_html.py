@@ -21,6 +21,7 @@ DOC_NAV = """\
         <a href="/docs/adoption-bar.html"{ab}>Adoption bar</a>
         <a href="/docs/ai-models.html"{ai}>AI models</a>
         <a href="/docs/model-training.html"{ai}>Model training</a>
+        <a href="/docs/spark-builder.html"{bc}>Builder</a>
         <a href="/docs/native-network-web.html"{nn}>Network + web</a>
         <a href="/docs/programming-guide.html">Programming guide</a>
         <a href="/docs/language.html">Language reference</a>
@@ -67,6 +68,7 @@ HEADER = """\
                 <ul class="nav-more__menu" hidden>
                   <li><a href="/docs/adoption-bar.html">Adoption bar</a></li>
                   <li><a href="/docs/ai-models.html">AI models</a></li>
+                  <li><a href="/docs/spark-builder.html">Builder</a></li>
                   <li><a href="/docs/native-network-web.html">Network + web</a></li>
                   <li><a href="/docs/programming-guide.html">Programming guide</a></li>
                   <li><a href="/docs/ide.html">IDE</a></li>
@@ -131,6 +133,7 @@ MD_LINK_MAP = {
     "VOICE.md": "/docs/language.html",
     "SELF_HOST.md": "/docs/self-host.html",
     "SPARK_BC.md": "/docs/self-host.html",
+    "SPARK_BUILDER.md": "/docs/spark-builder.html",
     "NATIVE_NETWORK_WEB.md": "/docs/native-network-web.html",
 }
 
@@ -209,6 +212,7 @@ def render(md_path: Path, out_path: Path, title: str, description: str, current:
         nn=' aria-current="page"' if current == "nn" else "",
         ide=' aria-current="page"' if current == "ide" else "",
         sh=' aria-current="page"' if current == "sh" else "",
+        bc=' aria-current="page"' if current == "bc" else "",
     )
     prefix = ""
     if current == "sh":
@@ -240,7 +244,7 @@ def main() -> int:
     ap.add_argument(
         "--all-stale",
         action="store_true",
-        help="Regenerate ai-models, language, self-host, native-network-web",
+        help="Regenerate docs HTML including builder / SPARK_BC dump",
     )
     args = ap.parse_args()
     docs = ROOT / "docs"
@@ -282,6 +286,15 @@ def main() -> int:
             "SparkLang model train / build — real jobs, dry fixtures, "
             "HTTP and local-yield backends.",
             "ai",
+        )
+        render(
+            docs / "SPARK_BUILDER.md",
+            out / "spark-builder.html",
+            "Builder — SPARK_BC factory",
+            "Spark compiles Spark to SPARK_BC (TRAIN 0x26 / "
+            "TRAIN_STATUS 0x27) and emits init weights. "
+            "Emitting TRAIN is not a trained model.",
+            "bc",
         )
         render(
             docs / "LANGUAGE.md",

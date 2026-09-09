@@ -1,0 +1,7 @@
+{
+  "metadata": {"total_size": 0},
+  "weight_map": {
+    "model.embed_tokens.weight": "model.safetensors",
+    "lm_head.weight": "model.safetensors"
+  }
+}
