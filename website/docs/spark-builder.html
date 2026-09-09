@@ -110,7 +110,9 @@
            <code class="inline-code">STEP</code> <code class="inline-code">0x28</code> (plus <code class="inline-code">MODEL</code> / <code class="inline-code">ASK</code> / <code class="inline-code">PRINT</code> / <code class="inline-code">HALT</code> as needed).</li>
         <li><strong><code class="inline-code">--run-bc</code></strong> — <code class="inline-code">./spark-bootstrap --run-bc ….sparkbc</code> executes those
            train opcodes as a <strong>dry fixture</strong> (<code class="inline-code">trained=false</code>, <code class="inline-code">ARTIFACT</code> under
-           <code class="inline-code">out/train/&lt;job&gt;/</code>). Dry ≠ trained.</li>
+           <code class="inline-code">out/train/&lt;job&gt;/</code>). <strong>STEP</strong> also writes/updates
+           <code class="inline-code">out/train/&lt;job&gt;/weights.safetensors</code> (meta <code class="inline-code">step_n</code>, tiny bytecode-hash
+           delta; still <code class="inline-code">trained=false</code> / <code class="inline-code">not_sgd=true</code>). Dry ≠ SGD ≠ trained.</li>
         <li><strong>GAS dry-run vs emit</strong> — <code class="inline-code">./spark --dry-run file.spark</code> runs train
            verbs from <strong>source</strong>. GAS does <strong>not emit</strong> <code class="inline-code">.sparkbc</code>.
            <code class="inline-code">./spark --run-bc</code> is <strong>BLOCKED</strong> (exit 1). Use bootstrap.</li>
@@ -154,7 +156,7 @@
         <td><code class="inline-code">STEP</code></td>
         <td><code class="inline-code">model step "job-id" -&gt; bind</code></td>
         <td>job_id, bind</td>
-        <td><code class="inline-code">[model] {dry step JSON}</code>; updates <code class="inline-code">ARTIFACT</code> <code class="inline-code">step_n</code></td>
+        <td><code class="inline-code">[model] {dry step JSON}</code>; updates <code class="inline-code">ARTIFACT</code> <code class="inline-code">step_n</code> + <code class="inline-code">weights.safetensors</code></td>
         </tr>
         </tbody>
         </table></div>
@@ -245,8 +247,15 @@
         <pre class="doc__pre"><code class="language-bash">./spark-bootstrap --run-bc docs/examples/spark-builder.sparkbc
         ./spark-bootstrap --run-bc docs/examples/spark-train-step.sparkbc
         # Expect dry JSON + ARTIFACT under out/train/job-dry-001/
-        # trained=false; STEP bumps step_n. Not SGD.
-        ls -la out/train/job-dry-001/ARTIFACT
+        # trained=false; STEP bumps step_n + writes weights.safetensors.
+        # Not SGD (apply_dry_step / tools/spark-bc-dump/apply_step.py).
+        ls -la out/train/job-dry-001/ARTIFACT \
+          out/train/job-dry-001/weights.safetensors
+
+        # Proof STEP weight write (clean job dir first):
+        rm -f out/train/job-dry-001/{ARTIFACT,weights.safetensors}
+        ./spark-bootstrap --run-bc docs/examples/spark-train-step.sparkbc
+        # → out/train/job-dry-001/weights.safetensors (meta step_n&gt;=1)
         </code></pre>
         <h3 id="4-gas-source-dry-run-not-bytecode-emit">4) GAS source dry-run (not bytecode emit)</h3>
         <pre class="doc__pre"><code class="language-bash">./spark --dry-run examples/spark_builder.spark
@@ -270,8 +279,8 @@
         <code class="inline-code">examples/spark_train_step.spark</code>, dumps TRAIN/STEP decode, runs
         <code class="inline-code">./spark-bootstrap --run-bc</code> dry, asserts
         <code class="inline-code">out/train/job-dry-001/ARTIFACT</code> (<code class="inline-code">not_sgd=true</code>, <code class="inline-code">trained=false</code>,
-        <code class="inline-code">step_n=1</code>). Not SGD. STEP-updated weights remain a follow-on
-        (<code class="inline-code">feat/sparkbc-step-weights</code>).</p>
+        <code class="inline-code">step_n=1</code>). Not SGD. <code class="inline-code">make test-sparkbc</code> asserts STEP weights
+        (<code class="inline-code">weights.safetensors</code>, <code class="inline-code">step_n&gt;=1</code>).</p>
         <h2 id="published-files-sha256">Published files — sha256</h2>
         <p>Hashes from <code class="inline-code">sha256sum</code> on disk at doc authoring time (<code class="inline-code">51e4dbd</code> tree).
         Re-run <code class="inline-code">sha256sum</code> after recompile; mismatch means drift — update this
@@ -365,7 +374,7 @@
         </tr>
         <tr>
         <td>STEP-updated weights file</td>
-        <td><strong>planned / in flight</strong> (<code class="inline-code">feat/sparkbc-step-weights</code>) — not on <code class="inline-code">main</code> yet</td>
+        <td><strong>implemented</strong> (<code class="inline-code">out/train/&lt;job&gt;/weights.safetensors</code>; dry delta; <code class="inline-code">trained=false</code>)</td>
         </tr>
         <tr>
         <td>Trained / served / beats Claude</td>
@@ -436,7 +445,7 @@
         </tr>
         <tr>
         <td>STEP-updated weights</td>
-        <td><strong>follow-on</strong> (<code class="inline-code">feat/sparkbc-step-weights</code>)</td>
+        <td><strong>implemented</strong> (dry delta; not SGD)</td>
         </tr>
         <tr>
         <td>Trained / served / beats Claude</td>

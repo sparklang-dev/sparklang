@@ -107,7 +107,7 @@ forever.”
   GAS dry-run after banner for hello/mini/classify/extract/pipeline/
   tool/listen/speak + engine/IDE + review/browser/mitm fixtures).
   `make sparkbc-e2e` (TRAIN→STEP→TRAIN_STATUS: compile → dump →
-  `--run-bc` dry → `ARTIFACT`; not SGD; weights follow-on).
+  `--run-bc` dry → `ARTIFACT`; not SGD). STEP weights via `make test-sparkbc`.
   `make test-bc-emit` (bc_vm ↔ spark-bc-emit parity on same `.sparkbc`
   goldens).
 - `--dry-run` tries compile+`bc_vm` first; on compile failure falls

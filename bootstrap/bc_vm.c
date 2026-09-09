@@ -22,6 +22,9 @@
 #define BC_NAME_MAX SPARK_VM_NAME_MAX
 #define BC_VAL_MAX SPARK_VM_VAL_MAX
 
+/* Path of the .sparkbc currently executing (--run-bc). STEP weights. */
+static const char *g_run_bc_path;
+
 typedef struct {
   char name[BC_NAME_MAX];
   char value[BC_VAL_MAX];
@@ -348,7 +351,7 @@ static int op_train_status(BcFrame *fr, const SparkBc *bc, uint32_t *ip)
   return 0;
 }
 
-/* STEP: job_id, bind. Dry loop tick — updates ARTIFACT, not SGD. */
+/* STEP: job_id, bind. Dry loop tick — ARTIFACT + Spark weights, not SGD. */
 static int op_step(BcFrame *fr, const SparkBc *bc, uint32_t *ip)
 {
   uint16_t ji;
@@ -371,6 +374,8 @@ static int op_step(BcFrame *fr, const SparkBc *bc, uint32_t *ip)
     return 1;
   }
   if (spark_bump_train_step(out, job, step_n) != 0)
+    return 1;
+  if (spark_bump_train_weights(out, job, g_run_bc_path, step_n) != 0)
     return 1;
   printf("[model] %s\n", json);
   set_last(fr, json);
@@ -1133,6 +1138,7 @@ int spark_bc_run_file(const char *path)
 
   if (spark_bc_load(path, &bc) != 0)
     return 1;
+  g_run_bc_path = path;
   spark_dry_engine_reset();
   frame_init(&fr);
   printf("[spark] dry-run via bytecode VM\n");
@@ -1226,5 +1232,6 @@ int spark_bc_run_file(const char *path)
   if (rc == 0)
     printf("[spark] ok\n");
   spark_bc_free(&bc);
+  g_run_bc_path = NULL;
   return rc;
 }

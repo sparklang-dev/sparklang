@@ -35,7 +35,7 @@ Prioritized against the adoption bar. Status: **done** / **next** / **won't**
 | Eval | Expectation pass/fail harness (not only alias compare) |
 | Escape | ~~Live `--allow-shell` argv policy; JS / C host FFI~~ **done** |
 | Accounting | ~~Wall-clock latency on live ask; run-level rollup~~ **done** |
-| Builder | STEP-updated weights file (`feat/sparkbc-step-weights`); later owner train toward beat-Claude — not claimed today |
+| Builder | STEP→weights **done** (dry `weights.safetensors`); later owner train toward beat-Claude — not claimed today |
 | LSP | Prefer editor LSP + highlighting over IDE chrome |
 | Receptionist | Promote `examples/receptionist_goal.spark` off `[goal]` when transfer + eval syntax exist |
 | Releases | Cut GitHub Release tags from CHANGELOG (see RELEASE.md); Pages = human CF dashboard (no wrangler) |

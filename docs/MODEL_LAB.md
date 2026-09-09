@@ -57,7 +57,7 @@ Factory (SPARK_BC dump + Spark-created init weights + TRAIN/STEP
 opcodes): [SPARK_BUILDER.md](SPARK_BUILDER.md) — full E2E reproduce
 commands, published sha256 table, GAS BLOCKED, dry ≠ trained.
 Seed is Spark compiling Spark. Later train aims to beat Claude.
-Not trained today. STEP→weights is a follow-on lane.
+Not trained today. STEP→weights is **implemented** (dry; not SGD).
 
 Focused TRAIN→STEP→TRAIN_STATUS proof:
 
@@ -70,7 +70,7 @@ make sparkbc-e2e
 Asserts compile matches published `.sparkbc`, dump shows TRAIN/STEP,
 `--run-bc` dry JSON, and `out/train/job-dry-001/ARTIFACT`
 (`not_sgd=true`, `trained=false`, `step_n=1`). Does **not** invent
-SGD. STEP-updated weights are a follow-on lane.
+SGD. STEP-updated weights are **implemented** (`weights.safetensors`).
 
 ## Related
 

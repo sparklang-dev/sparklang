@@ -18,7 +18,11 @@ from sparklang.model_lab.bc_dump import (
     load_sparkbc,
 )
 from sparklang.model_lab.builder import emit_base, emit_stub
-from sparklang.model_lab.weights import emit_init_weights
+from sparklang.model_lab.weights import (
+    apply_dry_step,
+    emit_init_weights,
+    read_safetensors_meta,
+)
 
 BUILDER_BC = ROOT / "docs/examples/spark-builder.sparkbc"
 SELF_BC = ROOT / "docs/examples/spark-self.sparkbc"
@@ -158,21 +162,48 @@ def test_train_step_opcode() -> list[str]:
     return names
 
 
+def test_dry_step_writes_weights() -> dict:
+    """apply_dry_step leaves step_n>=1 and trained=false."""
+    with tempfile.TemporaryDirectory() as tmp:
+        dest = Path(tmp) / "weights.safetensors"
+        r1 = apply_dry_step(
+            STEP_BC,
+            dest,
+            step_n=1,
+            source=STEP_SRC,
+            command=STEP_CMD,
+        )
+        assert r1["trained"] is False
+        assert r1["not_sgd"] is True
+        assert r1["step_n"] >= 1
+        assert dest.is_file()
+        meta = read_safetensors_meta(dest)
+        assert int(meta["step_n"]) >= 1
+        assert meta["trained"] == "false"
+        assert meta["not_sgd"] == "true"
+        r2 = apply_dry_step(STEP_BC, dest, step_n=1)
+        assert r2["step_n"] > r1["step_n"]
+        assert r2["sha256"] != r1["sha256"]
+        return r1
+
+
 def main() -> int:
     """Run dump + weight checks against committed SPARK_BC files."""
     self_info = test_self_magic_and_weights()
     bops = test_builder_train_opcode()
     test_builder_weights_stay_init()
     sops = test_train_step_opcode()
+    step_w = test_dry_step_writes_weights()
     print(
         "ok sha256=%s n_tensors=%d first32=%s train_ops=%s "
-        "step_ops=%s"
+        "step_ops=%s step_n=%s"
         % (
             self_info["bc"]["sha256"][:12],
             self_info["weights"]["n_tensors"],
             self_info["first"],
             " ".join(bops),
             " ".join(sops),
+            step_w["step_n"],
         )
     )
     return 0
