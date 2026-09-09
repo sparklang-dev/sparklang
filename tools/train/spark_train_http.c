@@ -9,7 +9,8 @@
  *      SPARK_TRAIN_URL, SPARK_TRAIN_TOKEN (optional),
  *      SPARK_TRAIN_UNIT_ALLOWLIST (local-yield only)
  *      SPARK_TRAIN_METHOD=spark_distill_cpu|spark_pref_pack|
- *                          spark_playbook_fit|spark_faq_index
+ *                          spark_playbook_fit|spark_faq_index|
+ *                          spark_reply_pack
  *      SPARK_TRAIN_OUT (optional live out dir override)
  *
  * Language bridge: --spark-line PATH reads a `model train` /
@@ -52,7 +53,8 @@ static void usage(void)
 		"  [--dataset PATH] [--base ID] [--out DIR]\n"
 		"  [--backend http|local-yield|huggingface]\n"
 		"  [--method spark_distill_cpu|spark_pref_pack|"
-		"spark_playbook_fit|spark_faq_index]\n"
+		"spark_playbook_fit|spark_faq_index|"
+		"spark_reply_pack]\n"
 		"  [--spark-line PATH]  (parse model train|status line)\n"
 		"  [--unit NAME]  (local-yield only)\n");
 	exit(1);
@@ -70,7 +72,8 @@ static int method_ok(const char *method)
 	return strcmp(method, "spark_distill_cpu") == 0 ||
 	       strcmp(method, "spark_pref_pack") == 0 ||
 	       strcmp(method, "spark_playbook_fit") == 0 ||
-	       strcmp(method, "spark_faq_index") == 0;
+	       strcmp(method, "spark_faq_index") == 0 ||
+	       strcmp(method, "spark_reply_pack") == 0;
 }
 
 static int unit_allowlisted(const char *unit)
@@ -524,7 +527,7 @@ int main(int argc, char **argv)
 	if (!method_ok(method))
 		die_cfg("unknown method (want spark_distill_cpu|"
 			"spark_pref_pack|spark_playbook_fit|"
-			"spark_faq_index)");
+			"spark_faq_index|spark_reply_pack)");
 
 	if (status && !job_id)
 		die_cfg("status requires job id (argv or --spark-line)");

@@ -3,6 +3,7 @@
 #
 # Submit: write current linebuf → --spark-line (method/dataset/base/out).
 # Status: poll the quoted job id from `model status "…"`, not a hardcode.
+# Methods include spark_reply_pack (voice+text overlay, no fabricate).
 
 .intel_syntax noprefix
 .global train_live_submit

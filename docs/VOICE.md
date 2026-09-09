@@ -108,6 +108,18 @@ the written model is fully loadable without stubbing “copied”.
 ./spark --dry-run examples/voice_copy.spark
 ```
 
+## Overlay speak on a text-only model
+
+`model train … method "spark_reply_pack"` stores spoken scripts in
+`replies.json` even when the **base has no voice**. Spark `speak reply`
+uses the pack; this is **not** neural TTS / voice-GPU training.
+Inventable speak lines still need `sot_ref` (see
+[MODEL_TRAINING.md](MODEL_TRAINING.md)).
+
+```bash
+./spark --dry-run examples/model_train_reply.spark
+```
+
 ## Written AI voice models
 
 ```

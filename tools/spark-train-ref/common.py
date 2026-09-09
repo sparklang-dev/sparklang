@@ -16,6 +16,7 @@ METHODS = (
     "spark_pref_pack",
     "spark_playbook_fit",
     "spark_faq_index",
+    "spark_reply_pack",
 )
 
 

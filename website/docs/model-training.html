@@ -184,7 +184,7 @@
         export SPARK_TRAIN_BACKEND=http
         export SPARK_TRAIN_URL=https://train.example/v1   # your API
         # optional: SPARK_TRAIN_TOKEN=…   (never commit)
-        # optional: SPARK_TRAIN_METHOD=spark_distill_cpu|spark_pref_pack|spark_playbook_fit|spark_faq_index
+        # optional: SPARK_TRAIN_METHOD=spark_distill_cpu|spark_pref_pack|spark_playbook_fit|spark_faq_index|spark_reply_pack
         # optional: SPARK_TRAIN_OUT=out/train/job-…   (live out override)
         ./spark --live examples/model_train.spark
         # or:
@@ -252,6 +252,11 @@
         <td>Build FAQ corpus and train a tiny dual-encoder retriever</td>
         <td><code class="inline-code">faq_index.json</code> + <code class="inline-code">encoder.pt</code></td>
         </tr>
+        <tr>
+        <td><code class="inline-code">spark_reply_pack</code></td>
+        <td>Overlay text + spoken replies on a base that has no voice, or lock major behaviors. Inventable facts require SoT — fail loud, never fabricate</td>
+        <td><code class="inline-code">replies.json</code> + <code class="inline-code">gate.json</code> + <code class="inline-code">router.pt</code></td>
+        </tr>
         </tbody>
         </table></div>
         <p>Select via (first match wins):</p>
@@ -281,6 +286,7 @@
         ./spark --live examples/model_train_pref.spark
         ./spark --live examples/model_train_playbook.spark
         ./spark --live examples/model_train_faq.spark
+        ./spark --live examples/model_train_reply.spark
         </code></pre>
         <p>Dry-run fixtures still plan stub paths without training.</p>
         <h3 id="local-yield-optional-gated">local-yield (optional; gated)</h3>
@@ -317,14 +323,25 @@
         ./spark-train-http --dry --submit | grep job-dry-001
         ./spark-train-http --dry --submit --method spark_pref_pack | grep spark_pref_pack
         ./spark-train-http --dry --submit --method spark_faq_index | grep spark_faq_index
+        ./spark-train-http --dry --submit --method spark_reply_pack | grep spark_reply_pack
+        ./spark --dry-run examples/model_train_reply.spark
         </code></pre>
         <p><code class="inline-code">make test</code> never starts GPU jobs or dials the network.</p>
         <h2 id="product-story">Product story</h2>
         <p>Spark ships <strong>multiple</strong> CPU training methods behind one HTTP contract —
-        distill, preference pack, playbook fit, FAQ index. That is the product
-        story: not LoRA-by-default, not a marker file pretending to be weights.
-        Larger full-SFT / multi-node remain operator backends behind the same
-        contract.</p>
+        distill, preference pack, playbook fit, FAQ index, <strong>reply pack</strong>.
+        <code class="inline-code">spark_reply_pack</code> teaches <strong>voice and text replies</strong> to a
+        model that has <strong>no voice</strong>, or <strong>changes major behaviors</strong> without LoRA.
+        Inventable rows need a SoT file; missing SoT <strong>fails loud</strong> (no fabricated
+        hours/prices/IDs). Not LoRA-by-default, not a marker file pretending to be weights.</p>
+        <h2 id="voice-text-overlay-spark_reply_pack">Voice + text overlay (<code class="inline-code">spark_reply_pack</code>)</h2>
+        <p>Dataset JSONL may add <code class="inline-code">channel</code>, <code class="inline-code">speak</code>,
+        <code class="inline-code">behavior</code>, <code class="inline-code">lock</code>,
+        <code class="inline-code">inventable</code>, <code class="inline-code">sot_ref</code>,
+        <code class="inline-code">idk</code>. A text-only base still gets a speak channel.
+        Inventable without <code class="inline-code">sot_ref</code> → trainer error
+        (<code class="inline-code">refuse fabricate</code>).
+        Example: <code class="inline-code">examples/model_train_reply.spark</code>.</p>
         <h2 id="not-in-mvp">Not in MVP</h2>
         <ul class="doc__ul">
         <li>Auto dataset curation / labeling UI</li>

@@ -7,6 +7,7 @@ Methods (POST body ``method`` field, default spark_distill_cpu):
   spark_pref_pack     — preference pairs + ranker → pref_pack.json + ranker.pt
   spark_playbook_fit  — intent→playbook router → playbooks.json + router.pt
   spark_faq_index     — FAQ corpus + dual-encoder → faq_index.json + encoder.pt
+  spark_reply_pack    — voice+text overlay + behavior lock; never fabricate
 
 HTTP contract:
 
@@ -39,6 +40,7 @@ from distill_cpu import train_distill  # noqa: E402
 from faq_index import train_faq_index  # noqa: E402
 from playbook_fit import train_playbook_fit  # noqa: E402
 from pref_pack import train_pref_pack  # noqa: E402
+from reply_pack import train_reply_pack  # noqa: E402
 
 JOBS: dict[str, dict[str, Any]] = {}
 LOCK = threading.Lock()
@@ -49,6 +51,7 @@ _TRAINERS: dict[str, Callable[..., dict[str, Any]]] = {
     "spark_pref_pack": train_pref_pack,
     "spark_playbook_fit": train_playbook_fit,
     "spark_faq_index": train_faq_index,
+    "spark_reply_pack": train_reply_pack,
 }
 
 
@@ -91,6 +94,9 @@ def _artifact_paths(result: dict[str, Any]) -> dict[str, str]:
         "router",
         "faq_index",
         "encoder",
+        "replies",
+        "gate",
+        "router",
     ):
         if key in result and isinstance(result[key], str):
             arts[key] = result[key]

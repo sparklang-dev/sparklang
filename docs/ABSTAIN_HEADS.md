@@ -9,7 +9,9 @@ verify-or-refuse, quality stamps).
 **Not a Bifrost plugin.** Dry-run first. No fake trained weights in
 fixtures. No owner/TLP PII on public surfaces. Live model is an
 **explicit** HF path or `org/name` — never gateway aliases
-(`auto` / `code` / `fast`).
+(`auto` / `code` / `fast`). Pair with `spark_reply_pack` when you
+need spoken/text overlays: inventable rows still require SoT
+([MODEL_TRAINING.md](MODEL_TRAINING.md)).
 
 ---
 
