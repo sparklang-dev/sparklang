@@ -5,6 +5,22 @@ language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
 
+## 0.6.43 — 2026-09-09
+
+- **J-lane LLM decompile research expand:** enrich
+  [LLM_DECOMPILE.md](docs/research/LLM_DECOMPILE.md)
+  → [/docs/llm-decompile.html](/docs/llm-decompile.html) with
+  owner citations (full URLs): DecompAI agent-style RE (tool loop,
+  distinct from seq2seq), LLM4Decompile End/Ref + SK² +
+  decompile-bench / HF path, EmergentMind survey (ReF, Idioms,
+  SALT, SK², WaDec, SmartHalo, ICL4Decomp; RRR / R2I), Quarkslab
+  (agents route around static hardening; hallucination/cheating;
+  obfuscation as cost multiplier — LLM output is **not** verified
+  SPARK_BC SoT). Cross-links: [DIAGRAMS.md](docs/DIAGRAMS.md),
+  [FACTORY.md](docs/FACTORY.md). Dump/`--compile`/`--run-bc`
+  remain SoT. **Never** perfect SPARK_BC LLM claim. **Never**
+  6000. Does **not** beat Claude or these models.
+
 ## 0.6.42 — 2026-09-09
 
 - **Owned Spark coder (M-lane):** in-repo TinyCoder

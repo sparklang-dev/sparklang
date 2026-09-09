@@ -73,6 +73,22 @@
 <p>All notable user-facing releases of <strong>SparkLang</strong> (the Spark programming
 language) are listed here. Site and installers track
 <code>website/downloads/manifest.json</code>.</p>
+<h2>0.6.43 — 2026-09-09</h2>
+<ul>
+<li><strong>J-lane LLM decompile research expand:</strong> enrich
+  <a href="/docs/llm-decompile.html">LLM_DECOMPILE.md</a>
+  → <a href="/docs/llm-decompile.html">/docs/llm-decompile.html</a> with
+  owner citations (full URLs): DecompAI agent-style RE (tool loop,
+  distinct from seq2seq), LLM4Decompile End/Ref + SK² +
+  decompile-bench / HF path, EmergentMind survey (ReF, Idioms,
+  SALT, SK², WaDec, SmartHalo, ICL4Decomp; RRR / R2I), Quarkslab
+  (agents route around static hardening; hallucination/cheating;
+  obfuscation as cost multiplier — LLM output is <strong>not</strong> verified
+  SPARK_BC SoT). Cross-links: <a href="/docs/diagrams.html">DIAGRAMS.md</a>,
+  <a href="/docs/factory.html">FACTORY.md</a>. Dump/<code>--compile</code>/<code>--run-bc</code>
+  remain SoT. <strong>Never</strong> perfect SPARK_BC LLM claim. <strong>Never</strong>
+  6000. Does <strong>not</strong> beat Claude or these models.</li>
+</ul>
 <h2>0.6.42 — 2026-09-09</h2>
 <ul>
 <li><strong>Owned Spark coder (M-lane):</strong> in-repo TinyCoder
@@ -81,7 +97,7 @@ language) are listed here. Site and installers track
   RTX PRO 6000) on authored coding fixtures
   (<code>examples/fixtures/coder/</code>). CLI <code>./spark-code</code> train / generate /
   prove / tool-loop. Packaged under <code>models/spark-coder/</code> and SDK
-  pack when trained. Docs: <a href="docs/SPARK_CODER.md">SPARK_CODER.md</a> →
+  pack when trained. Docs: <a href="/docs/spark-coder.html">SPARK_CODER.md</a> →
   <code>/docs/spark-coder.html</code>. Gate: <code>make test-spark-coder</code> /
   <code>make spark-coder-train</code>. <strong>Not</strong> a HF/Claude/Bifrost brain.
   Does <strong>not</strong> beat Claude.</li>
@@ -97,14 +113,14 @@ language) are listed here. Site and installers track
   via <code>tools/package_helpers_k.sh</code> into <code>dist/spark-sdk/</code> and I-lane
   <code>out/sdk-pack/</code> when present. Gates: <code>make helpers</code>,
   <code>make tools-test</code> (with <code>make sdk-pack</code> / <code>make test-sdk-pack</code>).
-  Docs: <a href="docs/TOOLS_HELPERS.md">TOOLS_HELPERS.md</a>
+  Docs: <a href="/docs/tools-helpers.html">TOOLS_HELPERS.md</a>
   → <code>/docs/tools-helpers.html</code>. Never 6000. Does not beat Claude.</p>
 </li>
 <li>
 <p><strong>AI model aspects (L-lane):</strong> engineer hub for behaviors, ears/STT,
   eyes/vision, speaking/TTS, thinking/generation, memory, tools,
   train, eval, and serve wiring. Page:
-  <a href="docs/MODEL_ASPECTS.md">MODEL_ASPECTS.md</a> →
+  <a href="/docs/model-aspects.html">MODEL_ASPECTS.md</a> →
   <code>/docs/model-aspects.html</code>. Voice detail also published at
   <code>/docs/voice.html</code>. SVG diagrams: ears→brain→voice and
   behavior/tool loop under <code>docs/images/</code>. Thin <strong>planned</strong> vision
@@ -117,14 +133,14 @@ language) are listed here. Site and installers track
 <h2>0.6.39 — 2026-09-09</h2>
 <ul>
 <li><strong>Decompile UX + LLM research (J-lane):</strong> step-by-step
-  <a href="docs/DECOMPILE.md">DECOMPILE.md</a> with real CLI screenshots,
+  <a href="/docs/decompile.html">DECOMPILE.md</a> with real CLI screenshots,
   annotated SDK GUI mock, and SVG tool-function diagrams (compile
   path, decompile path, helpers/GUI, deterministic vs LLM, LLM
   assist flows). Research
-  <a href="docs/research/LLM_DECOMPILE.md">docs/research/LLM_DECOMPILE.md</a>
+  <a href="/docs/llm-decompile.html">docs/research/LLM_DECOMPILE.md</a>
   → <code>/docs/llm-decompile.html</code> (LLM4Decompile, Nova, SK2,
   Decompile-Bench, AutoDecompiler, Ghidra+LLM — cited). Complements
-  H-lane Mermaid <a href="docs/DIAGRAMS.md">DIAGRAMS.md</a> and I-lane
+  H-lane Mermaid <a href="/docs/diagrams.html">DIAGRAMS.md</a> and I-lane
   <code>spark-bc-gui</code>. Dump stays SoT. <strong>Never</strong> perfect SPARK_BC LLM
   claim. <strong>Never</strong> 6000. Does <strong>not</strong> beat Claude. Images:
   <code>website/docs/images/decompile-*</code>, <code>diagram-*</code>.</li>
@@ -146,7 +162,7 @@ language) are listed here. Site and installers track
 <li><strong>Factory diagrams (H-lane):</strong> Mermaid overview of Spark tools
   (compile / decompile / build / train / serve / helpers /
   shadows) and LLM assist vs deterministic SoT. Page:
-  <a href="docs/DIAGRAMS.md">DIAGRAMS.md</a> → <code>/docs/diagrams.html</code>. Mermaid
+  <a href="/docs/diagrams.html">DIAGRAMS.md</a> → <code>/docs/diagrams.html</code>. Mermaid
   render via <code>website/js/site.js</code> (CDN). J-lane decompile research
   captures cross-linked when/if merged — no conflicting SoT.
   <strong>Not beat Claude.</strong> Never 6000.</li>
@@ -160,7 +176,7 @@ language) are listed here. Site and installers track
   (embed/RMSNorm/lm_head/MLP; attention honest/partial), serve
   forward + HTTP/stdio API (G-lane linked), eval harness (E-lane
   Claude baseline linked; <strong>never</strong> beat Claude), makefile targets,
-  CI/Pages contributor how-to. Hub: <a href="docs/FACTORY.md">FACTORY.md</a>
+  CI/Pages contributor how-to. Hub: <a href="/docs/factory.html">FACTORY.md</a>
   → <code>/docs/factory.html</code>. Also: <code>/docs/compile.html</code>,
   <code>/docs/decompile.html</code>, <code>/docs/spark-bc.html</code>,
   <code>/docs/build-models.html</code>, <code>/docs/train-loop.html</code>,
@@ -176,8 +192,8 @@ language) are listed here. Site and installers track
   embeddings from Spark safetensors. Endpoints: <code>GET /health</code>,
   <code>GET /version</code>, <code>POST /v1/predict</code>, <code>POST /v1/embeddings</code> (also
   <code>--stdio</code>). Gate: <code>make test-serve-api</code>. <strong>Not production.</strong> Never
-  6000. Docs: <a href="docs/SPARK_BUILDER.md">SPARK_BUILDER.md</a> §6c,
-  <a href="docs/RELEASE.md">RELEASE.md</a>.</li>
+  6000. Docs: <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> §6c,
+  <a href="/docs/release.html">RELEASE.md</a>.</li>
 </ul>
 <h2>0.6.34 — 2026-09-09</h2>
 <ul>
@@ -190,7 +206,7 @@ language) are listed here. Site and installers track
   GHA; <code>make spark-sgd-proof-scale</code> is local opt-in
   (defaults dim=64 n_layer=4). Tests: fixture load + shape
   check + one-outer smoke (not overnight). <strong>Not beat Claude.</strong>
-  Never 6000. Docs: <a href="docs/SPARK_BUILDER.md">SPARK_BUILDER.md</a>.</li>
+  Never 6000. Docs: <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</li>
 </ul>
 <h2>0.6.33 — 2026-09-09</h2>
 <ul>
@@ -201,7 +217,7 @@ language) are listed here. Site and installers track
   Side-by-side comparison table; <code>beats_claude</code> always <strong>false</strong>.
   Never invents keys. Never claims beat Claude. Never 6000.
   Gate: <code>make test-spark-eval</code>. Docs: Eval honesty in
-  <a href="docs/SPARK_BUILDER.md">SPARK_BUILDER.md</a>.</li>
+  <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</li>
 </ul>
 <h2>0.6.32 — 2026-09-09</h2>
 <ul>
@@ -213,7 +229,7 @@ language) are listed here. Site and installers track
   measurement-only <code>spark-eval</code>). <strong>Not beat Claude.</strong> Never 6000.</li>
 <li><strong>Serve MLP0:</strong> tiny CPU forward uses layer-0 SwiGLU MLP when
   tensors exist (<code>embed→mlp0→norm→lm_head</code>). Still not production.</li>
-<li>Docs: <a href="docs/SPARK_BUILDER.md">SPARK_BUILDER.md</a>.</li>
+<li>Docs: <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</li>
 </ul>
 <h2>0.6.31 — 2026-09-08</h2>
 <ul>
@@ -226,7 +242,7 @@ language) are listed here. Site and installers track
   <code>tools/spark-bc-dump/apply_step.py</code>. Gates:
   <code>make test-sparkbc</code> (loss drop), <code>make sparkbc-e2e</code>. <strong>Not beat
   Claude.</strong> No 6000 / GPU-1. Docs:
-  <a href="docs/SPARK_BUILDER.md">SPARK_BUILDER.md</a>.</li>
+  <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</li>
 </ul>
 <h2>0.6.30 — 2026-09-09</h2>
 <ul>
@@ -234,7 +250,7 @@ language) are listed here. Site and installers track
   load Spark safetensors (or emit init), run one embed→RMSNorm→lm_head
   matmul on CPU, write <code>SERVE</code> with <code>forward=true</code> and honest
   <code>trained</code> from weights meta. Not a production LLM. Gate:
-  <code>make test-sparkbc</code>. Docs: <a href="docs/SPARK_BUILDER.md">SPARK_BUILDER.md</a>.</li>
+  <code>make test-sparkbc</code>. Docs: <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</li>
 </ul>
 <h2>0.6.29 — 2026-09-08</h2>
 <ul>
@@ -243,8 +259,8 @@ language) are listed here. Site and installers track
   <code>./spark-bootstrap</code> (bc_vm / C lowering remain SoT; exit status
   propagates). Docs un-BLOCK GAS wrappers. Gates:
   <code>make test-sparkbc</code>, <code>make sparkbc-e2e</code>. Not SGD.</li>
-<li><strong>Docs:</strong> <a href="docs/SPARK_BUILDER.md">SPARK_BUILDER.md</a> /
-  <a href="docs/SPARK_BC.md">SPARK_BC.md</a>. CI:
+<li><strong>Docs:</strong> <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> /
+  <a href="/docs/spark-bc.html">SPARK_BC.md</a>. CI:
   <code>.github/workflows/sparkbc.yml</code> (#10).</li>
 </ul>
 <h2>0.6.28 — 2026-09-08</h2>
@@ -254,7 +270,7 @@ language) are listed here. Site and installers track
   bytecode-hash delta; <code>trained=false</code> / <code>not_sgd=true</code>). Helper
   <code>tools/spark-bc-dump/apply_step.py</code> / <code>apply_dry_step</code>.
   <code>make test-sparkbc</code> asserts <code>step_n&gt;=1</code>. Docs:
-  <a href="docs/SPARK_BUILDER.md">SPARK_BUILDER.md</a>.</li>
+  <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</li>
 </ul>
 <h2>0.6.27 — 2026-09-08</h2>
 <ul>
@@ -274,11 +290,11 @@ language) are listed here. Site and installers track
   CLI/auth absent. Site: regen <code>website/docs/*</code> via
   <code>tools/md_to_doc_html.py --all-stale</code>; Learn + homepage link
   Builder; CHANGELOG.html mirrored. Pages:
-  <a href="docs/SPARK_BUILDER.md">SPARK_BUILDER.md</a> /
-  <code>/docs/spark-builder.html</code>, <a href="docs/SPARK_BC.md">SPARK_BC.md</a>,
-  <a href="docs/RELEASE.md">RELEASE.md</a> step 5,
-  <a href="docs/ADOPTION_BAR.md">ADOPTION_BAR.md</a>,
-  <a href="docs/ROADMAP.md">ROADMAP.md</a>.</li>
+  <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> /
+  <code>/docs/spark-builder.html</code>, <a href="/docs/spark-bc.html">SPARK_BC.md</a>,
+  <a href="/docs/release.html">RELEASE.md</a> step 5,
+  <a href="/docs/adoption-bar.html">ADOPTION_BAR.md</a>,
+  <a href="/docs/roadmap.html">ROADMAP.md</a>.</li>
 <li><strong>SPARK_BC e2e gate:</strong> <code>make sparkbc-e2e</code> / <code>make test-sparkbc-e2e</code>
   (<code>tools/spark-bc-dump/run_e2e_gate.sh</code>, wrapper
   <code>scripts/sparkbc-e2e</code>). Compiles
@@ -287,13 +303,13 @@ language) are listed here. Site and installers track
   <code>out/train/job-dry-001/ARTIFACT</code> (<code>not_sgd=true</code>,
   <code>trained=false</code>, <code>step_n=1</code>). Not SGD. STEP also writes
   <code>weights.safetensors</code> (dry delta; <code>trained=false</code>). Docs:
-  <a href="docs/SPARK_BC.md">SPARK_BC.md</a>,
-  <a href="docs/SPARK_BUILDER.md">SPARK_BUILDER.md</a>,
-  <a href="docs/MODEL_LAB.md">MODEL_LAB.md</a>,
-  <a href="docs/MODEL_TRAINING.md">MODEL_TRAINING.md</a>,
-  <a href="docs/LANGUAGE.md">LANGUAGE.md</a>,
-  <a href="docs/SELF_HOST.md">SELF_HOST.md</a>,
-  <a href="docs/PROGRAMMING_GUIDE.md">PROGRAMMING_GUIDE.md</a>.</li>
+  <a href="/docs/spark-bc.html">SPARK_BC.md</a>,
+  <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>,
+  <a href="/docs/model-lab.html">MODEL_LAB.md</a>,
+  <a href="/docs/model-training.html">MODEL_TRAINING.md</a>,
+  <a href="/docs/language.html">LANGUAGE.md</a>,
+  <a href="/docs/self-host.html">SELF_HOST.md</a>,
+  <a href="/docs/programming-guide.html">PROGRAMMING_GUIDE.md</a>.</li>
 </ul>
 <h2>0.6.26 — 2026-09-08</h2>
 <ul>
@@ -316,7 +332,7 @@ language) are listed here. Site and installers track
   <code>./spark --dry-run</code> runs train verbs from source; GAS does <strong>not
   emit</strong> <code>.sparkbc</code> (use bootstrap <code>--compile</code>). GAS <code>--run-bc</code>
   added later (0.6.29). Page:
-  <a href="docs/SPARK_BUILDER.md">SPARK_BUILDER.md</a> /
+  <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> /
   <code>/docs/spark-builder.html</code>. Honest: init, not trained. No
   imported weights. Emitting TRAIN/STEP ≠ a trained model. Later
   train aims to beat Claude. Companion
@@ -331,7 +347,7 @@ language) are listed here. Site and installers track
   <code>examples/model_lab.spark</code> also keeps SoT + <code>head abstain</code> so
   inventable facts still IDK. Companion <code>./spark-model-lab</code>. Gate:
   <code>make test-model-lab</code>. Not a new foundation LLM. Docs:
-  <a href="docs/MODEL_LAB.md">MODEL_LAB.md</a>.</li>
+  <a href="/docs/model-lab.html">MODEL_LAB.md</a>.</li>
 </ul>
 <h2>0.6.24 — 2026-09-08</h2>
 <ul>
@@ -398,7 +414,7 @@ language) are listed here. Site and installers track
   <code>"stream":true</code>, prints token deltas as they arrive, accumulates
   for <code>--out</code>. Dry prints <code>stream=1</code> (no network). Language:
   <code>ask stream "…"</code> under <code>--live</code> (asm passes <code>--stream</code>).
-  Docs: <a href="docs/ASK_LIVE.md">docs/ASK_LIVE.md</a>, ADOPTION_BAR /
+  Docs: <a href="/docs/ask-live.html">docs/ASK_LIVE.md</a>, ADOPTION_BAR /
   ROADMAP. Example: <code>examples/ask_stream.spark</code>. Gate:
   <code>make test-ask-gateway</code> (<code>PASS dry_stream</code>).</li>
 </ul>
@@ -409,7 +425,7 @@ language) are listed here. Site and installers track
   gated <code>head ask</code> for open asks (IDK + HALT). Honest scope:
   architecture prevents inventable open-decode, not “all
   hallucination forever.” Docs:
-  <a href="docs/ABSTAIN_HEADS.md">docs/ABSTAIN_HEADS.md</a>,
+  <a href="/docs/abstain-heads.html">docs/ABSTAIN_HEADS.md</a>,
   PROGRAMMING_GUIDE / LANGUAGE. Gate: <code>make test-abstain</code>.</li>
 </ul>
 <h2>0.6.17 — 2026-09-02</h2>
@@ -421,7 +437,7 @@ language) are listed here. Site and installers track
   seed ~105 rows. Continue path covered: HF <code>generate</code> when gate
   continues; <code>SPARK_ABSTAIN_SAMPLE_URL</code> OpenAI-compat SAMPLE;
   honest deferred note otherwise. Docs:
-  <a href="docs/ABSTAIN_HEADS.md">docs/ABSTAIN_HEADS.md</a>. Gate:
+  <a href="/docs/abstain-heads.html">docs/ABSTAIN_HEADS.md</a>. Gate:
   <code>make test-abstain</code> (optional kl3m eval if smoke dir present).</li>
 </ul>
 <h2>0.6.16 — 2026-09-02</h2>
@@ -434,7 +450,7 @@ language) are listed here. Site and installers track
   (<code>tools/spark-abstain/hf_export_train_smoke.sh</code>,
   <code>SPARK_ABSTAIN_HF=1</code> + local model, <code>local_files_only</code> /
   offline — no CI downloads). Docs:
-  <a href="docs/ABSTAIN_HEADS.md">docs/ABSTAIN_HEADS.md</a>,
+  <a href="/docs/abstain-heads.html">docs/ABSTAIN_HEADS.md</a>,
   <code>examples/fixtures/abstain/README.md</code>. Gate: <code>make test-abstain</code>.</li>
 </ul>
 <h2>0.6.15 — 2026-09-02</h2>
@@ -446,7 +462,7 @@ language) are listed here. Site and installers track
   (<code>python/sparklang/abstain/spark_hidden.py</code>), hardened client
   (<code>SPARK_ABSTAIN_VLLM_URL</code> / <code>TIMEOUT</code> / <code>TOKEN</code>). Stub kept for
   CI. Extra: <code>pip install -e 'python/[sidecar]'</code>. Docs:
-  <a href="docs/ABSTAIN_HEADS.md">docs/ABSTAIN_HEADS.md</a>. Gate:
+  <a href="/docs/abstain-heads.html">docs/ABSTAIN_HEADS.md</a>. Gate:
   <code>make test-abstain</code> (HTTP mocked; no GPU).</li>
 </ul>
 <h2>0.6.14 — 2026-09-02</h2>
@@ -457,7 +473,7 @@ language) are listed here. Site and installers track
   <code>hidden_dim</code> matches ask. Fixtures:
   <code>labels_text.jsonl</code>, <code>labels_exported.jsonl</code> (dim 16). Optional
   <code>tools/spark-abstain/spark_hidden_stub.py</code> for the <code>/spark_hidden</code>
-  contract. Docs: <a href="docs/ABSTAIN_HEADS.md">docs/ABSTAIN_HEADS.md</a>
+  contract. Docs: <a href="/docs/abstain-heads.html">docs/ABSTAIN_HEADS.md</a>
   (wired from README / PROGRAMMING_GUIDE / site). Gate:
   <code>make test-abstain</code>.</li>
 </ul>
@@ -478,7 +494,7 @@ language) are listed here. Site and installers track
   (<code>SPARK_ABSTAIN_STUB=1</code>). Refuses gateway aliases (<code>auto</code>/<code>code</code>/
   <code>fast</code>, …) — explicit HF path or <code>org/name</code> only. Optional
   <code>pip install -e 'python/[hf]'</code>. Docs: live generate path in
-  <a href="docs/ABSTAIN_HEADS.md">docs/ABSTAIN_HEADS.md</a>. Gate:
+  <a href="/docs/abstain-heads.html">docs/ABSTAIN_HEADS.md</a>. Gate:
   <code>make test-abstain</code> (mocks HF; no 27B download).</li>
 </ul>
 <h2>0.6.11 — 2026-09-02</h2>
@@ -487,7 +503,7 @@ language) are listed here. Site and installers track
   with SELECT-before-SAMPLE gate. Internal = linear/MLP probe on frozen
   backbone last-hidden; external = same math as sidecar. Companion
   <code>./spark-abstain</code> (dry fixtures + CPU train/attach). Docs:
-  <a href="docs/ABSTAIN_HEADS.md">docs/ABSTAIN_HEADS.md</a>. Not LoRA; no fake
+  <a href="/docs/abstain-heads.html">docs/ABSTAIN_HEADS.md</a>. Not LoRA; no fake
   weights in dry-run. Gate: <code>make test-abstain</code>.</li>
 <li>Examples: <code>head_abstain.spark</code>, <code>head_ask.spark</code>, <code>head_train.spark</code>,
   <code>head_attach.spark</code>, <code>head_abstain_external.spark</code>.</li>

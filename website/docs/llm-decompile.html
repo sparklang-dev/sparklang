@@ -110,7 +110,26 @@
         Mermaid overview: <a href="/docs/diagrams.html">DIAGRAMS.md</a>
         (<a href="/docs/diagrams.html">/docs/diagrams.html</a>).</p>
         <p>Does <strong>not</strong> beat Claude. <strong>Never</strong> 6000. <strong>Never</strong> claim any LLM
-        perfectly decompiles SPARK_BC.</p>
+        perfectly decompiles SPARK_BC. Spark does <strong>not</strong> claim to beat
+        LLM4Decompile / Nova / DecompAI / Claude on native RE benchmarks.</p>
+        <h2 id="owner-research-links-cite-these">Owner research links (cite these)</h2>
+        <p>Folded into this page from operator research (full URLs):</p>
+        <ol class="doc__ol">
+        <li>DecompAI discussion (agent-style RE):
+           https://www.reddit.com/r/ReverseEngineering/comments/1kt2gcb/decompai_an_llmpowered_reverse_engineering_agent/</li>
+        <li>LLM4Decompile discussion:
+           https://www.reddit.com/r/ReverseEngineering/comments/1bfkvbq/llm4decompile_decompiling_binary_code_with_large/</li>
+        <li>LLM4Decompile project (End/Ref, SK²Decompile, decompile-bench;
+           HF models; re-exec metrics; Ghidra refine path):
+           https://github.com/albertan017/LLM4Decompile</li>
+        <li>End-to-end LLM decompilation survey (ReF, Idioms, SALT, SK²,
+           WaDec, SmartHalo, ICL4Decomp; metrics RRR / R2I / …):
+           https://www.emergentmind.com/topics/end-to-end-llm-decompilation</li>
+        <li>Quarkslab — defeating (or not) AI-assisted RE; agents route
+           around static hardening; hallucination / cheating; obfuscation
+           as cost multiplier:
+           https://blog.quarkslab.com/defeating-ai-assisted-reverse-engineering-or-at-least-trying-to.html</li>
+        </ol>
         <h2 id="diagrams-function-layout">Diagrams (function layout)</h2>
         <h3 id="deterministic-spark-vs-llm-assist">Deterministic Spark vs LLM assist</h3>
         <p><img class="doc__img" alt="Deterministic vs LLM" src="/docs/images/diagram-deterministic-vs-llm.svg" /></p>
@@ -128,8 +147,43 @@
         <p><img class="doc__img" alt="Decompile path" src="/docs/images/diagram-decompile-path.svg" /></p>
         <p><em>Caption: Same diagrams as the <a href="/docs/decompile.html">decompile how-to</a> —
         where helpers / GUI sit relative to SPARK_BC.</em></p>
+        <h2 id="two-different-llm-decompile-shapes">Two different LLM “decompile” shapes</h2>
+        <p>Do not conflate these — they imply different Spark policy.</p>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Shape</th>
+        <th>What it does</th>
+        <th>Spark takeaway</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><strong>Seq2seq / specialized decompile models</strong></td>
+        <td>One-shot or refine: asm/bytes → guessed C (or IR→names). Train/eval on re-exec, edit similarity, R2I, etc.</td>
+        <td>Interesting research for <em>native</em> C; <strong>not</strong> SPARK_BC SoT; no transfer assumed</td>
+        </tr>
+        <tr>
+        <td><strong>Agent-style RE (tool loop)</strong></td>
+        <td>LLM plans → runs Ghidra / objdump / gdb / emulate → iterates. May route <em>around</em> static analysis</td>
+        <td>Closer to “assistant with shell”; still can hallucinate or cheat; must never overwrite <code class="inline-code">.sparkbc</code></td>
+        </tr>
+        </tbody>
+        </table></div>
+        <h3 id="decompai-agent-style-re-not-a-seq2seq-model">DecompAI — agent-style RE (not a seq2seq model)</h3>
+        <p><strong>DecompAI</strong> (community write-ups +
+        <a href="https://github.com/louisgthier/decompai">louisgthier/decompai</a>) is an
+        <strong>LLM agent</strong> (LangGraph / Gradio, ReAct-style) that <strong>orchestrates
+        tools</strong> (objdump, gdb, Ghidra hooks, shell) over x86 Linux ELFs in a
+        chat loop. That is <strong>distinct</strong> from LLM4Decompile-class models that
+        map linearized assembly → C in one generative pass.</p>
+        <p>Reddit thread (owner cite):
+        https://www.reddit.com/r/ReverseEngineering/comments/1kt2gcb/decompai_an_llmpowered_reverse_engineering_agent/</p>
+        <p>Honest limits: exploratory RE accelerator for supported binaries —
+        <strong>not</strong> a verified SPARK_BC→<code class="inline-code">.spark</code> recovery pipeline, and not
+        proof that agent output is ground truth.</p>
         <h2 id="survey-cited">Survey (cited)</h2>
-        <h3 id="specialized-decompile-llms">Specialized decompile LLMs</h3>
+        <h3 id="specialized-decompile-llms-seq2seq-staged">Specialized decompile LLMs (seq2seq / staged)</h3>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
@@ -141,8 +195,8 @@
         <tbody>
         <tr>
         <td><strong>LLM4Decompile</strong></td>
-        <td>Open LLM series (≈1.3B–33B) trained for binary→C; End + Ref (refine Ghidra)</td>
-        <td>EMNLP 2024. Stronger re-exec than GPT-4o/Ghidra on HumanEval-Decompile / ExeBench in paper — still far from perfect; obfuscation resists both LLM and Ghidra. <a href="https://arxiv.org/abs/2403.05286">arXiv:2403.05286</a> · <a href="https://aclanthology.org/2024.emnlp-main.203.pdf">ACL PDF</a> · <a href="https://github.com/albertan017/LLM4Decompile">GitHub</a></td>
+        <td>Open LLM series (≈1.3B–33B) for binary→C; <strong>End</strong> (asm→C) + <strong>Ref</strong> (refine Ghidra pseudocode); HF-hosted weights; siblings <strong>SK²Decompile</strong>, <strong>decompile-bench</strong></td>
+        <td>EMNLP 2024. Paper reports stronger re-exec than GPT-4o/Ghidra on HumanEval-Decompile / ExeBench — still far from perfect; obfuscation resists both LLM and Ghidra. Repo: <a href="https://github.com/albertan017/LLM4Decompile">albertan017/LLM4Decompile</a>. Reddit: <a href="https://www.reddit.com/r/ReverseEngineering/comments/1bfkvbq/llm4decompile_decompiling_binary_code_with_large/">r/ReverseEngineering</a>. Papers: <a href="https://arxiv.org/abs/2403.05286">arXiv:2403.05286</a> · <a href="https://aclanthology.org/2024.emnlp-main.203.pdf">ACL PDF</a></td>
         </tr>
         <tr>
         <td><strong>Nova</strong></td>
@@ -150,9 +204,9 @@
         <td>ICLR 2025. Improves binary code recovery / similarity vs prior; not a SPARK_BC tool. <a href="https://openreview.net/forum?id=4ytRL3HJrq">OpenReview</a> · <a href="https://github.com/lt-asset/nova">GitHub lt-asset/nova</a></td>
         </tr>
         <tr>
-        <td><strong>SK2Decompile</strong></td>
+        <td><strong>SK²Decompile</strong></td>
         <td>Two-phase “skeleton → skin” (structure then identifiers) on LLM4Decompile-class bases</td>
-        <td>arXiv 2025-09. Separates structure recovery from naming; RL objectives for compilability vs naming. <a href="https://arxiv.org/abs/2509.22114">arXiv:2509.22114</a></td>
+        <td>arXiv 2025-09. Separates structure recovery from naming; RL objectives for compilability vs naming. Survey cites ~69% avg re-exec on HumanEval (O0–O3) in <em>their</em> metrics — still not perfect, not SPARK_BC. <a href="https://arxiv.org/abs/2509.22114">arXiv:2509.22114</a></td>
         </tr>
         <tr>
         <td><strong>Decompile-Bench</strong></td>
@@ -165,12 +219,64 @@
         <td>arXiv 2026. Treats decompile as iterative repair, not one-shot. <a href="https://arxiv.org/pdf/2606.16162">arXiv PDF</a></td>
         </tr>
         <tr>
-        <td><strong>D-LIFT / Idioms / Ref-Decomp / DecLLM</strong></td>
-        <td>Pseudo-code refine, context, iterative repair</td>
-        <td>Cited in AutoDecompiler / SK2 surveys; functional correctness often fails ~half of HumanEval-Decompile-class tasks in reported baselines</td>
+        <td><strong>ReF / Idioms / SALT / ICL4Decomp / …</strong></td>
+        <td>Structure-augmented or staged: relabel jumps (ReF), joint code+types (Idioms), SALT logic trees, in-context exemplars (ICL4Decomp)</td>
+        <td>See EmergentMind survey below. Functional correctness still often fails a large share of hard suites</td>
         </tr>
         </tbody>
         </table></div>
+        <h3 id="survey-landscape-emergentmind">Survey landscape (EmergentMind)</h3>
+        <p>Owner cite:
+        https://www.emergentmind.com/topics/end-to-end-llm-decompilation</p>
+        <p>Useful vocabulary (native C / Wasm / Solidity — <strong>not</strong> SPARK_BC):</p>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Family</th>
+        <th>Idea (one line)</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><strong>ReF Decompile</strong></td>
+        <td>Relabel addresses + tool-backed literal recovery from <code class="inline-code">.rodata</code></td>
+        </tr>
+        <tr>
+        <td><strong>Idioms</strong></td>
+        <td>Joint generation of source <strong>and</strong> user-defined types</td>
+        </tr>
+        <tr>
+        <td><strong>SALT4Decompile</strong></td>
+        <td>Source-level abstract logic tree before LLM decode</td>
+        </tr>
+        <tr>
+        <td><strong>SK²Decompile</strong></td>
+        <td>Structure IR first, identifier naming second</td>
+        </tr>
+        <tr>
+        <td><strong>WaDec / StackSight</strong></td>
+        <td>Wasm→C-ish with loop/stack cues</td>
+        </tr>
+        <tr>
+        <td><strong>SmartHalo</strong></td>
+        <td>EVM/Solidity recovery with dependency graphs</td>
+        </tr>
+        <tr>
+        <td><strong>ICL4Decomp</strong></td>
+        <td>Retrieval / rule-based in-context prompts for opt levels</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <p><strong>Metrics you will see</strong> (paper-specific; do not invent Spark scores):</p>
+        <ul class="doc__ul">
+        <li><strong>Re-executability / RRR</strong> — recompile + pass original tests</li>
+        <li><strong>R2I</strong> — relative readability (AST-ish)</li>
+        <li>Edit similarity, CER (coverage equivalence), Elo-style LLM judges</li>
+        </ul>
+        <p>Survey honesty: even strong native numbers leave large failure rates;
+        LLM output can be more <em>readable</em> while less <em>functionally correct</em>
+        than classical decompilers on some benches. <strong>None of this is a
+        SPARK_BC fidelity claim.</strong></p>
         <h3 id="traditional-decompiler-general-llm-assistants">Traditional decompiler + general LLM assistants</h3>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
@@ -192,17 +298,43 @@
         <td>e.g. <a href="https://github.com/LaurieWired/GhidraMCP">LaurieWired/GhidraMCP</a>, <a href="https://github.com/cyberkaida/reverse-engineering-assistant">cyberkaida/reverse-engineering-assistant</a>, <a href="https://github.com/TheFlashBold/Better-Ghidra-MCP">Better-Ghidra-MCP</a>, <a href="https://github.com/weirdmachine64/GhidraGPT">GhidraGPT</a></td>
         </tr>
         <tr>
+        <td><strong>DecompAI (agent)</strong></td>
+        <td>Tool-loop RE over binaries (see above)</td>
+        <td><a href="https://github.com/louisgthier/decompai">GitHub</a> · <a href="https://www.reddit.com/r/ReverseEngineering/comments/1kt2gcb/decompai_an_llmpowered_reverse_engineering_agent/">Reddit</a></td>
+        </tr>
+        <tr>
         <td><strong>Claude / GPT / Codex as RE assistants</strong></td>
         <td>Read dump/pseudocode; suggest names, summaries, patches</td>
         <td>Useful for readability; <strong>not</strong> proven SPARK_BC→<code class="inline-code">.spark</code> fidelity</td>
         </tr>
         </tbody>
         </table></div>
+        <h3 id="quarkslab-why-llm-output-is-not-verified-sot">Quarkslab: why LLM output is not verified SoT</h3>
+        <p>Owner cite:
+        https://blog.quarkslab.com/defeating-ai-assisted-reverse-engineering-or-at-least-trying-to.html</p>
+        <p>Takeaways that bind Spark policy (paraphrase, not marketing):</p>
+        <ol class="doc__ol">
+        <li><strong>Agents route around static hardening</strong> — when CFG/MBA noise is
+           expensive, they lift/emulate/patch instead of “solving”
+           deobfuscation. A fluent narrative ≠ they understood the protect.</li>
+        <li><strong>Hallucination and cheating</strong> — agents take the cheapest path to
+           something answer-shaped (leaked keys, prior session flags, wrong
+           ISA stories). Confidence stays high either way.</li>
+        <li><strong>Artifacts lie</strong> — a script that prints the right string may
+           hardcode it or skip the claimed emulator; report quality ≠ proof.</li>
+        <li><strong>Obfuscation remains a cost multiplier</strong> — not obsolete; it pushes
+           agents onto dynamic / hallucinated paths. Throughput changes; SoT
+           does not.</li>
+        </ol>
+        <p><strong>Spark implication:</strong> treat any LLM / agent decompile or rename as
+        <strong>assist only</strong>. Verified bytes and behavior stay
+        <code class="inline-code">--compile</code> / <code class="inline-code">dump.py</code> / <code class="inline-code">--run-bc</code> (+ human). Never promote model
+        text to SPARK_BC SoT because it “looked right.”</p>
         <h3 id="bytecode-other-re-note">Bytecode / other RE note</h3>
         <p>Native x86/ARM C recovery dominates the literature. JVM/Python/WASM
         and custom ISAs (including <strong>SPARK_BC</strong>) are <strong>under-covered</strong>. Do
-        not assume LLM4Decompile-style models transfer to Spark orchestration
-        opcodes without new data and evals.</p>
+        not assume LLM4Decompile-style models or DecompAI tool loops transfer
+        to Spark orchestration opcodes without new data and evals.</p>
         <h2 id="how-this-maps-to-spark-spark-bc">How this maps to Spark SPARK_BC</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
@@ -249,27 +381,38 @@
            as SoT.</li>
         <li>Optional later: LLM assist lane that consumes <strong>dump text</strong> only
            (comments / rename proposals) — never silent rewrite of <code class="inline-code">.sparkbc</code>.</li>
-        <li>Do <strong>not</strong> claim Spark “beats” LLM4Decompile / Nova / Claude on
-           native binary benchmarks — different problem, different metrics.</li>
+        <li>Do <strong>not</strong> claim Spark “beats” LLM4Decompile / Nova / DecompAI /
+           Claude on native binary benchmarks — different problem, different
+           metrics.</li>
         <li>If evaluating assist: measure dump→suggested-name accuracy and
            recompile round-trip — not marketing re-exec slogans.</li>
+        <li>Treat agent loops (DecompAI-class) with the same Quarkslab caution:
+           tool traces can still cheat or invent; require dump/<code class="inline-code">--run-bc</code>
+           gates.</li>
         <li><strong>Never</strong> route SPARK_BC factory train to GPU 6000.</li>
         </ol>
         <h2 id="operator-brief-short">Operator brief (short)</h2>
         <ul class="doc__ul">
-        <li>Specialized models (LLM4Decompile, Nova, SK2, AutoDecompiler) help
-          <strong>native</strong> binary→C with partial re-exec; none are SPARK_BC SoT.</li>
-        <li>General LLMs + Ghidra plugins excel at <strong>annotation</strong>, not guaranteed
-          recovery.</li>
+        <li>Specialized models (LLM4Decompile End/Ref, Nova, SK², AutoDecompiler)
+          help <strong>native</strong> binary→C with <strong>partial</strong> re-exec; none are
+          SPARK_BC SoT.</li>
+        <li><strong>DecompAI</strong> = agent + tools, not the same as seq2seq decompile
+          models.</li>
+        <li>Quarkslab: agents evade, hallucinate, and write confident wrong
+          artifacts — another reason LLM ≠ verified decompile SoT.</li>
+        <li>General LLMs + Ghidra plugins excel at <strong>annotation</strong>, not
+          guaranteed recovery.</li>
         <li>Spark path: compile/dump/run deterministic; LLM optional for docs-
           level assist only.</li>
-        <li>Honest bar: no perfect SPARK_BC decompile claim; no beat Claude; no
-          6000.</li>
+        <li>Honest bar: no perfect SPARK_BC decompile claim; no beat Claude /
+          no beat these models; no 6000.</li>
         </ul>
         <h2 id="related">Related</h2>
         <ul class="doc__ul">
         <li><a href="/docs/decompile.html">DECOMPILE.md</a> · <a href="/docs/compile.html">COMPILE.md</a></li>
         <li><a href="/docs/factory.html">FACTORY.md</a> · <a href="/docs/spark-bc.html">SPARK_BC.md</a></li>
+        <li><a href="/docs/diagrams.html">DIAGRAMS.md</a> (Mermaid; J-lane screenshots live on
+          DECOMPILE)</li>
         </ul>
       </article>
       </main>
