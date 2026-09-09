@@ -28,6 +28,8 @@ ISA: [SPARK_BC.md](SPARK_BC.md). Story:
 | `make spark-serve-api` / `make test-serve-api` | G-lane HTTP/stdio predict + embeddings |
 | `make helpers` / `make tools-test` | K-lane helper CLIs + kit/shadow smoke |
 | `make test-spark-ask` | Voice/text ask loop (dump facts + dry TTS) |
+| `make helpers` / `make tools-test` | K-lane helper CLIs + kit/shadow/analyze smoke |
+| `make test-spark-analyze` | Project-loop analyze folder gate |
 | `make sdk-pack` / `make dist` | Stage `dist/spark-sdk/` (helpers + I overlay when present) |
 
 ```bash
@@ -63,6 +65,7 @@ See [TOOLS_HELPERS.md](TOOLS_HELPERS.md).
 | Path | Role |
 |------|------|
 | `helpers/spark-run` | compile → run-bc → dump |
+| `helpers/spark-analyze` | project loop → `out/analyze/<name>/` (optional `--serve`/`--ask`) |
 | `helpers/spark-train-proof` | wrap `spark-sgd-proof` (`SCALE=1` → scale) |
 | `helpers/spark-check-env` | env / fixture / import check |
 | `helpers/spark-bc-pp` / `spark-bc-diff` | pretty-print / diff `.sparkbc` |

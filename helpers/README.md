@@ -6,6 +6,7 @@ paths. CPU only. Never 6000. Does **not** claim beat Claude.
 | Helper | Invoke | What |
 |--------|--------|------|
 | `spark-run` | `./helpers/spark-run file.spark` | compile → `--run-bc` → dump |
+| `spark-analyze` | `./helpers/spark-analyze file.spark[.bc]` | project loop → `out/analyze/<name>/` (dump, ops, REPORT; optional `--serve` / `--ask`) |
 | `spark-train-proof` | `./helpers/spark-train-proof` | thin wrap of `make spark-sgd-proof` |
 | `spark-check-env` | `./helpers/spark-check-env` | bootstrap / python / fixtures check |
 | `spark-bc-pp` | `./helpers/spark-bc-pp file.sparkbc` | pretty-print SPARK_BC dump |

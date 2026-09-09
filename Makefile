@@ -23,8 +23,11 @@ NVML_LIB ?= /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1
 	sdk-pack dist test-sdk-pack spark-bc-gui \
 	helpers tools-test test-senses \
 	spark-coder-train spark-coder-train-large test-spark-coder \
-	weight-gallery weight-gallery-xl test-weights-play \
-	test-spark-ask
+	weight-gallery \
+	weight-gallery-xl \
+	test-weights-play \
+	test-spark-ask \
+	test-spark-analyze
 
 all: spark companions
 
@@ -81,7 +84,11 @@ helpers:
 
 tools-test: helpers
 	PYTHONPATH=python:tools python3 -m unittest \
-		spark_kit.test_kit -v
+		spark_kit.test_kit spark_analyze.test_analyze -v
+
+test-spark-analyze: helpers
+	PYTHONPATH=python:tools python3 -m unittest \
+		spark_analyze.test_analyze -v
 
 .PHONY: test-spark-ask
 test-spark-ask: helpers

@@ -14,6 +14,8 @@ make tools-test       # unit/smoke for kit + shadows
 make sdk-pack         # stage dist/spark-sdk/ (+ I overlay)
 ./helpers/spark-check-env
 ./helpers/spark-run examples/spark_builder.spark
+./helpers/spark-analyze docs/examples/spark-train-step.sparkbc
+./helpers/spark-analyze examples/spark_train_step.spark --ask
 ./helpers/spark-bc-pp docs/examples/spark-train-step.sparkbc
 ./helpers/spark-bc-diff a.sparkbc b.sparkbc
 ./helpers/spark-train-proof          # make spark-sgd-proof
@@ -27,12 +29,20 @@ SCALE=1 ./helpers/spark-train-proof  # scale opt-in
 ```
 
 Voice ask (STT→dump/TinyCoder→TTS): [VOICE_ASK.md](VOICE_ASK.md).
+make test-spark-analyze
+```
+
+Project loop: `spark-analyze` writes a **local** folder
+`out/analyze/<name>/` (dump, `ops.json`, REPORT stub, screenshot
+placeholder; optional `--serve` / `--ask`). No upload. Methods note:
+[METHODS_OPENBIN.md](METHODS_OPENBIN.md).
 
 ## Layout
 
 | Path | Role |
 |------|------|
-| `helpers/` | one-shot compile/run/inspect, train proof, env check, BC pp/diff, shadow CLI |
+| `helpers/` | one-shot compile/run/inspect, **analyze loop**, train proof, env check, BC pp/diff, shadow CLI |
+| `tools/spark_analyze/` | Python behind `spark-analyze` |
 | `shadows/` | docs for `build/shadow/` dual-path experiments |
 | `tools/spark_kit/` | hexdump, opcode sheet, fixture lint, vocab inspect, bc_diff |
 | `tools/spark_shadow/` | Python behind `spark-shadow` |
