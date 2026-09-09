@@ -222,6 +222,24 @@
                   malware reverse engineering.
                 </figcaption>
               </figure>
+              <h4 id="voice-ask">Voice ask the dump</h4>
+              <p>
+                After inspect, ask in text or speech — ears (STT) →
+                dump context + owned TinyCoder → speaking (TTS).
+                Local only; <strong>no</strong> OpenBin login.
+                TinyCoder is tiny: dump facts stay SoT; open-ended RE
+                answers carry an honesty note.
+              </p>
+              <p>
+                <a href="/docs/voice-ask.html">Voice ask docs</a> ·
+                <a href="/docs/voice.html">Voice / STT / TTS</a> ·
+                <a href="/docs/model-aspects.html">Model aspects</a>
+              </p>
+              <pre class="terminal code-block"><code><span class="comment"># Text ask (no mic)</span>
+<span class="cmd">./spark-ask docs/examples/spark-train-step.sparkbc \
+  --text "What opcodes are in this dump?"</span>
+<span class="comment"># Voice loop — dry stub for CI; --mic for live</span>
+<span class="cmd">./spark-speak-ask docs/examples/spark-train-step.sparkbc --dry</span></code></pre>
             </div>
           </article>
 

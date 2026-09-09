@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Voice-first alias for helpers/spark-ask (forces --voice).
+# Dry CI: ./helpers/spark-speak-ask file.sparkbc --dry
+# Live:   ./helpers/spark-speak-ask out/analyze/demo --mic
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$ROOT"
+export PYTHONPATH="${ROOT}/python:${ROOT}/tools:${PYTHONPATH:-}"
+exec python3 "${ROOT}/tools/spark_ask/voice_ask.py" --voice "$@"

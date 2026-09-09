@@ -61,6 +61,7 @@
                   <li><a href="/docs/weight-gallery.html">Weight gallery</a></li>
                   <li><a href="/docs/ai-models.html">AI models</a></li>
                   <li><a href="/docs/voice.html">Voice / STT / TTS</a></li>
+                  <li><a href="/docs/voice-ask.html">Voice ask</a></li>
                 </ul>
               </li>
               <li class="nav-more">
@@ -96,6 +97,7 @@
         <a href="/docs/factory.html">Factory hub</a>
         <a href="/docs/model-aspects.html">Model aspects</a>
         <a href="/docs/voice.html">Voice</a>
+        <a href="/docs/voice-ask.html">Voice ask</a>
         <a href="/docs/diagrams.html">Diagrams</a>
         <a href="/docs/spark-builder.html">Builder</a>
         <a href="/docs/compile.html">Compile</a>
@@ -136,7 +138,11 @@
         ./helpers/spark-shadow build-dir
         ./helpers/spark-shadow copy out/train/sgd-proof/weights.safetensors
         ./helpers/spark-shadow verify ORIG SHADOW
+        ./spark-ask docs/examples/spark-train-step.sparkbc \
+          --text &quot;What opcodes are in this dump?&quot;
+        ./spark-speak-ask docs/examples/spark-train-step.sparkbc --dry
         </code></pre>
+        <p>Voice ask (STT→dump/TinyCoder→TTS): <a href="/docs/voice-ask.html">VOICE_ASK.md</a>.</p>
         <h2 id="layout">Layout</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>

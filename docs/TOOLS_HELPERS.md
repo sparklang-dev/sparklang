@@ -21,7 +21,12 @@ SCALE=1 ./helpers/spark-train-proof  # scale opt-in
 ./helpers/spark-shadow build-dir
 ./helpers/spark-shadow copy out/train/sgd-proof/weights.safetensors
 ./helpers/spark-shadow verify ORIG SHADOW
+./spark-ask docs/examples/spark-train-step.sparkbc \
+  --text "What opcodes are in this dump?"
+./spark-speak-ask docs/examples/spark-train-step.sparkbc --dry
 ```
+
+Voice ask (STT→dump/TinyCoder→TTS): [VOICE_ASK.md](VOICE_ASK.md).
 
 ## Layout
 

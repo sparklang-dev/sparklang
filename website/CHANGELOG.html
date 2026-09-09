@@ -103,6 +103,16 @@
 <p>All notable user-facing releases of <strong>SparkLang</strong> (the Spark programming
 language) are listed here. Site and installers track
 <code>website/downloads/manifest.json</code>.</p>
+<h2>0.6.50 — 2026-09-09</h2>
+<ul>
+<li><strong>Voice ask (dump / binary Q&amp;A):</strong> <code>./spark-ask</code> /
+  <code>./spark-speak-ask</code> — STT → SPARK_BC dump/analysis context →
+  dump facts or owned TinyCoder → TTS. Dry stubs for CI; live
+  via <code>./spark-stt-tts</code> (net vendors gated). No OpenBin login.
+  Docs: <a href="/docs/voice-ask.html">VOICE_ASK.md</a>; linked from
+  <a href="/workflow">/workflow</a>. Gate: <code>make test-spark-ask</code>.
+  <strong>Not beat Claude.</strong> Never 6000.</li>
+</ul>
 <h2>0.6.49 — 2026-09-09</h2>
 <p><strong>Spark IDE functions:</strong> three-pane browse/compile/ask/weights/report; gallery catalog when present. <strong>Not beat Claude.</strong> Never 6000.</p>
 

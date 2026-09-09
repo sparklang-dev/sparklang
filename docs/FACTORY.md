@@ -21,6 +21,7 @@ field explainers (transformers → safety) with original diagrams.
 | **AI knowledge hive** | [KNOWLEDGE.md](KNOWLEDGE.md) | [/docs/knowledge.html](/docs/knowledge.html) |
 | **AI model aspects** | [MODEL_ASPECTS.md](MODEL_ASPECTS.md) | [/docs/model-aspects.html](/docs/model-aspects.html) |
 | Voice / STT / TTS | [VOICE.md](VOICE.md) | [/docs/voice.html](/docs/voice.html) |
+| **Voice ask (dump Q&A)** | [VOICE_ASK.md](VOICE_ASK.md) | [/docs/voice-ask.html](/docs/voice-ask.html) |
 | **Diagrams (tools + LLM)** | [DIAGRAMS.md](DIAGRAMS.md) | [/docs/diagrams.html](/docs/diagrams.html) |
 | Compile / assemble | [COMPILE.md](COMPILE.md) | [/docs/compile.html](/docs/compile.html) |
 | Decompile / dump / inspect | [DECOMPILE.md](DECOMPILE.md) | [/docs/decompile.html](/docs/decompile.html) |

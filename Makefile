@@ -23,7 +23,8 @@ NVML_LIB ?= /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1
 	sdk-pack dist test-sdk-pack spark-bc-gui \
 	helpers tools-test test-senses \
 	spark-coder-train spark-coder-train-large test-spark-coder \
-	weight-gallery weight-gallery-xl test-weights-play
+	weight-gallery weight-gallery-xl test-weights-play \
+	test-spark-ask
 
 all: spark companions
 
@@ -70,15 +71,24 @@ test-senses:
 
 # K-lane: helpers, shadows, spark_kit (enhances I-lane minimal helpers).
 helpers:
-	chmod +x helpers/spark-* tools/package_helpers_k.sh
+	chmod +x helpers/spark-* spark-ask spark-speak-ask \
+	  tools/package_helpers_k.sh
 	@echo "helpers:"
 	@ls -1 helpers/spark-*
+	@echo "ask: ./spark-ask  ./spark-speak-ask  (VOICE_ASK.md)"
 	@echo "shadows: see shadows/README.md (build/shadow/)"
 	@echo "kit: tools/spark_kit/  module: tools/spark_shadow/"
 
 tools-test: helpers
 	PYTHONPATH=python:tools python3 -m unittest \
 		spark_kit.test_kit -v
+
+.PHONY: test-spark-ask
+test-spark-ask: helpers
+	PYTHONPATH=python:tools python3 -m unittest \
+		tools.spark_ask.test_voice_ask -v
+
+
 
 function-catalog:
 	python3 tools/gen_function_catalog.py

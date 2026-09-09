@@ -35,6 +35,7 @@ here — Spark documents its own language surface and companions.
 | Memory / context window | **partial** | Script bindings + dry fixtures; **no** KV-cache decode |
 | Tools / actions | **implemented** (dry) | `tool` / `with tools`; live tool bus **planned** |
 | Ears / STT | **implemented** (surface) | Dry stub; live sidecar / whisper / gated HTTP |
+| Voice ask loop | **implemented** | `./spark-ask` / `./spark-speak-ask` — dump context + TinyCoder; [VOICE_ASK.md](VOICE_ASK.md) |
 | Eyes / vision | **planned** | Stub module only — no `look` opcode on tip |
 | Speaking / TTS | **implemented** (surface) | Dry WAV marker; live PCM synth / gated HTTP |
 | Behaviors / policies | **partial** | `spark_reply_pack`, abstain heads, expect; no full SM |
@@ -54,11 +55,17 @@ flowchart LR
   BRN["Thinking — tiny CPU forward<br/>embed → attn0 → MLP0 → lm_head"]
   TOOL["Tools / behaviors<br/>classify · ask · reply pack"]
   VOC["Speaking — speak / TTS<br/>PCM or SPARK_TTS_*"]
+  ASKV["Voice ask CLI<br/>spark-ask / spark-speak-ask"]
   EAR --> TOK --> BRN
   BRN --> TOOL
   TOOL --> VOC
+  ASKV --> EAR
+  ASKV --> BRN
+  ASKV --> VOC
   EYE["Eyes — vision<br/>planned stub only"] -.->|not wired| BRN
 ```
+
+Dump/binary voice Q&A: [VOICE_ASK.md](VOICE_ASK.md) (no OpenBin login).
 
 ## Diagram — behavior + tool loop
 

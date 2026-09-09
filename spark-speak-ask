@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Root alias — voice-first (helpers/spark-speak-ask).
+exec "$(cd "$(dirname "$0")" && pwd)/helpers/spark-speak-ask" "$@"

@@ -5,6 +5,17 @@ language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
 
+## 0.6.50 — 2026-09-09
+
+- **Voice ask (dump / binary Q&A):** `./spark-ask` /
+  `./spark-speak-ask` — STT → SPARK_BC dump/analysis context →
+  dump facts or owned TinyCoder → TTS. Dry stubs for CI; live
+  via `./spark-stt-tts` (net vendors gated). No OpenBin login.
+  Docs: [VOICE_ASK.md](docs/VOICE_ASK.md) →
+  [/docs/voice-ask.html](/docs/voice-ask.html); linked from
+  [/workflow](/workflow). Gate: `make test-spark-ask`.
+  **Not beat Claude.** Never 6000.
+
 ## 0.6.49 — 2026-09-09
 
 - **Spark IDE functions:** `spark-bc-gui` is a three-pane IDE

@@ -27,6 +27,7 @@ ISA: [SPARK_BC.md](SPARK_BC.md). Story:
 | `make docs-html` / `make docs-check` | Regen `website/docs/*` + nav link check |
 | `make spark-serve-api` / `make test-serve-api` | G-lane HTTP/stdio predict + embeddings |
 | `make helpers` / `make tools-test` | K-lane helper CLIs + kit/shadow smoke |
+| `make test-spark-ask` | Voice/text ask loop (dump facts + dry TTS) |
 | `make sdk-pack` / `make dist` | Stage `dist/spark-sdk/` (helpers + I overlay when present) |
 
 ```bash
@@ -66,6 +67,7 @@ See [TOOLS_HELPERS.md](TOOLS_HELPERS.md).
 | `helpers/spark-check-env` | env / fixture / import check |
 | `helpers/spark-bc-pp` / `spark-bc-diff` | pretty-print / diff `.sparkbc` |
 | `helpers/spark-shadow` | shadow copy, `build/shadow/`, hash verify |
+| `./spark-ask` / `./spark-speak-ask` | voice/text ask over dump / analysis dir |
 | `tools/spark_kit/` | hexdump, opcode sheet, fixture lint, vocab inspect |
 
 ## Docs / site regen
