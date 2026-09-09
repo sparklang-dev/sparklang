@@ -197,7 +197,7 @@
         <code class="inline-code">make test-sparkbc</code> (<code class="inline-code">test_serve_forward</code>).</p>
         <p>Architecture honesty: <a href="/docs/architecture.html">ARCHITECTURE.md</a> ·
         <a href="/docs/attention-forward.html">ATTENTION_FORWARD.md</a>.</p>
-        <h2 id="http-stdio-api-g-lane-on-tip">HTTP / stdio API (G-lane — on tip)</h2>
+        <h2 id="http-stdio-api-serve-api-path-on-tip">HTTP / stdio API (serve API path — on tip)</h2>
         <pre class="doc__pre"><code class="language-bash">make spark-serve-api
         ./spark-serve-api --weights /tmp/serve-dry-001/weights.safetensors \
           --http --host 127.0.0.1 --port 8765
@@ -244,7 +244,7 @@
         </table></div>
         <p>Implementation: <code class="inline-code">python/sparklang/model_lab/serve_api.py</code> wraps
         <code class="inline-code">run_tiny_forward</code> / <code class="inline-code">run_tiny_embed</code> — same path as file SERVE
-        (now <strong>attn0</strong> when tensors exist; D #28). Builder §6c:
+        (now <strong>attn0</strong> when tensors exist; layer-0 attention). Builder §6c:
         <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</p>
         <p>Optional live <strong>gateway</strong> ask/embed (Bifrost etc.) is a different
         surface — <a href="/docs/ai-models.html">AI_MODELS.md</a> / <a href="/docs/ai-models.html#live-gateway-integration-wired-today">ASK_LIVE.md</a>.</p>

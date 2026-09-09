@@ -181,7 +181,7 @@
         <h1 id="voice-easy-train-stt-tts-in-3-steps">Voice easy — train STT / TTS in 3 steps</h1>
         <p>Piece-of-cake path for <strong>owned</strong> Spark voice-related heads we write
         and train in this repo. Companion to <a href="/docs/voice.html">VOICE.md</a> and
-        <a href="/docs/model-aspects.html">MODEL_ASPECTS.md</a> (L-lane ears/speaking).</p>
+        <a href="/docs/model-aspects.html">MODEL_ASPECTS.md</a> (ears/speaking).</p>
         <p><strong>Not</strong> ElevenLabs, Kokoro, or a downloaded mega TTS overnight.
         <strong>Never</strong> trains on the RTX PRO <strong>6000</strong> (voice-serving only).
         Prefers RTX <strong>5090</strong> for large. Does <strong>not</strong> beat Claude.
@@ -258,7 +258,7 @@
         </tr>
         <tr>
         <td><code class="inline-code">--device auto\|cpu\|5090</code></td>
-        <td>auto prefers 5090; never 6000</td>
+        <td>auto prefers RTX 5090 (or CPU)</td>
         </tr>
         <tr>
         <td><code class="inline-code">--scale tiny\|large</code></td>
@@ -277,7 +277,7 @@
         is obvious:</p>
         <pre class="doc__pre"><code class="language-text">ears (fixtures / spark-stt-tts)
            → voice-easy STT head (classify phrases)
-        brain (optional spark-coder / dump ask — sibling lanes)
+        brain (optional spark-coder / dump ask)
            → voice-easy TTS head (PCM params)
         speaking (roundtrip WAV / spark-stt-tts speak)
         </code></pre>
@@ -332,7 +332,7 @@
         <td><strong>yes</strong> (<code class="inline-code">make test-voice-easy</code>)</td>
         </tr>
         <tr>
-        <td>Prefer 5090 / never 6000</td>
+        <td>Prefer RTX 5090 (or CPU) for GPU train</td>
         <td><strong>yes</strong></td>
         </tr>
         <tr>

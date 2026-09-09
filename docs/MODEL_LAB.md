@@ -65,7 +65,7 @@ Focused TRAIN→STEP→TRAIN_STATUS proof:
 ```bash
 make sparkbc-e2e
 # alias: make test-sparkbc-e2e
-# or:    ./tools/spark-bc-dump/run_e2e_gate.sh
+# or:./tools/spark-bc-dump/run_e2e_gate.sh
 ```
 
 Asserts compile matches published `.sparkbc`, dump shows TRAIN/STEP,

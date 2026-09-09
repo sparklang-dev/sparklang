@@ -187,7 +187,7 @@ flowchart TB
 ```
 .spark ──► spark-bootstrap --compile ──► .sparkbc
                 ▲
-   ./spark --compile (shadow wrap)
+./spark --compile (shadow wrap)
 
 .sparkbc ──► dump.py ──► hex/mnemonics
          ──► --run-bc ──► TRAIN/STEP/ARTIFACT

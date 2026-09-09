@@ -182,16 +182,16 @@
         <p>Engineer-grade survey for <strong>Spark / SparkLang</strong>. Verified with public
         papers and tools (2024–2026). Honest about limits.</p>
         <p><strong>SoT for SPARK_BC remains deterministic</strong> (<code class="inline-code">--compile</code>, <code class="inline-code">dump.py</code>,
-        <code class="inline-code">--run-bc</code>). Optional LLM assist is a <strong>later lane</strong> for naming /
-        comments / drafts — never the authority for bytecode bytes.</p>
+        <code class="inline-code">--run-bc</code>). Optional LLM assist is for naming / comments / drafts —
+        never the authority for bytecode bytes.</p>
         <p>Companion how-to: <a href="/docs/decompile.html">DECOMPILE.md</a>
         (<a href="/docs/decompile.html">/docs/decompile.html</a>).
         Mermaid overview: <a href="/docs/diagrams.html">DIAGRAMS.md</a>
         (<a href="/docs/diagrams.html">/docs/diagrams.html</a>).</p>
-        <p>Does <strong>not</strong> beat Claude. <strong>Never</strong> 6000. <strong>Never</strong> claim any LLM
-        perfectly decompiles SPARK_BC. Spark does <strong>not</strong> claim to beat
-        LLM4Decompile / Nova / DecompAI / Claude on native RE benchmarks.</p>
-        <h2 id="owner-research-links-cite-these">Owner research links (cite these)</h2>
+        <p>Does <strong>not</strong> beat Claude. Does <strong>not</strong> claim any LLM perfectly
+        decompiles SPARK_BC. Spark does <strong>not</strong> claim to beat LLM4Decompile /
+        Nova / DecompAI / Claude on native RE benchmarks.</p>
+        <h2 id="research-links-cite-these">Research links (cite these)</h2>
         <p>Folded into this page from operator research (full URLs):</p>
         <ol class="doc__ol">
         <li>DecompAI discussion (agent-style RE):
@@ -472,13 +472,13 @@
         <tbody>
         <tr>
         <td><strong>OpenBin</strong> (<a href="https://openbin.ai/">openbin.ai</a>)</td>
-        <td>Free / open-source <strong>online</strong> AI reverse-engineering platform (The Open Binary Project): browser UI, cloud projects, Ghidra-backed native decompile + agent Q&amp;A, BYOK LLM keys; sibling OpenAPK for Android. Source: <a href="https://github.com/openbin-ai/platform">openbin-ai/platform</a>. CLI pin used on SoapBox: <a href="https://github.com/openbin-ai/platform/releases/tag/openbin-v0.10.0">openbin-v0.10.0</a>.</td>
-        <td><strong>Not</strong> SPARK_BC SoT. Uploading binaries (or decompile artifacts) to a third party has <strong>trust / IP / malware-handling</strong> implications. Spark keeps <strong>local</strong> deterministic <code class="inline-code">dump.py</code> / <code class="inline-code">--compile</code> / <code class="inline-code">--run-bc</code>. Do not treat OpenBin output as verified Spark recovery. See also <a href="/docs/methods-openbin.html">METHODS_OPENBIN.md</a> (adopted vs rejected). On SoapBox, run the CLI only in the <strong>gated lab</strong> (<code class="inline-code">openbin-lab</code> DinD) — see operator report <code class="inline-code">workspaces/reports/openbin-gated-vm-install-20260909.md</code>; binary stays local, decompiled JSON may upload after login.</td>
+        <td>Free / open-source <strong>online</strong> AI reverse-engineering platform (The Open Binary Project): browser UI, cloud projects, Ghidra-backed native decompile + agent Q&amp;A, BYOK LLM keys; sibling OpenAPK for Android. Source: <a href="https://github.com/openbin-ai/platform">openbin-ai/platform</a>. CLI pin: <a href="https://github.com/openbin-ai/platform/releases/tag/openbin-v0.10.0">openbin-v0.10.0</a>.</td>
+        <td><strong>Not</strong> SPARK_BC SoT. Uploading binaries (or decompile artifacts) to a third party has <strong>trust / IP / malware-handling</strong> implications. Spark keeps <strong>local</strong> deterministic <code class="inline-code">dump.py</code> / <code class="inline-code">--compile</code> / <code class="inline-code">--run-bc</code>. Do not treat OpenBin output as verified Spark recovery. See also <a href="/docs/methods-openbin.html">METHODS_OPENBIN.md</a>. Prefer a <strong>gated lab</strong> container if you run their CLI at all; binary stays local.</td>
         </tr>
         </tbody>
         </table></div>
         <h3 id="quarkslab-why-llm-output-is-not-verified-sot">Quarkslab: why LLM output is not verified SoT</h3>
-        <p>Owner cites (article + continuing category index):</p>
+        <p>Cited (article + continuing category index):</p>
         <ul class="doc__ul">
         <li>https://blog.quarkslab.com/defeating-ai-assisted-reverse-engineering-or-at-least-trying-to.html</li>
         <li>https://blog.quarkslab.com/category/reverse-engineering.html
@@ -518,13 +518,13 @@
         <code class="inline-code">--compile</code> / <code class="inline-code">dump.py</code> / <code class="inline-code">--run-bc</code> (+ human). Never promote model
         text to SPARK_BC SoT because it “looked right.”</p>
         <h3 id="plain-english-demystifying-llm-decompilation">Plain English: demystifying LLM decompilation</h3>
-        <p>Owner cite:
+        <p>Overview cite:
         https://ai.plainenglish.io/demystifying-decompilation-with-large-language-models-0e63bf067045</p>
         <p>Use as a readable overview of how LLM decompile <em>pipelines</em> are
         framed in industry writing (stages, assist roles, failure modes).
         It does <strong>not</strong> change Spark policy: dump/<code class="inline-code">--compile</code>/<code class="inline-code">--run-bc</code>
         remain SoT; LLM text is assist; no perfect SPARK_BC recovery claim;
-        does not beat Claude; never 6000.</p>
+        does not beat Claude.</p>
         <h3 id="bytecode-other-re-note">Bytecode / other RE note</h3>
         <p>Native x86/ARM C recovery dominates the literature. JVM/Python/WASM
         and custom ISAs (including <strong>SPARK_BC</strong>) are <strong>under-covered</strong>. Do
@@ -586,7 +586,8 @@
            Quarkslab caution: tool traces can still cheat or invent; require
            dump/<code class="inline-code">--run-bc</code> gates. Prefer <strong>local</strong> artifacts over third-party
            upload for proprietary SPARK_BC.</li>
-        <li><strong>Never</strong> route SPARK_BC factory train to GPU 6000.</li>
+        <li>Prefer CPU / RTX <strong>5090</strong> for any SPARK_BC factory GPU train
+           (see <a href="/docs/factory.html">FACTORY.md</a>); leave voice-reserved GPUs alone.</li>
         </ol>
         <h2 id="operator-brief-short">Operator brief (short)</h2>
         <ul class="doc__ul">
@@ -612,7 +613,7 @@
         <li>Spark path: compile/dump/run deterministic; LLM optional for docs-
           level assist only.</li>
         <li>Honest bar: no perfect SPARK_BC decompile claim; no beat Claude /
-          no beat these models/products; no 6000.</li>
+          no beat these models/products. GPU train: see factory policy.</li>
         </ul>
         <h2 id="related">Related</h2>
         <ul class="doc__ul">

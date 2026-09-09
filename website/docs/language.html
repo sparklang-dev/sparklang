@@ -396,7 +396,7 @@
         <p><strong><code class="inline-code">retrieve</code></strong> — rag-gateway <code class="inline-code">POST /v1/retrieve</code> with project + audience.
         Default project <strong><code class="inline-code">docs</code></strong>, audience <strong><code class="inline-code">operator</code></strong>, <code class="inline-code">top_k</code> <strong>8</strong>.
         Operator/cursor responses may include gateway <strong><code class="inline-code">crag</code></strong> fields
-        (grade/retry) — Spark does <strong>not</strong> re-implement CRAG in-process.
+        (grade/retry) — Spark does <strong>not</strong> re-implement retrieval grading in-process.
         Compose with <code class="inline-code">ask</code> when you want an answer grounded on hits:</p>
         <pre class="doc__pre"><code class="inline-code">retrieve &quot;how does dry-run work&quot; from project &quot;docs&quot; -&gt; hits
         retrieve &quot;…&quot; from project &quot;docs&quot; audience &quot;operator&quot; top_k 4 -&gt; hits
@@ -546,7 +546,7 @@
         keys the schema does not mention are allowed and passed through.</p>
         <p>A violation prints each problem and exits non-zero — nothing is bound
         and nothing is printed:</p>
-        <pre class="doc__pre"><code class="inline-code">$ ./spark --dry-run examples/extract_bad.spark ; echo $?
+        <pre class="doc__pre"><code class="inline-code">$ ./spark --dry-run examples/extract_bad.spark; echo $?
         error: extract Person: field age expected int, fixture has string
         error: extract Person did not validate against .../person_bad_type.json
         1

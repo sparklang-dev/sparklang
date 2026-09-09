@@ -99,7 +99,7 @@ OpenAI-compatible base URL (and rag-gateway for retrieve):
 | Integration | Role | Env / companion |
 |-------------|------|-----------------|
 | **OpenAI-compatible gateway** (`AI_GATEWAY_URL`) | Chat + embeddings with an **explicit** model id (HF / path / configured string). Bifrost is one optional backend, not a Spark requirement. | **`SPARK_GATEWAY_KEY`** preferred; `OPENAI_API_KEY` wire-compat only; `./spark-ask-http` / `./spark-rag-http --embed` |
-| **rag-gateway** (`RAG_GATEWAY_URL`) | `POST /v1/retrieve` (project + audience; CRAG on operator/cursor) | Default `:4620`; `RAG_GATEWAY_API_KEY` or `SPARK_GATEWAY_KEY`; `./spark-rag-http --retrieve` |
+| **rag-gateway** (`RAG_GATEWAY_URL`) | `POST /v1/retrieve` (project + audience; retrieval grading on operator/cursor) | Default `:4620`; `RAG_GATEWAY_API_KEY` or `SPARK_GATEWAY_KEY`; `./spark-rag-http --retrieve` |
 | **Model probe** (optional) | Read-only configured models + local vLLM port discovery | `make model-probe`; `SPARK_ALLOW_NET=1` |
 | **Encrypt-to-model** | Seal prompt; gateway decrypts at model boundary | [ENCRYPT_GATEWAY.md](ENCRYPT_GATEWAY.md); `./spark-enc-gateway` |
 | **Public gateway probe** | Credential check only | a gateway probe credential; HTTP 401 → stop, no routing verdict |
@@ -128,7 +128,7 @@ First-class language ops — not a fake roadmap:
 |-------|-------------|-----------------|
 | **Embeddings** | Gateway `embed` / `embed-rag` → `POST /v1/embeddings` | `embed "…" [model embed-rag\|embed] -> vec` |
 | **RAG** | rag-gateway `POST /v1/retrieve` | `retrieve "…" from project "…" [audience …] [top_k N] -> hits` |
-| **CRAG** | Gateway-side for `operator` / `cursor` audiences | Present in retrieve JSON `crag`; compose with `ask` for answers |
+| **retrieval grading** | Gateway-side for `operator` / `cursor` audiences | Present in retrieve JSON `crag`; compose with `ask` for answers |
 | **Dry fixtures** | `examples/fixtures/rag/` + `bootstrap/dry_rag.c` | `make test-rag-gateway` offline |
 
 Governed ledger / product-specific projects stay outside public Spark
@@ -158,7 +158,7 @@ speech pipelines — it is an **optional** surface, not primary positioning. See
 - Not a replacement narrative for “throw away Python + OpenAI SDK” — Spark
   complements gateways and existing stacks with a reviewable language surface
 - Train jobs need a configured backend — dry-run never starts GPU work
-- Not in-process CRAG — grade/retry stay on rag-gateway; Spark surfaces
+- Not in-process retrieval grading — grade/retry stay on rag-gateway; Spark surfaces
   `crag` JSON from `retrieve` and composes with `ask`
 - Not a vendor voice-product codebase — Spark stays a general AI language
 

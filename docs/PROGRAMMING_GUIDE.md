@@ -107,7 +107,7 @@ ops** (`ide open|save|run|…`) — [IDE.md](IDE.md),
 ./spark --dry-run examples/ide_hello.spark
 
 export AI_GATEWAY_URL=http://127.0.0.1:4000
-export OPENAI_API_KEY=…          # sk-bf-* ; never commit
+export OPENAI_API_KEY=…          # sk-bf-*; never commit
 ./spark --live examples/ask_live.spark
 ```
 

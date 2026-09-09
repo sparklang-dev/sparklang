@@ -8,10 +8,9 @@ is the destination runner. Tree-walk `spark_vm_run_file` is a
 **legacy bridge** (Phase 4 deletes it). Hello already runs on B via
 `--run-bc selfhost/fixtures/hello.sparkbc`.
 
-**Owner pick (2026-08-31):** A with B bootstrap and C too.
-Pivot record: `workspaces/reports/spark-vm-not-asm-pivot-20260831.md`.
+**Direction (2026-08-31):** A with B bootstrap and C too.
 
-This doc is the architecture SoT for the self-host lane. No vapor
+This doc is the architecture SoT for the self-host path. No vapor
 calendar dates — stages advance when evidence on disk exists.
 
 `selfhost/` is seeds + a C tokenize aid. It is **not** a full Spark

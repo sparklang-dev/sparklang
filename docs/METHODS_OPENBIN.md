@@ -19,7 +19,7 @@ Hub: [FACTORY.md](FACTORY.md) · Loop UX: [/workflow.html](/workflow.html)
 |-------------------------|-------------------|
 | One CLI path that lands you in an inspectable **project** | `helpers/spark-analyze` → `out/analyze/<name>/` with dump, ops list, REPORT stub |
 | Clear **local-first** story for native binaries | Keep binary / SPARK_BC **local**; analysis folder never uploads |
-| Side-by-side inspect vocabulary | Existing `dump.py` + `spark-bc-gui` + loop UX (`/workflow.html`, PR #33) |
+| Side-by-side inspect vocabulary | Existing `dump.py` + `spark-bc-gui` + loop UX (`/workflow.html`, the loop UX) |
 | Optional **Ask** after inspect | `--ask` stub via **owned** `spark-coder` or honesty note — not their SaaS |
 | Publish / share findings | Docs + Pages share (examples gallery) — **not** a malware community feed |
 | apk vs elf as separate worker paths | Spark stays SPARK_BC-only; no JADX/Ghidra workers in this lane |
@@ -31,7 +31,7 @@ Hub: [FACTORY.md](FACTORY.md) · Loop UX: [/workflow.html](/workflow.html)
 | Cloud project URL as default SoT | Spark SoT is local dump / SPARK_BC bytes |
 | Upload decompiled JSON / APK trees to a third party | Trust / IP / malware-handling; gated lab only for studying their CLI |
 | BYOK Anthropic/OpenAI keys in git or Spark CLI defaults | Prefer owned TinyCoder / gateway aliases elsewhere; no keys in git |
-| Pixel-clone of OpenBin / OpenAPK UI | Original Spark loop branding (PR #33) |
+| Pixel-clone of OpenBin / OpenAPK UI | Original Spark loop branding (the loop UX) |
 | Ghidra/JADX Docker workers as Spark runtime | Different problem (ELF/APK RE vs SPARK_BC orchestration) |
 | “AI recovered perfect source” marketing | Forbidden; LLM research stays cited and non-SoT |
 | Beat Claude / use RTX PRO 6000 | Standing Spark policy |
@@ -50,9 +50,8 @@ Gate: `make test-spark-analyze` (or `PYTHONPATH=python:tools python3 -m unittest
 
 ## Ethics / lab note
 
-SoapBox runs OpenBin CLI **v0.10.0** only inside gated DinD
-`openbin-lab` (see operator report
-`workspaces/reports/openbin-gated-vm-install-20260909.md`).
-Do not dump proprietary worker image layers for redistribution.
-Login/BYOK for deeper OpenBin probes stays an owner action — this
+The OpenBin CLI (**v0.10.0**) belongs in a **gated lab** container
+(`openbin-lab` DinD) when used at all — not as a parallel SPARK_BC
+SoT. Do not dump proprietary worker image layers for redistribution.
+Login/BYOK for deeper OpenBin probes is optional operator work; this
 doc does not require it.

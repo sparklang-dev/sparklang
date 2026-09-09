@@ -269,7 +269,7 @@ embed "…" model embed -> vec
 **`retrieve`** — rag-gateway `POST /v1/retrieve` with project + audience.
 Default project **`docs`**, audience **`operator`**, `top_k` **8**.
 Operator/cursor responses may include gateway **`crag`** fields
-(grade/retry) — Spark does **not** re-implement CRAG in-process.
+(grade/retry) — Spark does **not** re-implement retrieval grading in-process.
 Compose with `ask` when you want an answer grounded on hits:
 
 ```
@@ -397,7 +397,7 @@ A violation prints each problem and exits non-zero — nothing is bound
 and nothing is printed:
 
 ```
-$ ./spark --dry-run examples/extract_bad.spark ; echo $?
+$ ./spark --dry-run examples/extract_bad.spark; echo $?
 error: extract Person: field age expected int, fixture has string
 error: extract Person did not validate against .../person_bad_type.json
 1

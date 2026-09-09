@@ -196,7 +196,7 @@
         <li><code class="inline-code">make test-sparkbc</code></li>
         <li><code class="inline-code">make sparkbc-e2e</code> / related SPARK_BC gates</li>
         <li>Eval unit gate when present: <code class="inline-code">make test-spark-eval</code></li>
-        <li>Serve API gate when G-lane merges: <code class="inline-code">make test-serve-api</code></li>
+        <li>Serve API gate when serve API path merges: <code class="inline-code">make test-serve-api</code></li>
         <li>Voice easy dry: <code class="inline-code">make test-voice-easy</code></li>
         </ul>
         <p>PRs should keep these green. Docs-only PRs still run
@@ -211,7 +211,7 @@
           --branch=production \
           --commit-hash=&quot;$(git rev-parse HEAD)&quot;
         </code></pre>
-        <p><strong>Auth:</strong> Wrangler OAuth on SoapBox is often under
+        <p><strong>Auth:</strong> Wrangler OAuth on the operator host is often under
         <code class="inline-code">~/.config/.wrangler/</code> (leading <strong>dot</strong>). That is not
         <code class="inline-code">~/.config/wrangler/</code>. Do not invent or print tokens.</p>
         <p>If CLI/auth absent → Cloudflare dashboard Direct Upload of

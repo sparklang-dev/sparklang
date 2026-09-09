@@ -24,7 +24,7 @@ Typical factory jobs (names may grow — read the YAML):
 - `make test-sparkbc`
 - `make sparkbc-e2e` / related SPARK_BC gates
 - Eval unit gate when present: `make test-spark-eval`
-- Serve API gate when G-lane merges: `make test-serve-api`
+- Serve API gate when serve API path merges: `make test-serve-api`
 - Voice easy dry: `make test-voice-easy`
 
 PRs should keep these green. Docs-only PRs still run
@@ -44,7 +44,7 @@ npx wrangler pages deploy website \
   --commit-hash="$(git rev-parse HEAD)"
 ```
 
-**Auth:** Wrangler OAuth on SoapBox is often under
+**Auth:** Wrangler OAuth on the operator host is often under
 `~/.config/.wrangler/` (leading **dot**). That is not
 `~/.config/wrangler/`. Do not invent or print tokens.
 

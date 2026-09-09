@@ -1,7 +1,7 @@
 # Weight gallery — view / play / understand Spark stub weights
 
 Catalog **many weight kinds** Spark already produces (or can emit):
-init / dry ARTIFACT, post-STEP SGD, checkpoints, F-lane scale
+init / dry ARTIFACT, post-STEP SGD, checkpoints, scale
 fixtures, owned **spark-coder**, and **large / xl** multi-layer
 profiles. Play on CPU; opt-in generate XL on **RTX 5090**;
 **never** the voice RTX PRO **6000**.
@@ -17,7 +17,7 @@ Hub: [FACTORY.md](FACTORY.md). Arch roles: [ARCHITECTURE.md](ARCHITECTURE.md).
 | Profile | dim | n_layer | Notes |
 |---------|-----|---------|-------|
 | `tiny` | 32 | 2 | Default init / spark-coder |
-| `scale` | 64 | 4 | F-lane fixture (`spark-sgd-proof-scale`) |
+| `scale` | 64 | 4 | Scale fixture (`spark-sgd-proof-scale`) |
 | `large` | 128 | 8 | Multi-layer + full attn tensor set |
 | `xl` | 256 | 8 | Opt-in; prefer 5090 generate |
 
@@ -31,7 +31,7 @@ Larger spark-coder variant path (when present):
 | Init / dry ARTIFACT | SPARK_BC-seeded Xavier; `trained=false` |
 | Post-STEP SGD | After `apply_step` / coder train (`lm_head`, embed, attn…) |
 | Checkpoints | `checkpoint.json` loss-curve companions |
-| Scale fixtures | F-lane larger dim/layers |
+| Scale fixtures | Larger dim/layers (`spark-sgd-proof-scale`) |
 | spark-coder | Owned TinyCoder under `models/spark-coder/` |
 | spark-coder-large / gallery large|xl | Larger stub packs |
 | `models/**/*.safetensors` | Any owned pack on disk |
@@ -75,7 +75,7 @@ and interactive browser [/weight-playground.html](/weight-playground.html)
 # CPU scale + large samples under out/gallery/
 make weight-gallery
 
-# XL prefers 5090 (falls back to CPU); never 6000
+# XL prefers 5090 (falls back to CPU)
 PYTHONPATH=python python3 tools/spark-weights/cli.py generate xl --5090
 # or force CPU:
 PYTHONPATH=python python3 tools/spark-weights/cli.py generate xl --cpu

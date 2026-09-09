@@ -288,7 +288,7 @@ stubs. Prefer an **explicit local dir**.
 
 ```bash
 SPARK_ABSTAIN_ALLOW_TINY_DOWNLOAD=1 \
-  ./tools/spark-abstain/tiny_hf_download.sh
+./tools/spark-abstain/tiny_hf_download.sh
 # prints: export SPARK_ABSTAIN_MODEL=…
 # then:
 SPARK_ABSTAIN_HF=1 SPARK_ABSTAIN_MODEL=… \
@@ -303,7 +303,7 @@ CI must leave that unset.
 ```bash
 SPARK_ABSTAIN_HF=1 SPARK_ABSTAIN_HF_LOCAL_ONLY=1 \
 SPARK_ABSTAIN_MODEL=/path/to/local-hf-model \
-  ./tools/spark-abstain/hf_export_train_smoke.sh
+./tools/spark-abstain/hf_export_train_smoke.sh
 ```
 
 On success the smoke stamps **`hf_backbone_trained`** via

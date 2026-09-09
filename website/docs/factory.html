@@ -186,7 +186,7 @@
         <p>Reproduction story: <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.
         <strong>Diagrams:</strong> <a href="/docs/diagrams.html">DIAGRAMS.md</a> — tool map, shadows, LLM
         assist vs deterministic SoT.
-        <strong>AI model aspects (L):</strong> <a href="/docs/model-aspects.html">MODEL_ASPECTS.md</a> —
+        <strong>AI model aspects:</strong> <a href="/docs/model-aspects.html">MODEL_ASPECTS.md</a> —
         behaviors, ears/STT, eyes/vision, speaking/TTS, thinking, memory,
         tools, train, eval, serve.
         <strong>AI knowledge hive:</strong> <a href="/docs/knowledge.html">KNOWLEDGE.md</a> — engineer-grade
@@ -341,82 +341,87 @@
         make spark-eval
         make docs-check
         </code></pre>
-        <h2 id="sibling-factory-lanes-do-not-steal">Sibling factory lanes (do not steal)</h2>
+        <h2 id="factory-feature-status">Factory feature status</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
-        <th>Lane</th>
-        <th>Scope</th>
+        <th>Feature</th>
         <th>Docs stance</th>
         </tr>
         </thead>
         <tbody>
         <tr>
-        <td><strong>D</strong></td>
-        <td>Attention train/serve math</td>
-        <td><strong>Merged</strong> (#28) — layer-0 attn; <a href="/docs/attention-forward.html">ATTENTION_FORWARD.md</a> / <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a></td>
+        <td>Attention train/serve (layer-0)</td>
+        <td><strong>On tip</strong> — <a href="/docs/attention-forward.html">ATTENTION_FORWARD.md</a> / <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a></td>
         </tr>
         <tr>
-        <td><strong>E</strong></td>
-        <td>Claude eval harness</td>
-        <td><strong>Merged</strong> — see <a href="/docs/eval.html">EVAL.md</a></td>
+        <td>Eval harness</td>
+        <td><strong>On tip</strong> — <a href="/docs/eval.html">EVAL.md</a></td>
         </tr>
         <tr>
-        <td><strong>F</strong></td>
         <td>Scale fixtures / dim knobs</td>
-        <td><strong>Merged</strong> — see <a href="/docs/train-loop.html">TRAIN_LOOP.md</a> / <code class="inline-code">spark-sgd-proof-scale</code></td>
+        <td><strong>On tip</strong> — <a href="/docs/train-loop.html">TRAIN_LOOP.md</a> / <code class="inline-code">spark-sgd-proof-scale</code></td>
         </tr>
         <tr>
-        <td><strong>G</strong></td>
         <td>Serve HTTP/API</td>
-        <td><strong>Merged</strong> — see <a href="/docs/serve.html">SERVE.md</a> / <code class="inline-code">make spark-serve-api</code></td>
+        <td><strong>On tip</strong> — <a href="/docs/serve.html">SERVE.md</a> / <code class="inline-code">make spark-serve-api</code></td>
         </tr>
         <tr>
-        <td><strong>H</strong></td>
         <td>Website + factory docs</td>
-        <td><strong>Merged</strong> (#23/#25) — this hub + <a href="/docs/diagrams.html">DIAGRAMS.md</a></td>
+        <td><strong>On tip</strong> — this hub + <a href="/docs/diagrams.html">DIAGRAMS.md</a></td>
         </tr>
         <tr>
-        <td><strong>I</strong></td>
         <td>SDK / IDE / GUI pack</td>
-        <td><strong>Merged</strong> (#24) — <code class="inline-code">make sdk-pack</code>; K enhances helpers overlay</td>
+        <td><strong>On tip</strong> — <code class="inline-code">make sdk-pack</code>; helpers overlay in <a href="/docs/tools-helpers.html">TOOLS_HELPERS.md</a></td>
         </tr>
         <tr>
-        <td><strong>J</strong></td>
-        <td>Decompile research / captures</td>
-        <td><strong>Merged</strong> (#26) + research expand — <a href="/docs/decompile.html">DECOMPILE.md</a> + <a href="/docs/llm-decompile.html">research/LLM_DECOMPILE.md</a> (DecompAI / LLM4Decompile / EmergentMind / Quarkslab article + RE category / Plain English overview); flow diagrams also in <a href="/docs/diagrams.html">DIAGRAMS.md</a></td>
+        <td>Decompile / RE research</td>
+        <td><strong>On tip</strong> — <a href="/docs/decompile.html">DECOMPILE.md</a> + <a href="/docs/llm-decompile.html">research/LLM_DECOMPILE.md</a>; scoreboard in <a href="/docs/decompile-compete.html">DECOMPILE_COMPETE.md</a></td>
         </tr>
         <tr>
-        <td><strong>K</strong></td>
         <td>Helpers / shadows / kit</td>
-        <td><strong>Merged</strong> (#27) — <a href="/docs/tools-helpers.html">TOOLS_HELPERS.md</a></td>
+        <td><strong>On tip</strong> — <a href="/docs/tools-helpers.html">TOOLS_HELPERS.md</a></td>
         </tr>
         <tr>
-        <td><strong>M</strong></td>
-        <td>Owned spark-coder TinyCoder</td>
-        <td><strong>Merged</strong> (#30) — tiny CI + opt-in <strong>large</strong> (<code class="inline-code">--scale large</code> / <code class="inline-code">make spark-coder-train-large</code>); <a href="/docs/spark-coder.html">SPARK_CODER.md</a></td>
+        <td>Owned spark-coder (TinyCoder)</td>
+        <td><strong>On tip</strong> — tiny CI + opt-in <strong>large</strong>; <a href="/docs/spark-coder.html">SPARK_CODER.md</a></td>
         </tr>
         <tr>
-        <td><strong>L</strong></td>
-        <td>AI model aspects (senses + behaviors)</td>
-        <td><strong>Merged</strong> (#29) + sensory 100× expand — <a href="/docs/model-aspects.html">MODEL_ASPECTS.md</a>; eyes stub only</td>
+        <td>Model aspects (senses)</td>
+        <td><strong>On tip</strong> — <a href="/docs/model-aspects.html">MODEL_ASPECTS.md</a>; eyes stub only</td>
+        </tr>
+        <tr>
+        <td>Grounding / anti-guess</td>
+        <td><strong>On tip</strong> — <code class="inline-code">./spark-ground</code>; <a href="/docs/knowledge-safety.html">knowledge/SAFETY_LIMITS.md</a></td>
+        </tr>
+        <tr>
+        <td>Voice ask / voice easy</td>
+        <td><strong>On tip</strong> — <a href="/docs/voice-ask.html">VOICE_ASK.md</a> / <a href="/docs/voice-easy.html">VOICE_EASY.md</a></td>
+        </tr>
+        <tr>
+        <td>Local analyze loop</td>
+        <td><strong>On tip</strong> — <code class="inline-code">./helpers/spark-analyze</code>; <a href="/docs/methods-openbin.html">METHODS_OPENBIN.md</a></td>
+        </tr>
+        <tr>
+        <td>Weight gallery</td>
+        <td><strong>On tip</strong> — <a href="/docs/weight-gallery.html">WEIGHT_GALLERY.md</a></td>
         </tr>
         </tbody>
         </table></div>
         <h2 id="honesty-bar">Honesty bar</h2>
         <ul class="doc__ul">
         <li>Multi-outer CPU SGD + layer-0 attn train + MLP0 serve + frozen
-          eval — <strong>yes</strong> on tip (D #28).</li>
-        <li>Owned TinyCoder (<code class="inline-code">make spark-coder-train</code>) — <strong>yes</strong> (M #30).</li>
+          eval — <strong>yes</strong> on tip.</li>
+        <li>Owned TinyCoder (<code class="inline-code">make spark-coder-train</code>) — <strong>yes</strong> (tiny CI +
+          large opt-in); still not Claude.</li>
         <li>Ears/speaking language surface + companions — <strong>yes</strong> (dry/live gated).</li>
-        <li>Voice easy owned STT/TTS train (<code class="inline-code">make voice-easy</code>) — <strong>yes</strong> (tiny CI + large opt-in; never 6000).</li>
+        <li>Voice easy owned STT/TTS train (<code class="inline-code">make voice-easy</code>) — <strong>yes</strong>.</li>
         <li>Eyes / vision runtime — <strong>no</strong> (planned stub only).</li>
-        <li>Owned TinyCoder tiny (CI) + large opt-in — <strong>yes</strong> (M); still not Claude.</li>
         <li>Beat Claude — <strong>no</strong>.</li>
         <li>Multi-layer / RoPE / production attn decode — <strong>no</strong> (layer-0
           last-query MHA only).</li>
-        <li>RTX PRO <strong>6000</strong> train — <strong>never</strong> (voice-only).</li>
-        <li>RTX <strong>5090</strong> — OK for factory / coder GPU train when used.</li>
+        <li>GPU train policy: prefer <strong>RTX 5090</strong> (or CPU). Do <strong>not</strong> place
+          Spark train jobs on the voice-reserved RTX PRO <strong>6000</strong>.</li>
         </ul>
       </article>
       </main>

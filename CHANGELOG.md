@@ -13,7 +13,7 @@ language) are listed here. Site and installers track
   and knowledge-safety follow the same hierarchy; Grounding links
   `./spark-ground` anti-guess. Shared SoT
   `tools/site_primary_nav.py` + `make sync-nav` / `docs-html`.
-  Mobile keeps nested labels inside drawers. Never 6000; does not
+  Mobile keeps nested labels inside drawers. Does not
   beat Claude.
 
 ## 0.6.55 — 2026-09-09
@@ -22,7 +22,7 @@ language) are listed here. Site and installers track
   verify-before-speak — wrong expect / fixture / dump / schema →
   abstain (exit 2). Thin `adapter-attach` manifest for Qwen-class +
   Spark-owned modify hooks (`keep_special_training`; full external
-  SFT opt-in on **5090**, never **6000**). Stdlib JSON Schema subset
+  SFT opt-in on **5090**). Stdlib JSON Schema subset
   (no xgrammar dep). Docs: [SAFETY_LIMITS.md](docs/knowledge/SAFETY_LIMITS.md)
   → [/docs/knowledge-safety.html](/docs/knowledge-safety.html).
   Gate: `make test-ground`. Does **not** claim impossible to lie;
@@ -37,7 +37,7 @@ language) are listed here. Site and installers track
   `make decompile-bench` scoreboard JSON (wins/ties/losses/N/A —
   **no** fake “beats all”). Docs
   [/docs/decompile-compete.html](/docs/decompile-compete.html).
-  External RE tools skipped cleanly if absent. Never 6000; does
+  External RE tools skipped cleanly if absent. Does
   **not** beat Claude; do not copy OpenBin.
 
 ## 0.6.53 — 2026-09-09
@@ -46,15 +46,14 @@ language) are listed here. Site and installers track
   [MODEL_ASPECTS.md](docs/MODEL_ASPECTS.md) →
   [/docs/model-aspects.html](/docs/model-aspects.html) with hero
   explainer, deep Ears/Eyes/Speaking/Thinking/Behaviors sections
-  (dataflows, opcodes/CLI/make, tiny vs large / never 6000, gaps),
+  (dataflows, opcodes/CLI/make, tiny vs large, gaps),
   agentic system loop SVG, Spark vs OpenBin Ask vs phone-voice
   comparison (local SoT — not clones), 15-min how-to lab. Keeps
   summary status table. New diagrams under `docs/images/diagram-*sense*`
   + `diagram-agentic-sensory-loop.svg` +
   `diagram-spark-vs-external-stacks.svg`. Cross-links Knowledge hive,
   Voice ask, Voice easy, Methods vs OpenBin. Forge nav lists Model
-  aspects. **Honest:** eyes planned stub only; not beat Claude; never
-  6000; no OpenBin/phone clone. Also fix `md_to_doc_html.py` so
+  aspects. **Honest:** eyes planned stub only; not beat Claude; no OpenBin/phone clone. Also fix `md_to_doc_html.py` so
   `![…](images/*.svg)` publishes as `<img>` under `/docs/images/`
   (was incorrectly rewritten to inline code).
 
@@ -81,7 +80,7 @@ language) are listed here. Site and installers track
   their SaaS). Docs: [METHODS_OPENBIN.md](docs/METHODS_OPENBIN.md)
   → [/docs/methods-openbin.html](/docs/methods-openbin.html)
   (adopted vs rejected; OpenBin prior art link only). Coordinates with
-  loop UX from PR #33 (`/workflow.html`). Gate:
+  loop UX (`/workflow.html`). Gate:
   `make test-spark-analyze`. Dump remains SoT. No upload. **Never**
   6000. Does **not** beat Claude.
 
@@ -94,7 +93,7 @@ language) are listed here. Site and installers track
   Docs: [VOICE_ASK.md](docs/VOICE_ASK.md) →
   [/docs/voice-ask.html](/docs/voice-ask.html); linked from
   [/workflow](/workflow). Gate: `make test-spark-ask`.
-  **Not beat Claude.** Never 6000.
+  **Not beat Claude.**
 
 ## 0.6.49 — 2026-09-09
 
@@ -107,7 +106,7 @@ language) are listed here. Site and installers track
   site tokens from 0.6.45 theme — **not** an OpenBin clone. Web demos:
   [/docs/ide-shell.html](website/docs/ide-shell.html) and
   [/ide-web.html](website/ide-web.html). Gate: `make test-sdk-pack`.
-  Docs: [IDE.md](docs/IDE.md). **Not beat Claude.** Never 6000.
+  Docs: [IDE.md](docs/IDE.md). **Not beat Claude.**
 
 ## 0.6.48 — 2026-09-09
 
@@ -129,8 +128,7 @@ language) are listed here. Site and installers track
   multimodal, agents/tools, eval honesty, decompile+RE (links
   existing llm-decompile; recompile≠semantics), and safety.
   Original SVG diagrams; cited papers. Nav: **Knowledge** + **Hive**
-  menu beside Learn / Forge / Bench. Does **not** beat Claude;
-  never 6000; not an OpenBin clone.
+  menu beside Learn / Forge / Bench. Does **not** beat Claude; not an OpenBin clone.
 - **Tiny vs large (owner addendum):** spark-coder
   `./spark-code train --scale {tiny,large}` +
   `make spark-coder-train-large` (opt-in dim 64 / n_layer 4).
@@ -144,14 +142,14 @@ language) are listed here. Site and installers track
 
 ## 0.6.46 — 2026-09-09
 
-- **Docs honesty after D+M:** rebase
+- **Docs honesty after attention + TinyCoder land:** rebase
   [ATTENTION_FORWARD.md](docs/ATTENTION_FORWARD.md),
   [ARCHITECTURE.md](docs/ARCHITECTURE.md),
   [FACTORY.md](docs/FACTORY.md), [SERVE.md](docs/SERVE.md),
   [TRAIN_LOOP.md](docs/TRAIN_LOOP.md),
   [MODEL_ASPECTS.md](docs/MODEL_ASPECTS.md) so tip claims match
-  merged D (#28) layer-0 attn train+serve and M (#30) owned
-  TinyCoder. Still **not** beat Claude; never 6000; no RoPE /
+  merged D layer-0 attn train+serve and M owned
+  TinyCoder. Still **not** beat Claude; no RoPE /
   multi-layer / KV-cache claim.
 
 ## 0.6.45 — 2026-09-09
@@ -163,11 +161,11 @@ language) are listed here. Site and installers track
   `prefers-reduced-motion`. Web IDE shell demo at `/ide-web.html`
   (`ide-shell.css`). Desktop `spark-bc-gui` applies mirrored theme
   (`tools/spark_bc_gui/theme.py`). Original Spark aesthetic — not a
-  third-party clone; does not beat Claude; never 6000.
+  third-party clone; does not beat Claude
 
 ## 0.6.44 — 2026-09-09
 
-- **D-lane layer-0 attention train + serve:** `STEP` /
+- **layer-0 attention layer-0 attention train + serve:** `STEP` /
   `apply_sgd_step` defaults to sequence next-token CE through
   last-query causal MHA (GQA) on `spark.layers.0` q/k/v/o (+ embed
   + lm_head). CPU by default; **RTX 5090 OK**; **NEVER** RTX PRO
@@ -231,7 +229,7 @@ language) are listed here. Site and installers track
   `out/sdk-pack/` when present. Gates: `make helpers`,
   `make tools-test` (with `make sdk-pack` / `make test-sdk-pack`).
   Docs: [TOOLS_HELPERS.md](docs/TOOLS_HELPERS.md)
-  → `/docs/tools-helpers.html`. Never 6000. Does not beat Claude.
+  → `/docs/tools-helpers.html`. Does not beat Claude.
 
 - **AI model aspects (L-lane):** engineer hub for behaviors, ears/STT,
   eyes/vision, speaking/TTS, thinking/generation, memory, tools,
@@ -242,7 +240,7 @@ language) are listed here. Site and installers track
   behavior/tool loop under `docs/images/`. Thin **planned** vision
   stub: `python/sparklang/senses/` (`make test-senses`). Honest:
   STT/TTS language surface exists; vision runtime **not** shipped;
-  attention decode still partial; **not** beat Claude; never 6000.
+  attention decode still partial; **not** beat Claude
 
 ## 0.6.40 — 2026-09-09
 
@@ -272,7 +270,7 @@ language) are listed here. Site and installers track
   **shadow** copy/build/verify, and assorted tools (BC dump,
   opcode sheet, fixture lint). Gate: `make test-sdk-pack`. Docs:
   [sdk-ide-download.html](website/docs/sdk-ide-download.html).
-  **Not beat Claude.** Never 6000.
+  **Not beat Claude.**
 
 ## 0.6.37 — 2026-09-09
 
@@ -282,7 +280,7 @@ language) are listed here. Site and installers track
   [DIAGRAMS.md](docs/DIAGRAMS.md) → `/docs/diagrams.html`. Mermaid
   render via `website/js/site.js` (CDN). J-lane decompile research
   captures cross-linked when/if merged — no conflicting SoT.
-  **Not beat Claude.** Never 6000.
+  **Not beat Claude.**
 
 ## 0.6.36 — 2026-09-09
 
@@ -291,7 +289,7 @@ language) are listed here. Site and installers track
   (ISA), build models + weights/checkpoints, tokenizer/BPE, train
   loop (outer/inner SGD; scale fixture linked), architecture
   (embed/RMSNorm/lm_head/MLP; attention honest/partial), serve
-  forward + HTTP/stdio API (G-lane linked), eval harness (E-lane
+  forward + HTTP/stdio API (serve API path linked), eval harness (E-lane
   Claude baseline linked; **never** beat Claude), makefile targets,
   CI/Pages contributor how-to. Hub: [FACTORY.md](docs/FACTORY.md)
   → `/docs/factory.html`. Also: `/docs/compile.html`,
@@ -304,12 +302,11 @@ language) are listed here. Site and installers track
 
 ## 0.6.35 — 2026-09-09
 
-- **Serve HTTP / stdio API (G-lane):** `./spark-serve-api` wraps the
+- **Serve HTTP / stdio API (serve API path):** `./spark-serve-api` wraps the
   existing tiny CPU forward for local JSON predict (next-token) and
   embeddings from Spark safetensors. Endpoints: `GET /health`,
   `GET /version`, `POST /v1/predict`, `POST /v1/embeddings` (also
-  `--stdio`). Gate: `make test-serve-api`. **Not production.** Never
-  6000. Docs: [SPARK_BUILDER.md](docs/SPARK_BUILDER.md) §6c,
+  `--stdio`). Gate: `make test-serve-api`. **Not production.** Docs: [SPARK_BUILDER.md](docs/SPARK_BUILDER.md) §6c,
   [RELEASE.md](docs/RELEASE.md).
 
 ## 0.6.34 — 2026-09-09
@@ -322,8 +319,7 @@ language) are listed here. Site and installers track
   dim≤128, n_layer≤8). `make spark-sgd-proof` stays tiny for
   GHA; `make spark-sgd-proof-scale` is local opt-in
   (defaults dim=64 n_layer=4). Tests: fixture load + shape
-  check + one-outer smoke (not overnight). **Not beat Claude.**
-  Never 6000. Docs: [SPARK_BUILDER.md](docs/SPARK_BUILDER.md).
+  check + one-outer smoke (not overnight). **Not beat Claude.** Docs: [SPARK_BUILDER.md](docs/SPARK_BUILDER.md).
 
 ## 0.6.33 — 2026-09-09
 
@@ -332,7 +328,7 @@ language) are listed here. Site and installers track
   Anthropic Messages baseline **only if** credentials already exist
   on the box. No key → `skipped_no_credentials` (clear status).
   Side-by-side comparison table; `beats_claude` always **false**.
-  Never invents keys. Never claims beat Claude. Never 6000.
+  Never invents keys. Never claims beat Claude.
   Gate: `make test-spark-eval`. Docs: Eval honesty in
   [SPARK_BUILDER.md](docs/SPARK_BUILDER.md).
 
@@ -343,7 +339,7 @@ language) are listed here. Site and installers track
   embed grads, writes `checkpoint.json` with an honest `loss_curve`.
   Defaults: `--outer 4 --inner 8`. Gate: `make test-sparkbc`,
   `make sparkbc-e2e`, `make spark-sgd-proof` (SGD then
-  measurement-only `spark-eval`). **Not beat Claude.** Never 6000.
+  measurement-only `spark-eval`). **Not beat Claude.**
 - **Serve MLP0:** tiny CPU forward uses layer-0 SwiGLU MLP when
   tensors exist (`embed→mlp0→norm→lm_head`). Still not production.
 - Docs: [SPARK_BUILDER.md](docs/SPARK_BUILDER.md).
