@@ -34,6 +34,9 @@ Folded into this page from operator research (full URLs):
    around static hardening; hallucination / cheating; obfuscation
    as cost multiplier:
    https://blog.quarkslab.com/defeating-ai-assisted-reverse-engineering-or-at-least-trying-to.html
+6. Quarkslab reverse-engineering category (continuing RE source —
+   follow alongside the AI-assisted RE article above):
+   https://blog.quarkslab.com/category/reverse-engineering.html
 
 ## Diagrams (function layout)
 
@@ -140,8 +143,12 @@ SPARK_BC fidelity claim.**
 
 ### Quarkslab: why LLM output is not verified SoT
 
-Owner cite:
-https://blog.quarkslab.com/defeating-ai-assisted-reverse-engineering-or-at-least-trying-to.html
+Owner cites (article + continuing category index):
+
+- https://blog.quarkslab.com/defeating-ai-assisted-reverse-engineering-or-at-least-trying-to.html
+- https://blog.quarkslab.com/category/reverse-engineering.html
+  (Quarkslab RE category — keep as an ongoing source next to the
+  specific AI-assisted RE post)
 
 Takeaways that bind Spark policy (paraphrase, not marketing):
 

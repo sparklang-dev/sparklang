@@ -14,12 +14,15 @@ language) are listed here. Site and installers track
   distinct from seq2seq), LLM4Decompile End/Ref + SK² +
   decompile-bench / HF path, EmergentMind survey (ReF, Idioms,
   SALT, SK², WaDec, SmartHalo, ICL4Decomp; RRR / R2I), Quarkslab
-  (agents route around static hardening; hallucination/cheating;
-  obfuscation as cost multiplier — LLM output is **not** verified
-  SPARK_BC SoT). Cross-links: [DIAGRAMS.md](docs/DIAGRAMS.md),
-  [FACTORY.md](docs/FACTORY.md). Dump/`--compile`/`--run-bc`
-  remain SoT. **Never** perfect SPARK_BC LLM claim. **Never**
-  6000. Does **not** beat Claude or these models.
+  AI-assisted RE article **plus** RE category index
+  (https://blog.quarkslab.com/category/reverse-engineering.html)
+  as a continuing source (agents route around static hardening;
+  hallucination/cheating; obfuscation as cost multiplier — LLM
+  output is **not** verified SPARK_BC SoT). Cross-links:
+  [DIAGRAMS.md](docs/DIAGRAMS.md), [FACTORY.md](docs/FACTORY.md).
+  Dump/`--compile`/`--run-bc` remain SoT. **Never** perfect
+  SPARK_BC LLM claim. **Never** 6000. Does **not** beat Claude or
+  these models.
 
 ## 0.6.42 — 2026-09-09
 
