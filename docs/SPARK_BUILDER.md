@@ -20,7 +20,7 @@ Bytecode is the **training program + orchestration**. Init tensors stay
 (layer-0 last-query causal attention + embed + lm_head; larger
 fixture; loss curve in `checkpoint.json`; loss must drop or fail
 loud). Frozen `make spark-eval` probes can score **>0** after that
-train — still **does not beat Claude.** CPU default; RTX 5090 OK; **NEVER** RTX PRO 6000 / GPU-1. Do not
+train — still **does not beat Claude.** CPU default; RTX 5090 OK;  / GPU-1. Do not
 import Claude or Grok weights.
 
 **ISA SoT:** [SPARK_BC.md](SPARK_BC.md).
@@ -204,12 +204,12 @@ PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
 # Or: ./spark-serve docs/examples/spark-builder.sparkbc /tmp/serve-dry-001
 ```
 
-### 6c) Serve HTTP / stdio API (G-lane)
+### 6c) Serve HTTP / stdio API (serve API path)
 
 Wraps the same tiny CPU forward behind a local JSON API
 (predict next-token + embeddings). Uses whatever tensors
-`serve.py` already runs (attn0 when present — D #28).
-**Not production. Never 6000.**
+`serve.py` already runs (attn0 when present — layer-0 attention).
+**Not production.**
 
 ```bash
 # one-shot SERVE dir first (or point --weights at any Spark .safetensors)
@@ -229,7 +229,7 @@ curl -s -X POST http://127.0.0.1:8765/v1/embeddings \
 
 # stdio (one JSON object per line):
 echo '{"op":"predict","token_ids":[1,2]}' | \
-  ./spark-serve-api --weights /tmp/serve-dry-001/weights.safetensors \
+./spark-serve-api --weights /tmp/serve-dry-001/weights.safetensors \
   --stdio
 
 make test-serve-api
@@ -268,7 +268,7 @@ CI / `make spark-sgd-proof` keeps `dataset.jsonl` + `arch_from_bc`
 tiny defaults. Scale config SoT:
 `examples/fixtures/train/scale_config.json` +
 `dataset_scale.jsonl`. Shape checks live in `make test-sparkbc`
-(no overnight train). **Not beat Claude.** Never 6000.
+(no overnight train). **Not beat Claude.**
 
 
 ## Eval harness (measure later — not beat Claude)
@@ -381,7 +381,7 @@ make test-model-lab
 | Model lab reverse/compile/modify | **tested** (`make test-model-lab`) |
 | STEP real CPU SGD | **implemented** (tiny; attn train; loss drop + eval>0 proven; not beat Claude) |
 | Tiny CPU serve forward | **implemented** (`SERVE`; `forward=true`; attn0+mlp0; not production) |
-| Serve HTTP / stdio API (G-lane) | **implemented** (`spark-serve-api`; predict + embeddings; not production) |
+| Serve HTTP / stdio API (serve API path) | **implemented** (`spark-serve-api`; predict + embeddings; not production) |
 | Beats Claude | **not** |
 
 

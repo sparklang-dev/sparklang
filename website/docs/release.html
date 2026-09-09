@@ -218,7 +218,7 @@
              --project-name=sparklang-dev \
              --branch=production \
              --commit-hash="$(git rev-parse HEAD)"</code></p>
-        <p><strong>Auth gotcha:</strong> Wrangler OAuth on SoapBox lives under
+        <p><strong>Auth gotcha:</strong> Wrangler OAuth on the operator host lives under
            <code class="inline-code">~/.config/.wrangler/</code> (leading <strong>dot</strong> on <code class="inline-code">.wrangler</code>), with
            <code class="inline-code">pages:write</code>. That is <strong>not</strong> <code class="inline-code">~/.config/wrangler/</code> (no leading
            dot). If deploy fails with auth / missing credentials, check the
@@ -262,7 +262,7 @@
         <li>Dry-run remains the default story; live gateway is optional.</li>
         <li>Builder factory honesty: init ≠ trained; GAS <code class="inline-code">--compile</code>/<code class="inline-code">--run-bc</code> wrap bootstrap
           — see <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</li>
-        <li>Local serve API (G-lane): <code class="inline-code">./spark-serve-api --weights … --http</code>
+        <li>Local serve API (serve API path): <code class="inline-code">./spark-serve-api --weights … --http</code>
           exposes <code class="inline-code">/health</code>, <code class="inline-code">/version</code>, <code class="inline-code">/v1/predict</code>, <code class="inline-code">/v1/embeddings</code> on
           CPU only (wraps tiny forward; not production). Gate:
           <code class="inline-code">make test-serve-api</code>. See Builder §6c.</li>

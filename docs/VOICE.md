@@ -141,7 +141,7 @@ Templates: `templates/voice_models/`. Artifacts under
 ## Voice easy train (owned heads)
 
 Piece-of-cake path for **training** owned STT/TTS heads (tiny CI or
-large opt-in). Not vendor neural clone. Prefer 5090; never 6000.
+large opt-in). Not vendor neural clone. Prefer 5090
 
 ```bash
 make voice-easy
@@ -162,7 +162,7 @@ Docs: [VOICE_EASY.md](VOICE_EASY.md) →
 | Allowlist | Placeholders `+15555550100` / `+15555550101`, or `SPARK_PSTN_ALLOW` |
 | Telnyx | `TELNYX_API_KEY`, `TELNYX_CONNECTION_ID`, `SPARK_PSTN_FROM` |
 
-### Divert / CARRIER_DIVERT
+### Carrier divert guard
 
 While a carrier-divert guard file (e.g. `SPARK_PSTN_GUARD_JSON`) has
 `mode=failover` with `applied_dids`, live dial to those **guarded DIDs**
@@ -214,15 +214,16 @@ export TELNYX_CONNECTION_ID=…
 ## Tiny vs large (voice / weight play)
 
 Voice model write/copy and weight playgrounds follow the **same**
-scale honesty as spark-coder + F-lane factory:
+scale honesty as spark-coder + factory scale fixtures:
 
 | Scale | Default | How |
 |-------|---------|-----|
 | **tiny** | CI / dry demos | Stub WAV, tiny STT (`tiny.en`), tiny coder/SGD fixtures |
 | **large** | Opt-in local | `make spark-coder-train-large` / `make spark-sgd-proof-scale`; prefer **RTX 5090** |
 
-**Never** route voice/weight **train** to RTX PRO **6000** (voice-only
-GPU for CallsBack.ai). Larger stubs still **do not** beat Claude.
+**Never** route Spark voice/weight **train** onto GPUs reserved for
+other production voice stacks — prefer CPU / RTX **5090**
+([FACTORY.md](FACTORY.md)). Larger stubs still **do not** beat Claude.
 Details: [SPARK_CODER.md](SPARK_CODER.md) · [TRAIN_LOOP.md](TRAIN_LOOP.md).
 
 ## Production gaps (honest — not sold as telephony)

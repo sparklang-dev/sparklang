@@ -8,7 +8,7 @@ SGD, attention, or serve APIs — links code + makefile targets.
 Reproduction story: [SPARK_BUILDER.md](SPARK_BUILDER.md).
 **Diagrams:** [DIAGRAMS.md](DIAGRAMS.md) — tool map, shadows, LLM
 assist vs deterministic SoT.
-**AI model aspects (L):** [MODEL_ASPECTS.md](MODEL_ASPECTS.md) —
+**AI model aspects:** [MODEL_ASPECTS.md](MODEL_ASPECTS.md) —
 behaviors, ears/STT, eyes/vision, speaking/TTS, thinking, memory,
 tools, train, eval, serve.
 **AI knowledge hive:** [KNOWLEDGE.md](KNOWLEDGE.md) — engineer-grade
@@ -56,32 +56,36 @@ make spark-eval
 make docs-check
 ```
 
-## Sibling factory lanes (do not steal)
+## Factory feature status
 
-| Lane | Scope | Docs stance |
-|------|-------|-------------|
-| **D** | Attention train/serve math | **Merged** (#28) — layer-0 attn; [ATTENTION_FORWARD.md](ATTENTION_FORWARD.md) / [SPARK_BUILDER.md](SPARK_BUILDER.md) |
-| **E** | Claude eval harness | **Merged** — see [EVAL.md](EVAL.md) |
-| **F** | Scale fixtures / dim knobs | **Merged** — see [TRAIN_LOOP.md](TRAIN_LOOP.md) / `spark-sgd-proof-scale` |
-| **G** | Serve HTTP/API | **Merged** — see [SERVE.md](SERVE.md) / `make spark-serve-api` |
-| **H** | Website + factory docs | **Merged** (#23/#25) — this hub + [DIAGRAMS.md](DIAGRAMS.md) |
-| **I** | SDK / IDE / GUI pack | **Merged** (#24) — `make sdk-pack`; K enhances helpers overlay |
-| **J** | Decompile research / captures | **Merged** (#26) + research expand — [DECOMPILE.md](DECOMPILE.md) + [research/LLM_DECOMPILE.md](research/LLM_DECOMPILE.md) (DecompAI / LLM4Decompile / EmergentMind / Quarkslab article + RE category / Plain English overview); flow diagrams also in [DIAGRAMS.md](DIAGRAMS.md) |
-| **K** | Helpers / shadows / kit | **Merged** (#27) — [TOOLS_HELPERS.md](TOOLS_HELPERS.md) |
-| **M** | Owned spark-coder TinyCoder | **Merged** (#30) — tiny CI + opt-in **large** (`--scale large` / `make spark-coder-train-large`); [SPARK_CODER.md](SPARK_CODER.md) |
-| **L** | AI model aspects (senses + behaviors) | **Merged** (#29) + sensory 100× expand — [MODEL_ASPECTS.md](MODEL_ASPECTS.md); eyes stub only |
+| Feature | Docs stance |
+|---------|-------------|
+| Attention train/serve (layer-0) | **On tip** — [ATTENTION_FORWARD.md](ATTENTION_FORWARD.md) / [SPARK_BUILDER.md](SPARK_BUILDER.md) |
+| Eval harness | **On tip** — [EVAL.md](EVAL.md) |
+| Scale fixtures / dim knobs | **On tip** — [TRAIN_LOOP.md](TRAIN_LOOP.md) / `spark-sgd-proof-scale` |
+| Serve HTTP/API | **On tip** — [SERVE.md](SERVE.md) / `make spark-serve-api` |
+| Website + factory docs | **On tip** — this hub + [DIAGRAMS.md](DIAGRAMS.md) |
+| SDK / IDE / GUI pack | **On tip** — `make sdk-pack`; helpers overlay in [TOOLS_HELPERS.md](TOOLS_HELPERS.md) |
+| Decompile / RE research | **On tip** — [DECOMPILE.md](DECOMPILE.md) + [research/LLM_DECOMPILE.md](research/LLM_DECOMPILE.md); scoreboard in [DECOMPILE_COMPETE.md](DECOMPILE_COMPETE.md) |
+| Helpers / shadows / kit | **On tip** — [TOOLS_HELPERS.md](TOOLS_HELPERS.md) |
+| Owned spark-coder (TinyCoder) | **On tip** — tiny CI + opt-in **large**; [SPARK_CODER.md](SPARK_CODER.md) |
+| Model aspects (senses) | **On tip** — [MODEL_ASPECTS.md](MODEL_ASPECTS.md); eyes stub only |
+| Grounding / anti-guess | **On tip** — `./spark-ground`; [knowledge/SAFETY_LIMITS.md](knowledge/SAFETY_LIMITS.md) |
+| Voice ask / voice easy | **On tip** — [VOICE_ASK.md](VOICE_ASK.md) / [VOICE_EASY.md](VOICE_EASY.md) |
+| Local analyze loop | **On tip** — `./helpers/spark-analyze`; [METHODS_OPENBIN.md](METHODS_OPENBIN.md) |
+| Weight gallery | **On tip** — [WEIGHT_GALLERY.md](WEIGHT_GALLERY.md) |
 
 ## Honesty bar
 
 - Multi-outer CPU SGD + layer-0 attn train + MLP0 serve + frozen
-  eval — **yes** on tip (D #28).
-- Owned TinyCoder (`make spark-coder-train`) — **yes** (M #30).
+  eval — **yes** on tip.
+- Owned TinyCoder (`make spark-coder-train`) — **yes** (tiny CI +
+  large opt-in); still not Claude.
 - Ears/speaking language surface + companions — **yes** (dry/live gated).
-- Voice easy owned STT/TTS train (`make voice-easy`) — **yes** (tiny CI + large opt-in; never 6000).
+- Voice easy owned STT/TTS train (`make voice-easy`) — **yes**.
 - Eyes / vision runtime — **no** (planned stub only).
-- Owned TinyCoder tiny (CI) + large opt-in — **yes** (M); still not Claude.
 - Beat Claude — **no**.
 - Multi-layer / RoPE / production attn decode — **no** (layer-0
   last-query MHA only).
-- RTX PRO **6000** train — **never** (voice-only).
-- RTX **5090** — OK for factory / coder GPU train when used.
+- GPU train policy: prefer **RTX 5090** (or CPU). Do **not** place
+  Spark train jobs on the voice-reserved RTX PRO **6000**.

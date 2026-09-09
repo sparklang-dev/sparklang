@@ -24,18 +24,18 @@ shapes match `control.sparkasm` comments (e.g. small `dim`, few
 layers, GQA head counts) — **re-read** `weights.py` /
 `control.sparkasm` for live numbers; do not invent a 3B claim.
 
-Opt-in larger `dim` / `n_layer` for CPU-fast stubs: **F-lane**
+Opt-in larger `dim` / `n_layer` for CPU-fast stubs: **scale fixtures**
 (`make spark-sgd-proof-scale`).
 
 ## Embed → logits paths
 
-**Serve (implemented, D #28):**
+**Serve (implemented, layer-0 attention):**
 
 `embed -> attn0 -> mlp0 -> rms_norm -> lm_head`
 
 (when layer-0 attn tensors exist; else mean-pool → MLP0 path)
 
-**Train STEP (implemented, D #28):**
+**Train STEP (implemented, layer-0 attention):**
 
 last-query causal MHA CE on layer-0 q/k/v/o (+ embed / lm_head).
 `--no-train-attn` keeps mean-pool CE.

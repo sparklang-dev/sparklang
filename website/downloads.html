@@ -366,7 +366,7 @@ print(p['sha256']+'  '+p['file'])
       <div class="shell footer-inner">
         <div class="footer-brand">
           <span>SparkLang — the Spark programming language</span>
-          <span class="footer-meta">v0.6.2 · MIT</span>
+          <span class="footer-meta">v0.6.56 · MIT</span>
         </div>
         <nav class="footer-nav" aria-label="Footer">
           <a href="/workflow.html">Loop</a>
@@ -453,7 +453,7 @@ print(p['sha256']+'  '+p['file'])
             let altHtml = "—";
             if (secondary.length) {
               altHtml = secondary
-                .map(function (p) {
+.map(function (p) {
                   const kl =
                     kindLabel[p.kind] || p.kind || p.format;
                   return (
@@ -466,7 +466,7 @@ print(p['sha256']+'  '+p['file'])
                     ")</small>"
                   );
                 })
-                .join("<br>");
+.join("<br>");
             }
             const tr = document.createElement("tr");
             tr.innerHTML =
@@ -493,10 +493,10 @@ print(p['sha256']+'  '+p['file'])
             skipEl.innerHTML =
               "<strong>Not published:</strong> " +
               m.skipped
-                .map(function (s) {
+.map(function (s) {
                   return s.os + " " + s.arch + " — " + s.reason;
                 })
-                .join("; ");
+.join("; ");
           }
 
           const ver = document.getElementById("manifest-version");

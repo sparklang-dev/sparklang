@@ -238,13 +238,13 @@
         shapes match <code class="inline-code">control.sparkasm</code> comments (e.g. small <code class="inline-code">dim</code>, few
         layers, GQA head counts) — <strong>re-read</strong> <code class="inline-code">weights.py</code> /
         <code class="inline-code">control.sparkasm</code> for live numbers; do not invent a 3B claim.</p>
-        <p>Opt-in larger <code class="inline-code">dim</code> / <code class="inline-code">n_layer</code> for CPU-fast stubs: <strong>F-lane</strong>
+        <p>Opt-in larger <code class="inline-code">dim</code> / <code class="inline-code">n_layer</code> for CPU-fast stubs: <strong>scale fixtures</strong>
         (<code class="inline-code">make spark-sgd-proof-scale</code>).</p>
         <h2 id="embed-logits-paths">Embed → logits paths</h2>
-        <p><strong>Serve (implemented, D #28):</strong></p>
+        <p><strong>Serve (implemented, layer-0 attention):</strong></p>
         <p><code class="inline-code">embed -&gt; attn0 -&gt; mlp0 -&gt; rms_norm -&gt; lm_head</code></p>
         <p>(when layer-0 attn tensors exist; else mean-pool → MLP0 path)</p>
-        <p><strong>Train STEP (implemented, D #28):</strong></p>
+        <p><strong>Train STEP (implemented, layer-0 attention):</strong></p>
         <p>last-query causal MHA CE on layer-0 q/k/v/o (+ embed / lm_head).
         <code class="inline-code">--no-train-attn</code> keeps mean-pool CE.</p>
         <p><strong>sparkasm documented (not a VM):</strong></p>

@@ -342,7 +342,7 @@
         </tr>
         <tr>
         <td><strong>rag-gateway</strong> (<code class="inline-code">RAG_GATEWAY_URL</code>)</td>
-        <td><code class="inline-code">POST /v1/retrieve</code> (project + audience; CRAG on operator/cursor)</td>
+        <td><code class="inline-code">POST /v1/retrieve</code> (project + audience; retrieval grading on operator/cursor)</td>
         <td>Default <code class="inline-code">:4620</code>; <code class="inline-code">RAG_GATEWAY_API_KEY</code> or <code class="inline-code">SPARK_GATEWAY_KEY</code>; <code class="inline-code">./spark-rag-http --retrieve</code></td>
         </tr>
         <tr>
@@ -397,7 +397,7 @@
         <td><code class="inline-code">retrieve "…" from project "…" [audience …] [top_k N] -&gt; hits</code></td>
         </tr>
         <tr>
-        <td><strong>CRAG</strong></td>
+        <td><strong>retrieval grading</strong></td>
         <td>Gateway-side for <code class="inline-code">operator</code> / <code class="inline-code">cursor</code> audiences</td>
         <td>Present in retrieve JSON <code class="inline-code">crag</code>; compose with <code class="inline-code">ask</code> for answers</td>
         </tr>
@@ -429,7 +429,7 @@
         <li>Not a replacement narrative for “throw away Python + OpenAI SDK” — Spark
           complements gateways and existing stacks with a reviewable language surface</li>
         <li>Train jobs need a configured backend — dry-run never starts GPU work</li>
-        <li>Not in-process CRAG — grade/retry stay on rag-gateway; Spark surfaces
+        <li>Not in-process retrieval grading — grade/retry stay on rag-gateway; Spark surfaces
           <code class="inline-code">crag</code> JSON from <code class="inline-code">retrieve</code> and composes with <code class="inline-code">ask</code></li>
         <li>Not a vendor voice-product codebase — Spark stays a general AI language</li>
         </ul>

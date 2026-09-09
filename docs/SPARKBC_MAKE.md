@@ -18,24 +18,24 @@ ISA: [SPARK_BC.md](SPARK_BC.md). Story:
 | `make decompile-roundtrip` | compile→dump→recompile sha256 on published fixtures |
 | `make decompile-bench` | SPARK_BC metrics + `website/data/decompile-scoreboard.json` |
 | `make spark-sgd-proof` | Multi-outer CPU SGD → `checkpoint.json` loss drop → `make spark-eval WEIGHTS=…` |
-| `make spark-sgd-proof-scale` | Local opt-in larger JSONL + dim/n_layer (F-lane; not default CI) |
-| `make spark-coder-train` | Owned TinyCoder **tiny** (CI/default); prefer 5090; never 6000 |
+| `make spark-sgd-proof-scale` | Local opt-in larger JSONL + dim/n_layer (scale fixtures; not default CI) |
+| `make spark-coder-train` | Owned TinyCoder **tiny** (CI/default); prefer 5090 |
 | `make spark-coder-train-large` | Opt-in **large** coder (dim 64 / n_layer 4); not GHA default |
 | `make weight-gallery` | Catalog + emit scale/large samples + website catalog JSON |
 | `make test-weights-play` | Weight gallery unit + CLI play/diff/stats |
-| `make weight-gallery-xl` | Opt-in XL emit (prefer 5090; never 6000) |
+| `make weight-gallery-xl` | Opt-in XL emit (prefer 5090) |
 | `make spark-eval` | Frozen copy/recall + next-token probes; exit 0 = harness ran (**not** beat Claude) |
 | `make spark-eval-claude` | Same + optional Anthropic baseline (E-lane; skip if no key) |
 | `make test-spark-eval` | Unit gate for eval harness |
 | `make docs-html` / `make docs-check` | Regen `website/docs/*` + nav link check |
-| `make spark-serve-api` / `make test-serve-api` | G-lane HTTP/stdio predict + embeddings |
+| `make spark-serve-api` / `make test-serve-api` | serve API path HTTP/stdio predict + embeddings |
 | `make helpers` / `make tools-test` | K-lane helper CLIs + kit/shadow smoke |
 | `make test-spark-ask` | Voice/text ask loop (dump facts + dry TTS) |
 | `make helpers` / `make tools-test` | K-lane helper CLIs + kit/shadow/analyze smoke |
 | `make test-spark-analyze` | Project-loop analyze folder gate |
 | `make sdk-pack` / `make dist` | Stage `dist/spark-sdk/` (helpers + I overlay when present) |
 | `make voice-easy` / `make test-voice-easy` | Owned voice STT/TTS heads — tiny dry (CI) |
-| `make voice-easy-large` | Opt-in large voice-easy (prefer 5090; never 6000; not default CI) |
+| `make voice-easy-large` | Opt-in large voice-easy (prefer 5090; not default CI) |
 
 ```bash
 make test-sparkbc

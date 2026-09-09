@@ -315,7 +315,7 @@
         <tr>
         <td><strong>Thinking</strong></td>
         <td>LLM forward / generation</td>
-        <td>Tiny CPU <code class="inline-code">embed→attn0→MLP0→RMSNorm→lm_head</code> (D #28); fixture-scale</td>
+        <td>Tiny CPU <code class="inline-code">embed→attn0→MLP0→RMSNorm→lm_head</code> (layer-0 attention); fixture-scale</td>
         </tr>
         <tr>
         <td><strong>Behaviors</strong></td>
@@ -361,7 +361,7 @@
         <tr>
         <td>Attention (QKVO / GQA)</td>
         <td><strong>implemented</strong> (layer-0)</td>
-        <td>D #28 — last-query MHA train+serve; <strong>no</strong> RoPE</td>
+        <td>layer-0 attention — last-query MHA train+serve; <strong>no</strong> RoPE</td>
         </tr>
         <tr>
         <td>RMSNorm / <code class="inline-code">lm_head</code></td>
@@ -401,7 +401,7 @@
         <tr>
         <td>Train / adaptation</td>
         <td><strong>implemented</strong> (CPU/5090)</td>
-        <td>STEP SGD + owned TinyCoder (M #30) — never 6000</td>
+        <td>STEP SGD + owned TinyCoder (owned TinyCoder) —</td>
         </tr>
         <tr>
         <td>Eval / honesty</td>
@@ -544,7 +544,7 @@
         </tr>
         </tbody>
         </table></div>
-        <h3 id="tiny-vs-large-5090-ok-never-6000">Tiny vs large (5090 OK, never 6000)</h3>
+        <h3 id="tiny-vs-large-5090-ok">Tiny vs large (5090 OK)</h3>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
@@ -765,7 +765,7 @@
         </tr>
         </tbody>
         </table></div>
-        <h3 id="tiny-vs-large-5090-ok-never-6000">Tiny vs large (5090 OK, never 6000)</h3>
+        <h3 id="tiny-vs-large-5090-ok">Tiny vs large (5090 OK)</h3>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
@@ -788,7 +788,7 @@
         </tr>
         <tr>
         <td>Opt-in owned TTS heads</td>
-        <td>Prefer <strong>5090</strong>; <strong>never 6000</strong></td>
+        <td>Prefer <strong>5090</strong>; ****</td>
         </tr>
         </tbody>
         </table></div>
@@ -808,7 +808,7 @@
         gateway</strong> <code class="inline-code">ask</code> (not required for dry demos).</p>
         <h3 id="engineering-stack-tiny-cpu-serve-weights">Engineering stack — tiny CPU serve (weights)</h3>
         <p>When MLP tensors exist (<a href="/docs/serve.html">SERVE.md</a>):</p>
-        <pre class="doc__pre"><code class="language-text">embed (mean pool) → attn0 (layer-0 last-query MHA, D #28)
+        <pre class="doc__pre"><code class="language-text">embed (mean pool) → attn0 (layer-0 last-query MHA, layer-0 attention)
           → MLP0 (SwiGLU) → RMSNorm → lm_head
         </code></pre>
         <p>Code: <code class="inline-code">python/sparklang/model_lab/serve.py</code>. HTTP/stdio:
@@ -830,7 +830,7 @@
         <td><strong>yes</strong> in serve</td>
         </tr>
         <tr>
-        <td>Layer-0 last-query attn (D #28)</td>
+        <td>Layer-0 last-query attn (layer-0 attention)</td>
         <td><strong>yes</strong> train + serve</td>
         </tr>
         <tr>
@@ -891,7 +891,7 @@
         ./spark-ask-http --dry --model fixtures/tiny-lm --prompt &quot;Reply: pong&quot;
         make test-ask-gateway
         </code></pre>
-        <h3 id="tiny-vs-large-5090-ok-never-6000">Tiny vs large (5090 OK, never 6000)</h3>
+        <h3 id="tiny-vs-large-5090-ok">Tiny vs large (5090 OK)</h3>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
@@ -1058,8 +1058,8 @@
         </tr>
         <tr>
         <td>Owned TinyCoder</td>
-        <td><strong>implemented</strong> (M #30)</td>
-        <td>tiny CI + large opt-in — never 6000</td>
+        <td><strong>implemented</strong> (owned TinyCoder)</td>
+        <td>tiny CI + large opt-in —</td>
         </tr>
         <tr>
         <td>LoRA / voice-GPU</td>
@@ -1149,7 +1149,7 @@
         <p>Do not invent a context-window size for production marketing — read
         live dims from weights / control asm when measuring.</p>
         <hr class="doc__hr" />
-        <h2 id="comparison-spark-local-sot-vs-openbin-ask-phone-voice">Comparison — Spark local SoT vs OpenBin Ask / phone voice</h2>
+        <h2 id="comparison-spark-local-sot-vs-openbin-ask-production-voice-stacks">Comparison — Spark local SoT vs OpenBin Ask / production voice stacks</h2>
         <p>Spark is the <strong>local</strong> language + bytecode + weights SoT. Other
         products are related reading — <strong>not</strong> clones and <strong>not</strong> substitutes
         for Spark recovery / serve proofs.</p>
@@ -1159,7 +1159,7 @@
         <th>Dimension</th>
         <th><strong>Spark (this repo / sparklang.dev)</strong></th>
         <th><strong>OpenBin Ask</strong> (<a href="https://openbin.ai/">openbin.ai</a>)</th>
-        <th><strong>Production phone voice</strong> (e.g. CallsBack.ai-class)</th>
+        <th><strong>Production phone / voice products</strong></th>
         </tr>
         </thead>
         <tbody>
@@ -1167,13 +1167,13 @@
         <td>Job</td>
         <td>Language + SPARK_BC factory + optional senses</td>
         <td>Online AI reverse-engineering / agent Q&amp;A on binaries</td>
-        <td>Live DID telephony, STT/TTS, transfers, digests</td>
+        <td>Live telephony, STT/TTS, transfers</td>
         </tr>
         <tr>
         <td>SoT</td>
         <td>Local <code class="inline-code">dump.py</code> / <code class="inline-code">--compile</code> / <code class="inline-code">--run-bc</code> / dry fixtures</td>
         <td>Cloud project + Ghidra-backed decompile — <strong>not</strong> SPARK_BC</td>
-        <td>Carrier + worker journals — <strong>not</strong> Spark VM</td>
+        <td>Carrier + product journals — <strong>not</strong> Spark VM</td>
         </tr>
         <tr>
         <td>Ask path</td>
@@ -1185,7 +1185,7 @@
         <td>Ears / speaking</td>
         <td>Language <code class="inline-code">listen</code>/<code class="inline-code">speak</code> + <code class="inline-code">spark-stt-tts</code> (gated)</td>
         <td>N/A (RE product)</td>
-        <td>Always-on production STT/TTS + capacity rules</td>
+        <td>Always-on production STT/TTS</td>
         </tr>
         <tr>
         <td>Eyes</td>
@@ -1196,14 +1196,14 @@
         <tr>
         <td>Trust</td>
         <td>Binaries stay local; fail-closed net gates</td>
-        <td>Upload / login trust surface — lab-gated on SoapBox</td>
-        <td>Staff / divert / recording retention policies</td>
+        <td>Upload / login trust surface — use a gated lab if at all</td>
+        <td>Product-specific privacy / retention — out of scope here</td>
         </tr>
         <tr>
         <td>GPU</td>
-        <td>Train: CPU / <strong>5090</strong>; <strong>never 6000</strong></td>
+        <td>Train: CPU / <strong>RTX 5090</strong> (see <a href="/docs/factory.html">FACTORY.md</a>)</td>
         <td>Vendor / cloud</td>
-        <td>Voice LLM may use reserved GPUs — <strong>out of Spark train</strong></td>
+        <td>May reserve separate voice GPUs — <strong>out of Spark train</strong></td>
         </tr>
         <tr>
         <td>Honesty</td>
@@ -1218,7 +1218,8 @@
         <li>Treat OpenBin output as verified Spark recovery</li>
         <li>Clone OpenBin UX into sparklang.dev</li>
         <li>Sell Spark voice as a phone stack</li>
-        <li>Route Spark train onto the <strong>6000</strong> because a phone product uses it</li>
+        <li>Place Spark factory train on GPUs reserved for other voice products
+          (prefer CPU / 5090 — <a href="/docs/factory.html">FACTORY.md</a>)</li>
         </ul>
         <p>Decompile research context (OpenBin cited carefully):
         <a href="/docs/llm-decompile.html">research/LLM_DECOMPILE.md</a> →
@@ -1255,7 +1256,7 @@
         </code></pre>
         <p>Live STT/TTS/PSTN and live gateway ask need <strong>explicit</strong> gates —
         see <a href="/docs/voice.html">VOICE.md</a> and <a href="/docs/ai-models.html#live-gateway-integration-wired-today">ASK_LIVE.md</a>. Prefer
-        passive / dry proofs when carrier divert or missing keys apply.</p>
+        passive / dry proofs when PSTN guards or missing keys apply.</p>
         <hr class="doc__hr" />
         <h2 id="runtime-serve-wiring-thinking-surface">Runtime / serve wiring (thinking surface)</h2>
         <pre class="doc__pre"><code class="language-bash">make spark-serve-api
@@ -1309,42 +1310,42 @@
         <p>Adoption checklist: <a href="/docs/adoption-bar.html">ADOPTION_BAR.md</a>.
         Roadmap sketches: <a href="/docs/roadmap.html">ROADMAP.md</a>.</p>
         <hr class="doc__hr" />
-        <h2 id="related-lanes">Related lanes</h2>
+        <h2 id="related-docs">Related docs</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
-        <th>Lane</th>
+        <th>Topic</th>
         <th>Relation to this page</th>
         </tr>
         </thead>
         <tbody>
         <tr>
-        <td><strong>H</strong></td>
-        <td>Factory hub + diagrams — <strong>extended</strong>, not replaced</td>
+        <td>Factory hub + diagrams</td>
+        <td>Extended context — <a href="/docs/factory.html">FACTORY.md</a> / <a href="/docs/diagrams.html">DIAGRAMS.md</a></td>
         </tr>
         <tr>
-        <td><strong>J</strong></td>
-        <td>Decompile research / OpenBin citations — cross-link; no fight</td>
+        <td>Decompile / OpenBin methods</td>
+        <td>Cross-link — <a href="/docs/decompile.html">DECOMPILE.md</a> / <a href="/docs/methods-openbin.html">METHODS_OPENBIN.md</a></td>
         </tr>
         <tr>
-        <td><strong>I / K</strong></td>
-        <td>SDK / helpers / shadows — tools for authors; behaviors ≠ helpers</td>
+        <td>SDK / helpers / shadows</td>
+        <td>Authoring tools — <a href="/docs/ide.html">IDE.md</a> / <a href="/docs/tools-helpers.html">TOOLS_HELPERS.md</a></td>
         </tr>
         <tr>
-        <td><strong>D</strong></td>
-        <td>Attention math — layer-0 last-query honest</td>
+        <td>Attention math</td>
+        <td>Layer-0 last-query — <a href="/docs/attention-forward.html">ATTENTION_FORWARD.md</a></td>
         </tr>
         <tr>
-        <td><strong>E / F / G</strong></td>
-        <td>Eval / scale / serve API — linked above</td>
+        <td>Eval / scale / serve</td>
+        <td>Linked above — <a href="/docs/eval.html">EVAL.md</a> / <a href="/docs/train-loop.html">TRAIN_LOOP.md</a> / <a href="/docs/serve.html">SERVE.md</a></td>
         </tr>
         <tr>
-        <td><strong>M</strong></td>
-        <td>Owned spark-coder — tiny + large discipline</td>
+        <td>Owned spark-coder</td>
+        <td>Tiny + large discipline — <a href="/docs/spark-coder.html">SPARK_CODER.md</a></td>
         </tr>
         <tr>
-        <td><strong>L</strong></td>
-        <td>This sensory map (expanded)</td>
+        <td>This sensory map</td>
+        <td>Expanded status on this page</td>
         </tr>
         </tbody>
         </table></div>

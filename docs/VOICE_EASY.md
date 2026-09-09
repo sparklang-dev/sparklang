@@ -2,7 +2,7 @@
 
 Piece-of-cake path for **owned** Spark voice-related heads we write
 and train in this repo. Companion to [VOICE.md](VOICE.md) and
-[MODEL_ASPECTS.md](MODEL_ASPECTS.md) (L-lane ears/speaking).
+[MODEL_ASPECTS.md](MODEL_ASPECTS.md) (ears/speaking).
 
 **Not** ElevenLabs, Kokoro, or a downloaded mega TTS overnight.
 **Never** trains on the RTX PRO **6000** (voice-serving only).
@@ -61,7 +61,7 @@ the RTX PRO 6000, Spark **refuses** (exit 2) unless you pass
 | Flag / env | Meaning |
 |------------|---------|
 | `--dry` | CI-friendly (clamped steps); used by `make voice-easy` / `make test-voice-easy` |
-| `--device auto\|cpu\|5090` | auto prefers 5090; never 6000 |
+| `--device auto\|cpu\|5090` | auto prefers RTX 5090 (or CPU) |
 | `--scale tiny\|large` | model size |
 | `VOICE_SCALE=large` | same as `--scale large` when flag omitted |
 
@@ -75,7 +75,7 @@ is obvious:
 ```text
 ears (fixtures / spark-stt-tts)
    → voice-easy STT head (classify phrases)
-brain (optional spark-coder / dump ask — sibling lanes)
+brain (optional spark-coder / dump ask)
    → voice-easy TTS head (PCM params)
 speaking (roundtrip WAV / spark-stt-tts speak)
 ```
@@ -111,6 +111,6 @@ make voice-easy-large    # opt-in local large (not default CI)
 |-------|--------|
 | Owned STT/TTS heads we train | **yes** (tiny + large) |
 | CI dry green | **yes** (`make test-voice-easy`) |
-| Prefer 5090 / never 6000 | **yes** |
+| Prefer RTX 5090 (or CPU) for GPU train | **yes** |
 | Replace ElevenLabs overnight | **no** |
 | Beat Claude | **no** |

@@ -216,7 +216,7 @@
         (layer-0 last-query causal attention + embed + lm_head; larger
         fixture; loss curve in <code class="inline-code">checkpoint.json</code>; loss must drop or fail
         loud). Frozen <code class="inline-code">make spark-eval</code> probes can score <strong>&gt;0</strong> after that
-        train — still <strong>does not beat Claude.</strong> CPU default; RTX 5090 OK; <strong>NEVER</strong> RTX PRO 6000 / GPU-1. Do not
+        train — still <strong>does not beat Claude.</strong> CPU default; RTX 5090 OK;  / GPU-1. Do not
         import Claude or Grok weights.</p>
         <p><strong>ISA SoT:</strong> <a href="/docs/spark-bc.html">SPARK_BC.md</a>.</p>
         <h2 id="factory-story-end-to-end">Factory story (end-to-end)</h2>
@@ -422,11 +422,11 @@
         #    attn+MLP tensors exist; + weights.safetensors (init if missing)
         # Or: ./spark-serve docs/examples/spark-builder.sparkbc /tmp/serve-dry-001
         </code></pre>
-        <h3 id="6c-serve-http-stdio-api-g-lane">6c) Serve HTTP / stdio API (G-lane)</h3>
+        <h3 id="6c-serve-http-stdio-api-serve-api-path">6c) Serve HTTP / stdio API (serve API path)</h3>
         <p>Wraps the same tiny CPU forward behind a local JSON API
         (predict next-token + embeddings). Uses whatever tensors
-        <code class="inline-code">serve.py</code> already runs (attn0 when present — D #28).
-        <strong>Not production. Never 6000.</strong></p>
+        <code class="inline-code">serve.py</code> already runs (attn0 when present — layer-0 attention).
+        <strong>Not production.</strong></p>
         <pre class="doc__pre"><code class="language-bash"># one-shot SERVE dir first (or point --weights at any Spark .safetensors)
         ./spark-serve docs/examples/spark-builder.sparkbc /tmp/serve-dry-001
         make spark-serve-api
@@ -444,7 +444,7 @@
 
         # stdio (one JSON object per line):
         echo '{&quot;op&quot;:&quot;predict&quot;,&quot;token_ids&quot;:[1,2]}' | \
-          ./spark-serve-api --weights /tmp/serve-dry-001/weights.safetensors \
+        ./spark-serve-api --weights /tmp/serve-dry-001/weights.safetensors \
           --stdio
 
         make test-serve-api
@@ -475,7 +475,7 @@
         tiny defaults. Scale config SoT:
         <code class="inline-code">examples/fixtures/train/scale_config.json</code> +
         <code class="inline-code">dataset_scale.jsonl</code>. Shape checks live in <code class="inline-code">make test-sparkbc</code>
-        (no overnight train). <strong>Not beat Claude.</strong> Never 6000.</p>
+        (no overnight train). <strong>Not beat Claude.</strong></p>
         <h2 id="eval-harness-measure-later-not-beat-claude">Eval harness (measure later — not beat Claude)</h2>
         <p>Frozen tiny probes live under <code class="inline-code">examples/eval/</code> (copy/recall +
         next-token fixtures). Runner: <code class="inline-code">tools/spark-eval/run.py</code>.</p>
@@ -692,7 +692,7 @@
         <td><strong>implemented</strong> (<code class="inline-code">SERVE</code>; <code class="inline-code">forward=true</code>; attn0+mlp0; not production)</td>
         </tr>
         <tr>
-        <td>Serve HTTP / stdio API (G-lane)</td>
+        <td>Serve HTTP / stdio API (serve API path)</td>
         <td><strong>implemented</strong> (<code class="inline-code">spark-serve-api</code>; predict + embeddings; not production)</td>
         </tr>
         <tr>

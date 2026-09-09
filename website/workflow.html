@@ -243,8 +243,7 @@
               </p>
               <p>
                 <a href="/docs/decompile.html">Decompile docs</a> ·
-                <a href="/docs/llm-decompile.html">LLM research notes</a>
-              </p>
+                <a href="/docs/decompile-compete.html">Compete / scoreboard</a> ·
                 <a href="/docs/tools-helpers.html">Tools &amp; helpers</a> ·
                 <a href="/docs/methods-openbin.html">Methods vs OpenBin</a> ·
                 <a href="/docs/llm-decompile.html">LLM research notes</a>
@@ -330,8 +329,8 @@
                 <a href="/docs/voice-easy.html">Voice easy</a>
                 (<code class="inline-code">make voice-easy</code>):
                 tiny CI default or
-                <code class="inline-code">--scale large</code> on the
-                5090 (never 6000). Owned heads — not ElevenLabs overnight.
+                <code class="inline-code">--scale large</code> on an
+                RTX 5090 (or CPU). Owned heads — not ElevenLabs overnight.
               </p>
               <p>
                 <a href="/docs/train-loop.html">Train loop</a> ·
@@ -343,7 +342,7 @@
 <span class="cmd">./spark --dry-run examples/train_eval.spark</span>
 <span class="comment"># Voice easy (tiny / CI)</span>
 <span class="cmd">make voice-easy</span>
-<span class="comment"># Large opt-in (prefer 5090; never 6000)</span>
+<span class="comment"># Large opt-in (prefer 5090)</span>
 <span class="cmd">./spark-voice easy --scale large --device auto</span></code></pre>
               <p class="honest-note">
                 Honest bar: CPU reference methods and owned tiny coder /

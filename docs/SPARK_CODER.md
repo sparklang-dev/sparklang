@@ -1,4 +1,4 @@
-# Spark coder — owned TinyCoder (M-lane)
+# Spark coder — owned TinyCoder (spark-coder)
 
 **Written and trained in this repo.** Not a HuggingFace / Claude /
 OpenAI / Bifrost / vLLM wrapper. Prefers **RTX 5090** for GPU SGD
@@ -37,7 +37,7 @@ only compile/verify.
 ```
 
 SoT JSON: `examples/fixtures/coder/scale_config.json` (aligns with
-F-lane `examples/fixtures/train/scale_config.json` dims).
+scale fixtures `examples/fixtures/train/scale_config.json` dims).
 
 **Hard refuse:** RTX PRO **6000** (voice-only). **Never** claim beat
 Claude — larger dims ≠ Claude quality.

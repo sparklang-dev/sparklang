@@ -180,7 +180,7 @@
       </nav>      <article class="doc__body">
         <h1 id="weight-gallery-view-play-understand-spark-stub-weights">Weight gallery — view / play / understand Spark stub weights</h1>
         <p>Catalog <strong>many weight kinds</strong> Spark already produces (or can emit):
-        init / dry ARTIFACT, post-STEP SGD, checkpoints, F-lane scale
+        init / dry ARTIFACT, post-STEP SGD, checkpoints, scale
         fixtures, owned <strong>spark-coder</strong>, and <strong>large / xl</strong> multi-layer
         profiles. Play on CPU; opt-in generate XL on <strong>RTX 5090</strong>;
         <strong>never</strong> the voice RTX PRO <strong>6000</strong>.</p>
@@ -209,7 +209,7 @@
         <td><code class="inline-code">scale</code></td>
         <td>64</td>
         <td>4</td>
-        <td>F-lane fixture (<code class="inline-code">spark-sgd-proof-scale</code>)</td>
+        <td>Scale fixture (<code class="inline-code">spark-sgd-proof-scale</code>)</td>
         </tr>
         <tr>
         <td><code class="inline-code">large</code></td>
@@ -250,7 +250,7 @@
         </tr>
         <tr>
         <td>Scale fixtures</td>
-        <td>F-lane larger dim/layers</td>
+        <td>Larger dim/layers (<code class="inline-code">spark-sgd-proof-scale</code>)</td>
         </tr>
         <tr>
         <td>spark-coder</td>
@@ -298,7 +298,7 @@
         <pre class="doc__pre"><code class="language-bash"># CPU scale + large samples under out/gallery/
         make weight-gallery
 
-        # XL prefers 5090 (falls back to CPU); never 6000
+        # XL prefers 5090 (falls back to CPU)
         PYTHONPATH=python python3 tools/spark-weights/cli.py generate xl --5090
         # or force CPU:
         PYTHONPATH=python python3 tools/spark-weights/cli.py generate xl --cpu

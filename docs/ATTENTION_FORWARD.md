@@ -1,8 +1,7 @@
 # Attention heads / MLP / serve forward
 
 Honest status of **neural forward** pieces next to SPARK_BC.
-Spark / SparkLang only. Documents tip/`main` after **D-lane**
-(#28) attention train + serve landed.
+Spark / SparkLang only. Documents tip/`main` after attention train + serve landed.
 
 ## Summary table
 
@@ -11,10 +10,10 @@ Spark / SparkLang only. Documents tip/`main` after **D-lane**
 | Init tensors `spark.layers.*.q/k/v/o` + `attn_norm` | **allocated** | `weights.py` Xavier init from SPARK_BC bytes |
 | Init tensors MLP (`mlp_up/gate/down`, `mlp_norm`) | **allocated** | same |
 | Tiny CPU serve: embed → **attn0** → optional **MLP0** → RMSNorm → lm_head | **implemented** | `serve.py` / `dump.py --serve` when layer-0 attn tensors exist |
-| Tiny CPU serve: attention (last-query causal MHA / GQA) | **implemented** | D-lane; no RoPE math yet |
+| Tiny CPU serve: attention (last-query causal MHA / GQA) | **implemented** | layer-0 attention; no RoPE math yet |
 | `control.sparkasm` ATTN / ROPE macros | **source + shape check** | `make test-sparkasm-control` — not a tensor VM |
-| Attention train (factory D-lane) | **implemented** | `apply_sgd_step` default `train_attn=True`; `--no-train-attn` = mean-pool CE |
-| HTTP serve API (factory G-lane) | **implemented** | `make spark-serve-api` — see [SERVE.md](SERVE.md) |
+| Attention train (layer-0) | **implemented** | `apply_sgd_step` default `train_attn=True`; `--no-train-attn` = mean-pool CE |
+| HTTP serve API | **implemented** | `make spark-serve-api` — see [SERVE.md](SERVE.md) |
 | Beat Claude | **not** | never claim from docs |
 | RTX PRO 6000 train | **never** | voice-only; 5090 OK |
 
@@ -43,7 +42,7 @@ Code: `python/sparklang/model_lab/serve.py` (`_attn_block`,
 **Not** a production LLM. **Not** multi-layer full-decode /
 RoPE. Fixture-scale only.
 
-## Attention train (D-lane on tip)
+## Attention train (layer-0 attention on tip)
 
 ```bash
 make spark-sgd-proof

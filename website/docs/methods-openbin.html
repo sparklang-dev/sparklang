@@ -208,7 +208,7 @@
         </tr>
         <tr>
         <td>Side-by-side inspect vocabulary</td>
-        <td>Existing <code class="inline-code">dump.py</code> + <code class="inline-code">spark-bc-gui</code> + loop UX (<code class="inline-code">/workflow.html</code>, PR #33)</td>
+        <td>Existing <code class="inline-code">dump.py</code> + <code class="inline-code">spark-bc-gui</code> + loop UX (<code class="inline-code">/workflow.html</code>, the loop UX)</td>
         </tr>
         <tr>
         <td>Optional <strong>Ask</strong> after inspect</td>
@@ -247,7 +247,7 @@
         </tr>
         <tr>
         <td>Pixel-clone of OpenBin / OpenAPK UI</td>
-        <td>Original Spark loop branding (PR #33)</td>
+        <td>Original Spark loop branding (the loop UX)</td>
         </tr>
         <tr>
         <td>Ghidra/JADX Docker workers as Spark runtime</td>
@@ -272,11 +272,10 @@
         </code></pre>
         <p>Gate: <code class="inline-code">make test-spark-analyze</code> (or <code class="inline-code">PYTHONPATH=python:tools python3 -m unittest tools.spark_analyze.test_analyze -v</code>).</p>
         <h2 id="ethics-lab-note">Ethics / lab note</h2>
-        <p>SoapBox runs OpenBin CLI <strong>v0.10.0</strong> only inside gated DinD
-        <code class="inline-code">openbin-lab</code> (see operator report
-        <code class="inline-code">workspaces/reports/openbin-gated-vm-install-20260909.md</code>).
-        Do not dump proprietary worker image layers for redistribution.
-        Login/BYOK for deeper OpenBin probes stays an owner action — this
+        <p>The OpenBin CLI (<strong>v0.10.0</strong>) belongs in a <strong>gated lab</strong> container
+        (<code class="inline-code">openbin-lab</code> DinD) when used at all — not as a parallel SPARK_BC
+        SoT. Do not dump proprietary worker image layers for redistribution.
+        Login/BYOK for deeper OpenBin probes is optional operator work; this
         doc does not require it.</p>
       </article>
       </main>

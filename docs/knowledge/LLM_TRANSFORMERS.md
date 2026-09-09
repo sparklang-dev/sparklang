@@ -64,7 +64,7 @@ flowchart TB
 
 | Claim | Spark status |
 |-------|--------------|
-| Layer-0 last-query MHA train/serve | Yes (D-lane) — [ATTENTION_FORWARD.md](ATTENTION_FORWARD.md) |
+| Layer-0 last-query MHA train/serve | Yes (layer-0 attention) — [ATTENTION_FORWARD.md](ATTENTION_FORWARD.md) |
 | Full RoPE / multi-layer production decode | No |
 | Beat Claude | **Never** |
 | Train on RTX PRO 6000 | **Never** (voice-only elsewhere) |

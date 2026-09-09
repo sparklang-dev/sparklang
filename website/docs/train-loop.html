@@ -227,7 +227,7 @@
         <p>Or: <code class="inline-code">make spark-sgd-proof</code> (same path + eval).</p>
         <h2 id="what-is-trained-today">What is trained today</h2>
         <ul class="doc__ul">
-        <li>Default (D #28): layer-0 last-query causal MHA CE on
+        <li>Default (layer-0 attention): layer-0 last-query causal MHA CE on
           <code class="inline-code">q/k/v/o</code> (+ embed / <code class="inline-code">lm_head</code>) via <code class="inline-code">train_attn=True</code>.</li>
         <li>Fallback: <code class="inline-code">--no-train-attn</code> mean-pool embed → CE on <code class="inline-code">lm_head</code>.</li>
         <li>Optional: embed grads when the helper enables them.</li>
@@ -263,11 +263,11 @@
         </tr>
         <tr>
         <td>Opt-in <code class="inline-code">dim</code> / <code class="inline-code">n_layer</code> + scale JSONL</td>
-        <td><strong>on tip (F-lane)</strong> — <code class="inline-code">dataset_scale.jsonl</code>; <code class="inline-code">make spark-sgd-proof-scale</code>; CI keeps tiny <code class="inline-code">spark-sgd-proof</code></td>
+        <td><strong>on tip</strong> — <code class="inline-code">dataset_scale.jsonl</code>; <code class="inline-code">make spark-sgd-proof-scale</code>; CI keeps tiny <code class="inline-code">spark-sgd-proof</code></td>
         </tr>
         <tr>
         <td>Spark-coder tiny vs large</td>
-        <td><strong>tiny</strong> CI (<code class="inline-code">make spark-coder-train</code>); <strong>large</strong> opt-in dim64/n_layer4 (<code class="inline-code">make spark-coder-train-large</code> / <code class="inline-code">./spark-code train --scale large</code>). Prefer <strong>5090</strong>; never <strong>6000</strong>. SoT: <code class="inline-code">examples/fixtures/coder/scale_config.json</code></td>
+        <td><strong>tiny</strong> CI (<code class="inline-code">make spark-coder-train</code>); <strong>large</strong> opt-in dim64/n_layer4 (<code class="inline-code">make spark-coder-train-large</code> / <code class="inline-code">./spark-code train --scale large</code>). Prefer <strong>5090</strong> SoT: <code class="inline-code">examples/fixtures/coder/scale_config.json</code></td>
         </tr>
         </tbody>
         </table></div>

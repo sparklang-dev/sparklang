@@ -26,7 +26,7 @@ Code: `python/sparklang/model_lab/serve.py`. Gate:
 Architecture honesty: [ARCHITECTURE.md](ARCHITECTURE.md) ·
 [ATTENTION_FORWARD.md](ATTENTION_FORWARD.md).
 
-## HTTP / stdio API (G-lane — on tip)
+## HTTP / stdio API (serve API path — on tip)
 
 ```bash
 make spark-serve-api
@@ -57,7 +57,7 @@ make test-serve-api
 
 Implementation: `python/sparklang/model_lab/serve_api.py` wraps
 `run_tiny_forward` / `run_tiny_embed` — same path as file SERVE
-(now **attn0** when tensors exist; D #28). Builder §6c:
+(now **attn0** when tensors exist; layer-0 attention). Builder §6c:
 [SPARK_BUILDER.md](SPARK_BUILDER.md).
 
 Optional live **gateway** ask/embed (Bifrost etc.) is a different

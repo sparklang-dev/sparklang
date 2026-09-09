@@ -41,7 +41,7 @@ OpenBin clone). Lessons from public IDE pane workflows only.
 | Compile / Decompile / Dump | Real `spark-bootstrap --compile` + `bc_dump` |
 | Split view | Source ↔ dump; best-effort sync via string pool |
 | Ask | Text ask over dump (factual + optional `spark_ask` hook) |
-| Weights play | CPU mean/min/max/sample — never 6000 |
+| Weights play | CPU mean/min/max/sample — |
 | Report | Export markdown analysis stub |
 | Helpers / shadows | One-click opcode sheet, compile/decompile, shadow copy |
 

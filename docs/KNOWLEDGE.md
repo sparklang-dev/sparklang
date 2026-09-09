@@ -5,8 +5,7 @@ transformers, training, inference, multimodal, agents, eval honesty,
 and decompile limits. Original diagrams (not scraped paper figures).
 Citations point at primary papers and surveys.
 
-**Never** claims beat Claude. **Never** RTX PRO 6000. Spark factory
-CPU / 5090 paths stay honest. Not an OpenBin clone.
+**Never** claims beat Claude. Spark factory train prefers CPU / RTX 5090 (see [FACTORY.md](FACTORY.md) GPU policy). Not an OpenBin clone.
 
 Topics below follow the same **category → subcategory** map as the
 Hive nav: Foundations · Systems · Safety / Eval · RE.

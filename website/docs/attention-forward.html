@@ -180,8 +180,7 @@
       </nav>      <article class="doc__body">
         <h1 id="attention-heads-mlp-serve-forward">Attention heads / MLP / serve forward</h1>
         <p>Honest status of <strong>neural forward</strong> pieces next to SPARK_BC.
-        Spark / SparkLang only. Documents tip/<code class="inline-code">main</code> after <strong>D-lane</strong>
-        (#28) attention train + serve landed.</p>
+        Spark / SparkLang only. Documents tip/<code class="inline-code">main</code> after attention train + serve landed.</p>
         <h2 id="summary-table">Summary table</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
@@ -210,7 +209,7 @@
         <tr>
         <td>Tiny CPU serve: attention (last-query causal MHA / GQA)</td>
         <td><strong>implemented</strong></td>
-        <td>D-lane; no RoPE math yet</td>
+        <td>layer-0 attention; no RoPE math yet</td>
         </tr>
         <tr>
         <td><code class="inline-code">control.sparkasm</code> ATTN / ROPE macros</td>
@@ -218,12 +217,12 @@
         <td><code class="inline-code">make test-sparkasm-control</code> — not a tensor VM</td>
         </tr>
         <tr>
-        <td>Attention train (factory D-lane)</td>
+        <td>Attention train (layer-0)</td>
         <td><strong>implemented</strong></td>
         <td><code class="inline-code">apply_sgd_step</code> default <code class="inline-code">train_attn=True</code>; <code class="inline-code">--no-train-attn</code> = mean-pool CE</td>
         </tr>
         <tr>
-        <td>HTTP serve API (factory G-lane)</td>
+        <td>HTTP serve API</td>
         <td><strong>implemented</strong></td>
         <td><code class="inline-code">make spark-serve-api</code> — see <a href="/docs/serve.html">SERVE.md</a></td>
         </tr>
@@ -257,7 +256,7 @@
         → <code class="inline-code">tools/spark-bc-dump/test_dump.py</code>.</p>
         <p><strong>Not</strong> a production LLM. <strong>Not</strong> multi-layer full-decode /
         RoPE. Fixture-scale only.</p>
-        <h2 id="attention-train-d-lane-on-tip">Attention train (D-lane on tip)</h2>
+        <h2 id="attention-train-layer-0-attention-on-tip">Attention train (layer-0 attention on tip)</h2>
         <pre class="doc__pre"><code class="language-bash">make spark-sgd-proof
         # asserts train_attn, copy_recall&gt;0, next_token&gt;0, beats_claude=false
         </code></pre>

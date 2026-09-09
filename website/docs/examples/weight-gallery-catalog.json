@@ -33,7 +33,7 @@
     },
     {
       "id": "scale",
-      "title": "Scale fixture weights (F-lane)",
+      "title": "Scale fixture weights",
       "role": "dim\u226564, n_layer\u22654 CPU-fast stubs",
       "paths": [
         "out/train/sgd-proof-scale/weights.safetensors",
@@ -91,7 +91,7 @@
     "scale": {
       "dim": 64,
       "n_layer": 4,
-      "label": "F-lane scale fixture",
+      "label": "Scale fixture",
       "prefer_5090": false
     },
     "large": {
@@ -216,6 +216,6 @@
     "mlp": "SwiGLU MLP (up/gate/down + mlp_norm). Layer-0 runs in tiny CPU serve when tensors exist.",
     "other": "Named Spark tensor outside the common embed/attn/mlp/lm_head map \u2014 still F32 stub weights, not HF imports."
   },
-  "note": "Gallery lists tiny and large stub configs. Opt-in XL generate prefers 5090; never 6000.",
+  "note": "Gallery lists tiny and large stub configs. Opt-in XL generate prefers RTX 5090 (or CPU).",
   "beats_claude": false
 }

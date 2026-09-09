@@ -316,7 +316,7 @@
         <code class="inline-code">out/voice_models/</code>.</p>
         <h2 id="voice-easy-train-owned-heads">Voice easy train (owned heads)</h2>
         <p>Piece-of-cake path for <strong>training</strong> owned STT/TTS heads (tiny CI or
-        large opt-in). Not vendor neural clone. Prefer 5090; never 6000.</p>
+        large opt-in). Not vendor neural clone. Prefer 5090</p>
         <pre class="doc__pre"><code class="language-bash">make voice-easy
         ./spark-voice easy --dry --device auto
         ./spark-voice easy --scale large --device auto   # opt-in
@@ -354,7 +354,7 @@
         </tr>
         </tbody>
         </table></div>
-        <h3 id="divert-carrier-divert">Divert / CARRIER_DIVERT</h3>
+        <h3 id="carrier-divert-guard">Carrier divert guard</h3>
         <p>While a carrier-divert guard file (e.g. <code class="inline-code">SPARK_PSTN_GUARD_JSON</code>) has
         <code class="inline-code">mode=failover</code> with <code class="inline-code">applied_dids</code>, live dial to those <strong>guarded DIDs</strong>
         is refused (<strong>exit 4</strong>). Documented placeholders stay allowlisted.
@@ -415,7 +415,7 @@
         </table></div>
         <h2 id="tiny-vs-large-voice-weight-play">Tiny vs large (voice / weight play)</h2>
         <p>Voice model write/copy and weight playgrounds follow the <strong>same</strong>
-        scale honesty as spark-coder + F-lane factory:</p>
+        scale honesty as spark-coder + factory scale fixtures:</p>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
@@ -437,8 +437,9 @@
         </tr>
         </tbody>
         </table></div>
-        <p><strong>Never</strong> route voice/weight <strong>train</strong> to RTX PRO <strong>6000</strong> (voice-only
-        GPU for CallsBack.ai). Larger stubs still <strong>do not</strong> beat Claude.
+        <p><strong>Never</strong> route Spark voice/weight <strong>train</strong> onto GPUs reserved for
+        other production voice stacks — prefer CPU / RTX <strong>5090</strong>
+        (<a href="/docs/factory.html">FACTORY.md</a>). Larger stubs still <strong>do not</strong> beat Claude.
         Details: <a href="/docs/spark-coder.html">SPARK_CODER.md</a> · <a href="/docs/train-loop.html">TRAIN_LOOP.md</a>.</p>
         <h2 id="production-gaps-honest-not-sold-as-telephony">Production gaps (honest — not sold as telephony)</h2>
         <p>Spark voice is a <strong>language/demo surface</strong>, not a production call center.</p>
