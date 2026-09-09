@@ -158,9 +158,12 @@ is in the `.sparkbc`; the tensors are still init.
 
 ## Related
 
+- Builder page live on production Pages:
+  https://sparklang.dev/docs/spark-builder.html
 - [SPARK_BC.md](SPARK_BC.md)
 - [MODEL_LAB.md](MODEL_LAB.md)
 - [AI_MODELS.md](AI_MODELS.md)
 - [LANGUAGE.md](LANGUAGE.md)
 - [SELF_HOST.md](SELF_HOST.md)
 - [MODEL_TRAINING.md](MODEL_TRAINING.md)
+- [RELEASE.md](RELEASE.md) (Pages deploy CLI)
