@@ -1,0 +1,27 @@
+# SPARK_BC gate — Makefile targets only; no secrets / no live gateway.
+name: sparkbc
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  sparkbc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # build-essential: cc/make for spark-bootstrap; as/ld for GAS ./spark
+      # (test-sparkbc depends on both). python3 is on the runner image.
+      - name: Install build deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends build-essential
+
+      - name: make test-sparkbc
+        run: make test-sparkbc
+
+      - name: make sparkbc-e2e
+        run: make sparkbc-e2e
