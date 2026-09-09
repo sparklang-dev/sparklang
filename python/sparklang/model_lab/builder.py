@@ -1,7 +1,7 @@
 """Builder whose genome is SPARK_BC bytes — not imported weights.
 
-Implemented: decode a real .sparkbc and emit a stub plan.
-Planned: train / serve a foundation model from that genome.
+Implemented: decode a real .sparkbc, emit stub + init weights,
+dry serve stub. Planned: owner train-grant toward beat-Claude.
 """
 
 from __future__ import annotations
@@ -14,6 +14,7 @@ from sparklang.model_lab.bc_dump import (
     hex_preview,
     load_sparkbc,
 )
+from sparklang.model_lab.serve import emit_serve_stub
 from sparklang.model_lab.weights import emit_init_weights
 
 
@@ -53,18 +54,20 @@ def emit_stub(
         "trained": False,
         "served": False,
         "implemented": [
-            "compile .spark -> .sparkbc (spark-bootstrap --compile)",
+            "compile .spark -> .sparkbc (bootstrap / GAS --compile)",
             "TRAIN / TRAIN_STATUS ops in SPARK_BC (training program)",
             "execute TRAIN/TRAIN_STATUS from .sparkbc (dry fixture)",
+            "GAS --run-bc thin-wrap to spark-bootstrap bc_vm",
             "dump hex + decoded ops",
             "emit this stub from those bytes",
             "emit structured Xavier init weights from those bytes",
+            "dry serve stub (SERVE marker; not production LLM)",
         ],
         "planned": [
             "Spark-hosted compiler (self-host Stage 4 still C)",
             "train from this Spark-created init "
             "(owner train-grant)",
-            "serve a model grown from this seed",
+            "production serve of a model grown from this seed",
         ],
     }
 
@@ -86,3 +89,21 @@ def emit_base(
     )
     stub["weights"] = weights
     return stub
+
+
+def emit_serve(
+    sparkbc_path: str | Path,
+    dest_dir: str | Path,
+    *,
+    source: str,
+    command: str,
+    job_id: str = "serve-dry-001",
+) -> dict[str, Any]:
+    """Dry SERVE marker from SPARK_BC. Not production inference."""
+    return emit_serve_stub(
+        sparkbc_path,
+        dest_dir,
+        source=source,
+        command=command,
+        job_id=job_id,
+    )

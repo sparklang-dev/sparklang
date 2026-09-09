@@ -11,7 +11,7 @@ plain `.spark` files you can diff, dry-run, and ship.
 
 **Related:** [SPARK_BUILDER.md](SPARK_BUILDER.md) (full factory E2E —
 SPARK_BC vs weights; `TRAIN` `0x26` / `STEP` `0x28` /
-`TRAIN_STATUS` `0x27`; sha256 table; GAS BLOCKED; dry ≠ trained) ·
+`TRAIN_STATUS` `0x27`; sha256 table; GAS `--run-bc`/`--compile` wrappers; dry ≠ trained) ·
 [SPARK_BC.md](SPARK_BC.md) (bytecode ISA) ·
 [MODEL_LAB.md](MODEL_LAB.md) (reverse / compile / modify) ·
 [MODEL_TRAINING.md](MODEL_TRAINING.md) (train jobs) ·
@@ -29,7 +29,7 @@ SPARK_BC vs weights; `TRAIN` `0x26` / `STEP` `0x28` /
 | **Train / build** real jobs | `model train` / `model build` → job; `model status` | Dry fixtures; live `./spark-train-http`. **`spark_reply_pack`** overlays voice+text on text-only bases and refuses inventable rows without SoT — see [MODEL_TRAINING.md](MODEL_TRAINING.md) |
 | **Reverse / inspect** | `model reverse` / `model inspect` → architecture JSON | Local `config.json` + index names only; [MODEL_LAB.md](MODEL_LAB.md) |
 | **Compile program** | `model compile "….spark" into "….sparkbc"` | SPARK_BC of the **program**, not a transformer compiler |
-| **Builder from SPARK_BC** | `--compile` Spark → `.sparkbc` (incl. `0x26`/`0x28`/`0x27`); dump; emit init weights; bootstrap `--run-bc` dry train | Spark-created **init**, not trained; GAS emit/`--run-bc` **BLOCKED**; STEP→weights **implemented** (dry); later train aims to beat Claude; [SPARK_BUILDER.md](SPARK_BUILDER.md) |
+| **Builder from SPARK_BC** | `--compile` Spark → `.sparkbc` (incl. `0x26`/`0x28`/`0x27`); dump; emit init weights; `--run-bc` dry train (bootstrap or GAS) | Spark-created **init**, not trained; GAS `--run-bc` / `--compile` wrappers **implemented**; STEP→weights **implemented** (dry); later train aims to beat Claude; [SPARK_BUILDER.md](SPARK_BUILDER.md) |
 | **Modify existing** | `model modify keep_existing …` | Attach adapters/heads; **never** delete special training |
 | **Abstain / IDK heads** | `head abstain|train|attach|ask` | Probe on frozen local LLM; SELECT before SAMPLE; [ABSTAIN_HEADS.md](ABSTAIN_HEADS.md) |
 | **Analyze** reachable models | `model analyze "…" -> report` | Dry-run = fixtures under `examples/fixtures/models/`; not live leaderboards |

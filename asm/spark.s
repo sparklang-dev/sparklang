@@ -140,6 +140,8 @@ tool_reg_name: .space 64
 tool_reg_len: .space 8
 tools_scope: .space 128
 saved_envp: .space 8
+run_bc_argv: .space 32          # bin, --run-bc, path, NULL
+compile_argv: .space 48         # bin, --compile, in, -o, out, NULL
 cuda_argv:  .space 48
 review_argv: .space 64
 review_url_buf: .space 1024
@@ -157,6 +159,11 @@ msg_usage:
     .ascii "  # ask → AI_GATEWAY_URL\n"
     .ascii "       spark --live --pstn-live <file>"
     .ascii "  # PSTN off unless SPARK_PSTN=1\n"
+    .ascii "       spark --run-bc <file.sparkbc>"
+    .ascii "  # SPBC via spark-bootstrap bc_vm\n"
+    .ascii "       spark --compile <file.spark>"
+    .ascii " -o <out.sparkbc>\n"
+    .ascii "  # emit SPARK_BC via spark-bootstrap\n"
     .ascii "       spark --version\n"
     .ascii "Note: review url = spark-review-url companion;"
     .ascii " file:// offline; http(s) needs --allow-net;"
@@ -277,8 +284,14 @@ msg_err_open:
     .ascii "error: cannot open file\n"
 msg_err_open_len = . - msg_err_open
 msg_err_args:
-    .ascii "error: need --dry-run|--live <file.spark>\n"
+    .ascii "error: need --dry-run|--live|--run-bc|--compile\n"
 msg_err_args_len = . - msg_err_args
+msg_err_run_bc:
+    .ascii "error: --run-bc requires a .sparkbc path\n"
+msg_err_run_bc_len = . - msg_err_run_bc
+msg_err_compile:
+    .ascii "error: --compile needs <file.spark> -o <out.sparkbc>\n"
+msg_err_compile_len = . - msg_err_compile
 msg_err_unknown:
     .ascii "error: unknown or unimplemented statement: "
 msg_err_unknown_len = . - msg_err_unknown
@@ -452,8 +465,12 @@ outdir_name:
     .ascii "out\0"
 kw_dry:     .ascii "--dry-run\0"
 kw_live:    .ascii "--live\0"
+kw_run_bc:  .ascii "--run-bc\0"
+kw_compile: .ascii "--compile\0"
+kw_dash_o:  .ascii "-o\0"
 kw_ver:     .ascii "--version\0"
 kw_help:    .ascii "--help\0"
+run_bc_bin: .ascii "./spark-bootstrap\0"
 kw_allow_net_cap:.ascii "--allow-net-capture\0"
 kw_allow_net_fetch:.ascii "--allow-net\0"
 kw_allow_shell:.ascii "--allow-shell\0"
@@ -680,6 +697,24 @@ arg_mode:
     add     rax, rbp
     add     rax, 8
     mov     rsi, [rax]
+    lea     rdi, [rip+kw_run_bc]
+    call    streq
+    test    rax, rax
+    jnz     do_run_bc
+    mov     rax, r12
+    shl     rax, 3
+    add     rax, rbp
+    add     rax, 8
+    mov     rsi, [rax]
+    lea     rdi, [rip+kw_compile]
+    call    streq
+    test    rax, rax
+    jnz     do_compile
+    mov     rax, r12
+    shl     rax, 3
+    add     rax, rbp
+    add     rax, 8
+    mov     rsi, [rax]
     lea     rdi, [rip+kw_dry]
     call    streq
     test    rax, rax
@@ -807,6 +842,94 @@ err_args:
     mov     rdx, msg_err_args_len
     call    write_stdout
     mov     edi, 1
+    call    sys_exit
+
+# --run-bc <file.sparkbc>: thin wrapper → spark-bootstrap bc_vm
+do_run_bc:
+    inc     r12
+    cmp     r12, [rbp]
+    jge     err_run_bc_need
+    mov     rax, r12
+    shl     rax, 3
+    add     rax, rbp
+    add     rax, 8
+    mov     rsi, [rax]
+    lea     rdi, [rip+pathbuf]
+    call    strcpy
+    lea     rax, [rip+run_bc_bin]
+    mov     qword ptr [rip+run_bc_argv], rax
+    lea     rax, [rip+kw_run_bc]
+    mov     qword ptr [rip+run_bc_argv+8], rax
+    lea     rax, [rip+pathbuf]
+    mov     qword ptr [rip+run_bc_argv+16], rax
+    mov     qword ptr [rip+run_bc_argv+24], 0
+    lea     rdi, [rip+run_bc_bin]
+    lea     rsi, [rip+run_bc_argv]
+    call    fork_exec_wait
+    mov     edi, eax
+    call    sys_exit
+err_run_bc_need:
+    lea     rsi, [rip+msg_err_run_bc]
+    mov     rdx, msg_err_run_bc_len
+    call    write_stdout
+    mov     edi, 2
+    call    sys_exit
+
+# --compile <in.spark> -o <out.sparkbc>: thin wrapper → bootstrap
+do_compile:
+    inc     r12
+    cmp     r12, [rbp]
+    jge     err_compile_need
+    mov     rax, r12
+    shl     rax, 3
+    add     rax, rbp
+    add     rax, 8
+    mov     rsi, [rax]
+    lea     rdi, [rip+pathbuf]
+    call    strcpy
+    inc     r12
+    cmp     r12, [rbp]
+    jge     err_compile_need
+    mov     rax, r12
+    shl     rax, 3
+    add     rax, rbp
+    add     rax, 8
+    mov     rsi, [rax]
+    lea     rdi, [rip+kw_dash_o]
+    call    streq
+    test    rax, rax
+    jz      err_compile_need
+    inc     r12
+    cmp     r12, [rbp]
+    jge     err_compile_need
+    mov     rax, r12
+    shl     rax, 3
+    add     rax, rbp
+    add     rax, 8
+    mov     rsi, [rax]
+    lea     rdi, [rip+tmpbuf]
+    call    strcpy
+    lea     rax, [rip+run_bc_bin]
+    mov     qword ptr [rip+compile_argv], rax
+    lea     rax, [rip+kw_compile]
+    mov     qword ptr [rip+compile_argv+8], rax
+    lea     rax, [rip+pathbuf]
+    mov     qword ptr [rip+compile_argv+16], rax
+    lea     rax, [rip+kw_dash_o]
+    mov     qword ptr [rip+compile_argv+24], rax
+    lea     rax, [rip+tmpbuf]
+    mov     qword ptr [rip+compile_argv+32], rax
+    mov     qword ptr [rip+compile_argv+40], 0
+    lea     rdi, [rip+run_bc_bin]
+    lea     rsi, [rip+compile_argv]
+    call    fork_exec_wait
+    mov     edi, eax
+    call    sys_exit
+err_compile_need:
+    lea     rsi, [rip+msg_err_compile]
+    mov     rdx, msg_err_compile_len
+    call    write_stdout
+    mov     edi, 2
     call    sys_exit
 
 # ------------------------------------------------------------
@@ -1865,8 +1988,8 @@ do_model:
     # analyze|compare|improve|train|step|build|reverse|compile|modify
     # live in asm/model_ops.s
     # train/step/status = SPARK_BC TRAIN 0x26 / STEP 0x28 /
-    # TRAIN_STATUS 0x27 (GAS interpreter). Bytecode emit BLOCKED —
-    # bootstrap --compile.
+    # TRAIN_STATUS 0x27 (GAS interpreter). Bytecode emit stays on
+    # bootstrap --compile; GAS --run-bc forks bc_vm.
     call    model_ops_dispatch
     # remember plain alias for --live ask (not lab/train verbs)
     lea     rdi, [rip+linebuf]

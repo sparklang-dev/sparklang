@@ -4,6 +4,17 @@ All notable user-facing releases of **SparkLang** (the Spark programming
 language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
+## 0.6.29 — 2026-09-08
+
+- **GAS SPARK_BC wrappers:** `./spark --run-bc <file.sparkbc>` and
+  `./spark --compile <file.spark> -o <out.sparkbc>` thin-wrap
+  `./spark-bootstrap` (bc_vm / C lowering remain SoT; exit status
+  propagates). Docs un-BLOCK GAS wrappers. Gates:
+  `make test-sparkbc`, `make sparkbc-e2e`. Not SGD.
+- **Docs:** [SPARK_BUILDER.md](docs/SPARK_BUILDER.md) /
+  [SPARK_BC.md](docs/SPARK_BC.md). CI:
+  `.github/workflows/sparkbc.yml` (#10).
+
 ## 0.6.28 — 2026-09-08
 
 - **STEP→weights:** Dry `--run-bc` `STEP` (`0x28`) writes/updates
@@ -24,7 +35,8 @@ language) are listed here. Site and installers track
   `model_lab.spark`), `--compile` / `--run-bc` / GAS `--dry-run` /
   dump / `make test-sparkbc` / `make test-model-lab` /
   `make sparkbc-e2e`, sha256 table for published `docs/examples/*`,
-  GAS emit/`--run-bc` **BLOCKED**, dry ≠ SGD ≠ trained,
+  GAS emit **BLOCKED** / GAS `--run-bc` later unblocked in 0.6.29,
+  dry ≠ SGD ≠ trained,
   STEP→weights **implemented** (`weights.safetensors`; dry), Pages
   deploy = Wrangler OAuth preferred + CF dashboard fallback when
   CLI/auth absent. Site: regen `website/docs/*` via
@@ -70,8 +82,8 @@ language) are listed here. Site and installers track
   `.sparkbc`: `./spark-bootstrap --run-bc` (dry fixture + ARTIFACT
   marker; `trained=false`; not SGD). Dry ≠ trained. GAS
   `./spark --dry-run` runs train verbs from source; GAS does **not
-  emit** `.sparkbc` and `./spark --run-bc` is **BLOCKED** (use
-  bootstrap `--compile`). Page:
+  emit** `.sparkbc` (use bootstrap `--compile`). GAS `--run-bc`
+  added later (0.6.29). Page:
   [SPARK_BUILDER.md](docs/SPARK_BUILDER.md) /
   `/docs/spark-builder.html`. Honest: init, not trained. No
   imported weights. Emitting TRAIN/STEP ≠ a trained model. Later

@@ -583,25 +583,48 @@ print('first32', ' '.join('%02x' % b for b in bc['raw'][:32]))
 fi
 rm -f "$step_tmp"
 
-# GAS ./spark has no SPARK_BC path. BLOCKED, not silent skip.
+# GAS ./spark --run-bc / --compile thin-wrap spark-bootstrap.
+# bc_vm + C lowering remain SoT; wrappers are argv convenience.
 set +e
 gas_bc_out="$(./spark --run-bc "$pub_bc" 2>&1)"
 gas_bc_rc=$?
 set -e
-if [[ "$gas_bc_rc" -eq 0 ]]; then
-  echo "FAIL sparkbc_gas_no_bc: ./spark --run-bc unexpectedly succeeded"
+if [[ "$gas_bc_rc" -ne 0 ]]; then
+  echo "FAIL sparkbc_gas_run_bc: ./spark --run-bc exit $gas_bc_rc"
+  echo "$gas_bc_out" | head -8
   fail=1
-elif echo "$gas_bc_out" | grep -q '"op":"train"'; then
-  echo "FAIL sparkbc_gas_no_bc: GAS executed TRAIN from SPARK_BC"
+elif ! echo "$gas_bc_out" | grep -q '"op":"train"'; then
+  echo "FAIL sparkbc_gas_run_bc: missing train JSON"
   echo "$gas_bc_out" | head -8
   fail=1
 elif echo "$gas_bc_out" | grep -Fq 'need --dry-run|--live'; then
-  echo "PASS sparkbc_gas_no_bc (BLOCKED ./spark --run-bc)"
-else
-  echo "FAIL sparkbc_gas_no_bc: unexpected GAS error"
-  echo "$gas_bc_out" | head -8
+  echo "FAIL sparkbc_gas_run_bc: still BLOCKED (old argv path)"
   fail=1
+else
+  echo "PASS sparkbc_gas_run_bc (./spark --run-bc → bootstrap bc_vm)"
 fi
+
+gas_emit="/tmp/sparkbc-gas-emit-$$.sparkbc"
+rm -f "$gas_emit"
+set +e
+gas_comp_out="$(./spark --compile examples/spark_builder.spark \
+  -o "$gas_emit" 2>&1)"
+gas_comp_rc=$?
+set -e
+if [[ "$gas_comp_rc" -ne 0 ]]; then
+  echo "FAIL sparkbc_gas_compile: exit $gas_comp_rc"
+  echo "$gas_comp_out" | head -8
+  fail=1
+elif [[ ! -f "$gas_emit" ]]; then
+  echo "FAIL sparkbc_gas_compile: missing $gas_emit"
+  fail=1
+elif ! cmp -s "$gas_emit" "$pub_bc"; then
+  echo "FAIL sparkbc_gas_compile: bytes != published builder"
+  fail=1
+else
+  echo "PASS sparkbc_gas_compile (./spark --compile → bootstrap)"
+fi
+rm -f "$gas_emit"
 
 if [[ "$fail" -ne 0 ]]; then exit 1; fi
 

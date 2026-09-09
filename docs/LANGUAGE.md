@@ -4,7 +4,7 @@
 [PROGRAMMING_GUIDE.md](PROGRAMMING_GUIDE.md) ·
 **AI models (user-facing):** [AI_MODELS.md](AI_MODELS.md) ·
 **Builder / bytecode:** [SPARK_BUILDER.md](SPARK_BUILDER.md)
-(full E2E factory reproduce — opcodes, sha256, GAS BLOCKED) ·
+(full E2E factory reproduce — opcodes, sha256, GAS `--run-bc`/`--compile` wrappers) ·
 **IDE status:** [IDE.md](IDE.md) (verified
 `ide new|open|save|run|buffer|ask|show` + `ide keys` / `ide key`;
 paint = PPM wire, not a language op; show = real `spark-engine-show`)
@@ -105,10 +105,10 @@ for `model train`** (not a blueprint file).
 as `TRAIN_STATUS` (`0x27`).
 Selfhost train seed: `selfhost/compile_train.spark` →
 `docs/examples/spark-selfhost-train.sparkbc`. Bootstrap
-`./spark-bootstrap --run-bc` runs that binary (dry;
-`trained=false`). GAS `./spark --dry-run` runs train verbs from
-source; GAS does **not emit** `.sparkbc`. Emitting TRAIN/STEP ≠ a
-trained model. See [SPARK_BC.md](SPARK_BC.md) and
+`./spark-bootstrap --run-bc` **or** GAS `./spark --run-bc` runs that
+binary (dry; `trained=false`). GAS `./spark --dry-run` runs train
+verbs from source; GAS `--compile` wraps bootstrap emit. Emitting
+TRAIN/STEP ≠ a trained model. See [SPARK_BC.md](SPARK_BC.md) and
 [SPARK_BUILDER.md](SPARK_BUILDER.md) (sha256 table + reproduce
 commands). STEP→weights is **implemented**
 (`out/train/<job>/weights.safetensors`; dry; `trained=false`).
@@ -159,7 +159,7 @@ override). Live GAS passes the statement via
 `./spark-train-http --spark-line`; status uses the **quoted** job id
 (never a hardcoded `job-dry-001`). SPARK_BC `TRAIN` is **`0x26`**;
 `STEP` is **`0x28`**; `TRAIN_STATUS` is **`0x27`**. Execute with
-`./spark-bootstrap --run-bc`. GAS `./spark --run-bc` exits 1.
+`./spark-bootstrap --run-bc` or `./spark --run-bc`.
 See [SPARK_BC.md](SPARK_BC.md) and
 [SPARK_BUILDER.md](SPARK_BUILDER.md).
 

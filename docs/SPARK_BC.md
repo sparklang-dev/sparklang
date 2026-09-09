@@ -118,7 +118,9 @@ Mapped 1:1 to LANGUAGE.md statement starts. Voice merge keeps
 They encode job submit, one dry loop tick, and status —
 dumpable hex + mnemonics. Dry fixture via `bootstrap/dry_train.c`
 (JSON + `ARTIFACT` marker). Execute with
-`./spark-bootstrap --run-bc`. GAS `./spark --run-bc` is **BLOCKED**.
+`./spark-bootstrap --run-bc` or `./spark --run-bc`
+(GAS thin fork → bootstrap bc_vm). GAS `--compile` wraps bootstrap emit; C lowering remains SoT. GAS does **not reimplement**
+`.sparkbc` — use bootstrap `--compile`.
 Emitting TRAIN/STEP ≠ a trained model. `backend` is parsed and skipped
 (HTTP companion); not an operand.
 
@@ -330,7 +332,8 @@ Code bytes:
 
 **SPARK_BC is the orchestration ISA — not neural weights.** Full
 engineer reproduction (programs, commands, sha256 table, GAS
-BLOCKED, model lab, Pages deploy): [SPARK_BUILDER.md](SPARK_BUILDER.md).
+`--compile` / `--run-bc`, model lab, Pages deploy):
+[SPARK_BUILDER.md](SPARK_BUILDER.md).
 
 Spark compiling Spark: `selfhost/compile.spark` →
 `docs/examples/spark-self.sparkbc` (sha256
@@ -356,9 +359,9 @@ Focused e2e: `make sparkbc-e2e` (compile → dump TRAIN/STEP →
 `--run-bc` dry → assert `ARTIFACT`; not SGD). STEP weights via `make test-sparkbc`.
 Factory page: [SPARK_BUILDER.md](SPARK_BUILDER.md).
 Not trained. Emitting TRAIN/STEP ≠ trained. Dry ≠ SGD ≠ trained.
-STEP→weights **implemented** (dry). Later train aims to beat Claude. GAS
-does not emit `.sparkbc` — use bootstrap `--compile`.
-`./spark --run-bc` is **BLOCKED**.
+STEP→weights **implemented** (dry). Later train aims to beat Claude.
+`./spark --compile` and `./spark --run-bc` thin-wrap bootstrap
+(C lowering / bc_vm remain SoT).
 
 ## Out of scope (do not add)
 

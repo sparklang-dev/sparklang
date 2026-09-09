@@ -16,7 +16,7 @@ if str(ROOT / "python") not in sys.path:
     sys.path.insert(0, str(ROOT / "python"))
 
 from sparklang.model_lab.bc_dump import format_dump, load_sparkbc
-from sparklang.model_lab.builder import emit_base, emit_stub
+from sparklang.model_lab.builder import emit_base, emit_serve, emit_stub
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -36,10 +36,22 @@ def main(argv: list[str] | None = None) -> int:
         "--weights",
         help="write Spark-created init safetensors here",
     )
+    p.add_argument(
+        "--serve",
+        help="write dry SERVE marker dir (not production LLM)",
+    )
     args = p.parse_args(argv)
     src = args.source or args.sparkbc
     cmd = args.command or "(already compiled)"
-    if args.weights:
+    if args.serve:
+        payload = emit_serve(
+            args.sparkbc,
+            args.serve,
+            source=src,
+            command=cmd,
+        )
+        text = json.dumps(payload, indent=2) + "\n"
+    elif args.weights:
         payload = emit_base(
             args.sparkbc,
             args.weights,
