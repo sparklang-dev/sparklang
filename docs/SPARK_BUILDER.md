@@ -198,6 +198,37 @@ PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
 # Or: ./spark-serve docs/examples/spark-builder.sparkbc /tmp/serve-dry-001
 ```
 
+### 6c) Serve HTTP / stdio API (G-lane)
+
+Wraps the same tiny CPU forward behind a local JSON API
+(predict next-token + embeddings). Attention forward (D-lane) is
+not required — uses whatever tensors `serve.py` already runs.
+**Not production. Never 6000.**
+
+```bash
+# one-shot SERVE dir first (or point --weights at any Spark .safetensors)
+./spark-serve docs/examples/spark-builder.sparkbc /tmp/serve-dry-001
+make spark-serve-api
+./spark-serve-api --weights /tmp/serve-dry-001/weights.safetensors \
+  --http --host 127.0.0.1 --port 8765
+
+curl -s http://127.0.0.1:8765/health
+curl -s http://127.0.0.1:8765/version
+curl -s -X POST http://127.0.0.1:8765/v1/predict \
+  -H 'Content-Type: application/json' \
+  -d '{"token_ids":[72,105]}'
+curl -s -X POST http://127.0.0.1:8765/v1/embeddings \
+  -H 'Content-Type: application/json' \
+  -d '{"text":"Hi"}'
+
+# stdio (one JSON object per line):
+echo '{"op":"predict","token_ids":[1,2]}' | \
+  ./spark-serve-api --weights /tmp/serve-dry-001/weights.safetensors \
+  --stdio
+
+make test-serve-api
+```
+
 Focused TRAIN→STEP→ARTIFACT gate: `make sparkbc-e2e` /
 `make test-sparkbc-e2e` (`tools/spark-bc-dump/run_e2e_gate.sh`,
 wrapper `scripts/sparkbc-e2e`). Compiles
@@ -317,6 +348,7 @@ make test-model-lab
 | Init safetensors from SPARK_BC | **implemented** — `trained: false` until STEP |
 | STEP CPU SGD weights | **implemented** (multi-outer; `weights.safetensors` + `checkpoint.json` loss curve; `trained=true`; `not_sgd=false`; loss must drop) |
 | Tiny CPU serve forward | **implemented** (`dump.py --serve` → `SERVE` with `forward=true`; optional layer-0 MLP; `trained` from weights meta; not production) |
+| Serve HTTP / stdio API | **implemented** (`./spark-serve-api` — `/health` `/version` `/v1/predict` `/v1/embeddings`; gate `make test-serve-api`; not production) |
 | Beats Claude / production LLM | **not** — multi-stage later; multi-outer SGD ≠ Claude |
 
 | Cloudflare Pages deploy | Prefer Wrangler OAuth (`npx wrangler pages deploy website …`); if CLI/auth absent → **dashboard** upload of `website/` from a known SHA (see [RELEASE.md](RELEASE.md) step 5) |
@@ -340,6 +372,7 @@ make test-model-lab
 | Model lab reverse/compile/modify | **tested** (`make test-model-lab`) |
 | STEP real CPU SGD | **implemented** (tiny; loss drop proven; not beat Claude) |
 | Tiny CPU serve forward | **implemented** (`SERVE`; `forward=true`; not production) |
+| Serve HTTP / stdio API (G-lane) | **implemented** (`spark-serve-api`; predict + embeddings; not production) |
 | Beats Claude | **not** |
 
 

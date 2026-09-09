@@ -5,6 +5,16 @@ language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
 
+## 0.6.35 — 2026-09-09
+
+- **Serve HTTP / stdio API (G-lane):** `./spark-serve-api` wraps the
+  existing tiny CPU forward for local JSON predict (next-token) and
+  embeddings from Spark safetensors. Endpoints: `GET /health`,
+  `GET /version`, `POST /v1/predict`, `POST /v1/embeddings` (also
+  `--stdio`). Gate: `make test-serve-api`. **Not production.** Never
+  6000. Docs: [SPARK_BUILDER.md](docs/SPARK_BUILDER.md) §6c,
+  [RELEASE.md](docs/RELEASE.md).
+
 ## 0.6.34 — 2026-09-09
 
 - **Scale fixture / dims (F-lane):** larger CE JSONL

@@ -73,6 +73,40 @@
 <p>All notable user-facing releases of <strong>SparkLang</strong> (the Spark programming
 language) are listed here. Site and installers track
 <code class="inline-code">website/downloads/manifest.json</code>.</p>
+<h2>0.6.35 — 2026-09-09</h2>
+<ul>
+<li><strong>Serve HTTP / stdio API (G-lane):</strong>
+  <code class="inline-code">./spark-serve-api</code> wraps the existing tiny CPU
+  forward for local JSON predict (next-token) and embeddings from Spark
+  safetensors. Endpoints: <code class="inline-code">GET /health</code>,
+  <code class="inline-code">GET /version</code>,
+  <code class="inline-code">POST /v1/predict</code>,
+  <code class="inline-code">POST /v1/embeddings</code> (also
+  <code class="inline-code">--stdio</code>). Gate:
+  <code class="inline-code">make test-serve-api</code>.
+  <strong>Not production.</strong> Never 6000. Docs:
+  <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> §6c,
+  <a href="/docs/release.html">RELEASE.md</a>.</li>
+</ul>
+<h2>0.6.34 — 2026-09-09</h2>
+<ul>
+<li><strong>Scale fixture / dims (F-lane):</strong> larger CE JSONL
+  (<code class="inline-code">examples/fixtures/train/dataset_scale.jsonl</code>,
+  145 pairs, longer sequences) +
+  <code class="inline-code">scale_config.json</code>. Opt-in arch knobs
+  <code class="inline-code">--dim</code> /
+  <code class="inline-code">--n-layer</code> on
+  <code class="inline-code">apply_step.py</code> /
+  <code class="inline-code">emit_init_weights</code> /
+  <code class="inline-code">apply_sgd_step</code>
+  (CPU-fast bounds dim≤128, n_layer≤8).
+  <code class="inline-code">make spark-sgd-proof</code> stays tiny for GHA;
+  <code class="inline-code">make spark-sgd-proof-scale</code> is local opt-in
+  (defaults dim=64 n_layer=4). Tests: fixture load + shape check +
+  one-outer smoke (not overnight). <strong>Not beat Claude.</strong>
+  Never 6000. Docs:
+  <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</li>
+</ul>
 <h2>0.6.33 — 2026-09-09</h2>
 <ul>
 <li><strong>Claude eval baseline (honest):</strong>

@@ -11,7 +11,8 @@ NVML_LIB ?= /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1
 .PHONY: all clean test test-hdl test-e2e-browser test-examples machine-proof \
 	examples-run corpus corpus-agg spark-cuda spark-net spark-binary \
 	spark-lift spark-section-dump companions browser-scaffold \
-	test-model-lab spark-model-lab spark-serve test-bpe-seed \
+	test-model-lab spark-model-lab spark-serve spark-serve-api \
+	test-serve-api test-bpe-seed \
 	browser-mitm-analyze ide test-engine-paint test-engine-css \
 	test-engine-layout test-ide-paint spark-bootstrap sparkc \
 	test-bootstrap test-sparkbc test-sparkbc-e2e sparkbc-e2e \
@@ -201,7 +202,8 @@ asm/engine_js.o: asm/engine_js.s
 companions: spark-cuda-probe spark-net-capture \
 	spark-binary-probe spark-section-dump spark-lift spark-ask-http \
 	spark-ask-probe spark-rag-http spark-http spark-extract spark-expect \
-	spark-train-http spark-abstain spark-model-lab spark-serve spark-shell \
+	spark-train-http spark-abstain spark-model-lab spark-serve \
+	spark-serve-api spark-shell \
 	spark-browser-host spark-mitm-quic \
 	spark-mitm-quic-divert spark-mitm-ca spark-mitm-h2 spark-browser-cdp spark-pstn-dial \
 	spark-enc-gateway spark-stt-tts spark-review-url spark-engine-show \
@@ -280,6 +282,15 @@ spark-model-lab: tools/spark-model-lab/spark_model_lab.sh \
 spark-serve: tools/spark-bc-dump/spark_serve.sh \
 	tools/spark-bc-dump/dump.py
 	install -m 755 tools/spark-bc-dump/spark_serve.sh $@
+
+# Tiny CPU HTTP/stdio predict + embeddings (G-lane; not production).
+spark-serve-api: tools/spark-serve-api/spark_serve_api.sh \
+	python/sparklang/model_lab/serve_api.py
+	install -m 755 tools/spark-serve-api/spark_serve_api.sh $@
+
+.PHONY: test-serve-api
+test-serve-api:
+	PYTHONPATH=python python3 tools/spark-serve-api/test_serve_api.py
 
 # Gateway probe credential dry/live check (public AI gateway).
 spark-ask-probe: tools/ask/spark_ask_probe.c
@@ -363,6 +374,7 @@ machine-proof: spark
 
 test: spark companions spark-bootstrap test-sparkbc test-ai-playbooks \
 	test-extract test-expect test-host-embed test-abstain test-model-lab \
+	test-serve-api \
 	test-bpe-seed \
 	test-shell \
 	test-ask-gateway
@@ -523,7 +535,7 @@ clean:
 	rm -f spark-binary-probe spark-section-dump spark-lift
 	rm -f spark-ask-http spark-ask-probe spark-rag-http spark-http \
 		spark-extract spark-expect spark-train-http spark-abstain \
-		spark-shell \
+		spark-shell spark-model-lab spark-serve spark-serve-api \
 		spark-browser-host spark-pstn-dial spark-mitm-quic
 	rm -f spark-mitm-quic-divert spark-mitm-ca spark-mitm-h2 spark-browser-cdp spark-enc-gateway
 	rm -f spark-stt-tts spark-review-url spark-engine-show spark-engine-paint
