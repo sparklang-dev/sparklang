@@ -315,8 +315,8 @@ mkdir -p "$DEST/share/applications"
 cat >"$DEST/share/applications/sparklang-bc-gui.desktop" <<EOF
 [Desktop Entry]
 Type=Application
-Name=SparkLang SPARK_BC Compile/Decompile
-Comment=Graphical compile and decompile for SparkLang bytecode
+Name=Spark IDE (SPARK_BC)
+Comment=Spark IDE — browse, compile, dump, ask, weights
 Exec=$NAME/bin/spark-bc-gui
 Path=$NAME
 Terminal=false
@@ -332,7 +332,7 @@ Contents
 --------
   bin/spark-bootstrap        CPU runtime / --compile / --run-bc
   bin/sparkc                 symlink → spark-bootstrap
-  bin/spark-bc-gui           Graphical compile + decompile (tkinter)
+  bin/spark-bc-gui           Spark IDE GUI (browse/compile/ask/weights)
   bin/spark-ide              Open workspace + language extension
   bin/spark-helper-compile   Helper: compile .spark → .sparkbc
   bin/spark-helper-decompile Helper: dump/inspect .sparkbc
@@ -349,7 +349,7 @@ Contents
 
 Quick start
 -----------
-  # Graphical compiler / decompiler (requires a display + python3-tk)
+  # Spark IDE GUI (requires a display + python3-tk)
   ./bin/spark-bc-gui
 
   # Owned spark-coder (if models/spark-coder shipped)

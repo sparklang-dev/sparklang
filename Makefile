@@ -31,7 +31,7 @@ all: spark companions
 ide:
 	./tools/open-spark-ide.sh
 
-# Graphical SPARK_BC compile / decompile (tkinter; needs a display).
+# Graphical Spark IDE (browse/compile/ask/weights; needs a display).
 spark-bc-gui: spark-bootstrap
 	PYTHONPATH=tools:python ./tools/spark_bc_gui/launch.sh
 

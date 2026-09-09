@@ -109,6 +109,20 @@ def apply_ttk_theme(root) -> None:
         background=[("selected", IDE["bg_panel"])],
         foreground=[("selected", IDE["text"])],
     )
+    style.configure(
+        "Treeview",
+        background=IDE["bg"],
+        foreground=IDE["text"],
+        fieldbackground=IDE["bg"],
+        borderwidth=0,
+        rowheight=22,
+        font=(FONT_MONO[0], 9),
+    )
+    style.map(
+        "Treeview",
+        background=[("selected", IDE["selection"])],
+        foreground=[("selected", IDE["accent"])],
+    )
 
 
 def style_scrolled_text(widget) -> None:

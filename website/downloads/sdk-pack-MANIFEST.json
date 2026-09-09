@@ -1,9 +1,9 @@
 {
-  "name": "sparklang-sdk-0.6.45",
-  "version": "0.6.45",
-  "tarball": "sparklang-sdk-0.6.45.tar.gz",
-  "sha256": "8425050cc39811b1fb8d0ef9d964c6b82f2d19cffd1b62ed5ca7e50dd2280c15",
-  "size_bytes": 773053,
+  "name": "sparklang-sdk-0.6.49",
+  "version": "0.6.49",
+  "tarball": "sparklang-sdk-0.6.49.tar.gz",
+  "sha256": "73542db9150c76ff9938e455754322cbcbf86ce4f24d6b52cee511dbf299814a",
+  "size_bytes": 1058153,
   "required_paths": [
     "bin/spark-bootstrap",
     "bin/sparkc",
@@ -59,6 +59,7 @@
     "Does not claim beat Claude",
     "GUI uses real --compile + bc_dump.format_dump",
     "Includes helpers + shadows + BC dump tools",
-    "spark-coder owned weights when models/spark-coder present"
+    "spark-coder owned weights when models/spark-coder present",
+    "weight gallery: init safetensors + catalog; scale/large when generated"
   ]
 }
