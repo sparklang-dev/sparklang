@@ -7,9 +7,10 @@ they do **not** replace `--compile`, `dump.py`, or `bc_vm`.
 
 Hub: [FACTORY.md](FACTORY.md). Builder: [SPARK_BUILDER.md](SPARK_BUILDER.md).
 Helpers/shadows CLIs: [TOOLS_HELPERS.md](TOOLS_HELPERS.md).
-**Model aspects (L):** [MODEL_ASPECTS.md](MODEL_ASPECTS.md) — ears →
-brain → voice SVG + behavior/tool loops (does not replace these
-factory tool diagrams).
+**Model aspects (L):** [MODEL_ASPECTS.md](MODEL_ASPECTS.md) — sensory
+mapping 100× (hero, per-sense deep sections, agentic loop + vs
+OpenBin/phone comparison SVGs). Factory tool diagrams on this page
+stay SoT for compile/decompile/helpers — aspects does not replace them.
 
 **J-lane (landed + research expand):** decompile how-to with CLI
 captures + SVG tool diagrams — [DECOMPILE.md](DECOMPILE.md) /
