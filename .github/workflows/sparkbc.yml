@@ -35,3 +35,6 @@ jobs:
       # Claude baseline auto-skips without secrets (honest status).
       - name: make spark-eval-claude
         run: make spark-eval-claude
+
+      - name: make test-serve-api
+        run: make test-serve-api
