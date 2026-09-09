@@ -15,7 +15,7 @@ factory tool diagrams).
 captures + SVG tool diagrams — [DECOMPILE.md](DECOMPILE.md) /
 [/docs/decompile.html](/docs/decompile.html). LLM survey (owner
 cites: DecompAI agent vs seq2seq, LLM4Decompile, EmergentMind,
-Quarkslab article + RE category) —
+Quarkslab article + RE category, Plain English overview) —
 [research/LLM_DECOMPILE.md](research/LLM_DECOMPILE.md) /
 [/docs/llm-decompile.html](/docs/llm-decompile.html). This file
 keeps **Mermaid flow** diagrams; prefer DECOMPILE for screenshots.

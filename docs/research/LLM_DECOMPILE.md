@@ -37,6 +37,9 @@ Folded into this page from operator research (full URLs):
 6. Quarkslab reverse-engineering category (continuing RE source —
    follow alongside the AI-assisted RE article above):
    https://blog.quarkslab.com/category/reverse-engineering.html
+7. Plain English overview — demystifying decompilation with LLMs
+   (accessible survey / pipeline honesty; not SPARK_BC SoT):
+   https://ai.plainenglish.io/demystifying-decompilation-with-large-language-models-0e63bf067045
 
 ## Diagrams (function layout)
 
@@ -130,7 +133,8 @@ Useful vocabulary (native C / Wasm / Solidity — **not** SPARK_BC):
 Survey honesty: even strong native numbers leave large failure rates;
 LLM output can be more *readable* while less *functionally correct*
 than classical decompilers on some benches. **None of this is a
-SPARK_BC fidelity claim.**
+SPARK_BC fidelity claim.** See also the Plain English overview
+section below (owner cite).
 
 ### Traditional decompiler + general LLM assistants
 
@@ -164,10 +168,35 @@ Takeaways that bind Spark policy (paraphrase, not marketing):
    agents onto dynamic / hallucinated paths. Throughput changes; SoT
    does not.
 
+**Other RE themes on that category index** (link the category; do
+**not** treat titles as Spark product claims — honesty for tooling
+expectations only):
+
+- **Firmware / hardware RE** — black-box secure chips, smartwatch
+  firmware teardown, blinkenlights-style extract paths; slow
+  evidence work, not one-shot LLM “decompile.”
+- **VM attack comparison (QBDI vs TritonDSE)** — dynamic
+  instrumentation / DSE trade-offs against a protected VM; reminds
+  that bytecode-ish VMs need *instrumentation evidence*, not fluent
+  narrative alone.
+- **Obfuscation** — same cost-multiplier theme as the AI-assisted RE
+  post; hardening raises agent cost, it does not mint verified SoT.
+
 **Spark implication:** treat any LLM / agent decompile or rename as
 **assist only**. Verified bytes and behavior stay
 `--compile` / `dump.py` / `--run-bc` (+ human). Never promote model
 text to SPARK_BC SoT because it “looked right.”
+
+### Plain English: demystifying LLM decompilation
+
+Owner cite:
+https://ai.plainenglish.io/demystifying-decompilation-with-large-language-models-0e63bf067045
+
+Use as a readable overview of how LLM decompile *pipelines* are
+framed in industry writing (stages, assist roles, failure modes).
+It does **not** change Spark policy: dump/`--compile`/`--run-bc`
+remain SoT; LLM text is assist; no perfect SPARK_BC recovery claim;
+does not beat Claude; never 6000.
 
 ### Bytecode / other RE note
 
@@ -214,7 +243,11 @@ are wrong. Always recompile and re-dump to verify.
 - **DecompAI** = agent + tools, not the same as seq2seq decompile
   models.
 - Quarkslab: agents evade, hallucinate, and write confident wrong
-  artifacts — another reason LLM ≠ verified decompile SoT.
+  artifacts — another reason LLM ≠ verified decompile SoT. Keep
+  following the RE category index (firmware, QBDI/TritonDSE VM
+  attacks, obfuscation) without scraping it into this page.
+- Plain English demystify piece is a readable overview only — not a
+  SPARK_BC fidelity claim.
 - General LLMs + Ghidra plugins excel at **annotation**, not
   guaranteed recovery.
 - Spark path: compile/dump/run deterministic; LLM optional for docs-

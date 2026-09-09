@@ -132,6 +132,9 @@
         <li>Quarkslab reverse-engineering category (continuing RE source —
            follow alongside the AI-assisted RE article above):
            https://blog.quarkslab.com/category/reverse-engineering.html</li>
+        <li>Plain English overview — demystifying decompilation with LLMs
+           (accessible survey / pipeline honesty; not SPARK_BC SoT):
+           https://ai.plainenglish.io/demystifying-decompilation-with-large-language-models-0e63bf067045</li>
         </ol>
         <h2 id="diagrams-function-layout">Diagrams (function layout)</h2>
         <h3 id="deterministic-spark-vs-llm-assist">Deterministic Spark vs LLM assist</h3>
@@ -279,7 +282,8 @@
         <p>Survey honesty: even strong native numbers leave large failure rates;
         LLM output can be more <em>readable</em> while less <em>functionally correct</em>
         than classical decompilers on some benches. <strong>None of this is a
-        SPARK_BC fidelity claim.</strong></p>
+        SPARK_BC fidelity claim.</strong> See also the Plain English overview
+        section below (owner cite).</p>
         <h3 id="traditional-decompiler-general-llm-assistants">Traditional decompiler + general LLM assistants</h3>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
@@ -334,10 +338,32 @@
            agents onto dynamic / hallucinated paths. Throughput changes; SoT
            does not.</li>
         </ol>
+        <p><strong>Other RE themes on that category index</strong> (link the category; do
+        <strong>not</strong> treat titles as Spark product claims — honesty for tooling
+        expectations only):</p>
+        <ul class="doc__ul">
+        <li><strong>Firmware / hardware RE</strong> — black-box secure chips, smartwatch
+          firmware teardown, blinkenlights-style extract paths; slow
+          evidence work, not one-shot LLM “decompile.”</li>
+        <li><strong>VM attack comparison (QBDI vs TritonDSE)</strong> — dynamic
+          instrumentation / DSE trade-offs against a protected VM; reminds
+          that bytecode-ish VMs need <em>instrumentation evidence</em>, not fluent
+          narrative alone.</li>
+        <li><strong>Obfuscation</strong> — same cost-multiplier theme as the AI-assisted RE
+          post; hardening raises agent cost, it does not mint verified SoT.</li>
+        </ul>
         <p><strong>Spark implication:</strong> treat any LLM / agent decompile or rename as
         <strong>assist only</strong>. Verified bytes and behavior stay
         <code class="inline-code">--compile</code> / <code class="inline-code">dump.py</code> / <code class="inline-code">--run-bc</code> (+ human). Never promote model
         text to SPARK_BC SoT because it “looked right.”</p>
+        <h3 id="plain-english-demystifying-llm-decompilation">Plain English: demystifying LLM decompilation</h3>
+        <p>Owner cite:
+        https://ai.plainenglish.io/demystifying-decompilation-with-large-language-models-0e63bf067045</p>
+        <p>Use as a readable overview of how LLM decompile <em>pipelines</em> are
+        framed in industry writing (stages, assist roles, failure modes).
+        It does <strong>not</strong> change Spark policy: dump/<code class="inline-code">--compile</code>/<code class="inline-code">--run-bc</code>
+        remain SoT; LLM text is assist; no perfect SPARK_BC recovery claim;
+        does not beat Claude; never 6000.</p>
         <h3 id="bytecode-other-re-note">Bytecode / other RE note</h3>
         <p>Native x86/ARM C recovery dominates the literature. JVM/Python/WASM
         and custom ISAs (including <strong>SPARK_BC</strong>) are <strong>under-covered</strong>. Do
@@ -407,7 +433,11 @@
         <li><strong>DecompAI</strong> = agent + tools, not the same as seq2seq decompile
           models.</li>
         <li>Quarkslab: agents evade, hallucinate, and write confident wrong
-          artifacts — another reason LLM ≠ verified decompile SoT.</li>
+          artifacts — another reason LLM ≠ verified decompile SoT. Keep
+          following the RE category index (firmware, QBDI/TritonDSE VM
+          attacks, obfuscation) without scraping it into this page.</li>
+        <li>Plain English demystify piece is a readable overview only — not a
+          SPARK_BC fidelity claim.</li>
         <li>General LLMs + Ghidra plugins excel at <strong>annotation</strong>, not
           guaranteed recovery.</li>
         <li>Spark path: compile/dump/run deterministic; LLM optional for docs-

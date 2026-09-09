@@ -16,9 +16,13 @@ language) are listed here. Site and installers track
   SALT, SK², WaDec, SmartHalo, ICL4Decomp; RRR / R2I), Quarkslab
   AI-assisted RE article **plus** RE category index
   (https://blog.quarkslab.com/category/reverse-engineering.html)
-  as a continuing source (agents route around static hardening;
-  hallucination/cheating; obfuscation as cost multiplier — LLM
-  output is **not** verified SPARK_BC SoT). Cross-links:
+  as a continuing source (firmware RE, QBDI/TritonDSE VM attack
+  comparison, obfuscation themes — link only; agents route around
+  static hardening; hallucination/cheating; obfuscation as cost
+  multiplier — LLM output is **not** verified SPARK_BC SoT), plus
+  Plain English demystify overview
+  (https://ai.plainenglish.io/demystifying-decompilation-with-large-language-models-0e63bf067045)
+  as accessible survey only. Cross-links:
   [DIAGRAMS.md](docs/DIAGRAMS.md), [FACTORY.md](docs/FACTORY.md).
   Dump/`--compile`/`--run-bc` remain SoT. **Never** perfect
   SPARK_BC LLM claim. **Never** 6000. Does **not** beat Claude or
