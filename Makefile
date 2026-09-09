@@ -17,7 +17,7 @@ NVML_LIB ?= /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1
 	test-bootstrap test-sparkbc test-sparkbc-e2e sparkbc-e2e \
 	spark-bc spark-bc-pack-hello sparkasm \
 	test-sparkasm test-sparkasm-control docs-docx function-catalog \
-	playbooks-catalog spark-eval
+	playbooks-catalog spark-eval spark-sgd-proof
 
 all: spark companions
 
@@ -440,6 +440,27 @@ spark-eval:
 	else \
 	  PYTHONPATH=python python3 tools/spark-eval/run.py; \
 	fi
+
+# Multi-outer CPU SGD proof + measurement-only eval on those weights.
+# Never claims beat Claude. CPU only.
+.PHONY: spark-sgd-proof
+spark-sgd-proof: spark-bootstrap
+	@mkdir -p out/train/sgd-proof
+	@rm -f out/train/sgd-proof/{weights.safetensors,checkpoint.json}
+	PYTHONPATH=python python3 tools/spark-bc-dump/apply_step.py \
+	  --sparkbc docs/examples/spark-train-step.sparkbc \
+	  --weights out/train/sgd-proof/weights.safetensors \
+	  --checkpoint out/train/sgd-proof/checkpoint.json \
+	  --dataset examples/fixtures/train/dataset.jsonl \
+	  --outer 4 --inner 8 --step 1 \
+	  --command 'make spark-sgd-proof'
+	@python3 -c "import json; c=json.load(open('out/train/sgd-proof/checkpoint.json')); \
+	  print('loss_curve', [(p['outer'], round(p['loss'],6)) for p in c['loss_curve']]); \
+	  print('loss', c['loss_before'], '->', c['loss_after']); \
+	  print('beats_claude', c['beats_claude'], 'device', c['device']); \
+	  assert c['loss_after'] < c['loss_before']; \
+	  assert c['beats_claude'] is False"
+	@$(MAKE) spark-eval WEIGHTS=out/train/sgd-proof/weights.safetensors
 
 corpus:
 	mkdir -p data

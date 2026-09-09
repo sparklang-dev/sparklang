@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import sys
 import tempfile
 from pathlib import Path
@@ -189,16 +190,21 @@ def test_dry_step_writes_weights() -> dict:
 
 
 def test_sgd_step_loss_drops() -> dict:
-    """apply_sgd_step: real CE grads; loss drops; weights move."""
+    """apply_sgd_step: multi-outer CE; loss curve; checkpoint."""
     dataset = ROOT / "examples/fixtures/train/dataset.jsonl"
     assert dataset.is_file(), dataset
     with tempfile.TemporaryDirectory() as tmp:
         dest = Path(tmp) / "weights.safetensors"
+        ckpt = Path(tmp) / "checkpoint.json"
         r1 = apply_sgd_step(
             STEP_BC,
             dest,
             step_n=1,
             dataset=dataset,
+            outer_steps=4,
+            inner_steps=4,
+            train_embed=True,
+            checkpoint=ckpt,
             source=STEP_SRC,
             command=STEP_CMD,
         )
@@ -207,16 +213,35 @@ def test_sgd_step_loss_drops() -> dict:
         assert r1["sgd"] is True
         assert r1["beats_claude"] is False
         assert r1["loss_after"] < r1["loss_before"]
+        assert r1["outer_steps"] == 4
+        assert r1["dataset_n"] >= 12
+        curve = r1["loss_curve"]
+        assert isinstance(curve, list) and len(curve) >= 2
+        assert curve[0]["phase"] == "start"
+        assert curve[-1]["loss"] == r1["loss_after"]
+        assert ckpt.is_file()
+        ck = json.loads(ckpt.read_text(encoding="utf-8"))
+        assert ck["beats_claude"] is False
+        assert ck["device"] == "cpu"
+        assert ck["never"] == "rtx-pro-6000"
+        assert len(ck["loss_curve"]) == len(curve)
         assert r1["step_n"] >= 1
         meta = read_safetensors_meta(dest)
         assert meta["trained"] == "true"
         assert meta["not_sgd"] == "false"
+        assert meta.get("sgd_outer") == "4"
         assert float(meta["loss_after"]) < float(
             meta["loss_before"]
         )
         sha1 = r1["sha256"]
         r2 = apply_sgd_step(
-            STEP_BC, dest, step_n=2, dataset=dataset
+            STEP_BC,
+            dest,
+            step_n=2,
+            dataset=dataset,
+            outer_steps=2,
+            inner_steps=4,
+            checkpoint=ckpt,
         )
         assert r2["step_n"] > r1["step_n"]
         assert r2["sha256"] != sha1
@@ -225,7 +250,7 @@ def test_sgd_step_loss_drops() -> dict:
 
 
 def test_serve_forward() -> dict:
-    """Tiny CPU SERVE: forward=true, trained honest, not production."""
+    """Tiny CPU SERVE: forward=true, mlp0 when present, honest."""
 
     with tempfile.TemporaryDirectory() as tmp:
         dest = Path(tmp) / "serve-dry-001"
@@ -244,7 +269,8 @@ def test_serve_forward() -> dict:
         fwd = payload["forward_result"]
         assert isinstance(fwd["argmax"], int)
         assert len(fwd["logits_preview"]) >= 1
-        assert fwd["path"].startswith("embed_mean_pool")
+        assert fwd["mlp0"] is True
+        assert "mlp0" in fwd["path"]
         marker = dest / "SERVE"
         assert marker.is_file()
         body = marker.read_text(encoding="utf-8")

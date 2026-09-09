@@ -1,8 +1,8 @@
 """Tiny CPU serve forward from SPARK_BC / Spark safetensors.
 
-Loads Spark-created weights (or emits init), runs one embed→norm→lm_head
-matmul for logits, writes SERVE with forward=true and honest trained.
-Not a production LLM. CPU only — never the voice GPU.
+Loads Spark-created weights (or emits init), runs embed→optional
+layer-0 MLP→norm→lm_head on CPU, writes SERVE with forward=true and
+honest trained. Not a production LLM. Never the voice GPU / 6000.
 """
 
 from __future__ import annotations
@@ -66,14 +66,55 @@ def _token_ids_from_bc(raw: bytes, n: int, vocab: int) -> list[int]:
     return [int(b) % vocab for b in raw[:n]]
 
 
+def _silu(x: list[float]) -> list[float]:
+    """SiLU / swish activation."""
+    out: list[float] = []
+    for v in x:
+        out.append(v / (1.0 + math.exp(-v)))
+    return out
+
+
+def _mlp_block(
+    hidden: list[float],
+    tensors: dict[str, tuple[tuple[int, ...], bytes]],
+    layer: int = 0,
+) -> tuple[list[float], bool]:
+    """Optional layer-N SwiGLU MLP residual if tensors exist."""
+    p = "spark.layers.%d" % layer
+    need = (
+        p + ".mlp_norm.weight",
+        p + ".mlp_up.weight",
+        p + ".mlp_gate.weight",
+        p + ".mlp_down.weight",
+    )
+    if any(k not in tensors for k in need):
+        return hidden, False
+    dim = len(hidden)
+    norm_w = _unpack_f32(tensors[need[0]][1])
+    up_shape, up_raw = tensors[need[1]]
+    gate_shape, gate_raw = tensors[need[2]]
+    down_shape, down_raw = tensors[need[3]]
+    mlp = int(up_shape[0])
+    if up_shape != (mlp, dim) or gate_shape != (mlp, dim):
+        raise ValueError("mlp up/gate shape mismatch")
+    if down_shape != (dim, mlp):
+        raise ValueError("mlp down shape mismatch")
+    x = _rms_norm(hidden, norm_w)
+    up = _matmul_vec(_unpack_f32(up_raw), mlp, dim, x)
+    gate = _matmul_vec(_unpack_f32(gate_raw), mlp, dim, x)
+    act = _silu(gate)
+    mid = [up[i] * act[i] for i in range(mlp)]
+    down = _matmul_vec(_unpack_f32(down_raw), dim, mlp, mid)
+    return [hidden[i] + down[i] for i in range(dim)], True
+
+
 def run_tiny_forward(
     tensors: dict[str, tuple[tuple[int, ...], bytes]],
     token_ids: list[int],
 ) -> dict[str, Any]:
-    """One CPU embed → final_norm → lm_head logit path.
+    """CPU embed → optional layer-0 MLP → final_norm → lm_head.
 
-    Skips full attention/MLP — still a real matmul + logits, not a
-    marker-only stub. Not a production LLM.
+    Real matmuls + logits, not a marker-only stub. Not production.
     """
     embed_shape, embed_raw = tensors["spark.embed.weight"]
     head_shape, head_raw = tensors["spark.lm_head.weight"]
@@ -88,7 +129,6 @@ def run_tiny_forward(
     norm_w = _unpack_f32(norm_raw)
 
     ids = [int(t) % vocab for t in token_ids] or [0]
-    # Mean-pool token embeddings (tiny control path).
     acc = [0.0] * dim
     for tid in ids:
         row = _row(embed, dim, tid)
@@ -96,18 +136,27 @@ def run_tiny_forward(
             acc[i] += row[i]
     scale = 1.0 / float(len(ids))
     hidden = [v * scale for v in acc]
+    hidden, used_mlp = _mlp_block(hidden, tensors, 0)
     hidden = _rms_norm(hidden, norm_w)
     logits = _matmul_vec(head, vocab, dim, hidden)
     argmax = max(range(vocab), key=lambda i: logits[i])
     preview_n = min(8, vocab)
+    path = (
+        "embed_mean_pool->mlp0->rms_norm->lm_head"
+        if used_mlp
+        else "embed_mean_pool->rms_norm->lm_head"
+    )
     return {
         "token_ids": ids,
         "hidden_dim": dim,
         "vocab": vocab,
-        "logits_preview": [round(logits[i], 6) for i in range(preview_n)],
+        "logits_preview": [
+            round(logits[i], 6) for i in range(preview_n)
+        ],
         "argmax": argmax,
         "logit_max": round(logits[argmax], 6),
-        "path": "embed_mean_pool->rms_norm->lm_head",
+        "mlp0": used_mlp,
+        "path": path,
     }
 
 
@@ -173,7 +222,7 @@ def emit_serve_stub(
         "production": False,
         "forward_result": fwd,
         "note": (
-            "tiny CPU forward (embed→norm→lm_head); "
+            "tiny CPU forward (embed→optional mlp0→norm→lm_head); "
             "not a production LLM; trained follows weights meta"
         ),
         "marker": str(marker),

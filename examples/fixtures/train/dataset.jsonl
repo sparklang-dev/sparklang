@@ -1,12 +1,36 @@
 {"messages":[{"role":"user","content":"hi"},{"role":"assistant","content":"hello"}]}
 {"messages":[{"role":"user","content":"hello"},{"role":"assistant","content":"hello"}]}
 {"messages":[{"role":"user","content":"hey there"},{"role":"assistant","content":"hello"}]}
+{"messages":[{"role":"user","content":"hey"},{"role":"assistant","content":"hello"}]}
+{"messages":[{"role":"user","content":"good morning"},{"role":"assistant","content":"hello"}]}
+{"messages":[{"role":"user","content":"good afternoon"},{"role":"assistant","content":"hello"}]}
 {"messages":[{"role":"user","content":"thanks"},{"role":"assistant","content":"you are welcome"}]}
 {"messages":[{"role":"user","content":"thank you"},{"role":"assistant","content":"you are welcome"}]}
+{"messages":[{"role":"user","content":"thx"},{"role":"assistant","content":"you are welcome"}]}
+{"messages":[{"role":"user","content":"appreciate it"},{"role":"assistant","content":"you are welcome"}]}
 {"messages":[{"role":"user","content":"help"},{"role":"assistant","content":"how can i help"}]}
 {"messages":[{"role":"user","content":"i need help"},{"role":"assistant","content":"how can i help"}]}
 {"messages":[{"role":"user","content":"what can you do"},{"role":"assistant","content":"how can i help"}]}
+{"messages":[{"role":"user","content":"can you help me"},{"role":"assistant","content":"how can i help"}]}
+{"messages":[{"role":"user","content":"assist me"},{"role":"assistant","content":"how can i help"}]}
 {"messages":[{"role":"user","content":"bye"},{"role":"assistant","content":"goodbye"}]}
 {"messages":[{"role":"user","content":"goodbye"},{"role":"assistant","content":"goodbye"}]}
 {"messages":[{"role":"user","content":"see you"},{"role":"assistant","content":"goodbye"}]}
+{"messages":[{"role":"user","content":"later"},{"role":"assistant","content":"goodbye"}]}
+{"messages":[{"role":"user","content":"farewell"},{"role":"assistant","content":"goodbye"}]}
 {"messages":[{"role":"user","content":"ping"},{"role":"assistant","content":"pong"}]}
+{"messages":[{"role":"user","content":"pong"},{"role":"assistant","content":"ping"}]}
+{"messages":[{"role":"user","content":"status"},{"role":"assistant","content":"ok"}]}
+{"messages":[{"role":"user","content":"are you there"},{"role":"assistant","content":"ok"}]}
+{"messages":[{"role":"user","content":"who are you"},{"role":"assistant","content":"spark"}]}
+{"messages":[{"role":"user","content":"your name"},{"role":"assistant","content":"spark"}]}
+{"messages":[{"role":"user","content":"what is spark"},{"role":"assistant","content":"sparklang"}]}
+{"messages":[{"role":"user","content":"sparklang"},{"role":"assistant","content":"spark"}]}
+{"messages":[{"role":"user","content":"train"},{"role":"assistant","content":"step"}]}
+{"messages":[{"role":"user","content":"step"},{"role":"assistant","content":"train"}]}
+{"messages":[{"role":"user","content":"loss"},{"role":"assistant","content":"down"}]}
+{"messages":[{"role":"user","content":"grad"},{"role":"assistant","content":"ok"}]}
+{"messages":[{"role":"user","content":"cpu"},{"role":"assistant","content":"sgd"}]}
+{"messages":[{"role":"user","content":"sgd"},{"role":"assistant","content":"cpu"}]}
+{"messages":[{"role":"user","content":"eval"},{"role":"assistant","content":"score"}]}
+{"messages":[{"role":"user","content":"score"},{"role":"assistant","content":"eval"}]}

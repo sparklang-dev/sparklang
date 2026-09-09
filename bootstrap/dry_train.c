@@ -101,8 +101,8 @@ const char *spark_pick_train_step(const char *job_id, int step_n)
 		     "\"artifacts\":{"
 		     "\"marker\":\"out/train/%s/ARTIFACT\","
 		     "\"weights\":\"out/train/%s/weights.safetensors\"},"
-		     "\"note\":\"CPU SGD STEP — real grads on Spark "
-		     "tensors; tiny; not beat Claude\"}",
+		     "\"note\":\"CPU multi-outer SGD STEP — real grads "
+		     "on Spark tensors; tiny; not beat Claude\"}",
 		     job_id, step_n, job_id, job_id) >=
 	    (int)sizeof(step_buf))
 		return NULL;
@@ -212,9 +212,10 @@ int spark_bump_train_step(const char *out_dir, const char *job_id,
 		     "step_n=%d\n"
 		     "op=step\n"
 		     "weights=%s/weights.safetensors\n"
-		     "note=CPU SGD STEP -- real grads; tiny; "
-		     "not beat Claude\n",
-		     job_id, step_n, out_dir);
+		     "checkpoint=%s/checkpoint.json\n"
+		     "note=CPU multi-outer SGD -- real grads; "
+		     "tiny; not beat Claude\n",
+		     job_id, step_n, out_dir, out_dir);
 	if (n < 0 || n >= (int)sizeof(body))
 		return 1;
 	f = fopen(path, "w");
@@ -273,8 +274,11 @@ int spark_bump_train_weights(const char *out_dir, const char *job_id,
 		     "tools/spark-bc-dump/apply_step.py "
 		     "--sparkbc %s --weights %s --step %d "
 		     "--dataset examples/fixtures/train/dataset.jsonl "
+		     "--outer 4 --inner 8 "
+		     "--checkpoint %s/checkpoint.json "
 		     "--command './spark-bootstrap --run-bc %s'",
-		     sparkbc_path, weights, step_n, sparkbc_path);
+		     sparkbc_path, weights, step_n, out_dir,
+		     sparkbc_path);
 	if (n < 0 || n >= (int)sizeof(cmd))
 		return 1;
 	st = system(cmd);

@@ -173,8 +173,8 @@
         </tr>
         <tr>
         <td>SPARK_BC Builder factory</td>
-        <td><strong>done (tiny SGD)</strong></td>
-        <td>Spark → <code class="inline-code">--compile</code> → <code class="inline-code">.sparkbc</code> with <code class="inline-code">TRAIN</code>/<code class="inline-code">STEP</code>/<code class="inline-code">TRAIN_STATUS</code>; <code class="inline-code">--run-bc</code> TRAIN dry + STEP CPU SGD (bootstrap or GAS); Spark-created init + post-STEP <code class="inline-code">trained=true</code> / <code class="inline-code">not_sgd=false</code> when grads apply. GAS wrappers <strong>implemented</strong>. <strong>Not beat Claude.</strong> Page: <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> / <code class="inline-code">/docs/spark-builder.html</code></td>
+        <td><strong>done (multi-outer SGD)</strong></td>
+        <td>Spark → <code class="inline-code">--compile</code> → <code class="inline-code">.sparkbc</code> with <code class="inline-code">TRAIN</code>/<code class="inline-code">STEP</code>/<code class="inline-code">TRAIN_STATUS</code>; <code class="inline-code">--run-bc</code> TRAIN dry + STEP multi-outer CPU SGD (bootstrap or GAS); <code class="inline-code">checkpoint.json</code> loss curve; post-STEP <code class="inline-code">trained=true</code> / <code class="inline-code">not_sgd=false</code> when grads apply. Serve optional MLP0. GAS wrappers <strong>implemented</strong>. <strong>Not beat Claude.</strong> Page: <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> / <code class="inline-code">/docs/spark-builder.html</code></td>
         </tr>
         <tr>
         <td>Production receptionist workflow</td>

@@ -480,11 +480,17 @@ def _batch_ce(
     dim: int,
     vocab: int,
     pairs: list[tuple[str, str]],
-) -> tuple[float, list[float], float]:
-    """Mean CE loss + mean dW over pairs. Returns (loss, gw, gnorm)."""
+    *,
+    train_embed: bool = False,
+) -> tuple[float, list[float], list[float] | None, float]:
+    """Mean CE + grads. Returns (loss, gw, g_embed|None, gnorm)."""
     gw = [0.0] * len(w)
+    g_emb: list[float] | None = (
+        [0.0] * len(embed) if train_embed else None
+    )
     total = 0.0
     for user, asst in pairs:
+        raw = user.encode("utf-8") or b"\0"
         h = _mean_pool_embed(embed, dim, user)
         target = (asst.encode("utf-8") or b"\0")[0] % vocab
         logits = _logits_from_w(w, dim, vocab, h)
@@ -492,17 +498,42 @@ def _batch_ce(
         total += -math.log(max(probs[target], 1e-12))
         dlogits = list(probs)
         dlogits[target] -= 1.0
+        dh = [0.0] * dim
         for v in range(vocab):
             base = v * dim
             dv = dlogits[v]
             for j in range(dim):
                 gw[base + j] += dv * h[j]
+                dh[j] += dv * w[base + j]
+        if g_emb is not None:
+            scale = 1.0 / float(len(raw))
+            for byte in raw:
+                base = (byte % VOCAB) * dim
+                for j in range(dim):
+                    g_emb[base + j] += dh[j] * scale
     n = float(len(pairs))
     loss = total / n
     for i in range(len(gw)):
         gw[i] /= n
+    if g_emb is not None:
+        for i in range(len(g_emb)):
+            g_emb[i] /= n
     gnorm = math.sqrt(sum(g * g for g in gw))
-    return loss, gw, gnorm
+    if g_emb is not None:
+        gnorm += math.sqrt(sum(g * g for g in g_emb))
+    return loss, gw, g_emb, gnorm
+
+
+def _write_checkpoint(
+    path: Path,
+    payload: dict[str, Any],
+) -> None:
+    """Write checkpoint.json next to weights (CPU SGD only)."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(payload, indent=2) + "\n",
+        encoding="utf-8",
+    )
 
 
 def apply_sgd_step(
@@ -512,15 +543,20 @@ def apply_sgd_step(
     step_n: int | None = None,
     dataset: str | Path | None = None,
     lr: float = 0.08,
-    inner_steps: int = 12,
+    inner_steps: int = 8,
+    outer_steps: int = 4,
+    train_embed: bool = True,
+    lr_embed: float | None = None,
+    checkpoint: str | Path | None = None,
     source: str = "",
     command: str = "",
 ) -> dict[str, Any]:
-    """Real CPU SGD on Spark-created tensors (tiny; not beat Claude).
+    """Multi-outer CPU SGD on Spark tensors (tiny; not beat Claude).
 
-    Reads fixture JSONL, mean-pools embed bytes, CE on lm_head,
-    applies gradients. Sets trained=true / not_sgd=false only when
-    loss drops and grad norm is nonzero. Fails loud otherwise.
+    Fixture JSONL → mean-pool embed → CE on lm_head (optional embed
+    grads). Records a loss_curve and writes checkpoint.json. Sets
+    trained=true / not_sgd=false only when loss drops. CPU only —
+    never the voice GPU / RTX PRO 6000.
     """
     bc_path = Path(sparkbc_path)
     out = Path(dest)
@@ -575,33 +611,74 @@ def apply_sgd_step(
         )
     embed = _unpack_f32(emb_blob)
     w = _unpack_f32(head_blob)
-    before = list(w)
+    before_w = list(w)
+    before_e = list(embed)
+    lr_e = float(lr) * 0.25 if lr_embed is None else float(lr_embed)
+    n_outer = max(1, int(outer_steps))
+    n_inner = max(1, int(inner_steps))
+    do_embed = bool(train_embed)
 
-    loss_before, _gw0, g0 = _batch_ce(
-        w, embed, dim, vocab, pairs
+    loss_before, _gw0, _ge0, g0 = _batch_ce(
+        w,
+        embed,
+        dim,
+        vocab,
+        pairs,
+        train_embed=do_embed,
     )
     if g0 <= 0.0:
         raise RuntimeError(
             "SGD STEP stub fail: zero grad before update"
         )
 
-    for _ in range(max(1, int(inner_steps))):
-        loss_i, gw, gnorm = _batch_ce(
-            w, embed, dim, vocab, pairs
-        )
-        if gnorm <= 0.0:
-            raise RuntimeError(
-                "SGD STEP stub fail: zero grad mid-loop "
-                "(loss=%s)" % loss_i
+    loss_curve: list[dict[str, Any]] = [
+        {"outer": 0, "loss": loss_before, "phase": "start"}
+    ]
+    for outer in range(n_outer):
+        for _ in range(n_inner):
+            loss_i, gw, g_emb, gnorm = _batch_ce(
+                w,
+                embed,
+                dim,
+                vocab,
+                pairs,
+                train_embed=do_embed,
             )
-        for i in range(len(w)):
-            w[i] -= float(lr) * gw[i]
+            if gnorm <= 0.0:
+                raise RuntimeError(
+                    "SGD STEP stub fail: zero grad mid-loop "
+                    "(loss=%s)" % loss_i
+                )
+            for i in range(len(w)):
+                w[i] -= float(lr) * gw[i]
+            if do_embed and g_emb is not None:
+                for i in range(len(embed)):
+                    embed[i] -= lr_e * g_emb[i]
+        loss_o, _gwo, _geo, _go = _batch_ce(
+            w,
+            embed,
+            dim,
+            vocab,
+            pairs,
+            train_embed=do_embed,
+        )
+        loss_curve.append(
+            {
+                "outer": outer + 1,
+                "loss": loss_o,
+                "phase": "after_outer",
+            }
+        )
 
-    loss_after, _gw1, g1 = _batch_ce(
-        w, embed, dim, vocab, pairs
+    loss_after = float(loss_curve[-1]["loss"])
+    moved_w = any(
+        abs(w[i] - before_w[i]) > 1e-12 for i in range(len(w))
     )
-    moved = any(abs(w[i] - before[i]) > 1e-12 for i in range(len(w)))
-    if not moved:
+    moved_e = any(
+        abs(embed[i] - before_e[i]) > 1e-12
+        for i in range(len(embed))
+    )
+    if not (moved_w or (do_embed and moved_e)):
         raise RuntimeError(
             "SGD STEP stub fail: weights unchanged"
         )
@@ -610,11 +687,16 @@ def apply_sgd_step(
             "SGD STEP stub fail: loss did not drop "
             "(before=%s after=%s)" % (loss_before, loss_after)
         )
-    if g1 < 0.0:
-        raise RuntimeError("SGD STEP stub fail: bad grad norm")
 
     tensors[head_name] = (head_shape, _pack_f32(w))
+    if do_embed:
+        tensors[embed_name] = (emb_shape, _pack_f32(embed))
     bc = load_sparkbc(bc_path)
+    ckpt_path = (
+        Path(checkpoint)
+        if checkpoint
+        else out.parent / "checkpoint.json"
+    )
     meta["step_n"] = str(n)
     meta["trained"] = "true"
     meta["not_sgd"] = "false"
@@ -624,25 +706,43 @@ def apply_sgd_step(
     meta["loss_before"] = "%.8g" % loss_before
     meta["loss_after"] = "%.8g" % loss_after
     meta["dataset"] = str(data_path)
-    meta["sgd_tensor"] = head_name
+    meta["dataset_n"] = str(len(pairs))
+    meta["sgd_tensor"] = (
+        "%s+%s" % (head_name, embed_name)
+        if do_embed
+        else head_name
+    )
     meta["sgd_lr"] = "%.6g" % float(lr)
-    meta["sgd_inner"] = str(int(inner_steps))
+    meta["sgd_lr_embed"] = "%.6g" % lr_e
+    meta["sgd_inner"] = str(n_inner)
+    meta["sgd_outer"] = str(n_outer)
+    meta["train_embed"] = "true" if do_embed else "false"
+    meta["checkpoint"] = str(ckpt_path)
+    meta["device"] = "cpu"
+    meta["never_gpu"] = "rtx-pro-6000"
     meta["sparkbc_sha256"] = bc["sha256"]
     meta["genome"] = meta.get("genome") or "SPARK_BC"
     meta["factory"] = meta.get("factory") or "Spark language"
     meta["goal"] = (
-        "tiny CPU SGD on Spark tensors; "
+        "multi-outer CPU SGD on Spark tensors; "
         "does not beat Claude"
     )
     meta["note"] = (
-        "CPU SGD STEP updated lm_head from fixture batch; "
-        "trained=true; not_sgd=false; not beat Claude"
+        "CPU multi-outer SGD updated lm_head"
+        + ("+embed" if do_embed else "")
+        + "; trained=true; not_sgd=false; not beat Claude"
     )
     base_der = meta.get("derivation") or "SPARK_BC init"
     meta["derivation"] = (
-        "%s; real CPU SGD CE on %s "
-        "(embed mean-pool; fixture JSONL)"
-        % (base_der, head_name)
+        "%s; multi-outer CPU SGD CE on %s "
+        "(outer=%d inner=%d; fixture JSONL n=%d)"
+        % (
+            base_der,
+            meta["sgd_tensor"],
+            n_outer,
+            n_inner,
+            len(pairs),
+        )
     )
     if source:
         meta["source"] = source
@@ -650,24 +750,60 @@ def apply_sgd_step(
         meta["command"] = command
 
     write_safetensors(tensors, meta, out)
+    ckpt = {
+        "op": "checkpoint",
+        "mode": "cpu-sgd",
+        "status": "implemented",
+        "step_n": n,
+        "loss_before": loss_before,
+        "loss_after": loss_after,
+        "loss_curve": loss_curve,
+        "outer_steps": n_outer,
+        "inner_steps": n_inner,
+        "lr": float(lr),
+        "lr_embed": lr_e,
+        "train_embed": do_embed,
+        "dataset": str(data_path),
+        "dataset_n": len(pairs),
+        "weights": str(out),
+        "weights_sha256": hashlib.sha256(
+            out.read_bytes()
+        ).hexdigest(),
+        "trained": True,
+        "not_sgd": False,
+        "sgd": True,
+        "beats_claude": False,
+        "device": "cpu",
+        "never": "rtx-pro-6000",
+        "sparkbc_sha256": bc["sha256"],
+        "note": meta["note"],
+    }
+    _write_checkpoint(ckpt_path, ckpt)
     return {
         "op": "step_weights",
         "status": "implemented",
         "mode": "cpu-sgd",
         "path": str(out),
-        "sha256": hashlib.sha256(out.read_bytes()).hexdigest(),
+        "checkpoint": str(ckpt_path),
+        "sha256": ckpt["weights_sha256"],
         "size_bytes": out.stat().st_size,
         "step_n": n,
-        "tensor": head_name,
+        "tensor": meta["sgd_tensor"],
         "trained": True,
         "not_sgd": False,
         "sgd": True,
         "loss_before": loss_before,
         "loss_after": loss_after,
+        "loss_curve": loss_curve,
+        "outer_steps": n_outer,
+        "inner_steps": n_inner,
+        "train_embed": do_embed,
         "grad_norm_before": g0,
         "dataset": str(data_path),
+        "dataset_n": len(pairs),
         "sparkbc_sha256": bc["sha256"],
         "note": meta["note"],
         "beats_claude": False,
+        "device": "cpu",
     }
 
