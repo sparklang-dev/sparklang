@@ -58,7 +58,7 @@ make docs-check
 | **G** | Serve HTTP/API | **Merged** — see [SERVE.md](SERVE.md) / `make spark-serve-api` |
 | **H** | Website + factory docs | **Merged** (#23/#25) — this hub + [DIAGRAMS.md](DIAGRAMS.md) |
 | **I** | SDK / IDE / GUI pack | **Merged** (#24) — `make sdk-pack`; K enhances helpers overlay |
-| **J** | Decompile research / captures | **Merged** (#26) — [DECOMPILE.md](DECOMPILE.md) + [research/LLM_DECOMPILE.md](research/LLM_DECOMPILE.md); flow diagrams also in [DIAGRAMS.md](DIAGRAMS.md) |
+| **J** | Decompile research / captures | **Merged** (#26) + research expand — [DECOMPILE.md](DECOMPILE.md) + [research/LLM_DECOMPILE.md](research/LLM_DECOMPILE.md) (DecompAI / LLM4Decompile / EmergentMind / Quarkslab article + RE category / Plain English overview); flow diagrams also in [DIAGRAMS.md](DIAGRAMS.md) |
 | **K** | Helpers / shadows / kit | **Merged** (#27) — [TOOLS_HELPERS.md](TOOLS_HELPERS.md) |
 | **M** | Owned spark-coder TinyCoder | **This lane** — [SPARK_CODER.md](SPARK_CODER.md) |
 | **L** | AI model aspects (senses + behaviors) | **Merged** (#29) — [MODEL_ASPECTS.md](MODEL_ASPECTS.md); eyes stub only |

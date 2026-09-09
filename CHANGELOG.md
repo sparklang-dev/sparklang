@@ -5,6 +5,35 @@ language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
 
+## 0.6.43 — 2026-09-09
+
+- **J-lane LLM decompile research expand:** enrich
+  [LLM_DECOMPILE.md](docs/research/LLM_DECOMPILE.md)
+  → [/docs/llm-decompile.html](/docs/llm-decompile.html) with
+  owner citations (full URLs): DecompAI agent-style RE (tool loop,
+  distinct from seq2seq), LLM4Decompile End/Ref + SK² +
+  Decompile-Bench dataset / DecompileBench ACL eval, EmergentMind
+  survey (ReF, Idioms, SALT, SK², WaDec, SmartHalo, ICL4Decomp;
+  RRR / R2I), AutoDecompiler, DecLLM, HELIOS (NDSS), Interactive
+  End-to-End / ReF (MDPI), **When LLM Decompilers Recompile More
+  and Preserve Less** (arXiv:2609.05370 — recompile ≠ fidelity),
+  Quarkslab AI-assisted RE article **plus** RE category index
+  (https://blog.quarkslab.com/category/reverse-engineering.html)
+  as a continuing source (firmware RE, QBDI/TritonDSE VM attack
+  comparison, obfuscation themes — link only; agents route around
+  static hardening; hallucination/cheating; obfuscation as cost
+  multiplier — LLM output is **not** verified SPARK_BC SoT), Plain
+  English demystify overview
+  (https://ai.plainenglish.io/demystifying-decompilation-with-large-language-models-0e63bf067045)
+  as accessible survey only, and **OpenBin**
+  (https://openbin.ai/) as a commercial/online AI RE product
+  (distinct from open research weights; third-party upload
+  trust/IP; not SPARK_BC SoT). Google AI Overview clusters marked
+  **secondary**. Cross-links: [DIAGRAMS.md](docs/DIAGRAMS.md),
+  [FACTORY.md](docs/FACTORY.md). Dump/`--compile`/`--run-bc`
+  remain SoT. **Never** perfect SPARK_BC LLM claim. **Never**
+  6000. Does **not** beat Claude or these models/products.
+
 ## 0.6.42 — 2026-09-09
 
 - **Owned Spark coder (M-lane):** in-repo TinyCoder

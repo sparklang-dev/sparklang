@@ -11,12 +11,15 @@ Helpers/shadows CLIs: [TOOLS_HELPERS.md](TOOLS_HELPERS.md).
 brain → voice SVG + behavior/tool loops (does not replace these
 factory tool diagrams).
 
-**J-lane (landed):** decompile how-to with CLI captures + SVG
-tool diagrams — [DECOMPILE.md](DECOMPILE.md) /
-[/docs/decompile.html](/docs/decompile.html). LLM survey —
+**J-lane (landed + research expand):** decompile how-to with CLI
+captures + SVG tool diagrams — [DECOMPILE.md](DECOMPILE.md) /
+[/docs/decompile.html](/docs/decompile.html). LLM survey (owner
+cites: DecompAI agent vs seq2seq, LLM4Decompile, EmergentMind,
+Quarkslab article + RE category, Plain English overview) —
 [research/LLM_DECOMPILE.md](research/LLM_DECOMPILE.md) /
 [/docs/llm-decompile.html](/docs/llm-decompile.html). This file
 keeps **Mermaid flow** diagrams; prefer DECOMPILE for screenshots.
+LLM remains assist-only; dump/`--run-bc` stay SoT.
 
 ## 1) How Spark tools function
 
