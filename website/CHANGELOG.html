@@ -158,6 +158,10 @@
         <article class="doc__body">
 <h1>Changelog</h1>
 <p>All notable user-facing releases of <strong>SparkLang</strong> (the Spark programming language) are listed here. Site and installers track <code>website/downloads/manifest.json</code>.</p>
+<h2>0.6.58 — 2026-09-09</h2>
+<ul>
+<li><strong>Pages screenshots MIME:</strong> <code>website/_headers</code> had <code>/docs/* → Content-Type: text/html</code>, which also matched <code>/docs/images/*</code>. With <code>nosniff</code>, browsers refused PNG/SVG screenshots (bytes 200, MIME wrong / dual-typed SVG). Fix: explicit <code>image/png</code> + <code>image/svg+xml</code> under <code>/docs/images/</code>; <code>/docs/*</code> is Cache-Control only. Does not beat Claude.</li>
+</ul>
 <h2>0.6.57 — 2026-09-09</h2>
 <ul>
 <li><strong>Makefile restore:</strong> <code>spark-ground</code> / <code>make test-ground</code> and <code>decompile-bench</code> / <code>decompile-roundtrip</code> / <code>test-decompile-compete</code> were dropped from the tip Makefile in the nav-subcategories land (#48). Targets + companions/<code>test</code>/<code>clean</code> wiring restored. Does not beat Claude.</li>

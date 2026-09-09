@@ -5,6 +5,15 @@ language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
 
+## 0.6.58 — 2026-09-09
+
+- **Pages screenshots MIME:** `website/_headers` had
+  `/docs/* → Content-Type: text/html`, which also matched
+  `/docs/images/*`. With `nosniff`, browsers refused PNG/SVG
+  screenshots (bytes 200, MIME wrong / dual-typed SVG). Fix:
+  explicit `image/png` + `image/svg+xml` under `/docs/images/`;
+  `/docs/*` is Cache-Control only. Does not beat Claude.
+
 ## 0.6.57 — 2026-09-09
 
 - **Makefile restore:** `spark-ground` / `make test-ground` and
