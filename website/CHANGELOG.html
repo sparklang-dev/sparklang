@@ -80,27 +80,35 @@ language) are listed here. Site and installers track
   <code class="inline-code">docs/examples/spark-self.sparkbc</code>)
   and emits <strong>Spark-created init weights</strong> from those bytes
   (<code class="inline-code">docs/examples/spark-self.init.safetensors</code>).
-  Training is also in the binary: <code class="inline-code">TRAIN</code>
-  <code class="inline-code">0x26</code> /
+  Training is also in the binary:
+  <code class="inline-code">TRAIN</code> <code class="inline-code">0x26</code> /
+  <code class="inline-code">STEP</code> <code class="inline-code">0x28</code> /
   <code class="inline-code">TRAIN_STATUS</code>
-  <code class="inline-code">0x27</code> from
-  <code class="inline-code">examples/spark_builder.spark</code> →
+  <code class="inline-code">0x27</code>.
+  Builder: <code class="inline-code">examples/spark_builder.spark</code> →
   <code class="inline-code">docs/examples/spark-builder.sparkbc</code>.
   Selfhost train seed:
   <code class="inline-code">selfhost/compile_train.spark</code> →
   <code class="inline-code">docs/examples/spark-selfhost-train.sparkbc</code>.
+  STEP proof stream TRAIN→STEP→TRAIN_STATUS:
+  <code class="inline-code">examples/spark_train_step.spark</code> →
+  <code class="inline-code">docs/examples/spark-train-step.sparkbc</code>
+  (sha256
+  <code class="inline-code">d08925b52bf8c840de626c9cfec619d4dbae5a674b94bb8c7c5837eb1ac64551</code>).
+  Syntax: <code class="inline-code">model step &quot;job-id&quot; -&gt; bind</code>.
   Dump: <code class="inline-code">docs/examples/spark-builder-bc.txt</code>.
-  Execute TRAIN from that file:
+  Execute from published <code class="inline-code">.sparkbc</code>:
   <code class="inline-code">./spark-bootstrap --run-bc</code>
   (dry fixture + ARTIFACT marker; <code class="inline-code">trained=false</code>;
-  not SGD). GAS <code class="inline-code">./spark --dry-run</code>
+  not SGD). Dry ≠ trained. GAS
+  <code class="inline-code">./spark --dry-run</code>
   runs train verbs from source; GAS does <strong>not emit</strong>
   <code class="inline-code">.sparkbc</code> and
   <code class="inline-code">./spark --run-bc</code> is
   <strong>BLOCKED</strong> (use bootstrap
   <code class="inline-code">--compile</code>). Page:
   <a href="/docs/spark-builder.html">SPARK_BUILDER</a>.
-  Honest: init, not trained. No imported weights. Emitting TRAIN ≠ a
+  Honest: init, not trained. No imported weights. Emitting TRAIN/STEP ≠ a
   trained model. Later train aims to beat Claude. Companion
   <code class="inline-code">tools/spark-bc-dump/dump.py</code>.</li>
 </ul>

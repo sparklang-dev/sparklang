@@ -137,7 +137,10 @@ One dry training-loop tick in the binary — not SGD and not trained.
 Syntax: `model step "job-id" -> bind`. Compiles to `STEP` (job_id,
 bind). Bootstrap `--run-bc` prints `"op":"step"` JSON and updates
 `ARTIFACT` with `step_n`. Proof: TRAIN → STEP → TRAIN_STATUS in
-`examples/spark_train_step.spark`.
+`examples/spark_train_step.spark` →
+`docs/examples/spark-train-step.sparkbc` (sha256
+`d08925b52bf8c840de626c9cfec619d4dbae5a674b94bb8c7c5837eb1ac64551`).
+Dry ≠ trained.
 
 Optional **`method "…"`** selects the training algorithm
 (`spark_distill_cpu` | `spark_pref_pack` | `spark_playbook_fit` |

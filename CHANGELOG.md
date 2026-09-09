@@ -10,20 +10,26 @@ language) are listed here. Site and installers track
   (`selfhost/compile.spark` → `docs/examples/spark-self.sparkbc`)
   and emits **Spark-created init weights** from those bytes
   (`docs/examples/spark-self.init.safetensors`). Training is also
-  in the binary: `TRAIN` `0x26` / `TRAIN_STATUS` `0x27` from
-  `examples/spark_builder.spark` →
+  in the binary: `TRAIN` `0x26` / `STEP` `0x28` /
+  `TRAIN_STATUS` `0x27`. Builder: `examples/spark_builder.spark` →
   `docs/examples/spark-builder.sparkbc`. Selfhost train seed:
   `selfhost/compile_train.spark` →
-  `docs/examples/spark-selfhost-train.sparkbc`. Dump:
-  `docs/examples/spark-builder-bc.txt`. Execute TRAIN from that
-  file: `./spark-bootstrap --run-bc` (dry fixture + ARTIFACT
-  marker; `trained=false`; not SGD). GAS `./spark --dry-run`
-  runs train verbs from source; GAS does **not emit** `.sparkbc`
-  and `./spark --run-bc` is **BLOCKED** (use bootstrap
-  `--compile`). Page: [SPARK_BUILDER.md](docs/SPARK_BUILDER.md) /
+  `docs/examples/spark-selfhost-train.sparkbc`. STEP proof stream
+  TRAIN→STEP→TRAIN_STATUS: `examples/spark_train_step.spark` →
+  `docs/examples/spark-train-step.sparkbc` (sha256
+  `d08925b52bf8c840de626c9cfec619d4dbae5a674b94bb8c7c5837eb1ac64551`).
+  Syntax: `model step "job-id" -> bind`. Dump:
+  `docs/examples/spark-builder-bc.txt`. Execute from published
+  `.sparkbc`: `./spark-bootstrap --run-bc` (dry fixture + ARTIFACT
+  marker; `trained=false`; not SGD). Dry ≠ trained. GAS
+  `./spark --dry-run` runs train verbs from source; GAS does **not
+  emit** `.sparkbc` and `./spark --run-bc` is **BLOCKED** (use
+  bootstrap `--compile`). Page:
+  [SPARK_BUILDER.md](docs/SPARK_BUILDER.md) /
   `/docs/spark-builder.html`. Honest: init, not trained. No
-  imported weights. Emitting TRAIN ≠ a trained model. Later train
-  aims to beat Claude. Companion `tools/spark-bc-dump/dump.py`.
+  imported weights. Emitting TRAIN/STEP ≠ a trained model. Later
+  train aims to beat Claude. Companion
+  `tools/spark-bc-dump/dump.py`.
 
 ## 0.6.25 — 2026-09-08
 

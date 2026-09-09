@@ -45,6 +45,18 @@ Selfhost seed **with** train ops (`TRAIN` / `TRAIN_STATUS`):
   -o docs/examples/spark-selfhost-train.sparkbc
 ```
 
+STEP proof stream (`TRAIN` → `STEP` → `TRAIN_STATUS`):
+
+```bash
+./spark-bootstrap --compile examples/spark_train_step.spark \
+  -o docs/examples/spark-train-step.sparkbc
+```
+
+Published proof:
+[spark-train-step.sparkbc](examples/spark-train-step.sparkbc)
+(sha256
+`d08925b52bf8c840de626c9cfec619d4dbae5a674b94bb8c7c5837eb1ac64551`).
+
 3. Dump hex + decode, then emit weights from **those** bytes:
 
 ```bash
@@ -77,20 +89,24 @@ and [spark-selfhost-train.sparkbc](examples/spark-selfhost-train.sparkbc)
 
 - Magic `SPBC`, version 1, string pool, const pool, opcode stream
 - Hex from `xxd` of the compiled file — not invented
-- Builder ops: `MODEL` `ASK` `PRINT` `TRAIN` `TRAIN_STATUS` `HALT`
+- Builder ops: `MODEL` `ASK` `PRINT` `TRAIN` `STEP` `TRAIN_STATUS`
+  `HALT`
 - `TRAIN` is opcode **`0x26`**. `TRAIN_STATUS` is **`0x27`**.
-  Loop tick `STEP` is **`0x28`** (see
+  Loop tick `STEP` is **`0x28`** — syntax
+  `model step "job-id" -> bind` (see
   [spark-train-step.sparkbc](examples/spark-train-step.sparkbc)).
 
 ```bash
 ./spark --dry-run examples/spark_builder.spark
 ./spark-bootstrap --run-bc docs/examples/spark-builder.sparkbc
+./spark-bootstrap --run-bc docs/examples/spark-train-step.sparkbc
 ```
 
-`./spark-bootstrap --run-bc` **executes** `TRAIN` (`0x26`) then
-`TRAIN_STATUS` (`0x27`) from that file: dry JSON plus an `ARTIFACT`
-marker under `out/train/<job>/`. That is a **dry fixture**
-(`trained=false`), not SGD and not a trained model.
+`./spark-bootstrap --run-bc` **executes** train opcodes from the
+binary: `TRAIN` (`0x26`), optional `STEP` (`0x28`), then
+`TRAIN_STATUS` (`0x27`). Dry JSON plus an `ARTIFACT` marker under
+`out/train/<job>/` (STEP updates `step_n`). That is a **dry fixture**
+(`trained=false`), not SGD and not a trained model. Dry ≠ trained.
 
 GAS `./spark` has **no SPARK_BC emit path** and **no** `--run-bc`.
 Proof (must fail):
@@ -128,9 +144,10 @@ is in the `.sparkbc`; the tensors are still init.
 | Claim | Today |
 |-------|--------|
 | Compile Spark → SPARK_BC | **implemented** (`--compile`) |
-| Train / status ops in the binary | **implemented** (`0x26` / `0x27`) |
+| Train / step / status ops in the binary | **implemented** (`0x26` / `0x28` / `0x27`) |
 | Selfhost train seed `.sparkbc` | **implemented** (`compile_train.spark` → `spark-selfhost-train.sparkbc`) |
-| Execute TRAIN from published `.sparkbc` | **implemented** (`./spark-bootstrap --run-bc`; dry; `trained=false`) |
+| STEP proof stream TRAIN→STEP→TRAIN_STATUS | **implemented** (`spark_train_step.spark` → `spark-train-step.sparkbc`) |
+| Execute TRAIN / STEP from published `.sparkbc` | **implemented** (`./spark-bootstrap --run-bc`; dry; `trained=false`) |
 | GAS `./spark --dry-run` train verbs | **implemented** (source, not bytecode) |
 | GAS emit `.sparkbc` / `--run-bc` | **BLOCKED** (use bootstrap `--compile` / `--run-bc`) |
 | Dry ARTIFACT from TRAIN | **implemented** (fixture; not SGD) |

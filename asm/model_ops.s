@@ -1112,6 +1112,79 @@ psb_faq:
     mov     rcx, step_artifact_faq_len
     ret
 
+# pick_step_art / pick_step_jobdir: job id from line (not method).
+pick_step_jobdir:
+    lea     rdi, [rip+linebuf]
+    lea     rsi, [rip+needle_job_reply]
+    call    contains
+    test    rax, rax
+    jnz     psj_reply
+    lea     rdi, [rip+linebuf]
+    lea     rsi, [rip+needle_job_pref]
+    call    contains
+    test    rax, rax
+    jnz     psj_pref
+    lea     rdi, [rip+linebuf]
+    lea     rsi, [rip+needle_job_play]
+    call    contains
+    test    rax, rax
+    jnz     psj_play
+    lea     rdi, [rip+linebuf]
+    lea     rsi, [rip+needle_job_faq]
+    call    contains
+    test    rax, rax
+    jnz     psj_faq
+    lea     rax, [rip+train_dir_dry]
+    ret
+psj_reply:
+    lea     rax, [rip+train_dir_reply]
+    ret
+psj_pref:
+    lea     rax, [rip+train_dir_pref]
+    ret
+psj_play:
+    lea     rax, [rip+train_dir_play]
+    ret
+psj_faq:
+    lea     rax, [rip+train_dir_faq]
+    ret
+
+pick_step_art:
+    lea     rdi, [rip+linebuf]
+    lea     rsi, [rip+needle_job_reply]
+    call    contains
+    test    rax, rax
+    jnz     psa_reply
+    lea     rdi, [rip+linebuf]
+    lea     rsi, [rip+needle_job_pref]
+    call    contains
+    test    rax, rax
+    jnz     psa_pref
+    lea     rdi, [rip+linebuf]
+    lea     rsi, [rip+needle_job_play]
+    call    contains
+    test    rax, rax
+    jnz     psa_play
+    lea     rdi, [rip+linebuf]
+    lea     rsi, [rip+needle_job_faq]
+    call    contains
+    test    rax, rax
+    jnz     psa_faq
+    lea     rax, [rip+train_artifact_path]
+    ret
+psa_reply:
+    lea     rax, [rip+train_art_reply]
+    ret
+psa_pref:
+    lea     rax, [rip+train_art_pref]
+    ret
+psa_play:
+    lea     rax, [rip+train_art_play]
+    ret
+psa_faq:
+    lea     rax, [rip+train_art_faq]
+    ret
+
 # --- model train / build (TRAIN 0x26; dry = fixtures, not SGD) ---
 model_train:
     cmp     qword ptr [rip+flag_live], 0
@@ -1177,6 +1250,76 @@ mt_ok:
     mov     rdx, rax
     call    pick_train_art
     mov     rsi, rax
+    call    write_stdout
+    lea     rsi, [rip+msg_nl_local]
+    mov     rdx, 1
+    call    write_stdout
+    pop     rcx
+    pop     rax
+    call    set_last_from_rcx
+    call    bind_arrow_from_line
+    pop     rbx
+    ret
+
+# --- model step (STEP 0x28; dry ARTIFACT step_n, not SGD) ---
+model_step:
+    cmp     qword ptr [rip+flag_live], 0
+    je      mst_dry
+    lea     rsi, [rip+msg_nl_local]
+    mov     rdx, 1
+    call    write_stdout
+    lea     rsi, [rip+msg_step_live]
+    mov     rdx, msg_step_live_len
+    call    write_stdout
+    mov     rdi, 1
+    call    sys_exit
+mst_dry:
+    call    pick_train_step
+    test    rax, rax
+    jnz     mst_ok
+    lea     rsi, [rip+msg_nl_local]
+    mov     rdx, 1
+    call    write_stdout
+    lea     rsi, [rip+msg_step_miss]
+    mov     rdx, msg_step_miss_len
+    call    write_stdout
+    mov     rdi, 1
+    call    sys_exit
+mst_ok:
+    push    rax
+    push    rcx
+    lea     rdi, [rip+outdir_name]
+    mov     rsi, 493
+    call    sys_mkdir
+    lea     rdi, [rip+train_dir_parent]
+    mov     rsi, 493
+    call    sys_mkdir
+    call    pick_step_jobdir
+    mov     rdi, rax
+    mov     rsi, 493
+    call    sys_mkdir
+    call    pick_step_art
+    push    rax
+    call    pick_step_body
+    mov     rsi, rax
+    mov     rdx, rcx
+    pop     rdi
+    call    write_bytes_path
+    lea     rsi, [rip+msg_nl_local]
+    mov     rdx, 1
+    call    write_stdout
+    lea     rsi, [rip+msg_step_why]
+    mov     rdx, msg_step_why_len
+    call    write_stdout
+    lea     rsi, [rip+msg_reply_local]
+    mov     rdx, msg_reply_local_len
+    call    write_stdout
+    pop     rcx
+    pop     rax
+    mov     rsi, rax
+    mov     rdx, rcx
+    push    rax
+    push    rcx
     call    write_stdout
     lea     rsi, [rip+msg_nl_local]
     mov     rdx, 1

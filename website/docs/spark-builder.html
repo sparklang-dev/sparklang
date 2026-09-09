@@ -72,7 +72,7 @@
         <p>Spark compiles Spark to <strong>SPARK_BC</strong>. The same factory emits:</p>
         <ol class="doc__ol">
         <li><strong>Orchestration + training program</strong> — opcodes in the <code class="inline-code">.sparkbc</code>
-           (including <code class="inline-code">TRAIN</code> / <code class="inline-code">TRAIN_STATUS</code>)</li>
+           (including <code class="inline-code">TRAIN</code> / <code class="inline-code">STEP</code> / <code class="inline-code">TRAIN_STATUS</code>)</li>
         <li><strong>Init weights</strong> — Spark-created safetensors derived from those
            bytes</li>
         </ol>
@@ -87,7 +87,9 @@
         <ol class="doc__ol">
         <li>Compiler seed: <code class="inline-code">selfhost/compile.spark</code>. Train slice seed:
            <code class="inline-code">selfhost/compile_train.spark</code>. Builder program (includes
-           <code class="inline-code">model train</code> / <code class="inline-code">model status</code>): <code class="inline-code">examples/spark_builder.spark</code>.</li>
+           <code class="inline-code">model train</code> / <code class="inline-code">model status</code>): <code class="inline-code">examples/spark_builder.spark</code>.
+           Loop tick (<code class="inline-code">model step</code>): <code class="inline-code">examples/spark_train_step.spark</code>
+           → TRAIN → STEP → TRAIN_STATUS in one stream.</li>
         <li>Compile → real SPARK_BC, including train ops:</li>
         </ol>
         <pre class="doc__pre"><code class="language-bash">./spark-bootstrap --compile examples/spark_builder.spark \
@@ -101,6 +103,14 @@
         <pre class="doc__pre"><code class="language-bash">./spark-bootstrap --compile selfhost/compile_train.spark \
           -o docs/examples/spark-selfhost-train.sparkbc
         </code></pre>
+        <p>STEP proof stream (<code class="inline-code">TRAIN</code> → <code class="inline-code">STEP</code> → <code class="inline-code">TRAIN_STATUS</code>):</p>
+        <pre class="doc__pre"><code class="language-bash">./spark-bootstrap --compile examples/spark_train_step.spark \
+          -o docs/examples/spark-train-step.sparkbc
+        </code></pre>
+        <p>Published proof:
+        <code class="inline-code">examples/spark-train-step.sparkbc</code>
+        (sha256
+        <code class="inline-code">d08925b52bf8c840de626c9cfec619d4dbae5a674b94bb8c7c5837eb1ac64551</code>).</p>
         <ol start="3">
         <li>Dump hex + decode, then emit weights from <strong>those</strong> bytes:</li>
         </ol>
@@ -130,16 +140,22 @@
         <ul class="doc__ul">
         <li>Magic <code class="inline-code">SPBC</code>, version 1, string pool, const pool, opcode stream</li>
         <li>Hex from <code class="inline-code">xxd</code> of the compiled file — not invented</li>
-        <li>Builder ops: <code class="inline-code">MODEL</code> <code class="inline-code">ASK</code> <code class="inline-code">PRINT</code> <code class="inline-code">TRAIN</code> <code class="inline-code">TRAIN_STATUS</code> <code class="inline-code">HALT</code></li>
-        <li><code class="inline-code">TRAIN</code> is opcode <strong><code class="inline-code">0x26</code></strong>. <code class="inline-code">TRAIN_STATUS</code> is <strong><code class="inline-code">0x27</code></strong>.</li>
+        <li>Builder ops: <code class="inline-code">MODEL</code> <code class="inline-code">ASK</code> <code class="inline-code">PRINT</code> <code class="inline-code">TRAIN</code> <code class="inline-code">STEP</code> <code class="inline-code">TRAIN_STATUS</code>
+          <code class="inline-code">HALT</code></li>
+        <li><code class="inline-code">TRAIN</code> is opcode <strong><code class="inline-code">0x26</code></strong>. <code class="inline-code">TRAIN_STATUS</code> is <strong><code class="inline-code">0x27</code></strong>.
+          Loop tick <code class="inline-code">STEP</code> is <strong><code class="inline-code">0x28</code></strong> — syntax
+          <code class="inline-code">model step "job-id" -&gt; bind</code> (see
+          <code class="inline-code">examples/spark-train-step.sparkbc</code>).</li>
         </ul>
         <pre class="doc__pre"><code class="language-bash">./spark --dry-run examples/spark_builder.spark
         ./spark-bootstrap --run-bc docs/examples/spark-builder.sparkbc
+        ./spark-bootstrap --run-bc docs/examples/spark-train-step.sparkbc
         </code></pre>
-        <p><code class="inline-code">./spark-bootstrap --run-bc</code> <strong>executes</strong> <code class="inline-code">TRAIN</code> (<code class="inline-code">0x26</code>) then
-        <code class="inline-code">TRAIN_STATUS</code> (<code class="inline-code">0x27</code>) from that file: dry JSON plus an <code class="inline-code">ARTIFACT</code>
-        marker under <code class="inline-code">out/train/&lt;job&gt;/</code>. That is a <strong>dry fixture</strong>
-        (<code class="inline-code">trained=false</code>), not SGD and not a trained model.</p>
+        <p><code class="inline-code">./spark-bootstrap --run-bc</code> <strong>executes</strong> train opcodes from the
+        binary: <code class="inline-code">TRAIN</code> (<code class="inline-code">0x26</code>), optional <code class="inline-code">STEP</code> (<code class="inline-code">0x28</code>), then
+        <code class="inline-code">TRAIN_STATUS</code> (<code class="inline-code">0x27</code>). Dry JSON plus an <code class="inline-code">ARTIFACT</code> marker under
+        <code class="inline-code">out/train/&lt;job&gt;/</code> (STEP updates <code class="inline-code">step_n</code>). That is a <strong>dry fixture</strong>
+        (<code class="inline-code">trained=false</code>), not SGD and not a trained model. Dry ≠ trained.</p>
         <p>GAS <code class="inline-code">./spark</code> has <strong>no SPARK_BC emit path</strong> and <strong>no</strong> <code class="inline-code">--run-bc</code>.
         Proof (must fail):</p>
         <pre class="doc__pre"><code class="language-bash">./spark --run-bc docs/examples/spark-builder.sparkbc
@@ -178,15 +194,19 @@
         <td><strong>implemented</strong> (<code class="inline-code">--compile</code>)</td>
         </tr>
         <tr>
-        <td>Train / status ops in the binary</td>
-        <td><strong>implemented</strong> (<code class="inline-code">0x26</code> / <code class="inline-code">0x27</code>)</td>
+        <td>Train / step / status ops in the binary</td>
+        <td><strong>implemented</strong> (<code class="inline-code">0x26</code> / <code class="inline-code">0x28</code> / <code class="inline-code">0x27</code>)</td>
         </tr>
         <tr>
         <td>Selfhost train seed <code class="inline-code">.sparkbc</code></td>
         <td><strong>implemented</strong> (<code class="inline-code">compile_train.spark</code> → <code class="inline-code">spark-selfhost-train.sparkbc</code>)</td>
         </tr>
         <tr>
-        <td>Execute TRAIN from published <code class="inline-code">.sparkbc</code></td>
+        <td>STEP proof stream TRAIN→STEP→TRAIN_STATUS</td>
+        <td><strong>implemented</strong> (<code class="inline-code">spark_train_step.spark</code> → <code class="inline-code">spark-train-step.sparkbc</code>)</td>
+        </tr>
+        <tr>
+        <td>Execute TRAIN / STEP from published <code class="inline-code">.sparkbc</code></td>
         <td><strong>implemented</strong> (<code class="inline-code">./spark-bootstrap --run-bc</code>; dry; <code class="inline-code">trained=false</code>)</td>
         </tr>
         <tr>

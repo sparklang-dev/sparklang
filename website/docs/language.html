@@ -141,19 +141,20 @@
         <p>Dry: <code class="inline-code">./spark --dry-run examples/model_lab.spark</code>. Gate:
         <code class="inline-code">make test-model-lab</code>. Inventable facts still use SoT +
         <code class="inline-code">ABSTAIN_HEADS.md</code>. Never <code class="inline-code">auto</code>/<code class="inline-code">code</code>/<code class="inline-code">fast</code>.</p>
-        <h3 id="model-analyze-compare-improve-train-status-plan"><code class="inline-code">model analyze</code> / <code class="inline-code">compare</code> / <code class="inline-code">improve</code> / <code class="inline-code">train</code> / <code class="inline-code">status</code> / <code class="inline-code">plan</code></h3>
+        <h3 id="model-analyze-compare-improve-train-step-status-plan"><code class="inline-code">model analyze</code> / <code class="inline-code">compare</code> / <code class="inline-code">improve</code> / <code class="inline-code">train</code> / <code class="inline-code">step</code> / <code class="inline-code">status</code> / <code class="inline-code">plan</code></h3>
         <p>Analyze and compare reachable models, propose improvements, <strong>train</strong>
-        real jobs (weights/adapters/checkpoints), poll <strong>status</strong>, or export an
-        optional markdown <strong>plan</strong>. Dry-run uses <strong>fixtures only</strong> — no GPU and
-        no network. <strong><code class="inline-code">model build</code> is an alias for <code class="inline-code">model train</code></strong> (not a
-        blueprint file).</p>
+        real jobs (weights/adapters/checkpoints), run one dry <strong>step</strong>, poll
+        <strong>status</strong>, or export an optional markdown <strong>plan</strong>. Dry-run uses
+        <strong>fixtures only</strong> — no GPU and no network. <strong><code class="inline-code">model build</code> is an alias
+        for <code class="inline-code">model train</code></strong> (not a blueprint file).</p>
         <p><code class="inline-code">--compile</code> encodes <code class="inline-code">model train</code> / <code class="inline-code">model build</code> as SPARK_BC
-        <code class="inline-code">TRAIN</code> (<code class="inline-code">0x26</code>) and <code class="inline-code">model status</code> as <code class="inline-code">TRAIN_STATUS</code> (<code class="inline-code">0x27</code>).
+        <code class="inline-code">TRAIN</code> (<code class="inline-code">0x26</code>), <code class="inline-code">model step</code> as <code class="inline-code">STEP</code> (<code class="inline-code">0x28</code>), and <code class="inline-code">model status</code>
+        as <code class="inline-code">TRAIN_STATUS</code> (<code class="inline-code">0x27</code>).
         Selfhost train seed: <code class="inline-code">selfhost/compile_train.spark</code> →
         <code class="inline-code">docs/examples/spark-selfhost-train.sparkbc</code>. Bootstrap
         <code class="inline-code">./spark-bootstrap --run-bc</code> runs that binary (dry;
         <code class="inline-code">trained=false</code>). GAS <code class="inline-code">./spark --dry-run</code> runs train verbs from
-        source; GAS does <strong>not emit</strong> <code class="inline-code">.sparkbc</code>. Emitting TRAIN ≠ a
+        source; GAS does <strong>not emit</strong> <code class="inline-code">.sparkbc</code>. Emitting TRAIN/STEP ≠ a
         trained model. See <a href="/docs/self-host.html">SPARK_BC.md</a> and
         <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</p>
         <p>Training methodology: <a href="/docs/model-training.html">MODEL_TRAINING.md</a>.
@@ -171,8 +172,18 @@
 
         model train dataset &quot;examples/fixtures/train/dataset.jsonl&quot; base &quot;fixture-base&quot; out &quot;out/train/job-dry-001&quot; backend &quot;http&quot; method &quot;spark_distill_cpu&quot; -&gt; job
         model build -&gt; job                               # same as train
+        model step &quot;job-dry-001&quot; -&gt; step                 # dry loop tick (0x28)
         model status &quot;job-dry-001&quot; -&gt; status             # polls that job id
         </code></pre>
+        <h3 id="model-step-spark-bc-step-0x28"><code class="inline-code">model step</code> (SPARK_BC <code class="inline-code">STEP</code> <code class="inline-code">0x28</code>)</h3>
+        <p>One dry training-loop tick in the binary — not SGD and not trained.
+        Syntax: <code class="inline-code">model step "job-id" -&gt; bind</code>. Compiles to <code class="inline-code">STEP</code> (job_id,
+        bind). Bootstrap <code class="inline-code">--run-bc</code> prints <code class="inline-code">"op":"step"</code> JSON and updates
+        <code class="inline-code">ARTIFACT</code> with <code class="inline-code">step_n</code>. Proof: TRAIN → STEP → TRAIN_STATUS in
+        <code class="inline-code">examples/spark_train_step.spark</code> →
+        <code class="inline-code">docs/examples/spark-train-step.sparkbc</code> (sha256
+        <code class="inline-code">d08925b52bf8c840de626c9cfec619d4dbae5a674b94bb8c7c5837eb1ac64551</code>).
+        Dry ≠ trained.</p>
         <p>Optional <strong><code class="inline-code">method "…"</code></strong> selects the training algorithm
         (<code class="inline-code">spark_distill_cpu</code> | <code class="inline-code">spark_pref_pack</code> | <code class="inline-code">spark_playbook_fit</code> |
         <code class="inline-code">spark_faq_index</code> | <code class="inline-code">spark_reply_pack</code>).
@@ -183,7 +194,7 @@
         override). Live GAS passes the statement via
         <code class="inline-code">./spark-train-http --spark-line</code>; status uses the <strong>quoted</strong> job id
         (never a hardcoded <code class="inline-code">job-dry-001</code>). SPARK_BC <code class="inline-code">TRAIN</code> is <strong><code class="inline-code">0x26</code></strong>;
-        <code class="inline-code">TRAIN_STATUS</code> is <strong><code class="inline-code">0x27</code></strong>. Execute with
+        <code class="inline-code">STEP</code> is <strong><code class="inline-code">0x28</code></strong>; <code class="inline-code">TRAIN_STATUS</code> is <strong><code class="inline-code">0x27</code></strong>. Execute with
         <code class="inline-code">./spark-bootstrap --run-bc</code>. GAS <code class="inline-code">./spark --run-bc</code> exits 1.
         See <a href="/docs/self-host.html">SPARK_BC.md</a> and
         <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</p>
