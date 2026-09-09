@@ -17,7 +17,8 @@ NVML_LIB ?= /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1
 	test-bootstrap test-sparkbc test-sparkbc-e2e sparkbc-e2e \
 	spark-bc spark-bc-pack-hello sparkasm \
 	test-sparkasm test-sparkasm-control docs-docx function-catalog \
-	playbooks-catalog spark-eval spark-sgd-proof
+	playbooks-catalog spark-eval spark-eval-claude test-spark-eval \
+	spark-sgd-proof
 
 all: spark companions
 
@@ -428,18 +429,31 @@ model-probe:
 	bash tools/model_probe/probe.sh
 
 # Frozen copy/recall + next-token probes. Dry default; optional WEIGHTS=
-# or SPARK_EVAL_WEIGHTS. Exit 0 = harness ran (not a beat-Claude claim).
+# or SPARK_EVAL_WEIGHTS. Optional CLAUDE=off|auto|on (default off).
+# Exit 0 = harness ran (not a beat-Claude claim). Never invents keys.
+CLAUDE ?= off
 .PHONY: spark-eval
 spark-eval:
 	@if [ -n "$(WEIGHTS)" ]; then \
 	  PYTHONPATH=python python3 tools/spark-eval/run.py \
-	    --weights "$(WEIGHTS)"; \
+	    --claude "$(CLAUDE)" --weights "$(WEIGHTS)"; \
 	elif [ -n "$${SPARK_EVAL_WEIGHTS}" ]; then \
 	  PYTHONPATH=python python3 tools/spark-eval/run.py \
-	    --weights "$${SPARK_EVAL_WEIGHTS}"; \
+	    --claude "$(CLAUDE)" --weights "$${SPARK_EVAL_WEIGHTS}"; \
 	else \
-	  PYTHONPATH=python python3 tools/spark-eval/run.py; \
+	  PYTHONPATH=python python3 tools/spark-eval/run.py \
+	    --claude "$(CLAUDE)"; \
 	fi
+
+# Head-to-head measurement: Spark scores + Claude baseline if creds
+# exist; otherwise status skipped_no_credentials. Never claims win.
+.PHONY: spark-eval-claude
+spark-eval-claude:
+	@$(MAKE) spark-eval CLAUDE=auto WEIGHTS="$(WEIGHTS)"
+
+.PHONY: test-spark-eval
+test-spark-eval:
+	PYTHONPATH=python python3 tools/spark-eval/test_eval.py
 
 # Multi-outer CPU SGD proof + measurement-only eval on those weights.
 # Never claims beat Claude. CPU only.

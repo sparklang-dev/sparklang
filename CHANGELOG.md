@@ -5,6 +5,17 @@ language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
 
+## 0.6.33 — 2026-09-09
+
+- **Claude eval baseline (honest):** `make spark-eval-claude` /
+  `CLAUDE=auto|on|off` runs Spark frozen probes plus an optional
+  Anthropic Messages baseline **only if** credentials already exist
+  on the box. No key → `skipped_no_credentials` (clear status).
+  Side-by-side comparison table; `beats_claude` always **false**.
+  Never invents keys. Never claims beat Claude. Never 6000.
+  Gate: `make test-spark-eval`. Docs: Eval honesty in
+  [SPARK_BUILDER.md](docs/SPARK_BUILDER.md).
+
 ## 0.6.32 — 2026-09-09
 
 - **Multi-outer CPU SGD + checkpoint:** `STEP` / `apply_sgd_step`

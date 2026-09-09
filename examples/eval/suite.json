@@ -3,7 +3,7 @@
   "version": 1,
   "mode_default": "dry",
   "claim": "none",
-  "note": "Frozen tiny probes for Spark scores only. Does NOT claim beat Claude. Compare later with the same suite offline.",
+  "note": "Frozen tiny probes for Spark scores (+ optional Claude baseline if credentials exist). Does NOT claim beat Claude. beats_claude always false.",
   "probes": [
     {
       "name": "copy_recall",

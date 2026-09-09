@@ -226,17 +226,32 @@ make spark-eval
 # optional Spark weights (init or later train artifact):
 make spark-eval WEIGHTS=docs/examples/spark-self.init.safetensors
 # or: SPARK_EVAL_WEIGHTS=/path/to/weights.safetensors make spark-eval
+# optional Claude API baseline (skips if no key on box):
+make spark-eval-claude
+# or: make spark-eval CLAUDE=auto
 ```
 
 - **Dry** (default): oracle fixture path — prints scores, exits **0**.
 - **Weights**: teacher-forced / next-token accuracy on
   `spark.embed` + `spark.lm_head` (CPU only; never the 6000).
+- **Claude baseline (optional):** `CLAUDE=auto` / `make spark-eval-claude`
+  calls Anthropic **only** when a key already exists
+  (`SPARK_EVAL_CLAUDE_API_KEY`, `ANTHROPIC_API_KEY`, `CLAUDE_API_KEY`,
+  or `SPARK_EVAL_CLAUDE_KEY_FILE`). Otherwise status
+  `skipped_no_credentials`. `CLAUDE=on` fails closed if missing.
+  Never invents keys. Never uses the 6000.
 - Suite JSON: `examples/eval/suite.json` (`claim: none`).
+- Gate: `make test-spark-eval`.
 
-**How to compare later (honest):** run the **same** frozen suite
-against Spark weights and against any other system offline; record
-both score tables side by side. This harness **does not** claim
-beat Claude, does not call Claude, and does not print a winner.
+### Eval honesty (Spark / SparkLang)
+
+- Product name in docs and scores: **Spark** / **SparkLang** only.
+- Harness output always sets `claim: none` and `beats_claude: false`.
+- Side-by-side Spark vs Claude scores are **measurement**, not a
+  marketing win. A higher Spark score on tiny fixtures **does not**
+  authorize “beats Claude.”
+- Dry Spark oracle scores are fixture plumbing, not model quality.
+- Weights-mode scores of `0.0` are honest misses until proven otherwise.
 
 ## Published files — sha256
 
