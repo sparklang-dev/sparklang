@@ -3,20 +3,37 @@
 AI systems fail loudly and quietly. This page lists **limits** Spark
 is willing to print in public docs.
 
-## Model limits (field)
+## Model limits
 
-- **Hallucination** — fluent falsehoods without tools/grounding.
-- **Jailbreaks / prompt injection** — untrusted text steers tools.
-- **Data exfiltration** via tool calls or verbose logs.
-- **Bias & dual-use** — capability ≠ permission.
-- **Eval hacking** — optimize the benchmark, miss the job.
+Field failure modes (not Spark-specific patents).
+
+### Hallucination
+
+Fluent falsehoods without tools or grounding. Prefer retrieve /
+expect / tests over vibes.
+
+### Jailbreaks / prompt injection
+
+Untrusted text steers tools. Keep tools on allowlists; default dry.
+
+### Data exfiltration
+
+Tool calls or verbose logs can leak secrets. Log args; redact.
+
+### Bias & dual-use
+
+Capability ≠ permission. Do not treat model output as policy.
+
+### Eval hacking
+
+Optimize the benchmark, miss the job. Treat wins as hypotheses.
 
 Alignment stacks (RLHF/RLAIF) reduce *some* failure modes; they do
 not erase them ([alignment survey](https://arxiv.org/abs/2407.16216)).
 Spark does **not** claim literal impossibility of all lies. What we
 ship is **forced grounding**: guessing should fail CI.
 
-## Spark-printed guardrails
+## Guardrails
 
 | Guardrail | Where |
 |-----------|--------|
@@ -29,7 +46,9 @@ ship is **forced grounding**: guessing should fail CI.
 | Recompile ≠ semantics | [DECOMPILE_RE.md](DECOMPILE_RE.md) · arXiv:2609.05370 |
 | Eyes vision stub only | [MODEL_ASPECTS.md](../MODEL_ASPECTS.md) |
 
-## Grounded generation / anti-guess
+## Grounding
+
+### Grounded generation / anti-guess
 
 **Goal:** make it **nearly impossible to pass CI while guessing** —
 abstain, retrieve/expect, tool allowlists, verify-before-speak,

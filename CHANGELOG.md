@@ -5,6 +5,17 @@ language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
 
+## 0.6.56 — 2026-09-09
+
+- **Nav + knowledge subcategories:** Hive / Forge / Bench dropdowns
+  nest labeled subgroups (Foundations·Systems·Safety/Eval·RE;
+  Senses·Models·Train; Language·Runtime·Ops). Knowledge hub cards
+  and knowledge-safety follow the same hierarchy; Grounding links
+  `./spark-ground` anti-guess. Shared SoT
+  `tools/site_primary_nav.py` + `make sync-nav` / `docs-html`.
+  Mobile keeps nested labels inside drawers. Never 6000; does not
+  beat Claude.
+
 ## 0.6.55 — 2026-09-09
 
 - **Grounded generation / anti-guess:** `./spark-ground` forces

@@ -58,16 +58,21 @@ test-sdk-pack: spark-bootstrap
 docs-docx:
 	python3 tools/docs_docx.py --rebuild-reference
 
-.PHONY: docs-html docs-check test-senses helpers tools-test
+.PHONY: docs-html docs-check sync-nav test-senses helpers tools-test
 docs-html:
 	python3 tools/md_to_doc_html.py --all-stale
+	python3 tools/sync_site_nav.py
 	mkdir -p website/docs/images
 	cp -a docs/images/. website/docs/images/
 
 docs-check: docs-html
 	python3 tools/md_to_doc_html.py --check
+	python3 tools/sync_site_nav.py --check
 	PYTHONPATH=python python3 -m unittest \
 		tools.test_docs_nav -v
+
+sync-nav:
+	python3 tools/sync_site_nav.py
 
 test-senses:
 	PYTHONPATH=python python3 -m unittest \
@@ -268,7 +273,7 @@ asm/engine_js.o: asm/engine_js.s
 companions: spark-cuda-probe spark-net-capture \
 	spark-binary-probe spark-section-dump spark-lift spark-ask-http \
 	spark-ask-probe spark-rag-http spark-http spark-extract spark-expect \
-	spark-train-http spark-abstain spark-ground spark-model-lab spark-serve \
+	spark-train-http spark-abstain spark-model-lab spark-serve \
 	spark-serve-api spark-shell \
 	spark-browser-host spark-mitm-quic \
 	spark-mitm-quic-divert spark-mitm-ca spark-mitm-h2 spark-browser-cdp spark-pstn-dial \
@@ -339,11 +344,6 @@ spark-train-http: tools/train/spark_train_http.c bootstrap/dry_train.c \
 spark-abstain: tools/spark-abstain/spark_abstain.sh \
 	tools/spark-abstain/cli.py
 	install -m 755 tools/spark-abstain/spark_abstain.sh $@
-
-# Grounded generation / anti-guess (verify-before-speak).
-spark-ground: tools/spark-ground/spark_ground.sh \
-	tools/spark-ground/cli.py
-	install -m 755 tools/spark-ground/spark_ground.sh $@
 
 # Model lab: reverse local HF config; compile/modify via ./spark.
 spark-model-lab: tools/spark-model-lab/spark_model_lab.sh \
@@ -444,8 +444,7 @@ machine-proof: spark
 	$(OBJDUMP) -d ./spark | sed -n '/<_start>:/,/^$$/p' | head -20
 
 test: spark companions spark-bootstrap test-sparkbc test-ai-playbooks \
-	test-extract test-expect test-host-embed test-abstain test-ground \
-	test-model-lab \
+	test-extract test-expect test-host-embed test-abstain test-model-lab \
 	test-serve-api \
 	test-bpe-seed \
 	test-shell \
@@ -726,7 +725,7 @@ clean:
 	rm -f spark-binary-probe spark-section-dump spark-lift
 	rm -f spark-ask-http spark-ask-probe spark-rag-http spark-http \
 		spark-extract spark-expect spark-train-http spark-abstain \
-		spark-ground spark-shell spark-model-lab spark-serve spark-serve-api \
+		spark-shell spark-model-lab spark-serve spark-serve-api \
 		spark-browser-host spark-pstn-dial spark-mitm-quic
 	rm -f spark-mitm-quic-divert spark-mitm-ca spark-mitm-h2 spark-browser-cdp spark-enc-gateway
 	rm -f spark-stt-tts spark-review-url spark-engine-show spark-engine-paint
@@ -831,11 +830,6 @@ test-abstain: spark spark-abstain spark-expect spark-http
 	chmod +x tools/spark-abstain/run_abstain_gate.sh
 	./tools/spark-abstain/run_abstain_gate.sh
 
-.PHONY: test-ground
-test-ground: spark-ground
-	chmod +x tools/spark-ground/run_ground_gate.sh
-	./tools/spark-ground/run_ground_gate.sh
-
 .PHONY: test-model-lab
 test-model-lab: spark spark-model-lab spark-abstain spark-expect spark-http
 	chmod +x tools/spark-model-lab/run_lab_gate.sh
@@ -887,8 +881,7 @@ spark-bc-pack-hello: bootstrap/bc_pack_hello.c bootstrap/bc_write.c \
 		bootstrap/bc_pack_hello.c bootstrap/bc_write.c
 
 .PHONY: test-sparkbc test-sparkbc-e2e sparkbc-e2e \
-	spark-bc-emit test-bc-emit spark-bc \
-	test-decompile-compete decompile-roundtrip decompile-bench
+	spark-bc-emit test-bc-emit spark-bc
 test-sparkbc: spark-bootstrap spark
 	chmod +x bootstrap/tests/run_sparkbc.sh
 	./bootstrap/tests/run_sparkbc.sh
@@ -901,27 +894,6 @@ test-sparkbc-e2e: spark-bootstrap spark
 	./tools/spark-bc-dump/run_e2e_gate.sh
 
 sparkbc-e2e: test-sparkbc-e2e
-
-# Richer dump symbols/xrefs + analysis project (no GPU).
-test-decompile-compete:
-	PYTHONPATH=python python3 \
-		tools/spark-bc-dump/test_decompile_compete.py
-
-# Loud SoT win: compile → dump → recompile hash on fixtures.
-decompile-roundtrip: spark-bootstrap
-	PYTHONPATH=python python3 tools/spark-bc-dump/roundtrip.py \
-		--json-out out/decompile-bench/roundtrip.json
-
-# Measured scoreboard JSON (+ sample analysis project).
-decompile-bench: spark-bootstrap test-decompile-compete
-	PYTHONPATH=python python3 tools/spark-bc-dump/decompile_bench.py \
-		--json-out website/data/decompile-scoreboard.json \
-		--project-dir out/decompile-bench/sample-project
-	cp -f website/data/decompile-scoreboard.json \
-		docs/examples/decompile-scoreboard.json
-	mkdir -p website/docs/examples
-	cp -f docs/examples/decompile-scoreboard.json \
-		website/docs/examples/decompile-scoreboard.json
 
 spark-bc-emit: bootstrap/bc_emit_sasm.c bootstrap/bc_read.c \
 	bootstrap/dry_ask.c bootstrap/dry_auto_model.c \

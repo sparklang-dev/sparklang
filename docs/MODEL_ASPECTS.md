@@ -27,6 +27,17 @@ Voice surface: [VOICE.md](VOICE.md). Voice easy train:
 
 ---
 
+## Category map
+
+| Category | Subcategories (on this page) |
+|----------|------------------------------|
+| **Senses** | Ears / STT · Eyes / vision · Speaking / TTS |
+| **Models** | Thinking / generation · Memory · Status table |
+| **Train / ops** | Training & adaptation · Eval & honesty · Runtime / serve |
+| **Behaviors** | Behaviors · Tools & actions |
+
+Nav: **Forge → Models → Model aspects** (with Senses / Train siblings).
+
 ## Why sensory mapping matters (hero)
 
 Agentic systems are not “a chat box with a bigger context window.”

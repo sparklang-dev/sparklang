@@ -118,5 +118,62 @@ class TestDocsNav(unittest.TestCase):
             self.assertTrue(path.is_file(), msg=name)
 
 
+    def test_primary_nav_has_subcategories(self) -> None:
+        """Hive/Forge/Bench menus expose labeled subgroups."""
+        import sys
+
+        tools = str(ROOT / "tools")
+        if tools not in sys.path:
+            sys.path.insert(0, tools)
+        import site_primary_nav as nav
+
+        html = nav.render_primary_nav_inner()
+        for label in (
+            "Foundations",
+            "Systems",
+            "Safety / Eval",
+            "RE",
+            "Senses",
+            "Models",
+            "Train",
+            "Language",
+            "Runtime",
+            "Ops",
+        ):
+            self.assertIn(label, html, msg=label)
+        self.assertIn('class="nav-sub__label"', html)
+        sample = (
+            ROOT / "website" / "docs" / "knowledge.html"
+        ).read_text(encoding="utf-8")
+        self.assertIn("nav-sub__label", sample)
+        self.assertIn("Foundations", sample)
+
+    def test_knowledge_hub_grouped(self) -> None:
+        """Knowledge markdown uses subcategory section headings."""
+        text = (ROOT / "docs" / "KNOWLEDGE.md").read_text(
+            encoding="utf-8"
+        )
+        for heading in (
+            "## Foundations",
+            "## Systems",
+            "## Safety / Eval",
+            "## RE",
+        ):
+            self.assertIn(heading, text, msg=heading)
+
+    def test_safety_has_limit_guardrail_grounding(self) -> None:
+        """Safety page nests Model limits / Guardrails / Grounding."""
+        text = (
+            ROOT / "docs" / "knowledge" / "SAFETY_LIMITS.md"
+        ).read_text(encoding="utf-8")
+        for heading in (
+            "## Model limits",
+            "### Hallucination",
+            "## Guardrails",
+            "## Grounding",
+        ):
+            self.assertIn(heading, text, msg=heading)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -7,8 +7,8 @@
     <meta name="description" content="Engineer-grade AI knowledge hub — transformers, training, inference, agents, eval honesty. Does not beat Claude." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
-    <link rel="stylesheet" href="/css/tokens.css?v=knowledge0909" />
-    <link rel="stylesheet" href="/css/site.css?v=knowledge0909" />
+    <link rel="stylesheet" href="/css/tokens.css?v=navsub0909" />
+    <link rel="stylesheet" href="/css/site.css?v=navsub0909" />
   </head>
   <body class="doc-page">
     <header class="site-header">
@@ -26,6 +26,7 @@
         </button>
         <div class="header-nav-wrap">
           <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <!-- spark-primary-nav:begin -->
             <ul class="nav-primary">
               <li><a href="/workflow.html">Loop</a></li>
               <li><a href="/learn/">Learn</a></li>
@@ -36,51 +37,104 @@
               <li class="nav-more">
                 <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">Hive</button>
                 <ul class="nav-more__menu" hidden>
-                  <li><a href="/docs/knowledge.html">Knowledge hub</a></li>
-                  <li><a href="/docs/knowledge-llm.html">LLMs & transformers</a></li>
-                  <li><a href="/docs/knowledge-training.html">Training</a></li>
-                  <li><a href="/docs/knowledge-inference.html">Inference</a></li>
-                  <li><a href="/docs/knowledge-multimodal.html">Multimodal</a></li>
-                  <li><a href="/docs/knowledge-agents.html">Agents & tools</a></li>
-                  <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
-                  <li><a href="/docs/knowledge-decompile.html">Decompile + RE</a></li>
-                  <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
-                  <li><a href="/docs/llm-decompile.html">LLM decompile research</a></li>
+                  <li class="nav-more__hub"><a href="/docs/knowledge.html">Knowledge hub</a></li>
+                  <li class="nav-sub">
+                    <span class="nav-sub__label" id="nav-hive-foundations">Foundations</span>
+                    <ul class="nav-sub__list" aria-labelledby="nav-hive-foundations">
+                      <li><a href="/docs/knowledge-llm.html">LLMs & transformers</a></li>
+                      <li><a href="/docs/knowledge-training.html">Training</a></li>
+                      <li><a href="/docs/knowledge-inference.html">Inference</a></li>
+                    </ul>
+                  </li>
+                  <li class="nav-sub">
+                    <span class="nav-sub__label" id="nav-hive-systems">Systems</span>
+                    <ul class="nav-sub__list" aria-labelledby="nav-hive-systems">
+                      <li><a href="/docs/knowledge-multimodal.html">Multimodal</a></li>
+                      <li><a href="/docs/knowledge-agents.html">Agents & tools</a></li>
+                    </ul>
+                  </li>
+                  <li class="nav-sub">
+                    <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
+                    <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
+                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
+                    </ul>
+                  </li>
+                  <li class="nav-sub">
+                    <span class="nav-sub__label" id="nav-hive-re">RE</span>
+                    <ul class="nav-sub__list" aria-labelledby="nav-hive-re">
+                      <li><a href="/docs/knowledge-decompile.html">Decompile + RE</a></li>
+                      <li><a href="/docs/llm-decompile.html">LLM decompile research</a></li>
+                    </ul>
+                  </li>
                 </ul>
               </li>
               <li class="nav-more">
                 <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">Forge</button>
                 <ul class="nav-more__menu" hidden>
-                  <li><a href="/docs/model-aspects.html">Model aspects</a></li>
-                  <li><a href="/docs/diagrams.html">Diagrams</a></li>
-                  <li><a href="/docs/spark-builder.html">Builder</a></li>
-                  <li><a href="/docs/build-models.html">Build models</a></li>
-                  <li><a href="/docs/model-training.html">Model training</a></li>
-                  <li><a href="/docs/train-loop.html">Train loop</a></li>
-                  <li><a href="/docs/spark-coder.html">Spark coder</a></li>
-                  <li><a href="/docs/weight-gallery.html">Weight gallery</a></li>
-                  <li><a href="/docs/ai-models.html">AI models</a></li>
-                  <li><a href="/docs/voice.html">Voice / STT / TTS</a></li>
-                  <li><a href="/docs/voice-ask.html">Voice ask</a></li>
+                  <li class="nav-sub">
+                    <span class="nav-sub__label" id="nav-forge-senses">Senses</span>
+                    <ul class="nav-sub__list" aria-labelledby="nav-forge-senses">
+                      <li><a href="/docs/voice.html">Voice / STT / TTS</a></li>
+                      <li><a href="/docs/voice-ask.html">Voice ask</a></li>
+                      <li><a href="/docs/voice-easy.html">Voice easy</a></li>
+                    </ul>
+                  </li>
+                  <li class="nav-sub">
+                    <span class="nav-sub__label" id="nav-forge-models">Models</span>
+                    <ul class="nav-sub__list" aria-labelledby="nav-forge-models">
+                      <li><a href="/docs/model-aspects.html">Model aspects</a></li>
+                      <li><a href="/docs/diagrams.html">Diagrams</a></li>
+                      <li><a href="/docs/spark-coder.html">Spark coder</a></li>
+                      <li><a href="/docs/weight-gallery.html">Weight gallery</a></li>
+                      <li><a href="/docs/ai-models.html">AI models</a></li>
+                    </ul>
+                  </li>
+                  <li class="nav-sub">
+                    <span class="nav-sub__label" id="nav-forge-train">Train</span>
+                    <ul class="nav-sub__list" aria-labelledby="nav-forge-train">
+                      <li><a href="/docs/spark-builder.html">Builder</a></li>
+                      <li><a href="/docs/build-models.html">Build models</a></li>
+                      <li><a href="/docs/model-training.html">Model training</a></li>
+                      <li><a href="/docs/train-loop.html">Train loop</a></li>
+                    </ul>
+                  </li>
                 </ul>
               </li>
               <li class="nav-more">
                 <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">Bench</button>
                 <ul class="nav-more__menu" hidden>
-                  <li><a href="/docs/compile.html">Compile</a></li>
-                  <li><a href="/docs/decompile.html">Decompile</a></li>
-                  <li><a href="/docs/decompile-compete.html">Decompile compete</a></li>
-                  <li><a href="/docs/programming-guide.html">Programming guide</a></li>
-                  <li><a href="/docs/ide.html">IDE</a></li>
-                  <li><a href="/ide-web.html">IDE web shell</a></li>
-                  <li><a href="/docs/native-network-web.html">Network + web</a></li>
-                  <li><a href="/docs/serve.html">Serve</a></li>
-                  <li><a href="/docs/tools-helpers.html">Tools & helpers</a></li>
-                  <li><a href="/about.html">About</a></li>
+                  <li class="nav-sub">
+                    <span class="nav-sub__label" id="nav-bench-language">Language</span>
+                    <ul class="nav-sub__list" aria-labelledby="nav-bench-language">
+                      <li><a href="/docs/compile.html">Compile</a></li>
+                      <li><a href="/docs/decompile.html">Decompile</a></li>
+                      <li><a href="/docs/decompile-compete.html">Decompile compete</a></li>
+                      <li><a href="/docs/spark-bc.html">Opcodes / ISA</a></li>
+                      <li><a href="/docs/programming-guide.html">Programming guide</a></li>
+                    </ul>
+                  </li>
+                  <li class="nav-sub">
+                    <span class="nav-sub__label" id="nav-bench-runtime">Runtime</span>
+                    <ul class="nav-sub__list" aria-labelledby="nav-bench-runtime">
+                      <li><a href="/docs/serve.html">Serve</a></li>
+                      <li><a href="/docs/ide.html">IDE</a></li>
+                      <li><a href="/ide-web.html">IDE web shell</a></li>
+                      <li><a href="/docs/native-network-web.html">Network + web</a></li>
+                    </ul>
+                  </li>
+                  <li class="nav-sub">
+                    <span class="nav-sub__label" id="nav-bench-ops">Ops</span>
+                    <ul class="nav-sub__list" aria-labelledby="nav-bench-ops">
+                      <li><a href="/docs/tools-helpers.html">Tools & helpers</a></li>
+                      <li><a href="/about.html">About</a></li>
+                    </ul>
+                  </li>
                 </ul>
               </li>
             </ul>
             <a href="/playground.html" class="nav-cta">Try</a>
+            <!-- spark-primary-nav:end -->
           </nav>
         </div>
       </div>
@@ -131,7 +185,9 @@
         Citations point at primary papers and surveys.</p>
         <p><strong>Never</strong> claims beat Claude. <strong>Never</strong> RTX PRO 6000. Spark factory
         CPU / 5090 paths stay honest. Not an OpenBin clone.</p>
-        <h2 id="topic-cards">Topic cards</h2>
+        <p>Topics below follow the same <strong>category → subcategory</strong> map as the
+        Hive nav: Foundations · Systems · Safety / Eval · RE.</p>
+        <h2 id="foundations">Foundations</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
@@ -156,6 +212,18 @@
         <td><a href="/docs/knowledge-inference.html">knowledge/INFERENCE.md</a></td>
         <td>Sampling, KV cache, quantization</td>
         </tr>
+        </tbody>
+        </table></div>
+        <h2 id="systems">Systems</h2>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Topic</th>
+        <th>Page</th>
+        <th>What you get</th>
+        </tr>
+        </thead>
+        <tbody>
         <tr>
         <td>Multimodal</td>
         <td><a href="/docs/knowledge-multimodal.html">knowledge/MULTIMODAL.md</a></td>
@@ -166,20 +234,49 @@
         <td><a href="/docs/knowledge-agents.html">knowledge/AGENTS_TOOLS.md</a></td>
         <td>Tool loops, ReAct-style patterns</td>
         </tr>
+        </tbody>
+        </table></div>
+        <h2 id="safety-eval">Safety / Eval</h2>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Topic</th>
+        <th>Page</th>
+        <th>What you get</th>
+        </tr>
+        </thead>
+        <tbody>
         <tr>
         <td>Eval honesty</td>
         <td><a href="/docs/knowledge-eval.html">knowledge/EVAL_HONESTY.md</a></td>
         <td>Benchmarks, baselines, no win theater</td>
         </tr>
         <tr>
+        <td>Safety &amp; limits</td>
+        <td><a href="/docs/knowledge-safety.html">knowledge/SAFETY_LIMITS.md</a></td>
+        <td>Model limits → Guardrails → Grounding (<code class="inline-code">./spark-ground</code>)</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <h2 id="re">RE</h2>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Topic</th>
+        <th>Page</th>
+        <th>What you get</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
         <td>Decompile + LLM RE</td>
         <td><a href="/docs/knowledge-decompile.html">knowledge/DECOMPILE_RE.md</a></td>
         <td>Link to existing research; recompile ≠ semantics</td>
         </tr>
         <tr>
-        <td>Safety &amp; limits</td>
-        <td><a href="/docs/knowledge-safety.html">knowledge/SAFETY_LIMITS.md</a></td>
-        <td>Hallucination, abstain, grounded anti-guess (<code class="inline-code">./spark-ground</code>)</td>
+        <td>LLM decompile research</td>
+        <td><a href="/docs/llm-decompile.html">research/LLM_DECOMPILE.md</a></td>
+        <td>Factory research page</td>
         </tr>
         </tbody>
         </table></div>
@@ -240,22 +337,26 @@
         </table></div>
         <h2 id="how-to-read-this-hive">How to read this hive</h2>
         <ol class="doc__ol">
-        <li>Start with <strong>LLMs &amp; transformers</strong> if you need the math sketch.</li>
+        <li>Start with <strong>Foundations → LLMs &amp; transformers</strong> for the math sketch.</li>
         <li>Jump to <strong>Training</strong> / <strong>Inference</strong> for practice vocabulary.</li>
-        <li>Use <strong>Decompile + LLM RE</strong> before trusting pretty recovered C.</li>
+        <li>Use <strong>RE</strong> before trusting pretty recovered C.</li>
         <li>Prefer Spark factory docs for <em>what ships</em>; this hive explains <em>the field</em>.</li>
         </ol>
         <pre class="mermaid">flowchart LR
-          H[Knowledge hive] --> T[Transformers]
-          H --> TR[Training]
-          H --> I[Inference]
-          H --> M[Multimodal]
-          H --> A[Agents]
-          H --> E[Eval honesty]
-          H --> D[Decompile RE]
-          H --> S[Safety]
+          H[Knowledge hive] --> F[Foundations]
+          H --> S[Systems]
+          H --> SE[Safety / Eval]
+          H --> R[RE]
+          F --> T[Transformers]
+          F --> TR[Training]
+          F --> I[Inference]
+          S --> M[Multimodal]
+          S --> A[Agents]
+          SE --> E[Eval honesty]
+          SE --> Saf[Safety]
+          R --> D[Decompile RE]
           D --> L[llm-decompile.html]
-          TR --> F[factory / spark-coder]</pre>
+          TR --> Fac[factory / spark-coder]</pre>
       </article>
       </main>
     </div>

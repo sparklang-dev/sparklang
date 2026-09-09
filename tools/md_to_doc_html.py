@@ -8,12 +8,18 @@ from __future__ import annotations
 import argparse
 import html
 import re
+import sys
 from pathlib import Path
 
 import markdown
 
 ROOT = Path(__file__).resolve().parents[1]
-CSS_V = "knowledge0909"
+sys.path.insert(0, str(ROOT / "tools"))
+from site_primary_nav import (  # noqa: E402
+    iter_menu_hrefs,
+    render_primary_nav_block,
+)
+CSS_V = "navsub0909"
 
 DOC_NAV = """\
       <nav class="doc__nav" aria-label="Docs">
@@ -78,61 +84,7 @@ HEADER = """\
         </button>
         <div class="header-nav-wrap">
           <nav class="site-nav" id="site-nav" aria-label="Primary">
-            <ul class="nav-primary">
-              <li><a href="/workflow.html">Loop</a></li>
-              <li><a href="/learn/">Learn</a></li>
-              <li><a href="/docs/knowledge.html">Knowledge</a></li>
-              <li><a href="/docs/language.html">Docs</a></li>
-              <li><a href="/docs/factory.html">Factory</a></li>
-              <li><a href="/downloads.html">Download</a></li>
-              <li class="nav-more">
-                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">Hive</button>
-                <ul class="nav-more__menu" hidden>
-                  <li><a href="/docs/knowledge.html">Knowledge hub</a></li>
-                  <li><a href="/docs/knowledge-llm.html">LLMs & transformers</a></li>
-                  <li><a href="/docs/knowledge-training.html">Training</a></li>
-                  <li><a href="/docs/knowledge-inference.html">Inference</a></li>
-                  <li><a href="/docs/knowledge-multimodal.html">Multimodal</a></li>
-                  <li><a href="/docs/knowledge-agents.html">Agents & tools</a></li>
-                  <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
-                  <li><a href="/docs/knowledge-decompile.html">Decompile + RE</a></li>
-                  <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
-                  <li><a href="/docs/llm-decompile.html">LLM decompile research</a></li>
-                </ul>
-              </li>
-              <li class="nav-more">
-                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">Forge</button>
-                <ul class="nav-more__menu" hidden>
-                  <li><a href="/docs/model-aspects.html">Model aspects</a></li>
-                  <li><a href="/docs/diagrams.html">Diagrams</a></li>
-                  <li><a href="/docs/spark-builder.html">Builder</a></li>
-                  <li><a href="/docs/build-models.html">Build models</a></li>
-                  <li><a href="/docs/model-training.html">Model training</a></li>
-                  <li><a href="/docs/train-loop.html">Train loop</a></li>
-                  <li><a href="/docs/spark-coder.html">Spark coder</a></li>
-                  <li><a href="/docs/weight-gallery.html">Weight gallery</a></li>
-                  <li><a href="/docs/ai-models.html">AI models</a></li>
-                  <li><a href="/docs/voice.html">Voice / STT / TTS</a></li>
-                  <li><a href="/docs/voice-ask.html">Voice ask</a></li>
-                </ul>
-              </li>
-              <li class="nav-more">
-                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">Bench</button>
-                <ul class="nav-more__menu" hidden>
-                  <li><a href="/docs/compile.html">Compile</a></li>
-                  <li><a href="/docs/decompile.html">Decompile</a></li>
-                  <li><a href="/docs/decompile-compete.html">Decompile compete</a></li>
-                  <li><a href="/docs/programming-guide.html">Programming guide</a></li>
-                  <li><a href="/docs/ide.html">IDE</a></li>
-                  <li><a href="/ide-web.html">IDE web shell</a></li>
-                  <li><a href="/docs/native-network-web.html">Network + web</a></li>
-                  <li><a href="/docs/serve.html">Serve</a></li>
-                  <li><a href="/docs/tools-helpers.html">Tools & helpers</a></li>
-                  <li><a href="/about.html">About</a></li>
-                </ul>
-              </li>
-            </ul>
-            <a href="/playground.html" class="nav-cta">Try</a>
+{primary_nav}
           </nav>
         </div>
       </div>
@@ -487,6 +439,7 @@ def render(md_path: Path, out_path: Path, title: str, description: str, current:
             title=html.escape(title),
             description=html.escape(description),
             css_v=CSS_V,
+            primary_nav=render_primary_nav_block(indent="            "),
         )
         + nav
         + '      <article class="doc__body">\n'
@@ -517,7 +470,11 @@ def check_docs_links() -> int:
         if not path.is_file():
             missing.append(str(path.relative_to(ROOT)))
     nav_hrefs = re.findall(r'href="(/docs/[^"]+\.html)"', DOC_NAV)
-    more_hrefs = re.findall(r'href="(/docs/[^"]+\.html)"', HEADER)
+    menu_hrefs = list(iter_menu_hrefs())
+    more_hrefs = [
+        h for h in menu_hrefs
+        if h.startswith("/docs/") and h.endswith(".html")
+    ]
     for href in sorted(set(nav_hrefs + more_hrefs)):
         disk = ROOT / "website" / href.lstrip("/")
         if not disk.is_file():

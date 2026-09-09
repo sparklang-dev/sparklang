@@ -113,11 +113,13 @@
       setOpen(!wrap.classList.contains("is-open"));
     });
 
-    qsa(".site-nav a, .nav-more__menu a").forEach(function (link) {
-      link.addEventListener("click", function () {
-        setOpen(false);
-      });
-    });
+    qsa(".site-nav a, .nav-more__menu a, .nav-sub__list a").forEach(
+      function (link) {
+        link.addEventListener("click", function () {
+          setOpen(false);
+        });
+      }
+    );
 
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape") {
@@ -361,11 +363,15 @@
   function markActiveNav() {
     var path = window.location.pathname.replace(/\/$/, "") || "/";
 
-    qsa(".site-nav a, .nav-more__menu a").forEach(function (a) {
+    qsa(
+      ".site-nav a, .nav-more__menu a, .nav-sub__list a"
+    ).forEach(function (a) {
       a.removeAttribute("aria-current");
     });
 
-    qsa(".site-nav a, .nav-more__menu a").forEach(function (a) {
+    qsa(
+      ".site-nav a, .nav-more__menu a, .nav-sub__list a"
+    ).forEach(function (a) {
       var href = (a.getAttribute("href") || "").replace(/\/$/, "") || "/";
       if (path === href) {
         a.setAttribute("aria-current", "page");
