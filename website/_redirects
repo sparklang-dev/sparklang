@@ -9,7 +9,7 @@
 /try       /playground.html  301
 /try.html  /playground.html  301
 
-# AI knowledge hive hub aliases
-/docs/knowledge       /docs/knowledge.html  301
-/docs/knowledge/      /docs/knowledge.html  301
-/learn/knowledge      /docs/knowledge.html  301
+# Knowledge hive: Pages already pretty-serves /docs/knowledge from
+# knowledge.html (308 .html → extensionless). Do NOT redirect
+# /docs/knowledge → knowledge.html (loop). Optional Learn alias only:
+/learn/knowledge  /docs/knowledge  301
