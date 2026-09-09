@@ -16,6 +16,8 @@ ISA: [SPARK_BC.md](SPARK_BC.md). Story:
 | `make sparkbc-e2e` | Alias for `test-sparkbc-e2e` |
 | `make spark-sgd-proof` | Multi-outer CPU SGD → `checkpoint.json` loss drop → `make spark-eval WEIGHTS=…` |
 | `make spark-sgd-proof-scale` | Local opt-in larger JSONL + dim/n_layer (F-lane; not default CI) |
+| `make spark-coder-train` | Owned TinyCoder **tiny** (CI/default); prefer 5090; never 6000 |
+| `make spark-coder-train-large` | Opt-in **large** coder (dim 64 / n_layer 4); not GHA default |
 | `make spark-eval` | Frozen copy/recall + next-token probes; exit 0 = harness ran (**not** beat Claude) |
 | `make spark-eval-claude` | Same + optional Anthropic baseline (E-lane; skip if no key) |
 | `make test-spark-eval` | Unit gate for eval harness |

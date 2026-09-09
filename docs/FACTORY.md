@@ -52,7 +52,7 @@ make docs-check
 
 | Lane | Scope | Docs stance |
 |------|-------|-------------|
-| **D** | Attention train/serve math | **Merged** (#28) — [ATTENTION_FORWARD.md](ATTENTION_FORWARD.md) / [SPARK_BUILDER.md](SPARK_BUILDER.md) |
+| **D** | Attention train/serve math | **Merged** (#28) — layer-0 attn; [ATTENTION_FORWARD.md](ATTENTION_FORWARD.md) / [SPARK_BUILDER.md](SPARK_BUILDER.md) |
 | **E** | Claude eval harness | **Merged** — see [EVAL.md](EVAL.md) |
 | **F** | Scale fixtures / dim knobs | **Merged** — see [TRAIN_LOOP.md](TRAIN_LOOP.md) / `spark-sgd-proof-scale` |
 | **G** | Serve HTTP/API | **Merged** — see [SERVE.md](SERVE.md) / `make spark-serve-api` |
@@ -60,7 +60,7 @@ make docs-check
 | **I** | SDK / IDE / GUI pack | **Merged** (#24) — `make sdk-pack`; K enhances helpers overlay |
 | **J** | Decompile research / captures | **Merged** (#26) + research expand — [DECOMPILE.md](DECOMPILE.md) + [research/LLM_DECOMPILE.md](research/LLM_DECOMPILE.md) (DecompAI / LLM4Decompile / EmergentMind / Quarkslab article + RE category / Plain English overview); flow diagrams also in [DIAGRAMS.md](DIAGRAMS.md) |
 | **K** | Helpers / shadows / kit | **Merged** (#27) — [TOOLS_HELPERS.md](TOOLS_HELPERS.md) |
-| **M** | Owned spark-coder TinyCoder | **Merged** (#30) — [SPARK_CODER.md](SPARK_CODER.md) |
+| **M** | Owned spark-coder TinyCoder | **Merged** (#30) — tiny CI + opt-in **large** (`--scale large` / `make spark-coder-train-large`); [SPARK_CODER.md](SPARK_CODER.md) |
 | **L** | AI model aspects (senses + behaviors) | **Merged** (#29) — [MODEL_ASPECTS.md](MODEL_ASPECTS.md); eyes stub only |
 
 ## Honesty bar
@@ -70,8 +70,9 @@ make docs-check
 - Owned TinyCoder (`make spark-coder-train`) — **yes** (M #30).
 - Ears/speaking language surface + companions — **yes** (dry/live gated).
 - Eyes / vision runtime — **no** (planned stub only).
+- Owned TinyCoder tiny (CI) + large opt-in — **yes** (M); still not Claude.
 - Beat Claude — **no**.
 - Multi-layer / RoPE / production attn decode — **no** (layer-0
   last-query MHA only).
 - RTX PRO **6000** train — **never** (voice-only).
-- RTX **5090** — OK for factory GPU train when used.
+- RTX **5090** — OK for factory / coder GPU train when used.

@@ -187,10 +187,15 @@
         <td>Opt-in <code class="inline-code">dim</code> / <code class="inline-code">n_layer</code> + scale JSONL</td>
         <td><strong>on tip (F-lane)</strong> — <code class="inline-code">dataset_scale.jsonl</code>; <code class="inline-code">make spark-sgd-proof-scale</code>; CI keeps tiny <code class="inline-code">spark-sgd-proof</code></td>
         </tr>
+        <tr>
+        <td>Spark-coder tiny vs large</td>
+        <td><strong>tiny</strong> CI (<code class="inline-code">make spark-coder-train</code>); <strong>large</strong> opt-in dim64/n_layer4 (<code class="inline-code">make spark-coder-train-large</code> / <code class="inline-code">./spark-code train --scale large</code>). Prefer <strong>5090</strong>; never <strong>6000</strong>. SoT: <code class="inline-code">examples/fixtures/coder/scale_config.json</code></td>
+        </tr>
         </tbody>
         </table></div>
         <p>Do not claim FineWeb-scale data. Seed BPE corpus is separate:
-        <a href="/docs/tokenizer.html">TOKENIZER.md</a>.</p>
+        <a href="/docs/tokenizer.html">TOKENIZER.md</a>. Larger Spark stubs still <strong>do not</strong>
+        beat Claude.</p>
         <h2 id="spark-bc-program-path">SPARK_BC program path</h2>
         <ol class="doc__ol">
         <li><code class="inline-code">TRAIN</code> (<code class="inline-code">0x26</code>) — dry accept + <code class="inline-code">ARTIFACT</code> stub (<code class="inline-code">trained=false</code>)</li>

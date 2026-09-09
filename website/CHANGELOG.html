@@ -75,14 +75,27 @@
 <p>All notable user-facing releases of <strong>SparkLang</strong> (the Spark programming
 language) are listed here. Site and installers track
 <code>website/downloads/manifest.json</code>.</p>
+<h2>0.6.47 — 2026-09-09</h2>
+<ul>
+<li><strong>Tiny vs large (owner addendum):</strong> spark-coder
+  <code>./spark-code train --scale {tiny,large}</code> +
+  <code>make spark-coder-train-large</code> (opt-in dim 64 / n_layer 4).
+  Tiny remains CI/default. Prefer <strong>RTX 5090</strong>; hard-refuse
+  <strong>6000</strong>. Honesty table in
+  <a href="/docs/spark-coder.html">SPARK_CODER.md</a>;
+  voice/weight play notes in
+  <a href="/docs/voice.html">VOICE.md</a>;
+  SoT <code>examples/fixtures/coder/scale_config.json</code>.
+  <code>./spark-code scales</code>. <strong>Not beat Claude.</strong></li>
+</ul>
 <h2>0.6.46 — 2026-09-09</h2>
 <ul>
 <li><strong>Docs honesty after D+M:</strong> rebase
-  <a href="docs/ATTENTION_FORWARD.md">ATTENTION_FORWARD.md</a>,
-  <a href="docs/ARCHITECTURE.md">ARCHITECTURE.md</a>,
-  <a href="docs/FACTORY.md">FACTORY.md</a>, <a href="docs/SERVE.md">SERVE.md</a>,
-  <a href="docs/TRAIN_LOOP.md">TRAIN_LOOP.md</a>,
-  <a href="docs/MODEL_ASPECTS.md">MODEL_ASPECTS.md</a> so tip claims match
+  <a href="/docs/attention-forward.html">ATTENTION_FORWARD.md</a>,
+  <a href="/docs/architecture.html">ARCHITECTURE.md</a>,
+  <a href="/docs/factory.html">FACTORY.md</a>, <a href="/docs/serve.html">SERVE.md</a>,
+  <a href="/docs/train-loop.html">TRAIN_LOOP.md</a>,
+  <a href="/docs/model-aspects.html">MODEL_ASPECTS.md</a> so tip claims match
   merged D (#28) layer-0 attn train+serve and M (#30) owned
   TinyCoder. Still <strong>not</strong> beat Claude; never 6000; no RoPE /
   multi-layer / KV-cache claim.</li>

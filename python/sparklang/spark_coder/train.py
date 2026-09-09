@@ -21,7 +21,11 @@ from sparklang.model_lab.weights import (
     write_safetensors,
 )
 from sparklang.spark_coder import layers as L
-from sparklang.spark_coder.arch import PROFILE, default_arch
+from sparklang.spark_coder.arch import (
+    PROFILE,
+    arch_for_scale,
+    resolve_scale,
+)
 from sparklang.spark_coder.device import pick_device
 from sparklang.spark_coder.model import TinyCoder
 
@@ -294,9 +298,11 @@ def train_spark_coder(
     max_pos: int = 40,
     also_factory_step: bool = True,
     device: str | None = None,
+    scale: str | None = "tiny",
 ) -> dict[str, Any]:
     """Train owned TinyCoder on coding JSONL.
 
+    scale: tiny (CI/default) or large (opt-in dim/n_layer).
     Prefers RTX 5090 torch SGD when available; CPU otherwise.
     Never RTX PRO 6000. Does not beat Claude.
     """
@@ -307,6 +313,8 @@ def train_spark_coder(
     weights = dest / "weights.safetensors"
     ckpt = dest / "checkpoint.json"
     arch_path = dest / "arch.json"
+    scale_name = resolve_scale(scale)
+    arch = arch_for_scale(scale_name)
 
     force = None
     if device in ("cpu", "5090"):
@@ -330,11 +338,12 @@ def train_spark_coder(
             weights,
             source=str(bc),
             command=(
-                "spark-coder factory seed "
+                "spark-coder factory seed scale=%s "
                 "(not beat Claude; never 6000)"
+                % scale_name
             ),
-            dim=default_arch()["dim"],
-            n_layer=default_arch()["n_layer"],
+            dim=arch["dim"],
+            n_layer=arch["n_layer"],
         )
         factory = apply_sgd_step(
             bc,
@@ -354,11 +363,12 @@ def train_spark_coder(
             weights,
             source=str(bc),
             command=(
-                "spark-coder owned init from SPARK_BC "
+                "spark-coder owned init scale=%s "
                 "(not beat Claude; never 6000)"
+                % scale_name
             ),
-            dim=default_arch()["dim"],
-            n_layer=default_arch()["n_layer"],
+            dim=arch["dim"],
+            n_layer=arch["n_layer"],
         )
 
     meta, tensors = read_safetensors(weights)
@@ -519,6 +529,7 @@ def train_spark_coder(
             "not_sgd": "false",
             "sgd": "true",
             "profile": PROFILE,
+            "scale": scale_name,
             "brain": "owned-weights",
             "device": train_device,
             "gpu_name": gpu_name,
@@ -528,8 +539,9 @@ def train_spark_coder(
             "op": "spark_coder_sgd",
             "note": (
                 "Owned TinyCoder SGD on coding fixtures; "
-                "not a downloaded model; not beat Claude; "
-                "never 6000; 5090 OK"
+                "scale=%s; not a downloaded model; "
+                "not beat Claude; never 6000; 5090 OK"
+                % scale_name
             ),
         }
     )
@@ -537,6 +549,7 @@ def train_spark_coder(
 
     payload = {
         "profile": PROFILE,
+        "scale": scale_name,
         "trained": True,
         "not_sgd": False,
         "sgd": True,
@@ -557,13 +570,13 @@ def train_spark_coder(
         "outer": n_outer,
         "inner": n_inner,
         "lr": float(lr),
-        "arch": default_arch(),
+        "arch": arch,
     }
     ckpt.write_text(
         json.dumps(payload, indent=2) + "\n", encoding="utf-8"
     )
     arch_path.write_text(
-        json.dumps(default_arch(), indent=2) + "\n",
+        json.dumps(arch, indent=2) + "\n",
         encoding="utf-8",
     )
 
@@ -571,6 +584,7 @@ def train_spark_coder(
         "op": "spark_coder_train",
         "status": "trained",
         "profile": PROFILE,
+        "scale": scale_name,
         "path": str(weights),
         "checkpoint": str(ckpt),
         "arch": str(arch_path),

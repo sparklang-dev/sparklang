@@ -5,6 +5,18 @@ language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
 
+## 0.6.47 — 2026-09-09
+
+- **Tiny vs large (owner addendum):** spark-coder
+  `./spark-code train --scale {tiny,large}` +
+  `make spark-coder-train-large` (opt-in dim 64 / n_layer 4).
+  Tiny remains CI/default. Prefer **RTX 5090**; hard-refuse
+  **6000**. Honesty table in [SPARK_CODER.md](docs/SPARK_CODER.md)
+  → [/docs/spark-coder.html](/docs/spark-coder.html);
+  voice/weight play notes in [VOICE.md](docs/VOICE.md);
+  SoT `examples/fixtures/coder/scale_config.json`.
+  `./spark-code scales`. **Not beat Claude.**
+
 ## 0.6.46 — 2026-09-09
 
 - **Docs honesty after D+M:** rebase

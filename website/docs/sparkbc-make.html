@@ -136,6 +136,14 @@
         <td>Local opt-in larger JSONL + dim/n_layer (F-lane; not default CI)</td>
         </tr>
         <tr>
+        <td><code class="inline-code">make spark-coder-train</code></td>
+        <td>Owned TinyCoder <strong>tiny</strong> (CI/default); prefer 5090; never 6000</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">make spark-coder-train-large</code></td>
+        <td>Opt-in <strong>large</strong> coder (dim 64 / n_layer 4); not GHA default</td>
+        </tr>
+        <tr>
         <td><code class="inline-code">make spark-eval</code></td>
         <td>Frozen copy/recall + next-token probes; exit 0 = harness ran (<strong>not</strong> beat Claude)</td>
         </tr>

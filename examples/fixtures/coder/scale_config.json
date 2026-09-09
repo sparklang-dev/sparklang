@@ -1,0 +1,29 @@
+{
+  "name": "spark-coder-scale",
+  "scales": {
+    "tiny": {
+      "ci_default": true,
+      "dim": 32,
+      "n_layer": 2,
+      "n_head": 4,
+      "dataset": "examples/fixtures/coder/dataset.jsonl",
+      "out": "models/spark-coder",
+      "train": "make spark-coder-train",
+      "cli": "./spark-code train --scale tiny"
+    },
+    "large": {
+      "ci_default": false,
+      "dim": 64,
+      "n_layer": 4,
+      "n_head": 4,
+      "dataset": "examples/fixtures/coder/dataset.jsonl",
+      "out": "models/spark-coder-large",
+      "train": "make spark-coder-train-large",
+      "cli": "./spark-code train --scale large --device auto"
+    }
+  },
+  "device": "prefer rtx-5090; cpu ok",
+  "never": "rtx-pro-6000",
+  "beats_claude": false,
+  "note": "Tiny = CI/default. Large = opt-in local (not GHA). Aligns with F-lane train scale_config dim/n_layer. Voice/weight play paths use the same tiny|large + 5090/never-6000 rules. Does not beat Claude."
+}
