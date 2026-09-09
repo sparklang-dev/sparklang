@@ -243,7 +243,7 @@
       "ida": "na",
       "binja": "na",
       "llm4decompile": "na",
-      "note": "K-lane helpers/shadows wrap Spark SoT"
+      "note": "helpers/shadows wrap Spark SoT"
     },
     {
       "category": "Local privacy (no upload)",

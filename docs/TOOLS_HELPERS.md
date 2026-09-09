@@ -1,8 +1,8 @@
-# Tools & helpers (K-lane)
+# Tools & helpers
 
 Ergonomic CLIs, shadow safety, and a small downloadable kit for the
 Spark / SparkLang SPARK_BC factory. Does **not** reimplement attention
-(D) or the serve HTTP API (G). **Never** 6000. Does **not** beat Claude.
+train or the serve HTTP API — those live in their own docs.
 
 Hub: [FACTORY.md](FACTORY.md). Make map: [SPARKBC_MAKE.md](SPARKBC_MAKE.md). Diagrams: [DIAGRAMS.md](DIAGRAMS.md).
 
@@ -11,7 +11,7 @@ Hub: [FACTORY.md](FACTORY.md). Make map: [SPARKBC_MAKE.md](SPARKBC_MAKE.md). Dia
 ```bash
 make helpers          # chmod + list helpers
 make tools-test       # unit/smoke for kit + shadows
-make sdk-pack         # stage dist/spark-sdk/ (+ I overlay)
+make sdk-pack         # stage dist/spark-sdk/ (+ helpers overlay)
 ./helpers/spark-check-env
 ./helpers/spark-run examples/spark_builder.spark
 ./helpers/spark-analyze docs/examples/spark-train-step.sparkbc
@@ -61,15 +61,17 @@ PYTHONPATH=python:tools python3 -m spark_kit.vocab_inspect
 PYTHONPATH=python:tools python3 -m spark_kit.bc_diff a.sparkbc b.sparkbc
 ```
 
-## Sibling lanes
+## Related surfaces
 
-- **I** (SDK/IDE/GUI pack) — K is additive `helpers/` + `tools/spark_*`;
-  `package_helpers_k.sh` overlays I’s `out/sdk-pack/stage/` when present.
-- **H/J** — docs; this page is the Tools & helpers section to link.
-- **D/G** — not touched here.
+- SDK/IDE/GUI pack — helpers are additive under `helpers/` +
+  `tools/spark_*`; `package_helpers_k.sh` overlays the SDK pack
+  stage when present.
+- Diagrams / decompile docs — this page is the Tools & helpers
+  section to link.
+- Attention train / serve HTTP API — not touched here.
 
 ## Honesty
 
 - Helpers wrap existing makefile / `spark-bootstrap` / `bc_dump` paths.
 - Shadow verify compares SHA-256 (and optional recompile).
-- Eval / train proofs remain measurement-only — **not** beat Claude.
+- Eval / train proofs remain measurement-only (see [EVAL.md](EVAL.md)).

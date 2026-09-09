@@ -198,7 +198,7 @@ Result stamps:
 - `quality=weights_provided_possible_leakage` — `--weights` path
 - `note` always says **not production SOTA**
 
-### Eval on kl3m-exported hiddens (owner host)
+### Eval on kl3m-exported hiddens
 
 After a successful HF smoke (`out/heads-hf-smoke-kl3m/`, stamp
 `hf_backbone_trained`, `hidden_dim` 2048):
@@ -284,7 +284,7 @@ Live generate path:
 Owner machines often have large causal LMs (multi‑GB) and incomplete hub
 stubs. Prefer an **explicit local dir**.
 
-### One-command tiny model (owner only; CI OFF)
+### One-command tiny model (CI OFF)
 
 ```bash
 SPARK_ABSTAIN_ALLOW_TINY_DOWNLOAD=1 \

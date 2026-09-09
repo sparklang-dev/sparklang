@@ -236,6 +236,11 @@
         <li>https://sparklang.dev/docs/knowledge-safety.html</li>
         <li>https://sparklang.dev/data/decompile-scoreboard.json</li>
         <li>https://sparklang.dev/downloads.html</li>
+        <li><strong>Images MIME (required):</strong>
+          <code class="inline-code">curl -sI https://sparklang.dev/docs/images/decompile-cli-dump.png?v=0.6.58</code>
+          must show <code class="inline-code">Content-Type: image/png</code> (not <code class="inline-code">text/html</code>).
+          SVG: <code class="inline-code">…/diagram-spark-loop.svg</code> → <code class="inline-code">image/svg+xml</code> only
+          (no dual <code class="inline-code">text/html</code>). <code class="inline-code">nosniff</code> + wrong MIME = blank screenshots.</li>
         </ul>
         <p>Record the Pages deployment id next to the git tip. Tip ≠ live
         site: say so if deploy lags.</p>

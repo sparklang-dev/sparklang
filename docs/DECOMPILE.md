@@ -147,10 +147,10 @@ PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
 Emits Spark-created Xavier init (`trained: false`). See
 [BUILD_MODELS.md](BUILD_MODELS.md).
 
-## Graphical path (SDK pack — I-lane)
+## Graphical path (SDK pack)
 
-I-lane ships `tools/spark_bc_gui` / `bin/spark-bc-gui` (tkinter) that
-calls real `--compile` + `bc_dump.format_dump`. Prefer the SDK pack
+The SDK pack ships `tools/spark_bc_gui` / `bin/spark-bc-gui` (tkinter)
+that calls real `--compile` + `bc_dump.format_dump`. Prefer the SDK pack
 from [Downloads](/downloads.html) / `make sdk-pack`. CLI remains the
 documented primary path on this page.
 

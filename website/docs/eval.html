@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Eval harness — Spark</title>
-    <meta name="description" content="Frozen spark-eval probes + optional Claude baseline. Never claims beat Claude." />
+    <meta name="description" content="Frozen spark-eval probes + optional Claude baseline. Measurement only — does not claim beat Claude." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
     <link rel="stylesheet" href="/css/tokens.css?v=navsub0909" />
@@ -182,14 +182,14 @@
         <p>Frozen probes for Spark weights. <strong>Does not beat Claude.</strong> Exit 0
         means the harness ran — not a marketing win. Never invents API keys.
         Never uses the RTX PRO 6000.</p>
-        <p>E-lane (Claude baseline) is <strong>merged</strong> on tip. Code:
+        <p>Optional Claude API baseline is <strong>merged</strong> on tip. Code:
         <code class="inline-code">tools/spark-eval/</code>. Suite: <code class="inline-code">examples/eval/</code>.</p>
         <h2 id="commands">Commands</h2>
         <pre class="doc__pre"><code class="language-bash">make spark-eval
         make spark-eval WEIGHTS=docs/examples/spark-self.init.safetensors
         # or: SPARK_EVAL_WEIGHTS=/path/to/weights.safetensors make spark-eval
 
-        # Optional Claude API baseline (E-lane):
+        # Optional Claude API baseline:
         make spark-eval-claude
         # or: make spark-eval CLAUDE=auto
         # require key: make spark-eval CLAUDE=on

@@ -54,7 +54,7 @@ and `not_sgd=false` / `trained=true` only when grads applied.
 | Fixture | Role |
 |---------|------|
 | `examples/fixtures/train/dataset.jsonl` | STEP / sgd-proof pairs on tip |
-| Larger multi-pair sets | Landed with multi-outer SGD (C-lane); do not invent counts — read the file |
+| Larger multi-pair sets | Landed with multi-outer SGD; do not invent counts — read the file |
 | Opt-in `dim` / `n_layer` + scale JSONL | **on tip** — `dataset_scale.jsonl`; `make spark-sgd-proof-scale`; CI keeps tiny `spark-sgd-proof` |
 | Spark-coder tiny vs large | **tiny** CI (`make spark-coder-train`); **large** opt-in dim64/n_layer4 (`make spark-coder-train-large` / `./spark-code train --scale large`). Prefer **5090** SoT: `examples/fixtures/coder/scale_config.json` |
 

@@ -32,7 +32,7 @@
   ],
   "planned": [
     "Spark-hosted compiler (self-host Stage 4 still C)",
-    "train from this Spark-created init (owner train-grant)",
+    "train from this Spark-created init (explicit train grant)",
     "serve a model grown from this seed"
   ],
   "weights": {

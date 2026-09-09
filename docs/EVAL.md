@@ -4,7 +4,7 @@ Frozen probes for Spark weights. **Does not beat Claude.** Exit 0
 means the harness ran — not a marketing win. Never invents API keys.
 Never uses the RTX PRO 6000.
 
-E-lane (Claude baseline) is **merged** on tip. Code:
+Optional Claude API baseline is **merged** on tip. Code:
 `tools/spark-eval/`. Suite: `examples/eval/`.
 
 ## Commands
@@ -14,7 +14,7 @@ make spark-eval
 make spark-eval WEIGHTS=docs/examples/spark-self.init.safetensors
 # or: SPARK_EVAL_WEIGHTS=/path/to/weights.safetensors make spark-eval
 
-# Optional Claude API baseline (E-lane):
+# Optional Claude API baseline:
 make spark-eval-claude
 # or: make spark-eval CLAUDE=auto
 # require key: make spark-eval CLAUDE=on

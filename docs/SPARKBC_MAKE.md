@@ -25,15 +25,14 @@ ISA: [SPARK_BC.md](SPARK_BC.md). Story:
 | `make test-weights-play` | Weight gallery unit + CLI play/diff/stats |
 | `make weight-gallery-xl` | Opt-in XL emit (prefer 5090) |
 | `make spark-eval` | Frozen copy/recall + next-token probes; exit 0 = harness ran (**not** beat Claude) |
-| `make spark-eval-claude` | Same + optional Anthropic baseline (E-lane; skip if no key) |
+| `make spark-eval-claude` | Same + optional Anthropic baseline (skip if no key) |
 | `make test-spark-eval` | Unit gate for eval harness |
 | `make docs-html` / `make docs-check` | Regen `website/docs/*` + nav link check |
 | `make spark-serve-api` / `make test-serve-api` | serve API path HTTP/stdio predict + embeddings |
-| `make helpers` / `make tools-test` | K-lane helper CLIs + kit/shadow smoke |
+| `make helpers` / `make tools-test` | Helper CLIs + kit/shadow/analyze smoke |
 | `make test-spark-ask` | Voice/text ask loop (dump facts + dry TTS) |
-| `make helpers` / `make tools-test` | K-lane helper CLIs + kit/shadow/analyze smoke |
 | `make test-spark-analyze` | Project-loop analyze folder gate |
-| `make sdk-pack` / `make dist` | Stage `dist/spark-sdk/` (helpers + I overlay when present) |
+| `make sdk-pack` / `make dist` | Stage `dist/spark-sdk/` (helpers overlay when present) |
 | `make voice-easy` / `make test-voice-easy` | Owned voice STT/TTS heads — tiny dry (CI) |
 | `make voice-easy-large` | Opt-in large voice-easy (prefer 5090; not default CI) |
 
@@ -64,7 +63,7 @@ make test-voice-easy
 | `make test-bootstrap` | Bootstrap VM suite |
 | `make test-bpe-seed` | Tokenizer BPE seed (when present) |
 
-## Helpers / shadows (K-lane)
+## Helpers / shadows
 
 See [TOOLS_HELPERS.md](TOOLS_HELPERS.md).
 
@@ -98,7 +97,7 @@ Release + Pages: [CI_PAGES.md](CI_PAGES.md) · [RELEASE.md](RELEASE.md).
 | `bootstrap/tests/run_sparkbc.sh` | Oracle compare for `test-sparkbc` |
 | `tools/spark-bc-dump/apply_step.py` | CPU SGD helper used by `spark-sgd-proof` |
 | `tools/spark-eval/run.py` | Eval harness |
-| `tools/package_helpers_k.sh` | K-lane `dist/spark-sdk/` stager |
+| `tools/package_helpers_k.sh` | `dist/spark-sdk/` helpers stager |
 
 ## CI
 

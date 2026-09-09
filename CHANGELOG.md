@@ -5,6 +5,16 @@ language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
 
+## 0.6.59 — 2026-09-09
+
+- **Site polish / leak scrub:** drop `(owner hierarchy)` from public
+  language tiers + README lowest-level heading; scrub operator
+  parentheticals (`owner cite`, `owner addendum`, `OWNER-CONFIRM`,
+  lane letters in living docs headings/body); trim meta-description
+  "beat Claude" / "Never 6000" spam (honest eval/coder/factory notes
+  stay once where they belong); remove SoapBox-local report path from
+  public README. `make docs-html` / `docs-check` green.
+
 ## 0.6.58 — 2026-09-09
 
 - **Pages screenshots MIME:** `website/_headers` had
@@ -14,15 +24,13 @@ language) are listed here. Site and installers track
   explicit `image/png` + `image/svg+xml` under `/docs/images/`;
   `/docs/*` is Cache-Control only. Image `src` cache-busted
   `?v=0.6.58` so poisoned edge MIME clears without zone purge.
-  Does not beat Claude.
 
 ## 0.6.57 — 2026-09-09
 
 - **Makefile restore:** `spark-ground` / `make test-ground` and
   `decompile-bench` / `decompile-roundtrip` / `test-decompile-compete`
   were dropped from the tip Makefile in the nav-subcategories land
-  (#48). Targets + companions/`test`/`clean` wiring restored. Does
-  not beat Claude.
+  (#48). Targets + companions/`test`/`clean` wiring restored.
 
 ## 0.6.56 — 2026-09-09
 
@@ -32,8 +40,7 @@ language) are listed here. Site and installers track
   and knowledge-safety follow the same hierarchy; Grounding links
   `./spark-ground` anti-guess. Shared SoT
   `tools/site_primary_nav.py` + `make sync-nav` / `docs-html`.
-  Mobile keeps nested labels inside drawers. Does not
-  beat Claude.
+  Mobile keeps nested labels inside drawers.
 
 ## 0.6.55 — 2026-09-09
 
@@ -148,7 +155,7 @@ language) are listed here. Site and installers track
   existing llm-decompile; recompile≠semantics), and safety.
   Original SVG diagrams; cited papers. Nav: **Knowledge** + **Hive**
   menu beside Learn / Forge / Bench. Does **not** beat Claude; not an OpenBin clone.
-- **Tiny vs large (owner addendum):** spark-coder
+- **Tiny vs large (spark-coder scales):** spark-coder
   `./spark-code train --scale {tiny,large}` +
   `make spark-coder-train-large` (opt-in dim 64 / n_layer 4).
   Tiny remains CI/default. Prefer **RTX 5090**; hard-refuse
@@ -197,7 +204,7 @@ language) are listed here. Site and installers track
 
 ## 0.6.43 — 2026-09-09
 
-- **J-lane LLM decompile research expand:** enrich
+- **LLM decompile research expand:** enrich
   [LLM_DECOMPILE.md](docs/research/LLM_DECOMPILE.md)
   → [/docs/llm-decompile.html](/docs/llm-decompile.html) with
   owner citations (full URLs): DecompAI agent-style RE (tool loop,
@@ -226,7 +233,7 @@ language) are listed here. Site and installers track
 
 ## 0.6.42 — 2026-09-09
 
-- **Owned Spark coder (M-lane):** in-repo TinyCoder
+- **Owned Spark coder:** in-repo TinyCoder
   (`python/sparklang/spark_coder/`) — layers, embed, MLP, lm_head —
   trained with CPU SGD (optional **RTX 5090** torch path; **never**
   RTX PRO 6000) on authored coding fixtures
@@ -239,18 +246,18 @@ language) are listed here. Site and installers track
 
 ## 0.6.41 — 2026-09-09
 
-- **Helpers / shadows / tools (K-lane):** enhances I-lane minimal
+- **Helpers / shadows / tools:** enhances SDK-pack minimal
   helpers with ergonomic CLIs under `helpers/` (compile→run→inspect,
   train-proof shortcut, env check, BC pretty-print + diff, shadow
   copy / `build/shadow/` / hash verify), kit under `tools/spark_kit/`
   (hexdump, opcode sheet, fixture lint, vocab inspect), pack overlay
-  via `tools/package_helpers_k.sh` into `dist/spark-sdk/` and I-lane
+  via `tools/package_helpers_k.sh` into `dist/spark-sdk/` and SDK-pack
   `out/sdk-pack/` when present. Gates: `make helpers`,
   `make tools-test` (with `make sdk-pack` / `make test-sdk-pack`).
   Docs: [TOOLS_HELPERS.md](docs/TOOLS_HELPERS.md)
   → `/docs/tools-helpers.html`. Does not beat Claude.
 
-- **AI model aspects (L-lane):** engineer hub for behaviors, ears/STT,
+- **AI model aspects:** engineer hub for behaviors, ears/STT,
   eyes/vision, speaking/TTS, thinking/generation, memory, tools,
   train, eval, and serve wiring. Page:
   [MODEL_ASPECTS.md](docs/MODEL_ASPECTS.md) →
@@ -266,7 +273,7 @@ language) are listed here. Site and installers track
 
 ## 0.6.39 — 2026-09-09
 
-- **Decompile UX + LLM research (J-lane):** step-by-step
+- **Decompile UX + LLM research:** step-by-step
   [DECOMPILE.md](docs/DECOMPILE.md) with real CLI screenshots,
   annotated SDK GUI mock, and SVG tool-function diagrams (compile
   path, decompile path, helpers/GUI, deterministic vs LLM, LLM
@@ -274,14 +281,14 @@ language) are listed here. Site and installers track
   [docs/research/LLM_DECOMPILE.md](docs/research/LLM_DECOMPILE.md)
   → `/docs/llm-decompile.html` (LLM4Decompile, Nova, SK2,
   Decompile-Bench, AutoDecompiler, Ghidra+LLM — cited). Complements
-  H-lane Mermaid [DIAGRAMS.md](docs/DIAGRAMS.md) and I-lane
+  Mermaid [DIAGRAMS.md](docs/DIAGRAMS.md) and SDK-pack
   `spark-bc-gui`. Dump stays SoT. **Never** perfect SPARK_BC LLM
   claim. **Never** 6000. Does **not** beat Claude. Images:
   `website/docs/images/decompile-*`, `diagram-*`.
 
 ## 0.6.38 — 2026-09-09
 
-- **SDK + IDE + GUI download pack (I-lane):** `make sdk-pack` /
+- **SDK + IDE + GUI download pack:** `make sdk-pack` /
   `make dist` builds `out/sdk-pack/sparklang-sdk-*.tar.gz` with CPU
   runtime (`spark-bootstrap`), SDK docs/headers/examples, VS Code /
   Cursor IDE extension + `bin/spark-ide`, graphical SPARK_BC
@@ -293,23 +300,22 @@ language) are listed here. Site and installers track
 
 ## 0.6.37 — 2026-09-09
 
-- **Factory diagrams (H-lane):** Mermaid overview of Spark tools
+- **Factory diagrams:** Mermaid overview of Spark tools
   (compile / decompile / build / train / serve / helpers /
   shadows) and LLM assist vs deterministic SoT. Page:
   [DIAGRAMS.md](docs/DIAGRAMS.md) → `/docs/diagrams.html`. Mermaid
-  render via `website/js/site.js` (CDN). J-lane decompile research
+  render via `website/js/site.js` (CDN). Decompile research
   captures cross-linked when/if merged — no conflicting SoT.
   **Not beat Claude.**
 
 ## 0.6.36 — 2026-09-09
 
-- **Factory docs (H-lane, full map):** engineer Pages for the whole
+- **Factory docs (full map):** engineer Pages for the whole
   SPARK_BC factory — compile/assemble, decompile/inspect, opcodes
   (ISA), build models + weights/checkpoints, tokenizer/BPE, train
   loop (outer/inner SGD; scale fixture linked), architecture
   (embed/RMSNorm/lm_head/MLP; attention honest/partial), serve
-  forward + HTTP/stdio API (serve API path linked), eval harness (E-lane
-  Claude baseline linked; **never** beat Claude), makefile targets,
+  forward + HTTP/stdio API (serve API path linked), eval harness (Claude baseline linked; measurement only), makefile targets,
   CI/Pages contributor how-to. Hub: [FACTORY.md](docs/FACTORY.md)
   → `/docs/factory.html`. Also: `/docs/compile.html`,
   `/docs/decompile.html`, `/docs/spark-bc.html`,
@@ -330,7 +336,7 @@ language) are listed here. Site and installers track
 
 ## 0.6.34 — 2026-09-09
 
-- **Scale fixture / dims (F-lane):** larger CE JSONL
+- **Scale fixture / dims:** larger CE JSONL
   (`examples/fixtures/train/dataset_scale.jsonl`, 145 pairs,
   longer sequences) + `scale_config.json`. Opt-in arch knobs
   `--dim` / `--n-layer` on `apply_step.py` /
@@ -365,7 +371,7 @@ language) are listed here. Site and installers track
 
 ## 0.6.31 — 2026-09-08
 
-- **STEP CPU SGD (B-lane):** `--run-bc` `STEP` (`0x28`) runs real
+- **STEP CPU SGD:** `--run-bc` `STEP` (`0x28`) runs real
   CPU SGD on Spark-created `lm_head` from
   `examples/fixtures/train/dataset.jsonl` (mean-pool embed → CE).
   Writes `weights.safetensors` with `trained=true` /
@@ -748,12 +754,12 @@ language) are listed here. Site and installers track
 ## 0.6.2 — 2026-09-02
 
 - **Rename:** public GitHub repo `sparklang-dev/spark` →
-  `sparklang-dev/sparklang` (OWNER-CONFIRM). Site remains
+  `sparklang-dev/sparklang`. Site remains
   https://sparklang.dev/. Docs/site/README/About/RELEASE/ADOPTION_BAR
   clone URLs updated.
 - **CLI:** binary / bootstrap names stay `spark` and `./spark-bootstrap`
   (no overnight break). Product identity is **SparkLang**.
-- **IDE:** tree **kept** (hard-delete OWNER-CONFIRM revoked). Editor story
+- **IDE:** tree **kept** (hard-delete plan revoked). Editor story
   still prefers LSP + highlighting; language `ide` ops unchanged.
 - Installer kit filenames / hashes remain **0.6.0** until the next
   packaging pass (no kit rebuild in this rename land).

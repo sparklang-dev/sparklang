@@ -51,7 +51,7 @@ Prioritized against the adoption bar. Status: **done** / **next** / **won't**
 | Drop | Why |
 |------|-----|
 | MITM / pcap / browser automation as hero | Distracts from AI workflow language |
-| Homegrown Electron/PyQt IDE as hero chrome | Prefer LSP for editor story; **IDE tree kept** (hard-delete OWNER-CONFIRM **revoked** 2026-09-02) |
+| Homegrown Electron/PyQt IDE as hero chrome | Prefer LSP for editor story; **IDE tree kept** (hard-delete plan **revoked** 2026-09-02) |
 | Model-build as training product | Blueprint / eval sugar only |
 | Production voice/telephony claim | Gaps remain (barge-in, EOU, SM, adapters) — gated demo only |
 | Bifrost-as-identity | Gateway optional; any OpenAI-compatible URL |
