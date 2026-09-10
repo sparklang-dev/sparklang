@@ -1,8 +1,15 @@
 #!/usr/bin/env python3
-"""spark-code — CLI for the owned Spark coding model.
+"""spark-code — CLI for Spark coding assistance.
 
-Train / generate / prove / tool-loop using TinyCoder weights written
-and trained in this repo. Prefers RTX 5090; never 6000. Not beat Claude.
+Product coder: self-hosted Qwen3-Coder-30B served locally by vLLM
+(default http://127.0.0.1:8003, override with SPARK_CODER_URL).
+Offline / self-hosted — no API keys, no vendor calls. This CLI
+never starts or stops services; when the endpoint is down,
+commands say so plainly and exit nonzero.
+
+The in-repo TinyCoder weights stay as the reference implementation
+for the training pipeline (train / prove / tool-loop, and
+``generate --engine reference``). Prefer RTX 5090; never 6000.
 """
 
 from __future__ import annotations
@@ -16,6 +23,12 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "python"))
 
 from sparklang.spark_coder.model import TinyCoder
+from sparklang.spark_coder.real_coder import (
+    DEFAULT_ENDPOINT,
+    ENV_URL,
+    generate as real_generate,
+    probe_endpoint,
+)
 from sparklang.spark_coder.tools_loop import (
     find_bootstrap,
     tool_loop_complete,
@@ -29,9 +42,12 @@ DEFAULT_BC = "docs/examples/spark-train-step.sparkbc"
 DEFAULT_DATA = "examples/fixtures/coder/dataset.jsonl"
 DEFAULT_OUT = "models/spark-coder"
 
+EXIT_NO_WEIGHTS = 2
+EXIT_ENDPOINT_DOWN = 3
+
 
 def _cmd_train(args: argparse.Namespace) -> int:
-    """Train owned TinyCoder weights."""
+    """Train reference TinyCoder weights (pipeline proof)."""
     result = train_spark_coder(
         sparkbc=args.sparkbc,
         dataset=args.dataset,
@@ -47,27 +63,23 @@ def _cmd_train(args: argparse.Namespace) -> int:
     return 0 if result.get("trained") else 1
 
 
-def _cmd_scales(_args: argparse.Namespace) -> int:
-    """Print tiny vs large honesty table as JSON."""
-    from sparklang.spark_coder.arch import scale_table
-
-    print(
-        json.dumps(
-            {
-                "ok": True,
-                "scales": scale_table(),
-                "beats_claude": False,
-                "never": "rtx-pro-6000",
-                "prefer_device": "rtx-5090",
-            },
-            indent=2,
-        )
+def _cmd_generate(args: argparse.Namespace) -> int:
+    """Generate code — self-hosted 30B endpoint by default."""
+    if args.engine == "reference":
+        return _generate_reference(args)
+    out = real_generate(
+        args.prompt,
+        url=args.url,
+        max_tokens=args.max_new,
     )
+    print(json.dumps(out, indent=2))
+    if not out.get("ok"):
+        return EXIT_ENDPOINT_DOWN
     return 0
 
 
-def _cmd_generate(args: argparse.Namespace) -> int:
-    """Greedy generate from owned weights."""
+def _generate_reference(args: argparse.Namespace) -> int:
+    """Greedy generate from in-repo reference weights."""
     weights = Path(args.weights)
     if not weights.is_file():
         print(
@@ -80,15 +92,16 @@ def _cmd_generate(args: argparse.Namespace) -> int:
                 }
             )
         )
-        return 2
+        return EXIT_NO_WEIGHTS
     model = TinyCoder.from_weights(weights)
     out = model.generate(args.prompt, max_new=args.max_new)
+    out["engine"] = "reference-tinycoder"
     print(json.dumps(out, indent=2))
     return 0
 
 
 def _cmd_prove(args: argparse.Namespace) -> int:
-    """Prove next-byte coding fixtures."""
+    """Prove next-byte coding fixtures (reference pipeline)."""
     fixtures = json.loads(
         Path(args.fixtures).read_text(encoding="utf-8")
     )
@@ -104,7 +117,7 @@ def _cmd_prove(args: argparse.Namespace) -> int:
 
 
 def _cmd_tool_loop(args: argparse.Namespace) -> int:
-    """Owned model + compile verify on candidate .spark files."""
+    """Reference model + compile verify on candidate .spark files."""
     weights = Path(args.weights)
     if not weights.is_file():
         print(
@@ -116,7 +129,7 @@ def _cmd_tool_loop(args: argparse.Namespace) -> int:
                 }
             )
         )
-        return 2
+        return EXIT_NO_WEIGHTS
     model = TinyCoder.from_weights(weights)
     cands = [Path(p) for p in args.candidate]
     boot = find_bootstrap(ROOT)
@@ -134,38 +147,34 @@ def _cmd_tool_loop(args: argparse.Namespace) -> int:
 
 
 def _cmd_status(args: argparse.Namespace) -> int:
-    """Show weights meta / arch."""
+    """Show product coder endpoint + reference weights status."""
+    probe = probe_endpoint(args.url)
     weights = Path(args.weights)
-    if not weights.is_file():
-        print(
-            json.dumps(
-                {
-                    "ok": False,
-                    "status": "no_weights",
-                    "path": str(weights),
-                    "brain": "owned-weights",
-                }
-            )
-        )
-        return 2
-    model = TinyCoder.from_weights(weights)
-    print(
-        json.dumps(
-            {
-                "ok": True,
-                "path": str(weights),
-                "trained": model.meta.get("trained"),
-                "scale": model.meta.get("scale", "tiny"),
-                "profile": model.meta.get("profile", "spark-coder"),
-                "brain": model.meta.get("brain", "owned-weights"),
-                "arch": model.arch_json(),
-                "beats_claude": False,
-                "prefer_device": "rtx-5090",
-                "never": "rtx-pro-6000",
-            },
-            indent=2,
-        )
-    )
+    ref: dict[str, object] = {
+        "path": str(weights),
+        "present": weights.is_file(),
+    }
+    if weights.is_file():
+        model = TinyCoder.from_weights(weights)
+        ref["trained"] = model.meta.get("trained")
+        ref["arch"] = model.arch_json()
+    out = {
+        "ok": True,
+        "product_coder": {
+            "engine": "self-hosted-30b",
+            "endpoint": probe.get("endpoint", args.url),
+            "serving": bool(probe.get("ok")),
+            "model": probe.get("model", ""),
+            "error": probe.get("error"),
+            "env_override": ENV_URL,
+        },
+        "reference_trainer": ref,
+        "prefer_device": "rtx-5090",
+        "never": "rtx-pro-6000",
+    }
+    print(json.dumps(out, indent=2))
+    if not probe.get("ok") and not weights.is_file():
+        return EXIT_NO_WEIGHTS
     return 0
 
 
@@ -174,14 +183,19 @@ def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(
         prog="spark-code",
         description=(
-            "Owned Spark coding model (TinyCoder). "
-            "Not Claude/HF. Prefer RTX 5090; never 6000. "
-            "Does not beat Claude."
+            "Spark coding assistant. Product coder is the "
+            "self-hosted Qwen3-Coder-30B endpoint (default "
+            f"{DEFAULT_ENDPOINT}, env {ENV_URL}); offline, no API "
+            "keys. In-repo TinyCoder is the reference trainer for "
+            "the training pipeline. Prefer RTX 5090; never 6000."
         ),
     )
     sub = ap.add_subparsers(dest="cmd", required=True)
 
-    p_tr = sub.add_parser("train", help="SGD train (tiny|large)")
+    p_tr = sub.add_parser(
+        "train",
+        help="train reference TinyCoder (pipeline proof)",
+    )
     p_tr.add_argument("--sparkbc", default=DEFAULT_BC)
     p_tr.add_argument("--dataset", default=DEFAULT_DATA)
     p_tr.add_argument("--out", default=DEFAULT_OUT)
@@ -192,7 +206,8 @@ def main(argv: list[str] | None = None) -> int:
         "--scale",
         default="tiny",
         choices=("tiny", "large"),
-        help="tiny=CI/default; large=opt-in dim64/n_layer4",
+        help="reference trainer config: tiny=CI/default dims; "
+        "large=opt-in dim64/n_layer4",
     )
     p_tr.add_argument(
         "--device",
@@ -207,21 +222,36 @@ def main(argv: list[str] | None = None) -> int:
     )
     p_tr.set_defaults(func=_cmd_train)
 
-    p_sc = sub.add_parser(
-        "scales", help="honesty table tiny vs large"
+    p_gen = sub.add_parser(
+        "generate",
+        help="generate code (self-hosted 30B endpoint by default)",
     )
-    p_sc.set_defaults(func=_cmd_scales)
-
-    p_gen = sub.add_parser("generate", help="greedy generate")
+    p_gen.add_argument(
+        "--engine",
+        default="endpoint",
+        choices=("endpoint", "reference"),
+        help="endpoint=self-hosted 30B (default); "
+        "reference=in-repo TinyCoder weights",
+    )
+    p_gen.add_argument(
+        "--url",
+        default="",
+        help=f"coder endpoint URL (env {ENV_URL}; "
+        f"default {DEFAULT_ENDPOINT})",
+    )
     p_gen.add_argument(
         "--weights",
         default=str(Path(DEFAULT_OUT) / "weights.safetensors"),
+        help="reference engine weights path",
     )
     p_gen.add_argument("--prompt", required=True)
-    p_gen.add_argument("--max-new", type=int, default=64)
+    p_gen.add_argument("--max-new", type=int, default=512)
     p_gen.set_defaults(func=_cmd_generate)
 
-    p_pr = sub.add_parser("prove", help="fixture next-byte prove")
+    p_pr = sub.add_parser(
+        "prove",
+        help="reference fixture next-byte prove",
+    )
     p_pr.add_argument(
         "--weights",
         default=str(Path(DEFAULT_OUT) / "weights.safetensors"),
@@ -251,7 +281,16 @@ def main(argv: list[str] | None = None) -> int:
     p_tl.add_argument("--bootstrap", default="")
     p_tl.set_defaults(func=_cmd_tool_loop)
 
-    p_st = sub.add_parser("status", help="weights status")
+    p_st = sub.add_parser(
+        "status",
+        help="product coder endpoint + reference weights status",
+    )
+    p_st.add_argument(
+        "--url",
+        default="",
+        help=f"coder endpoint URL (env {ENV_URL}; "
+        f"default {DEFAULT_ENDPOINT})",
+    )
     p_st.add_argument(
         "--weights",
         default=str(Path(DEFAULT_OUT) / "weights.safetensors"),

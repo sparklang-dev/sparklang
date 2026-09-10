@@ -3,22 +3,22 @@
   "mode": "cpu-sgd",
   "status": "implemented",
   "step_n": 1,
-  "loss_before": 5.5416472240145405,
-  "loss_after": 5.538808543479141,
+  "loss_before": 5.573303677777912,
+  "loss_after": 5.008518828255094,
   "loss_curve": [
     {
       "outer": 0,
-      "loss": 5.5416472240145405,
+      "loss": 5.573303677777912,
       "phase": "start"
     },
     {
       "outer": 1,
-      "loss": 5.540228850353919,
+      "loss": 5.276944540983153,
       "phase": "after_outer"
     },
     {
       "outer": 2,
-      "loss": 5.538808543479141,
+      "loss": 5.008518828255094,
       "phase": "after_outer"
     }
   ],
@@ -26,19 +26,20 @@
   "inner_steps": 4,
   "lr": 0.08,
   "lr_embed": 0.02,
+  "lr_attn": 0.04,
   "train_embed": true,
+  "train_attn": true,
   "dataset": "examples/fixtures/coder/dataset.jsonl",
   "dataset_n": 48,
   "arch_dim": 32,
   "arch_n_layer": 2,
   "weights": "models/spark-coder/weights.safetensors",
-  "weights_sha256": "543b334ff1bb6bf7f3e53ee90f3673e8734aa04926441430eaa9f672c215b65e",
+  "weights_sha256": "744860a72b7395ae170ec4c04c49768c4c659c62548e058c1d552bc121a03f21",
   "trained": true,
   "not_sgd": false,
   "sgd": true,
-  "beats_claude": false,
   "device": "cpu",
   "never": "rtx-pro-6000",
   "sparkbc_sha256": "d08925b52bf8c840de626c9cfec619d4dbae5a674b94bb8c7c5837eb1ac64551",
-  "note": "CPU multi-outer SGD updated lm_head+embed; trained=true; not_sgd=false; measurement only"
+  "note": "CPU multi-outer SGD updated spark.lm_head.weight+spark.embed.weight+spark.layers.0.q/k/v/o; trained=true; not_sgd=false; not beat Claude"
 }

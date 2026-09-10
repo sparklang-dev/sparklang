@@ -1,4 +1,4 @@
-"""Unit + integration tests for owned spark-coder (M-lane)."""
+"""Unit + integration tests for spark-coder (reference + real lane)."""
 
 from __future__ import annotations
 
@@ -18,7 +18,6 @@ from sparklang.spark_coder.arch import (
     arch_for_scale,
     default_arch,
     resolve_scale,
-    scale_table,
 )
 from sparklang.spark_coder.device import (
     _name_forbidden,
@@ -27,6 +26,12 @@ from sparklang.spark_coder.device import (
 )
 from sparklang.spark_coder.layers import encode_text, forward_hidden
 from sparklang.spark_coder.model import TinyCoder
+from sparklang.spark_coder.real_coder import (
+    DEFAULT_ENDPOINT,
+    endpoint_url,
+    generate as real_generate,
+    probe_endpoint,
+)
 from sparklang.spark_coder.tools_loop import (
     compile_spark,
     find_bootstrap,
@@ -81,7 +86,7 @@ class TestSparkCoder(unittest.TestCase):
         self.assertEqual(arch["scale"], "tiny")
         self.assertTrue(arch["ci_default"])
         self.assertEqual(arch["brain"], "owned-weights")
-        self.assertFalse(arch["beats_claude"])
+        self.assertNotIn("beats_claude", arch)
         self.assertEqual(arch["never"], "rtx-pro-6000")
 
     def test_scale_tiny_vs_large(self) -> None:
@@ -94,11 +99,9 @@ class TestSparkCoder(unittest.TestCase):
         self.assertEqual(large["n_layer"], 4)
         self.assertFalse(large["ci_default"])
         self.assertEqual(resolve_scale("LARGE"), "large")
-        rows = scale_table()
-        self.assertEqual([r["scale"] for r in rows], ["tiny", "large"])
-        for row in rows:
-            self.assertFalse(row["beats_claude"])
-            self.assertEqual(row["never"], "rtx-pro-6000")
+        for arch in (tiny, large):
+            self.assertNotIn("beats_claude", arch)
+            self.assertEqual(arch["never"], "rtx-pro-6000")
         with self.assertRaises(ValueError):
             resolve_scale("xl")
 
@@ -119,12 +122,13 @@ class TestSparkCoder(unittest.TestCase):
                 scale="large",
             )
             self.assertEqual(result["scale"], "large")
+            self.assertNotIn("beats_claude", result)
             arch = json.loads(
                 Path(result["arch"]).read_text(encoding="utf-8")
             )
             self.assertEqual(arch["dim"], 64)
             self.assertEqual(arch["n_layer"], 4)
-            self.assertFalse(arch["beats_claude"])
+            self.assertNotIn("beats_claude", arch)
             model = TinyCoder.from_weights(result["path"])
             self.assertEqual(model.dim, 64)
         finally:
@@ -151,6 +155,10 @@ class TestSparkCoder(unittest.TestCase):
         self.assertTrue(self.train["trained"])
         self.assertLess(
             self.train["loss_after"], self.train["loss_before"]
+        )
+        self.assertNotIn("beats_claude", self.train)
+        self.assertNotIn(
+            "beats_claude", self.train.get("factory_step") or {}
         )
         model = TinyCoder.from_weights(self.weights)
         self.assertEqual(
@@ -184,7 +192,7 @@ class TestSparkCoder(unittest.TestCase):
         out = model.generate("Say exactly: spark", max_new=8)
         self.assertIn("completion", out)
         self.assertEqual(out["path"], "owned-greedy")
-        self.assertFalse(out["beats_claude"])
+        self.assertNotIn("beats_claude", out)
 
     def test_tool_loop_compile(self) -> None:
         """Tool loop ranks candidates and compiles with bootstrap."""
@@ -210,6 +218,46 @@ class TestSparkCoder(unittest.TestCase):
             out_bc = work / (cand.stem + "-direct.sparkbc")
             info = compile_spark(cand, out_bc, bootstrap=boot)
             self.assertTrue(info["ok"], msg=info.get("stderr"))
+
+
+class TestRealCoderLane(unittest.TestCase):
+    """Product coder endpoint client (hermetic — no live calls)."""
+
+    def test_endpoint_url_default_and_env(self) -> None:
+        """Default is the local 30B; SPARK_CODER_URL overrides."""
+        import os
+        from unittest import mock
+
+        with mock.patch.dict(os.environ, {}, clear=False):
+            os.environ.pop("SPARK_CODER_URL", None)
+            self.assertEqual(endpoint_url(), DEFAULT_ENDPOINT)
+        with mock.patch.dict(
+            os.environ, {"SPARK_CODER_URL": "http://127.0.0.1:9/"}
+        ):
+            self.assertEqual(endpoint_url(), "http://127.0.0.1:9")
+        self.assertEqual(
+            endpoint_url("http://127.0.0.1:1234/"),
+            "http://127.0.0.1:1234",
+        )
+
+    def test_probe_down_is_plain(self) -> None:
+        """Closed port → ok False with a plain reason, no fake up."""
+        probe = probe_endpoint("http://127.0.0.1:9", timeout=1.0)
+        self.assertFalse(probe["ok"])
+        self.assertEqual(probe["error"], "coder_endpoint_down")
+        self.assertIn("endpoint", probe)
+        self.assertNotIn("completion", probe)
+
+    def test_generate_down_never_fakes(self) -> None:
+        """Down endpoint → ok False, no fabricated completion."""
+        out = real_generate(
+            "write fizzbuzz",
+            url="http://127.0.0.1:9",
+            timeout=1.0,
+        )
+        self.assertFalse(out["ok"])
+        self.assertEqual(out["error"], "coder_endpoint_down")
+        self.assertNotIn("completion", out)
 
 
 if __name__ == "__main__":

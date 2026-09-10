@@ -1,5 +1,7 @@
 {
   "profile": "spark-coder",
+  "scale": "tiny",
+  "ci_default": true,
   "vocab": 256,
   "dim": 32,
   "n_layer": 2,
@@ -9,9 +11,9 @@
   "mlp": 128,
   "genome": "SPARK_BC",
   "factory": "Spark language",
-  "beats_claude": false,
   "device": "cpu",
+  "prefer_device": "rtx-5090",
   "never": "rtx-pro-6000",
   "brain": "owned-weights",
-  "note": "TinyCoder written+trained in sparklang; not a downloaded base model"
+  "note": "reference TinyCoder written+trained in sparklang (config=tiny); proves the training pipeline \u2014 the product coder is the self-hosted 30B endpoint; never 6000"
 }

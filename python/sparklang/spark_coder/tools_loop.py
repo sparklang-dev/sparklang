@@ -1,7 +1,8 @@
-"""Optional compile/verify tools on top of owned TinyCoder.
+"""Optional compile/verify tools on top of the reference TinyCoder.
 
 The brain remains owned weights — these tools only check/compile
-Spark / SPARK_BC artifacts. Never call Claude/Bifrost as the model.
+Spark / SPARK_BC artifacts. The product coder is the self-hosted
+30B endpoint (see `real_coder.py`).
 """
 
 from __future__ import annotations
@@ -100,7 +101,6 @@ def tool_loop_complete(
         "ranked": ranked,
         "generate_preview": gen,
         "brain": "owned-weights",
-        "beats_claude": False,
     }
     if bootstrap is None:
         result["compile"] = {

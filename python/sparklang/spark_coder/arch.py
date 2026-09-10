@@ -1,13 +1,16 @@
-"""Spark-coder architecture constants (written in this repo).
+"""Spark-coder reference architecture constants (written in this repo).
 
 Tensor names match Spark factory safetensors (`emit_init_weights`)
 so TRAIN/STEP artifacts stay compatible.
 
-Scales:
-- **tiny** — CI / default (dim 32, n_layer 2)
-- **large** — opt-in (dim 64, n_layer 4; F-lane-aligned)
+This is the **reference implementation** for the training pipeline.
+The product coder is the self-hosted Qwen3-Coder-30B endpoint (see
+`real_coder.py`); these tiny dims exist to prove the trainer, not
+to serve product quality.
 
-Prefer RTX 5090 for GPU SGD; never RTX PRO 6000. Does not beat Claude.
+Trainer configs: ``tiny`` (CI default, dim 32 / n_layer 2) and
+``large`` (opt-in, dim 64 / n_layer 4). Prefer RTX 5090 for GPU
+SGD; never RTX PRO 6000.
 """
 
 from __future__ import annotations
@@ -25,9 +28,9 @@ MLP = DIM * 4
 
 PROFILE = "spark-coder"
 NEVER_GPU = "rtx-pro-6000"
-BEATS_CLAUDE = False
 
-# Opt-in large (matches examples/fixtures/train/scale_config.json).
+# Opt-in large trainer config (matches
+# examples/fixtures/train/scale_config.json).
 LARGE_DIM = 64
 LARGE_N_LAYER = 4
 
@@ -41,7 +44,7 @@ def _arch_body(
     scale: str,
     ci_default: bool,
 ) -> dict[str, Any]:
-    """Build an arch dict for one named scale."""
+    """Build an arch dict for one trainer config."""
     n_head = N_HEAD
     if dim % n_head != 0:
         raise ValueError(
@@ -60,70 +63,21 @@ def _arch_body(
         "mlp": int(dim) * 4,
         "genome": "SPARK_BC",
         "factory": "Spark language",
-        "beats_claude": BEATS_CLAUDE,
         "device": "cpu",
         "prefer_device": "rtx-5090",
         "never": NEVER_GPU,
         "brain": "owned-weights",
         "note": (
-            "TinyCoder written+trained in sparklang; "
-            "not a downloaded base model; scale=%s; "
-            "not beat Claude; never 6000"
-            % scale
+            "reference TinyCoder written+trained in sparklang "
+            "(config=%s); proves the training pipeline — the "
+            "product coder is the self-hosted 30B endpoint; "
+            "never 6000" % scale
         ),
     }
 
 
-def scale_table() -> list[dict[str, Any]]:
-    """Honesty rows: tiny (CI) vs large (opt-in)."""
-    return [
-        {
-            "scale": "tiny",
-            "ci_default": True,
-            "dim": DIM,
-            "n_layer": N_LAYER,
-            "n_head": N_HEAD,
-            "vocab": VOCAB,
-            "approx_params": DIM * VOCAB * 2
-            + N_LAYER * (4 * DIM * DIM + 3 * DIM * (DIM * 4)),
-            "train": "make spark-coder-train",
-            "cli": "./spark-code train --scale tiny",
-            "device": "CPU default; RTX 5090 OK",
-            "never": NEVER_GPU,
-            "vram_note": (
-                "CPU-fast CI fixture; 5090 optional, "
-                "busy heuristic skips when >28 GiB used"
-            ),
-            "beats_claude": False,
-        },
-        {
-            "scale": "large",
-            "ci_default": False,
-            "dim": LARGE_DIM,
-            "n_layer": LARGE_N_LAYER,
-            "n_head": N_HEAD,
-            "vocab": VOCAB,
-            "approx_params": LARGE_DIM * VOCAB * 2
-            + LARGE_N_LAYER
-            * (
-                4 * LARGE_DIM * LARGE_DIM
-                + 3 * LARGE_DIM * (LARGE_DIM * 4)
-            ),
-            "train": "make spark-coder-train-large",
-            "cli": "./spark-code train --scale large",
-            "device": "Prefer RTX 5090; CPU OK",
-            "never": NEVER_GPU,
-            "vram_note": (
-                "Still small vs production LLMs; fits 5090. "
-                "Hard-refuse RTX PRO 6000 (voice-only)."
-            ),
-            "beats_claude": False,
-        },
-    ]
-
-
 def resolve_scale(scale: str | None = None) -> str:
-    """Normalize scale name; default tiny."""
+    """Normalize trainer config name; default tiny."""
     name = (scale or "tiny").strip().lower()
     if name not in SCALES:
         raise ValueError(
@@ -151,7 +105,7 @@ def arch_for_scale(scale: str | None = None) -> dict[str, Any]:
 
 
 def default_arch() -> dict[str, Any]:
-    """Return the owned TinyCoder arch dict (tiny / CI default)."""
+    """Return the reference TinyCoder arch dict (tiny / CI)."""
     return arch_for_scale("tiny")
 
 
