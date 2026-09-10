@@ -6,12 +6,18 @@
  <title>About — SparkLang</title>
  <meta
  name="description"
- content="SparkLang — reviewable .spark programs with five CPU train methods (distill, preference pack, playbook fit, FAQ index, reply pack) — not LoRA — then status→expect with dry-run CI. MIT. Contact hello@sparklang.dev."
+ content="SparkLang is the home of the Spark programming language — an open, MIT-licensed language and runtime for AI work. Offline by default, no API keys. Contact hello@sparklang.dev."
  />
  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
  <link rel="shortcut icon" href="/favicon.svg" />
- <link rel="stylesheet" href="/css/tokens.css?v=polish0909" />
- <link rel="stylesheet" href="/css/site.css?v=polish0909" />
+ <link rel="preconnect" href="https://fonts.googleapis.com" />
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+ <link
+ href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+ rel="stylesheet"
+ />
+ <link rel="stylesheet" href="/css/tokens.css?v=visual0910" />
+ <link rel="stylesheet" href="/css/site.css?v=visual0910" />
  </head>
  <body class="doc-page">
  <header class="site-header">
@@ -159,35 +165,37 @@
  <article class="doc__body">
  <h1 id="about-sparklang">About SparkLang</h1>
  <p>
- <strong>SparkLang</strong> is the public name for the
- <strong>Spark programming language</strong> at
- <a href="https://sparklang.dev/">sparklang.dev</a>.
- A language beats another Python SDK because one reviewable
- <code class="inline-code">.spark</code> file covers train → eval →
- ship, with dry-run fixtures for CI without API keys.
+ <strong>SparkLang</strong> is the home of the
+ <strong>Spark programming language</strong> — an open, MIT-licensed
+ language and runtime for AI work. One Spark file covers the whole
+ job: train, evaluate, serve, and ship. It runs offline by default,
+ so you can read, run, and verify everything before anything leaves
+ your machine.
  </p>
 
  <h2 id="what-it-is">What it is</h2>
  <ul class="doc__ul">
  <li>
- A <strong>language + runtime</strong> for plain
- <code class="inline-code">.spark</code> files.
+ A <strong>language and runtime</strong> for plain-text
+ <code class="inline-code">.spark</code> files — readable, diffable,
+ reviewable.
  </li>
  <li>
- <strong>Dry-run / offline by default</strong> — no API keys and no
- network for learning and CI.
+ <strong>Offline by default</strong> — no API keys, no network,
+ nothing leaves your machine until you say so.
  </li>
  <li>
- <strong>Real training</strong> via
- <code class="inline-code">model train</code> /
- <code class="inline-code">model build</code> (jobs + status).
- <code class="inline-code">model plan</code> is plan-only markdown.
+ <strong>Real training</strong> — submit jobs, poll status, and
+ assert results from the same file.
  </li>
  <li>
- Optional live <code class="inline-code">ask</code> against any
- OpenAI-compatible gateway via
- <code class="inline-code">AI_GATEWAY_URL</code> and
- <code class="inline-code">./spark --live</code>.
+ <strong>Real voice</strong> — speech recognition and synthesis from
+ best-in-class open models, self-hosted, offline after a one-time
+ download.
+ </li>
+ <li>
+ <strong>Optional live asks</strong> — point Spark at any
+ OpenAI-compatible gateway you choose.
  </li>
  </ul>
 
@@ -210,14 +218,15 @@
  <tr>
  <td><strong>Core</strong></td>
  <td>
- Language, dry-run fixtures, model train/build/status,
- ask/eval helpers, playbooks, IDE language ops
+ Language and compiler, offline runs, model
+ train/build/status, ask and eval helpers, playbooks, IDE
  </td>
  </tr>
  <tr>
  <td><strong>Optional</strong></td>
  <td>
- Live ask/embed; voice (gated); browser / capture
+ Live gateway asks and embeddings; voice models (one-time
+ download); browser and capture helpers
  </td>
  </tr>
  </tbody>
@@ -230,7 +239,7 @@
  License: <a href="/LICENSE.txt">MIT</a>
  </li>
  <li>
- Version: <strong>0.6.3</strong> —
+ Version: <strong>0.6.62</strong> —
  <a href="/CHANGELOG.html">Changelog</a> ·
  <a href="/downloads.html">Downloads</a>
  </li>
@@ -259,7 +268,7 @@
  <div class="shell footer-inner">
  <div class="footer-brand">
  <span>SparkLang — the Spark programming language</span>
- <span class="footer-meta">v0.6.3 · <a href="/LICENSE.txt">MIT</a></span>
+ <span class="footer-meta">v0.6.62 · <a href="/LICENSE.txt">MIT</a></span>
  </div>
  <nav class="footer-nav" aria-label="Footer">
  <a href="/about.html" aria-current="page">About</a>

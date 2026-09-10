@@ -6,7 +6,7 @@
  <title>The Spark loop — compile · inspect · train · serve · share</title>
  <meta
  name="description"
- content="SparkLang five-step loop: compile SPARK_BC, dump/inspect locally, train or step with owned spark-coder, serve helpers/shadows, share docs on Pages. Original Spark design. "
+ content="The Spark loop: compile to a verifiable bytecode, inspect it locally, train real models, serve from your machine, and share what you built."
  />
  <meta
  name="keywords"
@@ -14,8 +14,14 @@
  />
  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
  <link rel="shortcut icon" href="/favicon.svg" />
- <link rel="stylesheet" href="/css/tokens.css?v=polish0909" />
- <link rel="stylesheet" href="/css/site.css?v=polish0909" />
+ <link rel="preconnect" href="https://fonts.googleapis.com" />
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+ <link
+ href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+ rel="stylesheet"
+ />
+ <link rel="stylesheet" href="/css/tokens.css?v=visual0910" />
+ <link rel="stylesheet" href="/css/site.css?v=visual0910" />
  </head>
  <body>
  <a class="skip-link" href="#main">Skip to content</a>
@@ -165,11 +171,10 @@
  Compile. Inspect. Train. Serve. Share.
  </h1>
  <p class="hero__lede">
- One Spark-native path from a reviewable
- <code class="inline-code">.spark</code> file to
- <code class="inline-code">SPARK_BC</code>, local dump, owned
- tiny coder steps, helpers on the wire, and docs on Pages —
- CLI first, GUI where it helps.
+ One path from a readable Spark file to a bytecode you can
+ inspect, models you trained yourself, and services running on
+ your own hardware. Command line first, graphical tools where
+ they help.
  </p>
  <div class="cta-row">
  <a class="btn btn--primary" href="/downloads.html">Download Spark</a>
@@ -186,8 +191,8 @@
  height="220"
  />
  <figcaption class="workshop-figure__cap">
- Original Spark diagram — SPARK_BC orchestration bytecode, not
- imported neural weights.
+ The Spark loop — programs compile to orchestration bytecode
+ you can inspect at every step.
  </figcaption>
  </figure>
  </section>
@@ -195,9 +200,8 @@
  <section class="section shell" aria-labelledby="steps-title">
  <h2 id="steps-title" class="section__title">Five steps, Spark tools</h2>
  <p class="section__lede">
- Inspired by clear CLI→inspect→publish loops elsewhere — rebuilt
- around <strong>our</strong> binaries, dumps, and honest model
- claims. No third-party branding on this page.
+ Five steps. Each has a tool you can run and an output you can
+ check.
  </p>
  <div class="step-detail">
  <article class="step-detail__item" id="compile">
@@ -205,13 +209,9 @@
  <div class="step-detail__body">
  <h3>Compile / assemble SPARK_BC</h3>
  <p>
- Author a <code class="inline-code">.spark</code> program,
- then
- <code class="inline-code">./spark-bootstrap --compile</code>
- (or open an existing pack). Output is Spark’s own
- <code class="inline-code">SPARK_BC</code> — orchestration
- ops like <code class="inline-code">TRAIN</code> /
- <code class="inline-code">STEP</code>, not a weight dump.
+ Author a Spark program and compile it. The output is
+ Spark’s own bytecode — orchestration operations like
+ train and step, written out where you can see them.
  </p>
  <p>
  <a href="/docs/compile.html">Compile docs</a> ·
@@ -229,24 +229,15 @@
  <div class="step-detail__body">
  <h3>Decompile / dump / inspect locally</h3>
  <p>
- Primary SoT:
- <code class="inline-code">tools/spark-bc-dump/dump.py</code>
- — hex, header, mnemonics. One-shot project loop:
- <code class="inline-code">./helpers/spark-analyze</code>
- → local
- <code class="inline-code">out/analyze/&lt;name&gt;/</code>
- (dump, ops list, REPORT stub; optional
- <code class="inline-code">--serve</code> /
- <code class="inline-code">--ask</code>). Optional
- <code class="inline-code">spark-bc-gui</code> for a
- readable pane. Deterministic inspect first; LLM research
- is a separate, cited lane.
+ Dump the bytecode locally — hex, headers, mnemonics — or
+ open it in the graphical inspector. One command builds a
+ full analysis folder on your disk: dump, opcode list,
+ report stub. Nothing is uploaded anywhere.
  </p>
  <p>
  <a href="/docs/decompile.html">Decompile docs</a> ·
  <a href="/docs/decompile-compete.html">Compete / scoreboard</a> ·
  <a href="/docs/tools-helpers.html">Tools &amp; helpers</a> ·
- <a href="/docs/methods-openbin.html">Methods vs OpenBin</a> ·
  <a href="/docs/llm-decompile.html">LLM research notes</a>
  </p>
  <pre class="terminal code-block"><code><span class="comment"># Local analysis folder — no upload</span>
@@ -287,18 +278,15 @@
  loading="lazy"
  />
  <figcaption class="workshop-figure__cap">
- IDE-ish panes mock built from Spark dump vocabulary
- (SPBC magic, TRAIN/STEP) — clearly Spark, not pseudo-C
- malware reverse engineering.
+ Inspector panes built from real Spark dump vocabulary.
  </figcaption>
  </figure>
  <h4 id="voice-ask">Voice ask the dump</h4>
  <p>
- After inspect, ask in text or speech — ears (STT) →
- dump context + owned TinyCoder → speaking (TTS).
- Local only; <strong>no</strong> OpenBin login.
- TinyCoder is tiny: dump facts stay SoT; open-ended RE
- answers carry an status note.
+ Then ask questions about what you found — by text or by
+ voice. Recognition and synthesis run locally. Answers
+ come from the decoded dump first; when the evidence runs
+ out, Spark says so.
  </p>
  <p>
  <a href="/docs/voice-ask.html">Voice ask docs</a> ·
@@ -318,20 +306,18 @@
  <div class="step-detail__body">
  <h3>Train / step / spark-coder / voice-easy</h3>
  <p>
- Run <code class="inline-code">model train</code> →
- <code class="inline-code">model status</code> →
- <code class="inline-code">expect</code> in one file.
- Owned <code class="inline-code">spark-coder</code> is a
- <strong>tiny</strong> capability — useful for Spark
- factory loops, not a claim to beat frontier models.
+ Run train, status, and expect in one file. Spark ships
+ reference trainers that run on CPU, plus an in-repo
+ coding model you can train, dump, and inspect end to
+ end — every weight on your disk.
  </p>
  <p>
- <strong>Train voice / STT / TTS in 3 steps</strong> —
- <a href="/docs/voice-easy.html">Voice easy</a>
- (<code class="inline-code">make voice-easy</code>):
- tiny CI default or
- <code class="inline-code">--scale large</code> on an
- RTX 5090 (or CPU). Owned heads — </p>
+ <strong>Real voice in 3 steps</strong> — fetch the open
+ speech models once, run the measured eval, check the
+ status. Recognition and synthesis are best-in-class open
+ weights, self-hosted, offline after the download.
+ Details: <a href="/docs/voice-easy.html">Voice easy</a>.
+ </p>
  <p>
  <a href="/docs/train-loop.html">Train loop</a> ·
  <a href="/docs/spark-coder.html">Spark coder</a> ·
@@ -344,10 +330,9 @@
 <span class="cmd">make voice-easy</span>
 <span class="comment"># Large opt-in (prefer 5090)</span>
 <span class="cmd">./spark-voice easy --scale large --device auto</span></code></pre>
- <p class="honest-note">
- Honest bar: CPU reference methods and owned tiny coder /
- voice heads. Does <strong>not</strong> publish a competitive AI win claim.
- or replace a vendor TTS stack overnight.
+ <p class="proof-note">
+ Proof: the voice eval reports real word-error rates on
+ held-out speech. The commands are on the voice pages.
  </p>
  </div>
  </article>
@@ -357,10 +342,9 @@
  <div class="step-detail__body">
  <h3>Serve / helpers / shadows</h3>
  <p>
- Local HTTP surfaces for helpers and shadows — wire a
- trainer at
- <code class="inline-code">SPARK_TRAIN_URL</code>, probe
- serve APIs, keep dry-run as the default gate.
+ Serve from your own machine: local HTTP surfaces for
+ helpers and isolated rebuilds, with your training service
+ wired in when you are ready. Offline stays the default.
  </p>
  <p>
  <a href="/docs/serve.html">Serve</a> ·
@@ -374,11 +358,9 @@
  <div class="step-detail__body">
  <h3>Docs / share (Pages)</h3>
  <p>
- Ship factory docs and examples on
- <a href="https://sparklang.dev/">sparklang.dev</a>
- (Cloudflare Pages). Share packs and captures from the
- gallery below — Spark-appropriate examples, not a malware
- community feed.
+ Publish docs, examples, and captures. This site is built
+ the same way — and everything in the gallery below is a
+ program you can run yourself.
  </p>
  <p>
  <a href="/docs/ci-pages.html">CI / Pages</a> ·
@@ -400,7 +382,7 @@
  <p class="gallery-card__meta">train → status → expect</p>
  <h3 class="gallery-card__title">train_eval.spark</h3>
  <p class="gallery-card__body">
- Minimal CI gate with fixture artifacts.
+ The minimal offline gate: train, status, expect.
  </p>
  </a>
  <a class="gallery-card" href="/docs/spark-builder.html">
@@ -425,7 +407,8 @@
  <p class="gallery-card__meta">owned model</p>
  <h3 class="gallery-card__title">spark-coder</h3>
  <p class="gallery-card__body">
- Tiny owned coding model notes — capability, not hype.
+ The in-repo coding model — architecture, training, and
+ weights you can inspect.
  </p>
  </a>
  <a class="gallery-card" href="/playground.html">
@@ -464,7 +447,7 @@
  <div class="footer-brand">
  <span>SparkLang</span>
  <span class="footer-meta"
- >v0.6.3 · <a href="/LICENSE.txt">MIT</a></span
+ >v0.6.62 · <a href="/LICENSE.txt">MIT</a></span
  >
  </div>
  <nav class="footer-nav" aria-label="Footer">
