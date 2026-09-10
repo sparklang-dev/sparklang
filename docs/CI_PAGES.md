@@ -33,16 +33,38 @@ PRs should keep these green. Docs-only PRs still run
 ## Production Pages deploy
 
 Project: **`sparklang-dev`**. Branch: **`production`**.
+The project is **direct upload** (no git integration — verified
+2026-09-10: API `source: null`). Deploys are therefore manual;
+the canonical path is the atomic full-tree script:
 
 ```bash
-# on the tip SHA you are shipping
-make docs-html
+# on the tip SHA you are shipping (merged to main, clean tree)
+make docs-html   # only when docs/*.md changed — regen is its own lane
 # mirror CHANGELOG.html if needed
-npx wrangler pages deploy website \
- --project-name=sparklang-dev \
- --branch=production \
- --commit-hash="$(git rev-parse HEAD)"
+make deploy-site   # == tools/deploy-site.sh
 ```
+
+`tools/deploy-site.sh` runs exactly one
+`wrangler pages deploy website --project-name=sparklang-dev
+--branch=production --commit-hash=<HEAD>` — the **whole** `website/`
+tree, every time. No rsync filters, no partial syncs, no per-file
+picks. It refuses a dirty `website/` tree (`--allow-dirty` overrides)
+and a HEAD that is not on `origin/main` (`--allow-unmerged`
+overrides). Pages deployments are immutable bundles, so the site
+flips atomically.
+
+**Why (2026-09-10 incident):** ad-hoc manual deploys from stale
+local checkouts rolled sparklang.dev ~6 commits backwards (last
+upload wins), and a filtered docs rsync once dropped
+`spark-self.init.safetensors`. One script, full tree, merged-tip
+only — that class of drift cannot happen.
+
+**Upgrade path (owner-side, not CLI-able):** connecting the Pages
+project to GitHub (merge-to-main = auto deploy) requires the
+Cloudflare GitHub App flow in the dashboard; a GitHub Actions
+deploy workflow would need a `CLOUDFLARE_API_TOKEN` repo secret
+(not provisioned). Until one of those exists, run
+`make deploy-site` after each merge to main.
 
 **Auth:** Wrangler OAuth on the deploy host is often under
 `~/.config/.wrangler/` (leading **dot**). That is not

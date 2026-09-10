@@ -58,7 +58,8 @@ test-sdk-pack: spark-bootstrap
 docs-docx:
 	python3 tools/docs_docx.py --rebuild-reference
 
-.PHONY: docs-html docs-check sync-nav test-senses helpers tools-test
+.PHONY: docs-html docs-check sync-nav test-senses helpers tools-test \
+	deploy-site
 docs-html:
 	python3 tools/md_to_doc_html.py --all-stale
 	python3 tools/sync_site_nav.py
@@ -69,7 +70,12 @@ docs-check: docs-html
 	python3 tools/md_to_doc_html.py --check
 	python3 tools/sync_site_nav.py --check
 	PYTHONPATH=python python3 -m unittest \
-		tools.test_docs_nav -v
+		tools.test_docs_nav tools.test_md_slugify -v
+
+# Atomic full-tree Pages deploy of website/ (sparklang-dev).
+# Refuses dirty trees and un-merged HEADs; see docs/CI_PAGES.md.
+deploy-site:
+	tools/deploy-site.sh
 
 sync-nav:
 	python3 tools/sync_site_nav.py

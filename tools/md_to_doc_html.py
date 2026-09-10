@@ -330,11 +330,18 @@ DOC_PAGES = [
 
 
 def slugify(text: str) -> str:
+    """GitHub-compatible anchor slug (github-slugger parity).
+
+    Punctuation (em-dashes included) is removed, then each remaining
+    whitespace char becomes exactly one dash — no run-collapsing —
+    so "Files — sha256" yields "files--sha256", matching the anchors
+    GitHub renders for the same markdown heading. Underscores are
+    word chars and stay (GitHub keeps them).
+    """
     text = re.sub(r"<[^>]+>", "", text)
     text = html.unescape(text).strip().lower()
     text = re.sub(r"[^\w\s-]", "", text)
-    text = re.sub(r"[\s_]+", "-", text)
-    return text.strip("-")
+    return re.sub(r"\s", "-", text)
 
 
 def rewrite_md_links(src: str) -> str:
