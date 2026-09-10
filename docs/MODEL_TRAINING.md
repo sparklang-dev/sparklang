@@ -181,7 +181,8 @@ When `out` basename matches `job-*`, that basename is the `job_id`.
 Live captures:
 
 - Distill: [website/docs/examples/live-train-capture.txt](../website/docs/examples/live-train-capture.txt)
-- All four: [website/docs/examples/live-train-methods-capture.txt](../website/docs/examples/live-train-methods-capture.txt)
+- All five: [docs/examples/live-train-five-methods-capture.txt](examples/live-train-five-methods-capture.txt)
+  (CPU live; not LoRA)
 
 ```bash
 python3 tools/spark-train-ref/server.py --host 127.0.0.1 --port 8090
