@@ -1,0 +1,247 @@
+bootstrap/dry_ops.c:15:19: warning: ‘DRY_SPAM’ defined but not used [-Wunused-const-variable=]
+   15 | static const char DRY_SPAM[] =
+      |                   ^~~~~~~~
+bootstrap/dry_ops.c:12:19: warning: ‘DRY_SALES’ defined but not used [-Wunused-const-variable=]
+   12 | static const char DRY_SALES[] =
+      |                   ^~~~~~~~~
+bootstrap/dry_ops.c:9:19: warning: ‘DRY_SUPPORT’ defined but not used [-Wunused-const-variable=]
+    9 | static const char DRY_SUPPORT[] =
+      |                   ^~~~~~~~~~~
+bootstrap/spark_parse.c: In function ‘load_tokens’:
+bootstrap/spark_parse.c:98:3: warning: ‘__builtin_strncpy’ output may be truncated copying 15 bytes from a string of length 15 [-Wstringop-truncation]
+   98 |   strncpy(t->kind, kind_raw, KIND_MAX - 1);
+      |   ^
+bootstrap/spark_parse.c: In function ‘take_arrow_bind.constprop’:
+bootstrap/spark_parse.c:407:29: warning: ‘%s’ directive output may be truncated writing up to 511 bytes into a region of size 128 [-Wformat-truncation=]
+  407 |   snprintf(bind, bind_cap, "%s", b->lexeme);
+      |                             ^~
+In file included from /usr/include/stdio.h:980,
+                 from bootstrap/../selfhost/lex.h:5,
+                 from bootstrap/spark_parse.c:4:
+In function ‘snprintf’,
+    inlined from ‘take_arrow_bind.constprop’ at bootstrap/spark_parse.c:407:3:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:54:10: note: ‘__builtin_snprintf’ output between 1 and 512 bytes into a destination of size 128
+   54 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   55 |                                    __glibc_objsize (__s), __fmt,
+      |                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   56 |                                    __va_arg_pack ());
+      |                                    ~~~~~~~~~~~~~~~~~
+bootstrap/spark_parse.c: In function ‘compile_expect’:
+bootstrap/spark_parse.c:1051:33: warning: ‘%s’ directive output may be truncated writing up to 511 bytes into a region of size 32 [-Wformat-truncation=]
+ 1051 |   snprintf(mode, sizeof(mode), "%s", t->lexeme);
+      |                                 ^~
+In function ‘snprintf’,
+    inlined from ‘compile_expect’ at bootstrap/spark_parse.c:1051:3:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:54:10: note: ‘__builtin_snprintf’ output between 1 and 512 bytes into a destination of size 32
+   54 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   55 |                                    __glibc_objsize (__s), __fmt,
+      |                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   56 |                                    __va_arg_pack ());
+      |                                    ~~~~~~~~~~~~~~~~~
+bootstrap/spark_parse.c: In function ‘compile_expect’:
+bootstrap/spark_parse.c:1065:33: warning: ‘%s’ directive output may be truncated writing up to 511 bytes into a region of size 128 [-Wformat-truncation=]
+ 1065 |   snprintf(name, sizeof(name), "%s", t->lexeme);
+      |                                 ^~
+In function ‘snprintf’,
+    inlined from ‘compile_expect’ at bootstrap/spark_parse.c:1065:3:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:54:10: note: ‘__builtin_snprintf’ output between 1 and 512 bytes into a destination of size 128
+   54 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   55 |                                    __glibc_objsize (__s), __fmt,
+      |                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   56 |                                    __va_arg_pack ());
+      |                                    ~~~~~~~~~~~~~~~~~
+bootstrap/spark_parse.c: In function ‘spark_compile_file.part.0’:
+bootstrap/spark_parse.c:1549:37: warning: ‘%s’ directive output may be truncated writing up to 511 bytes into a region of size 128 [-Wformat-truncation=]
+ 1549 |       snprintf(bbuf, sizeof(bbuf), "%s", t->lexeme);
+      |                                     ^~
+In function ‘snprintf’,
+    inlined from ‘spark_compile_file.part.0’ at bootstrap/spark_parse.c:1549:7:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:54:10: note: ‘__builtin_snprintf’ output between 1 and 512 bytes into a destination of size 128
+   54 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   55 |                                    __glibc_objsize (__s), __fmt,
+      |                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   56 |                                    __va_arg_pack ());
+      |                                    ~~~~~~~~~~~~~~~~~
+bootstrap/spark_parse.c: In function ‘spark_compile_file.part.0’:
+bootstrap/spark_parse.c:1453:37: warning: ‘%s’ directive output may be truncated writing up to 511 bytes into a region of size 128 [-Wformat-truncation=]
+ 1453 |       snprintf(nbuf, sizeof(nbuf), "%s", name->lexeme);
+      |                                     ^~
+In function ‘snprintf’,
+    inlined from ‘spark_compile_file.part.0’ at bootstrap/spark_parse.c:1453:7:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:54:10: note: ‘__builtin_snprintf’ output between 1 and 512 bytes into a destination of size 128
+   54 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   55 |                                    __glibc_objsize (__s), __fmt,
+      |                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   56 |                                    __va_arg_pack ());
+      |                                    ~~~~~~~~~~~~~~~~~
+bootstrap/spark_parse.c: In function ‘spark_compile_file.part.0’:
+bootstrap/spark_parse.c:1433:37: warning: ‘%s’ directive output may be truncated writing up to 511 bytes into a region of size 128 [-Wformat-truncation=]
+ 1433 |       snprintf(ibuf, sizeof(ibuf), "%s", ident->lexeme);
+      |                                     ^~
+In function ‘snprintf’,
+    inlined from ‘spark_compile_file.part.0’ at bootstrap/spark_parse.c:1433:7:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:54:10: note: ‘__builtin_snprintf’ output between 1 and 512 bytes into a destination of size 128
+   54 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   55 |                                    __glibc_objsize (__s), __fmt,
+      |                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   56 |                                    __va_arg_pack ());
+      |                                    ~~~~~~~~~~~~~~~~~
+bootstrap/spark_parse.c: In function ‘spark_compile_file.part.0’:
+bootstrap/spark_parse.c:1418:37: warning: ‘%s’ directive output may be truncated writing up to 511 bytes into a region of size 128 [-Wformat-truncation=]
+ 1418 |       snprintf(bbuf, sizeof(bbuf), "%s", bind->lexeme);
+      |                                     ^~
+In function ‘snprintf’,
+    inlined from ‘spark_compile_file.part.0’ at bootstrap/spark_parse.c:1418:7:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:54:10: note: ‘__builtin_snprintf’ output between 1 and 512 bytes into a destination of size 128
+   54 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   55 |                                    __glibc_objsize (__s), __fmt,
+      |                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   56 |                                    __va_arg_pack ());
+      |                                    ~~~~~~~~~~~~~~~~~
+bootstrap/spark_parse.c: In function ‘spark_compile_file.part.0’:
+bootstrap/spark_parse.c:1357:35: warning: ‘%s’ directive output may be truncated writing up to 511 bytes into a region of size 128 [-Wformat-truncation=]
+ 1357 |     snprintf(abuf, sizeof(abuf), "%s", alias->lexeme);
+      |                                   ^~
+In function ‘snprintf’,
+    inlined from ‘compile_model_stmt’ at bootstrap/spark_parse.c:1357:5,
+    inlined from ‘spark_compile_file.part.0’ at bootstrap/spark_parse.c:1387:11:
+/usr/include/x86_64-linux-gnu/bits/stdio2.h:54:10: note: ‘__builtin_snprintf’ output between 1 and 512 bytes into a destination of size 128
+   54 |   return __builtin___snprintf_chk (__s, __n, __USE_FORTIFY_LEVEL - 1,
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   55 |                                    __glibc_objsize (__s), __fmt,
+      |                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   56 |                                    __va_arg_pack ());
+      |                                    ~~~~~~~~~~~~~~~~~
+/usr/bin/ld: warning: asm/ide_paint.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+PASS bootstrap_hello
+PASS bootstrap_hello_banner
+PASS bootstrap_hello_print
+PASS bootstrap_hello_ok
+PASS bootstrap_hello_sugar
+PASS bootstrap_spark_toml
+PASS bootstrap_dx_showcase
+PASS bootstrap_dx_include
+PASS bootstrap_dx_include_gravity
+PASS bootstrap_let_bind
+PASS bootstrap_let_print
+PASS bootstrap_classify_support
+PASS bootstrap_classify_sales
+PASS bootstrap_tool_reg
+PASS bootstrap_tool_with
+PASS bootstrap_tool_ask
+PASS bootstrap_tool_print
+PASS bootstrap_extract_person
+PASS bootstrap_listen_stub
+PASS bootstrap_speak_stub
+PASS bootstrap_pipe_step
+PASS bootstrap_pipe_ask
+PASS bootstrap_review_higher
+PASS bootstrap_review_noreval
+PASS bootstrap_review_print
+PASS bootstrap_gas_only_review_url
+PASS bootstrap_with_no_tool
+PASS bootstrap_voice_session
+PASS bootstrap_voice_listen
+PASS bootstrap_voice_classify
+PASS bootstrap_voice_speak
+PASS bootstrap_voice_reply
+PASS bootstrap_gas_only_voice_review
+PASS bootstrap_browser_run
+PASS bootstrap_browser_goto
+PASS bootstrap_browser_print_url
+PASS bootstrap_browser_quic_note
+PASS bootstrap_gas_only_browser_gui
+PASS bootstrap_gas_only_browser_nosession
+PASS bootstrap_gas_only_browser_cdp
+PASS bootstrap_gas_only_browser_show
+PASS bootstrap_browser_show
+PASS bootstrap_browser_show_display
+PASS bootstrap_browser_show_path
+PASS bootstrap_browser_show_print
+PASS bootstrap_browser_show_file
+PASS bootstrap_browser_flags
+PASS bootstrap_browser_flags_override
+PASS bootstrap_browser_flags_entrypoint
+PASS bootstrap_browser_flags_print
+PASS bootstrap_gas_only_browser_render
+PASS bootstrap_browser_render
+PASS bootstrap_browser_render_stages
+PASS bootstrap_browser_render_prefix
+PASS bootstrap_browser_render_print
+PASS bootstrap_browser_render_file
+PASS bootstrap_mitm_enable
+PASS bootstrap_mitm_enable_mode
+PASS bootstrap_mitm_enable_print
+PASS bootstrap_gas_only_mitm_live
+PASS bootstrap_gas_only_mitm_smoke
+PASS bootstrap_engine_fetch
+PASS bootstrap_engine_fetch_transport
+PASS bootstrap_engine_fetch_bytes
+PASS bootstrap_engine_fetch_print
+PASS bootstrap_engine_fetch_parse
+PASS bootstrap_engine_fetch_parse_body
+PASS bootstrap_engine_fetch_parse_next
+PASS bootstrap_engine_fetch_parse_nnodes
+PASS bootstrap_engine_fetch_parse_arrow
+PASS bootstrap_engine_fetch_parse_print
+PASS bootstrap_engine_parse
+PASS bootstrap_engine_parse_nnodes
+PASS bootstrap_engine_parse_body
+PASS bootstrap_engine_parse_table
+PASS bootstrap_engine_parse_print
+PASS bootstrap_engine_css
+PASS bootstrap_engine_css_print
+PASS bootstrap_engine_css_file
+PASS bootstrap_engine_layout
+PASS bootstrap_engine_layout_print
+PASS bootstrap_engine_layout_file
+PASS bootstrap_engine_layout_table
+PASS bootstrap_engine_paint
+PASS bootstrap_engine_paint_json
+PASS bootstrap_engine_paint_print
+PASS bootstrap_engine_paint_file
+PASS bootstrap_engine_show
+PASS bootstrap_engine_show_path
+PASS bootstrap_engine_show_print
+PASS bootstrap_engine_show_file
+PASS bootstrap_engine_render
+PASS bootstrap_engine_render_stages
+PASS bootstrap_engine_render_print
+PASS bootstrap_engine_render_file
+PASS bootstrap_gas_only_engine_https
+PASS bootstrap_gas_only_engine_http
+PASS bootstrap_gas_only_engine_live
+PASS bootstrap_gas_only_engine_css
+PASS bootstrap_gas_only_engine_layout
+PASS bootstrap_gas_only_engine_paint
+PASS bootstrap_gas_only_engine_show
+PASS bootstrap_gas_only_engine_render
+PASS bootstrap_gas_only_engine_parse_missing
+PASS bootstrap_gas_only_engine_fetch_parse
+PASS bootstrap_classify_parity
+PASS bootstrap_tool_parity
+PASS bootstrap_review_parity
+PASS bootstrap_voice_parity
+PASS bootstrap_browser_parity
+PASS bootstrap_browser_show_parity
+PASS bootstrap_browser_flags_parity
+PASS bootstrap_browser_render_parity
+PASS bootstrap_mitm_parity
+PASS bootstrap_engine_fetch_parity
+PASS bootstrap_engine_fetch_parse_parity
+PASS bootstrap_engine_parse_parity
+PASS bootstrap_engine_css_parity
+PASS bootstrap_engine_layout_parity
+PASS bootstrap_engine_paint_parity
+PASS bootstrap_engine_show_parity
+PASS bootstrap_engine_render_parity
+PASS bootstrap_hello_parity_reply
+bootstrap tests OK

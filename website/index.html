@@ -3,19 +3,25 @@
  <head>
  <meta charset="utf-8" />
  <meta name="viewport" content="width=device-width, initial-scale=1" />
- <title>SparkLang — compile · inspect · train · serve · share</title>
+ <title>SparkLang — Write it. Compile it. Prove it.</title>
  <meta
  name="description"
- content="SparkLang: reviewable .spark programs through SPARK_BC — compile, dump/inspect, train or step with owned tiny spark-coder, serve helpers, share on Pages. Five CPU train methods — not LoRA. Dry-run CI."
+ content="SparkLang is an open language for AI work: compile to a verifiable bytecode, train real models, serve locally, and speak and listen with built-in voice. Runs offline and self-hosted — no API keys required. MIT."
  />
  <meta
  name="keywords"
- content="SparkLang, Spark programming language, .spark, SPARK_BC, dry-run, model train, Spark loop"
+ content="SparkLang, Spark programming language, .spark, verifiable bytecode, offline AI, self-hosted voice, model training"
  />
  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
  <link rel="shortcut icon" href="/favicon.svg" />
- <link rel="stylesheet" href="/css/tokens.css?v=polish0909" />
- <link rel="stylesheet" href="/css/site.css?v=polish0909" />
+ <link rel="preconnect" href="https://fonts.googleapis.com" />
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+ <link
+ rel="stylesheet"
+ href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+ />
+ <link rel="stylesheet" href="/css/tokens.css?v=visual0910" />
+ <link rel="stylesheet" href="/css/site.css?v=visual0910" />
  </head>
  <body>
  <a class="skip-link" href="#main">Skip to content</a>
@@ -153,76 +159,141 @@
  </header>
 
  <main id="main">
- <section class="hero hero--workshop shell">
- <p class="hero__eyebrow">SparkLang</p>
+ <section class="hero hero--landing shell">
+ <p class="hero__badge">
+ <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+ <path
+ d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z"
+ fill="currentColor"
+ />
+ </svg>
+ SparkLang · v0.6.62 ·
+ <a href="/CHANGELOG.html">Changelog</a>
+ </p>
  <h1 class="hero__title">
- From .spark to SPARK_BC — then prove it
+ Write it. Compile it. <span class="text-grad">Prove it.</span>
  </h1>
  <p class="hero__lede">
- One reviewable language surface for compile → dump → train →
- serve → share. Dry-run fixtures in CI. Owned
- <code class="inline-code">spark-coder</code> stays tiny and
- honest — , not "competitive AI win"”
+ SparkLang is an open language for AI work. Programs compile to a
+ bytecode you can dump and inspect line by line. Training, serving,
+ and real voice — ears and speech — are built in. It runs offline
+ and self-hosted, with no API keys required.
  </p>
  <p class="hero__lede hero__lede--tight">
- Offline-first:
- <code class="inline-code">./spark --dry-run</code>.
- Live jobs hit
- <code class="inline-code">SPARK_TRAIN_URL</code>.
- Five CPU reference methods:
- <code class="inline-code">spark_distill_cpu</code>,
- <code class="inline-code">spark_pref_pack</code>,
- <code class="inline-code">spark_playbook_fit</code>,
- <code class="inline-code">spark_faq_index</code>,
- <code class="inline-code">spark_reply_pack</code>.
+ Every capability on this site ships with a command you can rerun
+ yourself. MIT licensed. Source on GitHub.
  </p>
  <div class="cta-row">
  <a class="btn btn--primary" href="/downloads.html">Download Spark</a>
- <a class="btn btn--secondary" href="/workflow.html">The Spark loop</a>
- <a class="btn btn--ghost" href="/playground.html">Playground</a>
+ <a class="btn btn--secondary" href="/workflow.html">See the workflow</a>
+ <a class="btn btn--ghost" href="/playground.html">Try in the browser</a>
  </div>
+
+ <div class="term-stage">
+ <div class="term">
+ <div class="term__bar">
+ <span class="term__dot"></span>
+ <span class="term__dot"></span>
+ <span class="term__dot"></span>
+ <span class="term__title">spark — compile · inspect · prove</span>
+ </div>
+ <pre class="term__body"><code id="hero-term-code"><span class="tl tl-cmd"><span class="t-prompt">$</span> <span class="t-cmd">./spark-bootstrap --compile examples/train_eval.spark -o out/train_eval.sparkbc</span></span>
+<span class="tl tl-cmd"><span class="t-prompt">$</span> <span class="t-cmd">python3 tools/spark-bc-dump/dump.py out/train_eval.sparkbc</span></span>
+<span class="tl t-dim"># SPARK_BC dump</span>
+<span class="tl t-dim"># sha256: 7880e2227da06c5c249f97a731471d7d22ceb84fcc28ede9388a25c77d214dbd</span>
+<span class="tl t-dim"># size: 322 bytes</span>
+<span class="tl t-dim">…</span>
+<span class="tl t-dim">## Code (opcode + u16le const indices)</span>
+<span class="tl">code+0  01 00 00  <span class="t-op">MODEL</span> (0x01) const0 "code"</span>
+<span class="tl">code+3  26 05 00 04 00 03 00 02 00 01 00  <span class="t-op">TRAIN</span> (0x26) const5 "examples/fixtures/train/dataset.jsonl" const4 "fixture-base" const3 "out/train/job-dry-001" const2 "spark_distill_cpu" const1 "job"</span>
+<span class="tl">code+14  27 07 00 06 00  <span class="t-op">TRAIN_STATUS</span> (0x27) const7 "job-dry-001" const6 "status"</span>
+<span class="tl">code+19  25 09 00 01 00 08 00  <span class="t-op">EXPECT</span> (0x25) const9 "contains" const1 "job" const8 "@fixture:examples/fixtures/train/want_accepted.txt"</span>
+<span class="tl">code+26  25 09 00 06 00 0a 00  <span class="t-op">EXPECT</span> (0x25) const9 "contains" const6 "status" const10 "@fixture:examples/fixtures/train/want_succeeded.txt"</span>
+<span class="tl">code+33  00  <span class="t-op">HALT</span> (0x00)</span>
+<span class="tl tl-cmd"><span class="t-prompt">$</span> <span class="t-cmd">./spark-bootstrap --dry-run examples/train_eval.spark</span></span>
+<span class="tl t-dim">[spark] dry-run via bytecode VM</span>
+<span class="tl">[model] code</span>
+<span class="tl t-json">[model] {"op":"train","mode":"dry-run","job_id":"job-dry-001","backend":"http","method":"spark_distill_cpu","status":"accepted","dataset":"examples/fixtures/train/dataset.jsonl","base":"fixture-base","out":"out/train/job-dry-001","artifacts":{"adapter":"out/train/job-dry-001/adapter.bin","checkpoint":"out/train/job-dry-001/checkpoint.json","marker":"out/train/job-dry-001/ARTIFACT"},"note":"dry-run — method planned; no train on this host"}</span>
+<span class="tl t-json">[model] {"op":"status","mode":"dry-run","job_id":"job-dry-001","state":"succeeded","backend":"http","artifacts":{"adapter":"out/train/job-dry-001/adapter.bin","checkpoint":"out/train/job-dry-001/checkpoint.json","marker":"out/train/job-dry-001/ARTIFACT"},"note":"dry-run fixture — weights not trained on this host"}</span>
+<span class="tl t-ok">[expect] pass contains job</span>
+<span class="tl t-ok">[expect] pass contains status</span>
+<span class="tl t-ok">[spark] ok</span></code></pre>
+ </div>
+ </div>
+ </section>
+
+ <section class="proof-bar" aria-label="Measured facts">
+ <ul class="proof-bar__list shell">
+ <li class="proof-bar__item">
+ <span class="proof-bar__num">123/123</span>
+ <span class="proof-bar__label">Dry-run tests pass</span>
+ </li>
+ <li class="proof-bar__item">
+ <span class="proof-bar__num">38</span>
+ <span class="proof-bar__label">Bytecode opcodes</span>
+ </li>
+ <li class="proof-bar__item">
+ <a href="/docs/decompile-compete.html">
+ <span class="proof-bar__num">100%</span>
+ <span class="proof-bar__label">Bytecode round-trip</span>
+ </a>
+ </li>
+ <li class="proof-bar__item">
+ <span class="proof-bar__num">158</span>
+ <span class="proof-bar__label">Example programs</span>
+ </li>
+ <li class="proof-bar__item">
+ <a href="/LICENSE.txt">
+ <span class="proof-bar__num">MIT</span>
+ <span class="proof-bar__label">Open source</span>
+ </a>
+ </li>
+ </ul>
+ </section>
+
+ <section class="section shell" aria-label="The Spark loop" data-reveal>
  <nav aria-label="Spark loop steps">
  <ul class="loop-strip">
  <li>
  <a class="loop-strip__step" href="/workflow.html#compile">
  <span class="loop-strip__n">01</span>
  <span class="loop-strip__label">Compile</span>
- <span class="loop-strip__hint">.spark → SPARK_BC</span>
+ <span class="loop-strip__hint">source → bytecode</span>
  </a>
  </li>
  <li>
  <a class="loop-strip__step" href="/workflow.html#inspect">
  <span class="loop-strip__n">02</span>
  <span class="loop-strip__label">Inspect</span>
- <span class="loop-strip__hint">dump · spark-bc-gui</span>
+ <span class="loop-strip__hint">dump and verify locally</span>
  </a>
  </li>
  <li>
  <a class="loop-strip__step" href="/workflow.html#train">
  <span class="loop-strip__n">03</span>
  <span class="loop-strip__label">Train</span>
- <span class="loop-strip__hint">step · spark-coder</span>
+ <span class="loop-strip__hint">jobs you can rerun</span>
  </a>
  </li>
  <li>
  <a class="loop-strip__step" href="/workflow.html#serve">
  <span class="loop-strip__n">04</span>
  <span class="loop-strip__label">Serve</span>
- <span class="loop-strip__hint">helpers · shadows</span>
+ <span class="loop-strip__hint">from your own machine</span>
  </a>
  </li>
  <li>
  <a class="loop-strip__step" href="/workflow.html#share">
  <span class="loop-strip__n">05</span>
  <span class="loop-strip__label">Share</span>
- <span class="loop-strip__hint">docs · Pages</span>
+ <span class="loop-strip__hint">docs and examples</span>
  </a>
  </li>
  </ul>
  </nav>
  </section>
 
- <section class="trust-strip shell" aria-label="Product facts">
+ <section class="trust-strip shell" aria-label="Product facts" data-reveal>
  <ul class="trust-strip__list">
  <li><strong>SparkLang</strong> at sparklang.dev</li>
  <li>
@@ -231,78 +302,69 @@
  <li>
  <a href="https://github.com/sparklang-dev/sparklang">Source on GitHub</a>
  </li>
- <li>v0.6.56 · <a href="/CHANGELOG.html">Changelog</a></li>
+ <li>v0.6.62 · <a href="/CHANGELOG.html">Changelog</a></li>
  <li>Installers on this site</li>
+ <li><strong>Runs offline — no API keys</strong></li>
  </ul>
  </section>
 
- <section class="section shell" aria-labelledby="why-lang-title">
- <h2 id="why-lang-title" class="section__title">Why a language?</h2>
+ <section class="section section--landing shell" aria-labelledby="why-lang-title" data-reveal>
+ <p class="section__kicker">Why a language?</p>
+ <h2 id="why-lang-title" class="section__title">
+ One file, not a sprawl of scripts
+ </h2>
  <p class="section__lede">
- Library glue scatters prompts, training scripts, and eval harnesses
- across repos. A <code class="inline-code">.spark</code> program is one
- reviewable surface — same file for dry-run CI and live ops.
+ AI work tends to sprawl: a prompt in one repo, a training script in
+ another, an eval harness in CI. A Spark program puts the whole job in
+ one file you can read top to bottom — and rerun exactly, on your
+ machine, with no accounts.
  </p>
  <div class="compare-grid">
  <article class="compare-card">
- <h3 class="compare-card__label">Typical Python SDK soup</h3>
+ <h3 class="compare-card__label">The usual sprawl</h3>
  <pre class="card__code"><code>client = OpenAI(...)
 resp = client.chat.completions.create(...)
 # separate train script, eval notebook,
 # CI secrets, ad-hoc shell glue…</code></pre>
  </article>
  <article class="compare-card compare-card--accent">
- <h3 class="compare-card__label">One .spark program</h3>
- <pre class="card__code"><code>model train dataset "data.jsonl" base "base" out "out/job-1" backend "http" -&gt; job
-model status "job-1" -&gt; status
-expect contains job fixture "…/want_accepted.txt"
-expect contains status fixture "…/want_succeeded.txt"
+ <h3 class="compare-card__label">One Spark program</h3>
+ <pre class="card__code"><code>model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" -&gt; job
+model status "job-dry-001" -&gt; status
+expect contains job fixture "examples/fixtures/train/want_accepted.txt"
+expect contains status fixture "examples/fixtures/train/want_succeeded.txt"
 
-# ./spark --dry-run train_eval.spark</code></pre>
+# ./spark --dry-run examples/train_eval.spark</code></pre>
  </article>
  </div>
  </section>
 
- <section class="section shell" aria-labelledby="wedge-title">
- <h2 id="wedge-title" class="section__title">The wedge</h2>
+ <section class="section section--landing shell" aria-labelledby="wedge-title" data-reveal>
+ <p class="section__kicker">Capabilities</p>
+ <h2 id="wedge-title" class="section__title">What Spark does for you</h2>
+ <p class="section__lede">
+ Three things a single Spark file gives you that scattered scripts do
+ not.
+ </p>
  <div class="card-grid benefit-cards">
  <article class="card">
- <h3 class="card__title">Dry-run by default</h3>
+ <h3 class="card__title">Offline by default</h3>
  <p class="card__body">
- <code class="inline-code">./spark --dry-run</code> uses offline
- fixtures — no keys, no network. Pass
- <code class="inline-code">--live</code> only when you want real
- calls.
+ Every example runs with no network and no keys — nothing leaves
+ your machine. Go live only when you point Spark at your own
+ services.
  </p>
  <pre class="card__code"><code>./spark --dry-run examples/model_train.spark</code></pre>
  </article>
  <article class="card">
- <h3 class="card__title">Train backends wired</h3>
+ <h3 class="card__title">Real training, on your hardware</h3>
  <p class="card__body">
- <code class="inline-code">model train</code> /
- <code class="inline-code">model build</code> submit via
- <code class="inline-code">backend "http"</code> to your trainer at
- <code class="inline-code">SPARK_TRAIN_URL</code>
- (<code class="inline-code">POST …/jobs</code>,
- <code class="inline-code">GET …/jobs/{id}</code>). Dry-run uses
- fixtures; live needs a service that implements the
- <a href="/docs/model-training.html#trainer-http-contract"
- >Trainer HTTP contract</a
- >
- — in-repo reference:
- <code class="inline-code">tools/spark-train-ref</code>
- ships five CPU methods:
- <code class="inline-code">spark_distill_cpu</code>,
- <code class="inline-code">spark_pref_pack</code>,
- <code class="inline-code">spark_playbook_fit</code>,
- <code class="inline-code">spark_faq_index</code>,
- <code class="inline-code">spark_reply_pack</code>
- (real <code class="inline-code">weights.pt</code> /
- <code class="inline-code">pref_pack.json</code>+ranker /
- <code class="inline-code">playbooks.json</code>+router /
- <code class="inline-code">faq_index.json</code>+encoder /
- <code class="inline-code">replies.json</code>+gate —
- not LoRA). Captures:
+ Submit a training job from the same file, poll its status, and
+ bind the artifacts. Spark ships five reference trainers that run
+ on CPU — distillation, preference packing, playbook fitting, FAQ
+ indexing, and reply packing — so the full loop works on a laptop.
+ When you outgrow them, point Spark at your own training service
+ over HTTP. Proof:
  <a href="/docs/examples/live-train-capture.txt"
  >live-train-capture.txt</a
  >,
@@ -310,33 +372,32 @@ expect contains status fixture "…/want_succeeded.txt"
  >live-train-methods-capture.txt</a
  >.
  </p>
- <pre class="card__code"><code>model train dataset "…" base "…" out "…" backend "http" -&gt; job
-model status "job-id" -&gt; status</code></pre>
+ <pre class="card__code"><code>model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" -&gt; job
+model status "job-dry-001" -&gt; status</code></pre>
  </article>
  <article class="card">
- <h3 class="card__title">Eval in the same file</h3>
+ <h3 class="card__title">Pass/fail in the same file</h3>
  <p class="card__body">
- After train, assert bound job and status fields with
- <code class="inline-code">expect contains … fixture</code>
- (exit 0/1) — gate of <em>this</em> job, not unrelated gateway
- aliases.
+ After a run, assert on the actual output. Expectations exit 0 or
+ 1 — the gate judges this run, on this machine, and you can rerun
+ it.
  </p>
- <pre class="card__code"><code>expect contains job fixture "…/want_accepted.txt"
-expect contains status fixture "…/want_succeeded.txt"</code></pre>
+ <pre class="card__code"><code>expect contains job fixture "examples/fixtures/train/want_accepted.txt"
+expect contains status fixture "examples/fixtures/train/want_succeeded.txt"</code></pre>
  </article>
  </div>
  </section>
 
- <section class="section shell" aria-labelledby="model-workflow-title">
+ <section class="section section--landing shell" aria-labelledby="model-workflow-title" data-reveal>
+ <p class="section__kicker">The training loop</p>
  <h2 id="model-workflow-title" class="section__title">
  Train → status → expect
  </h2>
  <p class="section__lede">
- Dry-run writes fixture artifact paths (no GPU). Live POSTs to the
- trainer at
- <code class="inline-code">SPARK_TRAIN_URL</code>
- (<code class="inline-code">backend "http"</code>), or an allowlisted
- <code class="inline-code">local-yield</code> unit.
+ The whole training loop is three lines: submit a job, poll its
+ status, assert the result. It runs offline out of the box. When you
+ are ready for real training, point Spark at your training service —
+ the same file goes live.
  </p>
 
  <ol class="workflow-pipeline" aria-label="Model workflow steps">
@@ -366,9 +427,7 @@ expect contains status fixture "examples/fixtures/train/want_succeeded.txt"</cod
  <p class="prose-muted">
  Fail path:
  <code class="inline-code">examples/train_eval_fail.spark</code>
- (exit 1). Live HTTP proof (five CPU methods, via)
- <code class="inline-code">./spark --live</code> /
- <code class="inline-code">./spark-train-http --method</code>):
+ exits 1. Live proof against the reference trainers:
  <a href="/docs/examples/live-train-methods-capture.txt"
  >live-train-methods-capture.txt</a
  >.
@@ -378,17 +437,14 @@ expect contains status fixture "examples/fixtures/train/want_succeeded.txt"</cod
  </p>
  </section>
 
- <section class="section shell" aria-labelledby="also-title">
- <h2 id="also-title" class="section__title">Also on tip</h2>
+ <section class="section section--landing shell" aria-labelledby="also-title" data-reveal>
+ <p class="section__kicker">Beyond the loop</p>
+ <h2 id="also-title" class="section__title">Also in the box</h2>
  <p class="section__lede">
- Beyond the train → status → expect wedge: local
- <code class="inline-code">spark-analyze</code>,
- grounded asks with
- <code class="inline-code">./spark-ground</code>,
- voice ask / voice easy, the three-pane IDE
- (<code class="inline-code">spark-bc-gui</code>),
- weight gallery, and decompile scoreboard. Details live in
- the
+ Beyond the training loop: grounded answers that abstain instead of
+ guessing, real voice — recognition and synthesis on your machine —
+ a three-pane IDE, a weight gallery, and a measured decompile
+ scoreboard. Details live in the
  <a href="/docs/factory.html">factory hub</a>,
  <a href="/docs/language.html">language reference</a>, and
  <a href="/docs/adoption-bar.html">what's shipping today</a>.
@@ -399,8 +455,8 @@ expect contains status fixture "examples/fixtures/train/want_succeeded.txt"</cod
  <a href="/docs/knowledge-safety.html">Grounding</a>
  </h3>
  <p class="card__body">
- <code class="inline-code">./spark-ground</code> —
- verify-before-speak; wrong fixture → abstain.
+ Ask questions with evidence attached. When the evidence does not
+ support the answer, Spark abstains instead of guessing.
  </p>
  <a class="card__link" href="/docs/knowledge-safety.html"
  >Safety &amp; limits →</a
@@ -411,8 +467,8 @@ expect contains status fixture "examples/fixtures/train/want_succeeded.txt"</cod
  <a href="/docs/ide.html">IDE functions</a>
  </h3>
  <p class="card__body">
- Browse · dump · ask · weights play · helpers — local
- panes.
+ Compile, decompile, dump, ask, and inspect weights from one
+ local workbench.
  </p>
  <a class="card__link" href="/docs/ide.html">IDE docs →</a>
  </article>
@@ -421,8 +477,8 @@ expect contains status fixture "examples/fixtures/train/want_succeeded.txt"</cod
  <a href="/docs/decompile-compete.html">Decompile bench</a>
  </h3>
  <p class="card__body">
- Measured scoreboard (wins / ties / losses / N/A) —
- no fake “beats all.”
+ A published scoreboard of decompile results — wins, ties, and
+ losses, measured and rerunnable.
  </p>
  <a class="card__link" href="/docs/decompile-compete.html"
  >Scoreboard →</a
@@ -433,8 +489,8 @@ expect contains status fixture "examples/fixtures/train/want_succeeded.txt"</cod
  <a href="/docs/weight-gallery.html">Weight gallery</a>
  </h3>
  <p class="card__body">
- Catalog stub weights; inspect, diff, play forward on
- CPU / 5090.
+ Inspect, diff, and run model weights forward — on CPU or your
+ GPU.
  </p>
  <a class="card__link" href="/docs/weight-gallery.html"
  >Gallery →</a
@@ -443,11 +499,13 @@ expect contains status fixture "examples/fixtures/train/want_succeeded.txt"</cod
  </div>
  </section>
 
- <section class="section shell" aria-labelledby="learn-path-title">
+ <section class="section section--landing shell" aria-labelledby="learn-path-title" data-reveal>
+ <p class="section__kicker">Documentation</p>
  <h2 id="learn-path-title" class="section__title">Learn Spark</h2>
  <p class="section__lede">
- Follow the trail: install → first dry-run → train→status→expect →
- gate a job. Field concepts live in the
+ Install, run your first program offline, then gate a real training
+ job — the docs walk the same loop this site describes. Deeper
+ background lives in the
  <a href="/docs/knowledge.html">AI knowledge hive</a>.
  </p>
  <div class="card-grid">
@@ -457,7 +515,7 @@ expect contains status fixture "examples/fixtures/train/want_succeeded.txt"</cod
  </h3>
  <p class="card__body">
  Transformers, training, inference, agents, evaluation —
- engineer explainers with diagrams. Not a Claude win claim.
+ engineer-level explainers with diagrams.
  </p>
  <a class="card__link" href="/docs/knowledge.html">Open the hive →</a>
  </article>
@@ -466,8 +524,8 @@ expect contains status fixture "examples/fixtures/train/want_succeeded.txt"</cod
  <a href="/learn/getting-started.html">Getting Started</a>
  </h3>
  <p class="card__body">
- Install the runtime and verify with
- <code class="inline-code">./spark --dry-run</code>.
+ Install the runtime and run your first program offline in
+ minutes.
  </p>
  <a class="card__link" href="/learn/getting-started.html"
  >Start here →</a
@@ -478,7 +536,8 @@ expect contains status fixture "examples/fixtures/train/want_succeeded.txt"</cod
  <a href="/learn/first-program.html">Your First Program</a>
  </h3>
  <p class="card__body">
- A minimal train → status → expect loop you can dry-run in CI.
+ A minimal train, status, expect loop that runs offline from the
+ first minute.
  </p>
  <a class="card__link" href="/learn/first-program.html"
  >Write train_eval.spark →</a
@@ -489,8 +548,8 @@ expect contains status fixture "examples/fixtures/train/want_succeeded.txt"</cod
  <a href="/learn/ai-in-5-minutes.html">AI in 5 Minutes</a>
  </h3>
  <p class="card__body">
- Orchestrate jobs, expect gates, classify, extract — the
- train→status→expect primitives.
+ Orchestrate jobs, gate results, classify and extract — the core
+ primitives in five minutes.
  </p>
  <a class="card__link" href="/learn/ai-in-5-minutes.html"
  >Quick tour →</a
@@ -501,7 +560,8 @@ expect contains status fixture "examples/fixtures/train/want_succeeded.txt"</cod
  <a href="/learn/build-model.html">Build a Model</a>
  </h3>
  <p class="card__body">
- Submit a dry-run train job, poll status, then expect pass/fail.
+ Submit a training job, poll its status, and assert the outcome —
+ pass or fail.
  </p>
  <a class="card__link" href="/learn/build-model.html"
  >Open wizard →</a
@@ -512,14 +572,10 @@ expect contains status fixture "examples/fixtures/train/want_succeeded.txt"</cod
  <a href="/docs/factory.html">Factory docs hub</a>
  </h3>
  <p class="card__body">
- Engineer map: compile, decompile, opcodes, TRAIN/STEP,
- train loop, architecture, tokenizer, serve, eval, make,
- CI/Pages, plus
- <a href="/docs/diagrams.html">diagrams</a> and
- <a href="/docs/model-aspects.html">model aspects</a>
- (ears / eyes / speaking / behaviors) and
- <a href="/docs/spark-coder.html">owned spark-coder</a>.
- Honest — </p>
+ The engineer's map: compile, decompile, opcodes, training,
+ serving, evaluation, diagrams, model aspects — ears, eyes,
+ speaking, behaviors — and the in-repo Spark coder model.
+ </p>
  <a class="card__link" href="/docs/factory.html"
  >Open factory map →</a
  >
@@ -529,11 +585,9 @@ expect contains status fixture "examples/fixtures/train/want_succeeded.txt"</cod
  <a href="/docs/spark-builder.html">Builder — SPARK_BC factory</a>
  </h3>
  <p class="card__body">
- Spark compiles Spark to SPARK_BC (<code class="inline-code">TRAIN</code>
- / <code class="inline-code">STEP</code> /
- <code class="inline-code">TRAIN_STATUS</code>), dumps hex, emits
- Spark-created init weights. Dry ≠ trained. GAS
- <code class="inline-code">--compile</code> wraps bootstrap.
+ Spark compiles Spark. The builder emits bytecode with training
+ opcodes, dumps it to hex for inspection, and writes initial
+ weights you can train from.
  </p>
  <a class="card__link" href="/docs/spark-builder.html"
  >Factory guide →</a
@@ -542,12 +596,13 @@ expect contains status fixture "examples/fixtures/train/want_succeeded.txt"</cod
  </div>
  </section>
 
- <section class="section shell" aria-labelledby="hello-title">
+ <section class="section section--landing shell" aria-labelledby="hello-title" data-reveal>
+ <p class="section__kicker">Run it yourself</p>
  <h2 id="hello-title" class="section__title">Try it</h2>
  <pre class="terminal code-block"><code><span class="comment"># Dry-run train → status → expect — no network, no API key</span>
 <span class="cmd">./spark --dry-run examples/train_eval.spark</span>
 
-<span class="comment"># Optional live submit — your trainer at SPARK_TRAIN_URL</span>
+<span class="comment"># Go live against your own trainer when you're ready</span>
 <span class="cmd">export SPARK_TRAIN_URL=http://127.0.0.1:8090/v1</span>
 <span class="cmd">./spark --live examples/model_train.spark</span></code></pre>
  <p class="prose-muted">
@@ -562,7 +617,7 @@ expect contains status fixture "examples/fixtures/train/want_succeeded.txt"</cod
  <div class="shell footer-inner">
  <div class="footer-brand">
  <span>SparkLang</span>
- <span class="footer-meta">v0.6.56 · <a href="/LICENSE.txt">MIT</a></span>
+ <span class="footer-meta">v0.6.62 · <a href="/LICENSE.txt">MIT</a></span>
  </div>
  <nav class="footer-nav" aria-label="Footer">
  <a href="/workflow.html">Loop</a>
@@ -578,5 +633,6 @@ expect contains status fixture "examples/fixtures/train/want_succeeded.txt"</cod
  </div>
  </footer>
  <script src="/js/site.js"></script>
+ <script src="/js/landing.js"></script>
  </body>
 </html>
