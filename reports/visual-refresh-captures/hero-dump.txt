@@ -1,0 +1,128 @@
+# SPARK_BC dump
+# SPARK_BC is orchestration bytecode — not neural weights.
+# Not HuggingFace. Not imported tensors. Spark's own binary.
+#
+# Source: out/train_eval.sparkbc
+# Command: (already compiled)
+# sha256: 7880e2227da06c5c249f97a731471d7d22ceb84fcc28ede9388a25c77d214dbd
+# size: 322 bytes
+#
+# First 32 hex bytes:
+# 53 50 42 43 01 0b 00 04 00 63 6f 64 65 03 00 6a 6f 62 11 00 73 70 61 72 6b 5f 64 69 73 74 69 6c
+#
+# File layout (little-endian, docs/SPARK_BC.md):
+#   offset 0  magic 'S''P''B''C'
+#   offset 4  version 0x01
+#   then u16 nstrings, string pool, u16 nconsts,
+#   const pool (u8 kind + u16 payload), u32 ncode, code
+
+## xxd
+00000000: 53 50 42 43 01 0b 00 04 00 63 6f 64 65 03 00 6a  SPBC.....code..j
+00000010: 6f 62 11 00 73 70 61 72 6b 5f 64 69 73 74 69 6c  ob..spark_distil
+00000020: 6c 5f 63 70 75 15 00 6f 75 74 2f 74 72 61 69 6e  l_cpu..out/train
+00000030: 2f 6a 6f 62 2d 64 72 79 2d 30 30 31 0c 00 66 69  /job-dry-001..fi
+00000040: 78 74 75 72 65 2d 62 61 73 65 25 00 65 78 61 6d  xture-base%.exam
+00000050: 70 6c 65 73 2f 66 69 78 74 75 72 65 73 2f 74 72  ples/fixtures/tr
+00000060: 61 69 6e 2f 64 61 74 61 73 65 74 2e 6a 73 6f 6e  ain/dataset.json
+00000070: 6c 06 00 73 74 61 74 75 73 0b 00 6a 6f 62 2d 64  l..status..job-d
+00000080: 72 79 2d 30 30 31 32 00 40 66 69 78 74 75 72 65  ry-0012.@fixture
+00000090: 3a 65 78 61 6d 70 6c 65 73 2f 66 69 78 74 75 72  :examples/fixtur
+000000a0: 65 73 2f 74 72 61 69 6e 2f 77 61 6e 74 5f 61 63  es/train/want_ac
+000000b0: 63 65 70 74 65 64 2e 74 78 74 08 00 63 6f 6e 74  cepted.txt..cont
+000000c0: 61 69 6e 73 33 00 40 66 69 78 74 75 72 65 3a 65  ains3.@fixture:e
+000000d0: 78 61 6d 70 6c 65 73 2f 66 69 78 74 75 72 65 73  xamples/fixtures
+000000e0: 2f 74 72 61 69 6e 2f 77 61 6e 74 5f 73 75 63 63  /train/want_succ
+000000f0: 65 65 64 65 64 2e 74 78 74 0b 00 00 00 00 00 01  eeded.txt.......
+00000100: 00 00 02 00 00 03 00 00 04 00 00 05 00 00 06 00  ................
+00000110: 00 07 00 00 08 00 00 09 00 00 0a 00 22 00 00 00  ............"...
+00000120: 01 00 00 26 05 00 04 00 03 00 02 00 01 00 27 07  ...&..........'.
+00000130: 00 06 00 25 09 00 01 00 08 00 25 09 00 06 00 0a  ...%......%.....
+00000140: 00 00                                            ..
+
+## Header
+magic: SPBC
+version: 1
+nstrings: 11
+nconsts: 11
+ncode: 34
+code_off: 288
+
+## Sections
+magic  off=0 size=4  SPBC
+version  off=4 size=1  u8
+string_pool  off=7 size=242  nstrings=11
+const_pool  off=251 size=33  nconsts=11
+code  off=288 size=34  ncode=34
+
+## Symbols (string pool)
+str0  'code' (4 bytes)
+str1  'job' (3 bytes)
+str2  'spark_distill_cpu' (17 bytes)
+str3  'out/train/job-dry-001' (21 bytes)
+str4  'fixture-base' (12 bytes)
+str5  'examples/fixtures/train/dataset.jsonl' (37 bytes)
+str6  'status' (6 bytes)
+str7  'job-dry-001' (11 bytes)
+str8  '@fixture:examples/fixtures/train/want_accepted.txt' (50 bytes)
+str9  'contains' (8 bytes)
+str10  '@fixture:examples/fixtures/train/want_succeeded.txt' (51 bytes)
+
+## String pool
+0: 'code' (4 bytes)
+1: 'job' (3 bytes)
+2: 'spark_distill_cpu' (17 bytes)
+3: 'out/train/job-dry-001' (21 bytes)
+4: 'fixture-base' (12 bytes)
+5: 'examples/fixtures/train/dataset.jsonl' (37 bytes)
+6: 'status' (6 bytes)
+7: 'job-dry-001' (11 bytes)
+8: '@fixture:examples/fixtures/train/want_accepted.txt' (50 bytes)
+9: 'contains' (8 bytes)
+10: '@fixture:examples/fixtures/train/want_succeeded.txt' (51 bytes)
+
+## Constant pool (kind 0 = STR → string index)
+0: kind=0 payload=0 → 'code'
+1: kind=0 payload=1 → 'job'
+2: kind=0 payload=2 → 'spark_distill_cpu'
+3: kind=0 payload=3 → 'out/train/job-dry-001'
+4: kind=0 payload=4 → 'fixture-base'
+5: kind=0 payload=5 → 'examples/fixtures/train/dataset.jsonl'
+6: kind=0 payload=6 → 'status'
+7: kind=0 payload=7 → 'job-dry-001'
+8: kind=0 payload=8 → '@fixture:examples/fixtures/train/want_accepted.txt'
+9: kind=0 payload=9 → 'contains'
+10: kind=0 payload=10 → '@fixture:examples/fixtures/train/want_succeeded.txt'
+
+## Xrefs (const → ops; str → consts)
+n_ops: 6
+n_const_refs: 14
+const0 → MODEL@0
+const1 → TRAIN@3, EXPECT@19
+const10 → EXPECT@26
+const2 → TRAIN@3
+const3 → TRAIN@3
+const4 → TRAIN@3
+const5 → TRAIN@3
+const6 → TRAIN_STATUS@14, EXPECT@26
+const7 → TRAIN_STATUS@14
+const8 → EXPECT@19
+const9 → EXPECT@19, EXPECT@26
+str0 ← consts 0
+str1 ← consts 1
+str10 ← consts 10
+str2 ← consts 2
+str3 ← consts 3
+str4 ← consts 4
+str5 ← consts 5
+str6 ← consts 6
+str7 ← consts 7
+str8 ← consts 8
+str9 ← consts 9
+
+## Code (opcode + u16le const indices)
+code+0  01 00 00  MODEL (0x01) const0 "code"
+code+3  26 05 00 04 00 03 00 02 00 01 00  TRAIN (0x26) const5 "examples/fixtures/train/dataset.jsonl" const4 "fixture-base" const3 "out/train/job-dry-001" const2 "spark_distill_cpu" const1 "job"
+code+14  27 07 00 06 00  TRAIN_STATUS (0x27) const7 "job-dry-001" const6 "status"
+code+19  25 09 00 01 00 08 00  EXPECT (0x25) const9 "contains" const1 "job" const8 "@fixture:examples/fixtures/train/want_accepted.txt"
+code+26  25 09 00 06 00 0a 00  EXPECT (0x25) const9 "contains" const6 "status" const10 "@fixture:examples/fixtures/train/want_succeeded.txt"
+code+33  00  HALT (0x00) 

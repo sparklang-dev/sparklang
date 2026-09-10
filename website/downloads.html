@@ -6,12 +6,18 @@
  <title>Downloads — Spark</title>
  <meta
  name="description"
- content="Download Spark AI-first runtime installers for Linux, macOS, and Windows."
+ content="Download Spark for Linux, macOS, and Windows — graphical installers, offline by default, no API keys."
  />
  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
  <link rel="shortcut icon" href="/favicon.svg" />
- <link rel="stylesheet" href="/css/tokens.css?v=polish0909" />
- <link rel="stylesheet" href="/css/site.css?v=polish0909" />
+ <link rel="preconnect" href="https://fonts.googleapis.com" />
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+ <link
+ href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+ rel="stylesheet"
+ />
+ <link rel="stylesheet" href="/css/tokens.css?v=visual0910" />
+ <link rel="stylesheet" href="/css/site.css?v=visual0910" />
  </head>
  <body class="doc-page">
  <header class="site-header">
@@ -162,19 +168,15 @@
  <article class="doc__body">
  <h1 id="downloads">Downloads</h1>
  <p>
- <strong>SparkLang</strong> is a language and runtime for plain
- <code class="inline-code">.spark</code> files:
+ <strong>Spark</strong> is a language and runtime for AI work:
  <code class="inline-code">ask</code>,
  <code class="inline-code">classify</code>,
  <code class="inline-code">extract</code>,
  <code class="inline-code">pipeline</code>,
- <code class="inline-code">review</code>,
- <code class="inline-code">model</code> train (real jobs), and
- optional <code class="inline-code">voice</code>. Dry-run offline with
- fixtures is the default; live
- <code class="inline-code">ask</code> via
- <code class="inline-code">AI_GATEWAY_URL</code> is optional
- (<code class="inline-code">--live</code>).
+ <code class="inline-code">review</code>, train real models, and
+ listen and speak with built-in
+ <code class="inline-code">voice</code>. Every install runs offline
+ out of the box — no accounts, no API keys.
  </p>
 
  <h2 id="graphical-installers">Graphical installers (recommended)</h2>
@@ -365,7 +367,7 @@ print(p['sha256']+' '+p['file'])
  <div class="shell footer-inner">
  <div class="footer-brand">
  <span>SparkLang — the Spark programming language</span>
- <span class="footer-meta">v0.6.56 · MIT</span>
+ <span class="footer-meta">v0.6.62 · <a href="/LICENSE.txt">MIT</a></span>
  </div>
  <nav class="footer-nav" aria-label="Footer">
  <a href="/workflow.html">Loop</a>

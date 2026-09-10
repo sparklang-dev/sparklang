@@ -191,7 +191,7 @@
  window.mermaid.initialize({
  startOnLoad: false,
  securityLevel: "strict",
- theme: "neutral",
+ theme: "dark",
  });
  window.mermaid.run({ nodes: blocks });
  }

@@ -1,49 +1,55 @@
 /* Spark — shared design tokens (site + GUI / IDE)
  *
- * Engineer-tool aesthetic: warm ember brand on cool neutrals.
- * Not OpenBin / not generic AI purple / cream-serif.
- * GUI mirrors hex values in tools/spark_bc_gui/theme.py.
+ * Compiler-grade dark: deep graphite surfaces, one signature
+ * amber "spark" accent used with restraint. GUI mirrors hex
+ * values in tools/spark_bc_gui/theme.py.
  */
 
 :root {
-  /* —— Surfaces —— */
-  --spark-bg: #ffffff;
-  --spark-bg-subtle: #f4f6f8;
-  --spark-bg-elevated: #ffffff;
-  --spark-bg-code: #f1f3f5;
-  --spark-bg-muted: #e8ecf0;
+  color-scheme: dark;
 
-  --spark-border: #d0d5dd;
-  --spark-border-light: #e4e7ec;
-  --spark-border-strong: #98a2b3;
+  /* —— Surfaces —— */
+  --spark-bg: #08090d;
+  --spark-bg-subtle: #0d1017;
+  --spark-bg-elevated: #12161f;
+  --spark-bg-code: #0b0e14;
+  --spark-bg-muted: #1a1f2b;
+  --spark-glass: rgba(255, 255, 255, 0.03);
+  --spark-glass-strong: rgba(255, 255, 255, 0.055);
+
+  --spark-border: rgba(255, 255, 255, 0.09);
+  --spark-border-light: rgba(255, 255, 255, 0.055);
+  --spark-border-strong: rgba(255, 255, 255, 0.18);
 
   /* —— Text —— */
-  --spark-text: #101828;
-  --spark-text-muted: #475467;
-  --spark-text-subtle: #667085;
-  --spark-text-inverse: #ffffff;
+  --spark-text: #eceef4;
+  --spark-text-muted: #a3acbd;
+  --spark-text-subtle: #6d7688;
+  --spark-text-inverse: #0b0d12;
 
-  /* —— Brand (ember — Spark mark) —— */
-  --spark-brand: #e85d04;
-  --spark-brand-dark: #c44d03;
-  --spark-brand-light: #fff4ed;
-  --spark-brand-glow: rgba(232, 93, 4, 0.12);
+  /* —— Brand (amber spark) —— */
+  --spark-brand: #ffb224;
+  --spark-brand-ember: #e85d04;
+  --spark-brand-dark: #d98a06;
+  --spark-brand-light: rgba(255, 178, 36, 0.1);
+  --spark-brand-glow: rgba(255, 178, 36, 0.28);
+  --spark-brand-soft: rgba(255, 178, 36, 0.16);
 
-  --spark-link: #0265c8;
-  --spark-link-hover: #024a94;
+  --spark-link: #ffc95e;
+  --spark-link-hover: #ffdd96;
 
   /* —— Header / chrome —— */
-  --spark-header-bg: #1c1f24;
-  --spark-header-text: #ffffff;
-  --spark-header-muted: #b0b7c3;
+  --spark-header-bg: #0a0c11;
+  --spark-header-text: #f2f4f9;
+  --spark-header-muted: #9aa3b5;
 
   /* —— Semantic (status chips) —— */
-  --spark-ok-bg: #ecfdf3;
-  --spark-ok-fg: #067647;
-  --spark-warn-bg: #fffaeb;
-  --spark-warn-fg: #b54708;
-  --spark-info-bg: #eff8ff;
-  --spark-info-fg: #175cd3;
+  --spark-ok-bg: rgba(52, 211, 153, 0.12);
+  --spark-ok-fg: #4ade9a;
+  --spark-warn-bg: rgba(251, 191, 36, 0.12);
+  --spark-warn-fg: #fbbf24;
+  --spark-info-bg: rgba(96, 165, 250, 0.12);
+  --spark-info-fg: #6fb3ff;
 
   /* —— IDE / dense tool chrome (dark engineer) —— */
   --ide-bg: #12151a;
@@ -53,15 +59,15 @@
   --ide-border-soft: #252b36;
   --ide-text: #e8eaed;
   --ide-text-muted: #9aa3b2;
-  --ide-accent: #e85d04;
-  --ide-accent-soft: rgba(232, 93, 4, 0.16);
-  --ide-selection: rgba(2, 101, 200, 0.28);
-  --ide-focus: #5eb1ff;
+  --ide-accent: #ffb224;
+  --ide-accent-soft: rgba(255, 178, 36, 0.16);
+  --ide-selection: rgba(255, 178, 36, 0.22);
+  --ide-focus: #ffc95e;
 
   /* —— Typography —— */
-  --font-sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto,
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Code",
+  --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Code",
     "Source Code Pro", Menlo, Consolas, monospace;
   --font-size-root: 1rem;
   --font-size-sm: 0.875rem;
@@ -93,13 +99,12 @@
   --ide-tools-width: 16rem;
 
   /* —— Elevation —— */
-  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06),
-    0 1px 3px rgba(16, 24, 40, 0.08);
-  --shadow-md: 0 4px 12px rgba(16, 24, 40, 0.1),
-    0 2px 4px rgba(16, 24, 40, 0.06);
-  --shadow-lg: 0 12px 28px rgba(16, 24, 40, 0.12),
-    0 4px 8px rgba(16, 24, 40, 0.06);
-  --shadow-focus: 0 0 0 3px var(--spark-brand-glow);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 18px 48px rgba(0, 0, 0, 0.55);
+  --shadow-glow: 0 0 24px rgba(255, 178, 36, 0.12),
+    0 0 64px rgba(255, 178, 36, 0.05);
+  --shadow-focus: 0 0 0 3px var(--spark-brand-soft);
 
   /* —— Motion (150–250ms; respect prefers-reduced-motion in site.css) —— */
   --motion-fast: 150ms;
@@ -113,20 +118,4 @@
   --focus-ring: 2px solid var(--spark-brand);
   --focus-ring-offset: 2px;
   --focus-ring-ide: 2px solid var(--ide-focus);
-}
-
-/* Optional dark site chrome for future toggle — keep light default */
-[data-theme="dark"] {
-  --spark-bg: #12151a;
-  --spark-bg-subtle: #1a1e26;
-  --spark-bg-elevated: #222833;
-  --spark-bg-code: #1e2430;
-  --spark-border: #2e3642;
-  --spark-border-light: #252b36;
-  --spark-text: #e8eaed;
-  --spark-text-muted: #9aa3b2;
-  --spark-text-subtle: #7a8494;
-  --spark-brand-light: rgba(232, 93, 4, 0.14);
-  --spark-link: #5eb1ff;
-  --spark-link-hover: #8ec8ff;
 }
