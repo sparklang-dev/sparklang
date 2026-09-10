@@ -113,7 +113,7 @@ playbooks-catalog:
 SPARK_OBJS = asm/spark.o asm/model_ops.o asm/train_ops.o asm/binary_ops.o \
 	asm/network_ops.o asm/os_ops.o asm/bind_ops.o asm/cuda_ops.o \
 	asm/ask_ops.o asm/rag_ops.o asm/http_ops.o asm/extract_ops.o \
-	asm/expect_ops.o asm/abstain_ops.o asm/shell_ops.o \
+	asm/expect_ops.o asm/voice_loop_ops.o asm/abstain_ops.o asm/shell_ops.o \
 	asm/browser_ops.o \
 	asm/voice_ops.o asm/pcie_ops.o \
 	asm/crypto_ops.o asm/gateway_ops.o asm/engine_js.o asm/engine_html.o \
@@ -171,6 +171,9 @@ asm/extract_ops.o: asm/extract_ops.s
 	$(AS) $(ASFLAGS) -o $@ $<
 
 asm/expect_ops.o: asm/expect_ops.s
+	$(AS) $(ASFLAGS) -o $@ $<
+
+asm/voice_loop_ops.o: asm/voice_loop_ops.s
 	$(AS) $(ASFLAGS) -o $@ $<
 
 asm/abstain_ops.o: asm/abstain_ops.s
@@ -274,7 +277,7 @@ companions: spark-cuda-probe spark-net-capture \
 	spark-binary-probe spark-section-dump spark-lift spark-ask-http \
 	spark-ask-probe spark-rag-http spark-http spark-extract spark-expect \
 	spark-train-http spark-abstain spark-ground spark-model-lab spark-serve \
-	spark-serve-api spark-shell \
+	spark-serve-api spark-shell spark-voice-loop \
 	spark-browser-host spark-mitm-quic \
 	spark-mitm-quic-divert spark-mitm-ca spark-mitm-h2 spark-browser-cdp spark-pstn-dial \
 	spark-enc-gateway spark-stt-tts spark-review-url spark-engine-show \
@@ -349,6 +352,12 @@ spark-abstain: tools/spark-abstain/spark_abstain.sh \
 spark-ground: tools/spark-ground/spark_ground.sh \
 	tools/spark-ground/cli.py
 	install -m 755 tools/spark-ground/spark_ground.sh $@
+
+# Voice agent loop companion (pairs / expect score / serve / ground /
+# bench / schedule). Dry-run + CPU; no vendor names.
+spark-voice-loop: tools/spark-voice-loop/spark_voice_loop.sh \
+	python/sparklang/voice_loop/stmt.py
+	install -m 755 tools/spark-voice-loop/spark_voice_loop.sh $@
 
 # Model lab: reverse local HF config; compile/modify via ./spark.
 spark-model-lab: tools/spark-model-lab/spark_model_lab.sh \
@@ -454,7 +463,9 @@ test: spark companions spark-bootstrap test-sparkbc test-ai-playbooks \
 	test-serve-api \
 	test-bpe-seed \
 	test-shell \
-	test-ask-gateway
+	test-ask-gateway \
+	test-pairs test-expect-score test-serve-helper test-ground-lang \
+	test-bench test-schedule test-train-replay
 	./tests/run_dry.sh
 	./tests/hdl_check.sh
 	./bootstrap/tests/run_bootstrap.sh
@@ -732,6 +743,7 @@ clean:
 	rm -f spark-ask-http spark-ask-probe spark-rag-http spark-http \
 		spark-extract spark-expect spark-train-http spark-abstain \
 		spark-ground spark-shell spark-model-lab spark-serve spark-serve-api \
+		spark-voice-loop \
 		spark-browser-host spark-pstn-dial spark-mitm-quic
 	rm -f spark-mitm-quic-divert spark-mitm-ca spark-mitm-h2 spark-browser-cdp spark-enc-gateway
 	rm -f spark-stt-tts spark-review-url spark-engine-show spark-engine-paint
@@ -840,6 +852,53 @@ test-abstain: spark spark-abstain spark-expect spark-http
 test-ground: spark-ground
 	chmod +x tools/spark-ground/run_ground_gate.sh
 	./tools/spark-ground/run_ground_gate.sh
+
+.PHONY: test-pairs test-expect-score test-serve-helper \
+	test-ground-lang test-bench test-schedule test-train-replay \
+	test-voice-loop
+test-voice-loop: spark spark-voice-loop
+	chmod +x tools/spark-voice-loop/run_voice_loop_gate.sh
+	./tools/spark-voice-loop/run_voice_loop_gate.sh
+
+test-pairs: spark spark-voice-loop
+	./spark --dry-run examples/pairs_basic.spark > /tmp/spark-vl-pairs.txt
+	grep -qE '"op": ?"pairs"' /tmp/spark-vl-pairs.txt
+	@echo "test-pairs OK"
+
+test-expect-score: spark spark-voice-loop
+	./spark --dry-run examples/expect_score.spark > /tmp/spark-vl-score.txt
+	grep -qE '"op": ?"expect_score"' /tmp/spark-vl-score.txt
+	@echo "test-expect-score OK"
+
+test-serve-helper: spark spark-voice-loop
+	./spark --dry-run examples/serve_helper.spark > /tmp/spark-vl-serve.txt
+	grep -qE '"op": ?"serve_helper"' /tmp/spark-vl-serve.txt
+	python3 tools/spark-serve-ref/server.py --helper out/pref-001 \
+		--as ranker --port 8091 --mode shadow --dry > /tmp/spark-vl-sref.txt
+	grep -qE '"op": ?"serve_helper"' /tmp/spark-vl-sref.txt
+	@echo "test-serve-helper OK"
+
+test-ground-lang: spark spark-voice-loop
+	./spark --dry-run examples/ground_fact.spark > /tmp/spark-vl-ground.txt
+	grep -qE '"op": ?"ground"' /tmp/spark-vl-ground.txt
+	@echo "test-ground-lang OK"
+
+test-bench: spark spark-voice-loop
+	./spark --dry-run examples/bench_agents.spark > /tmp/spark-vl-bench.txt
+	grep -qE '"op": ?"bench"' /tmp/spark-vl-bench.txt
+	@echo "test-bench OK"
+
+test-schedule: spark spark-voice-loop
+	./spark --dry-run examples/schedule_nightly.spark > /tmp/spark-vl-sched.txt
+	grep -qE '"op": ?"schedule"' /tmp/spark-vl-sched.txt
+	@echo "test-schedule OK"
+
+test-train-replay: spark-voice-loop
+	PYTHONPATH=python python3 -c \
+	  'from sparklang.voice_loop.expect_score import http_replay; \
+	   r=http_replay("examples/fixtures/voice_loop/stall.spark", \
+	                 "out/pref-001"); assert r["op"]=="replay"'
+	@echo "test-train-replay OK"
 
 .PHONY: test-spark-lsp
 test-spark-lsp:

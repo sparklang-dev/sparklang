@@ -1,0 +1,51 @@
+# SparkLang voice-loop live capture — CPU companions
+# 2026-09-10T07:43:05Z — synthetic fixtures only
+
+## pairs
+[spark] dry-run via assembly VM (machine code)
+[model] {"op":"pairs","mode":"dry-run","source":"examples/fixtures/voice_loop/turns.jsonl","schema":["context","target_turn","candidate_turn","score_target","score_candidate","class"],"filters":{"class":"stall","min_gap":2},"n_in":9,"n_out":2,"pref_inputs":[{"context":"caller asks about desk hours","chosen":"Desk hours are nine to five on weekdays.","rejected":"Um, I think we are open somehow.","class":"stall","score_chosen":9.0,"score_rejected":2.0},{"context":"caller asks catalog price","chosen":"The catalog price is twelve dollars.","rejected":"Probably cheap, not sure.","class":"stall","score_chosen":8.5,"score_rejected":1.5}],"note":"CPU pairs emit \u2014 not a trained model","artifact":"out/voice_loop/pairs-ds.json"}
+[spark] ok
+
+## expect score
+[spark] dry-run via assembly VM (machine code)
+{"op":"expect_score","mode":"dry-run","fixture_glob":"examples/fixtures/voice_loop/*.spark","helper":"out/pref-001","baseline":"out/none","n":4,"helper_mean":0.7,"baseline_mean":0.43,"pass":true,"detail":[{"fixture":"examples/fixtures/voice_loop/grounded.spark","helper_score":0.77,"baseline_score":0.5,"delta":0.27},{"fixture":"examples/fixtures/voice_loop/stall.spark","helper_score":0.73,"baseline_score":0.46,"delta":0.27},{"fixture":"examples/fixtures/voice_loop/turn_cues.spark","helper_score":0.68,"baseline_score":0.41,"delta":0.27},{"fixture":"examples/fixtures/voice_loop/turn_taking.spark","helper_score":0.62,"baseline_score":0.35,"delta":0.27}],"note":"CPU replay heuristic \u2014 not a live judge model"}
+[spark] ok
+
+## serve helper
+[spark] dry-run via assembly VM (machine code)
+[model] {"op":"serve_helper","mode":"dry-run","helper":"out/pref-001","name":"ranker","port":8091,"serve_mode":"shadow","endpoint":"http://127.0.0.1:8091/v1/rank","note":"dry-run plans serve; live uses ./spark-serve-ref (CPU HTTP)"}
+[spark] ok
+
+## ground
+[spark] dry-run via assembly VM (machine code)
+{"op":"ground","mode":"dry-run","key":"desk_hours","value":"09:00-17:00","abstain":false,"source":"examples/fixtures/voice_loop/facts.json","note":"grounded from facts file"}
+{"op":"ground","mode":"dry-run","key":"catalog_price","value":"12.00","abstain":false,"source":"examples/fixtures/voice_loop/facts.json","note":"grounded from facts file"}
+[spark] ok
+
+## bench
+[spark] dry-run via assembly VM (machine code)
+{"op":"bench","mode":"dry-run","fixtures":"examples/fixtures/voice_loop/*.spark","agents":["agent-a","agent-b"],"classes":["turn_taking","stall","dead_air","interrupt","filler","handoff","grounded"],"helpers":{"agent_a":"examples/fixtures/voice_loop/agents/agent-a","agent_b":"examples/fixtures/voice_loop/agents/agent-b"},"board":{"turn_taking":{"agent_a":0.8787,"agent_b":0.8787,"gap":0.0},"stall":{"agent_a":0.8181,"agent_b":0.8181,"gap":0.0},"dead_air":{"agent_a":0.8787,"agent_b":0.8787,"gap":0.0},"interrupt":{"agent_a":0.8787,"agent_b":0.8787,"gap":0.0},"filler":{"agent_a":0.8787,"agent_b":0.8787,"gap":0.0},"handoff":{"agent_a":0.8787,"agent_b":0.8787,"gap":0.0},"grounded":{"agent_a":0.8181,"agent_b":0.8181,"gap":0.0}},"n_fixtures":4,"note":"synthetic two-agent scoreboard \u2014 CPU only","artifact":"out/voice_loop/bench-board.json"}
+[spark] ok
+
+## schedule
+[spark] dry-run via assembly VM (machine code)
+{"op":"schedule","kind":"nightly","mode":"dry-run","program":"examples/pairs_basic.spark","ts":"2026-09-10T07:43:05Z","ok":true,"steps":[{"step":"capture","program":"examples/pairs_basic.spark","ok":true,"note":"program path recorded \u2014 no live dial"},{"step":"pairs","ok":true,"n_out":9,"artifact":"out/voice_loop/pairs-nightly.json"},{"step":"train","ok":true,"helper":"out/pref-001","note":"dry writes ARTIFACT stub when missing"},{"step":"expect","ok":true,"helper_mean":0.7,"baseline_mean":0.43},{"step":"serve","ok":true,"mode":"shadow","log":"out/voice_loop/serve-shadow.jsonl"}],"note":"nightly loop summary \u2014 CPU/dry only","artifact":"out/voice_loop/nightly-summary.json"}
+[spark] ok
+
+## serve-ref dry
+{
+  "op": "serve_helper",
+  "helper": "out/pref-001",
+  "as": "ranker",
+  "port": 8091,
+  "mode": "shadow"
+}
+
+## replay
+{
+  "op": "replay",
+  "fixture": "examples/fixtures/voice_loop/stall.spark",
+  "helper": "out/pref-001",
+  "score": 0.73,
+  "note": "CPU replay \u2014 Trainer contract"
+}

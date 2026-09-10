@@ -42,6 +42,7 @@ ship is **forced grounding**: guessing should fail CI.
 | Dry-run first | Learn trail, CI |
 | Abstain heads | [ABSTAIN_HEADS.md](../ABSTAIN_HEADS.md) |
 | Grounded generation / anti-guess | This page · `./spark-ground` |
+| `ground fact "…" from "…" else abstain` | Language verify-before-speak (voice loop) |
 | LLM decompile ≠ SoT | [llm-decompile](../research/LLM_DECOMPILE.md) |
 | Recompile ≠ semantics | [DECOMPILE_RE.md](DECOMPILE_RE.md) · arXiv:2609.05370 |
 | Eyes vision stub only | [Model aspects](../MODEL_ASPECTS.md) |
@@ -53,6 +54,17 @@ ship is **forced grounding**: guessing should fail CI.
 **Goal:** make it **nearly impossible to pass CI while guessing** —
 abstain, retrieve/expect, tool allowlists, verify-before-speak,
 structured outputs. Not magic weights.
+
+Language form (synthetic facts only):
+
+```text
+ground fact "desk_hours" from "examples/fixtures/voice_loop/facts.json" \
+ else abstain
+```
+
+Dry-run: `./spark --dry-run examples/ground_fact.spark`.
+Gate: `make test-ground-lang`. See [VOICE_AGENT_LOOP.md](VOICE_AGENT_LOOP.md).
+
 ### Modify / adapt path (Qwen-class + Spark-owned)
 
 Language already has attach-only modify:

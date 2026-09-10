@@ -1,0 +1,5 @@
+# class:stall dead_air filler
+# Synthetic agent fixture — stall recovery cues.
+listen "fixtures/voice/silence.wav" -> t
+speak "Are you still there? I can help with desk hours."
+expect contains t "silence"

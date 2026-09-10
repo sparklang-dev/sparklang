@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Voice agent loop — Spark</title>
+    <meta name="description" content="Capture → pairs → train → expect → serve → bench (synthetic fixtures, CPU/dry)." />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/css/tokens.css?v=navsub0909" />
+    <link rel="stylesheet" href="/css/site.css?v=navsub0909" />
+  </head>
+  <body class="doc-page">
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="site-brand" href="/" aria-label="Spark home">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+            <path d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z" fill="currentColor" />
+          </svg>
+          Spark
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+        </button>
+        <div class="header-nav-wrap">
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
+            <!-- spark-primary-nav:begin -->
+            <ul class="nav-primary">
+              <li><a href="/workflow.html">Loop</a></li>
+              <li><a href="/learn/">Learn</a></li>
+              <li><a href="/docs/knowledge.html">Knowledge</a></li>
+              <li><a href="/docs/language.html">Docs</a></li>
+              <li><a href="/docs/factory.html">Factory</a></li>
+              <li><a href="/downloads.html">Download</a></li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">Hive</button>
+                <ul class="nav-more__menu" hidden>
+                  <li class="nav-more__hub"><a href="/docs/knowledge.html">Knowledge hub</a></li>
+                  <li class="nav-sub">
+                    <span class="nav-sub__label" id="nav-hive-foundations">Foundations</span>
+                    <ul class="nav-sub__list" aria-labelledby="nav-hive-foundations">
+                      <li><a href="/docs/knowledge-llm.html">LLMs & transformers</a></li>
+                      <li><a href="/docs/knowledge-training.html">Training</a></li>
+                      <li><a href="/docs/knowledge-inference.html">Inference</a></li>
+                    </ul>
+                  </li>
+                  <li class="nav-sub">
+                    <span class="nav-sub__label" id="nav-hive-systems">Systems</span>
+                    <ul class="nav-sub__list" aria-labelledby="nav-hive-systems">
+                      <li><a href="/docs/knowledge-multimodal.html">Multimodal</a></li>
+                      <li><a href="/docs/knowledge-agents.html">Agents & tools</a></li>
+                      <li><a href="/docs/knowledge-voice-loop.html">Voice agent loop</a></li>
+                    </ul>
+                  </li>
+                  <li class="nav-sub">
+                    <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
+                    <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
+                      <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
+                    </ul>
+                  </li>
+                  <li class="nav-sub">
+                    <span class="nav-sub__label" id="nav-hive-re">RE</span>
+                    <ul class="nav-sub__list" aria-labelledby="nav-hive-re">
+                      <li><a href="/docs/knowledge-decompile.html">Decompile + RE</a></li>
+                      <li><a href="/docs/llm-decompile.html">LLM decompile research</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">Forge</button>
+                <ul class="nav-more__menu" hidden>
+                  <li class="nav-sub">
+                    <span class="nav-sub__label" id="nav-forge-senses">Senses</span>
+                    <ul class="nav-sub__list" aria-labelledby="nav-forge-senses">
+                      <li><a href="/docs/voice.html">Voice / STT / TTS</a></li>
+                      <li><a href="/docs/voice-ask.html">Voice ask</a></li>
+                      <li><a href="/docs/voice-easy.html">Voice easy</a></li>
+                    </ul>
+                  </li>
+                  <li class="nav-sub">
+                    <span class="nav-sub__label" id="nav-forge-models">Models</span>
+                    <ul class="nav-sub__list" aria-labelledby="nav-forge-models">
+                      <li><a href="/docs/model-aspects.html">Model aspects</a></li>
+                      <li><a href="/docs/diagrams.html">Diagrams</a></li>
+                      <li><a href="/docs/spark-coder.html">Spark coder</a></li>
+                      <li><a href="/docs/weight-gallery.html">Weight gallery</a></li>
+                      <li><a href="/docs/ai-models.html">AI models</a></li>
+                    </ul>
+                  </li>
+                  <li class="nav-sub">
+                    <span class="nav-sub__label" id="nav-forge-train">Train</span>
+                    <ul class="nav-sub__list" aria-labelledby="nav-forge-train">
+                      <li><a href="/docs/spark-builder.html">Builder</a></li>
+                      <li><a href="/docs/build-models.html">Build models</a></li>
+                      <li><a href="/docs/model-training.html">Model training</a></li>
+                      <li><a href="/docs/train-loop.html">Train loop</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li class="nav-more">
+                <button type="button" class="nav-more__toggle" aria-expanded="false" aria-haspopup="true">Bench</button>
+                <ul class="nav-more__menu" hidden>
+                  <li class="nav-sub">
+                    <span class="nav-sub__label" id="nav-bench-language">Language</span>
+                    <ul class="nav-sub__list" aria-labelledby="nav-bench-language">
+                      <li><a href="/docs/compile.html">Compile</a></li>
+                      <li><a href="/docs/decompile.html">Decompile</a></li>
+                      <li><a href="/docs/decompile-compete.html">Decompile compete</a></li>
+                      <li><a href="/docs/spark-bc.html">Opcodes / ISA</a></li>
+                      <li><a href="/docs/programming-guide.html">Programming guide</a></li>
+                    </ul>
+                  </li>
+                  <li class="nav-sub">
+                    <span class="nav-sub__label" id="nav-bench-runtime">Runtime</span>
+                    <ul class="nav-sub__list" aria-labelledby="nav-bench-runtime">
+                      <li><a href="/docs/serve.html">Serve</a></li>
+                      <li><a href="/docs/ide.html">IDE</a></li>
+                      <li><a href="/docs/lsp.html">LSP / editor</a></li>
+                      <li><a href="/ide-web.html">IDE web shell</a></li>
+                      <li><a href="/docs/native-network-web.html">Network + web</a></li>
+                    </ul>
+                  </li>
+                  <li class="nav-sub">
+                    <span class="nav-sub__label" id="nav-bench-ops">Ops</span>
+                    <ul class="nav-sub__list" aria-labelledby="nav-bench-ops">
+                      <li><a href="/docs/tools-helpers.html">Tools & helpers</a></li>
+                      <li><a href="/about.html">About</a></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+            <a href="/playground.html" class="nav-cta">Try</a>
+            <!-- spark-primary-nav:end -->
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <div class="shell doc-layout">
+      <aside class="doc-sidebar" aria-label="Table of contents">
+        <p class="doc-sidebar__title">On this page</p>
+        <nav id="doc-toc-list"></nav>
+      </aside>
+      <main class="doc-main">
+      <nav class="doc__nav" aria-label="Docs">
+        <a href="/learn/">Learn</a>
+        <a href="/docs/knowledge.html" aria-current="page">Knowledge hive</a>
+        <a href="/docs/factory.html">Factory hub</a>
+        <a href="/docs/model-aspects.html">Model aspects</a>
+        <a href="/docs/voice.html">Voice</a>
+        <a href="/docs/voice-ask.html">Voice ask</a>
+        <a href="/docs/voice-easy.html">Voice easy</a>
+        <a href="/docs/diagrams.html">Diagrams</a>
+        <a href="/docs/spark-builder.html">Builder</a>
+        <a href="/docs/compile.html">Compile</a>
+        <a href="/docs/decompile.html">Decompile</a>
+        <a href="/docs/decompile-compete.html">Compete</a>
+        <a href="/docs/llm-decompile.html">LLM research</a>
+        <a href="/docs/spark-bc.html">Opcodes / ISA</a>
+        <a href="/docs/build-models.html">Build models</a>
+        <a href="/docs/train-loop.html">Train loop</a>
+        <a href="/docs/spark-coder.html">Spark coder</a>
+        <a href="/docs/weight-gallery.html">Weight gallery</a>
+        <a href="/docs/architecture.html">Architecture</a>
+        <a href="/docs/tokenizer.html">Tokenizer</a>
+        <a href="/docs/serve.html">Serve</a>
+        <a href="/docs/eval.html">Eval</a>
+        <a href="/docs/sparkbc-make.html">Make targets</a>
+        <a href="/docs/tools-helpers.html">Tools & helpers</a>
+        <a href="/docs/methods-openbin.html">Methods vs OpenBin</a>
+        <a href="/docs/ci-pages.html">CI / Pages</a>
+        <a href="/docs/adoption-bar.html">Adoption bar</a>
+        <a href="/docs/language.html">Language</a>
+        <a href="/docs/programming-guide.html">Programming guide</a>
+        <a href="/downloads.html">Downloads</a>
+      </nav>      <article class="doc__body">
+        <h1 id="voice-agent-loop">Voice agent loop</h1>
+        <p>Capture → pairs → train → expect → serve → bench — a <strong>CPU-first</strong>
+        loop for improving spoken agents with synthetic fixtures. No vendor
+        or customer names. Dry-run works offline; live helpers are local HTTP.</p>
+        <h2 id="flow">Flow</h2>
+        <pre class="mermaid">flowchart LR
+          capture[Capture turns] --> pairs[pairs dataset]
+          pairs --> train[model train CPU]
+          train --> expect[expect score]
+          expect --> serve[model serve helper]
+          serve --> bench[bench scoreboard]
+          schedule[schedule nightly] --> capture
+          schedule --> pairs
+          schedule --> train
+          schedule --> expect
+          schedule --> serve</pre>
+        <h2 id="language-surface">Language surface</h2>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Statement</th>
+        <th>Role</th>
+        <th>Dry / live</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td><code class="inline-code">model pairs from "…" schema "…" …</code></td>
+        <td>Preference/reply inputs</td>
+        <td>Dry + CPU</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">expect score replay "…" with helper "…" &gt;= baseline "…"</code></td>
+        <td>Helper ≥ baseline gate</td>
+        <td>Dry + CPU</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">model serve helper "…" as "…" port N mode "shadow"|"live"</code></td>
+        <td>Local HTTP ranker</td>
+        <td>Dry plan; live <code class="inline-code">spark-serve-ref</code></td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">ground fact "…" from "…" else abstain</code></td>
+        <td>Verify-before-speak</td>
+        <td>Dry + CPU</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">bench fixtures "…" against "a" "b" …</code></td>
+        <td>Two-agent scoreboard</td>
+        <td>Dry + CPU</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">schedule nightly "prog.spark" …</code></td>
+        <td>Nightly summary JSON</td>
+        <td>Dry + CPU</td>
+        </tr>
+        </tbody>
+        </table></div>
+        <p>Honest adoption: <strong>language + companion</strong> (no new SPARK_BC opcodes).
+        GAS forks <code class="inline-code">./spark-voice-loop</code>. See <a href="/docs/language.html">LANGUAGE.md</a>.</p>
+        <h2 id="synthetic-example">Synthetic example</h2>
+        <pre class="doc__pre"><code class="inline-code">model pairs from &quot;examples/fixtures/voice_loop/turns.jsonl&quot; \
+          schema &quot;context,target_turn,candidate_turn,score_target,score_candidate,class&quot; \
+          where class = &quot;stall&quot; min_gap 2 -&gt; ds
+
+        expect score replay &quot;examples/fixtures/voice_loop/*.spark&quot; \
+          with helper &quot;out/pref-001&quot; &gt;= baseline &quot;out/none&quot;
+
+        model serve helper &quot;out/pref-001&quot; as &quot;ranker&quot; port 8091 mode &quot;shadow&quot;
+
+        ground fact &quot;desk_hours&quot; from &quot;examples/fixtures/voice_loop/facts.json&quot; \
+          else abstain
+
+        bench fixtures &quot;examples/fixtures/voice_loop/*.spark&quot; \
+          against &quot;agent-a&quot; &quot;agent-b&quot; \
+          classes &quot;turn_taking,stall,dead_air,interrupt,filler,handoff,grounded&quot; \
+          -&gt; board
+
+        schedule nightly &quot;examples/pairs_basic.spark&quot; \
+          pairs &quot;examples/fixtures/voice_loop/turns.jsonl&quot; \
+          helper &quot;out/pref-001&quot; -&gt; summary
+        </code></pre>
+        <p>Gate: <code class="inline-code">make test-pairs test-expect-score test-serve-helper \
+        test-ground-lang test-bench test-schedule</code>.</p>
+        <h2 id="safety">Safety</h2>
+        <p>Ground before speaking numbers, hours, or names — see
+        <a href="/docs/knowledge-safety.html">SAFETY_LIMITS.md</a>. Shadow serve logs beside a turn;
+        it does not invent facts.</p>
+        <h2 id="related">Related</h2>
+        <ul class="doc__ul">
+        <li><a href="/docs/model-training.html">MODEL_TRAINING.md</a> — <code class="inline-code">/replay</code> contract</li>
+        <li><a href="/docs/knowledge-training.html">TRAINING.md</a> · <a href="/docs/knowledge-agents.html">AGENTS_TOOLS.md</a></li>
+        </ul>
+      </article>
+      </main>
+    </div>
+
+    <footer class="site-footer">
+      <div class="shell footer-inner">
+        <span>Spark programming language</span>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="/workflow.html">Loop</a>
+          <a href="/learn/">Learn</a>
+          <a href="/docs/knowledge.html">Knowledge</a>
+          <a href="/docs/language.html">Reference</a>
+          <a href="/downloads.html">Downloads</a>
+          <a href="/playground.html">Playground</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="/js/site.js"></script>
+  </body>
+</html>

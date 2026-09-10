@@ -1,0 +1,5 @@
+# ground fact — verify-before-speak (synthetic desk hours).
+# ./spark --dry-run examples/ground_fact.spark
+
+ground fact "desk_hours" from "examples/fixtures/voice_loop/facts.json" else abstain
+ground fact "catalog_price" from "examples/fixtures/voice_loop/facts.json" else abstain

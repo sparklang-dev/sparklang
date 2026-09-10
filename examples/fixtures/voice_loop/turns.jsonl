@@ -1,0 +1,9 @@
+{"context": "caller asks about desk hours", "target_turn": "Desk hours are nine to five on weekdays.", "candidate_turn": "Um, I think we are open somehow.", "score_target": 9.0, "score_candidate": 2.0, "class": "stall"}
+{"context": "caller asks catalog price", "target_turn": "The catalog price is twelve dollars.", "candidate_turn": "Probably cheap, not sure.", "score_target": 8.5, "score_candidate": 1.5, "class": "stall"}
+{"context": "caller interrupts with a question", "target_turn": "Happy to answer — catalog price is twelve dollars.", "candidate_turn": "Wait what were we saying about weather?", "score_target": 8.0, "score_candidate": 3.0, "class": "interrupt"}
+{"context": "silence after greeting", "target_turn": "Are you still there? I can help with desk hours.", "candidate_turn": "", "score_target": 7.0, "score_candidate": 0.0, "class": "dead_air"}
+{"context": "handoff request", "target_turn": "I can take a message or connect you to the desk.", "candidate_turn": "Connecting you now without confirming.", "score_target": 8.0, "score_candidate": 4.0, "class": "handoff"}
+{"context": "filler-heavy reply", "target_turn": "Desk hours are nine to five.", "candidate_turn": "Uh, like, um, yeah open I guess.", "score_target": 9.0, "score_candidate": 2.5, "class": "filler"}
+{"context": "grounded number ask", "target_turn": "Catalog price is twelve dollars.", "candidate_turn": "Maybe fifteen or twenty.", "score_target": 9.5, "score_candidate": 1.0, "class": "grounded"}
+{"context": "turn taking overlap", "target_turn": "Please go ahead — I am listening.", "candidate_turn": "Sorry I talked over you.", "score_target": 7.5, "score_candidate": 5.0, "class": "turn_taking"}
+{"context": "near-tie stall pair", "target_turn": "One moment while I check desk hours.", "candidate_turn": "Hold on checking hours.", "score_target": 6.0, "score_candidate": 5.5, "class": "stall"}

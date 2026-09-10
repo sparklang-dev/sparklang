@@ -51,6 +51,7 @@
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-systems">
                       <li><a href="/docs/knowledge-multimodal.html">Multimodal</a></li>
                       <li><a href="/docs/knowledge-agents.html">Agents & tools</a></li>
+                      <li><a href="/docs/knowledge-voice-loop.html">Voice agent loop</a></li>
                     </ul>
                   </li>
                   <li class="nav-sub">
@@ -229,6 +230,10 @@
         <td>This page · <code class="inline-code">./spark-ground</code></td>
         </tr>
         <tr>
+        <td><code class="inline-code">ground fact "…" from "…" else abstain</code></td>
+        <td>Language verify-before-speak (voice loop)</td>
+        </tr>
+        <tr>
         <td>LLM decompile ≠ SoT</td>
         <td><a href="/docs/llm-decompile.html">llm-decompile</a></td>
         </tr>
@@ -247,6 +252,12 @@
         <p><strong>Goal:</strong> make it <strong>nearly impossible to pass CI while guessing</strong> —
         abstain, retrieve/expect, tool allowlists, verify-before-speak,
         structured outputs. Not magic weights.</p>
+        <p>Language form (synthetic facts only):</p>
+        <pre class="doc__pre"><code class="language-text">ground fact &quot;desk_hours&quot; from &quot;examples/fixtures/voice_loop/facts.json&quot; \
+         else abstain
+        </code></pre>
+        <p>Dry-run: <code class="inline-code">./spark --dry-run examples/ground_fact.spark</code>.
+        Gate: <code class="inline-code">make test-ground-lang</code>. See <a href="/docs/knowledge-voice-loop.html">VOICE_AGENT_LOOP.md</a>.</p>
         <h3 id="modify-adapt-path-qwen-class-spark-owned">Modify / adapt path (Qwen-class + Spark-owned)</h3>
         <p>Language already has attach-only modify:</p>
         <pre class="doc__pre"><code class="language-text">model modify keep_existing &quot;out/train/existing-lora&quot; \

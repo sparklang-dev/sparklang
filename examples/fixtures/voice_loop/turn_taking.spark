@@ -1,0 +1,4 @@
+# class:turn_taking interrupt
+# Synthetic agent fixture — turn taking.
+listen "fixtures/voice/hello.wav" -> t
+speak "Please go ahead — I am listening."

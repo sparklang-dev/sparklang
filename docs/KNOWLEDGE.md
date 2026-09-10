@@ -5,7 +5,7 @@ transformers, training, inference, multimodal, agents, evaluation,
 and decompile limits. Original diagrams (not scraped paper figures).
 Citations point at primary papers and surveys.
 
-**Never** publishes competitive AI win claims. Spark factory train prefers CPU / RTX 5090 (see [Factory hub](FACTORY.md) GPU policy). Not an OpenBin clone.
+ Spark factory train prefers CPU / RTX 5090 (see [Factory hub](FACTORY.md) GPU policy). Not an OpenBin clone.
 
 Topics below follow the same **category → subcategory** map as the
 Hive nav: Foundations · Systems · Safety / Eval · RE.
@@ -24,6 +24,7 @@ Hive nav: Foundations · Systems · Safety / Eval · RE.
 |-------|------|--------------|
 | Multimodal | [knowledge/MULTIMODAL.md](knowledge/MULTIMODAL.md) | STT / TTS / vision |
 | Agents & tools | [knowledge/AGENTS_TOOLS.md](knowledge/AGENTS_TOOLS.md) | Tool loops, ReAct-style patterns |
+| Voice agent loop | [knowledge/VOICE_AGENT_LOOP.md](knowledge/VOICE_AGENT_LOOP.md) | Capture → pairs → train → expect → serve → bench |
 
 ## Safety / Eval
 

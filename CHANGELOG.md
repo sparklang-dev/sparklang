@@ -4,9 +4,20 @@ All notable user-facing releases of **SparkLang** (the Spark programming
 language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
+## 0.6.63 — 2026-09-10
+
+- **Voice agent loop:** language + CPU companions for `model pairs`,
+  `expect score replay`, `model serve helper`, `ground fact`,
+  `bench`, and `schedule nightly`. GAS forks `./spark-voice-loop`
+  (no new SPARK_BC opcodes). Synthetic fixtures under
+  `examples/fixtures/voice_loop/`. Reference HTTP:
+  `tools/spark-serve-ref`, train-ref `POST /replay`, schedule unit
+  template. Knowledge page + adoption bar (Current dry/CPU). Gates:
+  `make test-pairs` … `test-schedule` / `test-train-replay`.
+
 ## 0.6.62 — 2026-09-09
 
-- **Public claims tone scrub:** remove authenticity/honesty-theater
+- **Public claims tone scrub:** remove authenticity/status-theater
   framing from public docs and site copy; rename evaluation map
   surface toward product-status wording (`EVAL_STATUS`); keep
   measurement language without operator-constraint dumps. Companion
@@ -29,7 +40,7 @@ language) are listed here. Site and installers track
   dry **receptionist** with `expect` gates
   (`examples/receptionist.spark`); local **ELF probe** sections JSON
   (`spark-binary-probe --elf`, scoreboard `elf_local_probe` — still
-  honest **loss** vs Ghidra on Multi-format ELF/PE); ROADMAP/ADOPTION
+  Current **loss** vs Ghidra on Multi-format ELF/PE); ROADMAP/ADOPTION
   sync (eval + LSP done; live transfer SM remains goal).
 
 ## 0.6.59 — 2026-09-09
@@ -107,7 +118,7 @@ language) are listed here. Site and installers track
  `make decompile-bench` scoreboard JSON (wins/ties/losses/N/A —
  **no** fake “beats all”). Docs
  [/docs/decompile-compete.html](/docs/decompile-compete.html).
- External RE tools skipped cleanly if absent. Measurement only — not a marketing win; do not copy OpenBin.
+ External RE tools skipped cleanly if absent. Scores and probes are measurement-only.; do not copy OpenBin.
 
 ## 0.6.53 — 2026-09-09
 
@@ -125,7 +136,7 @@ language) are listed here. Site and installers track
  + `diagram-agentic-sensory-loop.svg` +
  `diagram-spark-vs-external-stacks.svg`. Cross-links Knowledge hive
  Voice ask, Voice easy, Methods vs OpenBin. Forge nav lists Model
- aspects. **Honest:** eyes planned stub only; no OpenBin/phone clone. Also fix `md_to_doc_html.py` so
+ aspects. **Current:** eyes planned stub only; no OpenBin/phone clone. Also fix `md_to_doc_html.py` so
  `![…](images/*.svg)` publishes as `<img>` under `/docs/images/`
  (was incorrectly rewritten to inline code).
 
@@ -153,7 +164,7 @@ language) are listed here. Site and installers track
  analysis folder (`out/analyze/<name>/`) — compile (if `.spark`)
  deterministic `dump.txt`, `ops.json` (SPARK_BC instruction list)
  `REPORT.md` stub, screenshot placeholder; optional `--serve`
- (tiny CPU) and `--ask` (owned `spark-coder` or honesty note — **not**
+ (tiny CPU) and `--ask` (owned `spark-coder` or capability note — **not**
  their SaaS). Docs: [METHODS_OPENBIN.md](docs/METHODS_OPENBIN.md)
  → [/docs/methods-openbin.html](/docs/methods-openbin.html)
  (adopted vs rejected; OpenBin prior art link only). Coordinates with
@@ -219,7 +230,7 @@ language) are listed here. Site and installers track
 - **Tiny vs large (spark-coder scales):** spark-coder
  `./spark-code train --scale {tiny,large}` +
  `make spark-coder-train-large` (opt-in dim 64 / n_layer 4).
- Tiny remains CI/default. Prefer **RTX 5090**; hard-refuse mis-placed voice GPU. Honesty table in [SPARK_CODER.md](docs/SPARK_CODER.md)
+ Tiny remains CI/default. Prefer **RTX 5090**; hard-refuse mis-placed voice GPU. status table in [SPARK_CODER.md](docs/SPARK_CODER.md)
  → [/docs/spark-coder.html](/docs/spark-coder.html)
  voice/weight play notes in [VOICE.md](docs/VOICE.md)
  SoT `examples/fixtures/coder/scale_config.json`.
@@ -231,7 +242,7 @@ language) are listed here. Site and installers track
 
 
 
-- **Docs honesty after attention + TinyCoder land:** rebase
+- **Docs status after attention + TinyCoder land:** rebase
  [ATTENTION_FORWARD.md](docs/ATTENTION_FORWARD.md)
  [ARCHITECTURE.md](docs/ARCHITECTURE.md)
  [FACTORY.md](docs/FACTORY.md), [SERVE.md](docs/SERVE.md)
@@ -263,7 +274,7 @@ language) are listed here. Site and installers track
 - **layer-0 attention layer-0 attention train + serve:** `STEP` /
  `apply_sgd_step` defaults to sequence next-token CE through
  last-query causal MHA (GQA) on `spark.layers.0` q/k/v/o (+ embed
- + lm_head). CPU by default; **RTX 5090 OK**. `--no-train-attn` keeps mean-pool CE. Serve / eval use
+ + lm_head). CPU by default; ****. `--no-train-attn` keeps mean-pool CE. Serve / eval use
  `embed→attn0→(mlp0)→norm→lm_head` when tensors exist. Train
  fixture oversamples frozen eval probes. Gate: `make test-sparkbc`
  `make sparkbc-e2e`, `make spark-sgd-proof` (asserts copy_recall>0
@@ -313,7 +324,7 @@ language) are listed here. Site and installers track
  prove / tool-loop. Packaged under `models/spark-coder/` and SDK
  pack when trained. Docs: [SPARK_CODER.md](docs/SPARK_CODER.md) →
  `/docs/spark-coder.html`. Gate: `make test-spark-coder` /
- `make spark-coder-train`. **Not** a HF/Claude/Bifrost brain.
+ `make spark-coder-train`. **Not** a HF/Claude/the AI gateway brain.
 
 ## 0.6.41 — 2026-09-09
 
@@ -338,7 +349,7 @@ language) are listed here. Site and installers track
  `/docs/model-aspects.html`. Voice detail also published at
  `/docs/voice.html`. SVG diagrams: ears→brain→voice and
  behavior/tool loop under `docs/images/`. Thin **planned** vision
- stub: `python/sparklang/senses/` (`make test-senses`). Honest:
+ stub: `python/sparklang/senses/` (`make test-senses`). Current:
  STT/TTS language surface exists; vision runtime **not** shipped
  attention decode still partial
 
@@ -354,7 +365,7 @@ language) are listed here. Site and installers track
 
 
 - **Decompile UX + LLM research:** step-by-step
- [DECOMPILE.md](docs/DECOMPILE.md) with real CLI screenshots
+ [DECOMPILE.md](docs/DECOMPILE.md) with CLI screenshots
  annotated SDK GUI mock, and SVG tool-function diagrams (compile
  path, decompile path, helpers/GUI, deterministic vs LLM, LLM
  assist flows). Research
@@ -374,7 +385,7 @@ language) are listed here. Site and installers track
 - **SDK + IDE + GUI download pack:** `make sdk-pack` /
  `make dist` builds `out/sdk-pack/sparklang-sdk-*.tar.gz` with CPU
  runtime (`spark-bootstrap`), SDK docs/headers/examples, VS Code /
- Cursor IDE extension + `bin/spark-ide`, graphical SPARK_BC
+ the local IDE IDE extension + `bin/spark-ide`, graphical SPARK_BC
  compile/decompile (`bin/spark-bc-gui`), plus **helpers**
  **shadow** copy/build/verify, and assorted tools (BC dump
  opcode sheet, fixture lint). Gate: `make test-sdk-pack`. Docs:
@@ -401,7 +412,7 @@ language) are listed here. Site and installers track
  SPARK_BC factory — compile/assemble, decompile/inspect, opcodes
  (ISA), build models + weights/checkpoints, tokenizer/BPE, train
  loop (outer/inner SGD; scale fixture linked), architecture
- (embed/RMSNorm/lm_head/MLP; attention honest/partial), serve
+ (embed/RMSNorm/lm_head/MLP; attention Current/partial), serve
  forward + HTTP/stdio API (serve API path linked), eval harness (Claude baseline linked; measurement only), makefile targets
  CI/Pages contributor how-to. Hub: [FACTORY.md](docs/FACTORY.md)
  → `/docs/factory.html`. Also: `/docs/compile.html`
@@ -444,11 +455,11 @@ language) are listed here. Site and installers track
 
 
 
-- **Claude eval baseline (honest):** `make spark-eval-claude` /
+- **Claude eval baseline (Current):** `make spark-eval-claude` /
  `CLAUDE=auto|on|off` runs Spark frozen probes plus an optional
  Anthropic Messages baseline **only if** credentials already exist
  on the box. No key → `skipped_no_credentials` (clear status).
- Side-by-side comparison table; Never invents keys.
+ Side-by-side comparison table; 
  Gate: `make test-spark-eval`. Docs: Evaluation in
  [SPARK_BUILDER.md](docs/SPARK_BUILDER.md).
 
@@ -459,7 +470,7 @@ language) are listed here. Site and installers track
 
 - **Multi-outer CPU SGD + checkpoint:** `STEP` / `apply_sgd_step`
  runs outer×inner CE on a larger train fixture (36 pairs), optional
- embed grads, writes `checkpoint.json` with an honest `loss_curve`.
+ embed grads, writes `checkpoint.json` with an Current `loss_curve`.
  Defaults: `--outer 4 --inner 8`. Gate: `make test-sparkbc`
  `make sparkbc-e2e`, `make spark-sgd-proof` (SGD then
  measurement-only `spark-eval`)
@@ -489,7 +500,7 @@ language) are listed here. Site and installers track
 
 - **Tiny CPU serve forward:** `dump.py --serve` / `./spark-serve`
  load Spark safetensors (or emit init), run one embed→RMSNorm→lm_head
- matmul on CPU, write `SERVE` with `forward=true` and honest
+ matmul on CPU, write `SERVE` with `forward=true` and Current
  `trained` from weights meta. Not a production LLM. Gate:
  `make test-sparkbc`. Docs: [SPARK_BUILDER.md](docs/SPARK_BUILDER.md).
 
@@ -587,7 +598,7 @@ language) are listed here. Site and installers track
  emit** `.sparkbc` (use bootstrap `--compile`). GAS `--run-bc`
  added later (0.6.29). Page:
  [SPARK_BUILDER.md](docs/SPARK_BUILDER.md) /
- `/docs/spark-builder.html`. Honest: init, not trained. No
+ `/docs/spark-builder.html`. Current: init, not trained. No
  imported weights. Emitting TRAIN/STEP ≠ a trained model. Later
  train aims to improve measured probes. Companion
  `tools/spark-bc-dump/dump.py`.
@@ -652,7 +663,7 @@ language) are listed here. Site and installers track
  `make test-host-embed`.
 - **Ask accounting:** live wall-clock `latency_ms` on
  `[accounting]`; run-level `[accounting-run]` via
- `spark-ask-http --rollup`. Dry zeros. Never invents tokens.
+ `spark-ask-http --rollup`. Dry zeros. Missing usage stays blank — no invented tokens.
  Gate: `make test-ask-gateway` (`PASS rollup`).
 
 ## 0.6.21 — 2026-09-02
@@ -700,7 +711,7 @@ language) are listed here. Site and installers track
 
 - **Flagship no-invent example:** `examples/no_invent.spark` —
  SoT/`expect` first for inventable facts, `head abstain` +
- gated `head ask` for open asks (IDK + HALT). Honest scope:
+ gated `head ask` for open asks (IDK + HALT). Current scope:
  architecture prevents inventable open-decode, not “all
  hallucination forever.” Docs:
  [docs/ABSTAIN_HEADS.md](docs/ABSTAIN_HEADS.md)
@@ -717,7 +728,7 @@ language) are listed here. Site and installers track
  (fixture/synthetic/host only — not production SOTA). Corpus
  seed ~105 rows. Continue path covered: HF `generate` when gate
  continues; `SPARK_ABSTAIN_SAMPLE_URL` OpenAI-compat SAMPLE
- honest deferred note otherwise. Docs:
+ Current deferred note otherwise. Docs:
  [docs/ABSTAIN_HEADS.md](docs/ABSTAIN_HEADS.md). Gate:
  `make test-abstain` (optional kl3m eval if smoke dir present).
 
@@ -772,7 +783,7 @@ language) are listed here. Site and installers track
 
 
 
-- **No Bifrost-style model alias pick:** dry-run / `use auto` no longer
+- **No the AI gateway-style model alias pick:** dry-run / `use auto` no longer
  invents `fast`|`code` from task text. `use auto` keeps the prior
  configured model (`spark.toml` / earlier `model` line). Live
  `./spark-ask-http --model auto` is refused — pass an explicit HF id /
@@ -844,7 +855,7 @@ language) are listed here. Site and installers track
  not a marker stub. Same HTTP `method` field as distill / pref /
  playbook.
 - Example: `examples/model_train_faq.spark`.
-- Docs / hero list four methods honestly.
+- Docs / hero list four methods Clearly.
 
 ## 0.6.7 — 2026-09-02
 
@@ -878,7 +889,7 @@ language) are listed here. Site and installers track
 - Live captures:
  `website/docs/examples/live-train-capture.txt`
  `website/docs/examples/live-train-methods-capture.txt`.
-- Hero / What's real today list the three methods honestly.
+- Hero / What's real today list the three methods Clearly.
 - Examples: `examples/model_train_pref.spark`
  `examples/model_train_playbook.spark`.
 
@@ -893,7 +904,7 @@ language) are listed here. Site and installers track
  / no voice GPU. Live capture:
  `website/docs/examples/live-train-capture.txt` via
  `./spark --live examples/model_train.spark`.
-- **Hero:** “Train specialists — CPU distill, not LoRA” (honest about
+- **Hero:** “Train specialists — CPU distill, not LoRA” (Current about
  what the reference path trains).
 - **`expect` form on homepage / Learn / examples:** prefer
  `expect contains NAME fixture "PATH"` (fail-loud fixtures) — one form

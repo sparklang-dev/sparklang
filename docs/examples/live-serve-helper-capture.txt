@@ -1,0 +1,11 @@
+# live capture — serve helper dry plan
+[spark] dry-run via assembly VM (machine code)
+[model] {"op":"serve_helper","mode":"dry-run","helper":"out/pref-001","name":"ranker","port":8091,"serve_mode":"shadow","endpoint":"http://127.0.0.1:8091/v1/rank","note":"dry-run plans serve; live uses ./spark-serve-ref (CPU HTTP)"}
+[spark] ok
+{
+  "op": "serve_helper",
+  "helper": "out/pref-001",
+  "as": "ranker",
+  "port": 8091,
+  "mode": "shadow"
+}
