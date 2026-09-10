@@ -16,14 +16,13 @@ language) are listed here. Site and installers track
 
 ## 0.6.60 — 2026-09-09
 
-
 - **Competitive weaknesses close:** editor **LSP** (`tools/spark_lsp` +
- extension v0.2 hover/completion/diagnostics; `make test-spark-lsp`)
- dry **receptionist** with `expect` gates
- (`examples/receptionist.spark`); local **ELF probe** sections JSON
- (`spark-binary-probe --elf`, scoreboard `elf_local_probe` — still
- honest **loss** vs Ghidra on Multi-format ELF/PE); ROADMAP/ADOPTION
- sync (eval + LSP done; live transfer SM remains goal).
+  extension v0.2 hover/completion/diagnostics; `make test-spark-lsp`);
+  dry **receptionist** with `expect` gates
+  (`examples/receptionist.spark`); local **ELF probe** sections JSON
+  (`spark-binary-probe --elf`, scoreboard `elf_local_probe` — still
+  honest **loss** vs Ghidra on Multi-format ELF/PE); ROADMAP/ADOPTION
+  sync (eval + LSP done; live transfer SM remains goal).
 
 ## 0.6.59 — 2026-09-09
 
