@@ -1,34 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
- <head>
- <meta charset="utf-8" />
- <meta name="viewport" content="width=device-width, initial-scale=1" />
- <title>Spark IDE (web shell) — SparkLang</title>
- <meta
- name="description"
- content="Static demo of Spark’s dense IDE shell: rail · editor/dump · tools. Desktop spark-bc-gui uses the same design tokens. "
- />
- <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
- <link rel="shortcut icon" href="/favicon.svg" />
- <link rel="stylesheet" href="/css/tokens.css?v=polish0909" />
- <link rel="stylesheet" href="/css/site.css?v=polish0909" />
- <link rel="stylesheet" href="/css/ide-shell.css?v=polish0909" />
- </head>
- <body>
- <a class="skip-link" href="#ide-main">Skip to IDE</a>
- <header class="site-header">
- <div class="shell header-inner">
- <a class="site-brand" href="/" aria-label="SparkLang home">
- <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
- <path
- d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z"
- fill="currentColor"
- />
- </svg>
- Spark
- </a>
- <div class="header-nav-wrap">
- <nav class="site-nav" id="site-nav" aria-label="Primary">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Spark IDE (web) — SparkLang</title>
+    <meta
+      name="description"
+      content="Client-side SPARK_BC decompiler: open a real .sparkbc or load the bundled compiled fixture — parsed and disassembled in your browser, no server."
+    />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="shortcut icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/css/tokens.css?v=polish0909" />
+    <link rel="stylesheet" href="/css/site.css?v=polish0909" />
+    <link rel="stylesheet" href="/css/ide-shell.css?v=polish0909" />
+    <style>
+      .ide-web__ops {
+        border-collapse: collapse;
+        width: 100%;
+        font-family: var(--font-mono);
+        font-size: 0.8125rem;
+      }
+      .ide-web__ops th,
+      .ide-web__ops td {
+        border: 1px solid var(--ide-border);
+        padding: 0.25rem 0.5rem;
+        text-align: left;
+      }
+      .ide-web__ops th {
+        background: var(--ide-bg-elevated);
+      }
+      .ide-web__ask {
+        display: flex;
+        gap: var(--space-2);
+        align-items: center;
+        flex: 1 1 16rem;
+        min-width: 12rem;
+      }
+      .ide-web__ask input {
+        flex: 1;
+        min-width: 0;
+        background: var(--ide-bg-panel);
+        border: 1px solid var(--ide-border);
+        border-radius: var(--radius-sm);
+        color: var(--ide-text);
+        font: inherit;
+        font-size: var(--font-size-xs);
+        padding: 0.4rem 0.6rem;
+      }
+      .ide-web__file {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+      }
+      .ide-web__pane-scroll {
+        flex: 1;
+        margin: 0;
+        padding: var(--space-3);
+        overflow: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" href="#ide-main">Skip to IDE</a>
+    <header class="site-header">
+      <div class="shell header-inner">
+        <a class="site-brand" href="/" aria-label="SparkLang home">
+          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+            <path
+              d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z"
+              fill="currentColor"
+            />
+          </svg>
+          Spark
+        </a>
+        <div class="header-nav-wrap">
+          <nav class="site-nav" id="site-nav" aria-label="Primary">
             <!-- spark-primary-nav:begin -->
             <ul class="nav-primary">
               <li><a href="/workflow.html">Loop</a></li>
@@ -140,82 +189,108 @@
             <a href="/playground.html" class="nav-cta">Try</a>
             <!-- spark-primary-nav:end -->
           </nav>
- </div>
- </div>
- </header>
+        </div>
+      </div>
+    </header>
 
- <div id="ide-main" class="ide-shell" role="application" aria-label="Spark IDE demo">
- <div class="ide-shell__toolbar">
- <button type="button" class="ide-btn ide-btn--primary">
- Compile → .sparkbc
- </button>
- <button type="button" class="ide-btn">Decompile</button>
- <button type="button" class="ide-btn">Dump</button>
- <button type="button" class="ide-btn">Ask</button>
- <button type="button" class="ide-btn">Weights</button>
- <button type="button" class="ide-btn">Report</button>
- </div>
+    <div id="ide-main" class="ide-shell" role="application" aria-label="Spark IDE">
+      <div class="ide-shell__toolbar">
+        <label class="ide-btn ide-btn--primary" for="ide-file">
+          Open .sparkbc…
+        </label>
+        <input
+          class="ide-web__file"
+          id="ide-file"
+          type="file"
+          accept=".sparkbc,application/octet-stream"
+        />
+        <button type="button" class="ide-btn" id="ide-load-fixture">
+          Load bundled fixture
+        </button>
+        <button type="button" class="ide-btn" id="ide-decompile">
+          Decompile
+        </button>
+        <button type="button" class="ide-btn" id="ide-dump">Dump</button>
+        <button type="button" class="ide-btn" id="ide-weights">
+          Weights
+        </button>
+        <button type="button" class="ide-btn" id="ide-report">
+          Report
+        </button>
+        <form class="ide-web__ask" id="ide-ask-form">
+          <input
+            id="ide-ask-input"
+            type="text"
+            placeholder="Ask about this dump (opcodes, sha256, sections…)"
+            aria-label="Ask about this dump"
+          />
+          <button type="submit" class="ide-btn">Ask</button>
+        </form>
+      </div>
 
- <aside class="ide-shell__rail" aria-label="Files and opcodes">
- <p class="ide-shell__section-title">Files</p>
- <ul class="ide-shell__list">
- <li>
- <a href="#src" aria-current="true">examples/hello.spark</a>
- </li>
- <li><a href="#src">selfhost/compile.spark</a></li>
- <li><a href="#dump">out/hello.sparkbc</a></li>
- </ul>
- <p class="ide-shell__section-title">Opcodes</p>
- <ul class="ide-shell__list">
- <li><button type="button">TRAIN 0x26</button></li>
- <li><button type="button">STEP 0x28</button></li>
- <li><button type="button">ARTIFACT 0x2A</button></li>
- </ul>
- <p class="ide-shell__note">
- Demo shell only — wire real actions via desktop
- <code>spark-bc-gui</code> / IDE functions lane. Tokens shared
- with the site.
- </p>
- </aside>
+      <aside class="ide-shell__rail" aria-label="Files and opcodes">
+        <p class="ide-shell__section-title">Files</p>
+        <ul class="ide-shell__list" id="ide-files"></ul>
+        <p class="ide-shell__section-title">Opcodes</p>
+        <ul class="ide-shell__list" id="ide-opcodes"></ul>
+        <p class="ide-shell__note">
+          Everything on this page is computed in your browser from real
+          bytes by <code>/js/sparkbc.js</code> — the same parser the
+          node parity gate checks against
+          <code>python/sparklang/model_lab/bc_dump.py</code>.
+        </p>
+      </aside>
 
- <div class="ide-shell__center">
- <section class="ide-shell__pane" id="src" aria-label="Source">
- <p class="ide-shell__pane-label">.spark source</p>
- <pre class="ide-shell__code"># SparkLang — sample
-model status
-print "hello from Spark"
-</pre>
- </section>
- <section class="ide-shell__pane" id="dump" aria-label="Dump">
- <p class="ide-shell__pane-label">SPARK_BC dump</p>
- <pre class="ide-shell__code">; SPARK_BC dump (demo); magic SPARK_BC version 1
-0000 PRINT
-0001 HALT
-</pre>
- </section>
- </div>
+      <div class="ide-shell__center">
+        <section class="ide-shell__pane" id="src" aria-label="Source">
+          <p class="ide-shell__pane-label" id="ide-src-label">
+            .spark source
+          </p>
+          <pre class="ide-shell__code" id="ide-src-pane"></pre>
+        </section>
+        <section class="ide-shell__pane" id="dump" aria-label="Dump">
+          <p class="ide-shell__pane-label" id="ide-dump-label">
+            SPARK_BC dump
+          </p>
+          <div class="ide-web__pane-scroll" id="ide-dump-pane"></div>
+        </section>
+      </div>
 
- <aside class="ide-shell__tools" aria-label="Tools">
- <p class="ide-shell__section-title">Tools</p>
- <ul class="ide-shell__list">
- <li><button type="button">Compile</button></li>
- <li><button type="button">Decompile</button></li>
- <li><button type="button">Helpers / shadows</button></li>
- <li><button type="button">Weight gallery</button></li>
- <li><button type="button">Voice ask</button></li>
- </ul>
- <p class="ide-shell__section-title">Scope</p>
- <p class="ide-shell__note">
- Owned tiny models only. Prefer CPU or a consumer GPU for train.</p>
- </aside>
+      <aside class="ide-shell__tools" aria-label="Tools">
+        <p class="ide-shell__section-title">Tools</p>
+        <ul class="ide-shell__list">
+          <li>
+            <button type="button" data-action="decompile">
+              Decompile
+            </button>
+          </li>
+          <li><button type="button" data-action="dump">Dump</button></li>
+          <li>
+            <button type="button" data-action="weights">
+              Weight gallery
+            </button>
+          </li>
+          <li>
+            <button type="button" data-action="report">Report</button>
+          </li>
+        </ul>
+        <p class="ide-shell__section-title">Scope</p>
+        <p class="ide-shell__note">
+          Static site — no server. Compile stays on the desktop /
+          CLI (<code>spark-bootstrap --compile</code>); this page
+          decompiles, dumps, and inspects real
+          <code>.sparkbc</code> bytes client-side. Owned tiny models
+          only. Prefer CPU or a consumer GPU for train.
+        </p>
+      </aside>
 
- <div class="ide-shell__status">
- <span><strong>Ready</strong></span>
- <span>· theme tokens polish0909</span>
- <span>· dense IDE chrome</span>
- </div>
- </div>
+      <div class="ide-shell__status" id="ide-status">
+        <span><strong>Loading bundled fixture…</strong></span>
+      </div>
+    </div>
 
- <script src="/js/site.js?v=polish0909" defer></script>
- </body>
+    <script src="/js/sparkbc.js"></script>
+    <script src="/js/ide-web.js"></script>
+    <script src="/js/site.js?v=polish0909" defer></script>
+  </body>
 </html>

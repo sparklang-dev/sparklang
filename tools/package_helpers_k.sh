@@ -140,7 +140,6 @@ payload = {
     "required": required,
     "file_count": len(files),
     "never": "rtx-pro-6000",
-    "beats_claude": False,
     "files": files,
 }
 manifest.parent.mkdir(parents=True, exist_ok=True)

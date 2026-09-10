@@ -87,7 +87,6 @@ class VoiceEasyModel:
                 "profile": "spark-voice-easy",
                 "scale": str(scale.get("name") or "tiny"),
                 "trained": "false",
-                "beats_claude": "false",
                 "never": "rtx-pro-6000",
                 "brain": "owned-weights",
                 "vram_gi_hint": str(scale.get("vram_gi_hint") or 0),
@@ -168,7 +167,6 @@ class VoiceEasyModel:
                 "n_phrases": str(n),
                 "feat_bins": str(bins),
                 "profile": "spark-voice-easy",
-                "beats_claude": "false",
                 "never": "rtx-pro-6000",
                 "brain": "owned-weights",
             }
@@ -181,7 +179,6 @@ class VoiceEasyModel:
             "n_phrases": n,
             "feat_bins": bins,
             "scale": self.meta.get("scale", "tiny"),
-            "beats_claude": False,
             "never": "rtx-pro-6000",
             "brain": "owned-weights",
             "note": (

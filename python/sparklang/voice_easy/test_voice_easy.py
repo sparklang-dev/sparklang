@@ -23,7 +23,7 @@ class TestVoiceEasyScales(unittest.TestCase):
         """Default scale is tiny."""
         cfg = resolve_scale(None, env={})
         self.assertEqual(cfg["name"], "tiny")
-        self.assertFalse(cfg["beats_claude"])
+        self.assertNotIn("beats_claude", cfg)
         self.assertEqual(cfg["never"], "rtx-pro-6000")
 
     def test_env_large(self) -> None:
@@ -75,7 +75,7 @@ class TestVoiceEasyTrainDry(unittest.TestCase):
             self.assertEqual(result["prove"]["tts_acc"], 1.0)
             weights = Path(result["train"]["weights"])
             self.assertTrue(weights.is_file())
-            self.assertFalse(result["beats_claude"])
+            self.assertNotIn("beats_claude", result)
 
     def test_large_cpu_explicit(self) -> None:
         """Large may run on CPU when forced (still owned weights)."""

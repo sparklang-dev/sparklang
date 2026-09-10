@@ -413,7 +413,6 @@ def run_analyze(
         "ask": ask_path,
         "ask_status": ask_status,
         "uploads": False,
-        "beats_claude": False,
         "device": "cpu",
         "ts": ts,
     }

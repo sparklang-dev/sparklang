@@ -1052,7 +1052,6 @@ def apply_sgd_step(
         "trained": True,
         "not_sgd": False,
         "sgd": True,
-        "beats_claude": False,
         "device": "cpu",
         "never": "rtx-pro-6000",
         "sparkbc_sha256": bc["sha256"],
@@ -1086,7 +1085,6 @@ def apply_sgd_step(
         "arch_n_layer": int(meta["arch_n_layer"]),
         "sparkbc_sha256": bc["sha256"],
         "note": meta["note"],
-        "beats_claude": False,
         "device": "cpu",
     }
 

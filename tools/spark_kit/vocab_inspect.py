@@ -34,7 +34,7 @@ def inspect_vocab(path: Path) -> str:
         "artifact_sha256=%s" % art.sha256(),
         "sample_tokens:",
         *sample,
-        "never=rtx-pro-6000 beats_claude=false",
+        "never=rtx-pro-6000",
     ]
     return "\n".join(lines) + "\n"
 

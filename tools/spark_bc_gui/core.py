@@ -462,12 +462,10 @@ def ask_over_dump(
             "engine": "factual",
             "answer": fact,
             "honesty": HONESTY,
-            "beats_claude": False,
         }
     if use_voice_hook:
         hooked = _try_voice_ask(question, ctx, root=root)
         if isinstance(hooked, dict) and hooked.get("answer"):
-            hooked.setdefault("beats_claude", False)
             hooked.setdefault("honesty", HONESTY)
             return hooked
     names = _ops_names(ops)
@@ -484,7 +482,6 @@ def ask_over_dump(
         "engine": "fallback",
         "answer": fallback,
         "honesty": HONESTY,
-        "beats_claude": False,
     }
 
 
@@ -646,7 +643,6 @@ def export_report_markdown(
         "- SPARK_BC: `%s`" % (sparkbc_path or "(none)"),
         "- sha256: `%s`" % (sha256 or "(unknown)"),
         "- opcode count: %d" % len(names),
-        "- beats_claude: false",
         "- never_6000: true",
         "",
         "## Opcodes",

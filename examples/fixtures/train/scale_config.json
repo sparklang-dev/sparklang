@@ -11,7 +11,6 @@
  "train_embed": true,
  "device": "cpu",
  "never": "rtx-pro-6000",
- "beats_claude": false,
  "ci_default": false,
  "note": "Opt-in local CPU scale proof. GHA / make spark-sgd-proof keeps tiny dataset.jsonl and arch_from_bc defaults."
 }

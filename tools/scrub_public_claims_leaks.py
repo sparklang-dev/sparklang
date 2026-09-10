@@ -3,8 +3,9 @@
 beat-Claude claims, and internal leak jargon from public Spark paths.
 
 Edits docs/, website hand pages, README, CHANGELOG, examples, SVGs.
-Does not rename code API fields (beats_claude in eval JSON stays for
-harness honesty — prose must not say “beats Claude”).
+The `beats_claude` JSON field was removed from tool output
+entirely (2026-09-10); these patterns still scrub historical prose
+mentions — prose must not say “beats Claude”.
 """
 
 from __future__ import annotations
@@ -1096,7 +1097,7 @@ SKIP_DIRS = {
     "out",
     ".wrangler",
     "__pycache__",
-    "python",  # leave beats_claude field in harness
+    "python",  # harness code is not prose
     "asm",
     "bootstrap",
     "sparkasm",
@@ -1104,7 +1105,7 @@ SKIP_DIRS = {
 
 
 def scrub_text(text: str, *, path: Path) -> str:
-    """Apply ordered replacements; JSON keeps beats_claude keys."""
+    """Apply ordered replacements; JSON field names pass through."""
     pairs = list(REPLACEMENTS)
     if path.suffix in {".json", ".jsonl"}:
         # Keep harness / scoreboard field names; only scrub prose strings

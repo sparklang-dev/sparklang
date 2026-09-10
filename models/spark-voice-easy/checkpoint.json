@@ -23,14 +23,12 @@
     "reason": "cpu requested or prefer_gpu=false",
     "never": "rtx-pro-6000",
     "scale": "tiny",
-    "vram_gi_hint": 0.05,
-    "beats_claude": false
+    "vram_gi_hint": 0.05
   },
   "vram_gi_hint": 0.05,
-  "beats_claude": false,
   "never": "rtx-pro-6000",
   "brain": "owned-weights",
   "dry": true,
-  "weights": "/home/mike/workspaces/sparklang-public-voice-easy/models/spark-voice-easy/weights.safetensors",
+  "weights": "/home/mike/workspaces/sparklang-wt-no-mocks/models/spark-voice-easy/weights.safetensors",
   "note": "CI / piece-of-cake demo"
 }

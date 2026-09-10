@@ -198,7 +198,7 @@ PYTHONPATH=python python3 -c "
 import json
 c=json.load(open('$CKPT'))
 assert c['loss_after'] < c['loss_before'], c
-assert c['beats_claude'] is False, c
+assert 'beats_claude' not in c, c
 assert c['device'] == 'cpu', c
 assert len(c.get('loss_curve') or []) >= 2, c
 print('checkpoint loss', c['loss_before'], '->', c['loss_after'])

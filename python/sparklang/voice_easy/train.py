@@ -131,7 +131,6 @@ def train_voice_easy(
             "ok": False,
             "trained": False,
             "error": str(exc),
-            "beats_claude": False,
             "never": "rtx-pro-6000",
             "scale": scale["name"],
         }
@@ -187,7 +186,6 @@ def train_voice_easy(
         "trained": trained,
         "device": pick,
         "vram_gi_hint": scale["vram_gi_hint"],
-        "beats_claude": False,
         "never": "rtx-pro-6000",
         "brain": "owned-weights",
         "dry": dry,
@@ -207,7 +205,6 @@ def train_voice_easy(
         "scale": scale["name"],
         "device": pick,
         "weights": str(weights),
-        "beats_claude": False,
         "never": "rtx-pro-6000",
         "dry": dry,
     }

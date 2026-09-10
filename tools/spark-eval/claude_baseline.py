@@ -2,7 +2,7 @@
 """Optional Claude API baseline for spark-eval (honest measurement).
 
 Calls Anthropic only when a real key is already on the box. Never
-invents credentials. Never sets beats_claude / claim to a win.
+invents credentials. Never sets a beat-Claude claim to a win.
 CPU / HTTPS only — never GPU-1 / the 6000.
 """
 
@@ -182,7 +182,7 @@ def run_claude_baseline(
     mode: str,
     opener: Callable[..., Any] | None = None,
 ) -> dict[str, Any]:
-    """Run or skip Claude baseline. Always beats_claude=false.
+    """Run or skip Claude baseline. Never a beat-Claude claim.
 
     mode: off | auto | on
     """
@@ -191,7 +191,6 @@ def run_claude_baseline(
         "status": "off",
         "model": claude_model(),
         "probes": [],
-        "beats_claude": False,
         "claim": "none",
         "note": (
             "Optional API baseline only. Side-by-side scores are "
@@ -255,14 +254,12 @@ def run_claude_baseline(
         base["error"] = "%s: %s" % (type(exc).__name__, exc)
         base["probes"] = results
         # Still never a win claim.
-        base["beats_claude"] = False
         base["claim"] = "none"
         return base
 
     base["status"] = "ran"
     base["credential_source"] = status
     base["probes"] = results
-    base["beats_claude"] = False
     base["claim"] = "none"
     return base
 
@@ -287,7 +284,6 @@ def comparison_table(
         rows.append(row)
     return {
         "rows": rows,
-        "beats_claude": False,
         "claim": "none",
         "note": (
             "Head-to-head measurement table only. "

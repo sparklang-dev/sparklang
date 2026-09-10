@@ -129,7 +129,6 @@ def prep_fixtures(
         "bins": bins,
         "rate": 16000,
         "pairs": pairs,
-        "beats_claude": False,
         "never": "rtx-pro-6000",
         "note": "owned fixture tones + phrases — not vendor audio",
     }

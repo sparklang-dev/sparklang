@@ -28,6 +28,7 @@ NVML_LIB ?= /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1
 	test-weights-play \
 	test-spark-ask \
 	test-spark-analyze \
+	test-js-parity \
 	voice-easy test-voice-easy voice-easy-large
 
 all: spark companions
@@ -646,8 +647,8 @@ test-weights-play:
 	  docs/examples/spark-self.init.safetensors --prompt "ok" \
 	  >/tmp/wg-play.json
 	@python3 -c "import json; p=json.load(open('/tmp/wg-play.json')); \
-	  assert p['beats_claude'] is False; assert 'argmax' in p['forward']; \
-	  print('play_ok', p['forward']['path'], 'beats_claude=False')"
+	  assert 'beats_claude' not in p; assert 'argmax' in p['forward']; \
+	  print('play_ok', p['forward']['path'])"
 
 # Voice easy — owned STT/TTS heads (tiny CI + large opt-in).
 # Prefer RTX 5090; NEVER RTX PRO 6000. Not ElevenLabs overnight.
@@ -683,10 +684,10 @@ spark-sgd-proof: spark-bootstrap
 	@python3 -c "import json; c=json.load(open('out/train/sgd-proof/checkpoint.json')); \
 	  print('loss_curve', [(p['outer'], round(p['loss'],6)) for p in c['loss_curve']]); \
 	  print('loss', c['loss_before'], '->', c['loss_after']); \
-	  print('train_attn', c.get('train_attn'), 'beats_claude', c['beats_claude'], 'device', c['device']); \
+	  print('train_attn', c.get('train_attn'), 'device', c['device']); \
 	  assert c['loss_after'] < c['loss_before']; \
 	  assert c.get('train_attn') is True; \
-	  assert c['beats_claude'] is False"
+	  assert 'beats_claude' not in c"
 	@$(MAKE) spark-eval WEIGHTS=out/train/sgd-proof/weights.safetensors
 	@PYTHONPATH=python python3 -c "from pathlib import Path; \
 	  import importlib.util as u; \
@@ -696,7 +697,7 @@ spark-sgd-proof: spark-bootstrap
 	  sc={p['name']:p['score'] for p in r['probes']}; \
 	  print('proof_scores', sc); \
 	  assert sc.get('copy_recall',0)>0 and sc.get('next_token',0)>0, sc; \
-	  print('eval_nonzero_ok beats_claude=False')"
+	  print('eval_nonzero_ok')"
 
 # Opt-in local scale proof: larger JSONL + dim/n_layer knobs.
 # Still CPU-fast; not overnight; not GHA default. Not beat Claude.
@@ -721,12 +722,12 @@ spark-sgd-proof-scale: spark-bootstrap
 	        'n_layer', c.get('arch_n_layer')); \
 	  print('loss_curve', [(p['outer'], round(p['loss'],6)) for p in c['loss_curve']]); \
 	  print('loss', c['loss_before'], '->', c['loss_after']); \
-	  print('beats_claude', c['beats_claude'], 'device', c['device']); \
+	  print('device', c['device']); \
 	  assert c['dataset_n'] >= 72; \
 	  assert int(c.get('arch_dim') or 0) >= 64; \
 	  assert int(c.get('arch_n_layer') or 0) >= 4; \
 	  assert c['loss_after'] < c['loss_before']; \
-	  assert c['beats_claude'] is False; \
+	  assert 'beats_claude' not in c; \
 	  assert c['device'] == 'cpu'; \
 	  assert c['never'] == 'rtx-pro-6000'"
 	@$(MAKE) spark-eval WEIGHTS=out/train/sgd-proof-scale/weights.safetensors
@@ -911,7 +912,8 @@ spark-bc-pack-hello: bootstrap/bc_pack_hello.c bootstrap/bc_write.c \
 
 .PHONY: test-sparkbc test-sparkbc-e2e sparkbc-e2e \
 	spark-bc-emit test-bc-emit spark-bc \
-	test-decompile-compete decompile-roundtrip decompile-bench
+	test-decompile-compete decompile-roundtrip decompile-bench \
+	test-js-parity
 test-sparkbc: spark-bootstrap spark
 	chmod +x bootstrap/tests/run_sparkbc.sh
 	./bootstrap/tests/run_sparkbc.sh
@@ -949,13 +951,22 @@ probe-pe: spark-binary-probe
 probe-assist:
 	PYTHONPATH=python python3 tools/probe_assist.py
 
+# JS/Python parser parity: website/js/sparkbc.js (the exact file
+# served on /ide-web.html) must match bc_dump.py byte-for-byte on
+# the published fixtures. Requires node (no npm deps).
+test-js-parity:
+	PYTHONPATH=python python3 tools/spark-bc-dump/test_js_parity.py
+
 # Loud SoT win: compile → dump → recompile hash on fixtures.
 decompile-roundtrip: spark-bootstrap
 	PYTHONPATH=python python3 tools/spark-bc-dump/roundtrip.py \
 		--json-out out/decompile-bench/roundtrip.json
 
 # Measured scoreboard JSON (+ sample analysis project).
-decompile-bench: spark-bootstrap test-decompile-compete
+# spark + spark-binary-probe are built so the ELF row is a real
+# measurement, never a declared cell.
+decompile-bench: spark-bootstrap spark spark-binary-probe \
+	test-decompile-compete
 	PYTHONPATH=python python3 tools/spark-bc-dump/decompile_bench.py \
 		--json-out website/data/decompile-scoreboard.json \
 		--project-dir out/decompile-bench/sample-project

@@ -111,7 +111,7 @@ class TestGuiCore(unittest.TestCase):
             )
             self.assertEqual(ans["engine"], "factual")
             self.assertIn("Opcodes", ans["answer"])
-            self.assertFalse(ans.get("beats_claude"))
+            self.assertNotIn("beats_claude", ans)
             md = core.export_report_markdown(
                 dump_text=dump,
                 ops=ops,
@@ -121,7 +121,7 @@ class TestGuiCore(unittest.TestCase):
             )
             self.assertIn("# Spark IDE analysis", md)
             self.assertIn(result["sha256"], md)
-            self.assertIn("beats_claude: false", md)
+            self.assertNotIn("beats_claude", md)
 
     def test_weights_list_and_play(self) -> None:
         """List safetensors and play one tensor on CPU."""
