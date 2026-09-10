@@ -1,0 +1,59 @@
+{
+  "capability": "multi_format_elf_pe",
+  "probe": "tools/probe_pe.py",
+  "input_sha256": "7f1c587ac7140864a6c1c20f3cb1ea8b20cd6da6a07ed7cd37f27f51386c49cd",
+  "measured": true,
+  "ok": true,
+  "details": {
+    "binary": "spark-binary-probe --pe (auto-detect via --understand)",
+    "fixtures": [
+      {
+        "path": "examples/fixtures/binary/winver-pe32plus.exe",
+        "sha256": "7f1c587ac7140864a6c1c20f3cb1ea8b20cd6da6a07ed7cd37f27f51386c49cd",
+        "sha256_pinned": true,
+        "format": "pe32plus",
+        "format_ok": true,
+        "entry_va": "0x140001200",
+        "entry_matches_objdump": true,
+        "section_count": 14,
+        "sections_match_objdump": true,
+        "import_dlls": [
+          "comctl32.dll",
+          "kernel32.dll",
+          "shell32.dll",
+          "ucrtbase.dll"
+        ],
+        "imports_match_objdump": true,
+        "import_function_count": 14,
+        "ok": true
+      },
+      {
+        "path": "examples/fixtures/binary/csc-pe32.exe",
+        "sha256": "1f1c14c8f7bff93bbe433290963885a3ae3b13da6fdd24decb74c03d692fb6cb",
+        "sha256_pinned": true,
+        "format": "pe32",
+        "format_ok": true,
+        "entry_va": "0x402cfe",
+        "entry_matches_objdump": true,
+        "section_count": 3,
+        "sections_match_objdump": true,
+        "import_dlls": [
+          "mscoree.dll"
+        ],
+        "imports_match_objdump": true,
+        "import_function_count": 1,
+        "ok": true
+      }
+    ],
+    "negative_cases": {
+      "tiny": true,
+      "headers_only": true,
+      "mid_imports": true,
+      "bad_pe_sig": true,
+      "bad_mz": true,
+      "bad_opt_magic": true
+    },
+    "ground_truth": "objdump -x"
+  },
+  "ts": "2026-09-10T08:44:46.507386+00:00"
+}

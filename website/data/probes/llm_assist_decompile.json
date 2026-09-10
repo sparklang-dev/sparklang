@@ -1,0 +1,33 @@
+{
+  "capability": "llm_assist_decompile",
+  "probe": "tools/probe_assist.py",
+  "input_sha256": "d08925b52bf8c840de626c9cfec619d4dbae5a674b94bb8c7c5837eb1ac64551",
+  "measured": true,
+  "ok": true,
+  "details": {
+    "inputs": [
+      {
+        "path": "docs/examples/spark-train-step.sparkbc",
+        "sha256": "d08925b52bf8c840de626c9cfec619d4dbae5a674b94bb8c7c5837eb1ac64551",
+        "n_ops": 6,
+        "grounding": "pass"
+      },
+      {
+        "path": "docs/examples/spark-self.sparkbc",
+        "sha256": "a33f3232752c2fdd75db728773cb589a4eaf8e0bb70ac2539d2519b2dc7df6e8",
+        "n_ops": 4,
+        "grounding": "pass"
+      }
+    ],
+    "offline_grounding_pass": 2,
+    "sensitivity_distinct_outputs": true,
+    "injection_rejected": true,
+    "llm": {
+      "gateway": "http://127.0.0.1:4000",
+      "alias": "code",
+      "state": "degraded_offline",
+      "grounding": "pass"
+    }
+  },
+  "ts": "2026-09-10T08:47:33.283501+00:00"
+}
