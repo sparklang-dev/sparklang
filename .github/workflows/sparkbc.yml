@@ -60,3 +60,7 @@ jobs:
 # Voice easy — owned STT/TTS heads (tiny dry; never 6000)
       - name: make test-voice-easy
         run: make test-voice-easy
+
+      # Voice agent loop — pairs / expect score / serve / ground / bench / schedule
+      - name: make test-voice-loop
+        run: make test-voice-loop
