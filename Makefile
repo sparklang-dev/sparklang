@@ -916,6 +916,25 @@ test-decompile-compete:
 	PYTHONPATH=python python3 \
 		tools/spark-bc-dump/test_decompile_compete.py
 
+# PE32/PE32+ probe parity vs objdump + loud-fail negatives.
+.PHONY: test-pe-probe
+test-pe-probe: spark-binary-probe
+	python3 tools/binary/test_pe_probe.py
+
+# Grounded LLM-assist decompile (offline default; --llm stubbed).
+.PHONY: test-decompile-assist
+test-decompile-assist:
+	PYTHONPATH=python python3 tools/test_decompile_assist.py
+
+# Measured capability probes → website/data/probes/ (badge pass
+# consumes these; probes never edit the scoreboard themselves).
+.PHONY: probe-pe probe-assist
+probe-pe: spark-binary-probe
+	PYTHONPATH=python python3 tools/probe_pe.py
+
+probe-assist:
+	PYTHONPATH=python python3 tools/probe_assist.py
+
 # Loud SoT win: compile → dump → recompile hash on fixtures.
 decompile-roundtrip: spark-bootstrap
 	PYTHONPATH=python python3 tools/spark-bc-dump/roundtrip.py \
