@@ -1,43 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>About — SparkLang</title>
-    <meta
-      name="description"
-      content="SparkLang — reviewable .spark programs with five CPU train methods (distill, preference pack, playbook fit, FAQ index, reply pack) — not LoRA — then status→expect with dry-run CI. MIT. Contact hello@sparklang.dev."
-    />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="shortcut icon" href="/favicon.svg" />
-    <link rel="stylesheet" href="/css/tokens.css?v=polish0909" />
-    <link rel="stylesheet" href="/css/site.css?v=polish0909" />
-  </head>
-  <body class="doc-page">
-    <header class="site-header">
-      <div class="shell header-inner">
-        <a class="site-brand" href="/" aria-label="SparkLang home">
-          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
-            <path
-              d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z"
-              fill="currentColor"
-            />
-          </svg>
-          Spark
-        </a>
-        <button
-          class="nav-toggle"
-          type="button"
-          aria-expanded="false"
-          aria-controls="site-nav"
-          aria-label="Open menu"
-        >
-          <span class="nav-toggle__bar"></span>
-          <span class="nav-toggle__bar"></span>
-          <span class="nav-toggle__bar"></span>
-        </button>
-        <div class="header-nav-wrap">
-          <nav class="site-nav" id="site-nav" aria-label="Primary">
+ <head>
+ <meta charset="utf-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1" />
+ <title>About — SparkLang</title>
+ <meta
+ name="description"
+ content="SparkLang — reviewable .spark programs with five CPU train methods (distill, preference pack, playbook fit, FAQ index, reply pack) — not LoRA — then status→expect with dry-run CI. MIT. Contact hello@sparklang.dev."
+ />
+ <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+ <link rel="shortcut icon" href="/favicon.svg" />
+ <link rel="stylesheet" href="/css/tokens.css?v=polish0909" />
+ <link rel="stylesheet" href="/css/site.css?v=polish0909" />
+ </head>
+ <body class="doc-page">
+ <header class="site-header">
+ <div class="shell header-inner">
+ <a class="site-brand" href="/" aria-label="SparkLang home">
+ <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+ <path
+ d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z"
+ fill="currentColor"
+ />
+ </svg>
+ Spark
+ </a>
+ <button
+ class="nav-toggle"
+ type="button"
+ aria-expanded="false"
+ aria-controls="site-nav"
+ aria-label="Open menu"
+ >
+ <span class="nav-toggle__bar"></span>
+ <span class="nav-toggle__bar"></span>
+ <span class="nav-toggle__bar"></span>
+ </button>
+ <div class="header-nav-wrap">
+ <nav class="site-nav" id="site-nav" aria-label="Primary">
             <!-- spark-primary-nav:begin -->
             <ul class="nav-primary">
               <li><a href="/workflow.html">Loop</a></li>
@@ -68,7 +68,7 @@
                   <li class="nav-sub">
                     <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
-                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
                       <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
                     </ul>
                   </li>
@@ -149,131 +149,131 @@
             <a href="/playground.html" class="nav-cta">Try</a>
             <!-- spark-primary-nav:end -->
           </nav>
-        </div>
-      </div>
-    </header>
+ </div>
+ </div>
+ </header>
 
-    <div class="shell doc-layout">
-      <main class="doc-main">
-        <p class="doc-breadcrumb"><a href="/">Home</a> / About</p>
-        <article class="doc__body">
-          <h1 id="about-sparklang">About SparkLang</h1>
-          <p>
-            <strong>SparkLang</strong> is the public name for the
-            <strong>Spark programming language</strong> at
-            <a href="https://sparklang.dev/">sparklang.dev</a>.
-            A language beats another Python SDK because one reviewable
-            <code class="inline-code">.spark</code> file covers train → eval →
-            ship, with dry-run fixtures for CI without API keys.
-          </p>
+ <div class="shell doc-layout">
+ <main class="doc-main">
+ <p class="doc-breadcrumb"><a href="/">Home</a> / About</p>
+ <article class="doc__body">
+ <h1 id="about-sparklang">About SparkLang</h1>
+ <p>
+ <strong>SparkLang</strong> is the public name for the
+ <strong>Spark programming language</strong> at
+ <a href="https://sparklang.dev/">sparklang.dev</a>.
+ A language beats another Python SDK because one reviewable
+ <code class="inline-code">.spark</code> file covers train → eval →
+ ship, with dry-run fixtures for CI without API keys.
+ </p>
 
-          <h2 id="what-it-is">What it is</h2>
-          <ul class="doc__ul">
-            <li>
-              A <strong>language + runtime</strong> for plain
-              <code class="inline-code">.spark</code> files.
-            </li>
-            <li>
-              <strong>Dry-run / offline by default</strong> — no API keys and no
-              network for learning and CI.
-            </li>
-            <li>
-              <strong>Real training</strong> via
-              <code class="inline-code">model train</code> /
-              <code class="inline-code">model build</code> (jobs + status).
-              <code class="inline-code">model plan</code> is plan-only markdown.
-            </li>
-            <li>
-              Optional live <code class="inline-code">ask</code> against any
-              OpenAI-compatible gateway via
-              <code class="inline-code">AI_GATEWAY_URL</code> and
-              <code class="inline-code">./spark --live</code>.
-            </li>
-          </ul>
+ <h2 id="what-it-is">What it is</h2>
+ <ul class="doc__ul">
+ <li>
+ A <strong>language + runtime</strong> for plain
+ <code class="inline-code">.spark</code> files.
+ </li>
+ <li>
+ <strong>Dry-run / offline by default</strong> — no API keys and no
+ network for learning and CI.
+ </li>
+ <li>
+ <strong>Real training</strong> via
+ <code class="inline-code">model train</code> /
+ <code class="inline-code">model build</code> (jobs + status).
+ <code class="inline-code">model plan</code> is plan-only markdown.
+ </li>
+ <li>
+ Optional live <code class="inline-code">ask</code> against any
+ OpenAI-compatible gateway via
+ <code class="inline-code">AI_GATEWAY_URL</code> and
+ <code class="inline-code">./spark --live</code>.
+ </li>
+ </ul>
 
-          <h2 id="what-it-is-not">Name note</h2>
-          <p>
-            Unrelated to Apache Spark (big data) and AdaCore SPARK (formal
-            methods).
-          </p>
+ <h2 id="what-it-is-not">Name note</h2>
+ <p>
+ Unrelated to Apache Spark (big data) and AdaCore SPARK (formal
+ methods).
+ </p>
 
-          <h2 id="core-vs-optional">Core vs optional</h2>
-          <div class="doc__table-wrap">
-            <table class="doc__table">
-              <thead>
-                <tr>
-                  <th>Surface</th>
-                  <th>Role</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>Core</strong></td>
-                  <td>
-                    Language, dry-run fixtures, model train/build/status,
-                    ask/eval helpers, playbooks, IDE language ops
-                  </td>
-                </tr>
-                <tr>
-                  <td><strong>Optional</strong></td>
-                  <td>
-                    Live ask/embed; voice (gated); browser / capture
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+ <h2 id="core-vs-optional">Core vs optional</h2>
+ <div class="doc__table-wrap">
+ <table class="doc__table">
+ <thead>
+ <tr>
+ <th>Surface</th>
+ <th>Role</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+ <td><strong>Core</strong></td>
+ <td>
+ Language, dry-run fixtures, model train/build/status,
+ ask/eval helpers, playbooks, IDE language ops
+ </td>
+ </tr>
+ <tr>
+ <td><strong>Optional</strong></td>
+ <td>
+ Live ask/embed; voice (gated); browser / capture
+ </td>
+ </tr>
+ </tbody>
+ </table>
+ </div>
 
-          <h2 id="trust">Trust</h2>
-          <ul class="doc__ul">
-            <li>
-              License: <a href="/LICENSE.txt">MIT</a>
-            </li>
-            <li>
-              Version: <strong>0.6.3</strong> —
-              <a href="/CHANGELOG.html">Changelog</a> ·
-              <a href="/downloads.html">Downloads</a>
-            </li>
-            <li>
-              Source:
-              <a href="https://github.com/sparklang-dev/sparklang"
-                >github.com/sparklang-dev/sparklang</a
-              >
-              (public MIT). Installers ship from
-              <a href="https://sparklang.dev/">sparklang.dev</a>.
-            </li>
-            <li>
-              Contact:
-              <!--email_off-->
-              <a href="mailto:hello@sparklang.dev">hello@sparklang.dev</a>
-              ·
-              <a href="mailto:noreply@sparklang.dev">noreply@sparklang.dev</a>
-              <!--/email_off-->
-            </li>
-          </ul>
-        </article>
-      </main>
-    </div>
+ <h2 id="trust">Trust</h2>
+ <ul class="doc__ul">
+ <li>
+ License: <a href="/LICENSE.txt">MIT</a>
+ </li>
+ <li>
+ Version: <strong>0.6.3</strong> —
+ <a href="/CHANGELOG.html">Changelog</a> ·
+ <a href="/downloads.html">Downloads</a>
+ </li>
+ <li>
+ Source:
+ <a href="https://github.com/sparklang-dev/sparklang"
+ >github.com/sparklang-dev/sparklang</a
+ >
+ (public MIT). Installers ship from
+ <a href="https://sparklang.dev/">sparklang.dev</a>.
+ </li>
+ <li>
+ Contact:
+ <!--email_off-->
+ <a href="mailto:hello@sparklang.dev">hello@sparklang.dev</a>
+ ·
+ <a href="mailto:noreply@sparklang.dev">noreply@sparklang.dev</a>
+ <!--/email_off-->
+ </li>
+ </ul>
+ </article>
+ </main>
+ </div>
 
-    <footer class="site-footer">
-      <div class="shell footer-inner">
-        <div class="footer-brand">
-          <span>SparkLang — the Spark programming language</span>
-          <span class="footer-meta">v0.6.3 · <a href="/LICENSE.txt">MIT</a></span>
-        </div>
-        <nav class="footer-nav" aria-label="Footer">
-          <a href="/about.html" aria-current="page">About</a>
-          <a href="/LICENSE.txt">License</a>
-          <a href="/CHANGELOG.html">Changelog</a>
-          <a href="/learn/">Learn</a>
-          <a href="/downloads.html">Downloads</a>
-          <a href="https://github.com/sparklang-dev/sparklang">Source</a>
-          <!--email_off-->
-          <a href="mailto:hello@sparklang.dev">Contact</a>
-          <!--/email_off-->
-        </nav>
-      </div>
-    </footer>
-    <script src="/js/site.js"></script>
-  </body>
+ <footer class="site-footer">
+ <div class="shell footer-inner">
+ <div class="footer-brand">
+ <span>SparkLang — the Spark programming language</span>
+ <span class="footer-meta">v0.6.3 · <a href="/LICENSE.txt">MIT</a></span>
+ </div>
+ <nav class="footer-nav" aria-label="Footer">
+ <a href="/about.html" aria-current="page">About</a>
+ <a href="/LICENSE.txt">License</a>
+ <a href="/CHANGELOG.html">Changelog</a>
+ <a href="/learn/">Learn</a>
+ <a href="/downloads.html">Downloads</a>
+ <a href="https://github.com/sparklang-dev/sparklang">Source</a>
+ <!--email_off-->
+ <a href="mailto:hello@sparklang.dev">Contact</a>
+ <!--/email_off-->
+ </nav>
+ </div>
+ </footer>
+ <script src="/js/site.js"></script>
+ </body>
 </html>

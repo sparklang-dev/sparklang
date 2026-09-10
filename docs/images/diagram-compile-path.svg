@@ -1,63 +1,63 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 220" role="img" aria-labelledby="t1 d1">
-  <title id="t1">SparkLang compile path</title>
-  <desc id="d1">Source .spark to bootstrap or GAS to SPARK_BC then run train or serve</desc>
-  <defs>
-    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L6,3 L0,6 Z" fill="#334155"/>
-    </marker>
-    <style>
-      .box { fill:#fff; stroke:#334155; stroke-width:1.5; rx:6; }
-      .hl { fill:#fef3c7; stroke:#92400e; stroke-width:1.5; rx:6; }
-      .helper { fill:#e0f2fe; stroke:#0369a1; stroke-width:1.5; rx:6; stroke-dasharray:4 3; }
-      .lbl { font:600 13px ui-sans-serif,system-ui,sans-serif; fill:#0f172a; }
-      .sub { font:11px ui-sans-serif,system-ui,sans-serif; fill:#475569; }
-      .cap { font:12px ui-sans-serif,system-ui,sans-serif; fill:#334155; }
-      .flow { stroke:#334155; stroke-width:1.75; fill:none; marker-end:url(#arrow); }
-    </style>
-  </defs>
-  <rect x="8" y="8" width="904" height="204" fill="#f8fafc" stroke="#cbd5e1" rx="8"/>
-  <text x="20" y="28" class="cap">Compile path (deterministic SoT)  Spark / SparkLang</text>
+ <title id="t1">SparkLang compile path</title>
+ <desc id="d1">Source .spark to bootstrap or GAS to SPARK_BC then run train or serve</desc>
+ <defs>
+ <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+ <path d="M0,0 L6,3 L0,6 Z" fill="#334155"/>
+ </marker>
+ <style>
+ .box { fill:#fff; stroke:#334155; stroke-width:1.5; rx:6; }
+ .hl { fill:#fef3c7; stroke:#92400e; stroke-width:1.5; rx:6; }
+ .helper { fill:#e0f2fe; stroke:#0369a1; stroke-width:1.5; rx:6; stroke-dasharray:4 3; }
+ .lbl { font:600 13px ui-sans-serif,system-ui,sans-serif; fill:#0f172a; }
+ .sub { font:11px ui-sans-serif,system-ui,sans-serif; fill:#475569; }
+ .cap { font:12px ui-sans-serif,system-ui,sans-serif; fill:#334155; }
+ .flow { stroke:#334155; stroke-width:1.75; fill:none; marker-end:url(#arrow); }
+ </style>
+ </defs>
+ <rect x="8" y="8" width="904" height="204" fill="#f8fafc" stroke="#cbd5e1" rx="8"/>
+ <text x="20" y="28" class="cap">Compile path (deterministic SoT)  Spark / SparkLang</text>
 
-  <rect class="box" x="24" y="52" width="120" height="56"/>
-  <text x="84" y="74" text-anchor="middle" class="lbl">.spark</text>
-  <text x="84" y="92" text-anchor="middle" class="sub">source</text>
+ <rect class="box" x="24" y="52" width="120" height="56"/>
+ <text x="84" y="74" text-anchor="middle" class="lbl">.spark</text>
+ <text x="84" y="92" text-anchor="middle" class="sub">source</text>
 
-  <path class="flow" d="M148 80 H176"/>
+ <path class="flow" d="M148 80 H176"/>
 
-  <rect class="hl" x="180" y="44" width="150" height="72"/>
-  <text x="255" y="68" text-anchor="middle" class="lbl">Assembler</text>
-  <text x="255" y="86" text-anchor="middle" class="sub">spark-bootstrap</text>
-  <text x="255" y="102" text-anchor="middle" class="sub">./spark --compile (GAS)</text>
+ <rect class="hl" x="180" y="44" width="150" height="72"/>
+ <text x="255" y="68" text-anchor="middle" class="lbl">Assembler</text>
+ <text x="255" y="86" text-anchor="middle" class="sub">spark-bootstrap</text>
+ <text x="255" y="102" text-anchor="middle" class="sub">./spark --compile (GAS)</text>
 
-  <path class="flow" d="M334 80 H362"/>
+ <path class="flow" d="M334 80 H362"/>
 
-  <rect class="hl" x="366" y="52" width="130" height="56"/>
-  <text x="431" y="74" text-anchor="middle" class="lbl">.sparkbc</text>
-  <text x="431" y="92" text-anchor="middle" class="sub">SPARK_BC bytes</text>
+ <rect class="hl" x="366" y="52" width="130" height="56"/>
+ <text x="431" y="74" text-anchor="middle" class="lbl">.sparkbc</text>
+ <text x="431" y="92" text-anchor="middle" class="sub">SPARK_BC bytes</text>
 
-  <path class="flow" d="M500 80 H528"/>
+ <path class="flow" d="M500 80 H528"/>
 
-  <rect class="box" x="532" y="40" width="110" height="36"/>
-  <text x="587" y="62" text-anchor="middle" class="lbl">--run-bc</text>
-  <rect class="box" x="532" y="84" width="110" height="36"/>
-  <text x="587" y="106" text-anchor="middle" class="lbl">TRAIN/STEP</text>
-  <rect class="box" x="656" y="62" width="110" height="36"/>
-  <text x="711" y="84" text-anchor="middle" class="lbl">serve</text>
+ <rect class="box" x="532" y="40" width="110" height="36"/>
+ <text x="587" y="62" text-anchor="middle" class="lbl">--run-bc</text>
+ <rect class="box" x="532" y="84" width="110" height="36"/>
+ <text x="587" y="106" text-anchor="middle" class="lbl">TRAIN/STEP</text>
+ <rect class="box" x="656" y="62" width="110" height="36"/>
+ <text x="711" y="84" text-anchor="middle" class="lbl">serve</text>
 
-  <path class="flow" d="M646 58 H652"/>
-  <path class="flow" d="M646 102 H652 102 84"/>
+ <path class="flow" d="M646 58 H652"/>
+ <path class="flow" d="M646 102 H652 102 84"/>
 
-  <rect class="helper" x="24" y="148" width="160" height="48"/>
-  <text x="104" y="168" text-anchor="middle" class="lbl">Helpers</text>
-  <text x="104" y="184" text-anchor="middle" class="sub">sparkc · make · tests</text>
+ <rect class="helper" x="24" y="148" width="160" height="48"/>
+ <text x="104" y="168" text-anchor="middle" class="lbl">Helpers</text>
+ <text x="104" y="184" text-anchor="middle" class="sub">sparkc Â· make Â· tests</text>
 
-  <rect class="helper" x="204" y="148" width="180" height="48"/>
-  <text x="294" y="168" text-anchor="middle" class="lbl">Shadow-build</text>
-  <text x="294" y="184" text-anchor="middle" class="sub">docs/examples/*.sparkbc</text>
+ <rect class="helper" x="204" y="148" width="180" height="48"/>
+ <text x="294" y="168" text-anchor="middle" class="lbl">Shadow-build</text>
+ <text x="294" y="184" text-anchor="middle" class="sub">docs/examples/*.sparkbc</text>
 
-  <rect class="helper" x="404" y="148" width="200" height="48"/>
-  <text x="504" y="168" text-anchor="middle" class="lbl">SDK / IDE GUI</text>
-  <text x="504" y="184" text-anchor="middle" class="sub">spark-bc-gui (SDK pack)</text>
+ <rect class="helper" x="404" y="148" width="200" height="48"/>
+ <text x="504" y="168" text-anchor="middle" class="lbl">SDK / IDE GUI</text>
+ <text x="504" y="184" text-anchor="middle" class="sub">spark-bc-gui (SDK pack)</text>
 
-  <text x="640" y="176" class="sub">Never invents bytes · CPU only · not beat Claude</text>
+ <text x="640" y="176" class="sub">Never invents bytes Â· CPU only Â· measurement only</text>
 </svg>

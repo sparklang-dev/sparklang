@@ -1,5 +1,5 @@
 # Engine B — parse+css then layout→paint→show → out/engine/pipeline.ppm.
-# Dry:  ./spark --dry-run examples/browser_engine_render.spark (no X11)
+# Dry: ./spark --dry-run examples/browser_engine_render.spark (no X11)
 # Live: ./spark --live … → spark-engine-show on pipeline.ppm (needs DISPLAY)
 # Fail closed without DOM (no paint_fixture fallback).
 

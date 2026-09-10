@@ -7,10 +7,10 @@
 # without deleting existing LoRA / reply-pack / abstain heads.
 #
 # Dry (CI / offline):
-#   ./spark --dry-run examples/model_lab.spark
+# ./spark --dry-run examples/model_lab.spark
 #
 # Live reverse (local HF dir you already have):
-#   ./spark-model-lab --live reverse --model /path/to/local-hf
+# ./spark-model-lab --live reverse --model /path/to/local-hf
 # Never auto / code / fast. Never closed-weight theft.
 
 model "fixtures/tiny-lm"

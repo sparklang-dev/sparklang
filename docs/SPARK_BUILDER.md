@@ -20,7 +20,7 @@ Bytecode is the **training program + orchestration**. Init tensors stay
 (layer-0 last-query causal attention + embed + lm_head; larger
 fixture; loss curve in `checkpoint.json`; loss must drop or fail
 loud). Frozen `make spark-eval` probes can score **>0** after that
-train — still **does not beat Claude.** CPU default; RTX 5090 OK;  / GPU-1. Do not
+train — still **** CPU default; RTX 5090 OK; Do not
 import Claude or Grok weights.
 
 **ISA SoT:** [SPARK_BC.md](SPARK_BC.md).
@@ -28,29 +28,29 @@ import Claude or Grok weights.
 ## Factory story (end-to-end)
 
 1. **Seed programs** — compiler slice, train slice, builder, STEP proof,
-   optional model lab (see [Programs](#programs)).
+ optional model lab (see [Programs](#programs)).
 2. **`--compile`** — `./spark-bootstrap --compile … -o ….sparkbc`
-   **or** `./spark --compile … -o ….sparkbc` (GAS thin fork).
-   C lowering remains SoT; that is the factory emit path.
+ **or** `./spark --compile … -o ….sparkbc` (GAS thin fork).
+ C lowering remains SoT; that is the factory emit path.
 3. **Opcodes in the binary** — `TRAIN` `0x26`, `TRAIN_STATUS` `0x27`,
-   `STEP` `0x28` (plus `MODEL` / `ASK` / `PRINT` / `HALT` as needed).
+ `STEP` `0x28` (plus `MODEL` / `ASK` / `PRINT` / `HALT` as needed).
 4. **`--run-bc`** — `./spark-bootstrap --run-bc ….sparkbc` **or**
-   `./spark --run-bc ….sparkbc` (GAS thin fork → bootstrap bc_vm)
-   runs `TRAIN` as a dry job accept (`trained=false` until STEP),
-   then **`STEP` as multi-outer CPU SGD** on Spark safetensors
-   (`ARTIFACT` + `weights.safetensors` + `checkpoint.json`;
-   `trained=true` / `not_sgd=false` only after real grads; loss must
-   drop). Helper: `tools/spark-bc-dump/apply_step.py` →
-   `apply_sgd_step` (outer×inner sequence CE via layer-0 attn;
-   optional embed grads; `--no-train-attn` for mean-pool CE).
-   **Not beat Claude.** No 6000.
+ `./spark --run-bc ….sparkbc` (GAS thin fork → bootstrap bc_vm)
+ runs `TRAIN` as a dry job accept (`trained=false` until STEP),
+ then **`STEP` as multi-outer CPU SGD** on Spark safetensors
+ (`ARTIFACT` + `weights.safetensors` + `checkpoint.json`;
+ `trained=true` / `not_sgd=false` only after real grads; loss must
+ drop). Helper: `tools/spark-bc-dump/apply_step.py` →
+ `apply_sgd_step` (outer×inner sequence CE via layer-0 attn;
+ optional embed grads; `--no-train-attn` for mean-pool CE).
+ **Measurement only.** No 6000.
 5. **GAS dry-run + wrappers** — `./spark --dry-run file.spark` runs
-   train verbs from **source**. `./spark --run-bc` and
-   `./spark --compile … -o …` thin-wrap bootstrap (bc_vm / C
-   lowering remain SoT).
+ train verbs from **source**. `./spark --run-bc` and
+ `./spark --compile … -o …` thin-wrap bootstrap (bc_vm / C
+ lowering remain SoT).
 6. **Dump + init weights** — hex/mnemonic dump of the real file; emit
-   `spark-self.init.safetensors` from those bytes (no HF load).
-7. **Later beat Claude** — larger train / eval path. **Not this STEP.**
+ `spark-self.init.safetensors` from those bytes (no HF load).
+7. **Later larger train/eval** — larger train / eval path. **Not this STEP.**
 
 **Learn trail:** [/learn/](/learn/) →
 [Build a Model](/learn/build-model.html) →
@@ -93,16 +93,16 @@ the dump tool.
 
 ```bash
 ./spark-bootstrap --compile examples/spark_builder.spark \
-  -o docs/examples/spark-builder.sparkbc
+ -o docs/examples/spark-builder.sparkbc
 
 ./spark-bootstrap --compile selfhost/compile.spark \
-  -o docs/examples/spark-self.sparkbc
+ -o docs/examples/spark-self.sparkbc
 
 ./spark-bootstrap --compile selfhost/compile_train.spark \
-  -o docs/examples/spark-selfhost-train.sparkbc
+ -o docs/examples/spark-selfhost-train.sparkbc
 
 ./spark-bootstrap --compile examples/spark_train_step.spark \
-  -o docs/examples/spark-train-step.sparkbc
+ -o docs/examples/spark-train-step.sparkbc
 ```
 
 Verify bytes match the published hashes (see [Published files](#published-files--sha256)):
@@ -115,25 +115,25 @@ sha256sum docs/examples/spark-*.sparkbc
 
 ```bash
 PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
-  docs/examples/spark-builder.sparkbc \
-  --source examples/spark_builder.spark \
-  --command './spark-bootstrap --compile examples/spark_builder.spark -o docs/examples/spark-builder.sparkbc' \
-  --label 'Builder SPARK_BC (train ops in the binary)' \
-  -o docs/examples/spark-builder-bc.txt
+ docs/examples/spark-builder.sparkbc \
+ --source examples/spark_builder.spark \
+ --command './spark-bootstrap --compile examples/spark_builder.spark -o docs/examples/spark-builder.sparkbc' \
+ --label 'Builder SPARK_BC (train ops in the binary)' \
+ -o docs/examples/spark-builder-bc.txt
 
 PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
-  docs/examples/spark-train-step.sparkbc \
-  --source examples/spark_train_step.spark \
-  --command './spark-bootstrap --compile examples/spark_train_step.spark -o docs/examples/spark-train-step.sparkbc' \
-  --label 'Train-step SPARK_BC (TRAIN → STEP → TRAIN_STATUS)' \
-  -o docs/examples/spark-train-step-bc.txt
+ docs/examples/spark-train-step.sparkbc \
+ --source examples/spark_train_step.spark \
+ --command './spark-bootstrap --compile examples/spark_train_step.spark -o docs/examples/spark-train-step.sparkbc' \
+ --label 'Train-step SPARK_BC (TRAIN → STEP → TRAIN_STATUS)' \
+ -o docs/examples/spark-train-step-bc.txt
 
 PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
-  docs/examples/spark-self.sparkbc \
-  --source selfhost/compile.spark \
-  --command './spark-bootstrap --compile selfhost/compile.spark -o docs/examples/spark-self.sparkbc' \
-  --weights docs/examples/spark-self.init.safetensors \
-  -o docs/examples/spark-self-builder.json
+ docs/examples/spark-self.sparkbc \
+ --source selfhost/compile.spark \
+ --command './spark-bootstrap --compile selfhost/compile.spark -o docs/examples/spark-self.sparkbc' \
+ --weights docs/examples/spark-self.init.safetensors \
+ -o docs/examples/spark-self-builder.json
 ```
 
 Site mirrors of dumps live under `website/docs/examples/`. Copy
@@ -152,14 +152,14 @@ txt/json dumps there when regenerating the site; do not invent hex.
 # tools/spark-bc-dump/apply_step.py → apply_sgd_step
 # (multi-outer CE + checkpoint.json; not hash toy).
 ls -la out/train/job-dry-001/ARTIFACT \
-  out/train/job-dry-001/weights.safetensors \
-  out/train/job-dry-001/checkpoint.json
+ out/train/job-dry-001/weights.safetensors \
+ out/train/job-dry-001/checkpoint.json
 
 # Proof STEP SGD (clean job dir first):
 rm -f out/train/job-dry-001/{ARTIFACT,weights.safetensors,checkpoint.json}
 ./spark --run-bc docs/examples/spark-train-step.sparkbc
 # → weights.safetensors (step_n>=1, loss_after < loss_before)
-# → checkpoint.json (loss_curve; beats_claude=false)
+# → checkpoint.json (loss_curve; claim=none)
 ```
 
 ### 4) GAS source dry-run (not bytecode emit)
@@ -174,7 +174,7 @@ rm -f out/train/job-dry-001/{ARTIFACT,weights.safetensors,checkpoint.json}
 
 ```bash
 ./spark --compile examples/spark_builder.spark \
-  -o /tmp/builder.sparkbc
+ -o /tmp/builder.sparkbc
 # thin-wrap → ./spark-bootstrap --compile (bytes match published)
 
 ./spark --run-bc docs/examples/spark-builder.sparkbc
@@ -184,9 +184,9 @@ rm -f out/train/job-dry-001/{ARTIFACT,weights.safetensors,checkpoint.json}
 ### 6) Automated gates already on main
 
 ```bash
-make test-sparkbc      # compile → --run-bc body vs GAS dry (oracle)
-make test-model-lab    # examples/model_lab.spark dry + expects
-make sparkbc-e2e       # TRAIN→STEP→ARTIFACT focused gate
+make test-sparkbc # compile → --run-bc body vs GAS dry (oracle)
+make test-model-lab # examples/model_lab.spark dry + expects
+make sparkbc-e2e # TRAIN→STEP→ARTIFACT focused gate
 # alias: make test-sparkbc-e2e
 ```
 
@@ -194,13 +194,13 @@ make sparkbc-e2e       # TRAIN→STEP→ARTIFACT focused gate
 
 ```bash
 PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
-  docs/examples/spark-builder.sparkbc \
-  --source examples/spark_builder.spark \
-  --command './spark-bootstrap --compile examples/spark_builder.spark -o docs/examples/spark-builder.sparkbc' \
-  --serve /tmp/serve-dry-001
+ docs/examples/spark-builder.sparkbc \
+ --source examples/spark_builder.spark \
+ --command './spark-bootstrap --compile examples/spark_builder.spark -o docs/examples/spark-builder.sparkbc' \
+ --serve /tmp/serve-dry-001
 # → /tmp/serve-dry-001/SERVE (forward=true, trained=false)
-#    path embed->attn0->mlp0->rms_norm->lm_head when layer-0
-#    attn+MLP tensors exist; + weights.safetensors (init if missing)
+# path embed->attn0->mlp0->rms_norm->lm_head when layer-0
+# attn+MLP tensors exist; + weights.safetensors (init if missing)
 # Or: ./spark-serve docs/examples/spark-builder.sparkbc /tmp/serve-dry-001
 ```
 
@@ -216,21 +216,21 @@ Wraps the same tiny CPU forward behind a local JSON API
 ./spark-serve docs/examples/spark-builder.sparkbc /tmp/serve-dry-001
 make spark-serve-api
 ./spark-serve-api --weights /tmp/serve-dry-001/weights.safetensors \
-  --http --host 127.0.0.1 --port 8765
+ --http --host 127.0.0.1 --port 8765
 
 curl -s http://127.0.0.1:8765/health
 curl -s http://127.0.0.1:8765/version
 curl -s -X POST http://127.0.0.1:8765/v1/predict \
-  -H 'Content-Type: application/json' \
-  -d '{"token_ids":[72,105]}'
+ -H 'Content-Type: application/json' \
+ -d '{"token_ids":[72,105]}'
 curl -s -X POST http://127.0.0.1:8765/v1/embeddings \
-  -H 'Content-Type: application/json' \
-  -d '{"text":"Hi"}'
+ -H 'Content-Type: application/json' \
+ -d '{"text":"Hi"}'
 
 # stdio (one JSON object per line):
 echo '{"op":"predict","token_ids":[1,2]}' | \
 ./spark-serve-api --weights /tmp/serve-dry-001/weights.safetensors \
-  --stdio
+ --stdio
 
 make test-serve-api
 ```
@@ -243,10 +243,10 @@ wrapper `scripts/sparkbc-e2e`). Compiles
 `out/train/job-dry-001/ARTIFACT` (`not_sgd=false`, `trained=true`,
 `step_n=1`) + `checkpoint.json`. `make test-sparkbc` asserts STEP
 weights + `loss_after < loss_before` (multi-outer SGD + attn).
-**Not beat Claude.**
+**Measurement only.**
 
 Attn train proof (SGD then measurement-only eval; scores >0 on
-frozen probes; still not beat Claude):
+frozen probes; still measurement only.):
 
 ```bash
 make spark-sgd-proof
@@ -260,18 +260,18 @@ make spark-sgd-proof
 make spark-sgd-proof-scale
 # override knobs:
 SPARK_SGD_DIM=64 SPARK_SGD_N_LAYER=4 \
-  SPARK_SGD_OUTER=2 SPARK_SGD_INNER=4 \
-  make spark-sgd-proof-scale
+ SPARK_SGD_OUTER=2 SPARK_SGD_INNER=4 \
+ make spark-sgd-proof-scale
 ```
 
 CI / `make spark-sgd-proof` keeps `dataset.jsonl` + `arch_from_bc`
 tiny defaults. Scale config SoT:
 `examples/fixtures/train/scale_config.json` +
 `dataset_scale.jsonl`. Shape checks live in `make test-sparkbc`
-(no overnight train). **Not beat Claude.**
+(no overnight train). **Measurement only.**
 
 
-## Eval harness (measure later — not beat Claude)
+## Eval harness (measure later — measurement only.)
 
 Frozen tiny probes live under `examples/eval/` (copy/recall +
 next-token fixtures). Runner: `tools/spark-eval/run.py`.
@@ -281,32 +281,29 @@ make spark-eval
 # optional Spark weights (init or later train artifact):
 make spark-eval WEIGHTS=docs/examples/spark-self.init.safetensors
 # or: SPARK_EVAL_WEIGHTS=/path/to/weights.safetensors make spark-eval
-# optional Claude API baseline (skips if no key on box):
+# optional frontier-API baseline (skips if no key on box):
 make spark-eval-claude
 # or: make spark-eval CLAUDE=auto
 ```
 
 - **Dry** (default): oracle fixture path — prints scores, exits **0**.
 - **Weights**: teacher-forced / next-token accuracy via layer-0
-  attn when present (else mean-pool) + `lm_head` (CPU only; never
-  the 6000). After `make spark-sgd-proof`, frozen probes score **>0**
-  — still **not** beat Claude.
-- **Claude baseline (optional):** `CLAUDE=auto` / `make spark-eval-claude`
-  calls Anthropic **only** when a key already exists
-  (`SPARK_EVAL_CLAUDE_API_KEY`, `ANTHROPIC_API_KEY`, `CLAUDE_API_KEY`,
-  or `SPARK_EVAL_CLAUDE_KEY_FILE`). Otherwise status
-  `skipped_no_credentials`. `CLAUDE=on` fails closed if missing.
-  Never invents keys. Never uses the 6000.
-- Suite JSON: `examples/eval/suite.json` (`claim: none`).
+ attn when present (else mean-pool) + `lm_head` (CPU / consumer GPU). After `make spark-sgd-proof`, frozen probes score **>0**
+ — still **measurement only**
+- **frontier-API baseline (optional):** `CLAUDE=auto` / `make spark-eval-claude`
+ calls Anthropic **only** when a key already exists
+ (`SPARK_EVAL_CLAUDE_API_KEY`, `ANTHROPIC_API_KEY`, `CLAUDE_API_KEY`,
+ or `SPARK_EVAL_CLAUDE_KEY_FILE`). Otherwise status
+ `skipped_no_credentials`. `CLAUDE=on` fails closed if missing.
+ - Suite JSON: `examples/eval/suite.json` (`claim: none`).
 - Gate: `make test-spark-eval`.
 
-### Eval honesty (Spark / SparkLang)
-
+### Evaluation (Spark / SparkLang)
 - Product name in docs and scores: **Spark** / **SparkLang** only.
-- Harness output always sets `claim: none` and `beats_claude: false`.
+- Harness output always sets `claim: none` and no marketing-win flag.
 - Side-by-side Spark vs Claude scores are **measurement**, not a
-  marketing win. A higher Spark score on tiny fixtures **does not**
-  authorize “beats Claude.”
+ marketing win. A higher Spark score on tiny fixtures **does not**
+ authorize competitive AI win claims.”
 - Dry Spark oracle scores are fixture plumbing, not model quality.
 - Weights-mode scores of `0.0` are honest misses until proven otherwise.
 
@@ -340,12 +337,12 @@ make test-model-lab
 ```
 
 - `model reverse` / `inspect` — local `config.json` + safetensors **index**
-  names only (no tensor body load; no closed-weight theft).
+ names only (no tensor body load; no closed-weight theft).
 - `model compile` — SPARK_BC **plan** for the `.spark` program (dry stub
-  under `out/lab/`). Real bytes: `./spark-bootstrap --compile`.
+ under `out/lab/`). Bytes: `./spark-bootstrap --compile`.
 - `model modify` — attach only; `keep_special_training: true`.
 - Lab verbs stay **GAS-first** (no SPARK_BC opcode yet for reverse /
-  compile / modify). Train **does** encode as `0x26` / `0x27` / `0x28`.
+ compile / modify). Train **does** encode as `0x26` / `0x27` / `0x28`.
 
 ## Gaps / BLOCKED / later
 
@@ -358,7 +355,7 @@ make test-model-lab
 | STEP CPU SGD weights | **implemented** (multi-outer; layer-0 attn+embed+lm_head; `weights.safetensors` + `checkpoint.json` loss curve; `trained=true`; `not_sgd=false`; loss must drop; eval probes can be >0) |
 | Tiny CPU serve forward | **implemented** (`dump.py --serve` → `SERVE` with `forward=true`; optional layer-0 attn+MLP; `trained` from weights meta; not production) |
 | Serve HTTP / stdio API | **implemented** (`./spark-serve-api` — `/health` `/version` `/v1/predict` `/v1/embeddings`; gate `make test-serve-api`; not production) |
-| Beats Claude / production LLM | **not** — multi-stage later; multi-outer SGD ≠ Claude |
+| Competitive AI win / production LLM | **not** — multi-stage later; multi-outer SGD ≠ Claude |
 
 | Cloudflare Pages deploy | Prefer Wrangler OAuth (`npx wrangler pages deploy website …`); if CLI/auth absent → **dashboard** upload of `website/` from a known SHA (see [RELEASE.md](RELEASE.md) step 5) |
 
@@ -379,31 +376,31 @@ make test-model-lab
 | Emit init weights from those bytes | **implemented** (init only) |
 | Round-trip hello SPARK_BC | **tested** (`make test-sparkbc`) |
 | Model lab reverse/compile/modify | **tested** (`make test-model-lab`) |
-| STEP real CPU SGD | **implemented** (tiny; attn train; loss drop + eval>0 proven; not beat Claude) |
+| STEP real CPU SGD | **implemented** (tiny; attn train; loss drop + eval>0 proven; measurement only.) |
 | Tiny CPU serve forward | **implemented** (`SERVE`; `forward=true`; attn0+mlp0; not production) |
 | Serve HTTP / stdio API (serve API path) | **implemented** (`spark-serve-api`; predict + embeddings; not production) |
-| Beats Claude | **not** |
+| Competitive AI win | **not** |
 
 
 ## Related
 
 - Builder page live on production Pages:
-  https://sparklang.dev/docs/spark-builder.html
-- **Factory hub:** [FACTORY.md](FACTORY.md) /
-  https://sparklang.dev/docs/factory.html
-- **Diagrams:** [DIAGRAMS.md](DIAGRAMS.md) /
-  https://sparklang.dev/docs/diagrams.html
+ https://sparklang.dev/docs/spark-builder.html
+- **Factory hub:** [Factory hub](FACTORY.md) /
+ https://sparklang.dev/docs/factory.html
+- **Diagrams:** [Diagrams](DIAGRAMS.md) /
+ https://sparklang.dev/docs/diagrams.html
 - Engineer factory docs: [COMPILE.md](COMPILE.md) ·
-  [DECOMPILE.md](DECOMPILE.md) ·
-  [BUILD_MODELS.md](BUILD_MODELS.md) ·
-  [TRAIN_LOOP.md](TRAIN_LOOP.md) ·
-  [ARCHITECTURE.md](ARCHITECTURE.md) ·
-  [ATTENTION_FORWARD.md](ATTENTION_FORWARD.md) ·
-  [TOKENIZER.md](TOKENIZER.md) ·
-  [SERVE.md](SERVE.md) ·
-  [EVAL.md](EVAL.md) ·
-  [SPARKBC_MAKE.md](SPARKBC_MAKE.md) ·
-  [CI_PAGES.md](CI_PAGES.md)
+ [Decompile](DECOMPILE.md) ·
+ [BUILD_MODELS.md](BUILD_MODELS.md) ·
+ [Train loop](TRAIN_LOOP.md) ·
+ [Architecture](ARCHITECTURE.md) ·
+ [Attention / forward](ATTENTION_FORWARD.md) ·
+ [TOKENIZER.md](TOKENIZER.md) ·
+ [Serve](SERVE.md) ·
+ [Eval](EVAL.md) ·
+ [SPARKBC_MAKE.md](SPARKBC_MAKE.md) ·
+ [CI_PAGES.md](CI_PAGES.md)
 - [SPARK_BC.md](SPARK_BC.md)
 - [MODEL_LAB.md](MODEL_LAB.md)
 - [AI_MODELS.md](AI_MODELS.md)

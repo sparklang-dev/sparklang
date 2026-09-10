@@ -12,7 +12,7 @@ diagnostics. Prefer this over homegrown IDE chrome for authoring.
 | Keyword catalog | `tools/spark_lsp/keywords.json` | Shared hover / completion |
 | Static analyze | `tools/spark_lsp/analyze.py` | Unclosed strings; unbound `expect` |
 | Stdio LSP | `tools/spark_lsp/server.py` | Minimal JSON-RPC language server |
-| VS Code / Cursor extension | `tools/spark-ide-extension/` | TextMate + providers + `--check` diags |
+| VS Code-compatible editors extension | `tools/spark-ide-extension/` | TextMate + providers + `--check` diags |
 
 ## Commands
 

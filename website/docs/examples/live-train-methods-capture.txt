@@ -16,82 +16,82 @@
 
 ### Artifact sizes
 total 24
-drwxrwxr-x 2 mike mike 4096 Sep  2 07:12 .
-drwxr-xr-x 8 mike mike 4096 Sep  2 07:12 ..
--rw-rw-r-- 1 mike mike  119 Sep  2 07:12 ARTIFACT
--rw-rw-r-- 1 mike mike  409 Sep  2 07:12 checkpoint.json
--rw-rw-r-- 1 mike mike 5601 Sep  2 07:12 weights.pt
+drwxrwxr-x 2 mike mike 4096 Sep 2 07:12 .
+drwxr-xr-x 8 mike mike 4096 Sep 2 07:12 ..
+-rw-rw-r-- 1 mike mike 119 Sep 2 07:12 ARTIFACT
+-rw-rw-r-- 1 mike mike 409 Sep 2 07:12 checkpoint.json
+-rw-rw-r-- 1 mike mike 5601 Sep 2 07:12 weights.pt
 
 ## 2) spark_pref_pack — companion --method
 {"job_id":"job-pref-001","status":"accepted","artifacts":{"checkpoint":"out/train/job-pref-001/checkpoint.json","marker":"out/train/job-pref-001/ARTIFACT","adapter":"out/train/job-pref-001/ranker.pt","weights":"out/train/job-pref-001/ranker.pt","pref_pack":"out/train/job-pref-001/pref_pack.json","ranker":"out/train/job-pref-001/ranker.pt"},"out":"out/train/job-pref-001","base":"spark_pref_pack","dataset":"examples/fixtures/train/dataset.jsonl","backend":"http","method":"spark_pref_pack","note":"spark_pref_pack \u2014 CPU train (loss=0.492453; not LoRA)","final_loss":0.492453,"methods":["spark_distill_cpu","spark_pref_pack","spark_playbook_fit","spark_faq_index"]}
 {"job_id":"job-pref-001","state":"succeeded","artifacts":{"checkpoint":"out/train/job-pref-001/checkpoint.json","marker":"out/train/job-pref-001/ARTIFACT","adapter":"out/train/job-pref-001/ranker.pt","weights":"out/train/job-pref-001/ranker.pt","pref_pack":"out/train/job-pref-001/pref_pack.json","ranker":"out/train/job-pref-001/ranker.pt"},"out":"out/train/job-pref-001","base":"spark_pref_pack","dataset":"examples/fixtures/train/dataset.jsonl","backend":"http","method":"spark_pref_pack","note":"spark_pref_pack \u2014 CPU train (loss=0.492453; not LoRA)","final_loss":0.492453}
 
 total 28
-drwxrwxr-x 2 mike mike 4096 Sep  2 07:12 .
-drwxr-xr-x 8 mike mike 4096 Sep  2 07:12 ..
--rw-rw-r-- 1 mike mike  138 Sep  2 07:12 ARTIFACT
--rw-rw-r-- 1 mike mike  447 Sep  2 07:12 checkpoint.json
--rw-rw-r-- 1 mike mike 1207 Sep  2 07:12 pref_pack.json
--rw-rw-r-- 1 mike mike 5592 Sep  2 07:12 ranker.pt
+drwxrwxr-x 2 mike mike 4096 Sep 2 07:12 .
+drwxr-xr-x 8 mike mike 4096 Sep 2 07:12 ..
+-rw-rw-r-- 1 mike mike 138 Sep 2 07:12 ARTIFACT
+-rw-rw-r-- 1 mike mike 447 Sep 2 07:12 checkpoint.json
+-rw-rw-r-- 1 mike mike 1207 Sep 2 07:12 pref_pack.json
+-rw-rw-r-- 1 mike mike 5592 Sep 2 07:12 ranker.pt
 
 ## 3) spark_playbook_fit — companion --method
 {"job_id":"job-play-001","status":"accepted","artifacts":{"checkpoint":"out/train/job-play-001/checkpoint.json","marker":"out/train/job-play-001/ARTIFACT","adapter":"out/train/job-play-001/router.pt","weights":"out/train/job-play-001/router.pt","playbooks":"out/train/job-play-001/playbooks.json","router":"out/train/job-play-001/router.pt"},"out":"out/train/job-play-001","base":"spark_playbook_fit","dataset":"examples/fixtures/train/dataset.jsonl","backend":"http","method":"spark_playbook_fit","note":"spark_playbook_fit \u2014 CPU train (loss=3e-06; not LoRA)","final_loss":3e-06,"methods":["spark_distill_cpu","spark_pref_pack","spark_playbook_fit","spark_faq_index"]}
 {"job_id":"job-play-001","state":"succeeded","artifacts":{"checkpoint":"out/train/job-play-001/checkpoint.json","marker":"out/train/job-play-001/ARTIFACT","adapter":"out/train/job-play-001/router.pt","weights":"out/train/job-play-001/router.pt","playbooks":"out/train/job-play-001/playbooks.json","router":"out/train/job-play-001/router.pt"},"out":"out/train/job-play-001","base":"spark_playbook_fit","dataset":"examples/fixtures/train/dataset.jsonl","backend":"http","method":"spark_playbook_fit","note":"spark_playbook_fit \u2014 CPU train (loss=3e-06; not LoRA)","final_loss":3e-06}
 
 total 28
-drwxrwxr-x 2 mike mike 4096 Sep  2 07:12 .
-drwxr-xr-x 8 mike mike 4096 Sep  2 07:12 ..
--rw-rw-r-- 1 mike mike  138 Sep  2 07:12 ARTIFACT
--rw-rw-r-- 1 mike mike  468 Sep  2 07:12 checkpoint.json
--rw-rw-r-- 1 mike mike  918 Sep  2 07:12 playbooks.json
--rw-rw-r-- 1 mike mike 5528 Sep  2 07:12 router.pt
+drwxrwxr-x 2 mike mike 4096 Sep 2 07:12 .
+drwxr-xr-x 8 mike mike 4096 Sep 2 07:12 ..
+-rw-rw-r-- 1 mike mike 138 Sep 2 07:12 ARTIFACT
+-rw-rw-r-- 1 mike mike 468 Sep 2 07:12 checkpoint.json
+-rw-rw-r-- 1 mike mike 918 Sep 2 07:12 playbooks.json
+-rw-rw-r-- 1 mike mike 5528 Sep 2 07:12 router.pt
 
 ## checkpoint method stamps
 out/train/job-dry-001/checkpoint.json {
-  "method": "spark_distill_cpu",
-  "job_id": "job-dry-001",
-  "base": "fixture-base",
-  "dataset": "examples/fixtures/train/dataset.jsonl",
-  "pairs": 12,
-  "vocab_size": 19,
-  "n_replies": 5,
-  "steps": 200,
-  "final_loss": 1e-06,
-  "device": "cpu",
-  "elapsed_s": 0.194,
-  "weights": "out/train/job-dry-001/weights.pt",
-  "note": "Spark custom path: CPU distill student (not LoRA, not HF PEFT, no GPU)"
+ "method": "spark_distill_cpu",
+ "job_id": "job-dry-001",
+ "base": "fixture-base",
+ "dataset": "examples/fixtures/train/dataset.jsonl",
+ "pairs": 12,
+ "vocab_size": 19,
+ "n_replies": 5,
+ "steps": 200,
+ "final_loss": 1e-06,
+ "device": "cpu",
+ "elapsed_s": 0.194,
+ "weights": "out/train/job-dry-001/weights.pt",
+ "note": "Spark custom path: CPU distill student (not LoRA, not HF PEFT, no GPU)"
 }
 out/train/job-pref-001/checkpoint.json {
-  "method": "spark_pref_pack",
-  "job_id": "job-pref-001",
-  "base": "spark_pref_pack",
-  "dataset": "examples/fixtures/train/dataset.jsonl",
-  "pairs": 12,
-  "vocab_size": 23,
-  "steps": 200,
-  "final_loss": 0.492453,
-  "device": "cpu",
-  "elapsed_s": 0.107,
-  "pref_pack": "out/train/job-pref-001/pref_pack.json",
-  "ranker": "out/train/job-pref-001/ranker.pt",
-  "note": "Spark method: preference pack + CPU ranker (not LoRA, not HF PEFT)"
+ "method": "spark_pref_pack",
+ "job_id": "job-pref-001",
+ "base": "spark_pref_pack",
+ "dataset": "examples/fixtures/train/dataset.jsonl",
+ "pairs": 12,
+ "vocab_size": 23,
+ "steps": 200,
+ "final_loss": 0.492453,
+ "device": "cpu",
+ "elapsed_s": 0.107,
+ "pref_pack": "out/train/job-pref-001/pref_pack.json",
+ "ranker": "out/train/job-pref-001/ranker.pt",
+ "note": "Spark method: preference pack + CPU ranker (not LoRA, not HF PEFT)"
 }
 out/train/job-play-001/checkpoint.json {
-  "method": "spark_playbook_fit",
-  "job_id": "job-play-001",
-  "base": "spark_playbook_fit",
-  "dataset": "examples/fixtures/train/dataset.jsonl",
-  "pairs": 12,
-  "n_playbooks": 5,
-  "vocab_size": 19,
-  "steps": 200,
-  "final_loss": 3e-06,
-  "device": "cpu",
-  "elapsed_s": 0.063,
-  "playbooks": "out/train/job-play-001/playbooks.json",
-  "router": "out/train/job-play-001/router.pt",
-  "note": "Spark method: playbook fit router on CPU (not LoRA, not HF PEFT)"
+ "method": "spark_playbook_fit",
+ "job_id": "job-play-001",
+ "base": "spark_playbook_fit",
+ "dataset": "examples/fixtures/train/dataset.jsonl",
+ "pairs": 12,
+ "n_playbooks": 5,
+ "vocab_size": 19,
+ "steps": 200,
+ "final_loss": 3e-06,
+ "device": "cpu",
+ "elapsed_s": 0.063,
+ "playbooks": "out/train/job-play-001/playbooks.json",
+ "router": "out/train/job-play-001/router.pt",
+ "note": "Spark method: playbook fit router on CPU (not LoRA, not HF PEFT)"
 }
 
 ## GET /v1/

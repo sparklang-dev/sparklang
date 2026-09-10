@@ -56,7 +56,7 @@
                   <li class="nav-sub">
                     <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
-                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
                       <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
                     </ul>
                   </li>
@@ -183,7 +183,7 @@
         <h2 id="version-source">Version source</h2>
         <ul class="doc__ul">
         <li>Runtime / installer kit version: <code class="inline-code">website/downloads/manifest.json</code>
-          → <code class="inline-code">"version"</code></li>
+         → <code class="inline-code">"version"</code></li>
         <li>User-facing notes: <code class="inline-code">CHANGELOG.md</code> (mirrored at <code class="inline-code">/CHANGELOG.html</code>)</li>
         <li>CLI: <code class="inline-code">./spark --version</code></li>
         </ul>
@@ -203,38 +203,38 @@
         </code></pre>
         <ol start="5">
         <li><strong>Deploy Cloudflare Pages (<code class="inline-code">website/</code>) so Changelog + Downloads
-           match the tag.</strong></li>
+         match the tag.</strong></li>
         </ol>
         <p>Before any deploy, on the release SHA:</p>
         <p><code class="inline-code">bash
-           python3 tools/md_to_doc_html.py --all-stale
-           # Mirror CHANGELOG.md → website/CHANGELOG.html; sync
-           # docs/examples/ → website/docs/examples/ when Builder artifacts
-           # changed.</code></p>
+         python3 tools/md_to_doc_html.py --all-stale
+         # Mirror CHANGELOG.md → website/CHANGELOG.html; sync
+         # docs/examples/ → website/docs/examples/ when Builder artifacts
+         # changed.</code></p>
         <p>### 5a. Preferred — Wrangler CLI (OAuth)</p>
         <p>When Wrangler is available on the box (OAuth session — not
-           <code class="inline-code">CLOUDFLARE_*</code> env):</p>
+         <code class="inline-code">CLOUDFLARE_*</code> env):</p>
         <p><code class="inline-code">bash
-           npx wrangler pages deploy website \
-             --project-name=sparklang-dev \
-             --branch=production \
-             --commit-hash="$(git rev-parse HEAD)"</code></p>
-        <p><strong>Auth gotcha:</strong> Wrangler OAuth on the operator host lives under
-           <code class="inline-code">~/.config/.wrangler/</code> (leading <strong>dot</strong> on <code class="inline-code">.wrangler</code>), with
-           <code class="inline-code">pages:write</code>. That is <strong>not</strong> <code class="inline-code">~/.config/wrangler/</code> (no leading
-           dot). If deploy fails with auth / missing credentials, check the
-           dotted path first — do not invent or print tokens.</p>
+         npx wrangler pages deploy website \
+         --project-name=sparklang-dev \
+         --branch=production \
+         --commit-hash="$(git rev-parse HEAD)"</code></p>
+        <p><strong>Auth gotcha:</strong> Wrangler OAuth on the deploy host lives under
+         <code class="inline-code">~/.config/.wrangler/</code> (leading <strong>dot</strong> on <code class="inline-code">.wrangler</code>), with
+         <code class="inline-code">pages:write</code>. That is <strong>not</strong> <code class="inline-code">~/.config/wrangler/</code> (no leading
+         dot). If deploy fails with auth / missing credentials, check the
+         dotted path first — do not invent or print tokens.</p>
         <p>### 5b. Fallback — Cloudflare dashboard (no CLI)</p>
         <p>When Wrangler is <strong>absent</strong> or auth fails: do <strong>not</strong> invent a CLI
-           path. Exact human steps:</p>
+         path. Exact human steps:</p>
         <ol class="doc__ol">
         <li>Note the <strong>git SHA</strong> you are shipping (<code class="inline-code">git rev-parse HEAD</code>).</li>
         <li>Open the Cloudflare dashboard → <strong>Workers &amp; Pages</strong> → project
-              that serves <strong>sparklang.dev</strong> (Pages).</li>
+         that serves <strong>sparklang.dev</strong> (Pages).</li>
         <li><strong>Upload / deploy</strong> the contents of the local <code class="inline-code">website/</code>
-              directory from that SHA (Direct Upload, or the project's
-              connected production branch if CI is already wired — prefer the
-              same mechanism used for the last good Pages deploy).</li>
+         directory from that SHA (Direct Upload, or the project's
+         connected production branch if CI is already wired — prefer the
+         same mechanism used for the last good Pages deploy).</li>
         <li>Record the Pages deployment id / time next to the git SHA.</li>
         </ol>
         <p>After either path, spot-check:</p>
@@ -246,10 +246,10 @@
         <li><code class="inline-code">https://sparklang.dev/downloads.html</code></li>
         </ul>
         <p>Tip ≠ pin: if the live site lags git, say so — do not claim
-           sparklang.dev equals an unpushed local tree.</p>
+         sparklang.dev equals an unpushed local tree.</p>
         <ol start="6">
         <li>Sync the public mirror so <code class="inline-code">sparklang-dev/sparklang</code> matches the
-           tagged tree.</li>
+         tagged tree.</li>
         </ol>
         <h2 id="maintainer">Maintainer</h2>
         <p>Public source: GitHub org <strong>sparklang-dev</strong> /
@@ -261,12 +261,12 @@
         <ul class="doc__ul">
         <li>Do not invent token/cost numbers in release notes.</li>
         <li>Dry-run remains the default story; live gateway is optional.</li>
-        <li>Builder factory honesty: init ≠ trained; GAS <code class="inline-code">--compile</code>/<code class="inline-code">--run-bc</code> wrap bootstrap
-          — see <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</li>
+        <li>Builder factory status: init ≠ trained; GAS <code class="inline-code">--compile</code>/<code class="inline-code">--run-bc</code> wrap bootstrap
+         — see <a href="/docs/spark-builder.html">SPARK_BC Builder</a>.</li>
         <li>Local serve API (serve API path): <code class="inline-code">./spark-serve-api --weights … --http</code>
-          exposes <code class="inline-code">/health</code>, <code class="inline-code">/version</code>, <code class="inline-code">/v1/predict</code>, <code class="inline-code">/v1/embeddings</code> on
-          CPU only (wraps tiny forward; not production). Gate:
-          <code class="inline-code">make test-serve-api</code>. See Builder §6c.</li>
+         exposes <code class="inline-code">/health</code>, <code class="inline-code">/version</code>, <code class="inline-code">/v1/predict</code>, <code class="inline-code">/v1/embeddings</code> on
+         CPU only (wraps tiny forward; not production). Gate:
+         <code class="inline-code">make test-serve-api</code>. See Builder §6c.</li>
         </ul>
       </article>
       </main>

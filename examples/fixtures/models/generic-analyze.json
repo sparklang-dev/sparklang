@@ -1,16 +1,16 @@
 {
-  "id": "generic",
-  "mode": "fixture",
-  "note": "Fallback when target id has no dedicated fixture",
-  "metrics": {
-    "latency_ms_p50": 300,
-    "tokens_per_s": 40.0,
-    "quality_proxy": 0.85,
-    "tool_call_json_valid_pct": 80
-  },
-  "failure_modes": ["unknown target — used generic fixture"],
-  "reasons": [
-    "no invented live leaderboard numbers",
-    "replace with recorded fixture for this id"
-  ]
+ "id": "generic",
+ "mode": "fixture",
+ "note": "Fallback when target id has no dedicated fixture",
+ "metrics": {
+ "latency_ms_p50": 300,
+ "tokens_per_s": 40.0,
+ "quality_proxy": 0.85,
+ "tool_call_json_valid_pct": 80
+ },
+ "failure_modes": ["unknown target — used generic fixture"],
+ "reasons": [
+ "no invented live leaderboard numbers",
+ "replace with recorded fixture for this id"
+ ]
 }

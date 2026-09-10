@@ -1,7 +1,7 @@
 # Spark IDE - proven ide show non-PPM fail-loud.
 # After show-miss. Show of a .spark path (not P6/.rgb) exits
 # non-zero (engine validate format check).
-# Run: ./spark --dry-run examples/ide_show_notppm.spark  (expect rc!=0)
+# Run: ./spark --dry-run examples/ide_show_notppm.spark (expect rc!=0)
 # No Electron. No new asm - documents proven fail-loud only.
 
 ide open "examples/hello.spark"

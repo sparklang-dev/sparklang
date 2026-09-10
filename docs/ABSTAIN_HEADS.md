@@ -6,7 +6,7 @@ inventing. This doc is the single “fully effective” path: lowest
 ops (decode + real hiddens) through highest (`.spark`, outer
 verify-or-refuse, quality stamps).
 
-**Not a Bifrost plugin.** Dry-run first. No fake trained weights in
+**not tied to a single AI gateway.** Dry-run first. No fake trained weights in
 fixtures. No owner/TLP PII on public surfaces. Live model is an
 **explicit** HF path or `org/name` — never gateway aliases
 (`auto` / `code` / `fast`). Pair with `spark_reply_pack` when you
@@ -18,36 +18,36 @@ need spoken/text overlays: inventable rows still require SoT
 ## Architecture (prose)
 
 ```
-                    ┌─────────────────────────────┐
- Prompt ──────────► │ Outer verify-or-refuse      │
-                    │ (SoT / HTTP / expect first)  │
-                    └────────────┬────────────────┘
-                                 │ inventable + no SoT → IDK + HALT
-                                 ▼
-                    ┌─────────────────────────────┐
- last hidden h_t ──►│ Abstain head  p(abstain|h)  │
- (HF / file /       │ + optional entropy / margin │
-  /spark_hidden)    └────────────┬────────────────┘
-                                 │
-              SELECT: if p ≥ τ (or entropy/margin)
-                                 │
-                    yes ──► emit IDK + HALT (no SAMPLE)
-                    no  ──► SAMPLE (HF generate or
-                            SPARK_ABSTAIN_SAMPLE_URL)
+ ┌─────────────────────────────┐
+ Prompt ──────────► │ Outer verify-or-refuse │
+ │ (SoT / HTTP / expect first) │
+ └────────────┬────────────────┘
+ │ inventable + no SoT → IDK + HALT
+ ▼
+ ┌─────────────────────────────┐
+ last hidden h_t ──►│ Abstain head p(abstain|h) │
+ (HF / file / │ + optional entropy / margin │
+ /spark_hidden) └────────────┬────────────────┘
+ │
+ SELECT: if p ≥ τ (or entropy/margin)
+ │
+ yes ──► emit IDK + HALT (no SAMPLE)
+ no ──► SAMPLE (HF generate or
+ SPARK_ABSTAIN_SAMPLE_URL)
 ```
 
 Layers:
 
 1. **Lowest — decode machine:** shared `select_before_sample`
-   (`gate.py`) used by CLI + runtime. Live ask loads head, scores
-   last-token hidden, gates, then samples only on continue.
+ (`gate.py`) used by CLI + runtime. Live ask loads head, scores
+ last-token hidden, gates, then samples only on continue.
 2. **Lowest — backbone hiddens:** HF prefill, file override, or
-   `/spark_hidden` sidecar. Head `hidden_dim` must match.
+ `/spark_hidden` sidecar. Head `hidden_dim` must match.
 3. **Highest — language:** `.spark` `head abstain|train|attach|ask`
-   via assembler → `./spark-abstain`. Inventable facts use SoT +
-   `expect` **before** free generate.
+ via assembler → `./spark-abstain`. Inventable facts use SoT +
+ `expect` **before** free generate.
 4. **Cloud:** no local hiddens → outer orchestrator only (same
-   SoT / expect / HTTP pattern). Not a gateway plugin.
+ SoT / expect / HTTP pattern). Not a gateway plugin.
 
 ---
 
@@ -67,15 +67,15 @@ Layers:
 
 ```spark
 head abstain internal model "fixtures/tiny-lm" \
-  weights "out/heads/abstain.pt" threshold 0.7 \
-  idk "I don't know." -> gate
+ weights "out/heads/abstain.pt" threshold 0.7 \
+ idk "I don't know." -> gate
 
 head train dataset "examples/fixtures/abstain/corpus_seed.jsonl" \
-  kind internal out "out/heads/abstain.pt" hidden_dim 64 -> job
+ kind internal out "out/heads/abstain.pt" hidden_dim 64 -> job
 
 head attach model "path/or/hf-id" \
-  weights "out/heads/abstain.pt" \
-  out "out/heads/manifest.json" -> attach
+ weights "out/heads/abstain.pt" \
+ out "out/heads/manifest.json" -> attach
 
 head ask "Who is the mayor of Springfield?" -> answer
 ```
@@ -139,36 +139,36 @@ make test-abstain
 # Shared gate (threshold / entropy / margin)
 ./spark-abstain --dry gate --p 0.8 --threshold 0.7
 ./spark-abstain --dry gate --p 0.1 --threshold 0.99 \
-  --entropy 3 --entropy-max 1.5
+ --entropy 3 --entropy-max 1.5
 ./spark-abstain --dry outer-verify \
-  --prompt "What is the dryer start price at that store right now?"
+ --prompt "What is the dryer start price at that store right now?"
 
 # Corpus
 ./spark-abstain --live validate-corpus \
-  --dataset examples/fixtures/abstain/corpus_seed.jsonl
+ --dataset examples/fixtures/abstain/corpus_seed.jsonl
 
 # Export → train → attach → ask (toy / synthetic / HF)
 ./spark-abstain --live export \
-  --dataset examples/fixtures/abstain/corpus_seed.jsonl \
-  --source synthetic --hidden-dim 768 \
-  --out out/heads/synth768.jsonl
+ --dataset examples/fixtures/abstain/corpus_seed.jsonl \
+ --source synthetic --hidden-dim 768 \
+ --out out/heads/synth768.jsonl
 ./spark-abstain --live train \
-  --dataset out/heads/synth768.jsonl \
-  --out out/heads/abstain768.pt --hidden-dim 768
+ --dataset out/heads/synth768.jsonl \
+ --out out/heads/abstain768.pt --hidden-dim 768
 
 # Held-out eval (retrain on train fold — honest metrics)
 ./spark-abstain --live eval \
-  --dataset out/heads/synth768.jsonl \
-  --train-out out/heads/abstain768-heldout.pt \
-  --split-dir out/heads/eval-split \
-  --holdout 0.2 --threshold 0.5 \
-  --out out/heads/eval768.json
+ --dataset out/heads/synth768.jsonl \
+ --train-out out/heads/abstain768-heldout.pt \
+ --split-dir out/heads/eval-split \
+ --holdout 0.2 --threshold 0.5 \
+ --out out/heads/eval768.json
 ```
 
 Shipped fixtures:
 
 - `examples/fixtures/abstain/corpus_seed.jsonl` — curated seed
-  (~105 honest answer/abstain rows)
+ (~105 honest answer/abstain rows)
 - `labels*.jsonl` — legacy CI shapes (bag-hash 64 / toy 16)
 - `sot_dryer_price.json` — dry SoT for inventable playbook
 
@@ -205,11 +205,11 @@ After a successful HF smoke (`out/heads-hf-smoke-kl3m/`, stamp
 
 ```bash
 ./spark-abstain --live eval \
-  --dataset out/heads-hf-smoke-kl3m/from-hf.jsonl \
-  --train-out out/heads-hf-smoke-kl3m/abstain-heldout.pt \
-  --split-dir out/heads-hf-smoke-kl3m/eval-split \
-  --holdout 0.2 --threshold 0.5 --steps 200 \
-  --out out/heads-hf-smoke-kl3m/eval-heldout.json
+ --dataset out/heads-hf-smoke-kl3m/from-hf.jsonl \
+ --train-out out/heads-hf-smoke-kl3m/abstain-heldout.pt \
+ --split-dir out/heads-hf-smoke-kl3m/eval-split \
+ --holdout 0.2 --threshold 0.5 --steps 200 \
+ --out out/heads-hf-smoke-kl3m/eval-heldout.json
 ```
 
 Do **not** pass the full-corpus `abstain.pt` as `--weights` if you
@@ -230,14 +230,14 @@ weaker and more honest as a lower bound (example on this host:
 When `p_abstain` is below τ (and entropy/margin do not trip):
 
 1. **In-process HF** (`SPARK_ABSTAIN_HF=1` + local/`org/name`
-   model, no `SPARK_ABSTAIN_HIDDEN` override) →
-   `try_hf_select_then_sample` runs `generate` and returns answer
-   tokens (`reason=continue`, `halted=false`).
+ model, no `SPARK_ABSTAIN_HIDDEN` override) →
+ `try_hf_select_then_sample` runs `generate` and returns answer
+ tokens (`reason=continue`, `halted=false`).
 2. **File / sidecar hidden** → if `SPARK_ABSTAIN_SAMPLE_URL` is
-   set, POST OpenAI-compat `/v1/chat/completions` and fill
-   `text` (`sample_source=openai_compat`).
+ set, POST OpenAI-compat `/v1/chat/completions` and fill
+ `text` (`sample_source=openai_compat`).
 3. Else → honest deferred: empty `text` +
-   `note` containing `SAMPLE deferred` (no invented answer).
+ `note` containing `SAMPLE deferred` (no invented answer).
 
 Dry/live coverage: `make test-abstain` asserts deferred note and
 a mock SAMPLE_URL continue path (no multi‑GB download).
@@ -245,14 +245,14 @@ a mock SAMPLE_URL continue path (no multi‑GB download).
 ```bash
 # Deferred (no SAMPLE_URL / HF)
 ./spark-abstain --live ask --prompt "What is 2+2?" \
-  --weights out/heads/cont.pt --hidden out/heads/cont_h.pt \
-  --threshold 0.9
+ --weights out/heads/cont.pt --hidden out/heads/cont_h.pt \
+ --threshold 0.9
 
 # Continue via SAMPLE URL
 export SPARK_ABSTAIN_SAMPLE_URL=http://127.0.0.1:8000
 ./spark-abstain --live ask --prompt "What is 2+2?" \
-  --weights out/heads/cont.pt --hidden out/heads/cont_h.pt \
-  --threshold 0.9
+ --weights out/heads/cont.pt --hidden out/heads/cont_h.pt \
+ --threshold 0.9
 ```
 
 ---
@@ -268,14 +268,14 @@ Live generate path:
 1. Resolve head + `GateConfig` (weights or manifest).
 2. Optional outer inventable refuse.
 3. Hidden source priority:
-   1. `SPARK_ABSTAIN_HIDDEN` (file)
-   2. HF prefill (`SPARK_ABSTAIN_MODEL` + local dir or `SPARK_ABSTAIN_HF=1`)
-   3. `SPARK_ABSTAIN_VLLM_URL` → POST `/spark_hidden`
+ 1. `SPARK_ABSTAIN_HIDDEN` (file)
+ 2. HF prefill (`SPARK_ABSTAIN_MODEL` + local dir or `SPARK_ABSTAIN_HF=1`)
+ 3. `SPARK_ABSTAIN_VLLM_URL` → POST `/spark_hidden`
 4. Dim mismatch → **halt** with `reason=hidden_dim_mismatch` (no invent).
 5. If gate fires → configured IDK + `halted=true` (HF path never
-   calls `generate`).
+ calls `generate`).
 6. Else SAMPLE: in-process HF `generate`, or
-   `SPARK_ABSTAIN_SAMPLE_URL` OpenAI-compat, else deferred note.
+ `SPARK_ABSTAIN_SAMPLE_URL` OpenAI-compat, else deferred note.
 
 ---
 
@@ -292,7 +292,7 @@ SPARK_ABSTAIN_ALLOW_TINY_DOWNLOAD=1 \
 # prints: export SPARK_ABSTAIN_MODEL=…
 # then:
 SPARK_ABSTAIN_HF=1 SPARK_ABSTAIN_MODEL=… \
-  make smoke-abstain-hf
+ make smoke-abstain-hf
 ```
 
 Default refuses without `SPARK_ABSTAIN_ALLOW_TINY_DOWNLOAD=1`.
@@ -378,10 +378,10 @@ Extras: `pip install -e 'python/[hf]'` · `python/[sidecar]`.
 
 - CI never loads a multi‑GB LM; fixtures + toy/synthetic/stub only.
 - File / sidecar continue without `SAMPLE_URL` or HF → SAMPLE
-  deferred (honest empty `text` + note).
+ deferred (honest empty `text` + note).
 - Stock vLLM lacks native hidden export — use sidecar.
 - llama.cpp / GGUF hidden hooks out of scope.
 - Corpus is curated seed (~105), not a production billion.
-- Cloud verify-or-refuse is orchestrator composition — not Bifrost.
+- Cloud verify-or-refuse is orchestrator composition — not the AI gateway.
 - `hf_backbone_trained` ≠ published accuracy claim.
 - Held-out F1 on synthetic/kl3m exports ≠ production gate quality.

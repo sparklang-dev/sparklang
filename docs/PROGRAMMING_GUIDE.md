@@ -17,12 +17,12 @@ exists.
 | Doc | Role |
 |-----|------|
 | This file | How to build, run, and write `.spark` (CLI) |
-| [IDE.md](IDE.md) | Verified `ide` ops; interim Cursor optional |
+| [IDE.md](IDE.md) | Verified `ide` ops; interim editor optional |
 | [LANGUAGE.md](LANGUAGE.md) | Full statement reference |
 | [ABSTAIN_HEADS.md](ABSTAIN_HEADS.md) | IDK / abstain heads + `./spark-abstain`; flagship `examples/no_invent.spark` |
 | [ASK_LIVE.md](ASK_LIVE.md) | Optional live gateway `ask` |
 | [VOICE.md](VOICE.md) | STT/TTS / PSTN |
-| [MODEL_ASPECTS.md](MODEL_ASPECTS.md) | Behaviors, ears/eyes/speaking, thinking, tools |
+| [Model aspects](MODEL_ASPECTS.md) | Behaviors, ears/eyes/speaking, thinking, tools |
 | [ENCRYPT_GATEWAY.md](ENCRYPT_GATEWAY.md) | Encrypt-to-model |
 | [MODEL_ANALYSIS.md](MODEL_ANALYSIS.md) | Model analyze/improve |
 | [OS_DESIGN.md](OS_DESIGN.md) | OS blueprints |
@@ -42,7 +42,7 @@ self-host destination (A), thin C bootstrap (`bootstrap/`), Spark-native
 assembler (`sparkasm/`). Do not treat GAS as forever SoT; do not start
 a Rust/Python VM from IDE work. See [SELF_HOST.md](SELF_HOST.md).
 
-**Honesty banner:** not full ES / not full CSS / not a full compiler /
+**Scope:** not full ES / not full CSS / not a full compiler /
 not Google.com parity / not Electron. Fixture HTML + proven ops only.
 
 | Tier (today) | What | Path |
@@ -63,9 +63,9 @@ This is **not** Apache Spark / Databricks.
 ## 2. Build
 
 ```bash
-make                 # ./spark + companions
-./spark --version    # e.g. spark 0.6.0 (x86_64 asm + companions)
-make machine-proof   # file(1) + objdump of _start
+make # ./spark + companions
+./spark --version # e.g. spark 0.6.0 (x86_64 asm + companions)
+make machine-proof # file(1) + objdump of _start
 ```
 
 | Target | Role |
@@ -77,7 +77,7 @@ make machine-proof   # file(1) + objdump of _start
 | `make test-shell` | Live `--allow-shell` argv `execve` (echo\|true\|false) |
 | `make test-e2e-browser` | browser dry E2E (no display) |
 | `make sparkbc-e2e` | SPARK_BC TRAIN→STEP→ARTIFACT (dry; not SGD) |
-| `make ide` | interim Cursor workspace open (not product IDE) |
+| `make ide` | interim editor workspace open (not product IDE) |
 | `make clean` | remove ELF + companion binaries |
 
 If `make` fails on `asm/engine_*.s` while parallel engine work is in
@@ -93,9 +93,9 @@ Verified usage from bare `./spark`:
 
 ```
 Usage: spark --dry-run [--allow-net] [--allow-net-capture] [--allow-shell] <file.spark>
-       spark --live [--allow-shell] <file.spark>
-       spark --live --pstn-live <file>
-       spark --version
+ spark --live [--allow-shell] <file.spark>
+ spark --live --pstn-live <file>
+ spark --version
 ```
 
 There is **no** `./spark ide` ELF subcommand. IDE core is **language
@@ -107,7 +107,7 @@ ops** (`ide open|save|run|…`) — [IDE.md](IDE.md),
 ./spark --dry-run examples/ide_hello.spark
 
 export AI_GATEWAY_URL=http://127.0.0.1:4000
-export OPENAI_API_KEY=…          # sk-bf-*; never commit
+export OPENAI_API_KEY=… # sk-bf-*; never commit
 ./spark --live examples/ask_live.spark
 ```
 
@@ -133,7 +133,7 @@ assert r.ok
 PYTHONPATH=python python -m sparklang examples/hello.spark
 node -e "console.log(require('./js/sparklang').run('examples/hello.spark').ok)"
 make examples/c/host_embed && ./examples/c/host_embed
-./spark --embed   # JSON handshake: api=python,js,c
+./spark --embed # JSON handshake: api=python,js,c
 make test-host-embed
 make test-shell
 ```
@@ -180,11 +180,11 @@ Optional `spark.toml` documents defaults; the **bootstrap** VM reads
 `examples/hello_sugar.spark`, `examples/dx_showcase.spark`
 
 ```
-model "fixtures/tiny-lm"    # explicit HF id / path / configured name
+model "fixtures/tiny-lm" # explicit HF id / path / configured name
 
-? "Explain gravity in one sentence" -> text   # sugar for ask
+? "Explain gravity in one sentence" -> text # sugar for ask
 
-say "Hello" -> "out.wav"    # sugar for speak
+say "Hello" -> "out.wav" # sugar for speak
 ```
 
 Bootstrap also supports `include "lib/ai.spark"` and `{var}` interpolation
@@ -205,7 +205,7 @@ Live ask needs `--live` + `./spark-ask-http` + env — [ASK_LIVE.md](ASK_LIVE.md
 
 ### 5.2 `ask probe` / `gateway probe`
 
-`examples/ask_probe.spark`, `examples/gateway_probe.spark`  
+`examples/ask_probe.spark`, `examples/gateway_probe.spark` 
 (requires companion `./spark-ask-probe`; dry prints probe-credential readiness
 JSON, no public HTTP)
 
@@ -228,13 +228,13 @@ do not invent routing. See ASK_LIVE.md.
 
 ```
 classify Intent { support, sales, spam }
-  from "My account is locked and I need help"
-  min_confidence 0.7
-  -> intent
+ from "My account is locked and I need help"
+ min_confidence 0.7
+ -> intent
 
 classify multi Tags { support, sales, spam }
-  from "Please help me buy a card, what is the price?"
-  -> tags
+ from "Please help me buy a card, what is the price?"
+ -> tags
 ```
 
 ### 5.4 `extract`
@@ -243,8 +243,8 @@ classify multi Tags { support, sales, spam }
 
 ```
 extract Person {
-  name: string
-  age: int
+ name: string
+ age: int
 } from "Ada Lovelace was born in 1815" -> person
 ```
 
@@ -256,8 +256,8 @@ extract Person {
 let doc "Office printers need regular cleaning and toner checks."
 
 pipeline {
-  ask "Summarize: {doc}" -> summary
-  | ask "Translate to Spanish: {summary}" -> es
+ ask "Summarize: {doc}" -> summary
+ | ask "Translate to Spanish: {summary}" -> es
 }
 ```
 
@@ -267,11 +267,11 @@ pipeline {
 
 ```
 tool weather(city: string) -> string {
-  "stub:local"
+ "stub:local"
 }
 
 with tools [weather] {
-  ask "What's the weather hint for Springfield?" -> answer
+ ask "What's the weather hint for Springfield?" -> answer
 }
 ```
 
@@ -279,7 +279,7 @@ Fail-loud cases live under `examples/neg/` (e.g. `with_no_tool.spark`).
 
 ### 5.7 `review` / `builder` / `implement`
 
-`examples/review_builder.spark`, `examples/ide.spark`  
+`examples/review_builder.spark`, `examples/ide.spark` 
 (dry-run writes `out/program.spark`; **not** the product IDE)
 
 ```
@@ -566,10 +566,10 @@ Report: `reports/spark-ide-status-strip-20260831.md`,
 
 ```
 voice {
-  listen -> user
-  classify Intent { support, sales } from user -> intent
-  ask "Reply helpfully to: {user}" -> reply
-  speak reply -> "out.wav"
+ listen -> user
+ classify Intent { support, sales } from user -> intent
+ ask "Reply helpfully to: {user}" -> reply
+ speak reply -> "out.wav"
 }
 ```
 
@@ -639,15 +639,15 @@ gateway encrypt off
 ## 6. Layout
 
 ```
-examples/*.spark     # programs
-docs/                # this guide + LANGUAGE.md + …
-asm/*.s              # VM (do not thrash engine_* from app docs)
-tools/               # companions (ask-http, review-url, …)
-templates/           # os / browser scaffolds
-out/                 # implement / HAR / decompile / engine artifacts
-tests/               # dry harness
-spark.toml           # documented defaults (not VM-parsed for aliases)
-spark.code-workspace # Cursor workspace (IDE.md)
+examples/*.spark # programs
+docs/ # this guide + LANGUAGE.md + …
+asm/*.s # VM (do not thrash engine_* from app docs)
+tools/ # companions (ask-http, review-url, …)
+templates/ # os / browser scaffolds
+out/ # implement / HAR / decompile / engine artifacts
+tests/ # dry harness
+spark.toml # documented defaults (not VM-parsed for aliases)
+spark.code-workspace # editor workspace (IDE.md)
 ```
 
 ---
@@ -686,7 +686,7 @@ make test
 make test-examples
 make test-e2e-browser
 make sparkbc-e2e
-make test-ide-paint   # PPM paint wire (not a .spark op)
+make test-ide-paint # PPM paint wire (not a .spark op)
 ```
 
 `make test` stays offline for ask/vendor speech. If `./spark` disappears
@@ -698,9 +698,9 @@ mid-suite while engine objects are relinking, re-run `make` then `make test`.
 
 - **Users program in Spark.** The VM is asm→ELF.
 - Do not edit `asm/engine_*.s` from an app/docs lane while engine agents
-  work that tree.
+ work that tree.
 - `make machine-proof` shows ELF64 + `_start` disassembly when the binary
-  links.
+ links.
 
 ---
 
@@ -708,7 +708,7 @@ mid-suite while engine objects are relinking, re-run `make` then `make test`.
 
 Documented here only after dry-run (or gated fail) on this tree.
 
-**Honesty banner:** **Not** a full browser. **Not** full CSS / full ES /
+**Scope:** **Not** a full browser. **Not** full CSS / full ES /
 Google.com / Electron. Phase-1 `<script>` → `engine_js_eval` only.
 HTTPS is OpenSSL BIO companion `./spark-engine-fetch-tls` — **not**
 TLS-in-asm.
@@ -729,7 +729,7 @@ engine show "out/engine/pipeline.ppm" -> shown
 ```bash
 ./spark --dry-run examples/engine_pipeline.spark
 # → out/engine/pipeline.ppm + out/browser/show.json
-#   {"op":"show","mode":"dry-run","display":false,…}
+# {"op":"show","mode":"dry-run","display":false,…}
 ```
 
 **Table pipeline (real):** `examples/engine_pipeline_table.spark` on
@@ -765,7 +765,7 @@ Also: `./spark --live examples/browser_show.spark` (fixture PPM) and
 
 ```bash
 ./spark-engine-show --ppm out/engine/pipeline.ppm --hold 5000
-./spark-engine-show --dry --ppm out/engine/pipeline.ppm   # no X11
+./spark-engine-show --dry --ppm out/engine/pipeline.ppm # no X11
 ```
 
 Dry `make test` never forks X11. Report:
@@ -812,7 +812,7 @@ js eval "'a'+'b'" -> cat
 js eval "-1" -> neg
 js eval "var x = 1; x+2" -> vsum
 js run "console.log(1+1)" -> log
-js console -> buf          # dump console buffer (browser/engine/js.spark)
+js console -> buf # dump console buffer (browser/engine/js.spark)
 js selftest -> ok
 ```
 
@@ -882,8 +882,8 @@ make test-sparkbc
 make sparkbc-e2e
 ./spark-bootstrap --compile examples/hello.spark -o /tmp/hello.sparkbc
 ./spark-bootstrap --run-bc /tmp/hello.sparkbc
-# make test-ide-paint   # PPM + status strip (not a .spark op)
-# optional interim editor: make ide  (Cursor host — see IDE.md)
+# make test-ide-paint # PPM + status strip (not a .spark op)
+# optional interim editor: make ide (editor host — see IDE.md)
 ```
 
 Next: [IDE.md](IDE.md) (verified `ide` ops; CLI stays primary).

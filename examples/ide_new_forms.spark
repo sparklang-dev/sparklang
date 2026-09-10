@@ -2,8 +2,8 @@
 # After keys-long 40ff5a6. Quoted new already in ide_new_chain -
 # this slice documents+tests both forms in one example.
 # Proof: both emit {"op":"ide.new","ok":true,"dirty":true};
-#        quoted sets path (arrow print); bare clears without path line.
-# Keymap n->new NOT invented.
+# quoted sets path (arrow print); bare clears without path line.
+# Keymap n->new is wired.
 # Run: ./spark --dry-run examples/ide_new_forms.spark
 # No Electron. No new asm - documents proven forms only.
 

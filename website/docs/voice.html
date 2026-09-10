@@ -56,7 +56,7 @@
                   <li class="nav-sub">
                     <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
-                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
                       <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
                     </ul>
                   </li>
@@ -184,16 +184,16 @@
         <strong>copier</strong>, <strong>written voice models</strong>, and <strong>PSTN</strong> (off by default).
         Asm: <code class="inline-code">asm/voice_ops.s</code>. Companions: <code class="inline-code">./spark-stt-tts</code>, <code class="inline-code">./spark-pstn-dial</code>.</p>
         <p>Whole-model map (behaviors + ears/eyes/speaking + thinking):
-        <a href="/docs/model-aspects.html">MODEL_ASPECTS.md</a>.</p>
+        <a href="/docs/model-aspects.html">Model aspects</a>.</p>
         <p><strong>Voice ask (dump / binary Q&amp;A):</strong> ears → SPARK_BC context →
         TinyCoder or dump facts → speak — <a href="/docs/voice-ask.html">VOICE_ASK.md</a>
         (<code class="inline-code">./spark-ask</code>, <code class="inline-code">./spark-speak-ask</code>). No OpenBin login.</p>
         <p>Spark stays a generic language; optional vendor voice ids are config only.</p>
         <h2 id="syntax">Syntax</h2>
         <pre class="doc__pre"><code class="inline-code">listen &quot;input.wav&quot; -&gt; transcript
-        listen -&gt; user                 # --live: mic (arecord)
+        listen -&gt; user # --live: mic (arecord)
         speak &quot;Hello&quot; -&gt; &quot;out.wav&quot;
-        speak reply -&gt; &quot;out.wav&quot;       # text from last_val
+        speak reply -&gt; &quot;out.wav&quot; # text from last_val
         speak with model NAME
 
         voice review PATH_OR_ID -&gt; report
@@ -261,9 +261,9 @@
         </table></div>
         <p>URL set without the gate → <strong>exit 2</strong> (fail closed; no silent vendor call).
         Bearer: <code class="inline-code">SPARK_STT_KEY</code> / <code class="inline-code">SPARK_TTS_KEY</code> / <code class="inline-code">OPENAI_API_KEY</code> (never printed).</p>
-        <pre class="doc__pre"><code class="language-bash">make                                    # builds spark-stt-tts
-        ./spark --dry-run examples/voice_turn.spark   # offline
-        ./spark --live examples/voice_live.spark      # local sidecar + synth
+        <pre class="doc__pre"><code class="language-bash">make # builds spark-stt-tts
+        ./spark --dry-run examples/voice_turn.spark # offline
+        ./spark --live examples/voice_live.spark # local sidecar + synth
 
         # Optional vendor (explicit):
         export SPARK_SPEECH_NET=1
@@ -296,7 +296,7 @@
         <p>Written model documents timbre/prosody params Spark understands.
         Optional <code class="inline-code">brand_voice_id</code> in manifest (vendor TTS profile id)
         is <strong>config only</strong> — not a live PSTN path.</p>
-        <p>Vendor <strong>neural</strong> clone (ElevenLabs/etc.) is outside this artifact;
+        <p>Vendor neural TTS clones sit outside this artifact;
         the written model is fully loadable without stubbing “copied”.</p>
         <pre class="doc__pre"><code class="language-bash">./spark --dry-run examples/voice_copy.spark
         </code></pre>
@@ -320,9 +320,9 @@
         large opt-in). Not vendor neural clone. Prefer 5090</p>
         <pre class="doc__pre"><code class="language-bash">make voice-easy
         ./spark-voice easy --dry --device auto
-        ./spark-voice easy --scale large --device auto   # opt-in
+        ./spark-voice easy --scale large --device auto # opt-in
         </code></pre>
-        <p>Docs: <a href="/docs/voice-easy.html">VOICE_EASY.md</a> →
+        <p>Docs: <a href="/docs/voice-easy.html">Voice easy</a> →
         <a href="/docs/voice-easy.html">/docs/voice-easy.html</a>.</p>
         <h2 id="pstn-capability-on-default-off">PSTN — capability on, default OFF</h2>
         <div class="doc__table-wrap"><table class="doc__table">
@@ -380,8 +380,8 @@
         # voice pstn dial &quot;+15555550100&quot; -&gt; call
         </code></pre>
         <h3 id="default-proof">Default proof</h3>
-        <pre class="doc__pre"><code class="language-bash">./spark --dry-run examples/voice_pstn.spark   # claimed:false
-        ./spark-pstn-dial --to +15555550100          # exit ≠ 0 (no gates)
+        <pre class="doc__pre"><code class="language-bash">./spark --dry-run examples/voice_pstn.spark # claimed:false
+        ./spark-pstn-dial --to +15555550100 # exit ≠ 0 (no gates)
         </code></pre>
         <h2 id="files">Files</h2>
         <div class="doc__table-wrap"><table class="doc__table">
@@ -416,7 +416,7 @@
         </table></div>
         <h2 id="tiny-vs-large-voice-weight-play">Tiny vs large (voice / weight play)</h2>
         <p>Voice model write/copy and weight playgrounds follow the <strong>same</strong>
-        scale honesty as spark-coder + factory scale fixtures:</p>
+        scale table as spark-coder + factory scale fixtures:</p>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
@@ -440,8 +440,8 @@
         </table></div>
         <p><strong>Never</strong> route Spark voice/weight <strong>train</strong> onto GPUs reserved for
         other production voice stacks — prefer CPU / RTX <strong>5090</strong>
-        (<a href="/docs/factory.html">FACTORY.md</a>). Larger stubs still <strong>do not</strong> beat Claude.
-        Details: <a href="/docs/spark-coder.html">SPARK_CODER.md</a> · <a href="/docs/train-loop.html">TRAIN_LOOP.md</a>.</p>
+        (<a href="/docs/factory.html">Factory hub</a>). Larger stubs still <strong>measurement only</strong>.
+        Details: <a href="/docs/spark-coder.html">Spark coder</a> · <a href="/docs/train-loop.html">Train loop</a>.</p>
         <h2 id="production-gaps-honest-not-sold-as-telephony">Production gaps (honest — not sold as telephony)</h2>
         <p>Spark voice is a <strong>language/demo surface</strong>, not a production call center.</p>
         <p><strong>Not shipped as production:</strong> barge-in; end-of-utterance / silence;
@@ -450,7 +450,7 @@
         concurrency model.</p>
         <p>Until those land, keep voice <strong>optional / gated</strong> on the marketing site.
         See <a href="/docs/adoption-bar.html">ADOPTION_BAR.md</a>, <a href="/docs/roadmap.html">ROADMAP.md</a>, and
-        <a href="/docs/model-aspects.html">MODEL_ASPECTS.md</a>.</p>
+        <a href="/docs/model-aspects.html">Model aspects</a>.</p>
       </article>
       </main>
     </div>

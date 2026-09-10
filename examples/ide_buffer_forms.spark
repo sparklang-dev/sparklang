@@ -4,9 +4,9 @@
 # open→dirty→save * e2e skipped: redundant with ide_dirty_status +
 # ide_new_chain.
 # Proof: both emit {"op":"ide.buffer","ok":true}; nonempty dumps body;
-#        empty dumps nothing before JSON; -> shown does not hit show
-#        (dispatch matches buffer before show — "shown" contains
-#        "show").
+# empty dumps nothing before JSON; -> shown does not hit show
+# (dispatch matches buffer before show — "shown" contains
+# "show").
 # Run: ./spark --dry-run examples/ide_buffer_forms.spark
 # No Electron. No new asm — documents proven forms only.
 

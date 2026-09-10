@@ -56,7 +56,7 @@
                   <li class="nav-sub">
                     <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
-                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
                       <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
                     </ul>
                   </li>
@@ -181,36 +181,36 @@
       </nav>      <article class="doc__body">
         <h1 id="serve-forward-httpapi">Serve forward + HTTP/API</h1>
         <p>How Spark <strong>serves</strong> tiny CPU forward from SPARK_BC / safetensors.
-        Spark / SparkLang only. Not a production LLM. Never the 6000.</p>
+        Spark / SparkLang only.</p>
         <h2 id="tiny-cpu-serve-file-serve">Tiny CPU serve (file SERVE)</h2>
         <pre class="doc__pre"><code class="language-bash">make spark-serve
         ./spark-serve docs/examples/spark-builder.sparkbc /tmp/serve-dry-001
 
         PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
-          docs/examples/spark-builder.sparkbc \
-          --serve /tmp/serve-dry-001 \
-          --serve-weights /path/to/weights.safetensors   # optional
+         docs/examples/spark-builder.sparkbc \
+         --serve /tmp/serve-dry-001 \
+         --serve-weights /path/to/weights.safetensors # optional
         </code></pre>
         <p>Writes <code class="inline-code">SERVE</code> with <code class="inline-code">forward=true</code> and honest <code class="inline-code">trained</code> from weights
         meta. Forward path when MLP tensors exist:</p>
         <p><code class="inline-code">embed_mean_pool-&gt;mlp0-&gt;rms_norm-&gt;lm_head</code></p>
         <p>Code: <code class="inline-code">python/sparklang/model_lab/serve.py</code>. Gate:
         <code class="inline-code">make test-sparkbc</code> (<code class="inline-code">test_serve_forward</code>).</p>
-        <p>Architecture honesty: <a href="/docs/architecture.html">ARCHITECTURE.md</a> ·
-        <a href="/docs/attention-forward.html">ATTENTION_FORWARD.md</a>.</p>
+        <p>Architecture: <a href="/docs/architecture.html">Architecture</a> ·
+        <a href="/docs/attention-forward.html">Attention / forward</a>.</p>
         <h2 id="http-stdio-api-serve-api-path-on-tip">HTTP / stdio API (serve API path — on tip)</h2>
         <pre class="doc__pre"><code class="language-bash">make spark-serve-api
         ./spark-serve-api --weights /tmp/serve-dry-001/weights.safetensors \
-          --http --host 127.0.0.1 --port 8765
+         --http --host 127.0.0.1 --port 8765
 
         curl -s http://127.0.0.1:8765/health
         curl -s http://127.0.0.1:8765/version
         curl -s -X POST http://127.0.0.1:8765/v1/predict \
-          -H 'content-type: application/json' \
-          -d '{&quot;token_ids&quot;:[65,66,67]}'
+         -H 'content-type: application/json' \
+         -d '{&quot;token_ids&quot;:[65,66,67]}'
         curl -s -X POST http://127.0.0.1:8765/v1/embeddings \
-          -H 'content-type: application/json' \
-          -d '{&quot;token_ids&quot;:[65,66]}'
+         -H 'content-type: application/json' \
+         -d '{&quot;token_ids&quot;:[65,66]}'
 
         # stdio JSON lines:
         ./spark-serve-api --weights … --stdio
@@ -246,21 +246,21 @@
         <p>Implementation: <code class="inline-code">python/sparklang/model_lab/serve_api.py</code> wraps
         <code class="inline-code">run_tiny_forward</code> / <code class="inline-code">run_tiny_embed</code> — same path as file SERVE
         (now <strong>attn0</strong> when tensors exist; layer-0 attention). Builder §6c:
-        <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</p>
-        <p>Optional live <strong>gateway</strong> ask/embed (Bifrost etc.) is a different
+        <a href="/docs/spark-builder.html">SPARK_BC Builder</a>.</p>
+        <p>Optional live <strong>gateway</strong> ask/embed (the AI gateway etc.) is a different
         surface — <a href="/docs/ai-models.html">AI_MODELS.md</a> / <a href="/docs/ai-models.html#live-gateway-integration-wired-today">ASK_LIVE.md</a>.</p>
         <h2 id="never">Never</h2>
         <ul class="doc__ul">
         <li>Claim production LLM serving.</li>
         <li>Claim multi-layer / RoPE / KV-cache decode (layer-0 last-query
-          only).</li>
-        <li>Claim beat Claude from SERVE / predict JSON.</li>
+         only).</li>
+        <li>Claim a competitive AI win from SERVE / predict JSON.</li>
         <li>Bind serve training to the 6000.</li>
         </ul>
         <h2 id="related">Related</h2>
         <ul class="doc__ul">
-        <li><a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> § 6b / 6c</li>
-        <li><a href="/docs/factory.html">FACTORY.md</a> · <a href="/docs/eval.html">EVAL.md</a></li>
+        <li><a href="/docs/spark-builder.html">SPARK_BC Builder</a> § 6b / 6c</li>
+        <li><a href="/docs/factory.html">Factory hub</a> · <a href="/docs/eval.html">Eval</a></li>
         <li><a href="/docs/sparkbc-make.html">SPARKBC_MAKE.md</a></li>
         </ul>
       </article>

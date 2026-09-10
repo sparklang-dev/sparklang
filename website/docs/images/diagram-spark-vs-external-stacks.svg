@@ -1,34 +1,34 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 340" role="img" aria-labelledby="title desc">
-  <title id="title">Spark local SoT vs OpenBin Ask vs phone voice</title>
-  <desc id="desc">Three columns comparing Spark language factory, OpenBin online RE ask, and production phone voice stacks.</desc>
-  <rect width="960" height="340" fill="#f8fafc"/>
-  <text x="24" y="36" font-family="ui-sans-serif,system-ui,sans-serif" font-size="16" font-weight="700" fill="#0f172a">Comparison  Spark local SoT (not clones)</text>
-  <text x="24" y="58" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#64748b">Related reading only · never OpenBin UX clone · never phone-stack claim</text>
+ <title id="title">Spark local SoT vs OpenBin Ask vs phone voice</title>
+ <desc id="desc">Three columns comparing Spark language factory, OpenBin online RE ask, and production phone voice stacks.</desc>
+ <rect width="960" height="340" fill="#f8fafc"/>
+ <text x="24" y="36" font-family="ui-sans-serif,system-ui,sans-serif" font-size="16" font-weight="700" fill="#0f172a">Comparison  Spark local SoT (not clones)</text>
+ <text x="24" y="58" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#64748b">Related reading only Â· never OpenBin UX clone Â· never phone-stack claim</text>
 
-  <rect x="40" y="80" width="280" height="230" rx="12" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
-  <text x="180" y="112" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="14" font-weight="700" fill="#064e3b">Spark</text>
-  <text x="180" y="140" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#065f46">Language + SPARK_BC</text>
-  <text x="180" y="168" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#065f46">Local dry / gated live</text>
-  <text x="180" y="196" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#065f46">ask-http optional</text>
-  <text x="180" y="224" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#065f46">5090 OK</text>
-  <text x="180" y="252" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#065f46">Eyes planned only</text>
-  <text x="180" y="280" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" font-weight="700" fill="#047857">= this page SoT</text>
+ <rect x="40" y="80" width="280" height="230" rx="12" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+ <text x="180" y="112" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="14" font-weight="700" fill="#064e3b">Spark</text>
+ <text x="180" y="140" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#065f46">Language + SPARK_BC</text>
+ <text x="180" y="168" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#065f46">Local dry / gated live</text>
+ <text x="180" y="196" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#065f46">ask-http optional</text>
+ <text x="180" y="224" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#065f46">5090 OK</text>
+ <text x="180" y="252" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#065f46">Eyes planned only</text>
+ <text x="180" y="280" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" font-weight="700" fill="#047857">= this page SoT</text>
 
-  <rect x="340" y="80" width="280" height="230" rx="12" fill="#f1f5f9" stroke="#64748b" stroke-width="2"/>
-  <text x="480" y="112" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="14" font-weight="700" fill="#334155">OpenBin Ask</text>
-  <text x="480" y="140" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#475569">Online AI RE / Q&amp;A</text>
-  <text x="480" y="168" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#475569">Cloud + Ghidra tools</text>
-  <text x="480" y="196" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#475569">Not SPARK_BC SoT</text>
-  <text x="480" y="224" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#475569">Upload trust surface</text>
-  <text x="480" y="252" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#475569">Lab-gated if used</text>
-  <text x="480" y="280" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" font-weight="700" fill="#64748b">` Spark clone</text>
+ <rect x="340" y="80" width="280" height="230" rx="12" fill="#f1f5f9" stroke="#64748b" stroke-width="2"/>
+ <text x="480" y="112" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="14" font-weight="700" fill="#334155">OpenBin Ask</text>
+ <text x="480" y="140" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#475569">Online AI RE / Q&amp;A</text>
+ <text x="480" y="168" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#475569">Cloud + Ghidra tools</text>
+ <text x="480" y="196" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#475569">Not SPARK_BC SoT</text>
+ <text x="480" y="224" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#475569">Upload trust surface</text>
+ <text x="480" y="252" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#475569">Lab-gated if used</text>
+ <text x="480" y="280" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" font-weight="700" fill="#64748b">` Spark clone</text>
 
-  <rect x="640" y="80" width="280" height="230" rx="12" fill="#faf5ff" stroke="#7c3aed" stroke-width="2"/>
-  <text x="780" y="112" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="14" font-weight="700" fill="#5b21b6">Phone voice stack</text>
-  <text x="780" y="140" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#6d28d9">Live DID telephony</text>
-  <text x="780" y="168" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#6d28d9">Production STT/TTS</text>
-  <text x="780" y="196" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#6d28d9">Transfers / digests</text>
-  <text x="780" y="224" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#6d28d9">Capacity / ops rules</text>
-  <text x="780" y="252" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#6d28d9">May use reserved GPUs</text>
-  <text x="780" y="280" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" font-weight="700" fill="#7c3aed">` Spark product</text>
+ <rect x="640" y="80" width="280" height="230" rx="12" fill="#faf5ff" stroke="#7c3aed" stroke-width="2"/>
+ <text x="780" y="112" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="14" font-weight="700" fill="#5b21b6">Phone voice stack</text>
+ <text x="780" y="140" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#6d28d9">Live DID telephony</text>
+ <text x="780" y="168" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#6d28d9">Production STT/TTS</text>
+ <text x="780" y="196" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#6d28d9">Transfers / digests</text>
+ <text x="780" y="224" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#6d28d9">Capacity / ops rules</text>
+ <text x="780" y="252" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#6d28d9">May use reserved GPUs</text>
+ <text x="780" y="280" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" font-weight="700" fill="#7c3aed">` Spark product</text>
 </svg>

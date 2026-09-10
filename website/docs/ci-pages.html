@@ -56,7 +56,7 @@
                   <li class="nav-sub">
                     <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
-                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
                       <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
                     </ul>
                   </li>
@@ -183,8 +183,8 @@
         <p>How factory docs and gates reach <strong>sparklang.dev</strong>. Spark /
         SparkLang only. Full release cut: <a href="/docs/release.html">RELEASE.md</a>.</p>
         <h2 id="local-docs-regen-check">Local docs regen + check</h2>
-        <pre class="doc__pre"><code class="language-bash">make docs-html    # python3 tools/md_to_doc_html.py --all-stale
-        make docs-check   # regen + --check + tools/test_docs_nav.py
+        <pre class="doc__pre"><code class="language-bash">make docs-html # python3 tools/md_to_doc_html.py --all-stale
+        make docs-check # regen + --check + tools/test_docs_nav.py
         </code></pre>
         <p>Mirror <code class="inline-code">CHANGELOG.md</code> into <code class="inline-code">website/CHANGELOG.html</code> when cutting a
         docs release (site SoT is HTML under <code class="inline-code">website/</code>). Sync
@@ -208,11 +208,11 @@
         make docs-html
         # mirror CHANGELOG.html if needed
         npx wrangler pages deploy website \
-          --project-name=sparklang-dev \
-          --branch=production \
-          --commit-hash=&quot;$(git rev-parse HEAD)&quot;
+         --project-name=sparklang-dev \
+         --branch=production \
+         --commit-hash=&quot;$(git rev-parse HEAD)&quot;
         </code></pre>
-        <p><strong>Auth:</strong> Wrangler OAuth on the operator host is often under
+        <p><strong>Auth:</strong> Wrangler OAuth on the deploy host is often under
         <code class="inline-code">~/.config/.wrangler/</code> (leading <strong>dot</strong>). That is not
         <code class="inline-code">~/.config/wrangler/</code>. Do not invent or print tokens.</p>
         <p>If CLI/auth absent → Cloudflare dashboard Direct Upload of
@@ -238,17 +238,17 @@
         <li>https://sparklang.dev/data/decompile-scoreboard.json</li>
         <li>https://sparklang.dev/downloads.html</li>
         <li><strong>Images MIME (required):</strong>
-          <code class="inline-code">curl -sI https://sparklang.dev/docs/images/decompile-cli-dump.png?v=0.6.58</code>
-          must show <code class="inline-code">Content-Type: image/png</code> (not <code class="inline-code">text/html</code>).
-          SVG: <code class="inline-code">…/diagram-spark-loop.svg</code> → <code class="inline-code">image/svg+xml</code> only
-          (no dual <code class="inline-code">text/html</code>). <code class="inline-code">nosniff</code> + wrong MIME = blank screenshots.</li>
+         <code class="inline-code">curl -sI https://sparklang.dev/docs/images/decompile-cli-dump.png?v=0.6.58</code>
+         must show <code class="inline-code">Content-Type: image/png</code> (not <code class="inline-code">text/html</code>).
+         SVG: <code class="inline-code">…/diagram-spark-loop.svg</code> → <code class="inline-code">image/svg+xml</code> only
+         (no dual <code class="inline-code">text/html</code>). <code class="inline-code">nosniff</code> + wrong MIME = blank screenshots.</li>
         </ul>
         <p>Record the Pages deployment id next to the git tip. Tip ≠ live
         site: say so if deploy lags.</p>
         <h2 id="related">Related</h2>
         <ul class="doc__ul">
-        <li><a href="/docs/factory.html">FACTORY.md</a> · <a href="/docs/sparkbc-make.html">SPARKBC_MAKE.md</a></li>
-        <li><a href="/docs/release.html">RELEASE.md</a> · <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a></li>
+        <li><a href="/docs/factory.html">Factory hub</a> · <a href="/docs/sparkbc-make.html">SPARKBC_MAKE.md</a></li>
+        <li><a href="/docs/release.html">RELEASE.md</a> · <a href="/docs/spark-builder.html">SPARK_BC Builder</a></li>
         </ul>
       </article>
       </main>

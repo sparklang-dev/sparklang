@@ -5,7 +5,7 @@ Ears (STT) → question + dump context → brain → speaking (TTS).
 
 Brain prefers owned TinyCoder when weights exist; always injects
 dump/ops context. TinyCoder is tiny — open-ended RE answers get an
-honesty note. Dump remains SoT. Never 6000. Does not beat Claude.
+capability note. Dump remains SoT. Local tools only.
 No OpenBin login.
 """
 

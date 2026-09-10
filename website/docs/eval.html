@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Eval harness — Spark</title>
-    <meta name="description" content="Frozen spark-eval probes + optional Claude baseline. Measurement only — does not claim beat Claude." />
+    <meta name="description" content="Frozen spark-eval probes + optional frontier-API baseline. Measurement only." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
     <link rel="stylesheet" href="/css/tokens.css?v=navsub0909" />
@@ -56,7 +56,7 @@
                   <li class="nav-sub">
                     <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
-                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
                       <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
                     </ul>
                   </li>
@@ -180,17 +180,16 @@
         <a href="/downloads.html">Downloads</a>
       </nav>      <article class="doc__body">
         <h1 id="eval-harness-measurement-only">Eval harness (measurement only)</h1>
-        <p>Frozen probes for Spark weights. <strong>Does not beat Claude.</strong> Exit 0
+        <p>Frozen probes for Spark weights. <strong><em>* Exit 0
         means the harness ran — not a marketing win. Never invents API keys.
-        Never uses the RTX PRO 6000.</p>
-        <p>Optional Claude API baseline is <strong>merged</strong> on tip. Code:
+        Prefer CPU or a consumer GPU for train. optional frontier-API baseline is </em>*merged</strong> on tip. Code:
         <code class="inline-code">tools/spark-eval/</code>. Suite: <code class="inline-code">examples/eval/</code>.</p>
         <h2 id="commands">Commands</h2>
         <pre class="doc__pre"><code class="language-bash">make spark-eval
         make spark-eval WEIGHTS=docs/examples/spark-self.init.safetensors
         # or: SPARK_EVAL_WEIGHTS=/path/to/weights.safetensors make spark-eval
 
-        # Optional Claude API baseline:
+        # optional frontier-API baseline:
         make spark-eval-claude
         # or: make spark-eval CLAUDE=auto
         # require key: make spark-eval CLAUDE=on
@@ -198,7 +197,7 @@
         make test-spark-eval
         </code></pre>
         <p>After SGD proof:</p>
-        <pre class="doc__pre"><code class="language-bash">make spark-sgd-proof   # ends with spark-eval on those weights
+        <pre class="doc__pre"><code class="language-bash">make spark-sgd-proof # ends with spark-eval on those weights
         </code></pre>
         <h2 id="modes">Modes</h2>
         <div class="doc__table-wrap"><table class="doc__table">
@@ -218,7 +217,7 @@
         <td>Teacher-forced / next-token on <code class="inline-code">spark.embed</code> + <code class="inline-code">spark.lm_head</code> (CPU)</td>
         </tr>
         <tr>
-        <td>Claude baseline</td>
+        <td>frontier-API baseline</td>
         <td>Anthropic Messages <strong>only if</strong> a key already exists on the box</td>
         </tr>
         </tbody>
@@ -228,20 +227,20 @@
         <code class="inline-code">SPARK_EVAL_CLAUDE_API_KEY</code>, <code class="inline-code">ANTHROPIC_API_KEY</code>, <code class="inline-code">CLAUDE_API_KEY</code>,
         or <code class="inline-code">SPARK_EVAL_CLAUDE_KEY_FILE</code>. No key →
         <code class="inline-code">skipped_no_credentials</code>. <code class="inline-code">CLAUDE=on</code> fails closed if missing.</p>
-        <h2 id="honesty-contract">Honesty contract</h2>
+        <h2 id="eval-contract">Eval contract</h2>
         <ul class="doc__ul">
         <li>Suite JSON <code class="inline-code">claim: none</code>.</li>
-        <li>Output <code class="inline-code">beats_claude</code> always <strong>false</strong>.</li>
-        <li>Side-by-side Spark vs Claude scores are <strong>measurement</strong>.</li>
+        <li>Harness sets <code class="inline-code">claim: none</code> (no marketing-win flag).</li>
+        <li>Side-by-side Spark vs frontier-API scores are <strong>measurement</strong>.</li>
         <li>Dry oracle scores ≠ model quality.</li>
         <li>Weights-mode <code class="inline-code">0.0</code> scores are honest misses until proven otherwise.</li>
         <li>Product name in prose: <strong>Spark</strong> / <strong>SparkLang</strong> only.</li>
         </ul>
         <h2 id="related">Related</h2>
         <ul class="doc__ul">
-        <li><a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> § Eval harness</li>
+        <li><a href="/docs/spark-builder.html">SPARK_BC Builder</a> § Eval harness</li>
         <li><code class="inline-code">tools/spark-eval/README.md</code></li>
-        <li><a href="/docs/train-loop.html">TRAIN_LOOP.md</a> · <a href="/docs/factory.html">FACTORY.md</a></li>
+        <li><a href="/docs/train-loop.html">Train loop</a> · <a href="/docs/factory.html">Factory hub</a></li>
         <li><a href="/docs/sparkbc-make.html">SPARKBC_MAKE.md</a></li>
         </ul>
       </article>

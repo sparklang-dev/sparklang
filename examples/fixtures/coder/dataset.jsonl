@@ -22,7 +22,7 @@
 {"messages":[{"role":"user","content":"device for train"},{"role":"assistant","content":"cpu"}]}
 {"messages":[{"role":"user","content":"device for train"},{"role":"assistant","content":"cpu"}]}
 {"messages":[{"role":"user","content":"device for train"},{"role":"assistant","content":"cpu"}]}
-{"messages":[{"role":"user","content":"beats claude?"},{"role":"assistant","content":"false"}]}
+{"messages":[{"role":"user","content":"a marketing win.?"},{"role":"assistant","content":"false"}]}
 {"messages":[{"role":"user","content":"genome"},{"role":"assistant","content":"SPARK_BC"}]}
 {"messages":[{"role":"user","content":"builder ask"},{"role":"assistant","content":"ask \"Inspect Spark SPARK_BC\" -> plan\nprint plan\n"}]}
 {"messages":[{"role":"user","content":"compile sparkbc"},{"role":"assistant","content":"--compile"}]}

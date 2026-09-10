@@ -5,7 +5,7 @@ AI voice **listen/speak (STT/TTS)**, **reviewer**, **coder (codifer)**,
 Asm: `asm/voice_ops.s`. Companions: `./spark-stt-tts`, `./spark-pstn-dial`.
 
 Whole-model map (behaviors + ears/eyes/speaking + thinking):
-[MODEL_ASPECTS.md](MODEL_ASPECTS.md).
+[Model aspects](MODEL_ASPECTS.md).
 
 **Voice ask (dump / binary Q&A):** ears → SPARK_BC context →
 TinyCoder or dump facts → speak — [VOICE_ASK.md](VOICE_ASK.md)
@@ -17,9 +17,9 @@ Spark stays a generic language; optional vendor voice ids are config only.
 
 ```
 listen "input.wav" -> transcript
-listen -> user                 # --live: mic (arecord)
+listen -> user # --live: mic (arecord)
 speak "Hello" -> "out.wav"
-speak reply -> "out.wav"       # text from last_val
+speak reply -> "out.wav" # text from last_val
 speak with model NAME
 
 voice review PATH_OR_ID -> report
@@ -58,9 +58,9 @@ URL set without the gate → **exit 2** (fail closed; no silent vendor call).
 Bearer: `SPARK_STT_KEY` / `SPARK_TTS_KEY` / `OPENAI_API_KEY` (never printed).
 
 ```bash
-make                                    # builds spark-stt-tts
-./spark --dry-run examples/voice_turn.spark   # offline
-./spark --live examples/voice_live.spark      # local sidecar + synth
+make # builds spark-stt-tts
+./spark --dry-run examples/voice_turn.spark # offline
+./spark --live examples/voice_live.spark # local sidecar + synth
 
 # Optional vendor (explicit):
 export SPARK_SPEECH_NET=1
@@ -108,7 +108,7 @@ Written model documents timbre/prosody params Spark understands.
 Optional `brand_voice_id` in manifest (vendor TTS profile id)
 is **config only** — not a live PSTN path.
 
-Vendor **neural** clone (ElevenLabs/etc.) is outside this artifact;
+Vendor neural TTS clones sit outside this artifact;
 the written model is fully loadable without stubbing “copied”.
 
 ```bash
@@ -146,10 +146,10 @@ large opt-in). Not vendor neural clone. Prefer 5090
 ```bash
 make voice-easy
 ./spark-voice easy --dry --device auto
-./spark-voice easy --scale large --device auto   # opt-in
+./spark-voice easy --scale large --device auto # opt-in
 ```
 
-Docs: [VOICE_EASY.md](VOICE_EASY.md) →
+Docs: [Voice easy](VOICE_EASY.md) →
 [/docs/voice-easy.html](/docs/voice-easy.html).
 
 ## PSTN — capability on, default OFF
@@ -197,8 +197,8 @@ export TELNYX_CONNECTION_ID=…
 ### Default proof
 
 ```bash
-./spark --dry-run examples/voice_pstn.spark   # claimed:false
-./spark-pstn-dial --to +15555550100          # exit ≠ 0 (no gates)
+./spark --dry-run examples/voice_pstn.spark # claimed:false
+./spark-pstn-dial --to +15555550100 # exit ≠ 0 (no gates)
 ```
 
 ## Files
@@ -214,7 +214,7 @@ export TELNYX_CONNECTION_ID=…
 ## Tiny vs large (voice / weight play)
 
 Voice model write/copy and weight playgrounds follow the **same**
-scale honesty as spark-coder + factory scale fixtures:
+scale table as spark-coder + factory scale fixtures:
 
 | Scale | Default | How |
 |-------|---------|-----|
@@ -223,8 +223,8 @@ scale honesty as spark-coder + factory scale fixtures:
 
 **Never** route Spark voice/weight **train** onto GPUs reserved for
 other production voice stacks — prefer CPU / RTX **5090**
-([FACTORY.md](FACTORY.md)). Larger stubs still **do not** beat Claude.
-Details: [SPARK_CODER.md](SPARK_CODER.md) · [TRAIN_LOOP.md](TRAIN_LOOP.md).
+([Factory hub](FACTORY.md)). Larger stubs still **measurement only**.
+Details: [Spark coder](SPARK_CODER.md) · [Train loop](TRAIN_LOOP.md).
 
 ## Production gaps (honest — not sold as telephony)
 
@@ -237,4 +237,4 @@ concurrency model.
 
 Until those land, keep voice **optional / gated** on the marketing site.
 See [ADOPTION_BAR.md](ADOPTION_BAR.md), [ROADMAP.md](ROADMAP.md), and
-[MODEL_ASPECTS.md](MODEL_ASPECTS.md).
+[Model aspects](MODEL_ASPECTS.md).

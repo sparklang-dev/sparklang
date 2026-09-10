@@ -2,11 +2,11 @@
 # Dry-run uses offline fixtures (project name recorded; body is fixture).
 # Live: ./spark --live + RAG_GATEWAY_* (see scripts/smoke_retrieve_llm_arch.sh).
 #
-#   ./spark --dry-run examples/retrieve_llm_arch.spark
-#   ./scripts/smoke_retrieve_llm_arch.sh
+# ./spark --dry-run examples/retrieve_llm_arch.spark
+# ./scripts/smoke_retrieve_llm_arch.sh
 
-retrieve "What is CRAG-lite in the ablation ladder?" \
-  from project "llm-architecture-training" \
-  audience "operator" top_k 3 -> hits
+retrieve "What is retrieval-grading lite in the ablation ladder?" \
+ from project "llm-architecture-training" \
+ audience "operator" top_k 3 -> hits
 
 print hits

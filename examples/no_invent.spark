@@ -6,18 +6,18 @@
 # free-form ask. It does not claim to eliminate all hallucination.
 #
 # Dry (CI / offline):
-#   ./spark --dry-run examples/no_invent.spark
+# ./spark --dry-run examples/no_invent.spark
 #
 # Live shape (owner host): real SoT URL → expect → gated ask with
-# trained weights + matching hidden. Never Bifrost aliases
+# trained weights + matching hidden. Never gateway aliases
 # (auto / code / fast). Missing SoT must fail loud (expect / refuse),
 # not silent-fallback invent.
 #
 # Layers in this file:
-#   1) Declare abstain head (threshold + configured IDK)
-#   2) Inventable path: HTTP fixture SoT + expect (refuse if miss)
-#   3) Inventable ask without SoT text → IDK + HALT
-#   4) Open free-form ask → IDK + HALT
+# 1) Declare abstain head (threshold + configured IDK)
+# 2) Inventable path: HTTP fixture SoT + expect (refuse if miss)
+# 3) Inventable ask without SoT text → IDK + HALT
+# 4) Open free-form ask → IDK + HALT
 
 # --- 1) Abstain / IDK head (SELECT-before-SAMPLE) -----------------
 head abstain internal model "fixture-model" weights "out/heads/abstain.pt" threshold 0.7 idk "I don't know." -> gate

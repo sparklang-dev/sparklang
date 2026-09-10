@@ -54,9 +54,9 @@ Real SPARK_BC bytes: `./spark-bootstrap --compile file.spark -o out.sparkbc`
 under `out/lab/`.
 
 Factory (SPARK_BC dump + Spark-created init weights + TRAIN/STEP
-opcodes): [SPARK_BUILDER.md](SPARK_BUILDER.md) — full E2E reproduce
+opcodes): [SPARK_BC Builder](SPARK_BUILDER.md) — full E2E reproduce
 commands, published sha256 table, GAS `--compile`/`--run-bc`.
-Seed is Spark compiling Spark. `STEP` is tiny CPU SGD (not beat Claude).
+Seed is Spark compiling Spark. `STEP` is tiny CPU SGD (measurement only.).
 Init stays untrained until STEP; post-STEP `trained=true` when grads
 apply.
 
@@ -72,11 +72,11 @@ Asserts compile matches published `.sparkbc`, dump shows TRAIN/STEP,
 `--run-bc` JSON, and `out/train/job-dry-001/ARTIFACT`
 (`not_sgd=false`, `trained=true`, `step_n=1`). `make test-sparkbc`
 proves `loss_after < loss_before` on real CE grads (not hash toy).
-**Not beat Claude.**
+**Measurement only.**
 
 ## Related
 
-- [SPARK_BUILDER.md](SPARK_BUILDER.md)
+- [SPARK_BC Builder](SPARK_BUILDER.md)
 - [SPARK_BC.md](SPARK_BC.md)
 - [LANGUAGE.md](LANGUAGE.md)
 - [MODEL_TRAINING.md](MODEL_TRAINING.md)

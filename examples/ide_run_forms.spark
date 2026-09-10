@@ -2,7 +2,7 @@
 # After keys-long-srs a08293a. Run already in ide_hello -
 # this slice documents+tests both forms in one example.
 # Proof: both emit {"op":"ide.run","ok":true,"mode":"dry-run"};
-#        child prints Gravity; bind does not change dispatch.
+# child prints Gravity; bind does not change dispatch.
 # Run: ./spark --dry-run examples/ide_run_forms.spark
 # No Electron. No new asm - documents proven forms only.
 

@@ -17,7 +17,7 @@ Shippable DX wins — syntax, bootstrap VM, dry-run fixtures, stdlib includes.
 ## 1. `use` — sugar for `model`
 
 **Why:** Shorter programs; same explicit model id (HF / path / configured
-name). Not a Bifrost alias picker.
+name). Not a the AI gateway alias picker.
 
 ```
 # before
@@ -30,6 +30,7 @@ use "fixtures/tiny-lm"
 Works in `./spark` (GAS) and `./spark-bootstrap` (C VM).
 `use auto` keeps the prior configured line — it does **not** invent
 `fast`/`code` from task text.
+
 ## 2. `?` — alias for `ask`
 
 **Why:** Questions visually match intent; fewer keystrokes in scripts.

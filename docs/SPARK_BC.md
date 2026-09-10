@@ -15,8 +15,8 @@ Every opcode and stdout string traces to:
 2. [`examples/hello.spark`](../examples/hello.spark) — `model` / `ask` / `print`
 3. GAS + C bootstrap dry-run stdout (same model/ask/→/print lines)
 4. Existing dry fixtures in `bootstrap/vm.c` /
-   `bootstrap/dry_ask.c` `spark_pick_ask_reply` (copied from
-   `pick_ask_reply`; do not invent new reply prose)
+ `bootstrap/dry_ask.c` `spark_pick_ask_reply` (copied from
+ `pick_ask_reply`; do not invent new reply prose)
 
 **No inventing.** If a form is not in LANGUAGE.md, not in
 `examples/hello.spark`, and not an existing dry helper string: do
@@ -27,14 +27,14 @@ terminator.
 ## File layout (little-endian, packed, no padding)
 
 ```
-offset 0  : 4 bytes magic  'S' 'P' 'B' 'C'
-offset 4  : 1 byte  version 0x01
-          : u16     nstrings
-          : nstrings × { u16 nbytes; nbytes UTF-8 bytes }
-          : u16     nconsts
-          : nconsts × { u8 kind; u16 payload }
-          : u32     ncode
-          : ncode bytes (opcode + operands)
+offset 0 : 4 bytes magic 'S' 'P' 'B' 'C'
+offset 4 : 1 byte version 0x01
+ : u16 nstrings
+ : nstrings × { u16 nbytes; nbytes UTF-8 bytes }
+ : u16 nconsts
+ : nconsts × { u8 kind; u16 payload }
+ : u32 ncode
+ : ncode bytes (opcode + operands)
 ```
 
 Version **must** be `0x01`. Other versions fail loud.
@@ -93,10 +93,10 @@ Mapped 1:1 to LANGUAGE.md statement starts. Voice merge keeps
 |------|------|-------------|----------------------|----------------|
 | `0x00` | `HALT` | *VM-only* (not a keyword) | none | then `[spark] ok` |
 | `0x01` | `MODEL` | `model` / `use` | alias | `[model] <alias>` |
-| `0x02` | `ASK` | `ask` / `?` | prompt, bind | `[ask] <prompt>` / `  → <reply>` |
+| `0x02` | `ASK` | `ask` / `?` | prompt, bind | `[ask] <prompt>` / ` → <reply>` |
 | `0x03` | `PRINT` | `print` | ident | `[print] <value>` |
 | `0x04` | `LET` | `let` | name, value | `[let] <name> = <value>` |
-| `0x05` | `CLASSIFY` | `classify` | from-text, bind | `[classify] <text>` / `  → <json>` |
+| `0x05` | `CLASSIFY` | `classify` | from-text, bind | `[classify] <text>` / ` → <json>` |
 | `0x06` | `EXTRACT` | `extract` | schema, fixture, bind | `[extract] <json>` |
 | `0x07` | `PIPELINE` | `pipeline` | none | `[pipeline] step` |
 | `0x09` | `LISTEN` | `listen` | path, bind | `[listen] <transcript>` |
@@ -107,8 +107,8 @@ Mapped 1:1 to LANGUAGE.md statement starts. Voice merge keeps
 | `0x20` | `TOOL` | `tool` | name | `[tool] registered <name>` |
 | `0x21` | `WITH` | `with tools` | scope | `[with] {"op":"with_tools",…}` |
 | `0x22` | `WITH_END` | `}` clears tools | none | *(no line; `vm.c` 1559–1562)* |
-| `0x23` | `EMBED` | `embed` | text, bind | `[embed] <text>` / `  → <json>` |
-| `0x24` | `RETRIEVE` | `retrieve` | query, bind | `[retrieve] <query>` / `  → <json>` |
+| `0x23` | `EMBED` | `embed` | text, bind | `[embed] <text>` / ` → <json>` |
+| `0x24` | `RETRIEVE` | `retrieve` | query, bind | `[retrieve] <query>` / ` → <json>` |
 | `0x25` | `EXPECT` | `expect` | mode, name, want | `[expect] pass <mode> <name>` or exit 1 |
 | `0x26` | `TRAIN` | `model train` / `model build` | dataset, base, out, method, bind | `[model] {dry train JSON}` |
 | `0x27` | `TRAIN_STATUS` | `model status` | job_id, bind | `[model] {dry status JSON}` |
@@ -168,7 +168,7 @@ classify multi Tags { support, sales, spam } from "…" -> tags
 indices, same shape as `ASK`:
 
 1. **from-text** — the `from` STRING. GAS / `vm.c` `op_classify`
-   uses only `extract_quote` of that string.
+ uses only `extract_quote` of that string.
 2. **bind** — IDENT after `->`. Bound value is the dry JSON.
 
 **Not encoded (same as `vm.c`):** schema name (`Intent` / `Tags`),
@@ -187,9 +187,9 @@ GAS classify_dry body (compare SoT; banner may differ):
 ```
 [model] fast
 [classify] My account is locked
-  → {"label":"support","confidence":0.91,"reasons":["dry-run"]}
+ → {"label":"support","confidence":0.91,"reasons":["dry-run"]}
 [classify] Please help me buy a card
-  → {"label":"sales","confidence":0.88,"reasons":["dry-run"]}
+ → {"label":"sales","confidence":0.88,"reasons":["dry-run"]}
 [print] {"label":"support","confidence":0.91,"reasons":["dry-run"]}
 [print] {"label":"sales","confidence":0.88,"reasons":["dry-run"]}
 [spark] ok
@@ -201,17 +201,17 @@ LANGUAGE form in `selfhost/fixtures/extract_dry.spark`:
 
 ```
 extract Person { name: string, age: int }
-  from "…" fixture "examples/fixtures/extract/person.json" -> person
+ from "…" fixture "examples/fixtures/extract/person.json" -> person
 ```
 
 **Encoded operands:** three `u16` const indices.
 
 1. **schema** — the declaration re-serialized to one line,
-   `extract NAME { f: type, g?: type }`. The compiler joins the
-   block's tokens; source newlines and commas both separate fields,
-   so the encoded text is canonical regardless of layout.
+ `extract NAME { f: type, g?: type }`. The compiler joins the
+ block's tokens; source newlines and commas both separate fields,
+ so the encoded text is canonical regardless of layout.
 2. **fixture** — the `fixture` STRING. Required: a compile without
-   one is an error, because dry-run has no other source of values.
+ one is an error, because dry-run has no other source of values.
 3. **bind** — IDENT after `->`.
 
 The schema travels as text, not a packed field table, so
@@ -243,20 +243,20 @@ print answer
 **Cited `vm.c` before encoding:**
 
 - `op_tool` (~588) — name before `(`, print
-  `[tool] registered %s`. Signature / `{ "stub:local" }` ignored.
+ `[tool] registered %s`. Signature / `{ "stub:local" }` ignored.
 - `op_with` (~608) — requires `tools`, prior registration, `[list]`;
-  copies bytes between `[` and `]` into `tools_scope`; sets
-  `tools_active = 1`; prints the existing JSON line.
+ copies bytes between `[` and `]` into `tools_scope`; sets
+ `tools_active = 1`; prints the existing JSON line.
 - `}` (~1559–1562) — `tools_active = 0`; no stdout. That is
-  `WITH_END` (not invented: LANGUAGE + this clear).
+ `WITH_END`
 - `op_ask` (~468–471) — when `tools_active && tool_reg_len`: reply
-  is the existing `[tool:NAME] stub:local` (not `pick_ask_reply`).
+ is the existing `[tool:NAME] stub:local` (not `pick_ask_reply`).
 
 **Encoded operands (proven by that fixture + dry-run):**
 
 1. `TOOL` — one `u16` const: tool **name** (`weather`).
 2. `WITH` — one `u16` const: list text between `[` and `]`
-   (`weather` for `[weather]`).
+ (`weather` for `[weather]`).
 3. `WITH_END` — no operands.
 
 **Not encoded (same as `vm.c`):** `(city: string)`, `-> string`,
@@ -270,7 +270,7 @@ GAS tool_agent body (compare SoT; banner may differ):
 [tool] registered weather
 [with] {"op":"with_tools","tools":"weather","active":true}
 [ask] What's the weather hint for Springfield?
-  → [tool:weather] stub:local
+ → [tool:weather] stub:local
 [print] [tool:weather] stub:local
 [spark] ok
 ```
@@ -288,7 +288,7 @@ GAS hello:
 [spark] dry-run via assembly VM (machine code)
 [model] code
 [ask] Explain gravity in one sentence
-  → Gravity pulls masses together.
+ → Gravity pulls masses together.
 [print] Gravity pulls masses together.
 [spark] ok
 ```
@@ -299,10 +299,10 @@ Bytecode banner (allowed distinct line):
 [spark] dry-run via bytecode VM
 ```
 
-then the same `[model]` / `[ask]` / `  →` / `[print]` / `[spark] ok`.
+then the same `[model]` / `[ask]` / ` →` / `[print]` / `[spark] ok`.
 
 ASK reply: `spark_pick_ask_reply` — `contains_ci` `"gravity"` →
-`"Gravity pulls masses together."` (existing fixture; not invented).
+`"Gravity pulls masses together."` (existing fixture).
 
 PRINT of a bound name: `[print] <value>\n` (`vm.c` `op_print`).
 Unbound name prints the ident (same as `vm.c`).
@@ -322,10 +322,10 @@ Code section starts at **file offset 67**.
 Code bytes:
 
 ```
-01 00 00          MODEL const0
-02 01 00 02 00    ASK   const1 const2
-03 02 00          PRINT const2
-00                HALT
+01 00 00 MODEL const0
+02 01 00 02 00 ASK const1 const2
+03 02 00 PRINT const2
+00 HALT
 ```
 
 ## Builder (Spark-created binary + weights)
@@ -333,7 +333,7 @@ Code bytes:
 **SPARK_BC is the orchestration ISA — not neural weights.** Full
 engineer reproduction (programs, commands, sha256 table, GAS
 `--compile` / `--run-bc`, model lab, Pages deploy):
-[SPARK_BUILDER.md](SPARK_BUILDER.md).
+[SPARK_BC Builder](SPARK_BUILDER.md).
 
 Spark compiling Spark: `selfhost/compile.spark` →
 `docs/examples/spark-self.sparkbc` (sha256
@@ -358,10 +358,10 @@ Init weights from those bytes:
 Focused e2e: `make sparkbc-e2e` (compile → dump TRAIN/STEP →
 `--run-bc` → assert `ARTIFACT`; STEP = multi-outer CPU SGD). STEP
 weights + loss drop via `make test-sparkbc`.
-Factory page: [SPARK_BUILDER.md](SPARK_BUILDER.md).
+Factory page: [SPARK_BC Builder](SPARK_BUILDER.md).
 TRAIN accept is still a dry marker. `STEP` applies multi-outer CPU
 SGD (`trained=true` / `not_sgd=false` only after grads;
-`checkpoint.json` loss curve). **Not beat Claude.**
+`checkpoint.json` loss curve). **Measurement only.**
 No 6000 train. `./spark --compile` and `./spark --run-bc` thin-wrap
 bootstrap (C lowering / bc_vm remain SoT).
 

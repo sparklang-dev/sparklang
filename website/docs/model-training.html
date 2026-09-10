@@ -56,7 +56,7 @@
                   <li class="nav-sub">
                     <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
-                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
                       <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
                     </ul>
                   </li>
@@ -187,10 +187,10 @@
         <p>Eval helpers (<code class="inline-code">model analyze</code> / <code class="inline-code">compare</code> / <code class="inline-code">improve</code>) stay offline
         sugar. Optional plan export is <code class="inline-code">model plan</code> (markdown). Live gateway
         <code class="inline-code">ask</code> is <strong>optional</strong> for post-train inference checks — SparkLang is
-        not a Bifrost plugin.</p>
+        not tied to a single AI gateway.</p>
         <p>Full language forms: <a href="/docs/language.html">LANGUAGE.md</a>.
         Factory / SPARK_BC bytecode train ops (<code class="inline-code">0x26</code> / <code class="inline-code">0x28</code> / <code class="inline-code">0x27</code>) and
-        published proofs: <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</p>
+        published proofs: <a href="/docs/spark-builder.html">SPARK_BC Builder</a>.</p>
         <h2 id="verbs">Verbs</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
@@ -247,9 +247,9 @@
         the statement with <code class="inline-code">./spark-train-http --spark-line</code>. Status polls the
         <strong>quoted</strong> job id from the line (not a hardcoded <code class="inline-code">job-dry-001</code>).</p>
         <h2 id="job-lifecycle">Job lifecycle</h2>
-        <pre class="doc__pre"><code class="inline-code">submit  →  accepted (job_id)
-                →  running
-                →  succeeded | failed | cancelled
+        <pre class="doc__pre"><code class="inline-code">submit → accepted (job_id)
+         → running
+         → succeeded | failed | cancelled
         artifact paths appear on accept (planned) and again on success
         </code></pre>
         <div class="doc__table-wrap"><table class="doc__table">
@@ -310,16 +310,16 @@
 
         # Live
         export SPARK_TRAIN_BACKEND=http
-        export SPARK_TRAIN_URL=https://train.example/v1   # your API
-        # optional: SPARK_TRAIN_TOKEN=…   (never commit)
+        export SPARK_TRAIN_URL=https://train.example/v1 # your API
+        # optional: SPARK_TRAIN_TOKEN=… (never commit)
         # optional: SPARK_TRAIN_METHOD=spark_distill_cpu|spark_pref_pack|spark_playbook_fit|spark_faq_index|spark_reply_pack
-        # optional: SPARK_TRAIN_OUT=out/train/job-…   (live out override)
+        # optional: SPARK_TRAIN_OUT=out/train/job-… (live out override)
         ./spark --live examples/model_train.spark
         # or:
         ./spark-train-http --live --submit \
-          --method spark_pref_pack \
-          --dataset data/train.jsonl --base spark_pref_pack \
-          --out out/train/demo
+         --method spark_pref_pack \
+         --dataset data/train.jsonl --base spark_pref_pack \
+         --out out/train/demo
         ./spark-train-http --live --status &lt;job_id&gt;
         </code></pre>
         <h2 id="trainer-http-contract">Trainer HTTP contract</h2>
@@ -327,7 +327,7 @@
         <h3 id="submit">Submit</h3>
         <pre class="doc__pre"><code class="inline-code">POST {SPARK_TRAIN_URL}/jobs
         Content-Type: application/json
-        Authorization: Bearer {SPARK_TRAIN_TOKEN}   # optional
+        Authorization: Bearer {SPARK_TRAIN_TOKEN} # optional
 
         {&quot;dataset&quot;:&quot;…&quot;,&quot;base&quot;:&quot;…&quot;,&quot;out&quot;:&quot;…&quot;,&quot;backend&quot;:&quot;http&quot;,&quot;method&quot;:&quot;spark_distill_cpu&quot;}
         </code></pre>
@@ -339,7 +339,7 @@
         reference trainer may also treat a matching <code class="inline-code">base</code> as the method id.</p>
         <h3 id="status">Status</h3>
         <pre class="doc__pre"><code class="inline-code">GET {SPARK_TRAIN_URL}/jobs/{job_id}
-        Authorization: Bearer {SPARK_TRAIN_TOKEN}   # optional
+        Authorization: Bearer {SPARK_TRAIN_TOKEN} # optional
         </code></pre>
         <p>Response body:</p>
         <pre class="doc__pre"><code class="inline-code">{&quot;job_id&quot;:&quot;…&quot;,&quot;state&quot;:&quot;succeeded|failed|running|…&quot;,&quot;artifacts&quot;:{…},&quot;method&quot;:&quot;…&quot;, …}
@@ -350,7 +350,7 @@
         <h2 id="reference-methods-in-repo-not-lora">Reference methods (in-repo) — not LoRA</h2>
         <p><code class="inline-code">tools/spark-train-ref/</code> implements the HTTP contract with <strong>four</strong>
         SparkLang-native CPU methods. None are LoRA / HF PEFT. None use a
-        voice-reserved GPU. None invent <code class="inline-code">train@</code> grants.</p>
+        reserved GPU. None invent <code class="inline-code">train@</code> grants.</p>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
@@ -390,7 +390,7 @@
         <p>Select via (first match wins):</p>
         <ol class="doc__ol">
         <li>Language <code class="inline-code">method "…"</code> on <code class="inline-code">model train</code> / <code class="inline-code">model build</code> (live
-           <code class="inline-code">--spark-line</code>)</li>
+         <code class="inline-code">--spark-line</code>)</li>
         <li>Companion <code class="inline-code">--method</code> / POST body <code class="inline-code">method</code> / env <code class="inline-code">SPARK_TRAIN_METHOD</code></li>
         <li>Or <code class="inline-code">base</code> equal to a method id (reference trainer only)</li>
         <li>Default: <code class="inline-code">spark_distill_cpu</code></li>
@@ -423,11 +423,11 @@
         <li><code class="inline-code">SPARK_TRAIN_BACKEND=local-yield</code></li>
         <li>Unit name is in <code class="inline-code">SPARK_TRAIN_UNIT_ALLOWLIST</code> (comma-separated)</li>
         <li>Operator has a real owner train-grant for that unit elsewhere —
-           Spark <strong>does not</strong> invent train-grant tokens</li>
+         Spark <strong>does not</strong> invent train-grant tokens</li>
         </ol>
         <p>Then the companion may run <code class="inline-code">systemctl start train@&lt;unit&gt;</code>. Training
         compute policy on shared hosts: coding GPU only via the yield unit;
-        never place Spark training on a voice-only GPU.</p>
+        do not place Spark training on reserved voice GPUs.</p>
         <h2 id="what-model-build-means-now">What <code class="inline-code">model build</code> means now</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
@@ -467,7 +467,7 @@
         transfer, IDK) without LoRA. Inventable rows need a SoT file; missing
         SoT <strong>fails loud</strong> (no fabricated hours/prices/IDs). That is the
         product story: not LoRA-by-default, not a marker file pretending to be
-        weights. Larger full-SFT / multi-node remain operator backends behind
+        weights. Larger full-SFT / multi-node remain advanced backends behind
         the same contract.</p>
         <h2 id="voice-text-overlay-spark-reply-pack">Voice + text overlay (<code class="inline-code">spark_reply_pack</code>)</h2>
         <p>Dataset JSONL may add fields on each chat row:</p>
@@ -526,7 +526,7 @@
         <li>Hugging Face Hub publish</li>
         <li>Full LoRA studio / multi-node scheduler UI</li>
         <li>Invented owner train-grant strings</li>
-        <li>Bifrost alias pickers as “Step 2” of building a model</li>
+        <li>the AI gateway alias pickers as “Step 2” of building a model</li>
         <li>Language-level <code class="inline-code">method "…"</code> keyword on <code class="inline-code">model train</code> (use env / companion)</li>
         </ul>
       </article>

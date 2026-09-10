@@ -1,37 +1,37 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 280" role="img" aria-labelledby="t4 d4">
-  <title id="t4">Deterministic Spark tools versus LLM-assisted path</title>
-  <desc id="d4">Side-by-side deterministic SPARK_BC tools and optional LLM assist</desc>
-  <defs>
-    <style>
-      .box { fill:#fff; stroke:#334155; stroke-width:1.5; rx:6; }
-      .sot { fill:#dcfce7; stroke:#166534; stroke-width:1.75; rx:8; }
-      .llm { fill:#fff7ed; stroke:#c2410c; stroke-width:1.75; rx:8; }
-      .lbl { font:600 13px ui-sans-serif,system-ui,sans-serif; fill:#0f172a; }
-      .sub { font:11px ui-sans-serif,system-ui,sans-serif; fill:#475569; }
-      .cap { font:12px ui-sans-serif,system-ui,sans-serif; fill:#334155; }
-      .warn { font:600 11px ui-sans-serif,system-ui,sans-serif; fill:#9a3412; }
-    </style>
-  </defs>
-  <rect x="8" y="8" width="904" height="264" fill="#f8fafc" stroke="#cbd5e1" rx="8"/>
-  <text x="20" y="28" class="cap">Deterministic Spark tools vs optional LLM assist (honest split)</text>
+ <title id="t4">Deterministic Spark tools versus LLM-assisted path</title>
+ <desc id="d4">Side-by-side deterministic SPARK_BC tools and optional LLM assist</desc>
+ <defs>
+ <style>
+ .box { fill:#fff; stroke:#334155; stroke-width:1.5; rx:6; }
+ .sot { fill:#dcfce7; stroke:#166534; stroke-width:1.75; rx:8; }
+ .llm { fill:#fff7ed; stroke:#c2410c; stroke-width:1.75; rx:8; }
+ .lbl { font:600 13px ui-sans-serif,system-ui,sans-serif; fill:#0f172a; }
+ .sub { font:11px ui-sans-serif,system-ui,sans-serif; fill:#475569; }
+ .cap { font:12px ui-sans-serif,system-ui,sans-serif; fill:#334155; }
+ .warn { font:600 11px ui-sans-serif,system-ui,sans-serif; fill:#9a3412; }
+ </style>
+ </defs>
+ <rect x="8" y="8" width="904" height="264" fill="#f8fafc" stroke="#cbd5e1" rx="8"/>
+ <text x="20" y="28" class="cap">Deterministic Spark tools vs optional LLM assist (honest split)</text>
 
-  <rect class="sot" x="24" y="48" width="420" height="200"/>
-  <text x="234" y="76" text-anchor="middle" class="lbl">SoT  deterministic Spark</text>
-  <rect class="box" x="48" y="96" width="372" height="36"/>
-  <text x="234" y="118" text-anchor="middle" class="sub">Compile: .spark � SPARK_BC (bootstrap / GAS)</text>
-  <rect class="box" x="48" y="144" width="372" height="36"/>
-  <text x="234" y="166" text-anchor="middle" class="sub">Decompile: dump.py hex + opcode mnemonics</text>
-  <rect class="box" x="48" y="192" width="372" height="36"/>
-  <text x="234" y="214" text-anchor="middle" class="sub">Behavior: --run-bc / STEP / serve (CPU fixtures)</text>
+ <rect class="sot" x="24" y="48" width="420" height="200"/>
+ <text x="234" y="76" text-anchor="middle" class="lbl">SoT  deterministic Spark</text>
+ <rect class="box" x="48" y="96" width="372" height="36"/>
+ <text x="234" y="118" text-anchor="middle" class="sub">Compile: .spark · SPARK_BC (bootstrap / GAS)</text>
+ <rect class="box" x="48" y="144" width="372" height="36"/>
+ <text x="234" y="166" text-anchor="middle" class="sub">Decompile: dump.py hex + opcode mnemonics</text>
+ <rect class="box" x="48" y="192" width="372" height="36"/>
+ <text x="234" y="214" text-anchor="middle" class="sub">Behavior: --run-bc / STEP / serve (CPU fixtures)</text>
 
-  <rect class="llm" x="476" y="48" width="420" height="200"/>
-  <text x="686" y="76" text-anchor="middle" class="lbl">Optional  LLM assist (later / external)</text>
-  <rect class="box" x="500" y="96" width="372" height="36"/>
-  <text x="686" y="118" text-anchor="middle" class="sub">Suggest names / comments on dump text</text>
-  <rect class="box" x="500" y="144" width="372" height="36"/>
-  <text x="686" y="166" text-anchor="middle" class="sub">Draft .spark from intent (human review)</text>
-  <rect class="box" x="500" y="192" width="372" height="36"/>
-  <text x="686" y="214" text-anchor="middle" class="sub">Never SoT for .sparkbc bytes or prices</text>
+ <rect class="llm" x="476" y="48" width="420" height="200"/>
+ <text x="686" y="76" text-anchor="middle" class="lbl">Optional  LLM assist (later / external)</text>
+ <rect class="box" x="500" y="96" width="372" height="36"/>
+ <text x="686" y="118" text-anchor="middle" class="sub">Suggest names / comments on dump text</text>
+ <rect class="box" x="500" y="144" width="372" height="36"/>
+ <text x="686" y="166" text-anchor="middle" class="sub">Draft .spark from intent (human review)</text>
+ <rect class="box" x="500" y="192" width="372" height="36"/>
+ <text x="686" y="214" text-anchor="middle" class="sub">Never SoT for .sparkbc bytes or prices</text>
 
-  <text x="24" y="268" class="warn">Spark does not claim any LLM perfectly decompiles SPARK_BC.</text>
+ <text x="24" y="268" class="warn">Spark does not claim any LLM perfectly decompiles SPARK_BC.</text>
 </svg>

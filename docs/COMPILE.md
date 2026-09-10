@@ -6,8 +6,8 @@ Product name: **Spark / SparkLang** only.
 This page does **not** reimplement the compiler. It points at
 makefile targets and in-tree tools. ISA detail:
 [SPARK_BC.md](SPARK_BC.md). Factory story:
-[SPARK_BUILDER.md](SPARK_BUILDER.md).
-**Diagrams:** [DIAGRAMS.md](DIAGRAMS.md) (tools + LLM assist vs SoT).
+[SPARK_BC Builder](SPARK_BUILDER.md).
+**Diagrams:** [Diagrams](DIAGRAMS.md) (tools + LLM assist vs SoT).
 
 ## What “compile” means here
 
@@ -28,21 +28,21 @@ HuggingFace export.
 
 *Caption: `.spark` → bootstrap/GAS → `.sparkbc` → run/train/serve.
 Full decompile diagrams + screenshots:
-[DECOMPILE.md](DECOMPILE.md). LLM assist layout:
+[Decompile](DECOMPILE.md). LLM assist layout:
 [research/LLM_DECOMPILE.md](research/LLM_DECOMPILE.md).*
 
 ## Bootstrap emit (SoT)
 
 ```bash
-make spark-bootstrap   # or: make sparkc
+make spark-bootstrap # or: make sparkc
 ./spark-bootstrap --compile examples/hello.spark -o /tmp/hello.sparkbc
 ./spark-bootstrap --compile examples/spark_train_step.spark \
-  -o /tmp/spark-train-step.sparkbc
+ -o /tmp/spark-train-step.sparkbc
 ```
 
 C lowering (`bootstrap/` + `selfhost/lex.c`) remains the encode
 SoT. Published bytes live under `docs/examples/*.sparkbc` — rebuild
-with the commands in [SPARK_BUILDER.md](SPARK_BUILDER.md); do not
+with the commands in [SPARK_BC Builder](SPARK_BUILDER.md); do not
 invent hex.
 
 ## GAS `./spark --compile`
@@ -50,7 +50,7 @@ invent hex.
 ```bash
 make spark
 ./spark --compile examples/spark_builder.spark \
-  -o /tmp/spark-builder.sparkbc
+ -o /tmp/spark-builder.sparkbc
 ```
 
 Implemented as a **thin wrap** of `./spark-bootstrap` (exit status
@@ -98,7 +98,7 @@ Honest status is in the file header and on
 
 ```bash
 make spark-bc
-./scripts/spark-bc   # phase-6 product wrapper; see scripts/spark-bc
+./scripts/spark-bc # phase-6 product wrapper; see scripts/spark-bc
 ```
 
 Prefer `--compile` on bootstrap or GAS for engineer reproduction.
@@ -117,4 +117,4 @@ Full target list: [SPARKBC_MAKE.md](SPARKBC_MAKE.md).
 
 - [Decompile / dump](DECOMPILE.md)
 - [Build models (TRAIN/STEP)](BUILD_MODELS.md)
-- [SPARK_BC.md](SPARK_BC.md) · [SPARK_BUILDER.md](SPARK_BUILDER.md)
+- [SPARK_BC.md](SPARK_BC.md) · [SPARK_BC Builder](SPARK_BUILDER.md)

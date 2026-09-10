@@ -56,7 +56,7 @@
                   <li class="nav-sub">
                     <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
-                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
                       <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
                     </ul>
                   </li>
@@ -183,17 +183,17 @@
         <p>What a <strong>large language model</strong> is doing under the hood — engineer
         sketch for Spark readers. Spark’s owned TinyCoder and SPARK_BC
         attention path are <strong>tiny and honest</strong>; they do not pretend to be
-        frontier LLMs and <strong>do not beat Claude</strong>.</p>
+        frontier LLMs and <strong>do measurement only.</strong>.</p>
         <p><img class="doc__img" alt="Transformer block schematic" src="/docs/images/diagram-knowledge-transformer.svg?v=0.6.58" /></p>
         <h2 id="tokenization">Tokenization</h2>
         <p>Text is not fed as characters forever. A <strong>tokenizer</strong> maps strings
         to integer <strong>token ids</strong> from a finite vocabulary (often 32k–200k).</p>
         <ul class="doc__ul">
         <li><strong>BPE</strong> (byte-pair encoding) merges frequent byte/char pairs
-          (<a href="https://arxiv.org/abs/1508.07909">Sennrich et al.</a>).</li>
+         (<a href="https://arxiv.org/abs/1508.07909">Sennrich et al.</a>).</li>
         <li><strong>WordPiece</strong> / Unigram variants appear in BERT-family stacks.</li>
         <li>Spark’s from-nothing path: <a href="/docs/tokenizer.html">TOKENIZER.md</a>
-          (byte-level BPE seed vocab).</li>
+         (byte-level BPE seed vocab).</li>
         </ul>
         <p>Token boundaries affect everything downstream: cost, context length,
         and weird splits on code identifiers.</p>
@@ -219,41 +219,33 @@
         the model can mix different subspaces. Decoder-only LLMs (GPT-style)
         use <strong>causal masks</strong> so position <em>t</em> cannot see future tokens.</p>
         <pre class="mermaid">flowchart TB
-          tok[token ids] --> emb[embed + position]
-          emb --> mha[multi-head self-attention]
-          mha --> res1[residual + norm]
-          res1 --> ffn[MLP / SwiGLU]
-          ffn --> res2[residual + norm]
-          res2 --> next[next block or lm_head]</pre>
-        <h2 id="spark-honesty-map">Spark honesty map</h2>
+         tok[token ids] --> emb[embed + position]
+         emb --> mha[multi-head self-attention]
+         mha --> res1[residual + norm]
+         res1 --> ffn[MLP / SwiGLU]
+         ffn --> res2[residual + norm]
+         res2 --> next[next block or lm_head]</pre>
+        <h2 id="capability-status">Capability status</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
-        <th>Claim</th>
-        <th>Spark status</th>
+        <th>Capability</th>
+        <th>Status</th>
         </tr>
         </thead>
         <tbody>
         <tr>
-        <td>Layer-0 last-query MHA train/serve</td>
-        <td>Yes (layer-0 attention) — <a href="/docs/attention-forward.html">ATTENTION_FORWARD.md</a></td>
+        <td>Layer-0 last-query attention train/serve</td>
+        <td><strong>Yes</strong></td>
         </tr>
         <tr>
         <td>Full RoPE / multi-layer production decode</td>
-        <td>No</td>
-        </tr>
-        <tr>
-        <td>Beat Claude</td>
-        <td><strong>Never</strong></td>
-        </tr>
-        <tr>
-        <td>Train on RTX PRO 6000</td>
-        <td><strong>Never</strong> (voice-only elsewhere)</td>
+        <td><strong>Not yet</strong></td>
         </tr>
         </tbody>
         </table></div>
         <p>Continue: <a href="/docs/knowledge-training.html">Training stack</a> · <a href="/docs/knowledge-inference.html">Inference</a> ·
-        <a href="/docs/architecture.html">Architecture</a> · <a href="/docs/factory.html">Factory</a>.</p>
+        <a href="/docs/architecture.html">Architecture</a> · <a href="/docs/factory.html">Factory hub</a>.</p>
       </article>
       </main>
     </div>

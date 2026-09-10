@@ -1,124 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Spark IDE shell — demo</title>
-    <meta
-      name="description"
-      content="Spark IDE layout demo: browse, source↔dump, ask, weights — not OpenBin."
-    />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="/css/tokens.css?v=ide0909" />
-    <link rel="stylesheet" href="/css/site.css?v=ide0909" />
-    <link rel="stylesheet" href="/css/ide-shell.css?v=ide0909" />
-  </head>
-  <body class="ide-shell-page">
-    <header class="ide-top">
-      <a class="ide-brand" href="/" aria-label="SparkLang home">
-        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
-          <path
-            d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z"
-            fill="currentColor"
-          />
-        </svg>
-        Spark IDE
-      </a>
-      <nav class="ide-actions" aria-label="Demo actions">
-        <button type="button" data-act="compile" class="ide-btn ide-btn--brand">
-          Compile
-        </button>
-        <button type="button" data-act="decompile" class="ide-btn">
-          Decompile
-        </button>
-        <button type="button" data-act="ask" class="ide-btn">Ask</button>
-        <button type="button" data-act="report" class="ide-btn">Report</button>
-        <a class="ide-btn" href="/docs/sdk-ide-download.html">Download pack</a>
-      </nav>
-    </header>
+ <head>
+ <meta charset="utf-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1" />
+ <title>Spark IDE shell — demo</title>
+ <meta
+ name="description"
+ content="Spark IDE layout demo: browse, source↔dump, ask, weights — not OpenBin."
+ />
+ <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+ <link rel="stylesheet" href="/css/tokens.css?v=ide0909" />
+ <link rel="stylesheet" href="/css/site.css?v=ide0909" />
+ <link rel="stylesheet" href="/css/ide-shell.css?v=ide0909" />
+ </head>
+ <body class="ide-shell-page">
+ <header class="ide-top">
+ <a class="ide-brand" href="/" aria-label="SparkLang home">
+ <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+ <path
+ d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z"
+ fill="currentColor"
+ />
+ </svg>
+ Spark IDE
+ </a>
+ <nav class="ide-actions" aria-label="Demo actions">
+ <button type="button" data-act="compile" class="ide-btn ide-btn--brand">
+ Compile
+ </button>
+ <button type="button" data-act="decompile" class="ide-btn">
+ Decompile
+ </button>
+ <button type="button" data-act="ask" class="ide-btn">Ask</button>
+ <button type="button" data-act="report" class="ide-btn">Report</button>
+ <a class="ide-btn" href="/docs/sdk-ide-download.html">Download pack</a>
+ </nav>
+ </header>
 
-    <main class="ide-grid" aria-label="Spark IDE demo layout">
-      <aside class="ide-pane ide-browse" aria-label="Browse">
-        <h2>Browse</h2>
-        <div class="ide-tabs" role="tablist">
-          <button type="button" class="is-active" data-tab="files">Files</button>
-          <button type="button" data-tab="ops">Opcodes</button>
-          <button type="button" data-tab="weights">Weights</button>
-        </div>
-        <ul id="browse-files" class="ide-list">
-          <li data-file="sample">examples/sample.spark</li>
-          <li data-file="builder">docs/examples/spark-builder.sparkbc</li>
-        </ul>
-        <ul id="browse-ops" class="ide-list" hidden>
-          <li data-ip="0">code+0 LOAD</li>
-          <li data-ip="3">code+3 ASK</li>
-          <li data-ip="6">code+6 PRINT</li>
-          <li data-ip="9">code+9 HALT</li>
-        </ul>
-        <ul id="browse-weights" class="ide-list" hidden>
-          <li>models/spark-coder/weights.safetensors</li>
-        </ul>
-        <p class="ide-note">
-          Demo lists are static. Desktop
-          <code>bin/spark-bc-gui</code> browses the real tree.
-        </p>
-      </aside>
+ <main class="ide-grid" aria-label="Spark IDE demo layout">
+ <aside class="ide-pane ide-browse" aria-label="Browse">
+ <h2>Browse</h2>
+ <div class="ide-tabs" role="tablist">
+ <button type="button" class="is-active" data-tab="files">Files</button>
+ <button type="button" data-tab="ops">Opcodes</button>
+ <button type="button" data-tab="weights">Weights</button>
+ </div>
+ <ul id="browse-files" class="ide-list">
+ <li data-file="sample">examples/sample.spark</li>
+ <li data-file="builder">docs/examples/spark-builder.sparkbc</li>
+ </ul>
+ <ul id="browse-ops" class="ide-list" hidden>
+ <li data-ip="0">code+0 LOAD</li>
+ <li data-ip="3">code+3 ASK</li>
+ <li data-ip="6">code+6 PRINT</li>
+ <li data-ip="9">code+9 HALT</li>
+ </ul>
+ <ul id="browse-weights" class="ide-list" hidden>
+ <li>models/spark-coder/weights.safetensors</li>
+ </ul>
+ <p class="ide-note">
+ Demo lists are static. Desktop
+ <code>bin/spark-bc-gui</code> browses the real tree.
+ </p>
+ </aside>
 
-      <section class="ide-pane ide-center" aria-label="Editor">
-        <div class="ide-split">
-          <div>
-            <h2>Source</h2>
-            <pre id="src-pane" class="ide-code" tabindex="0"># SparkLang sample — compile to SPARK_BC
+ <section class="ide-pane ide-center" aria-label="Editor">
+ <div class="ide-split">
+ <div>
+ <h2>Source</h2>
+ <pre id="src-pane" class="ide-code" tabindex="0"># SparkLang sample — compile to SPARK_BC
 model code
 ask "hello from SparkLang IDE" -&gt; reply
 print reply
 </pre>
-          </div>
-          <div>
-            <h2>Dump / disasm</h2>
-            <pre id="dump-pane" class="ide-code" tabindex="0"># SPARK_BC dump (demo excerpt)
+ </div>
+ <div>
+ <h2>Dump / disasm</h2>
+ <pre id="dump-pane" class="ide-code" tabindex="0"># SPARK_BC dump (demo excerpt)
 # sha256: (run desktop IDE for live hash)
 ## Code
-code+0  … LOAD …
-code+3  … ASK  const "hello from SparkLang IDE"
-code+6  … PRINT …
-code+9  … HALT
+code+0 … LOAD …
+code+3 … ASK const "hello from SparkLang IDE"
+code+6 … PRINT …
+code+9 … HALT
 </pre>
-          </div>
-        </div>
-        <p id="ide-status" class="ide-status" role="status">
-          Demo shell — functions live in the SDK pack GUI.
-        </p>
-      </section>
+ </div>
+ </div>
+ <p id="ide-status" class="ide-status" role="status">
+ Demo shell — functions live in the SDK pack GUI.
+ </p>
+ </section>
 
-      <aside class="ide-pane ide-tools" aria-label="Tools">
-        <h2>Tools</h2>
-        <label class="ide-label" for="ask-q">Ask over dump</label>
-        <textarea id="ask-q" rows="3" placeholder="list opcodes"></textarea>
-        <button type="button" data-act="ask" class="ide-btn ide-btn--brand ide-btn--block">
-          Ask (text)
-        </button>
-        <pre id="ask-out" class="ide-code ide-code--sm" aria-live="polite"></pre>
-        <h3>Helpers</h3>
-        <ul class="ide-list ide-list--compact">
-          <li>helper:opcodes</li>
-          <li>helper:compile</li>
-          <li>shadow:copy / build / verify</li>
-        </ul>
-        <p class="ide-note">
-          Inspired by public IDE pane workflows — Spark-native tools only.
-          Not an OpenBin clone. Never 6000. Does not beat Claude.
-        </p>
-      </aside>
-    </main>
+ <aside class="ide-pane ide-tools" aria-label="Tools">
+ <h2>Tools</h2>
+ <label class="ide-label" for="ask-q">Ask over dump</label>
+ <textarea id="ask-q" rows="3" placeholder="list opcodes"></textarea>
+ <button type="button" data-act="ask" class="ide-btn ide-btn--brand ide-btn--block">
+ Ask (text)
+ </button>
+ <pre id="ask-out" class="ide-code ide-code--sm" aria-live="polite"></pre>
+ <h3>Helpers</h3>
+ <ul class="ide-list ide-list--compact">
+ <li>helper:opcodes</li>
+ <li>helper:compile</li>
+ <li>shadow:copy / build / verify</li>
+ </ul>
+ <p class="ide-note">
+ Inspired by public IDE pane workflows — Spark-native tools only.
+ Not an OpenBin clone. </p>
+ </aside>
+ </main>
 
-    <footer class="ide-foot">
-      <a href="/docs/ide.html">IDE status</a>
-      ·
-      <a href="/docs/sdk-ide-download.html">SDK + IDE pack</a>
-      ·
-      <a href="/docs/decompile.html">Decompile</a>
-    </footer>
-    <script src="/js/ide-shell.js?v=ide0909" defer></script>
-  </body>
+ <footer class="ide-foot">
+ <a href="/docs/ide.html">IDE status</a>
+ ·
+ <a href="/docs/sdk-ide-download.html">SDK + IDE pack</a>
+ ·
+ <a href="/docs/decompile.html">Decompile</a>
+ </footer>
+ <script src="/js/ide-shell.js?v=ide0909" defer></script>
+ </body>
 </html>

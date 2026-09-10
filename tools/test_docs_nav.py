@@ -46,7 +46,7 @@ class TestDocsNav(unittest.TestCase):
             "knowledge/INFERENCE.md",
             "knowledge/MULTIMODAL.md",
             "knowledge/AGENTS_TOOLS.md",
-            "knowledge/EVAL_HONESTY.md",
+            "knowledge/EVAL_STATUS.md",
             "knowledge/DECOMPILE_RE.md",
             "knowledge/SAFETY_LIMITS.md",
             "MODEL_ASPECTS.md",

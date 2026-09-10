@@ -4,21 +4,21 @@ Engineer map of the **Spark / SparkLang** AI model **as a whole
 system**: how text, tools, memory, and optional senses plug into
 bytecode + weights + serve. Not marketing. Not God/Loom metaphors.
 
-**Never** claims beat Claude. **Never** trains on the RTX PRO **6000**
+Eval scores are **measurement only**, not marketing wins.
 (voice-serving GPU elsewhere — not Spark train). Prefer **CPU** or
 **RTX 5090** for opt-in large local work.
 
-Factory hub: [FACTORY.md](FACTORY.md). Knowledge hive:
-[KNOWLEDGE.md](KNOWLEDGE.md) (agents/tools · multimodal · eval).
+Factory hub: [Factory hub](FACTORY.md). Knowledge hive:
+[Knowledge](KNOWLEDGE.md) (agents/tools · multimodal · eval).
 Voice surface: [VOICE.md](VOICE.md). Voice easy train:
-[VOICE_EASY.md](VOICE_EASY.md). Voice ask (dump Q&A):
+[Voice easy](VOICE_EASY.md). Voice ask (dump Q&A):
 [VOICE_ASK.md](VOICE_ASK.md). Methods vs OpenBin:
-[METHODS_OPENBIN.md](METHODS_OPENBIN.md). Coder:
-[SPARK_CODER.md](SPARK_CODER.md). Weights:
-[WEIGHT_GALLERY.md](WEIGHT_GALLERY.md). Architecture:
-[ARCHITECTURE.md](ARCHITECTURE.md). Attention honesty:
-[ATTENTION_FORWARD.md](ATTENTION_FORWARD.md). Live ask:
-[ASK_LIVE.md](ASK_LIVE.md). Diagrams: [DIAGRAMS.md](DIAGRAMS.md).
+[Methods vs OpenBin](METHODS_OPENBIN.md). Coder:
+[Spark coder](SPARK_CODER.md). Weights:
+[Weight gallery](WEIGHT_GALLERY.md). Architecture:
+[Architecture](ARCHITECTURE.md). Attention / forward:
+[Attention / forward](ATTENTION_FORWARD.md). Live ask:
+[ASK_LIVE.md](ASK_LIVE.md). Diagrams: [Diagrams](DIAGRAMS.md).
 
 > **Forge nav:** this page lives under **Forge → Model aspects** on
 > [sparklang.dev](https://sparklang.dev/docs/model-aspects.html).
@@ -33,7 +33,7 @@ Voice surface: [VOICE.md](VOICE.md). Voice easy train:
 |----------|------------------------------|
 | **Senses** | Ears / STT · Eyes / vision · Speaking / TTS |
 | **Models** | Thinking / generation · Memory · Status table |
-| **Train / ops** | Training & adaptation · Eval & honesty · Runtime / serve |
+| **Train / ops** | Training & adaptation · Eval & benchmarks · Runtime / serve |
 | **Behaviors** | Behaviors · Tools & actions |
 
 Nav: **Forge → Models → Model aspects** (with Senses / Train siblings).
@@ -62,15 +62,14 @@ a vague “AI platform” claim.
 For agentic AI specifically:
 
 1. **Each sense is a boundary.** Fail-closed net gates
-   (`SPARK_STT_NET`, `SPARK_TTS_NET`, inventable-IDK on `ask`) live
-   *at* the sense edges — not buried in marketing copy.
+ (`SPARK_STT_NET`, `SPARK_TTS_NET`, inventable-IDK on `ask`) live
+ *at* the sense edges — not buried in marketing copy.
 2. **Behaviors own the loop.** Tools and reply packs are first-class,
-   not afterthoughts bolted onto logits.
+ not afterthoughts bolted onto logits.
 3. **Tiny vs large is explicit.** CI stays tiny; large is opt-in on
-   **5090** / CPU — never the **6000**.
-4. **Comparison without cloning.** OpenBin Ask / production phone
-   voice stacks solve different jobs; Spark documents *its* loop and
-   refuses to fake theirs.
+ **5090** / CPU — 4. **Comparison without cloning.** OpenBin Ask / production phone
+ voice stacks solve different jobs; Spark documents *its* loop and
+ refuses to fake theirs.
 
 This page keeps the **summary status table** (below), then expands
 ~100× into diagrams, how-tos, opcode/CLI maps, gaps, and roadmap.
@@ -94,7 +93,7 @@ Jump: [Ears](#ears--stt--audio-in) · [Eyes](#eyes--vision--image-in) ·
 [System diagram](#system-diagram--ears--brain--voice--tools) ·
 [Comparison](#comparison--spark-local-sot-vs-openbin-ask--phone-voice) ·
 [How-to lab](#how-to-lab-15-minutes) ·
-[Honesty bar](#honesty-bar-never-fake).
+[Capability status](#capability-status).
 
 ---
 
@@ -104,7 +103,7 @@ Jump: [Ears](#ears--stt--audio-in) · [Eyes](#eyes--vision--image-in) ·
 |--------|--------|---------------|
 | Tokenizer (byte BPE seed) | **implemented** | [TOKENIZER.md](TOKENIZER.md); `python/sparklang/tokenize/` |
 | Token embed (`spark.embed`) | **implemented** | Init + serve; optional STEP grads |
-| Layers / MLP (SwiGLU MLP0) | **implemented** (serve) | [SERVE.md](SERVE.md); MLP0 in forward |
+| Layers / MLP (SwiGLU MLP0) | **implemented** (serve) | [Serve](SERVE.md); MLP0 in forward |
 | Attention (QKVO / GQA) | **implemented** (layer-0) | layer-0 attention — last-query MHA train+serve; **no** RoPE |
 | RMSNorm / `lm_head` | **implemented** | Serve path after attn0/MLP0 |
 | Memory / context window | **partial** | Script bindings + dry fixtures; **no** KV-cache decode |
@@ -114,10 +113,10 @@ Jump: [Ears](#ears--stt--audio-in) · [Eyes](#eyes--vision--image-in) ·
 | Speaking / TTS | **implemented** (surface) | Dry WAV marker; live PCM synth / gated HTTP |
 | Behaviors / policies | **partial** | `spark_reply_pack`, abstain, expect, `./spark-ground`; no full SM |
 | Train / adaptation | **implemented** (CPU/5090) | STEP SGD + owned TinyCoder (owned TinyCoder) — |
-| Eval / honesty | **implemented** | `make spark-eval`; optional Claude baseline — **not** beat Claude |
+| Eval / benchmarks | **implemented** | `make spark-eval`; optional frontier-API baseline — **measurement only** |
 | Runtime serve | **implemented** | `spark-serve` / `spark-serve-api` attn0+MLP0 CPU |
 | Multimodal fused I/O | **planned** | Text+voice demos exist; no joint vision+LM tensors |
-| Knowledge hive | **implemented** (docs) | [KNOWLEDGE.md](KNOWLEDGE.md) → [/docs/knowledge.html](/docs/knowledge.html); multimodal / agents topic pages |
+| Knowledge hive | **implemented** (docs) | [Knowledge](KNOWLEDGE.md) → [/docs/knowledge.html](/docs/knowledge.html); multimodal / agents topic pages |
 
 ---
 
@@ -129,17 +128,17 @@ Jump: [Ears](#ears--stt--audio-in) · [Eyes](#eyes--vision--image-in) ·
 
 ```mermaid
 flowchart LR
-  EAR["Ears — listen / STT<br/>spark-stt-tts"]
-  TOK["Tokenizer / bindings"]
-  BRN["Thinking — tiny CPU forward<br/>embed → attn0 → MLP0 → lm_head"]
-  TOOL["Tools / behaviors<br/>classify · ask · reply pack"]
-  VOC["Speaking — speak / TTS<br/>PCM or SPARK_TTS_*"]
-  EAR --> TOK --> BRN
-  BRN --> TOOL
-  TOOL --> VOC
-  VOC -.->|next turn transcript| EAR
-  TOOL -.->|tool result text| BRN
-  EYE["Eyes — vision<br/>planned stub only"] -.->|not wired| BRN
+ EAR["Ears — listen / STT<br/>spark-stt-tts"]
+ TOK["Tokenizer / bindings"]
+ BRN["Thinking — tiny CPU forward<br/>embed → attn0 → MLP0 → lm_head"]
+ TOOL["Tools / behaviors<br/>classify · ask · reply pack"]
+ VOC["Speaking — speak / TTS<br/>PCM or SPARK_TTS_*"]
+ EAR --> TOK --> BRN
+ BRN --> TOOL
+ TOOL --> VOC
+ VOC -.->|next turn transcript| EAR
+ TOOL -.->|tool result text| BRN
+ EYE["Eyes — vision<br/>planned stub only"] -.->|not wired| BRN
 ```
 
 **Loop reading (plain):** ears (or typed text) become tokens → thinking
@@ -173,31 +172,31 @@ pipe (`|`). Without ears, agent demos stay keyboard-only.
 
 ```mermaid
 flowchart TB
-  WAV["WAV file or arecord mic"]
-  SIDE["sidecar .txt / .intent.txt"]
-  CMD["SPARK_STT_CMD (%i → stdout)"]
-  WH["openai-whisper tiny.en"]
-  HTTP["HTTP STT — only if SPARK_STT_NET=1"]
-  BIND["VM binds transcript -> var"]
-  WAV --> SIDE
-  WAV --> CMD
-  WAV --> WH
-  WAV --> HTTP
-  SIDE --> BIND
-  CMD --> BIND
-  WH --> BIND
-  HTTP --> BIND
+ WAV["WAV file or arecord mic"]
+ SIDE["sidecar .txt / .intent.txt"]
+ CMD["SPARK_STT_CMD (%i → stdout)"]
+ WH["openai-whisper tiny.en"]
+ HTTP["HTTP STT — only if SPARK_STT_NET=1"]
+ BIND["VM binds transcript -> var"]
+ WAV --> SIDE
+ WAV --> CMD
+ WAV --> WH
+ WAV --> HTTP
+ SIDE --> BIND
+ CMD --> BIND
+ WH --> BIND
+ HTTP --> BIND
 ```
 
 ### Opcodes / CLI / makefile today
 
 ```bash
-make                          # builds spark-stt-tts
+make # builds spark-stt-tts
 ./spark --dry-run examples/voice_turn.spark
 ./spark --live examples/voice_live.spark
 ./spark-stt-tts status
 ./spark-stt-tts listen --in examples/fixtures/audio/sample_review.wav
-make voice-test               # local companion smoke
+make voice-test # local companion smoke
 ```
 
 | Env / flag | Meaning |
@@ -215,14 +214,14 @@ make voice-test               # local companion smoke
 |------|-------|--------|
 | Dry stub / CI whisper tiny | **tiny** | CPU |
 | Live sidecar + local whisper | small local | CPU |
-| Opt-in owned voice heads | tiny / **large** via [VOICE_EASY.md](VOICE_EASY.md) (`make voice-easy`) | Prefer **5090**; refuse **6000** |
+| Opt-in owned voice heads | tiny / **large** via [Voice easy](VOICE_EASY.md) (`make voice-easy`) | Prefer **5090**; refuse **6000** |
 
 Large STT heads are **owned experiments**, not a claim of vendor ASR
 parity. See [VOICE.md](VOICE.md) tiny-vs-large table.
 
 ### Gaps vs roadmap
 
-| Gap | Honesty |
+| Gap | Status |
 |-----|---------|
 | Barge-in / EOU / silence | **Not shipped** as production |
 | Streaming partial transcripts into VM | **Not** a product claim |
@@ -231,8 +230,8 @@ parity. See [VOICE.md](VOICE.md) tiny-vs-large table.
 
 ### Links
 
-[VOICE.md](VOICE.md) · [SPARK_CODER.md](SPARK_CODER.md) (sibling train
-discipline) · [WEIGHT_GALLERY.md](WEIGHT_GALLERY.md) ·
+[VOICE.md](VOICE.md) · [Spark coder](SPARK_CODER.md) (sibling train
+discipline) · [Weight gallery](WEIGHT_GALLERY.md) ·
 [CI_PAGES.md](CI_PAGES.md).
 
 ---
@@ -265,11 +264,11 @@ python3 -m unittest python/sparklang/senses/test_senses.py
 
 ```mermaid
 flowchart LR
-  IMG["PNG / JPEG path"]
-  ENC["Vision encoder — planned"]
-  TOK["Image / caption tokens — planned"]
-  EMB["spark.embed — not wired"]
-  IMG -.-> ENC -.-> TOK -.-> EMB
+ IMG["PNG / JPEG path"]
+ ENC["Vision encoder — planned"]
+ TOK["Image / caption tokens — planned"]
+ EMB["spark.embed — not wired"]
+ IMG -.-> ENC -.-> TOK -.-> EMB
 ```
 
 ### Tiny vs large
@@ -288,8 +287,8 @@ N/A for runtime. Do **not** route hypothetical vision train to the
 
 ### Links
 
-Senses package under `python/sparklang/senses/` · Factory honesty in
-[FACTORY.md](FACTORY.md) · Adoption: [ADOPTION_BAR.md](ADOPTION_BAR.md).
+Senses package under `python/sparklang/senses/` · Factory status in
+[Factory hub](FACTORY.md) · Adoption: [ADOPTION_BAR.md](ADOPTION_BAR.md).
 
 ---
 
@@ -323,14 +322,14 @@ text-only bases — still **not** voice-GPU / LoRA TTS.
 
 ```mermaid
 flowchart TB
-  TXT["Text / last_val / reply pack"]
-  PCM["Local PCM synth"]
-  CMD["SPARK_TTS_CMD (%o out)"]
-  HTTP["HTTP TTS — SPARK_TTS_NET=1"]
-  WAV["WAV path / aplay"]
-  TXT --> PCM --> WAV
-  TXT --> CMD --> WAV
-  TXT --> HTTP --> WAV
+ TXT["Text / last_val / reply pack"]
+ PCM["Local PCM synth"]
+ CMD["SPARK_TTS_CMD (%o out)"]
+ HTTP["HTTP TTS — SPARK_TTS_NET=1"]
+ WAV["WAV path / aplay"]
+ TXT --> PCM --> WAV
+ TXT --> CMD --> WAV
+ TXT --> HTTP --> WAV
 ```
 
 ### Opcodes / CLI / makefile
@@ -338,7 +337,7 @@ flowchart TB
 ```bash
 ./spark --dry-run examples/voice_turn.spark
 ./spark-stt-tts speak --text "hi" --out /tmp/spark-voice-test.wav
-./spark --dry-run examples/voice_copy.spark    # written model path
+./spark --dry-run examples/voice_copy.spark # written model path
 ./spark --dry-run examples/model_train_reply.spark
 ```
 
@@ -383,11 +382,11 @@ gateway** `ask` (not required for dry demos).
 
 ### Engineering stack — tiny CPU serve (weights)
 
-When MLP tensors exist ([SERVE.md](SERVE.md)):
+When MLP tensors exist ([Serve](SERVE.md)):
 
 ```text
 embed (mean pool) → attn0 (layer-0 last-query MHA, layer-0 attention)
-  → MLP0 (SwiGLU) → RMSNorm → lm_head
+ → MLP0 (SwiGLU) → RMSNorm → lm_head
 ```
 
 Code: `python/sparklang/model_lab/serve.py`. HTTP/stdio:
@@ -409,22 +408,22 @@ Code: `python/sparklang/model_lab/serve.py`. HTTP/stdio:
 | Live | `./spark-ask-http` + `AI_GATEWAY_URL` — [ASK_LIVE.md](ASK_LIVE.md) |
 | Grounding | Inventable prompts IDK unless `--sot-ok` |
 
-Bifrost is **one optional backend**, not a Spark requirement. Spark
-is **not** a Bifrost plugin.
+the AI gateway is **one optional backend**, not a Spark requirement. Spark
+is **not** a the AI gateway plugin.
 
 ### Dataflow
 
 ```mermaid
 flowchart LR
-  IN["Tokens / prompt"]
-  EMB["embed"]
-  AT["attn0"]
-  MLP["MLP0"]
-  HN["RMSNorm"]
-  LH["lm_head"]
-  OUT["logits / text"]
-  IN --> EMB --> AT --> MLP --> HN --> LH --> OUT
-  GW["Optional gateway ask"] -.-> OUT
+ IN["Tokens / prompt"]
+ EMB["embed"]
+ AT["attn0"]
+ MLP["MLP0"]
+ HN["RMSNorm"]
+ LH["lm_head"]
+ OUT["logits / text"]
+ IN --> EMB --> AT --> MLP --> HN --> LH --> OUT
+ GW["Optional gateway ask"] -.-> OUT
 ```
 
 ### CLI / makefile
@@ -435,7 +434,7 @@ make spark-serve
 
 make spark-serve-api
 ./spark-serve-api --weights …/weights.safetensors --http \
-  --host 127.0.0.1 --port 8765
+ --host 127.0.0.1 --port 8765
 
 make spark-ask-http
 ./spark-ask-http --dry --model fixtures/tiny-lm --prompt "Reply: pong"
@@ -446,12 +445,11 @@ make test-ask-gateway
 
 | Scale | Thinking path |
 |-------|---------------|
-| **tiny** | Fixture dims; CI SGD; TinyCoder default ([SPARK_CODER.md](SPARK_CODER.md)) |
+| **tiny** | Fixture dims; CI SGD; TinyCoder default ([Spark coder](SPARK_CODER.md)) |
 | **large** | Opt-in `make spark-coder-train-large` / weight gallery large+xl stubs — prefer **5090** |
 | **6000** | **Never** for train |
 
-Stub / gallery weights are **not** production LLMs and do **not**
-beat Claude. Catalog: [WEIGHT_GALLERY.md](WEIGHT_GALLERY.md).
+Stub / gallery weights are **not** production LLMs and do **measurement only** Catalog: [Weight gallery](WEIGHT_GALLERY.md).
 
 ### Gaps vs roadmap
 
@@ -459,13 +457,13 @@ beat Claude. Catalog: [WEIGHT_GALLERY.md](WEIGHT_GALLERY.md).
 |-----|--------|
 | Multi-layer decode + KV cache | **No** |
 | RoPE in Python serve | **No** |
-| “Beat Claude” | **Forbidden claim** — eval scores only ([EVAL.md](EVAL.md)) |
+| Competitive AI win claim | **Forbidden claim** — eval scores only ([Eval](EVAL.md)) |
 
 ### Links
 
-[ATTENTION_FORWARD.md](ATTENTION_FORWARD.md) ·
-[ARCHITECTURE.md](ARCHITECTURE.md) · [SERVE.md](SERVE.md) ·
-[SPARK_CODER.md](SPARK_CODER.md) · [WEIGHT_GALLERY.md](WEIGHT_GALLERY.md) ·
+[Attention / forward](ATTENTION_FORWARD.md) ·
+[Architecture](ARCHITECTURE.md) · [Serve](SERVE.md) ·
+[Spark coder](SPARK_CODER.md) · [Weight gallery](WEIGHT_GALLERY.md) ·
 [ASK_LIVE.md](ASK_LIVE.md).
 
 ---
@@ -501,7 +499,7 @@ tools, SoT, abstain, expect, reply locking, train/eval feedback.
 ```
 tool weather(city: string) -> string { "stub:local" }
 with tools [weather] {
-  ask "Weather in DSM?" -> answer
+ ask "Weather in DSM?" -> answer
 }
 ```
 
@@ -509,7 +507,7 @@ Dry `ask` inside an active scope returns `[tool:<name>] stub:local`.
 
 **Separate** from factory **helper tools** (I/K): `spark-helper-*`,
 shadows, SDK pack — those wrap compile/decompile/serve for authors.
-See [DIAGRAMS.md](DIAGRAMS.md) and [TOOLS_HELPERS.md](TOOLS_HELPERS.md).
+See [Diagrams](DIAGRAMS.md) and [TOOLS_HELPERS.md](TOOLS_HELPERS.md).
 Model **behaviors** stay in `.spark`; helpers do not silently become
 policy.
 
@@ -517,33 +515,33 @@ policy.
 
 ```mermaid
 flowchart TB
-  IN["User / fixture text or transcript"]
-  POL["Behavior policy<br/>reply pack · abstain · expect"]
-  ASK["ask / classify / extract"]
-  TL["tool registry<br/>with tools scope"]
-  OUT["print / speak / http"]
-  TR["Train STEP / model train"]
-  EV["spark-eval"]
-  IN --> POL --> ASK
-  ASK --> TL
-  TL --> ASK
-  ASK --> OUT
-  TR --> EV
-  EV -.->|scores only; never win claim| POL
+ IN["User / fixture text or transcript"]
+ POL["Behavior policy<br/>reply pack · abstain · expect"]
+ ASK["ask / classify / extract"]
+ TL["tool registry<br/>with tools scope"]
+ OUT["print / speak / http"]
+ TR["Train STEP / model train"]
+ EV["spark-eval"]
+ IN --> POL --> ASK
+ ASK --> TL
+ TL --> ASK
+ ASK --> OUT
+ TR --> EV
+ EV -.->|scores only; never win claim| POL
 ```
 
 ### Train / eval (behavior adjacent)
 
-| Path | Status | Honesty |
+| Path | Status | Status |
 |------|--------|---------|
 | SPARK_BC `TRAIN` / `STEP` | **implemented** | Multi-outer CPU SGD |
 | Five HTTP train methods | **implemented** | distill / pref / playbook / FAQ / reply pack — CPU |
 | Owned TinyCoder | **implemented** (owned TinyCoder) | tiny CI + large opt-in — |
 | LoRA / voice-GPU | **won't (claim)** | Not sold on sparklang.dev |
-| `make spark-eval` | **implemented** | Exit 0 = harness ran — **not** beat Claude |
+| `make spark-eval` | **implemented** | Exit 0 = harness ran — **measurement only** |
 
-[TRAIN_LOOP.md](TRAIN_LOOP.md) · [BUILD_MODELS.md](BUILD_MODELS.md) ·
-[MODEL_TRAINING.md](MODEL_TRAINING.md) · [EVAL.md](EVAL.md).
+[Train loop](TRAIN_LOOP.md) · [BUILD_MODELS.md](BUILD_MODELS.md) ·
+[MODEL_TRAINING.md](MODEL_TRAINING.md) · [Eval](EVAL.md).
 
 ### Gaps vs roadmap
 
@@ -558,7 +556,7 @@ flowchart TB
 [LANGUAGE.md](LANGUAGE.md) · [VOICE.md](VOICE.md) ·
 [knowledge/SAFETY_LIMITS.md](knowledge/SAFETY_LIMITS.md)
 (grounded / anti-guess) ·
-[ADOPTION_BAR.md](ADOPTION_BAR.md) · [SPARK_CODER.md](SPARK_CODER.md).
+[ADOPTION_BAR.md](ADOPTION_BAR.md) · [Spark coder](SPARK_CODER.md).
 
 ---
 
@@ -592,8 +590,8 @@ for Spark recovery / serve proofs.
 | Ears / speaking | Language `listen`/`speak` + `spark-stt-tts` (gated) | N/A (RE product) | Always-on production STT/TTS |
 | Eyes | **Planned stub only** | Screenshots ≠ Spark vision | Optional vision elsewhere — not claimed here |
 | Trust | Binaries stay local; fail-closed net gates | Upload / login trust surface — use a gated lab if at all | Product-specific privacy / retention — out of scope here |
-| GPU | Train: CPU / **RTX 5090** (see [FACTORY.md](FACTORY.md)) | Vendor / cloud | May reserve separate voice GPUs — **out of Spark train** |
-| Honesty | Never beat Claude; never fake eyes | Not Spark decompile SoT | Not a Spark clone — do not reimplement here |
+| GPU | Train: CPU / **RTX 5090** (see [Factory hub](FACTORY.md)) | Vendor / cloud | May reserve separate voice GPUs — **out of Spark train** |
+| Status | ; never fake eyes | Not Spark decompile SoT | Not a Spark clone — do not reimplement here |
 
 **Do not:**
 
@@ -601,7 +599,7 @@ for Spark recovery / serve proofs.
 - Clone OpenBin UX into sparklang.dev
 - Sell Spark voice as a phone stack
 - Place Spark factory train on GPUs reserved for other voice products
-  (prefer CPU / 5090 — [FACTORY.md](FACTORY.md))
+ (prefer CPU / 5090 — [Factory hub](FACTORY.md))
 
 Decompile research context (OpenBin cited carefully):
 [research/LLM_DECOMPILE.md](research/LLM_DECOMPILE.md) →
@@ -625,7 +623,7 @@ make spark-bootstrap spark
 # 2) Companion smoke (local PCM / stub listen)
 make voice-test
 
-# 3) Eyes honesty gate (planned stub)
+# 3) Eyes status gate (planned stub)
 make test-senses
 
 # 4) Thinking — tiny serve dry
@@ -654,25 +652,23 @@ passive / dry proofs when PSTN guards or missing keys apply.
 ```bash
 make spark-serve-api
 ./spark-serve-api --weights …/weights.safetensors --http \
-  --host 127.0.0.1 --port 8765
+ --host 127.0.0.1 --port 8765
 ```
 
 Voice companions are **not** inside `serve_api` — ears/speaking fork
 `./spark-stt-tts` from the language VM under `--live`. Predict API
 stays token-id JSON for the tiny CPU stack.
 
-[SERVE.md](SERVE.md) · [CI_PAGES.md](CI_PAGES.md).
+[Serve](SERVE.md) · [CI_PAGES.md](CI_PAGES.md).
 
 ---
 
-## Honesty bar (never fake)
-
+## Capability status
 | Claim | Allowed? |
 |-------|----------|
 | Ears/speaking language surface + dry/live gated companions | **Yes** |
 | Eyes fully working / vision encoder shipped | **No** |
-| Beat Claude | **No** |
-| Train on RTX PRO **6000** | **Never** |
+| Marketing win banners | Out of scope |
 | Opt-in large on **5090** / CPU | **Yes** |
 | OpenBin clone / phone-stack clone | **No** |
 | Spark local SPARK_BC SoT | **Yes** |
@@ -686,28 +682,28 @@ Roadmap sketches: [ROADMAP.md](ROADMAP.md).
 
 | Topic | Relation to this page |
 |-------|------------------------|
-| Factory hub + diagrams | Extended context — [FACTORY.md](FACTORY.md) / [DIAGRAMS.md](DIAGRAMS.md) |
-| Decompile / OpenBin methods | Cross-link — [DECOMPILE.md](DECOMPILE.md) / [METHODS_OPENBIN.md](METHODS_OPENBIN.md) |
+| Factory hub + diagrams | Extended context — [Factory hub](FACTORY.md) / [Diagrams](DIAGRAMS.md) |
+| Decompile / OpenBin methods | Cross-link — [Decompile](DECOMPILE.md) / [Methods vs OpenBin](METHODS_OPENBIN.md) |
 | SDK / helpers / shadows | Authoring tools — [IDE.md](IDE.md) / [TOOLS_HELPERS.md](TOOLS_HELPERS.md) |
-| Attention math | Layer-0 last-query — [ATTENTION_FORWARD.md](ATTENTION_FORWARD.md) |
-| Eval / scale / serve | Linked above — [EVAL.md](EVAL.md) / [TRAIN_LOOP.md](TRAIN_LOOP.md) / [SERVE.md](SERVE.md) |
-| Owned spark-coder | Tiny + large discipline — [SPARK_CODER.md](SPARK_CODER.md) |
+| Attention math | Layer-0 last-query — [Attention / forward](ATTENTION_FORWARD.md) |
+| Eval / scale / serve | Linked above — [Eval](EVAL.md) / [Train loop](TRAIN_LOOP.md) / [Serve](SERVE.md) |
+| Owned spark-coder | Tiny + large discipline — [Spark coder](SPARK_CODER.md) |
 | This sensory map | Expanded status on this page |
 
 ---
 
 ## Quick links (Forge + Bench)
 
-- [FACTORY.md](FACTORY.md) · [DIAGRAMS.md](DIAGRAMS.md) · [KNOWLEDGE.md](KNOWLEDGE.md)
+- [Factory hub](FACTORY.md) · [Diagrams](DIAGRAMS.md) · [Knowledge](KNOWLEDGE.md)
 - [VOICE.md](VOICE.md) · [AI_MODELS.md](AI_MODELS.md) · [ASK_LIVE.md](ASK_LIVE.md)
-- [SPARK_CODER.md](SPARK_CODER.md) · [WEIGHT_GALLERY.md](WEIGHT_GALLERY.md)
-- [ARCHITECTURE.md](ARCHITECTURE.md) · [TOKENIZER.md](TOKENIZER.md)
+- [Spark coder](SPARK_CODER.md) · [Weight gallery](WEIGHT_GALLERY.md)
+- [Architecture](ARCHITECTURE.md) · [TOKENIZER.md](TOKENIZER.md)
 - [LANGUAGE.md](LANGUAGE.md) · [ROADMAP.md](ROADMAP.md)
 - Site: [/docs/model-aspects.html](/docs/model-aspects.html) ·
-  [/docs/knowledge.html](/docs/knowledge.html) ·
-  [/docs/voice.html](/docs/voice.html) ·
-  [/docs/voice-easy.html](/docs/voice-easy.html) ·
-  [/docs/voice-ask.html](/docs/voice-ask.html) ·
-  [/docs/methods-openbin.html](/docs/methods-openbin.html) ·
-  [/docs/spark-coder.html](/docs/spark-coder.html) ·
-  [/docs/weight-gallery.html](/docs/weight-gallery.html)
+ [/docs/knowledge.html](/docs/knowledge.html) ·
+ [/docs/voice.html](/docs/voice.html) ·
+ [/docs/voice-easy.html](/docs/voice-easy.html) ·
+ [/docs/voice-ask.html](/docs/voice-ask.html) ·
+ [/docs/methods-openbin.html](/docs/methods-openbin.html) ·
+ [/docs/spark-coder.html](/docs/spark-coder.html) ·
+ [/docs/weight-gallery.html](/docs/weight-gallery.html)

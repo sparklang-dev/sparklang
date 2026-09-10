@@ -3,7 +3,7 @@
 **Programming how-to:**
 [PROGRAMMING_GUIDE.md](PROGRAMMING_GUIDE.md) ·
 **AI models (user-facing):** [AI_MODELS.md](AI_MODELS.md) ·
-**Builder / bytecode:** [SPARK_BUILDER.md](SPARK_BUILDER.md)
+**Builder / bytecode:** [SPARK_BC Builder](SPARK_BUILDER.md)
 (full E2E factory reproduce — opcodes, sha256, GAS `--run-bc`/`--compile` wrappers) ·
 **IDE status:** [IDE.md](IDE.md) (verified
 `ide new|open|save|run|buffer|ask|show` + `ide keys` / `ide key`;
@@ -39,12 +39,12 @@ See [LANGUAGE_IMPROVEMENTS.md](LANGUAGE_IMPROVEMENTS.md) for the full DX changel
 
 Set the default model for following calls. Pass an **explicit** HF id,
 checkpoint path, or configured gateway model string. SparkLang is **not**
-a Bifrost plugin — there is no per-task alias roulette.
+a the AI gateway plugin — there is no per-task alias roulette.
 
 ```
 model "fixtures/tiny-lm"
 model "org/local-lm"
-use auto          # keeps prior spark.toml / model line (no pick)
+use auto # keeps prior spark.toml / model line (no pick)
 ```
 
 **`use auto`** — keeps the **prior** configured model (`spark.toml` or an
@@ -72,12 +72,12 @@ abstain heads. Modify **attaches** and sets `keep_special_training`.
 
 ```
 model reverse "fixtures/tiny-lm" -> inspect
-model inspect "fixtures/tiny-lm" -> inspect   # alias
+model inspect "fixtures/tiny-lm" -> inspect # alias
 
 model compile "examples/model_lab.spark" into "out/lab/model_lab.sparkbc" -> bc
 
 model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" method "spark_distill_cpu" -> job
-model build -> job                               # same as train
+model build -> job # same as train
 
 model modify keep_existing "out/train/existing-lora" add "out/train/job-dry-001/adapter.bin" head "out/heads/abstain.pt" -> modified
 ```
@@ -109,10 +109,10 @@ Selfhost train seed: `selfhost/compile_train.spark` →
 binary (TRAIN accept dry; STEP = multi-outer CPU SGD). GAS `./spark --dry-run`
 runs train verbs from source; GAS `--compile` wraps bootstrap emit.
 Emitting TRAIN/STEP ≠ beating Claude. See [SPARK_BC.md](SPARK_BC.md)
-and [SPARK_BUILDER.md](SPARK_BUILDER.md) (sha256 table + reproduce
+and [SPARK_BC Builder](SPARK_BUILDER.md) (sha256 table + reproduce
 commands). STEP→weights is **CPU SGD**
 (`out/train/<job>/weights.safetensors`; `trained=true` /
-`not_sgd=false` when grads apply; not beat Claude).
+`not_sgd=false` when grads apply; measurement only.).
 
 Training methodology: [MODEL_TRAINING.md](MODEL_TRAINING.md).
 Eval helpers: [MODEL_ANALYSIS.md](MODEL_ANALYSIS.md).
@@ -127,12 +127,12 @@ model compare ["fixtures/tiny-lm"] on suite "examples/eval_suite.json" -> compar
 model improve from report prefer quality -> blueprint
 # prefer: quality | speed | cost | local
 
-model plan blueprint into "out/better-model.md"   # markdown only
+model plan blueprint into "out/better-model.md" # markdown only
 
 model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" method "spark_distill_cpu" -> job
-model build -> job                               # same as train
-model step "job-dry-001" -> step                 # CPU SGD tick (0x28)
-model status "job-dry-001" -> status             # polls that job id
+model build -> job # same as train
+model step "job-dry-001" -> step # CPU SGD tick (0x28)
+model status "job-dry-001" -> status # polls that job id
 ```
 
 ### `model step` (SPARK_BC `STEP` `0x28`)
@@ -145,14 +145,14 @@ Bootstrap `--run-bc` prints `"op":"step"` / `mode=cpu-sgd` JSON,
 updates `ARTIFACT` (`trained=true`, `not_sgd=false`), and writes
 `weights.safetensors` + `checkpoint.json` when grads apply (fails
 loud if stub).
-**Not beat Claude.** Proof: TRAIN → STEP → TRAIN_STATUS in
+**Measurement only.** Proof: TRAIN → STEP → TRAIN_STATUS in
 `examples/spark_train_step.spark` →
 `docs/examples/spark-train-step.sparkbc` (sha256
 `d08925b52bf8c840de626c9cfec619d4dbae5a674b94bb8c7c5837eb1ac64551`).
 Focused gate: `make sparkbc-e2e` (compile → dump TRAIN/STEP →
 `--run-bc` → assert `ARTIFACT`). Step-updated weights are
 **CPU SGD** (`weights.safetensors`; `trained=true`;
-`not_sgd=false`; loss must drop). Multi-outer; **not beat Claude**.
+`not_sgd=false`; loss must drop). Multi-outer; **measurement only.**.
 
 Optional **`method "…"`** selects the training algorithm
 (`spark_distill_cpu` | `spark_pref_pack` | `spark_playbook_fit` |
@@ -167,7 +167,7 @@ override). Live GAS passes the statement via
 `STEP` is **`0x28`**; `TRAIN_STATUS` is **`0x27`**. Execute with
 `./spark-bootstrap --run-bc` or `./spark --run-bc`.
 See [SPARK_BC.md](SPARK_BC.md) and
-[SPARK_BUILDER.md](SPARK_BUILDER.md).
+[SPARK_BC Builder](SPARK_BUILDER.md).
 
 **Backends:** `http` (default MVP companion `./spark-train-http`),
 `local-yield` (optional allowlisted `train@` unit), `huggingface`
@@ -185,7 +185,7 @@ head abstain external model "path" weights "out/heads/ext.pt" threshold 0.7 -> g
 head train dataset "examples/fixtures/abstain/labels.jsonl" kind internal out "out/heads/abstain.pt" hidden_dim 64 -> job
 # Prefer dim-matched export (see ABSTAIN_HEADS.md):
 # head train dataset "examples/fixtures/abstain/labels_exported.jsonl" …
-#   kind internal out "out/heads/abstain.pt" hidden_dim 16 -> job
+# kind internal out "out/heads/abstain.pt" hidden_dim 16 -> job
 head attach model "path" weights "out/heads/abstain.pt" out "out/heads/manifest.json" -> attach
 head ask "Who is the mayor of Springfield?" -> answer
 ```
@@ -303,19 +303,19 @@ run "python" "-c" "print(1)" -> out
 ```python
 from sparklang import run
 
-r = run("examples/hello.spark")          # dry-run default
+r = run("examples/hello.spark") # dry-run default
 print(r.stdout, r.returncode)
-r = run('print "from host"\n')         # inline source → temp .spark
-# r = run("examples/ask_live.spark", live=True)  # opt-in
+r = run('print "from host"\n') # inline source → temp .spark
+# r = run("examples/ask_live.spark", live=True) # opt-in
 ```
 
 ```bash
 PYTHONPATH=python python -m sparklang examples/hello.spark
 node examples/js/host_embed.js
 make examples/c/host_embed && ./examples/c/host_embed
-./spark --embed   # {"api":"python,js,c",…}
+./spark --embed # {"api":"python,js,c",…}
 make test-host-embed
-make test-shell   # live --allow-shell argv execve
+make test-shell # live --allow-shell argv execve
 ```
 
 See [ADOPTION_BAR.md](ADOPTION_BAR.md). Examples: `examples/shell_escape.spark`
@@ -325,7 +325,7 @@ See [ADOPTION_BAR.md](ADOPTION_BAR.md). Examples: `examples/shell_escape.spark`
 
 ### `http get` / `http post` (shipped)
 
-Generic HTTP client ops — **not** Bifrost-specific and **not**
+Generic HTTP client ops — **not** the AI gateway-specific and **not**
 `engine fetch` `file://`. Dry-run never dials the network.
 
 ```
@@ -372,11 +372,11 @@ name ends in `?`. Types are `string`, `int`, `float`, `bool`.
 
 ```
 extract Person {
-  name: string
-  age: int
-  email?: string
+ name: string
+ age: int
+ email?: string
 } from "Ada Lovelace was born in 1815"
-  fixture "examples/fixtures/extract/person.json" -> person
+ fixture "examples/fixtures/extract/person.json" -> person
 ```
 
 Run it: `./spark --dry-run examples/extract_person.spark`.
@@ -413,7 +413,7 @@ clause). Offline proof: `--stub-file PATH` (JSONL of canned replies).
 ```bash
 ./spark-extract --live --stmt-file /tmp/xt.txt --model fast --retries 2
 ./spark-extract --live --stmt-file /tmp/xt.txt --model fixtures/tiny-lm \
-  --stub-file examples/fixtures/extract/stub_retry.jsonl
+ --stub-file examples/fixtures/extract/stub_retry.jsonl
 ```
 
 Examples: `examples/extract_person.spark` (valid dry),
@@ -458,12 +458,12 @@ Single-label (default) or `multi`:
 
 ```
 classify Intent { support, sales, spam }
-  from "My account is locked"
-  min_confidence 0.7
-  -> intent
+ from "My account is locked"
+ min_confidence 0.7
+ -> intent
 
 classify multi Tags { support, sales, spam }
-  from message -> tags
+ from message -> tags
 ```
 
 Dry-run returns `{ label, confidence, reasons }`. Invalid labels fail loud.
@@ -479,10 +479,10 @@ speak "Hello" -> "out.wav"
 speak with model brand_voice
 
 voice {
-  listen -> user
-  classify Intent { support, sales } from user -> intent
-  ask "Reply helpfully to: {user}" -> reply
-  speak reply
+ listen -> user
+ classify Intent { support, sales } from user -> intent
+ ask "Reply helpfully to: {user}" -> reply
+ speak reply
 }
 
 voice review "clip.wav" -> report
@@ -491,7 +491,7 @@ voice copy from "src.wav" to my_voice -> model_path
 voice model write my_voice spec { ... } -> path
 voice model load my_voice -> model
 voice pstn status
-voice pstn dial "+15555550100" -> call   # OFF by default
+voice pstn dial "+15555550100" -> call # OFF by default
 ```
 
 Dry-run: `listen`/`speak` use stub transcript + minimal WAV write
@@ -499,7 +499,7 @@ Dry-run: `listen`/`speak` use stub transcript + minimal WAV write
 (real WAV/mic/synth/local whisper; vendor HTTP OFF unless
 `SPARK_STT_NET` / `SPARK_TTS_NET` / `SPARK_SPEECH_NET=1` —
 see [VOICE.md](VOICE.md)).
-`voice review` **byte-parses** real RIFF/WAVE (not invented metrics);
+`voice review` **byte-parses** real RIFF/WAVE (byte metrics);
 `voice code|copy|model` write real artifacts under `out/`.
 PSTN never places in `--dry-run` / `make test` (companion gated OFF).
 
@@ -507,8 +507,8 @@ PSTN never places in `--dry-run` / `make test` (companion gated OFF).
 
 ```
 pipeline {
-  ask "Summarize: {doc}" -> summary
-  | ask "Translate to Spanish: {summary}" -> es
+ ask "Summarize: {doc}" -> summary
+ | ask "Translate to Spanish: {summary}" -> es
 }
 ```
 
@@ -531,7 +531,7 @@ include "lib/ai.spark"
 tool weather(city: string) -> string { "stub:local" }
 
 with tools [weather] {
-  ask "Weather in DSM?" -> answer
+ ask "Weather in DSM?" -> answer
 }
 ```
 
@@ -552,7 +552,7 @@ picks a target level and codegen; implement writes artifacts.
 ```
 review path "examples/fixtures/sample.js" -> report
 review url "file://examples/fixtures/sample.js" -> report
-review url "https://example.com/app.js" -> report   # needs --allow-net
+review url "https://example.com/app.js" -> report # needs --allow-net
 review text "function x(){ eval(y); }" -> report
 
 builder prefer lower request "add classify Intent and wire voice turn" -> patch
@@ -717,11 +717,11 @@ binary firmware "blob.bin" -> report
 
 - `ALL_SECTIONS.contents` — `objdump -s -w` (full hex of **every** section)
 - `ALL_SECTIONS.disasm` — `objdump -D -w` (disassemble **every** section;
-  non-code still listed)
+ non-code still listed)
 - `<section>.raw` — full raw bytes via `./spark-section-dump` (any size;
-  checkpoint/resume with `--resume`; NOBITS → empty file)
+ checkpoint/resume with `--resume`; NOBITS → empty file)
 - `lifted/` — C-like lift from `ALL_SECTIONS.disasm` via `./spark-lift`
-  (`lifted_common.h`, per-section `.c`, `lifted.c` index)
+ (`lifted_common.h`, per-section `.c`, `lifted.c` index)
 
 Files **>32MiB** print a progress note and **continue** the full dump
 (no gate, no silent partial). Asm forks `objdump`, `spark-section-dump`,
@@ -745,7 +745,7 @@ CUDA drivers: `examples/binary_cuda_drivers.spark`.
 ./spark --dry-run examples/binary_any.spark
 ls out/decompile/tiny_cuda_stub.so/lifted/
 make spark-binary && ./spark-binary-probe --understand \
-  /lib/x86_64-linux-gnu/libnvidia-ml.so.1 --focus memory
+ /lib/x86_64-linux-gnu/libnvidia-ml.so.1 --focus memory
 ```
 
 ## Network
@@ -762,14 +762,14 @@ network explain traffic_report -> text
 ```
 
 - **capture probe**: forks `./spark-net-capture --probe` — AF_PACKET
-  socket attempt only; always `claimed:false`; JSON
-  `cap_net_raw` / `ready`. No `--allow-net-capture` needed.
+ socket attempt only; always `claimed:false`; JSON
+ `cap_net_raw` / `ready`. No `--allow-net-capture` needed.
 - **capture** without `--allow-net-capture`: `claimed:false`, loads
-  fixture pcap so `analyze` still works.
+ fixture pcap so `analyze` still works.
 - **capture** with `--allow-net-capture`: forks `./spark-net-capture`
-  (AF_PACKET SOCK_RAW → classic pcap). Needs `CAP_NET_RAW`
-  (`sudo setcap cap_net_raw,cap_net_admin+ep ./spark-net-capture`).
-  CAP miss → exit **4**, `claimed:false` (never invents packets).
+ (AF_PACKET SOCK_RAW → classic pcap). Needs `CAP_NET_RAW`
+ (`sudo setcap cap_net_raw,cap_net_admin+ep ./spark-net-capture`).
+ CAP miss → exit **4**, `claimed:false` (never invents packets).
 - **open**: real `open`/`read` of magic `0xa1b2c3d4`.
 - **analyze**: DNS QNAME from pcap bytes after open. Without open → error.
 - **explain**: plain-language summary of parsed bytes.
@@ -848,7 +848,7 @@ Full pipeline: `examples/engine_pipeline.spark` → `out/engine/pipeline.ppm`.
 Table: `examples/engine_pipeline_table.spark`; fetch→parse→layout:
 `examples/engine_fetch_parse_layout.spark`.
 
-**Honesty:** not full CSS / not Google.com / not full ES / not Electron.
+**Scope:** not full CSS / not Google.com / not full ES / not Electron.
 HTTPS TLS **not** in asm — OpenSSL BIO companion
 `./spark-engine-fetch-tls` under `--allow-net` only. JS phase-1 only
 (numbers/strings/`+`/unary `-`/`var` num/console.log).
@@ -857,8 +857,8 @@ HTTPS TLS **not** in asm — OpenSSL BIO companion
 
 ```bash
 make spark-engine-show
-./spark --dry-run examples/engine_pipeline.spark   # paints pipeline.ppm
-./spark --live examples/engine_pipeline.spark      # opens X11 from that PPM
+./spark --dry-run examples/engine_pipeline.spark # paints pipeline.ppm
+./spark --live examples/engine_pipeline.spark # opens X11 from that PPM
 ./spark-engine-show --ppm out/engine/pipeline.ppm --hold 3000
 ```
 
@@ -866,42 +866,42 @@ Same dry/`--live` split: `examples/browser_show.spark`,
 `examples/browser_engine_render.spark`. Dry tests never open X11.
 
 - **browser run|open|start** — session under `out/browser/`
-  (`session.json`). Dry-run never launches a GUI. Session JSON
-  includes `disable_quic:false` by default (QUIC ON).
+ (`session.json`). Dry-run never launches a GUI. Session JSON
+ includes `disable_quic:false` by default (QUIC ON).
 - **browser flags** — reports disable_quic default / override.
 - **browser goto** — records navigation URL (requires session).
 - **browser cdp** — CDP client to Qt `:9222`
-  (`status|navigate|evaluate|screenshot`). Dry-run returns
-  mocks (`claimed:false`, never dials). `--live` forks
-  `./spark-browser-cdp` (Python in spark-browser). Screenshot
-  optional path; default `out/browser/cdp-shot.png`.
+ (`status|navigate|evaluate|screenshot`). Dry-run returns
+ mocks (`claimed:false`, never dials). `--live` forks
+ `./spark-browser-cdp` (Python in spark-browser). Screenshot
+ optional path; default `out/browser/cdp-shot.png`.
 - **mitm ca-init** — forks `./spark-mitm-ca --init` (RSA CA under
-  `out/browser/ca/` + product `spark-browser/data/ca/`). Language
-  SoT for MITM trust. Separate from the **encrypt-to-model** gateway
-  (`crypto` / `encrypt` / `gateway` — see below).
+ `out/browser/ca/` + product `spark-browser/data/ca/`). Language
+ SoT for MITM trust. Separate from the **encrypt-to-model** gateway
+ (`crypto` / `encrypt` / `gateway` — see below).
 - **mitm ca-status** — present/missing via helper `--status`.
 - **mitm ca-install** — dry-run **plans only** (never auto-trust);
-  `--live` forks `install-ca.sh` (NSS / optional `--system`).
+ `--live` forks `install-ca.sh` (NSS / optional `--system`).
 - **mitm enable|disable|filter** — owner-local intercept
-  (`mitm.json`). Dry-run session markers only. **`--live` enable**
-  forks `./spark-mitm-h2 serve --daemon` (CONNECT h2/h1 + capture
-  + HAR). Qt must **attach**, not start the forge.
+ (`mitm.json`). Dry-run session markers only. **`--live` enable**
+ forks `./spark-mitm-h2 serve --daemon` (CONNECT h2/h1 + capture
+ + HAR). Qt must **attach**, not start the forge.
 - **mitm smoke** — forks `./spark-mitm-h2 --smoke` (HTTPS forge
-  proof; Spark-owned, no GUI).
+ proof; Spark-owned, no GUI).
 - **mitm disable_quic on|off** — optional Chromium `--disable-quic`
-  (product default is QUIC ON; use on for TCP h2/h1-only MITM).
+ (product default is QUIC ON; use on for TCP h2/h1-only MITM).
 - **mitm quic status|listen|smoke|divert** — HTTP/3 lane; `smoke`
-  forks `./spark-mitm-quic` (aioquic forge + SNI leaves). UDP MITM
-  via divert→listen (CONNECT-UDP is honest 501 on Qt TCP proxy).
+ forks `./spark-mitm-quic` (aioquic forge + SNI leaves). UDP MITM
+ via divert→listen (CONNECT-UDP is honest 501 on Qt TCP proxy).
 - **mitm har export** — writes a real HAR 1.2 file (byte-written).
-  Requires `mitm enable`. Dry HAR is a synthetic single-entry from
-  goto URL (valid 1.2); live multi-flow HAR comes from
-  `./spark-mitm-h2` session dir (not from Qt).
+ Requires `mitm enable`. Dry HAR is a synthetic single-entry from
+ goto URL (valid 1.2); live multi-flow HAR comes from
+ `./spark-mitm-h2` session dir (not from Qt).
 - **browser gui** — only with `--live`; forks
-  `./spark-browser-host` (Qt **attach-only** to Spark MITM on
-  `:8877`). Dry-run → error. Shim defaults to Chromium
-  `--enable-quic`. Optional `--disable-quic`. Debug: `--own-mitm`
-  (not product).
+ `./spark-browser-host` (Qt **attach-only** to Spark MITM on
+ `:8877`). Dry-run → error. Shim defaults to Chromium
+ `--enable-quic`. Optional `--disable-quic`. Debug: `--own-mitm`
+ (not product).
 
 ```
 ./spark --dry-run examples/browser_ca.spark
@@ -919,7 +919,7 @@ layout; language ops above are the runtime SoT.
 
 Off by default. When enabled, `ask` seals the prompt and sends a GCM
 envelope to `./spark-enc-gateway`, which **decrypts inside the gateway
-process** and only then calls Bifrost. Full docs:
+process** and only then calls the AI gateway. Full docs:
 [ENCRYPT_GATEWAY.md](ENCRYPT_GATEWAY.md).
 
 ```
@@ -952,11 +952,11 @@ not a QUESTION. Runtime path:
 
 1. `open` `/dev/nvidiactl`, `/dev/nvidia0`, `/dev/nvidia-uvm`
 2. `ioctl` `NV_ESC_CHECK_VERSION_STR` (`0xc04846d2`) and
-   `NV_ESC_CARD_INFO` (`0xc90046c8`) — numbers from
-   `/usr/src/nvidia-*/common/inc/nv-ioctl-numbers.h` as data
+ `NV_ESC_CARD_INFO` (`0xc90046c8`) — numbers from
+ `/usr/src/nvidia-*/common/inc/nv-ioctl-numbers.h` as data
 3. Optional anonymous `mmap`/`munmap` path proof
 4. Prefer compute on minor **0**; refuse reserved minors for
-   prefer/compute when policy marks them off-limits
+ prefer/compute when policy marks them off-limits
 
 `fb_bytes` comes from `NV_ESC_CARD_INFO`. Prefer minor **0**.
 Refuse `prefer gpu 2` when that device is reserved.
@@ -1017,10 +1017,10 @@ os design name "agentos" kind ai_agent -> blueprint
 os design name "aikitchen" kind ai_runtime features [scheduler, model_router, sandbox, net] -> blueprint
 
 os specify blueprint {
-  target: x86_64
-  memory_model: flat
-  ai: { agent_runtime: true, model_slots: 4, tool_bus: true }
-  drivers: [serial, framebuffer_stub, virtio_net_stub]
+ target: x86_64
+ memory_model: flat
+ ai: { agent_runtime: true, model_slots: 4, tool_bus: true }
+ drivers: [serial, framebuffer_stub, virtio_net_stub]
 } -> spec
 
 os generate spec into "out/os/agentos" -> tree
@@ -1042,7 +1042,7 @@ Example: `examples/os_agentos.spark`.
 ./spark --dry-run examples/network_analyze.spark
 ./spark --dry-run --allow-net-capture examples/network_capture.spark
 ./spark --dry-run examples/browser_main.spark
-./spark --live examples/ask_live.spark          # needs gateway
+./spark --live examples/ask_live.spark # needs gateway
 ./spark --version
 ```
 

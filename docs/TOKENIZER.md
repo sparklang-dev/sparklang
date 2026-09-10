@@ -24,9 +24,9 @@ later** — the minimum ship is the reproducible JSON + sha256 under
 ```bash
 # Train (writes JSON + .sha256 sidecar)
 PYTHONPATH=python python3 -m sparklang.tokenize train \
-  --corpus examples/fixtures/tokenize/seed_corpus.txt \
-  --merges 64 \
-  --out docs/examples/spark-bpe-vocab.json
+ --corpus examples/fixtures/tokenize/seed_corpus.txt \
+ --merges 64 \
+ --out docs/examples/spark-bpe-vocab.json
 
 # Verify committed hash matches a fresh train
 PYTHONPATH=python python3 -m sparklang.tokenize verify

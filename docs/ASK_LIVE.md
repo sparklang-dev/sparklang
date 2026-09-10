@@ -4,9 +4,9 @@
 Live `ask` / `generate` is **optional**: it requires `--live` and the companion
 `./spark-ask-http`.
 
-**Honesty:** this document covers the OpenAI-compatible live `ask` path only —
+**Scope:** this document covers the OpenAI-compatible live `ask` path only —
 not a claim of full IDE chrome, full ES, or Google.com browsing. Spark is a
-**language + runtime**; it is **not** a Bifrost plugin. Bifrost (or any other
+**language + runtime**; it is **not** a the AI gateway plugin. the AI gateway (or any other
 OpenAI-compatible gateway) is one optional backend when you set
 `AI_GATEWAY_URL`.
 
@@ -32,7 +32,7 @@ hallucination forever.”
 | `SPARK_ASK_IDK` | IDK string (default `I don't know.`) |
 
 Pass an **explicit** model id (HF id / path / configured gateway model
-string). `--model auto` is **rejected** — Spark does not pick Bifrost-style
+string). `--model auto` is **rejected** — Spark does not pick the AI gateway-style
 aliases from task text.
 
 Never route Spark compute to voice / `:8010` / reserved voice GPU.
@@ -42,7 +42,7 @@ Never route Spark compute to voice / `:8010` / reserved voice GPU.
 ```bash
 make spark-ask-http
 ./spark-ask-http --dry --model fixtures/tiny-lm --prompt "Reply with one word: pong"
-make test-ask-gateway   # required dry checks; live opt-in below
+make test-ask-gateway # required dry checks; live opt-in below
 ```
 
 `--dry` prints the model line and exits 0 with **no network** and
@@ -51,9 +51,9 @@ make test-ask-gateway   # required dry checks; live opt-in below
 ## Run (optional local gateway)
 
 ```bash
-make                                    # builds spark + spark-ask-http
+make # builds spark + spark-ask-http
 export AI_GATEWAY_URL=http://127.0.0.1:4000
-export SPARK_GATEWAY_KEY=…              # never commit
+export SPARK_GATEWAY_KEY=… # never commit
 ./spark --live examples/ask_live.spark
 ./spark --live examples/ask_live_explicit.spark
 ```
@@ -77,7 +77,7 @@ Token/SSE path is **shipped** on the companion:
 # → dry … stream=1 … dry ok (no network)
 
 ./spark-ask-http --stream --model fast --prompt "Say hi" \
-  --out /tmp/spark-ask-out.txt
+ --out /tmp/spark-ask-out.txt
 ```
 
 Live request sets `"stream":true` (+ `stream_options.include_usage`
@@ -122,7 +122,7 @@ Offline proof (no gateway):
 
 ```bash
 ./spark-ask-http --rollup --account-file fixtures.jsonl
-make test-ask-gateway   # includes PASS rollup
+make test-ask-gateway # includes PASS rollup
 ```
 
 Dry-run still prints zeros (`note=dry-run`) and does not append.
@@ -136,7 +136,7 @@ Never reuse `cursor-ide`. Never echo the probe credential.
 # Language ops (dry = no network; --live = public curl)
 ./spark --dry-run examples/ask_probe.spark
 ./spark --dry-run examples/gateway_probe.spark
-./spark --live examples/ask_probe.spark   # public tunnel
+./spark --live examples/ask_probe.spark # public tunnel
 
 # Shell companion / wrap
 ./spark-ask-probe --dry
@@ -151,6 +151,6 @@ HTTP **401** or missing probe credential / PROJECT_ID → **credential unavailab
 
 ```bash
 ./spark --dry-run examples/hello.spark
-make test                               # never calls live gateway
-make test-ask-gateway                   # companion --dry only
+make test # never calls live gateway
+make test-ask-gateway # companion --dry only
 ```

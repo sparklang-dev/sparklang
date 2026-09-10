@@ -1,7 +1,7 @@
-# SparkLang helpers (K-lane)
+# SparkLang helpers
 
 Ergonomic CLIs wrapping real SPARK_BC compile / run / train / inspect
-paths. CPU only. Never 6000. Does **not** claim beat Claude.
+paths. CPU only. Measurement only — not a marketing win.
 
 | Helper | Invoke | What |
 |--------|--------|------|
@@ -21,4 +21,4 @@ Shadows: see [../shadows/README.md](../shadows/README.md).
 Tool kit: `tools/spark_kit/` (`make helpers` / `make tools-test`).
 
 Pack: `make sdk-pack` stages into `dist/spark-sdk/` (and overlays
-I-lane `out/sdk-pack/` when present).
+SDK pack `out/sdk-pack/` when present).

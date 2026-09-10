@@ -4,8 +4,8 @@ model code
 let doc "Office printers need regular cleaning and toner checks."
 
 pipeline {
-  ask "Summarize: {doc}" -> summary
-  | ask "Translate to Spanish: {summary}" -> es
+ ask "Summarize: {doc}" -> summary
+ | ask "Translate to Spanish: {summary}" -> es
 }
 
 print es

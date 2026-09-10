@@ -1,7 +1,7 @@
 # Spark IDE - proven ide keys missing-script fail-loud.
 # After show-notppm 1fcfb79. Keys of a missing cmds file exits
 # non-zero (cannot open command script).
-# Run: ./spark --dry-run examples/ide_keys_miss.spark  (expect rc!=0)
+# Run: ./spark --dry-run examples/ide_keys_miss.spark (expect rc!=0)
 # No Electron. No new asm - documents proven fail-loud only.
 
 ide keys "examples/fixtures/ide/no_such_cmds.txt"

@@ -1,43 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Build a Model — Learn Spark</title>
-    <meta
-      name="description"
-      content="Submit a real Spark model train job (dry-run fixtures or live). Optional model plan is plan-only markdown."
-    />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="shortcut icon" href="/favicon.svg" />
-    <link rel="stylesheet" href="/css/tokens.css?v=pos060" />
-    <link rel="stylesheet" href="/css/site.css?v=pos060" />
-  </head>
-  <body class="doc-page">
-    <header class="site-header">
-      <div class="shell header-inner">
-        <a class="site-brand" href="/" aria-label="SparkLang home">
-          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
-            <path
-              d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z"
-              fill="currentColor"
-            />
-          </svg>
-          Spark
-        </a>
-        <button
-          class="nav-toggle"
-          type="button"
-          aria-expanded="false"
-          aria-controls="site-nav"
-          aria-label="Open menu"
-        >
-          <span class="nav-toggle__bar"></span>
-          <span class="nav-toggle__bar"></span>
-          <span class="nav-toggle__bar"></span>
-        </button>
-        <div class="header-nav-wrap">
-          <nav class="site-nav" id="site-nav" aria-label="Primary">
+ <head>
+ <meta charset="utf-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1" />
+ <title>Build a Model — Learn Spark</title>
+ <meta
+ name="description"
+ content="Submit a real Spark model train job (dry-run fixtures or live). Optional model plan is plan-only markdown."
+ />
+ <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+ <link rel="shortcut icon" href="/favicon.svg" />
+ <link rel="stylesheet" href="/css/tokens.css?v=pos060" />
+ <link rel="stylesheet" href="/css/site.css?v=pos060" />
+ </head>
+ <body class="doc-page">
+ <header class="site-header">
+ <div class="shell header-inner">
+ <a class="site-brand" href="/" aria-label="SparkLang home">
+ <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+ <path
+ d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z"
+ fill="currentColor"
+ />
+ </svg>
+ Spark
+ </a>
+ <button
+ class="nav-toggle"
+ type="button"
+ aria-expanded="false"
+ aria-controls="site-nav"
+ aria-label="Open menu"
+ >
+ <span class="nav-toggle__bar"></span>
+ <span class="nav-toggle__bar"></span>
+ <span class="nav-toggle__bar"></span>
+ </button>
+ <div class="header-nav-wrap">
+ <nav class="site-nav" id="site-nav" aria-label="Primary">
             <!-- spark-primary-nav:begin -->
             <ul class="nav-primary">
               <li><a href="/workflow.html">Loop</a></li>
@@ -68,7 +68,7 @@
                   <li class="nav-sub">
                     <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
-                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
                       <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
                     </ul>
                   </li>
@@ -149,138 +149,138 @@
             <a href="/playground.html" class="nav-cta">Try</a>
             <!-- spark-primary-nav:end -->
           </nav>
-        </div>
-      </div>
-    </header>
+ </div>
+ </div>
+ </header>
 
-    <div class="shell doc-layout">
-      <aside class="doc-sidebar" aria-label="Table of contents">
-        <p class="doc-sidebar__title">On this page</p>
-        <nav id="doc-toc-list"></nav>
-        <hr
-          style="
-            border: none;
-            border-top: 1px solid var(--spark-border-light);
-            margin: 1rem 0;
-          "
-        />
-        <p class="doc-sidebar__title">Tutorial trail</p>
-        <ul class="toc-list">
-          <li><a href="/learn/getting-started.html">Getting Started</a></li>
-          <li><a href="/learn/first-program.html">Your First Program</a></li>
-          <li><a href="/learn/ai-in-5-minutes.html">AI in 5 Minutes</a></li>
-          <li><a href="/learn/build-model.html" aria-current="page">Build a Model</a></li>
-          <li><a href="/docs/spark-builder.html">Builder factory</a></li>
-        </ul>
-      </aside>
+ <div class="shell doc-layout">
+ <aside class="doc-sidebar" aria-label="Table of contents">
+ <p class="doc-sidebar__title">On this page</p>
+ <nav id="doc-toc-list"></nav>
+ <hr
+ style="
+ border: none;
+ border-top: 1px solid var(--spark-border-light);
+ margin: 1rem 0;
+ "
+ />
+ <p class="doc-sidebar__title">Tutorial trail</p>
+ <ul class="toc-list">
+ <li><a href="/learn/getting-started.html">Getting Started</a></li>
+ <li><a href="/learn/first-program.html">Your First Program</a></li>
+ <li><a href="/learn/ai-in-5-minutes.html">AI in 5 Minutes</a></li>
+ <li><a href="/learn/build-model.html" aria-current="page">Build a Model</a></li>
+ <li><a href="/docs/spark-builder.html">Builder factory</a></li>
+ </ul>
+ </aside>
 
-      <main class="doc-main">
-        <p class="doc-breadcrumb"><a href="/learn/">Learn</a> / Build a Model</p>
-        <article class="doc__body">
-          <h1 id="build-a-model">Build a Model</h1>
-          <p>
-            Submit a training job with
-            <code class="inline-code">model train</code> /
-            <code class="inline-code">model build</code>
-            (<code class="inline-code">backend "http"</code>, then poll
-            <code class="inline-code">model status</code>. Dry-run writes
-            fixture artifact paths (no GPU, no network). Live POSTs to your
-            trainer at
-            <code class="inline-code">SPARK_TRAIN_URL</code>
-            via
-            <code class="inline-code">spark-train-http</code>.
-          </p>
+ <main class="doc-main">
+ <p class="doc-breadcrumb"><a href="/learn/">Learn</a> / Build a Model</p>
+ <article class="doc__body">
+ <h1 id="build-a-model">Build a Model</h1>
+ <p>
+ Submit a training job with
+ <code class="inline-code">model train</code> /
+ <code class="inline-code">model build</code>
+ (<code class="inline-code">backend "http"</code>, then poll
+ <code class="inline-code">model status</code>. Dry-run writes
+ fixture artifact paths (no GPU, no network). Live POSTs to your
+ trainer at
+ <code class="inline-code">SPARK_TRAIN_URL</code>
+ via
+ <code class="inline-code">spark-train-http</code>.
+ </p>
 
-          <ol class="wizard-steps" id="wizard-step-list">
-            <li class="is-active">1. Choose path</li>
-            <li>2. Copy .spark snippet</li>
-            <li>3. Run locally</li>
-          </ol>
+ <ol class="wizard-steps" id="wizard-step-list">
+ <li class="is-active">1. Choose path</li>
+ <li>2. Copy .spark snippet</li>
+ <li>3. Run locally</li>
+ </ol>
 
-          <h2 id="step-1">Step 1 — Path</h2>
-          <div class="wizard-controls">
-            <label for="wizard-path">Path:</label>
-            <select id="wizard-path" aria-label="Train new or improve plan">
-              <option value="create">Train a new job (dry-run)</option>
-              <option value="modify">Eval helpers + optional plan</option>
-            </select>
-          </div>
-          <p id="wizard-path-hint" class="prose-muted"></p>
+ <h2 id="step-1">Step 1 — Path</h2>
+ <div class="wizard-controls">
+ <label for="wizard-path">Path:</label>
+ <select id="wizard-path" aria-label="Train new or improve plan">
+ <option value="create">Train a new job (dry-run)</option>
+ <option value="modify">Eval helpers + optional plan</option>
+ </select>
+ </div>
+ <p id="wizard-path-hint" class="prose-muted"></p>
 
-          <h2 id="step-2">Step 2 — Generated program</h2>
-          <p>
-            Copy into
-            <code class="inline-code" id="wizard-filename">model_train.spark</code>:
-          </p>
-          <pre class="doc__pre" id="wizard-snippet"><code></code></pre>
+ <h2 id="step-2">Step 2 — Generated program</h2>
+ <p>
+ Copy into
+ <code class="inline-code" id="wizard-filename">model_train.spark</code>:
+ </p>
+ <pre class="doc__pre" id="wizard-snippet"><code></code></pre>
 
-          <h2 id="step-3">Step 3 — Run</h2>
-          <pre class="doc__pre"><code id="wizard-run-cmd"></code></pre>
-          <p class="prose-muted">
-            Dry-run uses offline fixtures (no API key, no GPU). Configure
-            <code class="inline-code">SPARK_TRAIN_URL</code> only for live
-            HTTP training. Optional
-            <code class="inline-code">ask</code> after train still uses
-            <code class="inline-code">AI_GATEWAY_URL</code> when you want it.
-          </p>
+ <h2 id="step-3">Step 3 — Run</h2>
+ <pre class="doc__pre"><code id="wizard-run-cmd"></code></pre>
+ <p class="prose-muted">
+ Dry-run uses offline fixtures (no API key, no GPU). Configure
+ <code class="inline-code">SPARK_TRAIN_URL</code> only for live
+ HTTP training. Optional
+ <code class="inline-code">ask</code> after train still uses
+ <code class="inline-code">AI_GATEWAY_URL</code> when you want it.
+ </p>
 
-          <h2 id="spark-bc-factory">SPARK_BC factory</h2>
-          <p>
-            Beyond HTTP train jobs: Spark compiles Spark to
-            <strong>SPARK_BC</strong> (orchestration ISA, not neural weights)
-            with <code class="inline-code">TRAIN</code>
-            <code class="inline-code">0x26</code> /
-            <code class="inline-code">STEP</code>
-            <code class="inline-code">0x28</code> /
-            <code class="inline-code">TRAIN_STATUS</code>
-            <code class="inline-code">0x27</code>, then emits Spark-created
-            <strong>init</strong> safetensors. Dry fixture ≠ SGD ≠ trained.
-            GAS does not emit <code class="inline-code">.sparkbc</code>.
-            Full reproduce commands + sha256 table:
-            <a href="/docs/spark-builder.html">Builder — SPARK_BC factory</a>.
-          </p>
+ <h2 id="spark-bc-factory">SPARK_BC factory</h2>
+ <p>
+ Beyond HTTP train jobs: Spark compiles Spark to
+ <strong>SPARK_BC</strong> (orchestration ISA, not neural weights)
+ with <code class="inline-code">TRAIN</code>
+ <code class="inline-code">0x26</code> /
+ <code class="inline-code">STEP</code>
+ <code class="inline-code">0x28</code> /
+ <code class="inline-code">TRAIN_STATUS</code>
+ <code class="inline-code">0x27</code>, then emits Spark-created
+ <strong>init</strong> safetensors. Dry fixture ≠ SGD ≠ trained.
+ GAS does not emit <code class="inline-code">.sparkbc</code>.
+ Full reproduce commands + sha256 table:
+ <a href="/docs/spark-builder.html">Builder — SPARK_BC factory</a>.
+ </p>
 
-          <h2 id="model-reference">Train ops (dry fixtures)</h2>
-          <pre class="doc__pre"><code>model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" -> job
+ <h2 id="model-reference">Train ops (dry fixtures)</h2>
+ <pre class="doc__pre"><code>model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" -> job
 model status "job-dry-001" -> status</code></pre>
-          <p>
-            Full docs:
-            <a href="/docs/spark-builder.html">Builder</a> ·
-            <a href="/docs/model-training.html">Model training</a> ·
-            <a href="/docs/language.html">Language reference</a>.
-          </p>
+ <p>
+ Full docs:
+ <a href="/docs/spark-builder.html">Builder</a> ·
+ <a href="/docs/model-training.html">Model training</a> ·
+ <a href="/docs/language.html">Language reference</a>.
+ </p>
 
-          <h2 id="preview">Preview in browser</h2>
-          <p>
-            Try related snippets in the
-            <a href="/playground.html">Playground</a> dry-run preview.
-          </p>
-        </article>
-      </main>
-    </div>
+ <h2 id="preview">Preview in browser</h2>
+ <p>
+ Try related snippets in the
+ <a href="/playground.html">Playground</a> dry-run preview.
+ </p>
+ </article>
+ </main>
+ </div>
 
-        <footer class="site-footer">
-      <div class="shell footer-inner">
-        <div class="footer-brand">
-          <span>SparkLang — the Spark programming language</span>
-          <span class="footer-meta">v0.6.3 · MIT</span>
-        </div>
-        <nav class="footer-nav" aria-label="Footer">
-          <a href="/workflow.html">Loop</a>
-          <a href="/about.html">About</a>
+ <footer class="site-footer">
+ <div class="shell footer-inner">
+ <div class="footer-brand">
+ <span>SparkLang — the Spark programming language</span>
+ <span class="footer-meta">v0.6.3 · MIT</span>
+ </div>
+ <nav class="footer-nav" aria-label="Footer">
+ <a href="/workflow.html">Loop</a>
+ <a href="/about.html">About</a>
 <a href="/LICENSE.txt">License</a>
-          <a href="/CHANGELOG.html">Changelog</a>
-          <a href="/learn/">Learn</a>
-          <a href="/downloads.html">Downloads</a>
-          <a href="/playground.html">Playground</a>
-        </nav>
-      </div>
-    
-      <div class="shell footer-trail">
-        <a href="/learn/ai-in-5-minutes.html">← AI in 5 Minutes</a>
-        <a href="/docs/language.html">Language reference →</a>
-      </div>
-    </footer>
-    <script src="/js/site.js"></script>
-  </body>
+ <a href="/CHANGELOG.html">Changelog</a>
+ <a href="/learn/">Learn</a>
+ <a href="/downloads.html">Downloads</a>
+ <a href="/playground.html">Playground</a>
+ </nav>
+ </div>
+ 
+ <div class="shell footer-trail">
+ <a href="/learn/ai-in-5-minutes.html">← AI in 5 Minutes</a>
+ <a href="/docs/language.html">Language reference →</a>
+ </div>
+ </footer>
+ <script src="/js/site.js"></script>
+ </body>
 </html>

@@ -1,6 +1,6 @@
 # Engine B pipeline — table fixture (2×2 th/td side-by-side cells).
-# Dry:  ./spark --dry-run examples/engine_pipeline_table.spark
-#       → out/engine/pipeline.ppm + show.json
+# Dry: ./spark --dry-run examples/engine_pipeline_table.spark
+# → out/engine/pipeline.ppm + show.json
 # Live: ./spark --live examples/engine_pipeline_table.spark
 
 engine fetch "file://engine/fixtures/table_demo.html" -> body

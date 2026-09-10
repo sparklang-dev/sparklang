@@ -56,7 +56,7 @@
                   <li class="nav-sub">
                     <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
-                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
                       <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
                     </ul>
                   </li>
@@ -209,11 +209,11 @@
         </thead>
         <tbody>
         <tr>
-        <td>Never beat Claude</td>
+        <td></td>
         <td>Eval, coder, hive, homepage</td>
         </tr>
         <tr>
-        <td>Never train on RTX PRO 6000</td>
+        <td>Prefer CPU or consumer GPU for train</td>
         <td>Factory / coder docs</td>
         </tr>
         <tr>
@@ -238,7 +238,7 @@
         </tr>
         <tr>
         <td>Eyes vision stub only</td>
-        <td><a href="/docs/model-aspects.html">MODEL_ASPECTS.md</a></td>
+        <td><a href="/docs/model-aspects.html">Model aspects</a></td>
         </tr>
         </tbody>
         </table></div>
@@ -246,31 +246,30 @@
         <h3 id="grounded-generation-anti-guess">Grounded generation / anti-guess</h3>
         <p><strong>Goal:</strong> make it <strong>nearly impossible to pass CI while guessing</strong> —
         abstain, retrieve/expect, tool allowlists, verify-before-speak,
-        structured outputs. Not magic honesty weights.</p>
+        structured outputs. Not magic weights.</p>
         <h3 id="modify-adapt-path-qwen-class-spark-owned">Modify / adapt path (Qwen-class + Spark-owned)</h3>
         <p>Language already has attach-only modify:</p>
         <pre class="doc__pre"><code class="language-text">model modify keep_existing &quot;out/train/existing-lora&quot; \
-          add &quot;out/train/job-dry-001/adapter.bin&quot; \
-          head &quot;out/heads/abstain.pt&quot; -&gt; modified
+         add &quot;out/train/job-dry-001/adapter.bin&quot; \
+         head &quot;out/heads/abstain.pt&quot; -&gt; modified
         </code></pre>
         <p>Companion API (manifest only — no Hub download, no PEFT train in
         this tool):</p>
         <pre class="doc__pre"><code class="language-bash">./spark-ground adapter-attach \
-          --base qwen \
-          --keep-existing out/train/existing-lora \
-          --add out/train/job-dry-001/adapter.bin \
-          --add out/heads/abstain.pt \
-          --out out/ground/adapter_manifest.json
+         --base qwen \
+         --keep-existing out/train/existing-lora \
+         --add out/train/job-dry-001/adapter.bin \
+         --add out/heads/abstain.pt \
+         --out out/ground/adapter_manifest.json
         </code></pre>
         <ul class="doc__ul">
         <li><strong>Spark-owned</strong> bases (TinyCoder / STEP / reply-pack): train on
-          CPU or <strong>5090</strong> via existing factory / coder lanes.</li>
+         CPU or <strong>5090</strong> via existing factory / coder lanes.</li>
         <li><strong>External bases</strong> (e.g. local Qwen HF dir): reverse/inspect via
-          <code class="inline-code">./spark-model-lab</code>; attach adapters/heads with
-          <code class="inline-code">keep_special_training</code>. <strong>Full Qwen SFT</strong> is operator <strong>opt-in
-          large</strong> on <strong>5090</strong> — <strong>never</strong> the RTX PRO <strong>6000</strong> (voice-only).</li>
-        <li>Owned homepage methods are <strong>not</strong> LoRA theater; see
-          <a href="/docs/knowledge-training.html">TRAINING.md</a> · <a href="/docs/model-training.html">MODEL_LAB.md</a>.</li>
+         <code class="inline-code">./spark-model-lab</code>; attach adapters/heads with
+         <code class="inline-code">keep_special_training</code>. <strong>Full Qwen SFT</strong> is <strong>opt-in
+         large</strong> on <strong>5090</strong> — <strong>never</strong> the reserved voice GPUs. - Owned homepage methods are <strong>not</strong> LoRA theater; see
+         <a href="/docs/knowledge-training.html">TRAINING.md</a> · <a href="/docs/model-training.html">MODEL_LAB.md</a>.</li>
         </ul>
         <h3 id="functions-forced-grounding">Functions (forced grounding)</h3>
         <div class="doc__table-wrap"><table class="doc__table">
@@ -316,29 +315,29 @@
         <pre class="doc__pre"><code class="language-bash">make spark-ground
         # Wrong guess fails CI (exit 2):
         ./spark-ground ask --prompt &quot;dryer start price right now?&quot; \
-          --sot-ok --expect &quot;2.50&quot; --candidate &quot;9.99&quot;
+         --sot-ok --expect &quot;2.50&quot; --candidate &quot;9.99&quot;
         # Match passes:
         ./spark-ground ask --prompt &quot;dryer start price right now?&quot; \
-          --sot-ok --expect &quot;2.50&quot; --candidate &quot;2.50&quot;
+         --sot-ok --expect &quot;2.50&quot; --candidate &quot;2.50&quot;
         # Structured verify (stdlib JSON Schema subset — no xgrammar dep):
         ./spark-ground verify \
-          --candidate '{&quot;price_usd&quot;:2.5,&quot;source&quot;:&quot;fixture&quot;}' \
-          --schema examples/fixtures/ground/want_price.schema.json
+         --candidate '{&quot;price_usd&quot;:2.5,&quot;source&quot;:&quot;fixture&quot;}' \
+         --schema examples/fixtures/ground/want_price.schema.json
         make test-ground
         </code></pre>
         <p>Flagship dry playbook: <code class="inline-code">examples/grounded_ask.spark</code> (with
         <code class="inline-code">examples/no_invent.spark</code> / inventable verify).</p>
         <p>Optional constrained decode via <strong>xgrammar</strong> is <strong>not</strong> required;
         Spark verifies JSON against a small schema subset after generate.
-        Heavier constrained-decode stacks stay opt-in operator choice.</p>
+        Heavier constrained-decode stacks stay opt-in.</p>
         <pre class="mermaid">flowchart TB
-          ask[Request] --> tools{Tool allowlist?}
-          tools -->|denied| abs[Abstain]
-          tools -->|ok| inv{Inventable?}
-          inv -->|yes, no SoT| abs
-          inv -->|SoT / safe| ver[verify-before-speak]
-          ver -->|expect/dump/schema miss| abs
-          ver -->|match| ans[Answer + cite]</pre>
+         ask[Request] --> tools{Tool allowlist?}
+         tools -->|denied| abs[Abstain]
+         tools -->|ok| inv{Inventable?}
+         inv -->|yes, no SoT| abs
+         inv -->|SoT / safe| ver[verify-before-speak]
+         ver -->|expect/dump/schema miss| abs
+         ver -->|match| ans[Answer + cite]</pre>
         <h2 id="practical-checklist">Practical checklist</h2>
         <ol class="doc__ol">
         <li>Prefer <strong>retrieve / expect / tests</strong> over vibes.</li>
@@ -347,19 +346,19 @@
         <li>Treat benchmark wins as <strong>hypotheses</strong>.</li>
         <li>When unsure — <strong>abstain</strong> and ask a human.</li>
         <li>Run <strong><code class="inline-code">make test-ground</code></strong> before claiming inventable facts are
-           safe.</li>
+         safe.</li>
         </ol>
         <pre class="mermaid">flowchart TB
-          ask[Request] --> ground{Grounded?}
-          ground -->|yes| ans[Answer + cite]
-          ground -->|no| tools[Tools / retrieve]
-          tools --> ground
-          ground -->|still no| abs[Abstain]</pre>
-        <p>Hive home: <a href="/docs/knowledge.html">KNOWLEDGE.md</a> · Learn:
-        <a href="/learn/">/learn/</a> · Factory: <a href="/docs/factory.html">FACTORY.md</a> ·
-        Behaviors: <a href="/docs/model-aspects.html">MODEL_ASPECTS.md</a> ·
+         ask[Request] --> ground{Grounded?}
+         ground -->|yes| ans[Answer + cite]
+         ground -->|no| tools[Tools / retrieve]
+         tools --> ground
+         ground -->|still no| abs[Abstain]</pre>
+        <p>Hive home: <a href="/docs/knowledge.html">Knowledge</a> · Learn:
+        <a href="/learn/">/learn/</a> · Factory: <a href="/docs/factory.html">Factory hub</a> ·
+        Behaviors: <a href="/docs/model-aspects.html">Model aspects</a> ·
         Voice ask: <a href="/docs/voice-ask.html">VOICE_ASK.md</a> ·
-        Coder: <a href="/docs/spark-coder.html">SPARK_CODER.md</a>.</p>
+        Coder: <a href="/docs/spark-coder.html">Spark coder</a>.</p>
       </article>
       </main>
     </div>

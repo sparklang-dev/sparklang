@@ -41,101 +41,101 @@ forever.”
 ### Stage 0 — Scaffold + A seeds (current)
 
 - `./spark` ELF from GAS still interprets language ops under
-  `--dry-run` / `--live`.
+ `--dry-run` / `--live`.
 - Language SoT: `docs/LANGUAGE.md`, `examples/*.spark`.
 - A seeds under `selfhost/*.spark` dry-run on GAS; `lex.c` golden
-  covers mini + ops fixtures.
+ covers mini + ops fixtures.
 - **Gate:** `make` + `./spark --dry-run examples/hello.spark` works;
-  `make test-selfhost-lex` green.
+ `make test-selfhost-lex` green.
 
-### Stage 1 — Bootstrap B runs a subset  ← **REAL (advanced)**
+### Stage 1 — Bootstrap B runs a subset ← **REAL (advanced)**
 
 - Thin C VM under `bootstrap/` → `spark-bootstrap` / `sparkc`.
 - Dry-parity (proven): `model` / `ask` / `print` / `let` +
-  `classify` / `extract` / `tool` / `with` / `listen` / `speak` /
-  `pipeline` + `review path|text` + `voice` session +
-  `browser run|goto|show|flags|render` + `mitm enable` +
-  `engine fetch` `file://` / `parse` / `css attach` / `layout` /
-  `paint boxes` / `show` / `render` (css.json + layout
-  `box_count` 21 + pipeline.ppm vs GAS).
+ `classify` / `extract` / `tool` / `with` / `listen` / `speak` /
+ `pipeline` + `review path|text` + `voice` session +
+ `browser run|goto|show|flags|render` + `mitm enable` +
+ `engine fetch` `file://` / `parse` / `css attach` / `layout` /
+ `paint boxes` / `show` / `render` (css.json + layout
+ `box_count` 21 + pipeline.ppm vs GAS).
 - **Live-only non-goals** (fail-loud; not this dry phase):
-  `review url`, `browser gui` / `cdp`, `mitm` beyond enable,
-  `engine` remote http(s) / `--live`, IDE chrome.
+ `review url`, `browser gui` / `cdp`, `mitm` beyond enable,
+ `engine` remote http(s) / `--live`, IDE chrome.
 - **Gate met:** `make test-bootstrap` green (+ classify/tool/review/
-  voice/browser/mitm/engine css/layout/paint/render parity vs
-  `./spark` where wired).
+ voice/browser/mitm/engine css/layout/paint/render parity vs
+ `./spark` where wired).
 - Stage 4–5 are **not** done (no Spark-hosted compiler; no
-  default-`./spark` cutover).
+ default-`./spark` cutover).
 - See `bootstrap/README.md`. Growing A lex seeds does **not** skip
-  running self-host sources on B.
+ running self-host sources on B.
 
-### Stage 2 — Assembler C replaces hand-GAS authoring  ← **REAL (phase-1)**
+### Stage 2 — Assembler C replaces hand-GAS authoring ← **REAL (phase-1)**
 
 - `sparkasm` assembles Spark-asm IR → objects/binaries.
 - Phase-1 proven: push/pop/push-imm/call/ret/jmp/cmp/test/jcc/add/sub/
-  and/or/xor/shl/shr/lea/imul/neg/not/inc/dec/xchg/add-rr/sub-rr/cqo/cdqe/cmp-rr/sete/setl/movzbq/movsbq/shl-cl/sar/leave/mul/idiv/adc/sbb/rol/ror/stc/clc/rcl/rcr/bsf/bsr/std/cld/bt/bts/btr/btc/shld/shrd/cmovz/cmovnz/cmovl/cmovg/cmovle/cmovge/cmova/cmovb/cmovae/cmovbe/test-imm/`mov reg,reg`
-  (GAS `6a 2a` / `48 99` / `48 98` / `48 39 f7` / `0f 94 c0` / `0f 9c c0` / `48 0f b6 f8` / `48 0f be f8` / `48 d3 e7` / `48 d1 ff` / `c9` / `48 f7 e6` / `48 f7 fe` / `48 11 f7` / `48 19 f7` / `48 d1 c7` / `48 d1 cf` / `f9` / `f8` / `48 d1 d7` / `48 d1 df` / `48 0f bc fe` / `48 0f bd fe` / `fd` / `fc` / `48 0f a3 ce` / `48 0f ab ce` / `48 0f b3 ce` / `48 0f bb ce` / `48 0f a4 f7 01` / `48 0f ac f7 01` / `48 0f 44 fe` / `48 0f 45 fe` / `48 0f 4c fe` / `48 0f 4f fe` / `48 0f 4e fe` / `48 0f 4d fe` / `48 0f 47 fe` / `48 0f 42 fe` / `48 0f 43 fe` / `48 0f 46 fe` / `48 f7 c7…` / `48 01 f7` / `48 29 f7` / `48 87 f7` / `48 f7 d7` / `48 ff c7` / `48 ff cf` / `48 89 f7`) — **not** full x86-64.
+ and/or/xor/shl/shr/lea/imul/neg/not/inc/dec/xchg/add-rr/sub-rr/cqo/cdqe/cmp-rr/sete/setl/movzbq/movsbq/shl-cl/sar/leave/mul/idiv/adc/sbb/rol/ror/stc/clc/rcl/rcr/bsf/bsr/std/cld/bt/bts/btr/btc/shld/shrd/cmovz/cmovnz/cmovl/cmovg/cmovle/cmovge/cmova/cmovb/cmovae/cmovbe/test-imm/`mov reg,reg`
+ (GAS `6a 2a` / `48 99` / `48 98` / `48 39 f7` / `0f 94 c0` / `0f 9c c0` / `48 0f b6 f8` / `48 0f be f8` / `48 d3 e7` / `48 d1 ff` / `c9` / `48 f7 e6` / `48 f7 fe` / `48 11 f7` / `48 19 f7` / `48 d1 c7` / `48 d1 cf` / `f9` / `f8` / `48 d1 d7` / `48 d1 df` / `48 0f bc fe` / `48 0f bd fe` / `fd` / `fc` / `48 0f a3 ce` / `48 0f ab ce` / `48 0f b3 ce` / `48 0f bb ce` / `48 0f a4 f7 01` / `48 0f ac f7 01` / `48 0f 44 fe` / `48 0f 45 fe` / `48 0f 4c fe` / `48 0f 4f fe` / `48 0f 4e fe` / `48 0f 4d fe` / `48 0f 47 fe` / `48 0f 42 fe` / `48 0f 43 fe` / `48 0f 46 fe` / `48 f7 c7…` / `48 01 f7` / `48 29 f7` / `48 87 f7` / `48 f7 d7` / `48 ff c7` / `48 ff cf` / `48 89 f7`) — **not** full x86-64.
 - **Gate met:** `make -C sparkasm test` green. Grow further as needed.
 
 ### Self-host sources run on B
 
 - `selfhost/*.spark` (lexer, then parser, then compiler) execute on
-  **B**, not only as docs.
+ **B**, not only as docs.
 - Lexer contract proven: tokens for `selfhost/fixtures/mini.spark`
-  (and ops) match the seed goldens (see `selfhost/README.md`).
+ (and ops) match the seed goldens (see `selfhost/README.md`).
 - **Gate (Phase 2 / Stage 3 entry):** B `--lex` matches
-  `expected_*.tokens.jsonl`. Spark-hosted `lexer.spark` scan is
-  **not** the golden producer (seed catalog only).
+ `expected_*.tokens.jsonl`. Spark-hosted `lexer.spark` scan is
+ **not** the golden producer (seed catalog only).
 
-### Stage 3 — Lexer on B  ← **REAL (Phase 2)**
+### Stage 3 — Lexer on B ← **REAL (Phase 2)**
 
 - `spark-bootstrap --lex` links `selfhost/lex.c` (same JSONL as
-  `./selfhost/spark-lex`).
+ `./selfhost/spark-lex`).
 - **Gate met:** `make test-selfhost-lex` (17/17 via spark-lex **and**
-  `--lex`).
+ `--lex`).
 
 ### Stage 4 partial — C compile → SPARK_BC (Phases 3–5)
 
 - `spark-bootstrap --compile file.spark -o out.sparkbc`
 - C driver: `bootstrap/spark_parse.c` lowers LANGUAGE forms in
-  `docs/SPARK_BC.md` (model/ask/print/let, classify, extract,
-  pipeline, tool/with, listen/speak/voice, engine/IDE,
-  review/browser/mitm). Fail loud on unknown stmts. `compile.spark`
-  is still a seed.
+ `docs/SPARK_BC.md` (model/ask/print/let, classify, extract,
+ pipeline, tool/with, listen/speak/voice, engine/IDE,
+ review/browser/mitm). Fail loud on unknown stmts. `compile.spark`
+ is still a seed.
 - **Gates met:** `make test-sparkbc` (compile → `--run-bc` body equals
-  GAS dry-run after banner for hello/mini/classify/extract/pipeline/
-  tool/listen/speak + engine/IDE + review/browser/mitm fixtures).
-  `make sparkbc-e2e` (TRAIN→STEP→TRAIN_STATUS: compile → dump →
-  `--run-bc` dry → `ARTIFACT`; not SGD). STEP weights via `make test-sparkbc`.
-  `make test-bc-emit` (bc_vm ↔ spark-bc-emit parity on same `.sparkbc`
-  goldens).
+ GAS dry-run after banner for hello/mini/classify/extract/pipeline/
+ tool/listen/speak + engine/IDE + review/browser/mitm fixtures).
+ `make sparkbc-e2e` (TRAIN→STEP→TRAIN_STATUS: compile → dump →
+ `--run-bc` dry → `ARTIFACT`; not SGD). STEP weights via `make test-sparkbc`.
+ `make test-bc-emit` (bc_vm ↔ spark-bc-emit parity on same `.sparkbc`
+ goldens).
 - `--dry-run` tries compile+`bc_vm` first; on compile failure falls
-  back to tree-walk `vm.c`. Tree-walk handlers kept for parity.
+ back to tree-walk `vm.c`. Tree-walk handlers kept for parity.
 - **Not done:** Spark-hosted compiler; full tree-walk deletion;
-  `include`/`builder`/`implement`/`model analyze` on BC; Stage 5/6.
+ `include`/`builder`/`implement`/`model analyze` on BC; Stage 5/6.
 
-### Stage 4 — Spark compiles Spark (full)  ← **NOT STARTED**
+### Stage 4 — Spark compiles Spark (full) ← **NOT STARTED**
 
 - Self-host compiler emits IR or objects (via C assembler / later
-  Spark-hosted assemble).
+ Spark-hosted assemble).
 - Scaffold GAS tree shrinks; product path is A-on-B (+ C).
 - **Gate:** rebuild a known ELF or bytecode from `selfhost/` sources
-  without editing GAS by hand.
+ without editing GAS by hand.
 - Phase 0: bytecode VM runs `hello.sparkbc` via `--run-bc`.
 - Phase 3: C `--compile` is a bootstrap, not Stage 4 complete.
 - Parser/grammar `.spark` files are catalogs only.
 
-### Stage 5 — Kick the ladder  ← **NOT STARTED**
+### Stage 5 — Kick the ladder ← **NOT STARTED**
 
 - Default `./spark` (or successor name) is B/self-host built, not
-  `as`+`ld` of `asm/spark.s`.
+ `as`+`ld` of `asm/spark.s`.
 - GAS retained only as archaeological / comparison until removed.
 - **Gate:** owner cutover after Stage 4 proof — not earlier.
 - `scripts/spark-bc` exists (Phase 6 wrapper); default `./spark` stays
-  GAS. SPARK_BC → ELF via `spark-bc-emit` + `sparkasm` is proven
-  (`make test-bc-emit`), not the product default.
+ GAS. SPARK_BC → ELF via `spark-bc-emit` + `sparkasm` is proven
+ (`make test-bc-emit`), not the product default.
 
-### Stage 6 — downloads / product default  ← **NOT STARTED**
+### Stage 6 — downloads / product default ← **NOT STARTED**
 
 - `make spark` remains the GAS ELF. Do not default downloads to BC.
 
@@ -201,7 +201,7 @@ Each self-host phase **must** spawn or log a code-ladder pick
 (alias + signals + why) before edits. Write
 `reports/spark-selfhost-*.md` as the last file of the phase.
 Never `voice` / `local-big`. Never treat `code-hard` as Sonnet.
-Never auto-escalate to Opus / `judge`. Do not retarget Bifrost CEL.
+Never auto-escalate to Opus / `judge`. Do not retarget the AI gateway CEL.
 
 ---
 
@@ -220,11 +220,11 @@ Never auto-escalate to Opus / `judge`. Do not retarget Bifrost CEL.
 # Phase 0 — bytecode on B (destination runner for hello)
 ./spark-bootstrap --run-bc selfhost/fixtures/hello.sparkbc
 make test-sparkbc
-make sparkbc-e2e   # TRAIN→STEP→ARTIFACT (dry; not SGD)
+make sparkbc-e2e # TRAIN→STEP→ARTIFACT (dry; not SGD)
 
 # Builder factory (TRAIN/STEP dry) — docs/SPARK_BUILDER.md
 ./spark-bootstrap --compile examples/spark_train_step.spark \
-  -o docs/examples/spark-train-step.sparkbc
+ -o docs/examples/spark-train-step.sparkbc
 ./spark-bootstrap --run-bc docs/examples/spark-train-step.sparkbc
 # ARTIFACT under out/train/job-dry-001/ — trained=false; not SGD
 

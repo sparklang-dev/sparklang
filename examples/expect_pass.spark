@@ -1,5 +1,5 @@
 # Expect pass — equal + contains + fixture want (dry-run CI shape).
-#   ./spark --dry-run examples/expect_pass.spark
+# ./spark --dry-run examples/expect_pass.spark
 # Exit 0 when every expectation holds.
 
 let answer "Ada Lovelace"

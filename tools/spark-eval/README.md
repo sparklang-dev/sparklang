@@ -1,7 +1,7 @@
 # spark-eval
 
 Frozen probe harness for Spark weights (or dry fixtures), with an
-optional Claude API baseline when credentials already exist.
+optional frontier-API baseline when credentials already exist.
 
 ```bash
 make spark-eval
@@ -16,7 +16,7 @@ Prints per-probe Spark scores and, when Claude runs, a side-by-side
 comparison table. Exit **0** when the harness runs (measurement ≠ win
 claim). Exit **2** only if `CLAUDE=on` and no credentials / API error.
 
-Does **not** claim beat Claude. Never invents API keys. Never uses
+Never invents API keys. Never uses
 the 6000.
 
 Suite: `examples/eval/suite.json`.

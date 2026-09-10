@@ -56,7 +56,7 @@
                   <li class="nav-sub">
                     <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
-                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
                       <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
                     </ul>
                   </li>
@@ -184,9 +184,9 @@
         false marketing. Spark / SparkLang only.</p>
         <p><strong>Never</strong> publish “Spark beats Ghidra / IDA / Binary Ninja /
         LLM4Decompile / OpenBin” without the measured JSON from
-        <code class="inline-code">make decompile-bench</code>. <strong>Never</strong> 6000. <strong>Does not</strong> beat Claude.
+        <code class="inline-code">make decompile-bench</code>. <strong>Measurement only.</strong>
         Do <strong>not</strong> copy OpenBin code.</p>
-        <p>Related: <a href="/docs/decompile.html">DECOMPILE.md</a> ·
+        <p>Related: <a href="/docs/decompile.html">Decompile</a> ·
         <a href="/docs/llm-decompile.html">research/LLM_DECOMPILE.md</a> ·
         site <a href="/docs/decompile-compete.html">/docs/decompile-compete.html</a>.</p>
         <h2 id="beat-axes-spark-bc-domain-where-we-can-actually-win">Beat-axes (SPARK_BC domain — where we can actually win)</h2>
@@ -338,26 +338,26 @@
         </table></div>
         <h2 id="commands">Commands</h2>
         <pre class="doc__pre"><code class="language-bash">make spark-bootstrap spark
-        make test-decompile-compete   # unit: richer dump + project
-        make decompile-roundtrip      # compile→dump→recompile hash
-        make decompile-bench          # metrics + scoreboard JSON
+        make test-decompile-compete # unit: richer dump + project
+        make decompile-roundtrip # compile→dump→recompile hash
+        make decompile-bench # metrics + scoreboard JSON
         # also records elf_local_probe from ./spark-binary-probe --elf
         ./spark-binary-probe --elf ./spark
         </code></pre>
         <p>Local ELF probe emits <code class="inline-code">claim: local_elf_probe_not_ghidra</code> and a
         <code class="inline-code">sections[]</code> index — <strong>still a loss</strong> on Multi-format ELF/PE vs
-        Ghidra/IDA/Binja/OpenBin. Honesty, not a domain flip.</p>
+        Ghidra/IDA/Binja/OpenBin. Status note, not a domain flip.</p>
         <p>Analysis project (single file):</p>
         <pre class="doc__pre"><code class="language-bash">PYTHONPATH=python python3 tools/spark-bc-dump/analyze_project.py \
-          docs/examples/spark-train-step.sparkbc \
-          -o out/analyze/train-step \
-          --source examples/spark_train_step.spark
+         docs/examples/spark-train-step.sparkbc \
+         -o out/analyze/train-step \
+         --source examples/spark_train_step.spark
         </code></pre>
         <p>Richer dump exports:</p>
         <pre class="doc__pre"><code class="language-bash">PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
-          docs/examples/spark-train-step.sparkbc --json -o /tmp/bc.json
+         docs/examples/spark-train-step.sparkbc --json -o /tmp/bc.json
         PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
-          docs/examples/spark-train-step.sparkbc --html -o /tmp/bc.html
+         docs/examples/spark-train-step.sparkbc --html -o /tmp/bc.html
         </code></pre>
         <h2 id="measured-scoreboard-data-driven">Measured scoreboard (data-driven)</h2>
         <p>After <code class="inline-code">make decompile-bench</code>:</p>
@@ -400,15 +400,15 @@
         </table></div>
         <h2 id="related">Related</h2>
         <ul class="doc__ul">
-        <li><a href="/docs/decompile.html">DECOMPILE.md</a> · <a href="/docs/spark-bc.html">SPARK_BC.md</a></li>
+        <li><a href="/docs/decompile.html">Decompile</a> · <a href="/docs/spark-bc.html">SPARK_BC.md</a></li>
         <li><a href="/docs/tools-helpers.html">TOOLS_HELPERS.md</a> · <a href="/docs/sparkbc-make.html">SPARKBC_MAKE.md</a></li>
-        <li><a href="/docs/factory.html">FACTORY.md</a> · <a href="/docs/ci-pages.html">CI_PAGES.md</a></li>
+        <li><a href="/docs/factory.html">Factory hub</a> · <a href="/docs/ci-pages.html">CI_PAGES.md</a></li>
         </ul>
         <div id="decompile-scoreboard-mount" class="doc__callout" role="region" aria-label="Measured scoreboard">
-          <p><strong>Live measured scoreboard</strong> — loaded from
-          <code class="inline-code">/data/decompile-scoreboard.json</code> after
-          <code class="inline-code">make decompile-bench</code>. Empty box means regenerate JSON.</p>
-          <div id="decompile-scoreboard-body"></div>
+         <p><strong>Live measured scoreboard</strong> — loaded from
+         <code class="inline-code">/data/decompile-scoreboard.json</code> after
+         <code class="inline-code">make decompile-bench</code>. Empty box means regenerate JSON.</p>
+         <div id="decompile-scoreboard-body"></div>
         </div>
         <script src="/js/decompile-scoreboard.js"></script>
       </article>

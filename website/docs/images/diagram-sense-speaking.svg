@@ -1,42 +1,42 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 280" role="img" aria-labelledby="title desc">
-  <title id="title">Speaking / TTS dataflow</title>
-  <desc id="desc">Text or reply pack into PCM synth, SPARK_TTS_CMD, or gated HTTP TTS, then WAV.</desc>
-  <defs>
-    <marker id="as" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M 0 0 L 10 5 L 0 10 z" fill="#334155"/>
-    </marker>
-  </defs>
-  <rect width="880" height="280" fill="#f8fafc"/>
-  <text x="24" y="36" font-family="ui-sans-serif,system-ui,sans-serif" font-size="16" font-weight="700" fill="#0f172a">Speaking  TTS / audio out</text>
-  <text x="24" y="58" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#64748b">Dry WAV marker · live PCM · written models ` neural clone</text>
+ <title id="title">Speaking / TTS dataflow</title>
+ <desc id="desc">Text or reply pack into PCM synth, SPARK_TTS_CMD, or gated HTTP TTS, then WAV.</desc>
+ <defs>
+ <marker id="as" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+ <path d="M 0 0 L 10 5 L 0 10 z" fill="#334155"/>
+ </marker>
+ </defs>
+ <rect width="880" height="280" fill="#f8fafc"/>
+ <text x="24" y="36" font-family="ui-sans-serif,system-ui,sans-serif" font-size="16" font-weight="700" fill="#0f172a">Speaking  TTS / audio out</text>
+ <text x="24" y="58" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#64748b">Dry WAV marker Â· live PCM Â· written models ` neural clone</text>
 
-  <rect x="40" y="110" width="180" height="70" rx="10" fill="#fae8ff" stroke="#a21caf" stroke-width="2"/>
-  <text x="130" y="140" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#701a75">Text / reply pack</text>
-  <text x="130" y="160" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#86198f">speak · speak reply</text>
+ <rect x="40" y="110" width="180" height="70" rx="10" fill="#fae8ff" stroke="#a21caf" stroke-width="2"/>
+ <text x="130" y="140" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#701a75">Text / reply pack</text>
+ <text x="130" y="160" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#86198f">speak Â· speak reply</text>
 
-  <rect x="280" y="80" width="140" height="50" rx="8" fill="#f5d0fe" stroke="#a21caf" stroke-width="1.5"/>
-  <text x="350" y="110" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#701a75">PCM synth</text>
+ <rect x="280" y="80" width="140" height="50" rx="8" fill="#f5d0fe" stroke="#a21caf" stroke-width="1.5"/>
+ <text x="350" y="110" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#701a75">PCM synth</text>
 
-  <rect x="280" y="145" width="140" height="50" rx="8" fill="#f5d0fe" stroke="#a21caf" stroke-width="1.5"/>
-  <text x="350" y="175" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#701a75">TTS_CMD</text>
+ <rect x="280" y="145" width="140" height="50" rx="8" fill="#f5d0fe" stroke="#a21caf" stroke-width="1.5"/>
+ <text x="350" y="175" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#701a75">TTS_CMD</text>
 
-  <rect x="280" y="210" width="140" height="50" rx="8" fill="#fff7ed" stroke="#ea580c" stroke-width="1.5" stroke-dasharray="4 3"/>
-  <text x="350" y="232" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#9a3412">HTTP TTS</text>
-  <text x="350" y="248" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="10" fill="#c2410c">SPARK_TTS_NET=1</text>
+ <rect x="280" y="210" width="140" height="50" rx="8" fill="#fff7ed" stroke="#ea580c" stroke-width="1.5" stroke-dasharray="4 3"/>
+ <text x="350" y="232" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#9a3412">HTTP TTS</text>
+ <text x="350" y="248" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="10" fill="#c2410c">SPARK_TTS_NET=1</text>
 
-  <rect x="500" y="120" width="160" height="70" rx="10" fill="#fce7f3" stroke="#db2777" stroke-width="2"/>
-  <text x="580" y="150" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#9d174d">voice model</text>
-  <text x="580" y="170" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#be185d">out/voice_models</text>
+ <rect x="500" y="120" width="160" height="70" rx="10" fill="#fce7f3" stroke="#db2777" stroke-width="2"/>
+ <text x="580" y="150" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#9d174d">voice model</text>
+ <text x="580" y="170" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#be185d">out/voice_models</text>
 
-  <rect x="720" y="120" width="120" height="70" rx="10" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
-  <text x="780" y="150" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#064e3b">WAV</text>
-  <text x="780" y="170" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#065f46">± aplay</text>
+ <rect x="720" y="120" width="120" height="70" rx="10" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+ <text x="780" y="150" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#064e3b">WAV</text>
+ <text x="780" y="170" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#065f46">Â· aplay</text>
 
-  <line x1="220" y1="145" x2="280" y2="105" stroke="#334155" stroke-width="1.5" marker-end="url(#as)"/>
-  <line x1="220" y1="145" x2="280" y2="170" stroke="#334155" stroke-width="1.5" marker-end="url(#as)"/>
-  <line x1="220" y1="145" x2="280" y2="235" stroke="#ea580c" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#as)"/>
-  <line x1="420" y1="105" x2="500" y2="145" stroke="#334155" stroke-width="1.5" marker-end="url(#as)"/>
-  <line x1="420" y1="170" x2="500" y2="155" stroke="#334155" stroke-width="1.5" marker-end="url(#as)"/>
-  <line x1="660" y1="155" x2="720" y2="155" stroke="#334155" stroke-width="2" marker-end="url(#as)"/>
-  <line x1="420" y1="105" x2="720" y2="140" stroke="#334155" stroke-width="1.5" marker-end="url(#as)"/>
+ <line x1="220" y1="145" x2="280" y2="105" stroke="#334155" stroke-width="1.5" marker-end="url(#as)"/>
+ <line x1="220" y1="145" x2="280" y2="170" stroke="#334155" stroke-width="1.5" marker-end="url(#as)"/>
+ <line x1="220" y1="145" x2="280" y2="235" stroke="#ea580c" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#as)"/>
+ <line x1="420" y1="105" x2="500" y2="145" stroke="#334155" stroke-width="1.5" marker-end="url(#as)"/>
+ <line x1="420" y1="170" x2="500" y2="155" stroke="#334155" stroke-width="1.5" marker-end="url(#as)"/>
+ <line x1="660" y1="155" x2="720" y2="155" stroke="#334155" stroke-width="2" marker-end="url(#as)"/>
+ <line x1="420" y1="105" x2="720" y2="140" stroke="#334155" stroke-width="1.5" marker-end="url(#as)"/>
 </svg>

@@ -1,13 +1,13 @@
 {
-  "object": "list",
-  "model": "embed-rag",
-  "data": [
-    {
-      "object": "embedding",
-      "index": 0,
-      "embedding": [0.01, -0.02, 0.03, 0.0]
-    }
-  ],
-  "usage": { "prompt_tokens": 8, "total_tokens": 8 },
-  "note": "dry-run fixture — not a live TEI vector"
+ "object": "list",
+ "model": "embed-rag",
+ "data": [
+ {
+ "object": "embedding",
+ "index": 0,
+ "embedding": [0.01, -0.02, 0.03, 0.0]
+ }
+ ],
+ "usage": { "prompt_tokens": 8, "total_tokens": 8 },
+ "note": "dry-run fixture — not a live TEI vector"
 }

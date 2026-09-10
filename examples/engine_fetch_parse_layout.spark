@@ -1,6 +1,6 @@
 # Engine B — fetch → parse → css → layout on table fixture (browser e2e).
-# Dry:  ./spark --dry-run examples/engine_fetch_parse_layout.spark
-#       → body.bin + dom.json + css.json + layout.table proof JSON
+# Dry: ./spark --dry-run examples/engine_fetch_parse_layout.spark
+# → body.bin + dom.json + css.json + layout.table proof JSON
 
 engine fetch "file://engine/fixtures/table_demo.html" -> body
 engine parse "out/engine/body.bin" -> dom

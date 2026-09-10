@@ -56,7 +56,7 @@
                   <li class="nav-sub">
                     <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
-                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
                       <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
                     </ul>
                   </li>
@@ -182,14 +182,14 @@
         <h1 id="sparklang-and-ai-models">SparkLang and AI models</h1>
         <p><strong>SparkLang</strong> (the Spark programming language) is a <strong>language and runtime</strong>
         for creating and modifying AI workflows efficiently — not a pile of training
-        scripts and SDK glue, and <strong>not</strong> a Bifrost plugin. Model work, optional live
+        scripts and SDK glue, and <strong>not</strong> a the AI gateway plugin. Model work, optional live
         gateway routing, retrieval (<code class="inline-code">embed</code> / <code class="inline-code">retrieve</code>), and AI coding live in
         plain <code class="inline-code">.spark</code> files you can diff, dry-run, and ship.</p>
         <p><strong>Default story:</strong> dry-run / offline / no keys. Live <code class="inline-code">ask</code> / <code class="inline-code">embed</code> /
         <code class="inline-code">retrieve</code> via gateway env is <strong>optional</strong> (<code class="inline-code">./spark --live</code>).</p>
-        <p><strong>Related:</strong> <a href="/docs/model-aspects.html">MODEL_ASPECTS.md</a> (behaviors + ears/eyes/speaking +
+        <p><strong>Related:</strong> <a href="/docs/model-aspects.html">Model aspects</a> (behaviors + ears/eyes/speaking +
         thinking + tools — honest status) ·
-        <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> (full factory E2E —
+        <a href="/docs/spark-builder.html">SPARK_BC Builder</a> (full factory E2E —
         SPARK_BC vs weights; <code class="inline-code">TRAIN</code> <code class="inline-code">0x26</code> / <code class="inline-code">STEP</code> <code class="inline-code">0x28</code> /
         <code class="inline-code">TRAIN_STATUS</code> <code class="inline-code">0x27</code>; sha256 table; GAS <code class="inline-code">--run-bc</code>/<code class="inline-code">--compile</code> wrappers; dry ≠ trained) ·
         <a href="/docs/spark-bc.html">SPARK_BC.md</a> (bytecode ISA) ·
@@ -229,7 +229,7 @@
         <tr>
         <td><strong>Builder from SPARK_BC</strong></td>
         <td><code class="inline-code">--compile</code> Spark → <code class="inline-code">.sparkbc</code> (incl. <code class="inline-code">0x26</code>/<code class="inline-code">0x28</code>/<code class="inline-code">0x27</code>); dump; emit init weights; <code class="inline-code">--run-bc</code> TRAIN dry + STEP CPU SGD (bootstrap or GAS)</td>
-        <td>Tiny SGD ≠ Claude; GAS <code class="inline-code">--run-bc</code> / <code class="inline-code">--compile</code> wrappers <strong>implemented</strong>; STEP→weights <strong>CPU SGD</strong> (<code class="inline-code">trained=true</code>); later stages aim to beat Claude; <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a></td>
+        <td>Tiny SGD ≠ Claude; GAS <code class="inline-code">--run-bc</code> / <code class="inline-code">--compile</code> wrappers <strong>implemented</strong>; STEP→weights <strong>CPU SGD</strong> (<code class="inline-code">trained=true</code>); later stages may grow train/eval (not a published claim); <a href="/docs/spark-builder.html">SPARK_BC Builder</a></td>
         </tr>
         <tr>
         <td><strong>Modify existing</strong></td>
@@ -300,7 +300,7 @@
         model analyze &quot;fixtures/tiny-lm&quot; -&gt; report
 
         model compare [&quot;fixtures/tiny-lm&quot;, &quot;fixtures/other-lm&quot;]
-          on suite &quot;examples/eval_suite.json&quot; -&gt; comparison
+         on suite &quot;examples/eval_suite.json&quot; -&gt; comparison
 
         model improve from report prefer quality -&gt; blueprint
 
@@ -312,15 +312,15 @@
         <p>Default <code class="inline-code">./spark --dry-run</code> and <code class="inline-code">make test</code> stay <strong>offline</strong>:</p>
         <ul class="doc__ul">
         <li><strong>Model ops</strong> — fixture JSON from <code class="inline-code">examples/fixtures/models/</code> and
-          <code class="inline-code">examples/eval_suite.json</code>; banner says numbers are not live Elo scores</li>
+         <code class="inline-code">examples/eval_suite.json</code>; banner says numbers are not live Elo scores</li>
         <li><strong><code class="inline-code">ask</code> / <code class="inline-code">classify</code> / <code class="inline-code">extract</code> / <code class="inline-code">embed</code> / <code class="inline-code">retrieve</code></strong> — heuristic
-          stubs / fixtures (<code class="inline-code">examples/fixtures/rag/</code> for RAG)</li>
+         stubs / fixtures (<code class="inline-code">examples/fixtures/rag/</code> for RAG)</li>
         <li><strong><code class="inline-code">use auto</code></strong> — keeps prior configured model; prints
-          <code class="inline-code">[model] prior … (no alias pick)</code> — never invents gateway aliases</li>
+         <code class="inline-code">[model] prior … (no alias pick)</code> — never invents gateway aliases</li>
         <li><strong>Playbooks</strong> — goldens under <code class="inline-code">bootstrap/fixtures/playbooks/</code>;
-          <code class="inline-code">make test-ai-playbooks</code></li>
+         <code class="inline-code">make test-ai-playbooks</code></li>
         <li><strong>IDE</strong> — <code class="inline-code">ide new|open|save|run|buffer|ask|show</code> + keymap traces under
-          <code class="inline-code">out/ide/</code> (PPM paint wire, not product Electron)</li>
+         <code class="inline-code">out/ide/</code> (PPM paint wire, not product Electron)</li>
         </ul>
         <p>Dry-run is the primary loop for CI, learning, and readable diffs <strong>before</strong>
         you spend on live inference.</p>
@@ -338,7 +338,7 @@
         <tbody>
         <tr>
         <td><strong>OpenAI-compatible gateway</strong> (<code class="inline-code">AI_GATEWAY_URL</code>)</td>
-        <td>Chat + embeddings with an <strong>explicit</strong> model id (HF / path / configured string). Bifrost is one optional backend, not a Spark requirement.</td>
+        <td>Chat + embeddings with an <strong>explicit</strong> model id (HF / path / configured string). the AI gateway is one optional backend, not a Spark requirement.</td>
         <td><strong><code class="inline-code">SPARK_GATEWAY_KEY</code></strong> preferred; <code class="inline-code">OPENAI_API_KEY</code> wire-compat only; <code class="inline-code">./spark-ask-http</code> / <code class="inline-code">./spark-rag-http --embed</code></td>
         </tr>
         <tr>
@@ -364,11 +364,11 @@
         </tbody>
         </table></div>
         <p>Pass an <strong>explicit</strong> model id in <code class="inline-code">.spark</code> / <code class="inline-code">--model</code> — never invent one
-        from task-text heuristics, and do not treat Spark as a Bifrost alias
+        from task-text heuristics, and do not treat Spark as a the AI gateway alias
         picker. Inventable live prompts <strong>IDK</strong> unless <code class="inline-code">--sot-ok</code>
         (see <a href="/docs/ai-models.html#live-gateway-integration-wired-today">ASK_LIVE.md</a>).</p>
         <pre class="doc__pre"><code class="language-bash">export AI_GATEWAY_URL=http://127.0.0.1:4000
-        export SPARK_GATEWAY_KEY=sk-…   # never commit; preferred over OPENAI_API_KEY
+        export SPARK_GATEWAY_KEY=sk-… # never commit; preferred over OPENAI_API_KEY
         ./spark --live examples/ask_live.spark
         ./spark --live examples/ask_live_explicit.spark
         ./spark --live examples/retrieve_embed_live.spark
@@ -418,20 +418,20 @@
         <p><strong>Readable diffs:</strong> one <code class="inline-code">.spark</code> file per workflow — <code class="inline-code">pipeline</code>, <code class="inline-code">classify</code>,
         <code class="inline-code">extract</code>, <code class="inline-code">review</code>, <code class="inline-code">builder</code>, <code class="inline-code">implement</code> — not scattered Python modules.</p>
         <p><strong>Verified IDE surface</strong> (<a href="/docs/ide.html">IDE.md</a>): terminal-first <code class="inline-code">ide</code> ops + optional
-        interim Cursor workspace (<code class="inline-code">make ide</code>). Not Electron / not PyQt product chrome.</p>
+        interim editor workspace (<code class="inline-code">make ide</code>). Not Electron / not PyQt product chrome.</p>
         <p>Voice (<code class="inline-code">listen</code> / <code class="inline-code">speak</code> / <code class="inline-code">voice { … }</code>) remains in the language for
         speech pipelines — it is an <strong>optional</strong> surface, not primary positioning. See
         <a href="/docs/voice.html">VOICE.md</a>.</p>
         <h2 id="what-spark-is-not">What Spark is not</h2>
         <ul class="doc__ul">
-        <li>Not a Bifrost plugin — gateway is optional live backend for <code class="inline-code">ask</code> /
-          <code class="inline-code">embed</code> / <code class="inline-code">retrieve</code></li>
+        <li>not tied to a single AI gateway — gateway is optional live backend for <code class="inline-code">ask</code> /
+         <code class="inline-code">embed</code> / <code class="inline-code">retrieve</code></li>
         <li>Not Apache Spark / AdaCore SPARK</li>
         <li>Not a replacement narrative for “throw away Python + OpenAI SDK” — Spark
-          complements gateways and existing stacks with a reviewable language surface</li>
+         complements gateways and existing stacks with a reviewable language surface</li>
         <li>Train jobs need a configured backend — dry-run never starts GPU work</li>
         <li>Not in-process retrieval grading — grade/retry stay on rag-gateway; Spark surfaces
-          <code class="inline-code">crag</code> JSON from <code class="inline-code">retrieve</code> and composes with <code class="inline-code">ask</code></li>
+         <code class="inline-code">crag</code> JSON from <code class="inline-code">retrieve</code> and composes with <code class="inline-code">ask</code></li>
         <li>Not a vendor voice-product codebase — Spark stays a general AI language</li>
         </ul>
         <h2 id="contributor-internals">Contributor internals</h2>

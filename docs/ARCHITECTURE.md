@@ -46,7 +46,7 @@ full block = pre-norm attn (GQA+RoPE) + SwiGLU MLP — shape-checked
 by `make test-sparkasm-control` only. RoPE still **not** in the
 Python CPU path.
 
-Detail: [ATTENTION_FORWARD.md](ATTENTION_FORWARD.md).
+Detail: [Attention / forward](ATTENTION_FORWARD.md).
 
 ## Safetensors meta (honest flags)
 
@@ -57,5 +57,5 @@ honest `trained` from weights.
 
 ## Related
 
-- [SERVE.md](SERVE.md) · [TRAIN_LOOP.md](TRAIN_LOOP.md)
-- [BUILD_MODELS.md](BUILD_MODELS.md) · [FACTORY.md](FACTORY.md)
+- [Serve](SERVE.md) · [Train loop](TRAIN_LOOP.md)
+- [BUILD_MODELS.md](BUILD_MODELS.md) · [Factory hub](FACTORY.md)

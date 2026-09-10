@@ -56,7 +56,7 @@
                   <li class="nav-sub">
                     <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
-                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
                       <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
                     </ul>
                   </li>
@@ -228,22 +228,22 @@
         <ul class="doc__ul">
         <li>Language: <code class="inline-code">with tools [&amp;]</code> — see programming guide / function catalog.</li>
         <li>Behavior + tool loop diagram:
-          <code class="inline-code">docs/images/diagram-behavior-tool-loop.svg</code></li>
-        <li>Model aspects tools row — <a href="/docs/model-aspects.html">MODEL_ASPECTS.md</a></li>
+         <code class="inline-code">docs/images/diagram-behavior-tool-loop.svg</code></li>
+        <li>Model aspects tools row — <a href="/docs/model-aspects.html">Model aspects</a></li>
         <li>Dry tools return <code class="inline-code">stub:local</code> until live gated.</li>
         </ul>
         <pre class="mermaid">sequenceDiagram
-          participant U as User
-          participant M as Model
-          participant T as Tool
-          U->>M: goal
-          M->>M: reason
-          M->>T: act
-          T->>M: observe
-          M->>U: answer or abstain</pre>
+         participant U as User
+         participant M as Model
+         participant T as Tool
+         U->>M: goal
+         M->>M: reason
+         M->>T: act
+         T->>M: observe
+         M->>U: answer or abstain</pre>
         <p>Spark does <strong>not</strong> claim autonomous ops on production store systems
         from this hive page — factory + product gates still apply.</p>
-        <p>Next: <a href="/docs/knowledge-eval.html">Eval honesty</a> · <a href="/docs/knowledge-safety.html">Safety</a> ·
+        <p>Next: <a href="/docs/knowledge-eval.html">Evaluation</a> · <a href="/docs/knowledge-safety.html">Safety</a> ·
         <a href="/docs/factory.html">Factory</a>.</p>
       </article>
       </main>

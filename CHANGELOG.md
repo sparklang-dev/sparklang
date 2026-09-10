@@ -4,6 +4,14 @@ All notable user-facing releases of **SparkLang** (the Spark programming
 language) are listed here. Site and installers track
 `website/downloads/manifest.json`.
 
+## 0.6.62 — 2026-09-09
+
+- **Public claims tone scrub:** remove authenticity/honesty-theater
+  framing from public docs and site copy; rename EVAL honesty map
+  surface toward product-status wording (`EVAL_STATUS`); keep
+  measurement language without operator-constraint dumps. Companion
+  restore: `spark-self.init.safetensors` if dropped by docs rsync.
+
 
 ## 0.6.61 — 2026-09-09
 

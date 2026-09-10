@@ -1,37 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Playground — Spark interactive preview</title>
-    <meta
-      name="description"
-      content="Edit Spark programs, preview dry-run output, try model workflows and playbooks. Live gateway calls run locally with ./spark --live."
-    />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="shortcut icon" href="/favicon.svg" />
-    <link rel="stylesheet" href="/css/tokens.css?v=polish0909" />
-    <link rel="stylesheet" href="/css/site.css?v=polish0909" />
-  </head>
-  <body>
-    <header class="site-header">
-      <div class="shell header-inner">
-        <a class="site-brand" href="/" aria-label="SparkLang home">
-          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
-            <path
-              d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z"
-              fill="currentColor"
-            />
-          </svg>
-          Spark
-        </a>
-        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
-          <span class="nav-toggle__bar"></span>
-          <span class="nav-toggle__bar"></span>
-          <span class="nav-toggle__bar"></span>
-        </button>
-        <div class="header-nav-wrap">
-          <nav class="site-nav" id="site-nav" aria-label="Primary">
+ <head>
+ <meta charset="utf-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1" />
+ <title>Playground — Spark interactive preview</title>
+ <meta
+ name="description"
+ content="Edit Spark programs, preview dry-run output, try model workflows and playbooks. Live gateway calls run locally with ./spark --live."
+ />
+ <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+ <link rel="shortcut icon" href="/favicon.svg" />
+ <link rel="stylesheet" href="/css/tokens.css?v=polish0909" />
+ <link rel="stylesheet" href="/css/site.css?v=polish0909" />
+ </head>
+ <body>
+ <header class="site-header">
+ <div class="shell header-inner">
+ <a class="site-brand" href="/" aria-label="SparkLang home">
+ <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+ <path
+ d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z"
+ fill="currentColor"
+ />
+ </svg>
+ Spark
+ </a>
+ <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+ <span class="nav-toggle__bar"></span>
+ <span class="nav-toggle__bar"></span>
+ <span class="nav-toggle__bar"></span>
+ </button>
+ <div class="header-nav-wrap">
+ <nav class="site-nav" id="site-nav" aria-label="Primary">
             <!-- spark-primary-nav:begin -->
             <ul class="nav-primary">
               <li><a href="/workflow.html">Loop</a></li>
@@ -62,7 +62,7 @@
                   <li class="nav-sub">
                     <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
-                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
                       <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
                     </ul>
                   </li>
@@ -143,165 +143,165 @@
             <a href="/playground.html" class="nav-cta">Try</a>
             <!-- spark-primary-nav:end -->
           </nav>
-        </div>
-      </div>
-    </header>
+ </div>
+ </div>
+ </header>
 
-    <main class="shell section playground">
-      <p class="doc-breadcrumb">
-        <a href="/">Home</a> / Playground
-      </p>
-      <article class="doc__body" style="max-width: none">
-        <h1>Playground</h1>
-        <p>
-          Edit <code class="inline-code">.spark</code> source and preview
-          dry-run fixture output in the browser. Optional browser voice demo
-          uses the Web Speech API. Live runs use the Spark runtime on your
-          machine (<a href="/downloads.html">Downloads</a>).
-        </p>
+ <main class="shell section playground">
+ <p class="doc-breadcrumb">
+ <a href="/">Home</a> / Playground
+ </p>
+ <article class="doc__body" style="max-width: none">
+ <h1>Playground</h1>
+ <p>
+ Edit <code class="inline-code">.spark</code> source and preview
+ dry-run fixture output in the browser. Optional browser voice demo
+ uses the Web Speech API. Live runs use the Spark runtime on your
+ machine (<a href="/downloads.html">Downloads</a>).
+ </p>
 
-        <div class="pg-tabs" role="tablist" aria-label="Playground sections">
-          <button type="button" class="pg-tab is-active" role="tab" id="pg-tab-code" data-tab="code" aria-controls="pg-panel-code" aria-selected="true" tabindex="0">Code</button>
-          <button type="button" class="pg-tab" role="tab" id="pg-tab-voice" data-tab="voice" aria-controls="pg-panel-voice" aria-selected="false" tabindex="-1">Voice</button>
-        </div>
+ <div class="pg-tabs" role="tablist" aria-label="Playground sections">
+ <button type="button" class="pg-tab is-active" role="tab" id="pg-tab-code" data-tab="code" aria-controls="pg-panel-code" aria-selected="true" tabindex="0">Code</button>
+ <button type="button" class="pg-tab" role="tab" id="pg-tab-voice" data-tab="voice" aria-controls="pg-panel-voice" aria-selected="false" tabindex="-1">Voice</button>
+ </div>
 
-        <!-- Code panel -->
-        <section class="pg-panel is-active" id="pg-panel-code" data-panel="code" role="tabpanel" aria-labelledby="pg-tab-code">
-          <div class="try-toolbar pg-toolbar">
-            <label for="pg-preset">Preset:</label>
-            <select id="pg-preset" aria-label="Choose preset program">
-              <option value="hello">Hello ask</option>
-            </select>
-            <a href="/learn/function-catalog.html" class="pg-catalog-link">Full catalog</a>
-            <a href="/docs/ide.html#playbooks-catalog" class="pg-catalog-link">Playbooks help</a>
-            <button type="button" class="btn btn--primary" id="pg-run-dry">
-              Run dry-run (browser)
-            </button>
-            <button type="button" class="btn btn--ghost" id="pg-clear-output">
-              Clear output
-            </button>
-            <button type="button" class="btn btn--ghost" id="pg-copy-output">
-              Copy output
-            </button>
-          </div>
-          <p id="pg-playbook-status" class="pg-playbook-status" aria-live="polite"></p>
+ <!-- Code panel -->
+ <section class="pg-panel is-active" id="pg-panel-code" data-panel="code" role="tabpanel" aria-labelledby="pg-tab-code">
+ <div class="try-toolbar pg-toolbar">
+ <label for="pg-preset">Preset:</label>
+ <select id="pg-preset" aria-label="Choose preset program">
+ <option value="hello">Hello ask</option>
+ </select>
+ <a href="/learn/function-catalog.html" class="pg-catalog-link">Full catalog</a>
+ <a href="/docs/ide.html#playbooks-catalog" class="pg-catalog-link">Playbooks help</a>
+ <button type="button" class="btn btn--primary" id="pg-run-dry">
+ Run dry-run (browser)
+ </button>
+ <button type="button" class="btn btn--ghost" id="pg-clear-output">
+ Clear output
+ </button>
+ <button type="button" class="btn btn--ghost" id="pg-copy-output">
+ Copy output
+ </button>
+ </div>
+ <p id="pg-playbook-status" class="pg-playbook-status" aria-live="polite"></p>
 
-          <div class="try-panel">
-            <div class="try-editor pg-editor">
-              <label for="pg-source">Your .spark program</label>
-              <textarea id="pg-source" spellcheck="false" aria-label="Spark source code" class="pg-source"></textarea>
-            </div>
-            <div class="try-output-wrap">
-              <label for="pg-output">Output console (simulated dry-run)</label>
-              <pre id="pg-output" class="try-output is-empty" aria-live="polite">Run dry-run to see simulated fixture output for ask, classify, model, and voice ops.</pre>
-            </div>
-          </div>
+ <div class="try-panel">
+ <div class="try-editor pg-editor">
+ <label for="pg-source">Your .spark program</label>
+ <textarea id="pg-source" spellcheck="false" aria-label="Spark source code" class="pg-source"></textarea>
+ </div>
+ <div class="try-output-wrap">
+ <label for="pg-output">Output console (simulated dry-run)</label>
+ <pre id="pg-output" class="try-output is-empty" aria-live="polite">Run dry-run to see simulated fixture output for ask, classify, model, and voice ops.</pre>
+ </div>
+ </div>
 
-          <p id="pg-cmd" class="try-cmd"></p>
+ <p id="pg-cmd" class="try-cmd"></p>
 
-          <div class="pg-live-box try-note">
-            <strong>Live (local only):</strong>
-            <ol class="pg-live-steps">
-              <li><a href="/downloads.html">Download</a> or build the Spark runtime</li>
-              <li>Save your program as <code class="inline-code">my_program.spark</code></li>
-              <li>
-                Dry-run:
-                <code class="inline-code">./spark-run.sh --dry-run my_program.spark</code>
-              </li>
-              <li>
-                Live:
-                <code class="inline-code">export AI_GATEWAY_URL=https://your-gateway.example/v1</code>
-                then
-                <code class="inline-code">./spark-run.sh --live my_program.spark</code>
-              </li>
-            </ol>
-            <p class="pg-live-note">
-              API keys stay on your machine — never paste them into this page.
-            </p>
-          </div>
-        </section>
+ <div class="pg-live-box try-note">
+ <strong>Live (local only):</strong>
+ <ol class="pg-live-steps">
+ <li><a href="/downloads.html">Download</a> or build the Spark runtime</li>
+ <li>Save your program as <code class="inline-code">my_program.spark</code></li>
+ <li>
+ Dry-run:
+ <code class="inline-code">./spark-run.sh --dry-run my_program.spark</code>
+ </li>
+ <li>
+ Live:
+ <code class="inline-code">export AI_GATEWAY_URL=https://your-gateway.example/v1</code>
+ then
+ <code class="inline-code">./spark-run.sh --live my_program.spark</code>
+ </li>
+ </ol>
+ <p class="pg-live-note">
+ API keys stay on your machine — never paste them into this page.
+ </p>
+ </div>
+ </section>
 
-        <!-- Voice panel -->
-        <section class="pg-panel" id="pg-panel-voice" data-panel="voice" role="tabpanel" aria-labelledby="pg-tab-voice" hidden>
-          <p class="pg-voice-label">
-            <strong>Browser voice demo</strong> — uses Web Speech API where
-            supported. Spark <code class="inline-code">listen</code> /
-            <code class="inline-code">speak</code> ops run locally with
-            <code class="inline-code">./spark-run.sh --live</code>.
-          </p>
+ <!-- Voice panel -->
+ <section class="pg-panel" id="pg-panel-voice" data-panel="voice" role="tabpanel" aria-labelledby="pg-tab-voice" hidden>
+ <p class="pg-voice-label">
+ <strong>Browser voice demo</strong> — uses Web Speech API where
+ supported. Spark <code class="inline-code">listen</code> /
+ <code class="inline-code">speak</code> ops run locally with
+ <code class="inline-code">./spark-run.sh --live</code>.
+ </p>
 
-          <div class="pg-voice-demo">
-            <div class="pg-voice-controls">
-              <button type="button" class="btn btn--primary" id="pg-voice-mic">
-                Mic — listen
-              </button>
-              <button type="button" class="btn btn--secondary" id="pg-voice-speak">
-                Speak reply
-              </button>
-              <button type="button" class="btn btn--ghost" id="pg-voice-dry">
-                Run voice dry-run in Code tab
-              </button>
-            </div>
-            <p id="pg-voice-status" class="pg-voice-status" aria-live="polite"></p>
-            <div class="pg-voice-io">
-              <div>
-                <span class="pg-io-label">Transcript</span>
-                <pre id="pg-voice-transcript" class="pg-io-box"></pre>
-              </div>
-              <div>
-                <span class="pg-io-label">Assistant reply</span>
-                <pre id="pg-voice-reply" class="pg-io-box"></pre>
-              </div>
-            </div>
-          </div>
+ <div class="pg-voice-demo">
+ <div class="pg-voice-controls">
+ <button type="button" class="btn btn--primary" id="pg-voice-mic">
+ Mic — listen
+ </button>
+ <button type="button" class="btn btn--secondary" id="pg-voice-speak">
+ Speak reply
+ </button>
+ <button type="button" class="btn btn--ghost" id="pg-voice-dry">
+ Run voice dry-run in Code tab
+ </button>
+ </div>
+ <p id="pg-voice-status" class="pg-voice-status" aria-live="polite"></p>
+ <div class="pg-voice-io">
+ <div>
+ <span class="pg-io-label">Transcript</span>
+ <pre id="pg-voice-transcript" class="pg-io-box"></pre>
+ </div>
+ <div>
+ <span class="pg-io-label">Assistant reply</span>
+ <pre id="pg-voice-reply" class="pg-io-box"></pre>
+ </div>
+ </div>
+ </div>
 
-          <h2 class="pg-subhead">Example voice program</h2>
-          <pre class="try-output pg-snippet-wrap"><code id="pg-voice-snippet">listen -> user_text
+ <h2 class="pg-subhead">Example voice program</h2>
+ <pre class="try-output pg-snippet-wrap"><code id="pg-voice-snippet">listen -> user_text
 ask "Reply briefly: {user_text}" -> reply
 say reply -> "out.wav"</code></pre>
-          <button type="button" class="btn btn--ghost" id="pg-copy-voice-snippet">
-            Copy snippet
-          </button>
-        </section>
+ <button type="button" class="btn btn--ghost" id="pg-copy-voice-snippet">
+ Copy snippet
+ </button>
+ </section>
 
-        <h2 id="next-steps">Next steps</h2>
-        <div class="card-grid">
-          <article class="card">
-            <h3 class="card__title">
-              <a href="/learn/build-model.html">Model builder wizard</a>
-            </h3>
-            <p class="card__body">
-              Pick classify / ask / pipeline / model and copy a starter program.
-            </p>
-          </article>
-          <article class="card">
-            <h3 class="card__title">
-              <a href="/learn/getting-started.html">Getting started</a>
-            </h3>
-            <p class="card__body">Install, verify, and run your first program.</p>
-          </article>
-        </div>
-      </article>
-    </main>
+ <h2 id="next-steps">Next steps</h2>
+ <div class="card-grid">
+ <article class="card">
+ <h3 class="card__title">
+ <a href="/learn/build-model.html">Model builder wizard</a>
+ </h3>
+ <p class="card__body">
+ Pick classify / ask / pipeline / model and copy a starter program.
+ </p>
+ </article>
+ <article class="card">
+ <h3 class="card__title">
+ <a href="/learn/getting-started.html">Getting started</a>
+ </h3>
+ <p class="card__body">Install, verify, and run your first program.</p>
+ </article>
+ </div>
+ </article>
+ </main>
 
-        <footer class="site-footer">
-      <div class="shell footer-inner">
-        <div class="footer-brand">
-          <span>SparkLang — the Spark programming language</span>
-          <span class="footer-meta">v0.6.2 · MIT</span>
-        </div>
-        <nav class="footer-nav" aria-label="Footer">
-          <a href="/workflow.html">Loop</a>
-          <a href="/about.html">About</a>
+ <footer class="site-footer">
+ <div class="shell footer-inner">
+ <div class="footer-brand">
+ <span>SparkLang — the Spark programming language</span>
+ <span class="footer-meta">v0.6.2 · MIT</span>
+ </div>
+ <nav class="footer-nav" aria-label="Footer">
+ <a href="/workflow.html">Loop</a>
+ <a href="/about.html">About</a>
 <a href="/LICENSE.txt">License</a>
-          <a href="/CHANGELOG.html">Changelog</a>
-          <a href="/learn/">Learn</a>
-          <a href="/downloads.html">Downloads</a>
-          <a href="/playground.html">Playground</a>
-        </nav>
-      </div>
-    </footer>
-    <script src="/js/playground.js?v=expect0902"></script>
-    <script src="/js/site.js?v=expect0902"></script>
-  </body>
+ <a href="/CHANGELOG.html">Changelog</a>
+ <a href="/learn/">Learn</a>
+ <a href="/downloads.html">Downloads</a>
+ <a href="/playground.html">Playground</a>
+ </nav>
+ </div>
+ </footer>
+ <script src="/js/playground.js?v=expect0902"></script>
+ <script src="/js/site.js?v=expect0902"></script>
+ </body>
 </html>

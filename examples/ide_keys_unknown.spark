@@ -1,6 +1,6 @@
 # Spark IDE keymap - proven unknown token fail-loud.
 # After run forms. Unknown script lines emit cmd unknown ok:false -
-# not invented as real ops. Quit still ends the loop.
+# Unknown keys stay fail-loud. Quit still ends the loop.
 # Run: ./spark --dry-run examples/ide_keys_unknown.spark
 # No Electron. No new asm - documents proven fail-loud only.
 

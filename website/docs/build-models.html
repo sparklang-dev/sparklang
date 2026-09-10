@@ -56,7 +56,7 @@
                   <li class="nav-sub">
                     <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
-                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
                       <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
                     </ul>
                   </li>
@@ -181,10 +181,9 @@
       </nav>      <article class="doc__body">
         <h1 id="build-models-train-step-artifact">Build models — TRAIN / STEP / ARTIFACT</h1>
         <p>How Spark <strong>programs</strong> training in SPARK_BC and what lands on disk.
-        Does <strong>not</strong> beat Claude. Never trains on the RTX PRO 6000
-        (voice GPU). CPU fixtures only unless a future owner grant says
+        Prefer CPU or a consumer GPU for train. (voice GPU). CPU fixtures only unless a future owner grant says
         otherwise.</p>
-        <p>Full factory: <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>. Language verbs:
+        <p>Full factory: <a href="/docs/spark-builder.html">SPARK_BC Builder</a>. Language verbs:
         <a href="/docs/model-training.html">MODEL_TRAINING.md</a> · <a href="/docs/language.html">LANGUAGE.md</a>.</p>
         <h2 id="opcodes-in-the-binary">Opcodes in the binary</h2>
         <div class="doc__table-wrap"><table class="doc__table">
@@ -223,28 +222,28 @@
         <p>Source: <code class="inline-code">examples/spark_train_step.spark</code> → published
         <code class="inline-code">docs/examples/spark-train-step.sparkbc</code>.</p>
         <pre class="doc__pre"><code class="language-bash">./spark-bootstrap --compile examples/spark_train_step.spark \
-          -o /tmp/spark-train-step.sparkbc
+         -o /tmp/spark-train-step.sparkbc
         ./spark-bootstrap --run-bc /tmp/spark-train-step.sparkbc
         # → out/train/job-dry-001/ARTIFACT (+ weights after STEP)
         </code></pre>
         <p>Helper (same SGD as STEP path):</p>
         <pre class="doc__pre"><code class="language-bash">PYTHONPATH=python python3 tools/spark-bc-dump/apply_step.py \
-          --sparkbc docs/examples/spark-train-step.sparkbc \
-          --weights /tmp/weights.safetensors \
-          --checkpoint /tmp/checkpoint.json \
-          --dataset examples/fixtures/train/dataset.jsonl \
-          --outer 4 --inner 8 --step 1
+         --sparkbc docs/examples/spark-train-step.sparkbc \
+         --weights /tmp/weights.safetensors \
+         --checkpoint /tmp/checkpoint.json \
+         --dataset examples/fixtures/train/dataset.jsonl \
+         --outer 4 --inner 8 --step 1
         </code></pre>
         <p>Implementation: <code class="inline-code">python/sparklang/model_lab/</code> (<code class="inline-code">apply_sgd_step</code>).
         <strong>Not</strong> a second training SoT in docs — link the code.</p>
-        <h2 id="artifact-checkpoint-honesty">ARTIFACT / checkpoint honesty</h2>
+        <h2 id="artifact-checkpoint-status">ARTIFACT / checkpoint status</h2>
         <ul class="doc__ul">
         <li><code class="inline-code">ARTIFACT</code> — job marker text; after successful STEP lists
-          weights + checkpoint paths and <code class="inline-code">not_sgd=false</code>.</li>
+         weights + checkpoint paths and <code class="inline-code">not_sgd=false</code>.</li>
         <li><code class="inline-code">weights.safetensors</code> — Spark tensors; meta <code class="inline-code">trained</code> must match
-          reality (<code class="inline-code">false</code> for init-only, <code class="inline-code">true</code> after SGD).</li>
+         reality (<code class="inline-code">false</code> for init-only, <code class="inline-code">true</code> after SGD).</li>
         <li><code class="inline-code">checkpoint.json</code> — includes <code class="inline-code">loss_curve</code>, <code class="inline-code">loss_before</code> /
-          <code class="inline-code">loss_after</code>, <code class="inline-code">beats_claude: false</code>, <code class="inline-code">device</code> (CPU).</li>
+         <code class="inline-code">loss_after</code>, <code class="inline-code">claim: false</code>, <code class="inline-code">device</code> (CPU).</li>
         </ul>
         <p>Gates fail loud if loss does not drop.</p>
         <h2 id="init-vs-step-weights">Init vs STEP weights</h2>
@@ -268,12 +267,12 @@
         </table></div>
         <p>Init tensor layout (including <strong>unused</strong> attn Q/K/V/O slots):
         <code class="inline-code">python/sparklang/model_lab/weights.py</code>. Serve path today uses
-        MLP0 only — <a href="/docs/attention-forward.html">ATTENTION_FORWARD.md</a>.</p>
+        MLP0 only — <a href="/docs/attention-forward.html">Attention / forward</a>.</p>
         <h2 id="makefile-targets">Makefile targets</h2>
-        <pre class="doc__pre"><code class="language-bash">make test-sparkbc        # includes dump + SGD loss-drop asserts
-        make sparkbc-e2e         # TRAIN→STEP→ARTIFACT (+ GAS --run-bc)
-        make spark-sgd-proof     # SGD then measurement-only spark-eval
-        make spark-eval          # frozen probes; exit 0 ≠ beat Claude
+        <pre class="doc__pre"><code class="language-bash">make test-sparkbc # includes dump + SGD loss-drop asserts
+        make sparkbc-e2e # TRAIN→STEP→ARTIFACT (+ GAS --run-bc)
+        make spark-sgd-proof # SGD then measurement-only spark-eval
+        make spark-eval # frozen probes; exit 0 ≠ marketing win
         make spark-eval WEIGHTS=out/train/sgd-proof/weights.safetensors
         </code></pre>
         <p>Details: <a href="/docs/sparkbc-make.html">SPARKBC_MAKE.md</a>.</p>
@@ -284,15 +283,15 @@
         <h2 id="honest-bar">Honest bar</h2>
         <ul class="doc__ul">
         <li>Multi-outer CPU SGD on tiny Spark tensors — <strong>yes</strong> (tip
-          <code class="inline-code">make spark-sgd-proof</code>).</li>
-        <li>Production LLM / beat Claude — <strong>no</strong>.</li>
-        <li>6000 / GPU-1 train — <strong>never</strong> from this lane.</li>
+         <code class="inline-code">make spark-sgd-proof</code>).</li>
+        <li>Production LLM / Competitive AI win claims — <strong>no</strong>.</li>
+        <li>6000 train — <strong>never</strong> from this lane.</li>
         </ul>
         <h2 id="related">Related</h2>
         <ul class="doc__ul">
         <li><a href="/docs/compile.html">Compile</a> · <a href="/docs/decompile.html">Decompile</a></li>
         <li><a href="/docs/attention-forward.html">Attention / forward</a></li>
-        <li><a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> · <a href="/docs/ai-models.html">AI_MODELS.md</a></li>
+        <li><a href="/docs/spark-builder.html">SPARK_BC Builder</a> · <a href="/docs/ai-models.html">AI_MODELS.md</a></li>
         </ul>
       </article>
       </main>

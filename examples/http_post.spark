@@ -1,5 +1,5 @@
 # First-class http post — dry-run fixture only (no network).
-#   ./spark --dry-run examples/http_post.spark
+# ./spark --dry-run examples/http_post.spark
 
 model fast
 

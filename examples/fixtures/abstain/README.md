@@ -33,7 +33,7 @@ Optional:
 - `text` — labels only
 - `toy` — CI toy backbone (default dim 16)
 - `synthetic_backbone` — dim-matched synthetic vectors (e.g. 768);
-  proves wide-head train/ask, **not** HF prefill
+ proves wide-head train/ask, **not** HF prefill
 - `hf` / `hf_prefill` — exported from an explicit HF model
 - `bag_hash` — legacy text→hash features (dim 64)
 
@@ -42,13 +42,13 @@ Optional:
 1. Add rows to a private or repo JSONL (no PII, no owner secrets).
 2. Validate: `./spark-abstain --live validate-corpus --dataset PATH`
 3. Export hiddens from the **target** backbone:
-   ```bash
-   SPARK_ABSTAIN_HF=1 SPARK_ABSTAIN_HF_LOCAL_ONLY=1 \
-   ./spark-abstain --live export \
-     --dataset examples/fixtures/abstain/corpus_seed.jsonl \
-     --model /path/to/local-hf-model \
-     --out out/heads/from-hf.jsonl
-   ```
+ ```bash
+ SPARK_ABSTAIN_HF=1 SPARK_ABSTAIN_HF_LOCAL_ONLY=1 \
+ ./spark-abstain --live export \
+ --dataset examples/fixtures/abstain/corpus_seed.jsonl \
+ --model /path/to/local-hf-model \
+ --out out/heads/from-hf.jsonl
+ ```
 4. Train: `./spark-abstain --live train --dataset out/heads/from-hf.jsonl --out out/heads/abstain.pt`
 5. Attach + ask with the **same** backbone `hidden_dim`.
 
@@ -56,18 +56,18 @@ Offline dim-match smoke (no HF):
 
 ```bash
 ./spark-abstain --live export \
-  --dataset examples/fixtures/abstain/corpus_seed.jsonl \
-  --source synthetic --hidden-dim 768 \
-  --out out/heads/synth768.jsonl
+ --dataset examples/fixtures/abstain/corpus_seed.jsonl \
+ --source synthetic --hidden-dim 768 \
+ --out out/heads/synth768.jsonl
 ./spark-abstain --live train \
-  --dataset out/heads/synth768.jsonl \
-  --out out/heads/abstain768.pt --hidden-dim 768
+ --dataset out/heads/synth768.jsonl \
+ --out out/heads/abstain768.pt --hidden-dim 768
 
 # Honest held-out metrics (retrain on train fold)
 ./spark-abstain --live eval \
-  --dataset out/heads/synth768.jsonl \
-  --train-out out/heads/abstain768-heldout.pt \
-  --holdout 0.2 --out out/heads/eval768.json
+ --dataset out/heads/synth768.jsonl \
+ --train-out out/heads/abstain768-heldout.pt \
+ --holdout 0.2 --out out/heads/eval768.json
 ```
 
 Quality stamps in export/train JSON (`toy_backbone`,

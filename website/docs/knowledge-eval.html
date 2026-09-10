@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Eval honesty — Spark</title>
+    <title>Evaluation — Spark</title>
     <meta name="description" content="Benchmarks as instruments — measurement, not marketing." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
@@ -56,7 +56,7 @@
                   <li class="nav-sub">
                     <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
-                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
                       <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
                     </ul>
                   </li>
@@ -179,10 +179,9 @@
         <a href="/docs/programming-guide.html">Programming guide</a>
         <a href="/downloads.html">Downloads</a>
       </nav>      <article class="doc__body">
-        <h1 id="eval-and-benchmark-honesty">Eval and benchmark honesty</h1>
-        <p>Scores are <strong>instruments</strong>, not trophies. Spark’s frozen harness
-        records probes and optional Claude baselines — it <strong>never</strong> claims
-        beat Claude (<a href="/docs/eval.html">EVAL.md</a>).</p>
+        <h1 id="evaluation-and-benchmarks">Evaluation and benchmarks</h1>
+        <p>Scores are <strong>instruments</strong>. Spark’s frozen harness
+        records probes and optional frontier-API baselines as measurements. (<a href="/docs/eval.html">Eval</a>).</p>
         <h2 id="what-benchmarks-measure">What benchmarks measure</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
@@ -223,27 +222,27 @@
         <p>QLoRA authors noted chatbot benchmarks can mislead
         (<a href="https://arxiv.org/abs/2305.14314">Dettmers et al.</a>). Prefer
         <strong>paired</strong> comparisons on <strong>frozen</strong> prompts with disclosed judges.</p>
-        <h2 id="honesty-rules-spark">Honesty rules (Spark)</h2>
+        <h2 id="eval-rules-spark">Eval rules (Spark)</h2>
         <ol class="doc__ol">
         <li>Publish the <strong>probe set</strong> and git SHA.</li>
         <li>Separate <strong>fixture dry-run</strong> from live gateway calls.</li>
-        <li>Optional frontier baseline = <strong>reference</strong>, not a win claim.</li>
+        <li>Optional frontier baseline = <strong>reference</strong> score.</li>
         <li>Abstain / expect failures are first-class — not hidden.</li>
         </ol>
         <pre class="mermaid">flowchart TB
-          probes[Frozen probes] --> run[spark-eval]
-          run --> scores[Numeric scores]
-          run --> base[Optional Claude baseline]
-          scores --> report[Report only]
-          base --> report
-          report --> ban[Never "beat Claude" banner]</pre>
+         probes[Frozen probes] --> run[spark-eval]
+         run --> scores[Numeric scores]
+         run --> base[optional frontier-API baseline]
+         scores --> report[Report only]
+         base --> report
+         report --> out[Publish scores only]</pre>
         <h2 id="related">Related</h2>
         <ul class="doc__ul">
-        <li><a href="/docs/eval.html">EVAL.md</a> — harness</li>
+        <li><a href="/docs/eval.html">Eval</a> — harness</li>
         <li><a href="/docs/abstain-heads.html">ABSTAIN_HEADS.md</a> — when not to answer</li>
         <li>Decompile metrics skepticism — <a href="/docs/knowledge-decompile.html">DECOMPILE_RE.md</a></li>
         </ul>
-        <p>Hive home: <a href="/docs/knowledge.html">KNOWLEDGE.md</a>.</p>
+        <p>Hive home: <a href="/docs/knowledge.html">Knowledge</a>.</p>
       </article>
       </main>
     </div>

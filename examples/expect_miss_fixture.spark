@@ -1,5 +1,5 @@
 # Expect miss — missing fixture path exits non-zero (no invented want).
-#   ./spark --dry-run examples/expect_miss_fixture.spark ; echo $?
+# ./spark --dry-run examples/expect_miss_fixture.spark ; echo $?
 
 let answer "Ada Lovelace"
 

@@ -1,334 +1,334 @@
 {
-  "generated_at": "2026-09-10T00:41Z",
-  "generator": "tools/spark-bc-dump/decompile_bench.py",
+ "generated_at": "2026-09-10T00:41Z",
+ "generator": "tools/spark-bc-dump/decompile_bench.py",
+ "domain": "SPARK_BC",
+ "honesty": "Measured Spark metrics on SPARK_BC fixtures only. Do not publish cross-tool win claims without this JSON. Classic tools win ELF/PE; Spark wins SPBC round-trip + local structured dump + privacy + train/weights.",
+ "beat_axes": [
+  {
+   "axis": "100% SPARK_BC round-trip hash",
+   "status": "pass",
+   "round_trip_pct": 100.0
+  },
+  {
+   "axis": "Best structured SPARK_BC dump",
+   "status": "measured",
+   "fixtures_ok": 3
+  },
+  {
+   "axis": "Best local privacy (no upload)",
+   "status": "design",
+   "note": "dump/analyze stay on disk"
+  },
+  {
+   "axis": "Integrated train/weights",
+   "status": "design",
+   "note": "TRAIN/STEP + emit_init_weights"
+  }
+ ],
+ "roundtrip": {
+  "status": "pass",
   "domain": "SPARK_BC",
-  "honesty": "Measured Spark metrics on SPARK_BC fixtures only. Do NOT publish 'Spark beats Ghidra/IDA/Binary Ninja/LLM4Decompile/OpenBin' without this JSON. Classic tools win ELF/PE; Spark wins SPBC round-trip + local structured dump + privacy + train/weights.",
-  "beat_axes": [
-    {
-      "axis": "100% SPARK_BC round-trip hash",
-      "status": "pass",
-      "round_trip_pct": 100.0
-    },
-    {
-      "axis": "Best structured SPARK_BC dump",
-      "status": "measured",
-      "fixtures_ok": 3
-    },
-    {
-      "axis": "Best local privacy (no upload)",
-      "status": "design",
-      "note": "dump/analyze stay on disk"
-    },
-    {
-      "axis": "Integrated train/weights",
-      "status": "design",
-      "note": "TRAIN/STEP + emit_init_weights"
-    }
-  ],
-  "roundtrip": {
-    "status": "pass",
-    "domain": "SPARK_BC",
-    "round_trip_pct": 100.0,
-    "n_pass": 3,
-    "n_total": 3,
-    "fixtures": [
-      {
-        "id": "train-step",
-        "status": "pass",
-        "source": "examples/spark_train_step.spark",
-        "published": "docs/examples/spark-train-step.sparkbc",
-        "sha256": "d08925b52bf8c840de626c9cfec619d4dbae5a674b94bb8c7c5837eb1ac64551",
-        "recompile_match": true,
-        "published_match": true,
-        "n_ops": 6,
-        "n_symbols": 9,
-        "n_sections": 5,
-        "dump_bytes": 3925
-      },
-      {
-        "id": "builder",
-        "status": "pass",
-        "source": "examples/spark_builder.spark",
-        "published": "docs/examples/spark-builder.sparkbc",
-        "sha256": "e89b27c86618cbbb87d2d59209fb5c0450c0513105c88c622de367f3a8e29f9a",
-        "recompile_match": true,
-        "published_match": true,
-        "n_ops": 7,
-        "n_symbols": 10,
-        "n_sections": 5,
-        "dump_bytes": 4615
-      },
-      {
-        "id": "self",
-        "status": "pass",
-        "source": "selfhost/compile.spark",
-        "published": "docs/examples/spark-self.sparkbc",
-        "sha256": "a33f3232752c2fdd75db728773cb589a4eaf8e0bb70ac2539d2519b2dc7df6e8",
-        "recompile_match": true,
-        "published_match": true,
-        "n_ops": 4,
-        "n_symbols": 3,
-        "n_sections": 5,
-        "dump_bytes": 2554
-      }
-    ],
-    "note": "compile\u2192dump\u2192recompile hash on same .spark source; dump is inspect, not source decompile"
-  },
+  "round_trip_pct": 100.0,
+  "n_pass": 3,
+  "n_total": 3,
   "fixtures": [
-    {
-      "path": "docs/examples/spark-train-step.sparkbc",
-      "status": "ok",
-      "sha256": "d08925b52bf8c840de626c9cfec619d4dbae5a674b94bb8c7c5837eb1ac64551",
-      "size": 201,
-      "n_symbols": 9,
-      "n_ops": 6,
-      "n_sections": 5,
-      "n_const_refs": 11,
-      "has_structured_dump": true,
-      "json_export": true,
-      "html_export": true
-    },
-    {
-      "path": "docs/examples/spark-builder.sparkbc",
-      "status": "ok",
-      "sha256": "e89b27c86618cbbb87d2d59209fb5c0450c0513105c88c622de367f3a8e29f9a",
-      "size": 272,
-      "n_symbols": 10,
-      "n_ops": 7,
-      "n_sections": 5,
-      "n_const_refs": 12,
-      "has_structured_dump": true,
-      "json_export": true,
-      "html_export": true
-    },
-    {
-      "path": "docs/examples/spark-self.sparkbc",
-      "status": "ok",
-      "sha256": "a33f3232752c2fdd75db728773cb589a4eaf8e0bb70ac2539d2519b2dc7df6e8",
-      "size": 118,
-      "n_symbols": 3,
-      "n_ops": 4,
-      "n_sections": 5,
-      "n_const_refs": 4,
-      "has_structured_dump": true,
-      "json_export": true,
-      "html_export": true
-    }
-  ],
-  "external_tools": [
-    {
-      "tool": "objdump",
-      "status": "present",
-      "path": "/usr/bin/objdump",
-      "verdict": "na-sparkbc",
-      "note": "Installed, but not a SPARK_BC SoT decoder \u2014 skip compete on SPBC domain. snippet='GNU objdump (GNU Binutils for Ubuntu) 2.42\\nCopyright (C) 2024 Free Software Foundation, Inc.\\nThis program is free softwa'"
-    },
-    {
-      "tool": "radare2",
-      "status": "absent",
-      "verdict": "skip",
-      "note": "r2 not on PATH"
-    },
-    {
-      "tool": "ghidra",
-      "status": "absent",
-      "verdict": "skip",
-      "note": "ghidraRun not on PATH"
-    },
-    {
-      "tool": "ida",
-      "status": "absent",
-      "verdict": "skip",
-      "note": "idat64 not on PATH"
-    },
-    {
-      "tool": "binaryninja",
-      "status": "absent",
-      "verdict": "skip",
-      "note": "binaryninja not on PATH"
-    },
-    {
-      "tool": "openbin",
-      "status": "absent",
-      "verdict": "skip",
-      "note": "openbin not on PATH"
-    }
-  ],
-  "elf_local_probe": {
-    "status": "ok",
-    "op": "elf",
-    "claim": "local_elf_probe_not_ghidra",
-    "section_count": 8,
-    "n_sections_listed": 8,
-    "elf_class": 2,
-    "machine": 62,
-    "note": "Local ELF64 hdr+sections JSON \u2014 still loss vs Ghidra/IDA/Binja on Multi-format ELF/PE axis"
-  },
-  "parity": [
-    {
-      "category": "Native dump fidelity (SPARK_BC)",
-      "spark": "win",
-      "openbin": "na",
-      "ghidra": "na",
-      "ida": "na",
-      "binja": "na",
-      "llm4decompile": "na",
-      "note": "Only Spark decodes SPBC SoT; classics target ELF/PE/mach-O"
-    },
-    {
-      "category": "Round-trip reassemble (compile hash)",
-      "spark": "win",
-      "openbin": "na",
-      "ghidra": "loss",
-      "ida": "loss",
-      "binja": "loss",
-      "llm4decompile": "loss",
-      "note": "Spark: compile\u2192dump\u2192recompile 100% on fixtures. LLM recompile\u2260fidelity (arXiv:2609.05370)"
-    },
-    {
-      "category": "IDE explore (SPARK_BC GUI / dump)",
-      "spark": "win",
-      "openbin": "tie",
-      "ghidra": "tie",
-      "ida": "tie",
-      "binja": "tie",
-      "llm4decompile": "na",
-      "note": "Spark has local dump/GUI for SPBC; classics win general binary IDE \u2014 different domain"
-    },
-    {
-      "category": "Ask / voice assist",
-      "spark": "tie",
-      "openbin": "tie",
-      "ghidra": "na",
-      "ida": "na",
-      "binja": "na",
-      "llm4decompile": "tie",
-      "note": "Optional LLM assist exists in research/product space; Spark keeps LLM off SoT"
-    },
-    {
-      "category": "Report export (txt/json/html project)",
-      "spark": "win",
-      "openbin": "tie",
-      "ghidra": "tie",
-      "ida": "tie",
-      "binja": "tie",
-      "llm4decompile": "na",
-      "note": "Spark ships analyze_project local folder"
-    },
-    {
-      "category": "Multi-format ELF/PE",
-      "spark": "loss",
-      "openbin": "win",
-      "ghidra": "win",
-      "ida": "win",
-      "binja": "win",
-      "llm4decompile": "win",
-      "note": "Spark ships spark-binary-probe --elf (hdr + sections JSON) + spark-section-dump; still not Ghidra-class. SPARK_BC first. claim=local_elf_probe_not_ghidra"
-    },
-    {
-      "category": "LLM-assist decompile",
-      "spark": "na",
-      "openbin": "win",
-      "ghidra": "tie",
-      "ida": "tie",
-      "binja": "tie",
-      "llm4decompile": "win",
-      "note": "Spark does not claim LLM source recovery; research note only"
-    },
-    {
-      "category": "Batch / fixtures harness",
-      "spark": "win",
-      "openbin": "tie",
-      "ghidra": "tie",
-      "ida": "tie",
-      "binja": "tie",
-      "llm4decompile": "tie",
-      "note": "make decompile-bench + roundtrip fixtures"
-    },
-    {
-      "category": "Shadows / helpers",
-      "spark": "win",
-      "openbin": "na",
-      "ghidra": "na",
-      "ida": "na",
-      "binja": "na",
-      "llm4decompile": "na",
-      "note": "helpers/shadows wrap Spark SoT"
-    },
-    {
-      "category": "Local privacy (no upload)",
-      "spark": "win",
-      "openbin": "loss",
-      "ghidra": "win",
-      "ida": "win",
-      "binja": "win",
-      "llm4decompile": "tie",
-      "note": "OpenBin online path may upload after login; Spark dump stays local"
-    },
-    {
-      "category": "Integrated train / weights",
-      "spark": "win",
-      "openbin": "na",
-      "ghidra": "na",
-      "ida": "na",
-      "binja": "na",
-      "llm4decompile": "na",
-      "note": "TRAIN/STEP + init weights from same BC"
-    }
-  ],
-  "summary_counts": {
-    "spark": {
-      "win": 8,
-      "tie": 1,
-      "loss": 1,
-      "na": 1
-    },
-    "openbin": {
-      "win": 2,
-      "tie": 4,
-      "loss": 1,
-      "na": 4
-    },
-    "ghidra": {
-      "win": 2,
-      "tie": 4,
-      "loss": 1,
-      "na": 4
-    },
-    "ida": {
-      "win": 2,
-      "tie": 4,
-      "loss": 1,
-      "na": 4
-    },
-    "binja": {
-      "win": 2,
-      "tie": 4,
-      "loss": 1,
-      "na": 4
-    },
-    "llm4decompile": {
-      "win": 2,
-      "tie": 3,
-      "loss": 1,
-      "na": 5
-    }
-  },
-  "sample_project": {
-    "out_dir": "out/decompile-bench/sample-project",
+   {
+    "id": "train-step",
+    "status": "pass",
+    "source": "examples/spark_train_step.spark",
+    "published": "docs/examples/spark-train-step.sparkbc",
     "sha256": "d08925b52bf8c840de626c9cfec619d4dbae5a674b94bb8c7c5837eb1ac64551",
-    "files": [
-      "dump.txt",
-      "dump.json",
-      "dump.html",
-      "report.md",
-      "roundtrip.json"
-    ]
+    "recompile_match": true,
+    "published_match": true,
+    "n_ops": 6,
+    "n_symbols": 9,
+    "n_sections": 5,
+    "dump_bytes": 3925
+   },
+   {
+    "id": "builder",
+    "status": "pass",
+    "source": "examples/spark_builder.spark",
+    "published": "docs/examples/spark-builder.sparkbc",
+    "sha256": "e89b27c86618cbbb87d2d59209fb5c0450c0513105c88c622de367f3a8e29f9a",
+    "recompile_match": true,
+    "published_match": true,
+    "n_ops": 7,
+    "n_symbols": 10,
+    "n_sections": 5,
+    "dump_bytes": 4615
+   },
+   {
+    "id": "self",
+    "status": "pass",
+    "source": "selfhost/compile.spark",
+    "published": "docs/examples/spark-self.sparkbc",
+    "sha256": "a33f3232752c2fdd75db728773cb589a4eaf8e0bb70ac2539d2519b2dc7df6e8",
+    "recompile_match": true,
+    "published_match": true,
+    "n_ops": 4,
+    "n_symbols": 3,
+    "n_sections": 5,
+    "dump_bytes": 2554
+   }
+  ],
+  "note": "compile\u2192dump\u2192recompile hash on same .spark source; dump is inspect, not source decompile"
+ },
+ "fixtures": [
+  {
+   "path": "docs/examples/spark-train-step.sparkbc",
+   "status": "ok",
+   "sha256": "d08925b52bf8c840de626c9cfec619d4dbae5a674b94bb8c7c5837eb1ac64551",
+   "size": 201,
+   "n_symbols": 9,
+   "n_ops": 6,
+   "n_sections": 5,
+   "n_const_refs": 11,
+   "has_structured_dump": true,
+   "json_export": true,
+   "html_export": true
   },
-  "never": [
-    "false marketing beats-all",
-    "RTX PRO 6000",
-    "beat Claude invention",
-    "copy OpenBin code"
+  {
+   "path": "docs/examples/spark-builder.sparkbc",
+   "status": "ok",
+   "sha256": "e89b27c86618cbbb87d2d59209fb5c0450c0513105c88c622de367f3a8e29f9a",
+   "size": 272,
+   "n_symbols": 10,
+   "n_ops": 7,
+   "n_sections": 5,
+   "n_const_refs": 12,
+   "has_structured_dump": true,
+   "json_export": true,
+   "html_export": true
+  },
+  {
+   "path": "docs/examples/spark-self.sparkbc",
+   "status": "ok",
+   "sha256": "a33f3232752c2fdd75db728773cb589a4eaf8e0bb70ac2539d2519b2dc7df6e8",
+   "size": 118,
+   "n_symbols": 3,
+   "n_ops": 4,
+   "n_sections": 5,
+   "n_const_refs": 4,
+   "has_structured_dump": true,
+   "json_export": true,
+   "html_export": true
+  }
+ ],
+ "external_tools": [
+  {
+   "tool": "objdump",
+   "status": "present",
+   "path": "/usr/bin/objdump",
+   "verdict": "na-sparkbc",
+   "note": "Installed, but not a SPARK_BC SoT decoder \u2014 skip compete on SPBC domain. snippet='GNU objdump (GNU Binutils for Ubuntu) 2.42\\nCopyright (C) 2024 Free Software Foundation, Inc.\\nThis program is free softwa'"
+  },
+  {
+   "tool": "radare2",
+   "status": "absent",
+   "verdict": "skip",
+   "note": "r2 not on PATH"
+  },
+  {
+   "tool": "ghidra",
+   "status": "absent",
+   "verdict": "skip",
+   "note": "ghidraRun not on PATH"
+  },
+  {
+   "tool": "ida",
+   "status": "absent",
+   "verdict": "skip",
+   "note": "idat64 not on PATH"
+  },
+  {
+   "tool": "binaryninja",
+   "status": "absent",
+   "verdict": "skip",
+   "note": "binaryninja not on PATH"
+  },
+  {
+   "tool": "openbin",
+   "status": "absent",
+   "verdict": "skip",
+   "note": "openbin not on PATH"
+  }
+ ],
+ "elf_local_probe": {
+  "status": "ok",
+  "op": "elf",
+  "claim": "local_elf_probe_not_ghidra",
+  "section_count": 8,
+  "n_sections_listed": 8,
+  "elf_class": 2,
+  "machine": 62,
+  "note": "Local ELF64 hdr+sections JSON \u2014 still loss vs Ghidra/IDA/Binja on Multi-format ELF/PE axis"
+ },
+ "parity": [
+  {
+   "category": "Native dump fidelity (SPARK_BC)",
+   "spark": "win",
+   "openbin": "na",
+   "ghidra": "na",
+   "ida": "na",
+   "binja": "na",
+   "llm4decompile": "na",
+   "note": "Only Spark decodes SPBC SoT; classics target ELF/PE/mach-O"
+  },
+  {
+   "category": "Round-trip reassemble (compile hash)",
+   "spark": "win",
+   "openbin": "na",
+   "ghidra": "loss",
+   "ida": "loss",
+   "binja": "loss",
+   "llm4decompile": "loss",
+   "note": "Spark: compile\u2192dump\u2192recompile 100% on fixtures. LLM recompile\u2260fidelity (arXiv:2609.05370)"
+  },
+  {
+   "category": "IDE explore (SPARK_BC GUI / dump)",
+   "spark": "win",
+   "openbin": "tie",
+   "ghidra": "tie",
+   "ida": "tie",
+   "binja": "tie",
+   "llm4decompile": "na",
+   "note": "Spark has local dump/GUI for SPBC; classics win general binary IDE \u2014 different domain"
+  },
+  {
+   "category": "Ask / voice assist",
+   "spark": "tie",
+   "openbin": "tie",
+   "ghidra": "na",
+   "ida": "na",
+   "binja": "na",
+   "llm4decompile": "tie",
+   "note": "Optional LLM assist exists in research/product space; Spark keeps LLM off SoT"
+  },
+  {
+   "category": "Report export (txt/json/html project)",
+   "spark": "win",
+   "openbin": "tie",
+   "ghidra": "tie",
+   "ida": "tie",
+   "binja": "tie",
+   "llm4decompile": "na",
+   "note": "Spark ships analyze_project local folder"
+  },
+  {
+   "category": "Multi-format ELF/PE",
+   "spark": "loss",
+   "openbin": "win",
+   "ghidra": "win",
+   "ida": "win",
+   "binja": "win",
+   "llm4decompile": "win",
+   "note": "Spark ships spark-binary-probe --elf (hdr + sections JSON) + spark-section-dump; still not Ghidra-class. SPARK_BC first. claim=local_elf_probe_not_ghidra"
+  },
+  {
+   "category": "LLM-assist decompile",
+   "spark": "na",
+   "openbin": "win",
+   "ghidra": "tie",
+   "ida": "tie",
+   "binja": "tie",
+   "llm4decompile": "win",
+   "note": "Spark does not claim LLM source recovery; research note only"
+  },
+  {
+   "category": "Batch / fixtures harness",
+   "spark": "win",
+   "openbin": "tie",
+   "ghidra": "tie",
+   "ida": "tie",
+   "binja": "tie",
+   "llm4decompile": "tie",
+   "note": "make decompile-bench + roundtrip fixtures"
+  },
+  {
+   "category": "Shadows / helpers",
+   "spark": "win",
+   "openbin": "na",
+   "ghidra": "na",
+   "ida": "na",
+   "binja": "na",
+   "llm4decompile": "na",
+   "note": "helpers/shadows wrap Spark SoT"
+  },
+  {
+   "category": "Local privacy (no upload)",
+   "spark": "win",
+   "openbin": "loss",
+   "ghidra": "win",
+   "ida": "win",
+   "binja": "win",
+   "llm4decompile": "tie",
+   "note": "OpenBin online path may upload after login; Spark dump stays local"
+  },
+  {
+   "category": "Integrated train / weights",
+   "spark": "win",
+   "openbin": "na",
+   "ghidra": "na",
+   "ida": "na",
+   "binja": "na",
+   "llm4decompile": "na",
+   "note": "TRAIN/STEP + init weights from same BC"
+  }
+ ],
+ "summary_counts": {
+  "spark": {
+   "win": 8,
+   "tie": 1,
+   "loss": 1,
+   "na": 1
+  },
+  "openbin": {
+   "win": 2,
+   "tie": 4,
+   "loss": 1,
+   "na": 4
+  },
+  "ghidra": {
+   "win": 2,
+   "tie": 4,
+   "loss": 1,
+   "na": 4
+  },
+  "ida": {
+   "win": 2,
+   "tie": 4,
+   "loss": 1,
+   "na": 4
+  },
+  "binja": {
+   "win": 2,
+   "tie": 4,
+   "loss": 1,
+   "na": 4
+  },
+  "llm4decompile": {
+   "win": 2,
+   "tie": 3,
+   "loss": 1,
+   "na": 5
+  }
+ },
+ "sample_project": {
+  "out_dir": "out/decompile-bench/sample-project",
+  "sha256": "d08925b52bf8c840de626c9cfec619d4dbae5a674b94bb8c7c5837eb1ac64551",
+  "files": [
+   "dump.txt",
+   "dump.json",
+   "dump.html",
+   "report.md",
+   "roundtrip.json"
   ]
+ },
+ "never": [
+  "false marketing beats-all",
+  "reserved voice GPUs",
+  "a marketing win. invention",
+  "copy OpenBin code"
+ ]
 }

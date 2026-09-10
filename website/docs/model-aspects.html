@@ -56,7 +56,7 @@
                   <li class="nav-sub">
                     <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
-                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
                       <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
                     </ul>
                   </li>
@@ -183,20 +183,20 @@
         <p>Engineer map of the <strong>Spark / SparkLang</strong> AI model <strong>as a whole
         system</strong>: how text, tools, memory, and optional senses plug into
         bytecode + weights + serve. Not marketing. Not God/Loom metaphors.</p>
-        <p><strong>Never</strong> claims beat Claude. <strong>Never</strong> trains on the RTX PRO <strong>6000</strong>
+        <p>Eval scores are <strong>measurement only</strong>, not marketing wins.
         (voice-serving GPU elsewhere — not Spark train). Prefer <strong>CPU</strong> or
         <strong>RTX 5090</strong> for opt-in large local work.</p>
-        <p>Factory hub: <a href="/docs/factory.html">FACTORY.md</a>. Knowledge hive:
-        <a href="/docs/knowledge.html">KNOWLEDGE.md</a> (agents/tools · multimodal · eval).
+        <p>Factory hub: <a href="/docs/factory.html">Factory hub</a>. Knowledge hive:
+        <a href="/docs/knowledge.html">Knowledge</a> (agents/tools · multimodal · eval).
         Voice surface: <a href="/docs/voice.html">VOICE.md</a>. Voice easy train:
-        <a href="/docs/voice-easy.html">VOICE_EASY.md</a>. Voice ask (dump Q&amp;A):
+        <a href="/docs/voice-easy.html">Voice easy</a>. Voice ask (dump Q&amp;A):
         <a href="/docs/voice-ask.html">VOICE_ASK.md</a>. Methods vs OpenBin:
-        <a href="/docs/methods-openbin.html">METHODS_OPENBIN.md</a>. Coder:
-        <a href="/docs/spark-coder.html">SPARK_CODER.md</a>. Weights:
-        <a href="/docs/weight-gallery.html">WEIGHT_GALLERY.md</a>. Architecture:
-        <a href="/docs/architecture.html">ARCHITECTURE.md</a>. Attention honesty:
-        <a href="/docs/attention-forward.html">ATTENTION_FORWARD.md</a>. Live ask:
-        <a href="/docs/ai-models.html#live-gateway-integration-wired-today">ASK_LIVE.md</a>. Diagrams: <a href="/docs/diagrams.html">DIAGRAMS.md</a>.</p>
+        <a href="/docs/methods-openbin.html">Methods vs OpenBin</a>. Coder:
+        <a href="/docs/spark-coder.html">Spark coder</a>. Weights:
+        <a href="/docs/weight-gallery.html">Weight gallery</a>. Architecture:
+        <a href="/docs/architecture.html">Architecture</a>. Attention / forward:
+        <a href="/docs/attention-forward.html">Attention / forward</a>. Live ask:
+        <a href="/docs/ai-models.html#live-gateway-integration-wired-today">ASK_LIVE.md</a>. Diagrams: <a href="/docs/diagrams.html">Diagrams</a>.</p>
         <blockquote>
         <p><strong>Forge nav:</strong> this page lives under <strong>Forge → Model aspects</strong> on
         <a href="https://sparklang.dev/docs/model-aspects.html">sparklang.dev</a>.
@@ -223,7 +223,7 @@
         </tr>
         <tr>
         <td><strong>Train / ops</strong></td>
-        <td>Training &amp; adaptation · Eval &amp; honesty · Runtime / serve</td>
+        <td>Training &amp; adaptation · Eval &amp; benchmarks · Runtime / serve</td>
         </tr>
         <tr>
         <td><strong>Behaviors</strong></td>
@@ -275,15 +275,14 @@
         <p>For agentic AI specifically:</p>
         <ol class="doc__ol">
         <li><strong>Each sense is a boundary.</strong> Fail-closed net gates
-           (<code class="inline-code">SPARK_STT_NET</code>, <code class="inline-code">SPARK_TTS_NET</code>, inventable-IDK on <code class="inline-code">ask</code>) live
-           <em>at</em> the sense edges — not buried in marketing copy.</li>
+         (<code class="inline-code">SPARK_STT_NET</code>, <code class="inline-code">SPARK_TTS_NET</code>, inventable-IDK on <code class="inline-code">ask</code>) live
+         <em>at</em> the sense edges — not buried in marketing copy.</li>
         <li><strong>Behaviors own the loop.</strong> Tools and reply packs are first-class,
-           not afterthoughts bolted onto logits.</li>
+         not afterthoughts bolted onto logits.</li>
         <li><strong>Tiny vs large is explicit.</strong> CI stays tiny; large is opt-in on
-           <strong>5090</strong> / CPU — never the <strong>6000</strong>.</li>
-        <li><strong>Comparison without cloning.</strong> OpenBin Ask / production phone
-           voice stacks solve different jobs; Spark documents <em>its</em> loop and
-           refuses to fake theirs.</li>
+         <strong>5090</strong> / CPU — 4. <strong>Comparison without cloning.</strong> OpenBin Ask / production phone
+         voice stacks solve different jobs; Spark documents <em>its</em> loop and
+         refuses to fake theirs.</li>
         </ol>
         <p>This page keeps the <strong>summary status table</strong> (below), then expands
         ~100× into diagrams, how-tos, opcode/CLI maps, gaps, and roadmap.</p>
@@ -332,7 +331,7 @@
         <a href="#system-diagram--ears--brain--voice--tools">System diagram</a> ·
         <a href="#comparison--spark-local-sot-vs-openbin-ask--phone-voice">Comparison</a> ·
         <a href="#how-to-lab-15-minutes">How-to lab</a> ·
-        <a href="#honesty-bar-never-fake">Honesty bar</a>.</p>
+        <a href="#capability-status">Capability status</a>.</p>
         <hr class="doc__hr" />
         <h2 id="status-table-honest-engineering-aspects">Status table (honest — engineering aspects)</h2>
         <div class="doc__table-wrap"><table class="doc__table">
@@ -357,7 +356,7 @@
         <tr>
         <td>Layers / MLP (SwiGLU MLP0)</td>
         <td><strong>implemented</strong> (serve)</td>
-        <td><a href="/docs/serve.html">SERVE.md</a>; MLP0 in forward</td>
+        <td><a href="/docs/serve.html">Serve</a>; MLP0 in forward</td>
         </tr>
         <tr>
         <td>Attention (QKVO / GQA)</td>
@@ -405,9 +404,9 @@
         <td>STEP SGD + owned TinyCoder (owned TinyCoder) —</td>
         </tr>
         <tr>
-        <td>Eval / honesty</td>
+        <td>Eval / benchmarks</td>
         <td><strong>implemented</strong></td>
-        <td><code class="inline-code">make spark-eval</code>; optional Claude baseline — <strong>not</strong> beat Claude</td>
+        <td><code class="inline-code">make spark-eval</code>; optional frontier-API baseline — <strong>measurement only</strong></td>
         </tr>
         <tr>
         <td>Runtime serve</td>
@@ -422,7 +421,7 @@
         <tr>
         <td>Knowledge hive</td>
         <td><strong>implemented</strong> (docs)</td>
-        <td><a href="/docs/knowledge.html">KNOWLEDGE.md</a> → <a href="/docs/knowledge.html">/docs/knowledge.html</a>; multimodal / agents topic pages</td>
+        <td><a href="/docs/knowledge.html">Knowledge</a> → <a href="/docs/knowledge.html">/docs/knowledge.html</a>; multimodal / agents topic pages</td>
         </tr>
         </tbody>
         </table></div>
@@ -431,17 +430,17 @@
         <p><img class="doc__img" alt="Ears to brain to voice" src="/docs/images/diagram-ears-brain-voice.svg" /></p>
         <p><img class="doc__img" alt="Agentic sensory loop" src="/docs/images/diagram-agentic-sensory-loop.svg" /></p>
         <pre class="mermaid">flowchart LR
-          EAR["Ears — listen / STT<br/>spark-stt-tts"]
-          TOK["Tokenizer / bindings"]
-          BRN["Thinking — tiny CPU forward<br/>embed → attn0 → MLP0 → lm_head"]
-          TOOL["Tools / behaviors<br/>classify · ask · reply pack"]
-          VOC["Speaking — speak / TTS<br/>PCM or SPARK_TTS_*"]
-          EAR --> TOK --> BRN
-          BRN --> TOOL
-          TOOL --> VOC
-          VOC -.->|next turn transcript| EAR
-          TOOL -.->|tool result text| BRN
-          EYE["Eyes — vision<br/>planned stub only"] -.->|not wired| BRN</pre>
+         EAR["Ears — listen / STT<br/>spark-stt-tts"]
+         TOK["Tokenizer / bindings"]
+         BRN["Thinking — tiny CPU forward<br/>embed → attn0 → MLP0 → lm_head"]
+         TOOL["Tools / behaviors<br/>classify · ask · reply pack"]
+         VOC["Speaking — speak / TTS<br/>PCM or SPARK_TTS_*"]
+         EAR --> TOK --> BRN
+         BRN --> TOOL
+         TOOL --> VOC
+         VOC -.->|next turn transcript| EAR
+         TOOL -.->|tool result text| BRN
+         EYE["Eyes — vision<br/>planned stub only"] -.->|not wired| BRN</pre>
         <p><strong>Loop reading (plain):</strong> ears (or typed text) become tokens → thinking
         produces logits / ask text → behaviors pick tools, SoT, or abstain →
         speaking (or <code class="inline-code">print</code>) leaves the system → the next turn may listen
@@ -489,27 +488,27 @@
         </table></div>
         <h3 id="dataflow">Dataflow</h3>
         <pre class="mermaid">flowchart TB
-          WAV["WAV file or arecord mic"]
-          SIDE["sidecar .txt / .intent.txt"]
-          CMD["SPARK_STT_CMD (%i → stdout)"]
-          WH["openai-whisper tiny.en"]
-          HTTP["HTTP STT — only if SPARK_STT_NET=1"]
-          BIND["VM binds transcript -> var"]
-          WAV --> SIDE
-          WAV --> CMD
-          WAV --> WH
-          WAV --> HTTP
-          SIDE --> BIND
-          CMD --> BIND
-          WH --> BIND
-          HTTP --> BIND</pre>
+         WAV["WAV file or arecord mic"]
+         SIDE["sidecar .txt / .intent.txt"]
+         CMD["SPARK_STT_CMD (%i → stdout)"]
+         WH["openai-whisper tiny.en"]
+         HTTP["HTTP STT — only if SPARK_STT_NET=1"]
+         BIND["VM binds transcript -> var"]
+         WAV --> SIDE
+         WAV --> CMD
+         WAV --> WH
+         WAV --> HTTP
+         SIDE --> BIND
+         CMD --> BIND
+         WH --> BIND
+         HTTP --> BIND</pre>
         <h3 id="opcodes-cli-makefile-today">Opcodes / CLI / makefile today</h3>
-        <pre class="doc__pre"><code class="language-bash">make                          # builds spark-stt-tts
+        <pre class="doc__pre"><code class="language-bash">make # builds spark-stt-tts
         ./spark --dry-run examples/voice_turn.spark
         ./spark --live examples/voice_live.spark
         ./spark-stt-tts status
         ./spark-stt-tts listen --in examples/fixtures/audio/sample_review.wav
-        make voice-test               # local companion smoke
+        make voice-test # local companion smoke
         </code></pre>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
@@ -567,7 +566,7 @@
         </tr>
         <tr>
         <td>Opt-in owned voice heads</td>
-        <td>tiny / <strong>large</strong> via <a href="/docs/voice-easy.html">VOICE_EASY.md</a> (<code class="inline-code">make voice-easy</code>)</td>
+        <td>tiny / <strong>large</strong> via <a href="/docs/voice-easy.html">Voice easy</a> (<code class="inline-code">make voice-easy</code>)</td>
         <td>Prefer <strong>5090</strong>; refuse <strong>6000</strong></td>
         </tr>
         </tbody>
@@ -579,7 +578,7 @@
         <thead>
         <tr>
         <th>Gap</th>
-        <th>Honesty</th>
+        <th>Status</th>
         </tr>
         </thead>
         <tbody>
@@ -602,8 +601,8 @@
         </tbody>
         </table></div>
         <h3 id="links">Links</h3>
-        <p><a href="/docs/voice.html">VOICE.md</a> · <a href="/docs/spark-coder.html">SPARK_CODER.md</a> (sibling train
-        discipline) · <a href="/docs/weight-gallery.html">WEIGHT_GALLERY.md</a> ·
+        <p><a href="/docs/voice.html">VOICE.md</a> · <a href="/docs/spark-coder.html">Spark coder</a> (sibling train
+        discipline) · <a href="/docs/weight-gallery.html">Weight gallery</a> ·
         <a href="/docs/ci-pages.html">CI_PAGES.md</a>.</p>
         <hr class="doc__hr" />
         <h2 id="eyes-vision-image-in">Eyes — vision / image in</h2>
@@ -647,11 +646,11 @@
         </code></pre>
         <h3 id="dataflow-planned-dashed">Dataflow (planned — dashed)</h3>
         <pre class="mermaid">flowchart LR
-          IMG["PNG / JPEG path"]
-          ENC["Vision encoder — planned"]
-          TOK["Image / caption tokens — planned"]
-          EMB["spark.embed — not wired"]
-          IMG -.-> ENC -.-> TOK -.-> EMB</pre>
+         IMG["PNG / JPEG path"]
+         ENC["Vision encoder — planned"]
+         TOK["Image / caption tokens — planned"]
+         EMB["spark.embed — not wired"]
+         IMG -.-> ENC -.-> TOK -.-> EMB</pre>
         <h3 id="tiny-vs-large">Tiny vs large</h3>
         <p>N/A for runtime. Do <strong>not</strong> route hypothetical vision train to the
         <strong>6000</strong>. Any future large vision experiment follows the same
@@ -680,8 +679,8 @@
         </tbody>
         </table></div>
         <h3 id="links">Links</h3>
-        <p>Senses package under <code class="inline-code">python/sparklang/senses/</code> · Factory honesty in
-        <a href="/docs/factory.html">FACTORY.md</a> · Adoption: <a href="/docs/adoption-bar.html">ADOPTION_BAR.md</a>.</p>
+        <p>Senses package under <code class="inline-code">python/sparklang/senses/</code> · Factory status in
+        <a href="/docs/factory.html">Factory hub</a> · Adoption: <a href="/docs/adoption-bar.html">ADOPTION_BAR.md</a>.</p>
         <hr class="doc__hr" />
         <h2 id="speaking-tts-audio-out">Speaking — TTS / audio out</h2>
         <p><img class="doc__img" alt="Speaking dataflow" src="/docs/images/diagram-sense-speaking.svg" /></p>
@@ -726,18 +725,18 @@
         text-only bases — still <strong>not</strong> voice-GPU / LoRA TTS.</p>
         <h3 id="dataflow">Dataflow</h3>
         <pre class="mermaid">flowchart TB
-          TXT["Text / last_val / reply pack"]
-          PCM["Local PCM synth"]
-          CMD["SPARK_TTS_CMD (%o out)"]
-          HTTP["HTTP TTS — SPARK_TTS_NET=1"]
-          WAV["WAV path / aplay"]
-          TXT --> PCM --> WAV
-          TXT --> CMD --> WAV
-          TXT --> HTTP --> WAV</pre>
+         TXT["Text / last_val / reply pack"]
+         PCM["Local PCM synth"]
+         CMD["SPARK_TTS_CMD (%o out)"]
+         HTTP["HTTP TTS — SPARK_TTS_NET=1"]
+         WAV["WAV path / aplay"]
+         TXT --> PCM --> WAV
+         TXT --> CMD --> WAV
+         TXT --> HTTP --> WAV</pre>
         <h3 id="opcodes-cli-makefile">Opcodes / CLI / makefile</h3>
         <pre class="doc__pre"><code class="language-bash">./spark --dry-run examples/voice_turn.spark
         ./spark-stt-tts speak --text &quot;hi&quot; --out /tmp/spark-voice-test.wav
-        ./spark --dry-run examples/voice_copy.spark    # written model path
+        ./spark --dry-run examples/voice_copy.spark # written model path
         ./spark --dry-run examples/model_train_reply.spark
         </code></pre>
         <div class="doc__table-wrap"><table class="doc__table">
@@ -808,9 +807,9 @@
         — either the <strong>owned tiny CPU serve path</strong> or an <strong>optional live
         gateway</strong> <code class="inline-code">ask</code> (not required for dry demos).</p>
         <h3 id="engineering-stack-tiny-cpu-serve-weights">Engineering stack — tiny CPU serve (weights)</h3>
-        <p>When MLP tensors exist (<a href="/docs/serve.html">SERVE.md</a>):</p>
+        <p>When MLP tensors exist (<a href="/docs/serve.html">Serve</a>):</p>
         <pre class="doc__pre"><code class="language-text">embed (mean pool) → attn0 (layer-0 last-query MHA, layer-0 attention)
-          → MLP0 (SwiGLU) → RMSNorm → lm_head
+         → MLP0 (SwiGLU) → RMSNorm → lm_head
         </code></pre>
         <p>Code: <code class="inline-code">python/sparklang/model_lab/serve.py</code>. HTTP/stdio:
         <code class="inline-code">./spark-serve-api</code> (<code class="inline-code">/v1/predict</code>, <code class="inline-code">/v1/embeddings</code>).</p>
@@ -867,26 +866,26 @@
         </tr>
         </tbody>
         </table></div>
-        <p>Bifrost is <strong>one optional backend</strong>, not a Spark requirement. Spark
-        is <strong>not</strong> a Bifrost plugin.</p>
+        <p>the AI gateway is <strong>one optional backend</strong>, not a Spark requirement. Spark
+        is <strong>not</strong> a the AI gateway plugin.</p>
         <h3 id="dataflow">Dataflow</h3>
         <pre class="mermaid">flowchart LR
-          IN["Tokens / prompt"]
-          EMB["embed"]
-          AT["attn0"]
-          MLP["MLP0"]
-          HN["RMSNorm"]
-          LH["lm_head"]
-          OUT["logits / text"]
-          IN --> EMB --> AT --> MLP --> HN --> LH --> OUT
-          GW["Optional gateway ask"] -.-> OUT</pre>
+         IN["Tokens / prompt"]
+         EMB["embed"]
+         AT["attn0"]
+         MLP["MLP0"]
+         HN["RMSNorm"]
+         LH["lm_head"]
+         OUT["logits / text"]
+         IN --> EMB --> AT --> MLP --> HN --> LH --> OUT
+         GW["Optional gateway ask"] -.-> OUT</pre>
         <h3 id="cli-makefile">CLI / makefile</h3>
         <pre class="doc__pre"><code class="language-bash">make spark-serve
         ./spark-serve docs/examples/spark-builder.sparkbc /tmp/serve-dry-001
 
         make spark-serve-api
         ./spark-serve-api --weights …/weights.safetensors --http \
-          --host 127.0.0.1 --port 8765
+         --host 127.0.0.1 --port 8765
 
         make spark-ask-http
         ./spark-ask-http --dry --model fixtures/tiny-lm --prompt &quot;Reply: pong&quot;
@@ -903,7 +902,7 @@
         <tbody>
         <tr>
         <td><strong>tiny</strong></td>
-        <td>Fixture dims; CI SGD; TinyCoder default (<a href="/docs/spark-coder.html">SPARK_CODER.md</a>)</td>
+        <td>Fixture dims; CI SGD; TinyCoder default (<a href="/docs/spark-coder.html">Spark coder</a>)</td>
         </tr>
         <tr>
         <td><strong>large</strong></td>
@@ -915,8 +914,7 @@
         </tr>
         </tbody>
         </table></div>
-        <p>Stub / gallery weights are <strong>not</strong> production LLMs and do <strong>not</strong>
-        beat Claude. Catalog: <a href="/docs/weight-gallery.html">WEIGHT_GALLERY.md</a>.</p>
+        <p>Stub / gallery weights are <strong>not</strong> production LLMs and do <strong>measurement only</strong> Catalog: <a href="/docs/weight-gallery.html">Weight gallery</a>.</p>
         <h3 id="gaps-vs-roadmap">Gaps vs roadmap</h3>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
@@ -935,15 +933,15 @@
         <td><strong>No</strong></td>
         </tr>
         <tr>
-        <td>“Beat Claude”</td>
-        <td><strong>Forbidden claim</strong> — eval scores only (<a href="/docs/eval.html">EVAL.md</a>)</td>
+        <td>Competitive AI win claim</td>
+        <td><strong>Forbidden claim</strong> — eval scores only (<a href="/docs/eval.html">Eval</a>)</td>
         </tr>
         </tbody>
         </table></div>
         <h3 id="links">Links</h3>
-        <p><a href="/docs/attention-forward.html">ATTENTION_FORWARD.md</a> ·
-        <a href="/docs/architecture.html">ARCHITECTURE.md</a> · <a href="/docs/serve.html">SERVE.md</a> ·
-        <a href="/docs/spark-coder.html">SPARK_CODER.md</a> · <a href="/docs/weight-gallery.html">WEIGHT_GALLERY.md</a> ·
+        <p><a href="/docs/attention-forward.html">Attention / forward</a> ·
+        <a href="/docs/architecture.html">Architecture</a> · <a href="/docs/serve.html">Serve</a> ·
+        <a href="/docs/spark-coder.html">Spark coder</a> · <a href="/docs/weight-gallery.html">Weight gallery</a> ·
         <a href="/docs/ai-models.html#live-gateway-integration-wired-today">ASK_LIVE.md</a>.</p>
         <hr class="doc__hr" />
         <h2 id="behaviors-policies-tools-turn-taking">Behaviors — policies, tools, turn-taking</h2>
@@ -1013,37 +1011,37 @@
         <h3 id="language-tools-behaviors">Language tools (behaviors)</h3>
         <pre class="doc__pre"><code class="inline-code">tool weather(city: string) -&gt; string { &quot;stub:local&quot; }
         with tools [weather] {
-          ask &quot;Weather in DSM?&quot; -&gt; answer
+         ask &quot;Weather in DSM?&quot; -&gt; answer
         }
         </code></pre>
         <p>Dry <code class="inline-code">ask</code> inside an active scope returns <code class="inline-code">[tool:&lt;name&gt;] stub:local</code>.</p>
         <p><strong>Separate</strong> from factory <strong>helper tools</strong> (I/K): <code class="inline-code">spark-helper-*</code>,
         shadows, SDK pack — those wrap compile/decompile/serve for authors.
-        See <a href="/docs/diagrams.html">DIAGRAMS.md</a> and <a href="/docs/tools-helpers.html">TOOLS_HELPERS.md</a>.
+        See <a href="/docs/diagrams.html">Diagrams</a> and <a href="/docs/tools-helpers.html">TOOLS_HELPERS.md</a>.
         Model <strong>behaviors</strong> stay in <code class="inline-code">.spark</code>; helpers do not silently become
         policy.</p>
         <h3 id="dataflow">Dataflow</h3>
         <pre class="mermaid">flowchart TB
-          IN["User / fixture text or transcript"]
-          POL["Behavior policy<br/>reply pack · abstain · expect"]
-          ASK["ask / classify / extract"]
-          TL["tool registry<br/>with tools scope"]
-          OUT["print / speak / http"]
-          TR["Train STEP / model train"]
-          EV["spark-eval"]
-          IN --> POL --> ASK
-          ASK --> TL
-          TL --> ASK
-          ASK --> OUT
-          TR --> EV
-          EV -.->|scores only; never win claim| POL</pre>
+         IN["User / fixture text or transcript"]
+         POL["Behavior policy<br/>reply pack · abstain · expect"]
+         ASK["ask / classify / extract"]
+         TL["tool registry<br/>with tools scope"]
+         OUT["print / speak / http"]
+         TR["Train STEP / model train"]
+         EV["spark-eval"]
+         IN --> POL --> ASK
+         ASK --> TL
+         TL --> ASK
+         ASK --> OUT
+         TR --> EV
+         EV -.->|scores only; never win claim| POL</pre>
         <h3 id="train-eval-behavior-adjacent">Train / eval (behavior adjacent)</h3>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
         <th>Path</th>
         <th>Status</th>
-        <th>Honesty</th>
+        <th>Status</th>
         </tr>
         </thead>
         <tbody>
@@ -1070,12 +1068,12 @@
         <tr>
         <td><code class="inline-code">make spark-eval</code></td>
         <td><strong>implemented</strong></td>
-        <td>Exit 0 = harness ran — <strong>not</strong> beat Claude</td>
+        <td>Exit 0 = harness ran — <strong>measurement only</strong></td>
         </tr>
         </tbody>
         </table></div>
-        <p><a href="/docs/train-loop.html">TRAIN_LOOP.md</a> · <a href="/docs/build-models.html">BUILD_MODELS.md</a> ·
-        <a href="/docs/model-training.html">MODEL_TRAINING.md</a> · <a href="/docs/eval.html">EVAL.md</a>.</p>
+        <p><a href="/docs/train-loop.html">Train loop</a> · <a href="/docs/build-models.html">BUILD_MODELS.md</a> ·
+        <a href="/docs/model-training.html">MODEL_TRAINING.md</a> · <a href="/docs/eval.html">Eval</a>.</p>
         <h3 id="gaps-vs-roadmap">Gaps vs roadmap</h3>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
@@ -1103,7 +1101,7 @@
         <p><a href="/docs/language.html">LANGUAGE.md</a> · <a href="/docs/voice.html">VOICE.md</a> ·
         <a href="/docs/knowledge-safety.html">knowledge/SAFETY_LIMITS.md</a>
         (grounded / anti-guess) ·
-        <a href="/docs/adoption-bar.html">ADOPTION_BAR.md</a> · <a href="/docs/spark-coder.html">SPARK_CODER.md</a>.</p>
+        <a href="/docs/adoption-bar.html">ADOPTION_BAR.md</a> · <a href="/docs/spark-coder.html">Spark coder</a>.</p>
         <hr class="doc__hr" />
         <h2 id="memory-context-cross-cutting">Memory &amp; context (cross-cutting)</h2>
         <div class="doc__table-wrap"><table class="doc__table">
@@ -1202,13 +1200,13 @@
         </tr>
         <tr>
         <td>GPU</td>
-        <td>Train: CPU / <strong>RTX 5090</strong> (see <a href="/docs/factory.html">FACTORY.md</a>)</td>
+        <td>Train: CPU / <strong>RTX 5090</strong> (see <a href="/docs/factory.html">Factory hub</a>)</td>
         <td>Vendor / cloud</td>
         <td>May reserve separate voice GPUs — <strong>out of Spark train</strong></td>
         </tr>
         <tr>
-        <td>Honesty</td>
-        <td>Never beat Claude; never fake eyes</td>
+        <td>Status</td>
+        <td>; never fake eyes</td>
         <td>Not Spark decompile SoT</td>
         <td>Not a Spark clone — do not reimplement here</td>
         </tr>
@@ -1220,7 +1218,7 @@
         <li>Clone OpenBin UX into sparklang.dev</li>
         <li>Sell Spark voice as a phone stack</li>
         <li>Place Spark factory train on GPUs reserved for other voice products
-          (prefer CPU / 5090 — <a href="/docs/factory.html">FACTORY.md</a>)</li>
+         (prefer CPU / 5090 — <a href="/docs/factory.html">Factory hub</a>)</li>
         </ul>
         <p>Decompile research context (OpenBin cited carefully):
         <a href="/docs/llm-decompile.html">research/LLM_DECOMPILE.md</a> →
@@ -1238,7 +1236,7 @@
         # 2) Companion smoke (local PCM / stub listen)
         make voice-test
 
-        # 3) Eyes honesty gate (planned stub)
+        # 3) Eyes status gate (planned stub)
         make test-senses
 
         # 4) Thinking — tiny serve dry
@@ -1262,14 +1260,14 @@
         <h2 id="runtime-serve-wiring-thinking-surface">Runtime / serve wiring (thinking surface)</h2>
         <pre class="doc__pre"><code class="language-bash">make spark-serve-api
         ./spark-serve-api --weights …/weights.safetensors --http \
-          --host 127.0.0.1 --port 8765
+         --host 127.0.0.1 --port 8765
         </code></pre>
         <p>Voice companions are <strong>not</strong> inside <code class="inline-code">serve_api</code> — ears/speaking fork
         <code class="inline-code">./spark-stt-tts</code> from the language VM under <code class="inline-code">--live</code>. Predict API
         stays token-id JSON for the tiny CPU stack.</p>
-        <p><a href="/docs/serve.html">SERVE.md</a> · <a href="/docs/ci-pages.html">CI_PAGES.md</a>.</p>
+        <p><a href="/docs/serve.html">Serve</a> · <a href="/docs/ci-pages.html">CI_PAGES.md</a>.</p>
         <hr class="doc__hr" />
-        <h2 id="honesty-bar-never-fake">Honesty bar (never fake)</h2>
+        <h2 id="capability-status">Capability status</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
@@ -1287,12 +1285,8 @@
         <td><strong>No</strong></td>
         </tr>
         <tr>
-        <td>Beat Claude</td>
-        <td><strong>No</strong></td>
-        </tr>
-        <tr>
-        <td>Train on RTX PRO <strong>6000</strong></td>
-        <td><strong>Never</strong></td>
+        <td>Marketing win banners</td>
+        <td>Out of scope</td>
         </tr>
         <tr>
         <td>Opt-in large on <strong>5090</strong> / CPU</td>
@@ -1322,11 +1316,11 @@
         <tbody>
         <tr>
         <td>Factory hub + diagrams</td>
-        <td>Extended context — <a href="/docs/factory.html">FACTORY.md</a> / <a href="/docs/diagrams.html">DIAGRAMS.md</a></td>
+        <td>Extended context — <a href="/docs/factory.html">Factory hub</a> / <a href="/docs/diagrams.html">Diagrams</a></td>
         </tr>
         <tr>
         <td>Decompile / OpenBin methods</td>
-        <td>Cross-link — <a href="/docs/decompile.html">DECOMPILE.md</a> / <a href="/docs/methods-openbin.html">METHODS_OPENBIN.md</a></td>
+        <td>Cross-link — <a href="/docs/decompile.html">Decompile</a> / <a href="/docs/methods-openbin.html">Methods vs OpenBin</a></td>
         </tr>
         <tr>
         <td>SDK / helpers / shadows</td>
@@ -1334,15 +1328,15 @@
         </tr>
         <tr>
         <td>Attention math</td>
-        <td>Layer-0 last-query — <a href="/docs/attention-forward.html">ATTENTION_FORWARD.md</a></td>
+        <td>Layer-0 last-query — <a href="/docs/attention-forward.html">Attention / forward</a></td>
         </tr>
         <tr>
         <td>Eval / scale / serve</td>
-        <td>Linked above — <a href="/docs/eval.html">EVAL.md</a> / <a href="/docs/train-loop.html">TRAIN_LOOP.md</a> / <a href="/docs/serve.html">SERVE.md</a></td>
+        <td>Linked above — <a href="/docs/eval.html">Eval</a> / <a href="/docs/train-loop.html">Train loop</a> / <a href="/docs/serve.html">Serve</a></td>
         </tr>
         <tr>
         <td>Owned spark-coder</td>
-        <td>Tiny + large discipline — <a href="/docs/spark-coder.html">SPARK_CODER.md</a></td>
+        <td>Tiny + large discipline — <a href="/docs/spark-coder.html">Spark coder</a></td>
         </tr>
         <tr>
         <td>This sensory map</td>
@@ -1353,19 +1347,19 @@
         <hr class="doc__hr" />
         <h2 id="quick-links-forge-bench">Quick links (Forge + Bench)</h2>
         <ul class="doc__ul">
-        <li><a href="/docs/factory.html">FACTORY.md</a> · <a href="/docs/diagrams.html">DIAGRAMS.md</a> · <a href="/docs/knowledge.html">KNOWLEDGE.md</a></li>
+        <li><a href="/docs/factory.html">Factory hub</a> · <a href="/docs/diagrams.html">Diagrams</a> · <a href="/docs/knowledge.html">Knowledge</a></li>
         <li><a href="/docs/voice.html">VOICE.md</a> · <a href="/docs/ai-models.html">AI_MODELS.md</a> · <a href="/docs/ai-models.html#live-gateway-integration-wired-today">ASK_LIVE.md</a></li>
-        <li><a href="/docs/spark-coder.html">SPARK_CODER.md</a> · <a href="/docs/weight-gallery.html">WEIGHT_GALLERY.md</a></li>
-        <li><a href="/docs/architecture.html">ARCHITECTURE.md</a> · <a href="/docs/tokenizer.html">TOKENIZER.md</a></li>
+        <li><a href="/docs/spark-coder.html">Spark coder</a> · <a href="/docs/weight-gallery.html">Weight gallery</a></li>
+        <li><a href="/docs/architecture.html">Architecture</a> · <a href="/docs/tokenizer.html">TOKENIZER.md</a></li>
         <li><a href="/docs/language.html">LANGUAGE.md</a> · <a href="/docs/roadmap.html">ROADMAP.md</a></li>
         <li>Site: <a href="/docs/model-aspects.html">/docs/model-aspects.html</a> ·
-          <a href="/docs/knowledge.html">/docs/knowledge.html</a> ·
-          <a href="/docs/voice.html">/docs/voice.html</a> ·
-          <a href="/docs/voice-easy.html">/docs/voice-easy.html</a> ·
-          <a href="/docs/voice-ask.html">/docs/voice-ask.html</a> ·
-          <a href="/docs/methods-openbin.html">/docs/methods-openbin.html</a> ·
-          <a href="/docs/spark-coder.html">/docs/spark-coder.html</a> ·
-          <a href="/docs/weight-gallery.html">/docs/weight-gallery.html</a></li>
+         <a href="/docs/knowledge.html">/docs/knowledge.html</a> ·
+         <a href="/docs/voice.html">/docs/voice.html</a> ·
+         <a href="/docs/voice-easy.html">/docs/voice-easy.html</a> ·
+         <a href="/docs/voice-ask.html">/docs/voice-ask.html</a> ·
+         <a href="/docs/methods-openbin.html">/docs/methods-openbin.html</a> ·
+         <a href="/docs/spark-coder.html">/docs/spark-coder.html</a> ·
+         <a href="/docs/weight-gallery.html">/docs/weight-gallery.html</a></li>
         </ul>
       </article>
       </main>

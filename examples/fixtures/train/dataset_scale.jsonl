@@ -1,11 +1,11 @@
 {"messages": [{"role": "user", "content": "please greet a new user who just opened the Spark REPL for the first time today"}, {"role": "assistant", "content": "hello \u2014 welcome to Spark; ask for help anytime"}]}
 {"messages": [{"role": "user", "content": "follow-up: please greet a new user who just opened the Spark REPL for the first time today"}, {"role": "assistant", "content": "again: hello \u2014 welcome to Spark; ask for help anytime"}]}
-{"messages": [{"role": "user", "content": "a caller says thanks after you explained the CPU SGD proof steps without claiming beat Claude"}, {"role": "assistant", "content": "you are welcome; that was measurement only"}]}
-{"messages": [{"role": "user", "content": "follow-up: a caller says thanks after you explained the CPU SGD proof steps without claiming beat Claude"}, {"role": "assistant", "content": "again: you are welcome; that was measurement only"}]}
-{"messages": [{"role": "user", "content": "someone asks what SparkLang is in one clear sentence for operators who already know CallsBack.ai"}, {"role": "assistant", "content": "SparkLang is the Spark programming language and factory"}]}
-{"messages": [{"role": "user", "content": "follow-up: someone asks what SparkLang is in one clear sentence for operators who already know CallsBack.ai"}, {"role": "assistant", "content": "again: SparkLang is the Spark programming language and factory"}]}
-{"messages": [{"role": "user", "content": "operator asks whether tonight's STEP run used the RTX PRO 6000 voice GPU for training"}, {"role": "assistant", "content": "no \u2014 Spark STEP SGD is CPU only; never the 6000"}]}
-{"messages": [{"role": "user", "content": "follow-up: operator asks whether tonight's STEP run used the RTX PRO 6000 voice GPU for training"}, {"role": "assistant", "content": "again: no \u2014 Spark STEP SGD is CPU only; never the 6000"}]}
+{"messages": [{"role": "user", "content": "a caller says thanks after you explained the CPU SGD proof steps without claiming a marketing win"}, {"role": "assistant", "content": "you are welcome; that was measurement only"}]}
+{"messages": [{"role": "user", "content": "follow-up: a caller says thanks after you explained the CPU SGD proof steps without claiming a marketing win"}, {"role": "assistant", "content": "again: you are welcome; that was measurement only"}]}
+{"messages": [{"role": "user", "content": "someone asks what SparkLang is in one clear sentence for operators who already know the phone stack"}, {"role": "assistant", "content": "SparkLang is the Spark programming language and factory"}]}
+{"messages": [{"role": "user", "content": "follow-up: someone asks what SparkLang is in one clear sentence for operators who already know the phone stack"}, {"role": "assistant", "content": "again: SparkLang is the Spark programming language and factory"}]}
+{"messages": [{"role": "user", "content": "operator asks whether tonight's STEP run used the reserved voice GPUs voice GPU for training"}, {"role": "assistant", "content": "no \u2014 Spark STEP SGD is CPU only; never the 6000"}]}
+{"messages": [{"role": "user", "content": "follow-up: operator asks whether tonight's STEP run used the reserved voice GPUs voice GPU for training"}, {"role": "assistant", "content": "again: no \u2014 Spark STEP SGD is CPU only; never the 6000"}]}
 {"messages": [{"role": "user", "content": "how do i run the default tiny SGD proof that CI keeps fast"}, {"role": "assistant", "content": "run make spark-sgd-proof on the tiny train fixture"}]}
 {"messages": [{"role": "user", "content": "follow-up: how do i run the default tiny SGD proof that CI keeps fast"}, {"role": "assistant", "content": "again: run make spark-sgd-proof on the tiny train fixture"}]}
 {"messages": [{"role": "user", "content": "how do i opt into the larger local scale fixture without changing GitHub Actions defaults"}, {"role": "assistant", "content": "run make spark-sgd-proof-scale with scale dims"}]}
@@ -14,8 +14,8 @@
 {"messages": [{"role": "user", "content": "follow-up: explain loss_curve in checkpoint.json after multi-outer STEP"}, {"role": "assistant", "content": "again: each outer records CE loss; after must be below start"}]}
 {"messages": [{"role": "user", "content": "what does trained=true and not_sgd=false mean on safetensors"}, {"role": "assistant", "content": "real CPU SGD applied; not a dry hash toy step"}]}
 {"messages": [{"role": "user", "content": "follow-up: what does trained=true and not_sgd=false mean on safetensors"}, {"role": "assistant", "content": "again: real CPU SGD applied; not a dry hash toy step"}]}
-{"messages": [{"role": "user", "content": "user: can spark-eval say we beat Claude after a short CPU run"}, {"role": "assistant", "content": "no \u2014 spark-eval is measurement only; never claim beat Claude"}]}
-{"messages": [{"role": "user", "content": "follow-up: user: can spark-eval say we beat Claude after a short CPU run"}, {"role": "assistant", "content": "again: no \u2014 spark-eval is measurement only; never claim beat Claude"}]}
+{"messages": [{"role": "user", "content": "user: can spark-eval say we a marketing win. after a short CPU run"}, {"role": "assistant", "content": "no \u2014 spark-eval is measurement only; never Claim a competitive AI win"}]}
+{"messages": [{"role": "user", "content": "follow-up: user: can spark-eval say we a marketing win. after a short CPU run"}, {"role": "assistant", "content": "again: no \u2014 spark-eval is measurement only; never Claim a competitive AI win"}]}
 {"messages": [{"role": "user", "content": "document the difference between dataset.jsonl and dataset_scale.jsonl for CE training"}, {"role": "assistant", "content": "scale has more pairs and longer sequences; CI stays tiny"}]}
 {"messages": [{"role": "user", "content": "follow-up: document the difference between dataset.jsonl and dataset_scale.jsonl for CE training"}, {"role": "assistant", "content": "again: scale has more pairs and longer sequences; CI stays tiny"}]}
 {"messages": [{"role": "user", "content": "ping the factory"}, {"role": "assistant", "content": "pong \u2014 factory alive"}]}
@@ -30,12 +30,12 @@
 {"messages": [{"role": "user", "content": "spark factory FAQ: status of STEP weights"}, {"role": "assistant", "content": "ok \u2014 check checkpoint.json"}]}
 {"messages": [{"role": "user", "content": "short reply needed for: status of STEP weights"}, {"role": "assistant", "content": "ok \u2014 check checkpoint.json"}]}
 {"messages": [{"role": "user", "content": "CPU-only context: status of STEP weights"}, {"role": "assistant", "content": "ok \u2014 check checkpoint.json"}]}
-{"messages": [{"role": "user", "content": "who answers store DIDs"}, {"role": "assistant", "content": "CallsBack.ai workers; Spark is separate"}]}
-{"messages": [{"role": "user", "content": "please answer briefly: who answers store DIDs"}, {"role": "assistant", "content": "CallsBack.ai workers; Spark is separate"}]}
-{"messages": [{"role": "user", "content": "operator question \u2014 who answers store DIDs"}, {"role": "assistant", "content": "CallsBack.ai workers; Spark is separate"}]}
-{"messages": [{"role": "user", "content": "spark factory FAQ: who answers store DIDs"}, {"role": "assistant", "content": "CallsBack.ai workers; Spark is separate"}]}
-{"messages": [{"role": "user", "content": "short reply needed for: who answers store DIDs"}, {"role": "assistant", "content": "CallsBack.ai workers; Spark is separate"}]}
-{"messages": [{"role": "user", "content": "CPU-only context: who answers store DIDs"}, {"role": "assistant", "content": "CallsBack.ai workers; Spark is separate"}]}
+{"messages": [{"role": "user", "content": "who answers store DIDs"}, {"role": "assistant", "content": "store phone workers; Spark is separate"}]}
+{"messages": [{"role": "user", "content": "please answer briefly: who answers store DIDs"}, {"role": "assistant", "content": "store phone workers; Spark is separate"}]}
+{"messages": [{"role": "user", "content": "operator question \u2014 who answers store DIDs"}, {"role": "assistant", "content": "store phone workers; Spark is separate"}]}
+{"messages": [{"role": "user", "content": "spark factory FAQ: who answers store DIDs"}, {"role": "assistant", "content": "store phone workers; Spark is separate"}]}
+{"messages": [{"role": "user", "content": "short reply needed for: who answers store DIDs"}, {"role": "assistant", "content": "store phone workers; Spark is separate"}]}
+{"messages": [{"role": "user", "content": "CPU-only context: who answers store DIDs"}, {"role": "assistant", "content": "store phone workers; Spark is separate"}]}
 {"messages": [{"role": "user", "content": "name of this language"}, {"role": "assistant", "content": "Spark"}]}
 {"messages": [{"role": "user", "content": "please answer briefly: name of this language"}, {"role": "assistant", "content": "Spark"}]}
 {"messages": [{"role": "user", "content": "operator question \u2014 name of this language"}, {"role": "assistant", "content": "Spark"}]}
@@ -60,36 +60,36 @@
 {"messages": [{"role": "user", "content": "spark factory FAQ: serve path honesty"}, {"role": "assistant", "content": "tiny CPU forward; not production LLM"}]}
 {"messages": [{"role": "user", "content": "short reply needed for: serve path honesty"}, {"role": "assistant", "content": "tiny CPU forward; not production LLM"}]}
 {"messages": [{"role": "user", "content": "CPU-only context: serve path honesty"}, {"role": "assistant", "content": "tiny CPU forward; not production LLM"}]}
-{"messages": [{"role": "user", "content": "attention lane ownership"}, {"role": "assistant", "content": "D-lane owns attention kernels"}]}
-{"messages": [{"role": "user", "content": "please answer briefly: attention lane ownership"}, {"role": "assistant", "content": "D-lane owns attention kernels"}]}
-{"messages": [{"role": "user", "content": "operator question \u2014 attention lane ownership"}, {"role": "assistant", "content": "D-lane owns attention kernels"}]}
-{"messages": [{"role": "user", "content": "spark factory FAQ: attention lane ownership"}, {"role": "assistant", "content": "D-lane owns attention kernels"}]}
-{"messages": [{"role": "user", "content": "short reply needed for: attention lane ownership"}, {"role": "assistant", "content": "D-lane owns attention kernels"}]}
-{"messages": [{"role": "user", "content": "CPU-only context: attention lane ownership"}, {"role": "assistant", "content": "D-lane owns attention kernels"}]}
-{"messages": [{"role": "user", "content": "fixture lane ownership"}, {"role": "assistant", "content": "F-lane owns scale fixtures and dims"}]}
-{"messages": [{"role": "user", "content": "please answer briefly: fixture lane ownership"}, {"role": "assistant", "content": "F-lane owns scale fixtures and dims"}]}
-{"messages": [{"role": "user", "content": "operator question \u2014 fixture lane ownership"}, {"role": "assistant", "content": "F-lane owns scale fixtures and dims"}]}
-{"messages": [{"role": "user", "content": "spark factory FAQ: fixture lane ownership"}, {"role": "assistant", "content": "F-lane owns scale fixtures and dims"}]}
-{"messages": [{"role": "user", "content": "short reply needed for: fixture lane ownership"}, {"role": "assistant", "content": "F-lane owns scale fixtures and dims"}]}
-{"messages": [{"role": "user", "content": "CPU-only context: fixture lane ownership"}, {"role": "assistant", "content": "F-lane owns scale fixtures and dims"}]}
-{"messages": [{"role": "user", "content": "eval lane ownership"}, {"role": "assistant", "content": "E-lane owns Claude measurement harness"}]}
-{"messages": [{"role": "user", "content": "please answer briefly: eval lane ownership"}, {"role": "assistant", "content": "E-lane owns Claude measurement harness"}]}
-{"messages": [{"role": "user", "content": "operator question \u2014 eval lane ownership"}, {"role": "assistant", "content": "E-lane owns Claude measurement harness"}]}
-{"messages": [{"role": "user", "content": "spark factory FAQ: eval lane ownership"}, {"role": "assistant", "content": "E-lane owns Claude measurement harness"}]}
-{"messages": [{"role": "user", "content": "short reply needed for: eval lane ownership"}, {"role": "assistant", "content": "E-lane owns Claude measurement harness"}]}
-{"messages": [{"role": "user", "content": "CPU-only context: eval lane ownership"}, {"role": "assistant", "content": "E-lane owns Claude measurement harness"}]}
-{"messages": [{"role": "user", "content": "HTTP serve API lane"}, {"role": "assistant", "content": "G-lane owns HTTP serve API"}]}
-{"messages": [{"role": "user", "content": "please answer briefly: HTTP serve API lane"}, {"role": "assistant", "content": "G-lane owns HTTP serve API"}]}
-{"messages": [{"role": "user", "content": "operator question \u2014 HTTP serve API lane"}, {"role": "assistant", "content": "G-lane owns HTTP serve API"}]}
-{"messages": [{"role": "user", "content": "spark factory FAQ: HTTP serve API lane"}, {"role": "assistant", "content": "G-lane owns HTTP serve API"}]}
-{"messages": [{"role": "user", "content": "short reply needed for: HTTP serve API lane"}, {"role": "assistant", "content": "G-lane owns HTTP serve API"}]}
-{"messages": [{"role": "user", "content": "CPU-only context: HTTP serve API lane"}, {"role": "assistant", "content": "G-lane owns HTTP serve API"}]}
-{"messages": [{"role": "user", "content": "never reboot host"}, {"role": "assistant", "content": "SoapBox host reboot is agent-blocked"}]}
-{"messages": [{"role": "user", "content": "please answer briefly: never reboot host"}, {"role": "assistant", "content": "SoapBox host reboot is agent-blocked"}]}
-{"messages": [{"role": "user", "content": "operator question \u2014 never reboot host"}, {"role": "assistant", "content": "SoapBox host reboot is agent-blocked"}]}
-{"messages": [{"role": "user", "content": "spark factory FAQ: never reboot host"}, {"role": "assistant", "content": "SoapBox host reboot is agent-blocked"}]}
-{"messages": [{"role": "user", "content": "short reply needed for: never reboot host"}, {"role": "assistant", "content": "SoapBox host reboot is agent-blocked"}]}
-{"messages": [{"role": "user", "content": "CPU-only context: never reboot host"}, {"role": "assistant", "content": "SoapBox host reboot is agent-blocked"}]}
+{"messages": [{"role": "user", "content": "attention lane ownership"}, {"role": "assistant", "content": "attention train owns attention kernels"}]}
+{"messages": [{"role": "user", "content": "please answer briefly: attention lane ownership"}, {"role": "assistant", "content": "attention train owns attention kernels"}]}
+{"messages": [{"role": "user", "content": "operator question \u2014 attention lane ownership"}, {"role": "assistant", "content": "attention train owns attention kernels"}]}
+{"messages": [{"role": "user", "content": "spark factory FAQ: attention lane ownership"}, {"role": "assistant", "content": "attention train owns attention kernels"}]}
+{"messages": [{"role": "user", "content": "short reply needed for: attention lane ownership"}, {"role": "assistant", "content": "attention train owns attention kernels"}]}
+{"messages": [{"role": "user", "content": "CPU-only context: attention lane ownership"}, {"role": "assistant", "content": "attention train owns attention kernels"}]}
+{"messages": [{"role": "user", "content": "fixture lane ownership"}, {"role": "assistant", "content": "scale fixtures owns scale fixtures and dims"}]}
+{"messages": [{"role": "user", "content": "please answer briefly: fixture lane ownership"}, {"role": "assistant", "content": "scale fixtures owns scale fixtures and dims"}]}
+{"messages": [{"role": "user", "content": "operator question \u2014 fixture lane ownership"}, {"role": "assistant", "content": "scale fixtures owns scale fixtures and dims"}]}
+{"messages": [{"role": "user", "content": "spark factory FAQ: fixture lane ownership"}, {"role": "assistant", "content": "scale fixtures owns scale fixtures and dims"}]}
+{"messages": [{"role": "user", "content": "short reply needed for: fixture lane ownership"}, {"role": "assistant", "content": "scale fixtures owns scale fixtures and dims"}]}
+{"messages": [{"role": "user", "content": "CPU-only context: fixture lane ownership"}, {"role": "assistant", "content": "scale fixtures owns scale fixtures and dims"}]}
+{"messages": [{"role": "user", "content": "eval lane ownership"}, {"role": "assistant", "content": "eval harness owns Claude measurement harness"}]}
+{"messages": [{"role": "user", "content": "please answer briefly: eval lane ownership"}, {"role": "assistant", "content": "eval harness owns Claude measurement harness"}]}
+{"messages": [{"role": "user", "content": "operator question \u2014 eval lane ownership"}, {"role": "assistant", "content": "eval harness owns Claude measurement harness"}]}
+{"messages": [{"role": "user", "content": "spark factory FAQ: eval lane ownership"}, {"role": "assistant", "content": "eval harness owns Claude measurement harness"}]}
+{"messages": [{"role": "user", "content": "short reply needed for: eval lane ownership"}, {"role": "assistant", "content": "eval harness owns Claude measurement harness"}]}
+{"messages": [{"role": "user", "content": "CPU-only context: eval lane ownership"}, {"role": "assistant", "content": "eval harness owns Claude measurement harness"}]}
+{"messages": [{"role": "user", "content": "HTTP serve API lane"}, {"role": "assistant", "content": "HTTP serve owns HTTP serve API"}]}
+{"messages": [{"role": "user", "content": "please answer briefly: HTTP serve API lane"}, {"role": "assistant", "content": "HTTP serve owns HTTP serve API"}]}
+{"messages": [{"role": "user", "content": "operator question \u2014 HTTP serve API lane"}, {"role": "assistant", "content": "HTTP serve owns HTTP serve API"}]}
+{"messages": [{"role": "user", "content": "spark factory FAQ: HTTP serve API lane"}, {"role": "assistant", "content": "HTTP serve owns HTTP serve API"}]}
+{"messages": [{"role": "user", "content": "short reply needed for: HTTP serve API lane"}, {"role": "assistant", "content": "HTTP serve owns HTTP serve API"}]}
+{"messages": [{"role": "user", "content": "CPU-only context: HTTP serve API lane"}, {"role": "assistant", "content": "HTTP serve owns HTTP serve API"}]}
+{"messages": [{"role": "user", "content": "never reboot host"}, {"role": "assistant", "content": "the operator host host reboot is agent-blocked"}]}
+{"messages": [{"role": "user", "content": "please answer briefly: never reboot host"}, {"role": "assistant", "content": "the operator host host reboot is agent-blocked"}]}
+{"messages": [{"role": "user", "content": "operator question \u2014 never reboot host"}, {"role": "assistant", "content": "the operator host host reboot is agent-blocked"}]}
+{"messages": [{"role": "user", "content": "spark factory FAQ: never reboot host"}, {"role": "assistant", "content": "the operator host host reboot is agent-blocked"}]}
+{"messages": [{"role": "user", "content": "short reply needed for: never reboot host"}, {"role": "assistant", "content": "the operator host host reboot is agent-blocked"}]}
+{"messages": [{"role": "user", "content": "CPU-only context: never reboot host"}, {"role": "assistant", "content": "the operator host host reboot is agent-blocked"}]}
 {"messages": [{"role": "user", "content": "device for SGD"}, {"role": "assistant", "content": "cpu"}]}
 {"messages": [{"role": "user", "content": "please answer briefly: device for SGD"}, {"role": "assistant", "content": "cpu"}]}
 {"messages": [{"role": "user", "content": "operator question \u2014 device for SGD"}, {"role": "assistant", "content": "cpu"}]}
@@ -138,8 +138,8 @@
 {"messages": [{"role": "user", "content": "spark factory FAQ: embed training default"}, {"role": "assistant", "content": "train embed and lm_head together"}]}
 {"messages": [{"role": "user", "content": "short reply needed for: embed training default"}, {"role": "assistant", "content": "train embed and lm_head together"}]}
 {"messages": [{"role": "user", "content": "CPU-only context: embed training default"}, {"role": "assistant", "content": "train embed and lm_head together"}]}
-{"messages": [{"role": "user", "content": "I need a clear operator note: we grew the CE fixture so local proof can stress longer sequences, but GitHub Actions must keep the tiny dataset.jsonl default so CI stays CPU-fast. Confirm the makefile target names and that beat-Claude remains false."}, {"role": "assistant", "content": "use spark-sgd-proof for CI tiny; spark-sgd-proof-scale locally; beats_claude stays false"}]}
+{"messages": [{"role": "user", "content": "I need a clear operator note: we grew the CE fixture so local proof can stress longer sequences, but GitHub Actions must keep the tiny dataset.jsonl default so CI stays CPU-fast. Confirm the makefile target names and that competitive-AI-win remains false."}, {"role": "assistant", "content": "use spark-sgd-proof for CI tiny; spark-sgd-proof-scale locally; beats_claude stays false"}]}
 {"messages": [{"role": "user", "content": "Walk through shape checks only: emit init weights with dim=64 and n_layer=4, verify spark.embed.weight is [256,64], lm_head matches, and layer count is four \u2014 no overnight train required."}, {"role": "assistant", "content": "shape check passes on dim 64 and four layers without overnight"}]}
 {"messages": [{"role": "user", "content": "If someone confuses East 33rd Full Cycle prices with FasCard thirty-minute dryer start, remind them Spark factory docs do not invent laundry prices; this fixture is language-only."}, {"role": "assistant", "content": "Spark fixtures are language training pairs only"}]}
-{"messages": [{"role": "user", "content": "Write a calm status line after spark-sgd-proof-scale finishes: include that device=cpu, never=rtx-pro-6000, and scores from spark-eval are measurement-only."}, {"role": "assistant", "content": "scale proof done on cpu; eval scores only; not beat Claude"}]}
+{"messages": [{"role": "user", "content": "Write a calm status line after spark-sgd-proof-scale finishes: include that device=cpu, never=rtx-pro-6000, and scores from spark-eval are measurement-only."}, {"role": "assistant", "content": "scale proof done on cpu; eval scores only; measurement only."}]}
 {"messages": [{"role": "user", "content": "Produce a longer assistant-facing prompt about documenting scaled proof in SPARK_BUILDER.md without marketing language or claiming a production LLM."}, {"role": "assistant", "content": "document scale proof honestly; Spark naming only"}]}

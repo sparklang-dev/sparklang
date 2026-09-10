@@ -6,7 +6,7 @@ Offline SoT for Spark `embed` and `retrieve` dry-run. Must match
 
 | File | Statement | Live target |
 |------|-----------|-------------|
-| `embed-default.json` | `embed "…"` | Bifrost `POST /v1/embeddings` alias `embed-rag` |
+| `embed-default.json` | `embed "…"` | the AI gateway `POST /v1/embeddings` alias `embed-rag` |
 | `retrieve-docs.json` | `retrieve "…" from project "docs"` | rag-gateway `POST /v1/retrieve` |
 
 No PII. Generic docs-project only. Live needs keys; `make test` /

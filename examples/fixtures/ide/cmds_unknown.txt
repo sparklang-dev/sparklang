@@ -1,6 +1,6 @@
 # Proven keymap unknown token - fail-loud (ok:false), then quit.
 # Consumed by: ide keys "examples/fixtures/ide/cmds_unknown.txt"
-# x = unknown (not invented as a real cmd); q = quit ends loop
+# x = unknown (fail-loud); q = quit ends loop
 
 x
 q

@@ -3,7 +3,7 @@
 # Pattern: SoT / HTTP / expect FIRST, then gated ask.
 # Flagship (full product pattern): examples/no_invent.spark
 #
-#   ./spark --dry-run examples/head_ask_inventable_verify.spark
+# ./spark --dry-run examples/head_ask_inventable_verify.spark
 #
 # Live shape (owner): http get real SoT → expect → head ask with
 # SPARK_ABSTAIN_* weights. Missing SoT must refuse, not invent.

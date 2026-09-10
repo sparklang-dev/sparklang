@@ -56,7 +56,7 @@
                   <li class="nav-sub">
                     <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
-                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
                       <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
                     </ul>
                   </li>
@@ -235,101 +235,101 @@
         <h3 id="stage-0-scaffold-a-seeds-current">Stage 0 — Scaffold + A seeds (current)</h3>
         <ul class="doc__ul">
         <li><code class="inline-code">./spark</code> ELF from GAS still interprets language ops under
-          <code class="inline-code">--dry-run</code> / <code class="inline-code">--live</code>.</li>
+         <code class="inline-code">--dry-run</code> / <code class="inline-code">--live</code>.</li>
         <li>Language SoT: <code class="inline-code">docs/LANGUAGE.md</code>, <code class="inline-code">examples/*.spark</code>.</li>
         <li>A seeds under <code class="inline-code">selfhost/*.spark</code> dry-run on GAS; <code class="inline-code">lex.c</code> golden
-          covers mini + ops fixtures.</li>
+         covers mini + ops fixtures.</li>
         <li><strong>Gate:</strong> <code class="inline-code">make</code> + <code class="inline-code">./spark --dry-run examples/hello.spark</code> works;
-          <code class="inline-code">make test-selfhost-lex</code> green.</li>
+         <code class="inline-code">make test-selfhost-lex</code> green.</li>
         </ul>
-        <h3 id="stage-1-bootstrap-b-runs-a-subset-real-advanced">Stage 1 — Bootstrap B runs a subset  ← <strong>REAL (advanced)</strong></h3>
+        <h3 id="stage-1-bootstrap-b-runs-a-subset-real-advanced">Stage 1 — Bootstrap B runs a subset ← <strong>REAL (advanced)</strong></h3>
         <ul class="doc__ul">
         <li>Thin C VM under <code class="inline-code">bootstrap/</code> → <code class="inline-code">spark-bootstrap</code> / <code class="inline-code">sparkc</code>.</li>
         <li>Dry-parity (proven): <code class="inline-code">model</code> / <code class="inline-code">ask</code> / <code class="inline-code">print</code> / <code class="inline-code">let</code> +
-          <code class="inline-code">classify</code> / <code class="inline-code">extract</code> / <code class="inline-code">tool</code> / <code class="inline-code">with</code> / <code class="inline-code">listen</code> / <code class="inline-code">speak</code> /
-          <code class="inline-code">pipeline</code> + <code class="inline-code">review path|text</code> + <code class="inline-code">voice</code> session +
-          <code class="inline-code">browser run|goto|show|flags|render</code> + <code class="inline-code">mitm enable</code> +
-          <code class="inline-code">engine fetch</code> <code class="inline-code">file://</code> / <code class="inline-code">parse</code> / <code class="inline-code">css attach</code> / <code class="inline-code">layout</code> /
-          <code class="inline-code">paint boxes</code> / <code class="inline-code">show</code> / <code class="inline-code">render</code> (css.json + layout
-          <code class="inline-code">box_count</code> 21 + pipeline.ppm vs GAS).</li>
+         <code class="inline-code">classify</code> / <code class="inline-code">extract</code> / <code class="inline-code">tool</code> / <code class="inline-code">with</code> / <code class="inline-code">listen</code> / <code class="inline-code">speak</code> /
+         <code class="inline-code">pipeline</code> + <code class="inline-code">review path|text</code> + <code class="inline-code">voice</code> session +
+         <code class="inline-code">browser run|goto|show|flags|render</code> + <code class="inline-code">mitm enable</code> +
+         <code class="inline-code">engine fetch</code> <code class="inline-code">file://</code> / <code class="inline-code">parse</code> / <code class="inline-code">css attach</code> / <code class="inline-code">layout</code> /
+         <code class="inline-code">paint boxes</code> / <code class="inline-code">show</code> / <code class="inline-code">render</code> (css.json + layout
+         <code class="inline-code">box_count</code> 21 + pipeline.ppm vs GAS).</li>
         <li><strong>Live-only non-goals</strong> (fail-loud; not this dry phase):
-          <code class="inline-code">review url</code>, <code class="inline-code">browser gui</code> / <code class="inline-code">cdp</code>, <code class="inline-code">mitm</code> beyond enable,
-          <code class="inline-code">engine</code> remote http(s) / <code class="inline-code">--live</code>, IDE chrome.</li>
+         <code class="inline-code">review url</code>, <code class="inline-code">browser gui</code> / <code class="inline-code">cdp</code>, <code class="inline-code">mitm</code> beyond enable,
+         <code class="inline-code">engine</code> remote http(s) / <code class="inline-code">--live</code>, IDE chrome.</li>
         <li><strong>Gate met:</strong> <code class="inline-code">make test-bootstrap</code> green (+ classify/tool/review/
-          voice/browser/mitm/engine css/layout/paint/render parity vs
-          <code class="inline-code">./spark</code> where wired).</li>
+         voice/browser/mitm/engine css/layout/paint/render parity vs
+         <code class="inline-code">./spark</code> where wired).</li>
         <li>Stage 4–5 are <strong>not</strong> done (no Spark-hosted compiler; no
-          default-<code class="inline-code">./spark</code> cutover).</li>
+         default-<code class="inline-code">./spark</code> cutover).</li>
         <li>See <code class="inline-code">bootstrap/README.md</code>. Growing A lex seeds does <strong>not</strong> skip
-          running self-host sources on B.</li>
+         running self-host sources on B.</li>
         </ul>
-        <h3 id="stage-2-assembler-c-replaces-hand-gas-authoring-real-phase-1">Stage 2 — Assembler C replaces hand-GAS authoring  ← <strong>REAL (phase-1)</strong></h3>
+        <h3 id="stage-2-assembler-c-replaces-hand-gas-authoring-real-phase-1">Stage 2 — Assembler C replaces hand-GAS authoring ← <strong>REAL (phase-1)</strong></h3>
         <ul class="doc__ul">
         <li><code class="inline-code">sparkasm</code> assembles Spark-asm IR → objects/binaries.</li>
         <li>Phase-1 proven: push/pop/push-imm/call/ret/jmp/cmp/test/jcc/add/sub/
-          and/or/xor/shl/shr/lea/imul/neg/not/inc/dec/xchg/add-rr/sub-rr/cqo/cdqe/cmp-rr/sete/setl/movzbq/movsbq/shl-cl/sar/leave/mul/idiv/adc/sbb/rol/ror/stc/clc/rcl/rcr/bsf/bsr/std/cld/bt/bts/btr/btc/shld/shrd/cmovz/cmovnz/cmovl/cmovg/cmovle/cmovge/cmova/cmovb/cmovae/cmovbe/test-imm/<code class="inline-code">mov reg,reg</code>
-          (GAS <code class="inline-code">6a 2a</code> / <code class="inline-code">48 99</code> / <code class="inline-code">48 98</code> / <code class="inline-code">48 39 f7</code> / <code class="inline-code">0f 94 c0</code> / <code class="inline-code">0f 9c c0</code> / <code class="inline-code">48 0f b6 f8</code> / <code class="inline-code">48 0f be f8</code> / <code class="inline-code">48 d3 e7</code> / <code class="inline-code">48 d1 ff</code> / <code class="inline-code">c9</code> / <code class="inline-code">48 f7 e6</code> / <code class="inline-code">48 f7 fe</code> / <code class="inline-code">48 11 f7</code> / <code class="inline-code">48 19 f7</code> / <code class="inline-code">48 d1 c7</code> / <code class="inline-code">48 d1 cf</code> / <code class="inline-code">f9</code> / <code class="inline-code">f8</code> / <code class="inline-code">48 d1 d7</code> / <code class="inline-code">48 d1 df</code> / <code class="inline-code">48 0f bc fe</code> / <code class="inline-code">48 0f bd fe</code> / <code class="inline-code">fd</code> / <code class="inline-code">fc</code> / <code class="inline-code">48 0f a3 ce</code> / <code class="inline-code">48 0f ab ce</code> / <code class="inline-code">48 0f b3 ce</code> / <code class="inline-code">48 0f bb ce</code> / <code class="inline-code">48 0f a4 f7 01</code> / <code class="inline-code">48 0f ac f7 01</code> / <code class="inline-code">48 0f 44 fe</code> / <code class="inline-code">48 0f 45 fe</code> / <code class="inline-code">48 0f 4c fe</code> / <code class="inline-code">48 0f 4f fe</code> / <code class="inline-code">48 0f 4e fe</code> / <code class="inline-code">48 0f 4d fe</code> / <code class="inline-code">48 0f 47 fe</code> / <code class="inline-code">48 0f 42 fe</code> / <code class="inline-code">48 0f 43 fe</code> / <code class="inline-code">48 0f 46 fe</code> / <code class="inline-code">48 f7 c7…</code> / <code class="inline-code">48 01 f7</code> / <code class="inline-code">48 29 f7</code> / <code class="inline-code">48 87 f7</code> / <code class="inline-code">48 f7 d7</code> / <code class="inline-code">48 ff c7</code> / <code class="inline-code">48 ff cf</code> / <code class="inline-code">48 89 f7</code>) — <strong>not</strong> full x86-64.</li>
+         and/or/xor/shl/shr/lea/imul/neg/not/inc/dec/xchg/add-rr/sub-rr/cqo/cdqe/cmp-rr/sete/setl/movzbq/movsbq/shl-cl/sar/leave/mul/idiv/adc/sbb/rol/ror/stc/clc/rcl/rcr/bsf/bsr/std/cld/bt/bts/btr/btc/shld/shrd/cmovz/cmovnz/cmovl/cmovg/cmovle/cmovge/cmova/cmovb/cmovae/cmovbe/test-imm/<code class="inline-code">mov reg,reg</code>
+         (GAS <code class="inline-code">6a 2a</code> / <code class="inline-code">48 99</code> / <code class="inline-code">48 98</code> / <code class="inline-code">48 39 f7</code> / <code class="inline-code">0f 94 c0</code> / <code class="inline-code">0f 9c c0</code> / <code class="inline-code">48 0f b6 f8</code> / <code class="inline-code">48 0f be f8</code> / <code class="inline-code">48 d3 e7</code> / <code class="inline-code">48 d1 ff</code> / <code class="inline-code">c9</code> / <code class="inline-code">48 f7 e6</code> / <code class="inline-code">48 f7 fe</code> / <code class="inline-code">48 11 f7</code> / <code class="inline-code">48 19 f7</code> / <code class="inline-code">48 d1 c7</code> / <code class="inline-code">48 d1 cf</code> / <code class="inline-code">f9</code> / <code class="inline-code">f8</code> / <code class="inline-code">48 d1 d7</code> / <code class="inline-code">48 d1 df</code> / <code class="inline-code">48 0f bc fe</code> / <code class="inline-code">48 0f bd fe</code> / <code class="inline-code">fd</code> / <code class="inline-code">fc</code> / <code class="inline-code">48 0f a3 ce</code> / <code class="inline-code">48 0f ab ce</code> / <code class="inline-code">48 0f b3 ce</code> / <code class="inline-code">48 0f bb ce</code> / <code class="inline-code">48 0f a4 f7 01</code> / <code class="inline-code">48 0f ac f7 01</code> / <code class="inline-code">48 0f 44 fe</code> / <code class="inline-code">48 0f 45 fe</code> / <code class="inline-code">48 0f 4c fe</code> / <code class="inline-code">48 0f 4f fe</code> / <code class="inline-code">48 0f 4e fe</code> / <code class="inline-code">48 0f 4d fe</code> / <code class="inline-code">48 0f 47 fe</code> / <code class="inline-code">48 0f 42 fe</code> / <code class="inline-code">48 0f 43 fe</code> / <code class="inline-code">48 0f 46 fe</code> / <code class="inline-code">48 f7 c7…</code> / <code class="inline-code">48 01 f7</code> / <code class="inline-code">48 29 f7</code> / <code class="inline-code">48 87 f7</code> / <code class="inline-code">48 f7 d7</code> / <code class="inline-code">48 ff c7</code> / <code class="inline-code">48 ff cf</code> / <code class="inline-code">48 89 f7</code>) — <strong>not</strong> full x86-64.</li>
         <li><strong>Gate met:</strong> <code class="inline-code">make -C sparkasm test</code> green. Grow further as needed.</li>
         </ul>
         <h3 id="self-host-sources-run-on-b">Self-host sources run on B</h3>
         <ul class="doc__ul">
         <li><code class="inline-code">selfhost/*.spark</code> (lexer, then parser, then compiler) execute on
-          <strong>B</strong>, not only as docs.</li>
+         <strong>B</strong>, not only as docs.</li>
         <li>Lexer contract proven: tokens for <code class="inline-code">selfhost/fixtures/mini.spark</code>
-          (and ops) match the seed goldens (see <code class="inline-code">selfhost/README.md</code>).</li>
+         (and ops) match the seed goldens (see <code class="inline-code">selfhost/README.md</code>).</li>
         <li><strong>Gate (Phase 2 / Stage 3 entry):</strong> B <code class="inline-code">--lex</code> matches
-          <code class="inline-code">expected_*.tokens.jsonl</code>. Spark-hosted <code class="inline-code">lexer.spark</code> scan is
-          <strong>not</strong> the golden producer (seed catalog only).</li>
+         <code class="inline-code">expected_*.tokens.jsonl</code>. Spark-hosted <code class="inline-code">lexer.spark</code> scan is
+         <strong>not</strong> the golden producer (seed catalog only).</li>
         </ul>
-        <h3 id="stage-3-lexer-on-b-real-phase-2">Stage 3 — Lexer on B  ← <strong>REAL (Phase 2)</strong></h3>
+        <h3 id="stage-3-lexer-on-b-real-phase-2">Stage 3 — Lexer on B ← <strong>REAL (Phase 2)</strong></h3>
         <ul class="doc__ul">
         <li><code class="inline-code">spark-bootstrap --lex</code> links <code class="inline-code">selfhost/lex.c</code> (same JSONL as
-          <code class="inline-code">./selfhost/spark-lex</code>).</li>
+         <code class="inline-code">./selfhost/spark-lex</code>).</li>
         <li><strong>Gate met:</strong> <code class="inline-code">make test-selfhost-lex</code> (17/17 via spark-lex <strong>and</strong>
-          <code class="inline-code">--lex</code>).</li>
+         <code class="inline-code">--lex</code>).</li>
         </ul>
         <h3 id="stage-4-partial-c-compile-spark-bc-phases-35">Stage 4 partial — C compile → SPARK_BC (Phases 3–5)</h3>
         <ul class="doc__ul">
         <li><code class="inline-code">spark-bootstrap --compile file.spark -o out.sparkbc</code></li>
         <li>C driver: <code class="inline-code">bootstrap/spark_parse.c</code> lowers LANGUAGE forms in
-          <code class="inline-code">docs/SPARK_BC.md</code> (model/ask/print/let, classify, extract,
-          pipeline, tool/with, listen/speak/voice, engine/IDE,
-          review/browser/mitm). Fail loud on unknown stmts. <code class="inline-code">compile.spark</code>
-          is still a seed.</li>
+         <code class="inline-code">docs/SPARK_BC.md</code> (model/ask/print/let, classify, extract,
+         pipeline, tool/with, listen/speak/voice, engine/IDE,
+         review/browser/mitm). Fail loud on unknown stmts. <code class="inline-code">compile.spark</code>
+         is still a seed.</li>
         <li><strong>Gates met:</strong> <code class="inline-code">make test-sparkbc</code> (compile → <code class="inline-code">--run-bc</code> body equals
-          GAS dry-run after banner for hello/mini/classify/extract/pipeline/
-          tool/listen/speak + engine/IDE + review/browser/mitm fixtures).
-          <code class="inline-code">make sparkbc-e2e</code> (TRAIN→STEP→TRAIN_STATUS: compile → dump →
-          <code class="inline-code">--run-bc</code> dry → <code class="inline-code">ARTIFACT</code>; not SGD). STEP weights via <code class="inline-code">make test-sparkbc</code>.
-          <code class="inline-code">make test-bc-emit</code> (bc_vm ↔ spark-bc-emit parity on same <code class="inline-code">.sparkbc</code>
-          goldens).</li>
+         GAS dry-run after banner for hello/mini/classify/extract/pipeline/
+         tool/listen/speak + engine/IDE + review/browser/mitm fixtures).
+         <code class="inline-code">make sparkbc-e2e</code> (TRAIN→STEP→TRAIN_STATUS: compile → dump →
+         <code class="inline-code">--run-bc</code> dry → <code class="inline-code">ARTIFACT</code>; not SGD). STEP weights via <code class="inline-code">make test-sparkbc</code>.
+         <code class="inline-code">make test-bc-emit</code> (bc_vm ↔ spark-bc-emit parity on same <code class="inline-code">.sparkbc</code>
+         goldens).</li>
         <li><code class="inline-code">--dry-run</code> tries compile+<code class="inline-code">bc_vm</code> first; on compile failure falls
-          back to tree-walk <code class="inline-code">vm.c</code>. Tree-walk handlers kept for parity.</li>
+         back to tree-walk <code class="inline-code">vm.c</code>. Tree-walk handlers kept for parity.</li>
         <li><strong>Not done:</strong> Spark-hosted compiler; full tree-walk deletion;
-          <code class="inline-code">include</code>/<code class="inline-code">builder</code>/<code class="inline-code">implement</code>/<code class="inline-code">model analyze</code> on BC; Stage 5/6.</li>
+         <code class="inline-code">include</code>/<code class="inline-code">builder</code>/<code class="inline-code">implement</code>/<code class="inline-code">model analyze</code> on BC; Stage 5/6.</li>
         </ul>
-        <h3 id="stage-4-spark-compiles-spark-full-not-started">Stage 4 — Spark compiles Spark (full)  ← <strong>NOT STARTED</strong></h3>
+        <h3 id="stage-4-spark-compiles-spark-full-not-started">Stage 4 — Spark compiles Spark (full) ← <strong>NOT STARTED</strong></h3>
         <ul class="doc__ul">
         <li>Self-host compiler emits IR or objects (via C assembler / later
-          Spark-hosted assemble).</li>
+         Spark-hosted assemble).</li>
         <li>Scaffold GAS tree shrinks; product path is A-on-B (+ C).</li>
         <li><strong>Gate:</strong> rebuild a known ELF or bytecode from <code class="inline-code">selfhost/</code> sources
-          without editing GAS by hand.</li>
+         without editing GAS by hand.</li>
         <li>Phase 0: bytecode VM runs <code class="inline-code">hello.sparkbc</code> via <code class="inline-code">--run-bc</code>.</li>
         <li>Phase 3: C <code class="inline-code">--compile</code> is a bootstrap, not Stage 4 complete.</li>
         <li>Parser/grammar <code class="inline-code">.spark</code> files are catalogs only.</li>
         </ul>
-        <h3 id="stage-5-kick-the-ladder-not-started">Stage 5 — Kick the ladder  ← <strong>NOT STARTED</strong></h3>
+        <h3 id="stage-5-kick-the-ladder-not-started">Stage 5 — Kick the ladder ← <strong>NOT STARTED</strong></h3>
         <ul class="doc__ul">
         <li>Default <code class="inline-code">./spark</code> (or successor name) is B/self-host built, not
-          <code class="inline-code">as</code>+<code class="inline-code">ld</code> of <code class="inline-code">asm/spark.s</code>.</li>
+         <code class="inline-code">as</code>+<code class="inline-code">ld</code> of <code class="inline-code">asm/spark.s</code>.</li>
         <li>GAS retained only as archaeological / comparison until removed.</li>
         <li><strong>Gate:</strong> owner cutover after Stage 4 proof — not earlier.</li>
         <li><code class="inline-code">scripts/spark-bc</code> exists (Phase 6 wrapper); default <code class="inline-code">./spark</code> stays
-          GAS. SPARK_BC → ELF via <code class="inline-code">spark-bc-emit</code> + <code class="inline-code">sparkasm</code> is proven
-          (<code class="inline-code">make test-bc-emit</code>), not the product default.</li>
+         GAS. SPARK_BC → ELF via <code class="inline-code">spark-bc-emit</code> + <code class="inline-code">sparkasm</code> is proven
+         (<code class="inline-code">make test-bc-emit</code>), not the product default.</li>
         </ul>
-        <h3 id="stage-6-downloads-product-default-not-started">Stage 6 — downloads / product default  ← <strong>NOT STARTED</strong></h3>
+        <h3 id="stage-6-downloads-product-default-not-started">Stage 6 — downloads / product default ← <strong>NOT STARTED</strong></h3>
         <ul class="doc__ul">
         <li><code class="inline-code">make spark</code> remains the GAS ELF. Do not default downloads to BC.</li>
         </ul>
@@ -472,7 +472,7 @@
         (alias + signals + why) before edits. Write
         <code class="inline-code">reports/spark-selfhost-*.md</code> as the last file of the phase.
         Never <code class="inline-code">voice</code> / <code class="inline-code">local-big</code>. Never treat <code class="inline-code">code-hard</code> as Sonnet.
-        Never auto-escalate to Opus / <code class="inline-code">judge</code>. Do not retarget Bifrost CEL.</p>
+        Never auto-escalate to Opus / <code class="inline-code">judge</code>. Do not retarget the AI gateway CEL.</p>
         <hr class="doc__hr" />
         <h2 id="coordination-rules">Coordination rules</h2>
         <ul class="doc__ul">
@@ -486,11 +486,11 @@
         <pre class="doc__pre"><code class="language-bash"># Phase 0 — bytecode on B (destination runner for hello)
         ./spark-bootstrap --run-bc selfhost/fixtures/hello.sparkbc
         make test-sparkbc
-        make sparkbc-e2e   # TRAIN→STEP→ARTIFACT (dry; not SGD)
+        make sparkbc-e2e # TRAIN→STEP→ARTIFACT (dry; not SGD)
 
         # Builder factory (TRAIN/STEP dry) — docs/SPARK_BUILDER.md
         ./spark-bootstrap --compile examples/spark_train_step.spark \
-          -o docs/examples/spark-train-step.sparkbc
+         -o docs/examples/spark-train-step.sparkbc
         ./spark-bootstrap --run-bc docs/examples/spark-train-step.sparkbc
         # ARTIFACT under out/train/job-dry-001/ — trained=false; not SGD
 

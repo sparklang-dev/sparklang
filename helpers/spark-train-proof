@@ -2,14 +2,14 @@
 # Train/step proof shortcut — wraps make spark-sgd-proof (tiny fixture).
 # Pass SCALE=1 to run spark-sgd-proof-scale instead.
 # Coder: SCALE=coder-large → make spark-coder-train-large.
-# Prefer 5090 for coder GPU; never 6000. Does not claim beat Claude.
+# Prefer a consumer GPU for coder train when available.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
 case "${SCALE:-0}" in
   1|scale|sgd-scale)
-    echo "==> make spark-sgd-proof-scale (CPU; not beat Claude)"
+    echo "==> make spark-sgd-proof-scale (CPU; measurement only)"
     exec make spark-sgd-proof-scale
     ;;
   coder-large|large-coder)
@@ -17,7 +17,7 @@ case "${SCALE:-0}" in
     exec make spark-coder-train-large
     ;;
   *)
-    echo "==> make spark-sgd-proof (CPU tiny; not beat Claude)"
+    echo "==> make spark-sgd-proof (CPU tiny; measurement only)"
     exec make spark-sgd-proof
     ;;
 esac

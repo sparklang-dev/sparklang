@@ -15,18 +15,17 @@ Spark SoT; third-party trust/IP), recompile ≠ semantic fidelity.
 ([/docs/decompile-compete.html](/docs/decompile-compete.html)) —
 parity matrix + measured `make decompile-bench` JSON (no fake
 “beats all”).
-Mermaid factory overview: [DIAGRAMS.md](DIAGRAMS.md)
+Mermaid factory overview: [Diagrams](DIAGRAMS.md)
 ([/docs/diagrams.html](/docs/diagrams.html)).
 
-**Never** claim an LLM perfectly decompiles SPARK_BC. **Never**
-6000. Does **not** beat Claude. Do **not** publish “beats
+**Never** claim an LLM perfectly decompiles SPARK_BC. Do **not** publish “beats
 Ghidra/IDA/…” without measured scoreboard JSON.
 
 ## Tool-function diagrams
 
 ### Compile path
 
-![Compile path: source to SPARK_BC to run/train/serve](/docs/images/diagram-compile-path.svg?v=0.6.58)
+![Compile path: source to SPARK_BC to run/train/serve](/docs/images/diagram-compile-path.svg?v=0.6.60)
 
 *Caption: `.spark` → bootstrap / GAS assembler → `.sparkbc`
 (SPARK_BC) → `--run-bc` / TRAIN·STEP / serve. Helpers, published
@@ -35,7 +34,7 @@ invent bytecode.*
 
 ### Decompile path
 
-![Decompile path: BC to dump to readable view](/docs/images/diagram-decompile-path.svg?v=0.6.58)
+![Decompile path: BC to dump to readable view](/docs/images/diagram-decompile-path.svg?v=0.6.60)
 
 *Caption: `.sparkbc` → `dump.py` (disasm/inspect) → readable hex +
 mnemonics (or stub JSON / `--run-bc`). Optional edit is of the
@@ -44,7 +43,7 @@ lossless BC→source decompiler.*
 
 ### Helpers · shadow-build · SDK/IDE GUI
 
-![Helpers shadow-build and GUI placement](/docs/images/diagram-helpers-gui.svg?v=0.6.58)
+![Helpers shadow-build and GUI placement](/docs/images/diagram-helpers-gui.svg?v=0.6.60)
 
 *Caption: Deterministic SPARK_BC SoT in the center. Helpers
 (`Makefile`, `sparkc`, tests), shadow-build
@@ -53,7 +52,7 @@ around it and call the same compile/dump paths.*
 
 ### Deterministic tools vs LLM assist
 
-![Deterministic Spark vs optional LLM assist](/docs/images/diagram-deterministic-vs-llm.svg?v=0.6.58)
+![Deterministic Spark vs optional LLM assist](/docs/images/diagram-deterministic-vs-llm.svg?v=0.6.60)
 
 *Caption: Left = Spark SoT (compile, dump, run). Right = optional
 LLM assist later (names/comments/drafts) — **never** the SoT for
@@ -74,17 +73,17 @@ thin-forks the same packer.
 
 ```bash
 PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
-  docs/examples/spark-train-step.sparkbc \
-  --source examples/spark_train_step.spark \
-  --command './spark-bootstrap --compile examples/spark_train_step.spark -o docs/examples/spark-train-step.sparkbc' \
-  -o /tmp/spark-train-step-bc.txt
+ docs/examples/spark-train-step.sparkbc \
+ --source examples/spark_train_step.spark \
+ --command './spark-bootstrap --compile examples/spark_train_step.spark -o docs/examples/spark-train-step.sparkbc' \
+ -o /tmp/spark-train-step-bc.txt
 ```
 
-![CLI dump of SPARK_BC](/docs/images/decompile-cli-dump.png?v=0.6.58)
+![CLI dump of SPARK_BC](/docs/images/decompile-cli-dump.png?v=0.6.60)
 
-*Caption: Real terminal capture of `tools/spark-bc-dump/dump.py` on
+*Caption: Terminal capture of `tools/spark-bc-dump/dump.py` on
 `docs/examples/spark-train-step.sparkbc` — magic `SPBC`, pools,
-opcode listing. Not invented hex.*
+opcode listing.*
 
 Loader / formatters: `python/sparklang/model_lab/bc_dump.py`
 (sections, string **symbols**, const/op **xrefs**, `--json` /
@@ -92,7 +91,7 @@ Loader / formatters: `python/sparklang/model_lab/bc_dump.py`
 `make test-sparkbc`; richer dump gate
 `make test-decompile-compete`.
 
-**Round-trip (SoT win, loud):** `make decompile-roundtrip` —
+**Round-trip (SoT):** `make decompile-roundtrip` —
 compile → dump → recompile → sha256 match on published fixtures.
 
 **Analysis project:** `tools/spark-bc-dump/analyze_project.py`
@@ -109,29 +108,29 @@ Published dump text (no rebuild): `docs/examples/*-bc.txt` (site:
 
 ```bash
 PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
-  docs/examples/spark-builder.sparkbc --stub -o /tmp/stub.json
+ docs/examples/spark-builder.sparkbc --stub -o /tmp/stub.json
 ```
 
-![CLI --stub JSON](/docs/images/decompile-cli-stub.png?v=0.6.58)
+![CLI --stub JSON](/docs/images/decompile-cli-stub.png?v=0.6.60)
 
-*Caption: Real `--stub` JSON from `spark-builder.sparkbc` — status,
+*Caption: `--stub` JSON from `spark-builder.sparkbc` — status,
 sha256, magic, version. Still inspect metadata, not source recovery.*
 
 ### 4. Inspect behavior with `--run-bc`
 
 ```bash
 ./spark-bootstrap --run-bc docs/examples/spark-train-step.sparkbc
-./spark --run-bc docs/examples/spark-train-step.sparkbc   # GAS → bc_vm
+./spark --run-bc docs/examples/spark-train-step.sparkbc # GAS → bc_vm
 ```
 
-![CLI --run-bc dry VM](/docs/images/decompile-cli-runbc.png?v=0.6.58)
+![CLI --run-bc dry VM](/docs/images/decompile-cli-runbc.png?v=0.6.60)
 
-*Caption: Real `./spark-bootstrap --run-bc` dry bytecode VM lines.
+*Caption: `./spark-bootstrap --run-bc` dry bytecode VM lines.
 TRAIN/STEP contracts: [SPARK_BC.md](SPARK_BC.md).*
 
 ### 5. CLI help (flags)
 
-![CLI dump.py --help](/docs/images/decompile-cli-help.png?v=0.6.58)
+![CLI dump.py --help](/docs/images/decompile-cli-help.png?v=0.6.60)
 
 *Caption: Captured `dump.py --help` — `--stub`, `--weights`,
 `--serve` (tiny CPU forward; not production LLM).*
@@ -140,8 +139,8 @@ TRAIN/STEP contracts: [SPARK_BC.md](SPARK_BC.md).*
 
 ```bash
 PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
-  docs/examples/spark-self.sparkbc \
-  --weights /tmp/spark-self.init.safetensors
+ docs/examples/spark-self.sparkbc \
+ --weights /tmp/spark-self.init.safetensors
 ```
 
 Emits Spark-created Xavier init (`trained: false`). See
@@ -165,7 +164,7 @@ Buttons: **Compile → .sparkbc**, **Decompile .sparkbc**, open
 source / `.sparkbc`, save dump, load sample. See also
 [sdk-ide-download](/docs/sdk-ide-download.html).
 
-![Annotated SPARK_BC GUI](/docs/images/decompile-gui-sparkbc.png?v=0.6.58)
+![Annotated SPARK_BC GUI](/docs/images/decompile-gui-sparkbc.png?v=0.6.60)
 
 *Caption: Annotated layout matching `tools/spark_bc_gui` chrome.
 Right pane text is **real** `dump.py` output (same capture as the
@@ -186,10 +185,10 @@ make test-model-lab
 ## ELF / machine disassembly (not SPARK_BC)
 
 ```bash
-make machine-proof   # ELF64 + _start when binary exists
-./spark-binary-probe --elf ./spark   # hdr + sections JSON
+make machine-proof # ELF64 + _start when binary exists
+./spark-binary-probe --elf ./spark # hdr + sections JSON
 # claim: local_elf_probe_not_ghidra — still not Ghidra-class
-make decompile-bench                 # records elf_local_probe
+make decompile-bench # records elf_local_probe
 ```
 
 Language `binary` artifacts under `out/decompile/<basename>/`
@@ -217,14 +216,14 @@ SPARK_BC↔ELF round-trip claim beyond `test-bc-emit`.
 | Recover original `.spark` losslessly | **not** — inspect, not source decompiler |
 | Beat Ghidra/IDA on ELF/PE | **not claimed** (loss / N/A on that domain) |
 | LLM perfectly decompiles SPARK_BC | **never claimed** |
-| Attention head activation maps | **not** — see [ATTENTION_FORWARD.md](ATTENTION_FORWARD.md) |
+| Attention head activation maps | **not** — see [Attention / forward](ATTENTION_FORWARD.md) |
 | Closed-weight model theft | **forbidden** — reverse stays index-only |
 
 ## Related
 
 - [Compile](COMPILE.md) · [Build models](BUILD_MODELS.md)
-- [SPARK_BUILDER.md](SPARK_BUILDER.md) · [SPARK_BC.md](SPARK_BC.md)
+- [SPARK_BC Builder](SPARK_BUILDER.md) · [SPARK_BC.md](SPARK_BC.md)
 - [Factory hub](FACTORY.md) · [LLM decompile research](research/LLM_DECOMPILE.md)
 - [Decompile compete / scoreboard](DECOMPILE_COMPETE.md)
 - Screenshots + diagrams: `website/docs/images/decompile-*`,
-  `website/docs/images/diagram-*`
+ `website/docs/images/diagram-*`

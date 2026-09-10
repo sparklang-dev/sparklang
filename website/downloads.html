@@ -1,37 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Downloads — Spark</title>
-    <meta
-      name="description"
-      content="Download Spark AI-first runtime installers for Linux, macOS, and Windows."
-    />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="shortcut icon" href="/favicon.svg" />
-    <link rel="stylesheet" href="/css/tokens.css?v=polish0909" />
-    <link rel="stylesheet" href="/css/site.css?v=polish0909" />
-  </head>
-  <body class="doc-page">
-    <header class="site-header">
-      <div class="shell header-inner">
-        <a class="site-brand" href="/" aria-label="SparkLang home">
-          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
-            <path
-              d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z"
-              fill="currentColor"
-            />
-          </svg>
-          Spark
-        </a>
-        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
-          <span class="nav-toggle__bar"></span>
-          <span class="nav-toggle__bar"></span>
-          <span class="nav-toggle__bar"></span>
-        </button>
-        <div class="header-nav-wrap">
-          <nav class="site-nav" id="site-nav" aria-label="Primary">
+ <head>
+ <meta charset="utf-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1" />
+ <title>Downloads — Spark</title>
+ <meta
+ name="description"
+ content="Download Spark AI-first runtime installers for Linux, macOS, and Windows."
+ />
+ <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+ <link rel="shortcut icon" href="/favicon.svg" />
+ <link rel="stylesheet" href="/css/tokens.css?v=polish0909" />
+ <link rel="stylesheet" href="/css/site.css?v=polish0909" />
+ </head>
+ <body class="doc-page">
+ <header class="site-header">
+ <div class="shell header-inner">
+ <a class="site-brand" href="/" aria-label="SparkLang home">
+ <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+ <path
+ d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z"
+ fill="currentColor"
+ />
+ </svg>
+ Spark
+ </a>
+ <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+ <span class="nav-toggle__bar"></span>
+ <span class="nav-toggle__bar"></span>
+ <span class="nav-toggle__bar"></span>
+ </button>
+ <div class="header-nav-wrap">
+ <nav class="site-nav" id="site-nav" aria-label="Primary">
             <!-- spark-primary-nav:begin -->
             <ul class="nav-primary">
               <li><a href="/workflow.html">Loop</a></li>
@@ -62,7 +62,7 @@
                   <li class="nav-sub">
                     <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
-                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
                       <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
                     </ul>
                   </li>
@@ -143,162 +143,160 @@
             <a href="/playground.html" class="nav-cta">Try</a>
             <!-- spark-primary-nav:end -->
           </nav>
-        </div>
-      </div>
-    </header>
+ </div>
+ </div>
+ </header>
 
-    <div class="shell doc-layout">
-      <aside class="doc-sidebar" aria-label="Table of contents">
-        <p class="doc-sidebar__title">On this page</p>
-        <nav id="doc-toc-list"></nav>
-      </aside>
-      <main class="doc-main">
-      <nav class="doc__nav" aria-label="Docs">
-        <a href="/learn/">Learn</a>
-        <a href="/docs/programming-guide.html">Programming guide</a>
-        <a href="/docs/language.html">Language reference</a>
-        <a href="/downloads.html" aria-current="page">Downloads</a>
-      </nav>
-      <article class="doc__body">
-        <h1 id="downloads">Downloads</h1>
-        <p>
-          <strong>SparkLang</strong> is a language and runtime for plain
-          <code class="inline-code">.spark</code> files:
-          <code class="inline-code">ask</code>,
-          <code class="inline-code">classify</code>,
-          <code class="inline-code">extract</code>,
-          <code class="inline-code">pipeline</code>,
-          <code class="inline-code">review</code>,
-          <code class="inline-code">model</code> train (real jobs), and
-          optional <code class="inline-code">voice</code>. Dry-run offline with
-          fixtures is the default; live
-          <code class="inline-code">ask</code> via
-          <code class="inline-code">AI_GATEWAY_URL</code> is optional
-          (<code class="inline-code">--live</code>).
-        </p>
+ <div class="shell doc-layout">
+ <aside class="doc-sidebar" aria-label="Table of contents">
+ <p class="doc-sidebar__title">On this page</p>
+ <nav id="doc-toc-list"></nav>
+ </aside>
+ <main class="doc-main">
+ <nav class="doc__nav" aria-label="Docs">
+ <a href="/learn/">Learn</a>
+ <a href="/docs/programming-guide.html">Programming guide</a>
+ <a href="/docs/language.html">Language reference</a>
+ <a href="/downloads.html" aria-current="page">Downloads</a>
+ </nav>
+ <article class="doc__body">
+ <h1 id="downloads">Downloads</h1>
+ <p>
+ <strong>SparkLang</strong> is a language and runtime for plain
+ <code class="inline-code">.spark</code> files:
+ <code class="inline-code">ask</code>,
+ <code class="inline-code">classify</code>,
+ <code class="inline-code">extract</code>,
+ <code class="inline-code">pipeline</code>,
+ <code class="inline-code">review</code>,
+ <code class="inline-code">model</code> train (real jobs), and
+ optional <code class="inline-code">voice</code>. Dry-run offline with
+ fixtures is the default; live
+ <code class="inline-code">ask</code> via
+ <code class="inline-code">AI_GATEWAY_URL</code> is optional
+ (<code class="inline-code">--live</code>).
+ </p>
 
-        <h2 id="graphical-installers">Graphical installers (recommended)</h2>
-        <p>
-          Primary downloads are <strong>setup wizards</strong> — not curl|bash
-          one-liners. CLI scripts remain available as fallbacks.
-        </p>
-        <div class="doc__table-wrap">
-          <table class="doc__table">
-            <thead>
-              <tr>
-                <th>Platform</th>
-                <th>Graphical installer</th>
-                <th>How to launch</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Linux x86_64 / arm64</strong></td>
-                <td>
-                  <code class="inline-code">.deb</code> (Software Center /
-                  GNOME Software) or
-                  <a href="/downloads/spark-install-linux-gui.sh"
-                    ><code class="inline-code">spark-install-linux-gui.sh</code></a
-                  >
-                  (zenity progress wizard)
-                </td>
-                <td>
-                  Double-click the <code class="inline-code">.deb</code>, or run
-                  the GUI script; after install, find
-                  <strong>Install Spark</strong> in Applications (zenity helper).
-                </td>
-              </tr>
-              <tr>
-                <td><strong>macOS</strong></td>
-                <td>
-                  <code class="inline-code">.pkg</code> with welcome + conclusion
-                  pages (Apple Silicon or Intel build)
-                </td>
-                <td>
-                  Double-click the <code class="inline-code">.pkg</code> in
-                  Finder — macOS Installer.app walks through the GUI steps.
-                </td>
-              </tr>
-              <tr>
-                <td><strong>Windows</strong></td>
-                <td>
-                  <code class="inline-code">spark-runtime-windows-*-setup.exe</code>
-                  (Inno Setup wizard: install folder, PATH checkbox, first-run
-                  build)
-                </td>
-                <td>
-                  Double-click the <code class="inline-code">.exe</code>. If only
-                  a <code class="inline-code">.zip</code> is listed, extract and
-                  run <code class="inline-code">Setup.bat</code> (CLI fallback).
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+ <h2 id="graphical-installers">Graphical installers (recommended)</h2>
+ <p>
+ Primary downloads are <strong>setup wizards</strong> — not curl|bash
+ one-liners. CLI scripts remain available as fallbacks.
+ </p>
+ <div class="doc__table-wrap">
+ <table class="doc__table">
+ <thead>
+ <tr>
+ <th>Platform</th>
+ <th>Graphical installer</th>
+ <th>How to launch</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+ <td><strong>Linux x86_64 / arm64</strong></td>
+ <td>
+ <code class="inline-code">.deb</code> (Software Center /
+ GNOME Software) or
+ <a href="/downloads/spark-install-linux-gui.sh"
+ ><code class="inline-code">spark-install-linux-gui.sh</code></a
+ >
+ (zenity progress wizard)
+ </td>
+ <td>
+ Double-click the <code class="inline-code">.deb</code>, or run
+ the GUI script; after install, find
+ <strong>Install Spark</strong> in Applications (zenity helper).
+ </td>
+ </tr>
+ <tr>
+ <td><strong>macOS</strong></td>
+ <td>
+ <code class="inline-code">.pkg</code> with welcome + conclusion
+ pages (Apple Silicon or Intel build)
+ </td>
+ <td>
+ Double-click the <code class="inline-code">.pkg</code> in
+ Finder — macOS Installer.app walks through the GUI steps.
+ </td>
+ </tr>
+ <tr>
+ <td><strong>Windows</strong></td>
+ <td>
+ <code class="inline-code">spark-runtime-windows-*-setup.exe</code>
+ (Inno Setup wizard: install folder, PATH checkbox, first-run
+ build)
+ </td>
+ <td>
+ Double-click the <code class="inline-code">.exe</code>. If only
+ a <code class="inline-code">.zip</code> is listed, extract and
+ run <code class="inline-code">Setup.bat</code> (CLI fallback).
+ </td>
+ </tr>
+ </tbody>
+ </table>
+ </div>
 
-        <div class="doc__table-wrap">
-          <table class="doc__table" id="runtime-table">
-            <thead>
-              <tr>
-                <th>OS</th>
-                <th>CPU</th>
-                <th>Kind</th>
-                <th>Installer (recommended)</th>
-                <th>Also available</th>
-              </tr>
-            </thead>
-            <tbody id="runtime-table-body">
-              <tr>
-                <td colspan="5">Loading packages from manifest…</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <p id="skipped-note"></p>
-        <p>
-          <a href="/downloads/manifest.json">manifest.json</a>
-          <span id="manifest-updated"></span>
-        </p>
+ <div class="doc__table-wrap">
+ <table class="doc__table" id="runtime-table">
+ <thead>
+ <tr>
+ <th>OS</th>
+ <th>CPU</th>
+ <th>Kind</th>
+ <th>Installer (recommended)</th>
+ <th>Also available</th>
+ </tr>
+ </thead>
+ <tbody id="runtime-table-body">
+ <tr>
+ <td colspan="5">Loading packages from manifest…</td>
+ </tr>
+ </tbody>
+ </table>
+ </div>
+ <p id="skipped-note"></p>
+ <p>
+ <a href="/downloads/manifest.json">manifest.json</a>
+ <span id="manifest-updated"></span>
+ </p>
 
-        <h2 id="sdk-ide-gui-pack">SDK + IDE + GUI pack (recommended for developers)</h2>
-        <p>
-          One tarball with the <strong>CPU runtime</strong>,
-          <strong>SDK</strong> (docs, headers, examples, Python APIs),
-          <strong>IDE</strong> (VS Code / Cursor extension + workspace), a
-          <strong>graphical</strong> SPARK_BC compile / decompile app
-          (<code class="inline-code">./bin/spark-bc-gui</code>), plus
-          <strong>helpers</strong>, <strong>shadows</strong>, and BC dump
-          tools.
-          Full page:
-          <a href="/docs/sdk-ide-download.html">SDK + IDE download</a>.
-        </p>
-        <pre class="doc__pre"><code class="language-bash">make sdk-pack    # or: make dist
+ <h2 id="sdk-ide-gui-pack">SDK + IDE + GUI pack (recommended for developers)</h2>
+ <p>
+ One tarball with the <strong>CPU runtime</strong>,
+ <strong>SDK</strong> (docs, headers, examples, Python APIs),
+ <strong>IDE</strong> (VS Code-compatible editors extension + workspace), a
+ <strong>graphical</strong> SPARK_BC compile / decompile app
+ (<code class="inline-code">./bin/spark-bc-gui</code>), plus
+ <strong>helpers</strong>, <strong>shadows</strong>, and BC dump
+ tools.
+ Full page:
+ <a href="/docs/sdk-ide-download.html">SDK + IDE download</a>.
+ </p>
+ <pre class="doc__pre"><code class="language-bash">make sdk-pack # or: make dist
 # → out/sdk-pack/sparklang-sdk-*.tar.gz
 tar -xzf out/sdk-pack/sparklang-sdk-*.tar.gz
 cd sparklang-sdk-*
-./bin/spark-bc-gui              # graphical compile + decompile
-./bin/spark-helper-compile …    # CLI helper
+./bin/spark-bc-gui # graphical compile + decompile
+./bin/spark-helper-compile … # CLI helper
 ./bin/spark-shadow-copy mybuild # isolated rebuild
-./bin/spark-ide                 # Cursor / VS Code + extension</code></pre>
-        <p>
-          Manifest mirror:
-          <a href="/downloads/sdk-pack-MANIFEST.json"
-            ><code class="inline-code">sdk-pack-MANIFEST.json</code></a
-          >
-          (tarball mirrored when under size cap). CPU only — never RTX PRO
-          6000. Does not claim beat Claude.
-        </p>
+./bin/spark-ide # VS Code-compatible editors + extension</code></pre>
+ <p>
+ Manifest mirror:
+ <a href="/downloads/sdk-pack-MANIFEST.json"
+ ><code class="inline-code">sdk-pack-MANIFEST.json</code></a
+ >
+ (tarball mirrored when under size cap). CPU only — prefer CPU or a consumer GPU. </p>
 
-        <h2 id="ai-quick-start-linux">AI quick start — Linux</h2>
-        <p>
-          <strong>Graphical:</strong> download the
-          <code class="inline-code">.deb</code> and open it in Software Center,
-          or run
-          <code class="inline-code">bash spark-install-linux-gui.sh</code>
-          (needs <code class="inline-code">zenity</code>).
-        </p>
-        <p>After install:</p>
-        <pre class="doc__pre"><code class="language-bash"># .deb (root)
+ <h2 id="ai-quick-start-linux">AI quick start — Linux</h2>
+ <p>
+ <strong>Graphical:</strong> download the
+ <code class="inline-code">.deb</code> and open it in Software Center,
+ or run
+ <code class="inline-code">bash spark-install-linux-gui.sh</code>
+ (needs <code class="inline-code">zenity</code>).
+ </p>
+ <p>After install:</p>
+ <pre class="doc__pre"><code class="language-bash"># .deb (root)
 sudo dpkg -i spark-runtime-linux-x86_64-<span id="ver-linux-deb">0.6.0</span>.deb
 spark --dry-run /opt/spark/examples/hello.spark
 spark --dry-run /opt/spark/examples/classify_intent.spark
@@ -306,212 +304,212 @@ spark --dry-run /opt/spark/examples/classify_intent.spark
 # curl|bash (user install, no root)
 curl -fsSL https://sparklang.dev/downloads/spark-install-linux.sh | bash -s -- --user
 spark --dry-run ~/.local/spark/examples/hello.spark</code></pre>
-        <p>
-          Live ask: set <code class="inline-code">AI_GATEWAY_URL</code> (optional key), then
-          <code class="inline-code">spark --live /opt/spark/examples/ask_live.spark</code>.
-          See
-          <a href="/docs/programming-guide.html#3-run-dry-vs-live"
-            >Program with Spark §3</a
-          >.
-        </p>
+ <p>
+ Live ask: set <code class="inline-code">AI_GATEWAY_URL</code> (optional key), then
+ <code class="inline-code">spark --live /opt/spark/examples/ask_live.spark</code>.
+ See
+ <a href="/docs/programming-guide.html#3-run-dry-vs-live"
+ >Program with Spark §3</a
+ >.
+ </p>
 
-        <h2 id="ai-quick-start-macos">AI quick start — macOS</h2>
-        <p>
-          <strong>Graphical:</strong> double-click the
-          <code class="inline-code">.pkg</code> for your CPU (arm64 Apple
-          Silicon or x86_64 Intel). CLI fallback:
-        </p>
-        <pre class="doc__pre"><code class="language-bash">curl -fsSL https://sparklang.dev/downloads/spark-install-macos.sh | bash</code></pre>
-        <pre class="doc__pre"><code class="language-bash">/usr/local/spark/bin/spark --dry-run /usr/local/spark/examples/hello.spark</code></pre>
-        <p>
-          The graphical installer sets up Spark on your Mac. For full companion
-          binaries, use the Linux package or build from source.
-        </p>
+ <h2 id="ai-quick-start-macos">AI quick start — macOS</h2>
+ <p>
+ <strong>Graphical:</strong> double-click the
+ <code class="inline-code">.pkg</code> for your CPU (arm64 Apple
+ Silicon or x86_64 Intel). CLI fallback:
+ </p>
+ <pre class="doc__pre"><code class="language-bash">curl -fsSL https://sparklang.dev/downloads/spark-install-macos.sh | bash</code></pre>
+ <pre class="doc__pre"><code class="language-bash">/usr/local/spark/bin/spark --dry-run /usr/local/spark/examples/hello.spark</code></pre>
+ <p>
+ The graphical installer sets up Spark on your Mac. For full companion
+ binaries, use the Linux package or build from source.
+ </p>
 
-        <h2 id="ai-quick-start-windows">AI quick start — Windows</h2>
-        <p>
-          <strong>Graphical:</strong> run
-          <code class="inline-code">spark-runtime-windows-x86_64-*-setup.exe</code>
-          (Inno Setup wizard). Choose install folder, optional PATH, then allow
-          the post-install first-run build.
-        </p>
-        <pre class="doc__pre"><code class="language-bash">bin\spark --dry-run examples\hello.spark</code></pre>
-        <p>
-          Windows ships the Spark runtime. For
-          <code class="inline-code">spark-ask-http</code>, speech, and gateway
-          companions, use WSL with the Linux x86_64 installer.
-        </p>
+ <h2 id="ai-quick-start-windows">AI quick start — Windows</h2>
+ <p>
+ <strong>Graphical:</strong> run
+ <code class="inline-code">spark-runtime-windows-x86_64-*-setup.exe</code>
+ (Inno Setup wizard). Choose install folder, optional PATH, then allow
+ the post-install first-run build.
+ </p>
+ <pre class="doc__pre"><code class="language-bash">bin\spark --dry-run examples\hello.spark</code></pre>
+ <p>
+ Windows ships the Spark runtime. For
+ <code class="inline-code">spark-ask-http</code>, speech, and gateway
+ companions, use WSL with the Linux x86_64 installer.
+ </p>
 
-        <h2 id="verify">Verify</h2>
-        <pre class="doc__pre"><code class="language-bash">curl -sO https://sparklang.dev/downloads/manifest.json
+ <h2 id="verify">Verify</h2>
+ <pre class="doc__pre"><code class="language-bash">curl -sO https://sparklang.dev/downloads/manifest.json
 curl -sO https://sparklang.dev/downloads/spark-runtime-linux-x86_64-0.6.0.deb
 sha256sum -c &lt;(python3 -c "
 import json; m=json.load(open('manifest.json'))
 p=next(x for x in m['platforms'] if x.get('primary') and x['id']=='linux-x86_64')
-print(p['sha256']+'  '+p['file'])
+print(p['sha256']+' '+p['file'])
 ")</code></pre>
 
-        <h2 id="build-from-source">Build from source</h2>
-        <p>
-          Download the runtime kit for your platform from the table above, extract
-          the archive, then run <code class="inline-code">make</code> in the
-          extracted directory. Packages here match release
-          <code class="inline-code" id="manifest-version">0.6.0</code>.
-          Need a different build or platform? Use the contact link on this page.
-        </p>
-      </article>
-    </main>
-    </div>
+ <h2 id="build-from-source">Build from source</h2>
+ <p>
+ Download the runtime kit for your platform from the table above, extract
+ the archive, then run <code class="inline-code">make</code> in the
+ extracted directory. Packages here match release
+ <code class="inline-code" id="manifest-version">0.6.0</code>.
+ Need a different build or platform? Use the contact link on this page.
+ </p>
+ </article>
+ </main>
+ </div>
 
-        <footer class="site-footer">
-      <div class="shell footer-inner">
-        <div class="footer-brand">
-          <span>SparkLang — the Spark programming language</span>
-          <span class="footer-meta">v0.6.56 · MIT</span>
-        </div>
-        <nav class="footer-nav" aria-label="Footer">
-          <a href="/workflow.html">Loop</a>
-          <a href="/about.html">About</a>
+ <footer class="site-footer">
+ <div class="shell footer-inner">
+ <div class="footer-brand">
+ <span>SparkLang — the Spark programming language</span>
+ <span class="footer-meta">v0.6.56 · MIT</span>
+ </div>
+ <nav class="footer-nav" aria-label="Footer">
+ <a href="/workflow.html">Loop</a>
+ <a href="/about.html">About</a>
 <a href="/LICENSE.txt">License</a>
-          <a href="/CHANGELOG.html">Changelog</a>
-          <a href="/learn/">Learn</a>
-          <a href="/downloads.html">Downloads</a>
-          <a href="/playground.html">Playground</a>
-        </nav>
-      </div>
-    </footer>
-    <script src="/js/site.js"></script>
-    <script>
-      (async function () {
-        const osOrder = ["linux", "macos", "windows"];
-        const archOrder = ["x86_64", "arm64", "i686"];
-        const kindLabel = {
-          prebuilt: "prebuilt",
-          installer: "installer",
-          binary: "prebuilt tarball",
-          "source-kit": "source kit",
-        };
-        try {
-          const res = await fetch("/downloads/manifest.json");
-          const m = await res.json();
-          const tbody = document.getElementById("runtime-table-body");
-          tbody.innerHTML = "";
+ <a href="/CHANGELOG.html">Changelog</a>
+ <a href="/learn/">Learn</a>
+ <a href="/downloads.html">Downloads</a>
+ <a href="/playground.html">Playground</a>
+ </nav>
+ </div>
+ </footer>
+ <script src="/js/site.js"></script>
+ <script>
+ (async function () {
+ const osOrder = ["linux", "macos", "windows"];
+ const archOrder = ["x86_64", "arm64", "i686"];
+ const kindLabel = {
+ prebuilt: "prebuilt",
+ installer: "installer",
+ binary: "prebuilt tarball",
+ "source-kit": "source kit",
+ };
+ try {
+ const res = await fetch("/downloads/manifest.json");
+ const m = await res.json();
+ const tbody = document.getElementById("runtime-table-body");
+ tbody.innerHTML = "";
 
-          const groups = {};
-          for (const p of m.platforms) {
-            const os = p.os || (p.id || "").split("-")[0];
-            const arch = p.arch || "unknown";
-            const key = os + ":" + arch;
-            if (!groups[key]) groups[key] = [];
-            groups[key].push(p);
-          }
+ const groups = {};
+ for (const p of m.platforms) {
+ const os = p.os || (p.id || "").split("-")[0];
+ const arch = p.arch || "unknown";
+ const key = os + ":" + arch;
+ if (!groups[key]) groups[key] = [];
+ groups[key].push(p);
+ }
 
-          const keys = Object.keys(groups).sort(function (a, b) {
-            const pa = a.split(":");
-            const pb = b.split(":");
-            const oi =
-              osOrder.indexOf(pa[0]) - osOrder.indexOf(pb[0]);
-            if (oi !== 0) return oi;
-            return (
-              archOrder.indexOf(pa[1]) - archOrder.indexOf(pb[1])
-            );
-          });
+ const keys = Object.keys(groups).sort(function (a, b) {
+ const pa = a.split(":");
+ const pb = b.split(":");
+ const oi =
+ osOrder.indexOf(pa[0]) - osOrder.indexOf(pb[0]);
+ if (oi !== 0) return oi;
+ return (
+ archOrder.indexOf(pa[1]) - archOrder.indexOf(pb[1])
+ );
+ });
 
-          for (const key of keys) {
-            const rows = groups[key];
-            const os = rows[0].os || key.split(":")[0];
-            const arch = rows[0].arch || key.split(":")[1];
-            const primary =
-              rows.find(function (p) {
-                return p.primary;
-              }) ||
-              rows.find(function (p) {
-                return p.kind === "installer" || p.kind === "binary";
-              });
-            const secondary = rows.filter(function (p) {
-              return p !== primary;
-            });
-            const kind =
-              primary &&
-              (primary.kind === "binary"
-                ? "prebuilt"
-                : primary.kind === "source-kit"
-                  ? "source kit"
-                  : primary.kind);
-            const instCell = primary
-              ? '<a href="/downloads/' +
-                primary.file +
-                '"><strong>' +
-                primary.file +
-                "</strong></a>" +
-                (primary.graphical
-                  ? '<br><small><strong>Graphical installer</strong></small>'
-                  : "") +
-                (primary.notes
-                  ? "<br><small>" + primary.notes + "</small>"
-                  : "")
-              : "—";
-            let altHtml = "—";
-            if (secondary.length) {
-              altHtml = secondary
+ for (const key of keys) {
+ const rows = groups[key];
+ const os = rows[0].os || key.split(":")[0];
+ const arch = rows[0].arch || key.split(":")[1];
+ const primary =
+ rows.find(function (p) {
+ return p.primary;
+ }) ||
+ rows.find(function (p) {
+ return p.kind === "installer" || p.kind === "binary";
+ });
+ const secondary = rows.filter(function (p) {
+ return p !== primary;
+ });
+ const kind =
+ primary &&
+ (primary.kind === "binary"
+ ? "prebuilt"
+ : primary.kind === "source-kit"
+ ? "source kit"
+ : primary.kind);
+ const instCell = primary
+ ? '<a href="/downloads/' +
+ primary.file +
+ '"><strong>' +
+ primary.file +
+ "</strong></a>" +
+ (primary.graphical
+ ? '<br><small><strong>Graphical installer</strong></small>'
+ : "") +
+ (primary.notes
+ ? "<br><small>" + primary.notes + "</small>"
+ : "")
+ : "—";
+ let altHtml = "—";
+ if (secondary.length) {
+ altHtml = secondary
 .map(function (p) {
-                  const kl =
-                    kindLabel[p.kind] || p.kind || p.format;
-                  return (
-                    '<a href="/downloads/' +
-                    p.file +
-                    '">' +
-                    p.file +
-                    "</a> <small>(" +
-                    kl +
-                    ")</small>"
-                  );
-                })
+ const kl =
+ kindLabel[p.kind] || p.kind || p.format;
+ return (
+ '<a href="/downloads/' +
+ p.file +
+ '">' +
+ p.file +
+ "</a> <small>(" +
+ kl +
+ ")</small>"
+ );
+ })
 .join("<br>");
-            }
-            const tr = document.createElement("tr");
-            tr.innerHTML =
-              "<td><strong>" +
-              os +
-              "</strong></td>" +
-              "<td><code>" +
-              arch +
-              "</code></td>" +
-              "<td>" +
-              (kind || "—") +
-              "</td>" +
-              "<td>" +
-              instCell +
-              "</td>" +
-              "<td>" +
-              altHtml +
-              "</td>";
-            tbody.appendChild(tr);
-          }
+ }
+ const tr = document.createElement("tr");
+ tr.innerHTML =
+ "<td><strong>" +
+ os +
+ "</strong></td>" +
+ "<td><code>" +
+ arch +
+ "</code></td>" +
+ "<td>" +
+ (kind || "—") +
+ "</td>" +
+ "<td>" +
+ instCell +
+ "</td>" +
+ "<td>" +
+ altHtml +
+ "</td>";
+ tbody.appendChild(tr);
+ }
 
-          const skipEl = document.getElementById("skipped-note");
-          if (skipEl && m.skipped && m.skipped.length) {
-            skipEl.innerHTML =
-              "<strong>Not published:</strong> " +
-              m.skipped
+ const skipEl = document.getElementById("skipped-note");
+ if (skipEl && m.skipped && m.skipped.length) {
+ skipEl.innerHTML =
+ "<strong>Not published:</strong> " +
+ m.skipped
 .map(function (s) {
-                  return s.os + " " + s.arch + " — " + s.reason;
-                })
+ return s.os + " " + s.arch + " — " + s.reason;
+ })
 .join("; ");
-          }
+ }
 
-          const ver = document.getElementById("manifest-version");
-          if (ver) ver.textContent = m.version;
-          const debVer = document.getElementById("ver-linux-deb");
-          if (debVer) debVer.textContent = m.version;
-          const upd = document.getElementById("manifest-updated");
-          if (upd && m.updated)
-            upd.textContent = " (updated " + m.updated + " UTC)";
-        } catch (e) {
-          document.getElementById("runtime-table-body").innerHTML =
-            "<tr><td colspan=5>Could not load manifest.json</td></tr>";
-        }
-      })();
-    </script>
-  </body>
+ const ver = document.getElementById("manifest-version");
+ if (ver) ver.textContent = m.version;
+ const debVer = document.getElementById("ver-linux-deb");
+ if (debVer) debVer.textContent = m.version;
+ const upd = document.getElementById("manifest-updated");
+ if (upd && m.updated)
+ upd.textContent = " (updated " + m.updated + " UTC)";
+ } catch (e) {
+ document.getElementById("runtime-table-body").innerHTML =
+ "<tr><td colspan=5>Could not load manifest.json</td></tr>";
+ }
+ })();
+ </script>
+ </body>
 </html>

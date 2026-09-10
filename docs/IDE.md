@@ -7,7 +7,7 @@ Today’s `./spark` ELF is the **GAS scaffold** for IDE ops (`asm/`).
 thin C bootstrap (B); Spark-native assembler (C). GAS is disposable —
 not forever SoT. Do **not** start a Rust/Python VM from this lane.
 
-**Honesty:** not Electron / not a VS Code fork. The downloadable
+**Scope:** not Electron / not a VS Code fork. The downloadable
 **tkinter Spark IDE** (`spark-bc-gui`) is a real three-pane shell with
 browse / compile / dump / ask / weights / report / helpers — not
 invented menus. Language `ide` ops remain on the GAS scaffold.
@@ -18,7 +18,7 @@ invented menus. Language `ide` ops remain on the GAS scaffold.
 | open→save→reopen | `examples/ide_save_reopen.spark` + sha256 | **Works** — `11ab006` |
 | `ide keys` / `ide key` | Keymap loop (quit/save/run/open/show) | **Works** — §1b |
 | Paint bind | status path strip + gutter + AI strip → PPM | **Works** — `b029a4a` |
-| Cursor workspace | `make ide` interim editor host | **Works** — not the product |
+| editor workspace | `make ide` interim editor host | **Works** — not the product |
 | Spark IDE GUI | `make spark-bc-gui` / `bin/spark-bc-gui` | **Works** — §0 |
 | Editor LSP + highlighting | `tools/spark_lsp` + extension v0.2 | **Works** — [LSP.md](LSP.md) |
 | Web IDE demo | `/docs/ide-shell.html` layout mirror | **Works** — demo |
@@ -47,14 +47,14 @@ OpenBin clone). Lessons from public IDE pane workflows only.
 | Helpers / shadows | One-click opcode sheet, compile/decompile, shadow copy |
 
 ```bash
-make spark-bc-gui          # display required
-make test-sdk-pack         # headless core + pack gate
+make spark-bc-gui # display required
+make test-sdk-pack # headless core + pack gate
 # Web layout demo (static):
-#   website/docs/ide-shell.html
+# website/docs/ide-shell.html
 ```
 
 Gate: `tools/spark_bc_gui/test_gui_pack.py`. Pack ships
-`bin/spark-bc-gui`. **Not beat Claude.**
+`bin/spark-bc-gui`. **Measurement only.**
 
 ---
 
@@ -150,7 +150,7 @@ Parent `--live` → child `--live`. No network invented by `ide` itself.
 ```bash
 ./spark --dry-run examples/ide_hello.spark
 # ide.open → out/ide/editor.ppm (P6)
-# ide.run  → child ./spark --dry-run … + Gravity
+# ide.run → child ./spark --dry-run … + Gravity
 
 ./spark --dry-run examples/ide_ask.spark
 # ide.open → editor.ppm; ide ask → fixture (Gravity) + AI strip
@@ -334,7 +334,7 @@ Long-form proof: `examples/ide_keys_long.spark` +
 aliases of `s` / `r` / `w`). Unknown script token proof:
 `examples/ide_keys_unknown.spark` +
 `examples/fixtures/ide/cmds_unknown.txt` (`x` →
-`"cmd":"unknown","ok":false` — not invented as a real cmd).
+`"cmd":"unknown","ok":false`).
 
 Fail-loud (core, exit non-zero): `examples/ide_save_nopath.spark`
 (bare `ide save` with no path);
@@ -404,7 +404,7 @@ No `n`/`new` keymap token (core `ide new` only). No mouse GUI in this lane.
 
 ---
 
-## 2. Open the Cursor workspace (editor host)
+## 2. Open the editor workspace (editor host)
 
 ```bash
 make ide
@@ -412,12 +412,12 @@ make ide
 ./tools/open-spark-ide.sh
 ```
 
-This opens Cursor on `spark.code-workspace` with `.spark` grammar + Bifrost.
+This opens the editor on `spark.code-workspace` with `.spark` grammar + optional gateway.
 It is **not** a substitute for the `ide` ops above.
 
 ### Workspace folders
 
-1. Spark (language) — this repo  
+1. Spark (language) — this repo 
 2. Spark Browser — `../spark-browser`
 
 ### Tasks
@@ -437,11 +437,11 @@ Agent card: [AGENTS.md](../AGENTS.md). Rules:
 
 | Surface | Endpoint | Models |
 |---------|----------|--------|
-| Cursor Override (when ON) | `http://127.0.0.1:4010/cursor/v1` | Bifrost aliases `fast` / `code` / `code-bulk` / `code-max` / `best` |
+| Editor model override (when ON) | `http://127.0.0.1:4010/cursor/v1` | gateway aliases `fast` / `code` / `code-bulk` / `code-max` / `best` |
 | Terminal live `ask` | `AI_GATEWAY_URL=http://127.0.0.1:4000` + Bearer `sk-bf-*` | `model` in `.spark` |
 
 Never commit keys. Never route coding to voice GPU aliases.
-Public Bifrost probes use a gateway probe credential only — [ASK_LIVE.md](ASK_LIVE.md).
+Public the AI gateway probes use a gateway probe credential only — [ASK_LIVE.md](ASK_LIVE.md).
 
 ### AI coding playbooks (catalog)
 
@@ -450,7 +450,7 @@ Pick a playbook without hunting docs:
 | Surface | How |
 |---------|-----|
 | Website playground | Preset → **AI playbooks** optgroup (`/playground.html`) |
-| VS Code / Cursor snippets | prefixes `spark-playbook-*` (extension snippets) |
+| VS Code-compatible editors snippets | prefixes `spark-playbook-*` (extension snippets) |
 | Repo SoT | `lib/playbooks.spark` + `bootstrap/fixtures/playbooks/` |
 
 Regenerate catalog (committed JSON + snippets):
@@ -463,7 +463,7 @@ make playbooks-catalog
 Selecting a playbook only loads fixture source into the editor.
 **Run dry-run** for a playbook **fails loud** with a
 [Downloads](https://sparklang.dev/downloads.html) link — it does **not**
-fake AI dry-run output. Real dry-run:
+Dry-run output:
 
 ```bash
 ./spark-bootstrap --dry-run bootstrap/fixtures/playbooks/explain_code.spark
@@ -526,46 +526,46 @@ Same ops as `examples/review_builder.spark`. Static review only — never
 - [LANGUAGE.md](LANGUAGE.md)
 - [ASK_LIVE.md](ASK_LIVE.md)
 - Reports (local): `spark-ide-ask-20260831.md` (`dc54d92`),
-  `spark-ide-show-20260831.md` (`efa2d90`),
-  `spark-ide-ask-show-20260831.md` (`b58ab9f`),
-  `spark-ide-status-strip-20260831.md` (`b029a4a`),
-  `spark-ide-save-reopen-20260831.md` (`11ab006`),
-  `spark-ide-dirty-status-20260831.md` (dirty `*` after `ide new`),
-  `spark-ide-new-chain-20260831.md` (proven `ide new` chain),
-  `spark-ide-buffer-forms-20260831.md` (proven `ide buffer` bare+bind),
-  `spark-ide-save-forms-20260831.md` (proven `ide save` bare+quoted),
-  `spark-ide-keys-run-20260831.md` (`ff7b545`),
-  `spark-ide-keys-quit-20260831.md` (proven `q` → quit),
-  `spark-ide-keys-show-20260831.md` (proven `w` → show),
-  `spark-ide-keys-open-20260831.md` (proven `o` → open),
-  `spark-ide-keys-long-20260831.md` (proven `open`/`quit` long forms),
-  `spark-ide-keys-long-srs-20260831.md` (proven `save`/`run`/`show` long),
-  `spark-ide-keys-unknown-20260831.md` (proven unknown → ok:false),
-  `spark-ide-show-forms-20260831.md` (proven `ide show` bare+quoted),
-  `spark-ide-ask-forms-20260831.md` (proven `ide ask` bare+quoted),
-  `spark-ide-new-forms-20260831.md` (proven `ide new` bare+quoted),
-  `spark-ide-run-forms-20260831.md` (proven `ide run` bare+bind),
-  `spark-ide-save-nopath-20260831.md` (proven save nopath fail-loud),
-  `spark-ide-run-nobuf-20260831.md` (proven run empty fail-loud),
-  `spark-ide-ask-nobuf-20260831.md` (proven ask empty fail-loud),
-  `spark-ide-open-nopath-20260831.md` (proven open needs-path fail-loud),
-  `spark-ide-bind-forms-20260831.md` (proven open/save -> binds),
-  `spark-ide-status-path-20260831.md` (proven status.txt after open),
-  `spark-ide-ask-bind-20260831.md` (proven ask -> reply print),
-  `spark-ide-open-miss-20260831.md` (proven open miss fail-loud),
-  `spark-ide-show-miss-20260831.md` (proven show miss fail-loud),
-  `spark-ide-show-notppm-20260831.md` (proven show not-PPM fail-loud),
-  `spark-ide-keys-miss-20260831.md` (proven keys miss fail-loud),
-  `spark-ide-run-bind-20260831.md` (proven run -> ran print JSON),
-  `spark-ide-new-bind-20260831.md` (proven new -> created print JSON),
-  `spark-ide-ask-quote-bind-20260831.md` (proven quoted ask -> reply),
-  `spark-ide-key-bad-20260831.md` (proven ide key bad-token fail-loud),
-  `spark-ide-buffer-bind-20260831.md` (proven buffer -> dump print JSON),
-  `spark-ide-keys-bare-20260831.md` (proven bare ide keys default cmds),
-  `spark-ide-key-open-nopath-20260831.md` (proven key open nopath soft-fail),
-  `spark-ide-open-bind-20260831.md` (proven open -> opened print JSON),
-  `spark-ide-save-bind-20260831.md` (proven save -> saved print JSON),
-  `spark-ide-status-new-star-20260831.md` (proven status.txt * after new),
-  `spark-ide-key-quit-alone-20260831.md` (proven bare ide key quit),
-  `spark-ide-status-clear-20260831.md` (proven status.txt clear after save),
-  `spark-ide-key-show-alone-20260831.md` (proven bare ide key show)
+ `spark-ide-show-20260831.md` (`efa2d90`),
+ `spark-ide-ask-show-20260831.md` (`b58ab9f`),
+ `spark-ide-status-strip-20260831.md` (`b029a4a`),
+ `spark-ide-save-reopen-20260831.md` (`11ab006`),
+ `spark-ide-dirty-status-20260831.md` (dirty `*` after `ide new`),
+ `spark-ide-new-chain-20260831.md` (proven `ide new` chain),
+ `spark-ide-buffer-forms-20260831.md` (proven `ide buffer` bare+bind),
+ `spark-ide-save-forms-20260831.md` (proven `ide save` bare+quoted),
+ `spark-ide-keys-run-20260831.md` (`ff7b545`),
+ `spark-ide-keys-quit-20260831.md` (proven `q` → quit),
+ `spark-ide-keys-show-20260831.md` (proven `w` → show),
+ `spark-ide-keys-open-20260831.md` (proven `o` → open),
+ `spark-ide-keys-long-20260831.md` (proven `open`/`quit` long forms),
+ `spark-ide-keys-long-srs-20260831.md` (proven `save`/`run`/`show` long),
+ `spark-ide-keys-unknown-20260831.md` (proven unknown → ok:false),
+ `spark-ide-show-forms-20260831.md` (proven `ide show` bare+quoted),
+ `spark-ide-ask-forms-20260831.md` (proven `ide ask` bare+quoted),
+ `spark-ide-new-forms-20260831.md` (proven `ide new` bare+quoted),
+ `spark-ide-run-forms-20260831.md` (proven `ide run` bare+bind),
+ `spark-ide-save-nopath-20260831.md` (proven save nopath fail-loud),
+ `spark-ide-run-nobuf-20260831.md` (proven run empty fail-loud),
+ `spark-ide-ask-nobuf-20260831.md` (proven ask empty fail-loud),
+ `spark-ide-open-nopath-20260831.md` (proven open needs-path fail-loud),
+ `spark-ide-bind-forms-20260831.md` (proven open/save -> binds),
+ `spark-ide-status-path-20260831.md` (proven status.txt after open),
+ `spark-ide-ask-bind-20260831.md` (proven ask -> reply print),
+ `spark-ide-open-miss-20260831.md` (proven open miss fail-loud),
+ `spark-ide-show-miss-20260831.md` (proven show miss fail-loud),
+ `spark-ide-show-notppm-20260831.md` (proven show not-PPM fail-loud),
+ `spark-ide-keys-miss-20260831.md` (proven keys miss fail-loud),
+ `spark-ide-run-bind-20260831.md` (proven run -> ran print JSON),
+ `spark-ide-new-bind-20260831.md` (proven new -> created print JSON),
+ `spark-ide-ask-quote-bind-20260831.md` (proven quoted ask -> reply),
+ `spark-ide-key-bad-20260831.md` (proven ide key bad-token fail-loud),
+ `spark-ide-buffer-bind-20260831.md` (proven buffer -> dump print JSON),
+ `spark-ide-keys-bare-20260831.md` (proven bare ide keys default cmds),
+ `spark-ide-key-open-nopath-20260831.md` (proven key open nopath soft-fail),
+ `spark-ide-open-bind-20260831.md` (proven open -> opened print JSON),
+ `spark-ide-save-bind-20260831.md` (proven save -> saved print JSON),
+ `spark-ide-status-new-star-20260831.md` (proven status.txt * after new),
+ `spark-ide-key-quit-alone-20260831.md` (proven bare ide key quit),
+ `spark-ide-status-clear-20260831.md` (proven status.txt clear after save),
+ `spark-ide-key-show-alone-20260831.md` (proven bare ide key show)

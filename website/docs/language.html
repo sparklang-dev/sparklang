@@ -56,7 +56,7 @@
                   <li class="nav-sub">
                     <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
-                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
                       <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
                     </ul>
                   </li>
@@ -183,7 +183,7 @@
         <p><strong>Programming how-to:</strong>
         <code class="inline-code">PROGRAMMING_GUIDE.md</code> ·
         <strong>AI models (user-facing):</strong> <a href="/docs/ai-models.html">AI_MODELS.md</a> ·
-        <strong>Builder / bytecode:</strong> <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>
+        <strong>Builder / bytecode:</strong> <a href="/docs/spark-builder.html">SPARK_BC Builder</a>
         (full E2E factory reproduce — opcodes, sha256, GAS <code class="inline-code">--run-bc</code>/<code class="inline-code">--compile</code> wrappers) ·
         <strong>IDE status:</strong> <a href="/docs/ide.html">IDE.md</a> (verified
         <code class="inline-code">ide new|open|save|run|buffer|ask|show</code> + <code class="inline-code">ide keys</code> / <code class="inline-code">ide key</code>;
@@ -215,10 +215,10 @@
         <h3 id="use-id-model-id"><code class="inline-code">use &lt;id&gt;</code> / <code class="inline-code">model &lt;id&gt;</code></h3>
         <p>Set the default model for following calls. Pass an <strong>explicit</strong> HF id,
         checkpoint path, or configured gateway model string. SparkLang is <strong>not</strong>
-        a Bifrost plugin — there is no per-task alias roulette.</p>
+        a the AI gateway plugin — there is no per-task alias roulette.</p>
         <pre class="doc__pre"><code class="inline-code">model &quot;fixtures/tiny-lm&quot;
         model &quot;org/local-lm&quot;
-        use auto          # keeps prior spark.toml / model line (no pick)
+        use auto # keeps prior spark.toml / model line (no pick)
         </code></pre>
         <p><strong><code class="inline-code">use auto</code></strong> — keeps the <strong>prior</strong> configured model (<code class="inline-code">spark.toml</code> or an
         earlier <code class="inline-code">model</code> / <code class="inline-code">use</code> line). Dry-run prints
@@ -238,12 +238,12 @@
         the Spark program → <code class="inline-code">.sparkbc</code>. Train/build is adapters, overlays, or
         abstain heads. Modify <strong>attaches</strong> and sets <code class="inline-code">keep_special_training</code>.</p>
         <pre class="doc__pre"><code class="inline-code">model reverse &quot;fixtures/tiny-lm&quot; -&gt; inspect
-        model inspect &quot;fixtures/tiny-lm&quot; -&gt; inspect   # alias
+        model inspect &quot;fixtures/tiny-lm&quot; -&gt; inspect # alias
 
         model compile &quot;examples/model_lab.spark&quot; into &quot;out/lab/model_lab.sparkbc&quot; -&gt; bc
 
         model train dataset &quot;examples/fixtures/train/dataset.jsonl&quot; base &quot;fixture-base&quot; out &quot;out/train/job-dry-001&quot; backend &quot;http&quot; method &quot;spark_distill_cpu&quot; -&gt; job
-        model build -&gt; job                               # same as train
+        model build -&gt; job # same as train
 
         model modify keep_existing &quot;out/train/existing-lora&quot; add &quot;out/train/job-dry-001/adapter.bin&quot; head &quot;out/heads/abstain.pt&quot; -&gt; modified
         </code></pre>
@@ -268,10 +268,10 @@
         binary (TRAIN accept dry; STEP = multi-outer CPU SGD). GAS <code class="inline-code">./spark --dry-run</code>
         runs train verbs from source; GAS <code class="inline-code">--compile</code> wraps bootstrap emit.
         Emitting TRAIN/STEP ≠ beating Claude. See <a href="/docs/spark-bc.html">SPARK_BC.md</a>
-        and <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> (sha256 table + reproduce
+        and <a href="/docs/spark-builder.html">SPARK_BC Builder</a> (sha256 table + reproduce
         commands). STEP→weights is <strong>CPU SGD</strong>
         (<code class="inline-code">out/train/&lt;job&gt;/weights.safetensors</code>; <code class="inline-code">trained=true</code> /
-        <code class="inline-code">not_sgd=false</code> when grads apply; not beat Claude).</p>
+        <code class="inline-code">not_sgd=false</code> when grads apply; measurement only.).</p>
         <p>Training methodology: <a href="/docs/model-training.html">MODEL_TRAINING.md</a>.
         Eval helpers: <a href="/docs/ai-models.html">MODEL_ANALYSIS.md</a>.
         Lab pipeline: <a href="/docs/model-training.html">MODEL_LAB.md</a>.</p>
@@ -283,12 +283,12 @@
         model improve from report prefer quality -&gt; blueprint
         # prefer: quality | speed | cost | local
 
-        model plan blueprint into &quot;out/better-model.md&quot;   # markdown only
+        model plan blueprint into &quot;out/better-model.md&quot; # markdown only
 
         model train dataset &quot;examples/fixtures/train/dataset.jsonl&quot; base &quot;fixture-base&quot; out &quot;out/train/job-dry-001&quot; backend &quot;http&quot; method &quot;spark_distill_cpu&quot; -&gt; job
-        model build -&gt; job                               # same as train
-        model step &quot;job-dry-001&quot; -&gt; step                 # CPU SGD tick (0x28)
-        model status &quot;job-dry-001&quot; -&gt; status             # polls that job id
+        model build -&gt; job # same as train
+        model step &quot;job-dry-001&quot; -&gt; step # CPU SGD tick (0x28)
+        model status &quot;job-dry-001&quot; -&gt; status # polls that job id
         </code></pre>
         <h3 id="model-step-spark-bc-step-0x28"><code class="inline-code">model step</code> (SPARK_BC <code class="inline-code">STEP</code> <code class="inline-code">0x28</code>)</h3>
         <p>One training-loop tick in the binary — <strong>multi-outer CPU SGD</strong> on
@@ -299,14 +299,14 @@
         updates <code class="inline-code">ARTIFACT</code> (<code class="inline-code">trained=true</code>, <code class="inline-code">not_sgd=false</code>), and writes
         <code class="inline-code">weights.safetensors</code> + <code class="inline-code">checkpoint.json</code> when grads apply (fails
         loud if stub).
-        <strong>Not beat Claude.</strong> Proof: TRAIN → STEP → TRAIN_STATUS in
+        <strong>Measurement only.</strong> Proof: TRAIN → STEP → TRAIN_STATUS in
         <code class="inline-code">examples/spark_train_step.spark</code> →
         <code class="inline-code">docs/examples/spark-train-step.sparkbc</code> (sha256
         <code class="inline-code">d08925b52bf8c840de626c9cfec619d4dbae5a674b94bb8c7c5837eb1ac64551</code>).
         Focused gate: <code class="inline-code">make sparkbc-e2e</code> (compile → dump TRAIN/STEP →
         <code class="inline-code">--run-bc</code> → assert <code class="inline-code">ARTIFACT</code>). Step-updated weights are
         <strong>CPU SGD</strong> (<code class="inline-code">weights.safetensors</code>; <code class="inline-code">trained=true</code>;
-        <code class="inline-code">not_sgd=false</code>; loss must drop). Multi-outer; <strong>not beat Claude</strong>.</p>
+        <code class="inline-code">not_sgd=false</code>; loss must drop). Multi-outer; <strong>measurement only.</strong>.</p>
         <p>Optional <strong><code class="inline-code">method "…"</code></strong> selects the training algorithm
         (<code class="inline-code">spark_distill_cpu</code> | <code class="inline-code">spark_pref_pack</code> | <code class="inline-code">spark_playbook_fit</code> |
         <code class="inline-code">spark_faq_index</code> | <code class="inline-code">spark_reply_pack</code>).
@@ -320,7 +320,7 @@
         <code class="inline-code">STEP</code> is <strong><code class="inline-code">0x28</code></strong>; <code class="inline-code">TRAIN_STATUS</code> is <strong><code class="inline-code">0x27</code></strong>. Execute with
         <code class="inline-code">./spark-bootstrap --run-bc</code> or <code class="inline-code">./spark --run-bc</code>.
         See <a href="/docs/spark-bc.html">SPARK_BC.md</a> and
-        <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</p>
+        <a href="/docs/spark-builder.html">SPARK_BC Builder</a>.</p>
         <p><strong>Backends:</strong> <code class="inline-code">http</code> (default MVP companion <code class="inline-code">./spark-train-http</code>),
         <code class="inline-code">local-yield</code> (optional allowlisted <code class="inline-code">train@</code> unit), <code class="inline-code">huggingface</code>
         (reserved — not wired). Env: <code class="inline-code">SPARK_TRAIN_BACKEND</code>, <code class="inline-code">SPARK_TRAIN_URL</code>,
@@ -333,7 +333,7 @@
         head train dataset &quot;examples/fixtures/abstain/labels.jsonl&quot; kind internal out &quot;out/heads/abstain.pt&quot; hidden_dim 64 -&gt; job
         # Prefer dim-matched export (see ABSTAIN_HEADS.md):
         # head train dataset &quot;examples/fixtures/abstain/labels_exported.jsonl&quot; …
-        #   kind internal out &quot;out/heads/abstain.pt&quot; hidden_dim 16 -&gt; job
+        # kind internal out &quot;out/heads/abstain.pt&quot; hidden_dim 16 -&gt; job
         head attach model &quot;path&quot; weights &quot;out/heads/abstain.pt&quot; out &quot;out/heads/manifest.json&quot; -&gt; attach
         head ask &quot;Who is the mayor of Springfield?&quot; -&gt; answer
         </code></pre>
@@ -438,24 +438,24 @@
         </table></div>
         <pre class="doc__pre"><code class="language-python">from sparklang import run
 
-        r = run(&quot;examples/hello.spark&quot;)          # dry-run default
+        r = run(&quot;examples/hello.spark&quot;) # dry-run default
         print(r.stdout, r.returncode)
-        r = run('print &quot;from host&quot;\n')         # inline source → temp .spark
-        # r = run(&quot;examples/ask_live.spark&quot;, live=True)  # opt-in
+        r = run('print &quot;from host&quot;\n') # inline source → temp .spark
+        # r = run(&quot;examples/ask_live.spark&quot;, live=True) # opt-in
         </code></pre>
         <pre class="doc__pre"><code class="language-bash">PYTHONPATH=python python -m sparklang examples/hello.spark
         node examples/js/host_embed.js
         make examples/c/host_embed &amp;&amp; ./examples/c/host_embed
-        ./spark --embed   # {&quot;api&quot;:&quot;python,js,c&quot;,…}
+        ./spark --embed # {&quot;api&quot;:&quot;python,js,c&quot;,…}
         make test-host-embed
-        make test-shell   # live --allow-shell argv execve
+        make test-shell # live --allow-shell argv execve
         </code></pre>
         <p>See <a href="/docs/adoption-bar.html">ADOPTION_BAR.md</a>. Examples: <code class="inline-code">examples/shell_escape.spark</code>
         (from <code class="inline-code">.spark</code> → host), <code class="inline-code">examples/shell_refuse.spark</code> (fail loud),
         <code class="inline-code">examples/python/host_embed.py</code>, <code class="inline-code">examples/js/host_embed.js</code>,
         <code class="inline-code">examples/c/host_embed.c</code> (host → <code class="inline-code">.spark</code>).</p>
         <h3 id="http-get-http-post-shipped"><code class="inline-code">http get</code> / <code class="inline-code">http post</code> (shipped)</h3>
-        <p>Generic HTTP client ops — <strong>not</strong> Bifrost-specific and <strong>not</strong>
+        <p>Generic HTTP client ops — <strong>not</strong> the AI gateway-specific and <strong>not</strong>
         <code class="inline-code">engine fetch</code> <code class="inline-code">file://</code>. Dry-run never dials the network.</p>
         <pre class="doc__pre"><code class="inline-code">http get &quot;https://example.com/&quot; fixture &quot;examples/fixtures/http/get_ok.json&quot; timeout 5 -&gt; resp
         http post &quot;https://example.com/api&quot; body &quot;{\&quot;ping\&quot;:true}&quot; fixture &quot;examples/fixtures/http/post_ok.json&quot; timeout 5 -&gt; resp
@@ -528,11 +528,11 @@
         The inline schema declares the fields: a field is required unless its
         name ends in <code class="inline-code">?</code>. Types are <code class="inline-code">string</code>, <code class="inline-code">int</code>, <code class="inline-code">float</code>, <code class="inline-code">bool</code>.</p>
         <pre class="doc__pre"><code class="inline-code">extract Person {
-          name: string
-          age: int
-          email?: string
+         name: string
+         age: int
+         email?: string
         } from &quot;Ada Lovelace was born in 1815&quot;
-          fixture &quot;examples/fixtures/extract/person.json&quot; -&gt; person
+         fixture &quot;examples/fixtures/extract/person.json&quot; -&gt; person
         </code></pre>
         <p>Run it: <code class="inline-code">./spark --dry-run examples/extract_person.spark</code>.</p>
         <p><code class="inline-code">fixture "PATH"</code> names the JSON file that dry-run reads. Dry-run never
@@ -560,7 +560,7 @@
         clause). Offline proof: <code class="inline-code">--stub-file PATH</code> (JSONL of canned replies).</p>
         <pre class="doc__pre"><code class="language-bash">./spark-extract --live --stmt-file /tmp/xt.txt --model fast --retries 2
         ./spark-extract --live --stmt-file /tmp/xt.txt --model fixtures/tiny-lm \
-          --stub-file examples/fixtures/extract/stub_retry.jsonl
+         --stub-file examples/fixtures/extract/stub_retry.jsonl
         </code></pre>
         <p>Examples: <code class="inline-code">examples/extract_person.spark</code> (valid dry),
         <code class="inline-code">examples/extract_bad.spark</code> (type mismatch),
@@ -612,12 +612,12 @@
         <h3 id="classify-first-class"><code class="inline-code">classify</code> (first-class)</h3>
         <p>Single-label (default) or <code class="inline-code">multi</code>:</p>
         <pre class="doc__pre"><code class="inline-code">classify Intent { support, sales, spam }
-          from &quot;My account is locked&quot;
-          min_confidence 0.7
-          -&gt; intent
+         from &quot;My account is locked&quot;
+         min_confidence 0.7
+         -&gt; intent
 
         classify multi Tags { support, sales, spam }
-          from message -&gt; tags
+         from message -&gt; tags
         </code></pre>
         <p>Dry-run returns <code class="inline-code">{ label, confidence, reasons }</code>. Invalid labels fail loud.</p>
         <h3 id="listen-speak-voice-first-class"><code class="inline-code">listen</code> / <code class="inline-code">speak</code> / <code class="inline-code">voice</code> (first-class)</h3>
@@ -628,10 +628,10 @@
         speak with model brand_voice
 
         voice {
-          listen -&gt; user
-          classify Intent { support, sales } from user -&gt; intent
-          ask &quot;Reply helpfully to: {user}&quot; -&gt; reply
-          speak reply
+         listen -&gt; user
+         classify Intent { support, sales } from user -&gt; intent
+         ask &quot;Reply helpfully to: {user}&quot; -&gt; reply
+         speak reply
         }
 
         voice review &quot;clip.wav&quot; -&gt; report
@@ -640,20 +640,20 @@
         voice model write my_voice spec { ... } -&gt; path
         voice model load my_voice -&gt; model
         voice pstn status
-        voice pstn dial &quot;+15555550100&quot; -&gt; call   # OFF by default
+        voice pstn dial &quot;+15555550100&quot; -&gt; call # OFF by default
         </code></pre>
         <p>Dry-run: <code class="inline-code">listen</code>/<code class="inline-code">speak</code> use stub transcript + minimal WAV write
         (<code class="inline-code">speak … -&gt; "path"</code> honored). <code class="inline-code">--live</code> forks <code class="inline-code">./spark-stt-tts</code>
         (real WAV/mic/synth/local whisper; vendor HTTP OFF unless
         <code class="inline-code">SPARK_STT_NET</code> / <code class="inline-code">SPARK_TTS_NET</code> / <code class="inline-code">SPARK_SPEECH_NET=1</code> —
         see <a href="/docs/voice.html">VOICE.md</a>).
-        <code class="inline-code">voice review</code> <strong>byte-parses</strong> real RIFF/WAVE (not invented metrics);
+        <code class="inline-code">voice review</code> <strong>byte-parses</strong> real RIFF/WAVE (byte metrics);
         <code class="inline-code">voice code|copy|model</code> write real artifacts under <code class="inline-code">out/</code>.
         PSTN never places in <code class="inline-code">--dry-run</code> / <code class="inline-code">make test</code> (companion gated OFF).</p>
         <h3 id="pipeline"><code class="inline-code">pipeline</code></h3>
         <pre class="doc__pre"><code class="inline-code">pipeline {
-          ask &quot;Summarize: {doc}&quot; -&gt; summary
-          | ask &quot;Translate to Spanish: {summary}&quot; -&gt; es
+         ask &quot;Summarize: {doc}&quot; -&gt; summary
+         | ask &quot;Translate to Spanish: {summary}&quot; -&gt; es
         }
         </code></pre>
         <p>Compose with classify/listen/speak the same way. Include shared steps
@@ -668,7 +668,7 @@
         <pre class="doc__pre"><code class="inline-code">tool weather(city: string) -&gt; string { &quot;stub:local&quot; }
 
         with tools [weather] {
-          ask &quot;Weather in DSM?&quot; -&gt; answer
+         ask &quot;Weather in DSM?&quot; -&gt; answer
         }
         </code></pre>
         <p><code class="inline-code">tool</code> registers a name. <code class="inline-code">with tools [name,…]</code> <strong>activates</strong> that
@@ -683,7 +683,7 @@
         picks a target level and codegen; implement writes artifacts.</p>
         <pre class="doc__pre"><code class="inline-code">review path &quot;examples/fixtures/sample.js&quot; -&gt; report
         review url &quot;file://examples/fixtures/sample.js&quot; -&gt; report
-        review url &quot;https://example.com/app.js&quot; -&gt; report   # needs --allow-net
+        review url &quot;https://example.com/app.js&quot; -&gt; report # needs --allow-net
         review text &quot;function x(){ eval(y); }&quot; -&gt; report
 
         builder prefer lower request &quot;add classify Intent and wire voice turn&quot; -&gt; patch
@@ -857,11 +857,11 @@
         <ul class="doc__ul">
         <li><code class="inline-code">ALL_SECTIONS.contents</code> — <code class="inline-code">objdump -s -w</code> (full hex of <strong>every</strong> section)</li>
         <li><code class="inline-code">ALL_SECTIONS.disasm</code> — <code class="inline-code">objdump -D -w</code> (disassemble <strong>every</strong> section;
-          non-code still listed)</li>
+         non-code still listed)</li>
         <li><code class="inline-code">&lt;section&gt;.raw</code> — full raw bytes via <code class="inline-code">./spark-section-dump</code> (any size;
-          checkpoint/resume with <code class="inline-code">--resume</code>; NOBITS → empty file)</li>
+         checkpoint/resume with <code class="inline-code">--resume</code>; NOBITS → empty file)</li>
         <li><code class="inline-code">lifted/</code> — C-like lift from <code class="inline-code">ALL_SECTIONS.disasm</code> via <code class="inline-code">./spark-lift</code>
-          (<code class="inline-code">lifted_common.h</code>, per-section <code class="inline-code">.c</code>, <code class="inline-code">lifted.c</code> index)</li>
+         (<code class="inline-code">lifted_common.h</code>, per-section <code class="inline-code">.c</code>, <code class="inline-code">lifted.c</code> index)</li>
         </ul>
         <p>Files <strong>&gt;32MiB</strong> print a progress note and <strong>continue</strong> the full dump
         (no gate, no silent partial). Asm forks <code class="inline-code">objdump</code>, <code class="inline-code">spark-section-dump</code>,
@@ -880,7 +880,7 @@
         <pre class="doc__pre"><code class="inline-code">./spark --dry-run examples/binary_any.spark
         ls out/decompile/tiny_cuda_stub.so/lifted/
         make spark-binary &amp;&amp; ./spark-binary-probe --understand \
-          /lib/x86_64-linux-gnu/libnvidia-ml.so.1 --focus memory
+         /lib/x86_64-linux-gnu/libnvidia-ml.so.1 --focus memory
         </code></pre>
         <h2 id="network">Network</h2>
         <p>Local pcap analysis. Dry-run <strong>never claims</strong> a live sniff unless
@@ -893,14 +893,14 @@
         </code></pre>
         <ul class="doc__ul">
         <li><strong>capture probe</strong>: forks <code class="inline-code">./spark-net-capture --probe</code> — AF_PACKET
-          socket attempt only; always <code class="inline-code">claimed:false</code>; JSON
-          <code class="inline-code">cap_net_raw</code> / <code class="inline-code">ready</code>. No <code class="inline-code">--allow-net-capture</code> needed.</li>
+         socket attempt only; always <code class="inline-code">claimed:false</code>; JSON
+         <code class="inline-code">cap_net_raw</code> / <code class="inline-code">ready</code>. No <code class="inline-code">--allow-net-capture</code> needed.</li>
         <li><strong>capture</strong> without <code class="inline-code">--allow-net-capture</code>: <code class="inline-code">claimed:false</code>, loads
-          fixture pcap so <code class="inline-code">analyze</code> still works.</li>
+         fixture pcap so <code class="inline-code">analyze</code> still works.</li>
         <li><strong>capture</strong> with <code class="inline-code">--allow-net-capture</code>: forks <code class="inline-code">./spark-net-capture</code>
-          (AF_PACKET SOCK_RAW → classic pcap). Needs <code class="inline-code">CAP_NET_RAW</code>
-          (<code class="inline-code">sudo setcap cap_net_raw,cap_net_admin+ep ./spark-net-capture</code>).
-          CAP miss → exit <strong>4</strong>, <code class="inline-code">claimed:false</code> (never invents packets).</li>
+         (AF_PACKET SOCK_RAW → classic pcap). Needs <code class="inline-code">CAP_NET_RAW</code>
+         (<code class="inline-code">sudo setcap cap_net_raw,cap_net_admin+ep ./spark-net-capture</code>).
+         CAP miss → exit <strong>4</strong>, <code class="inline-code">claimed:false</code> (never invents packets).</li>
         <li><strong>open</strong>: real <code class="inline-code">open</code>/<code class="inline-code">read</code> of magic <code class="inline-code">0xa1b2c3d4</code>.</li>
         <li><strong>analyze</strong>: DNS QNAME from pcap bytes after open. Without open → error.</li>
         <li><strong>explain</strong>: plain-language summary of parsed bytes.</li>
@@ -1027,56 +1027,56 @@
         Full pipeline: <code class="inline-code">examples/engine_pipeline.spark</code> → <code class="inline-code">out/engine/pipeline.ppm</code>.
         Table: <code class="inline-code">examples/engine_pipeline_table.spark</code>; fetch→parse→layout:
         <code class="inline-code">examples/engine_fetch_parse_layout.spark</code>.</p>
-        <p><strong>Honesty:</strong> not full CSS / not Google.com / not full ES / not Electron.
+        <p><strong>Scope:</strong> not full CSS / not Google.com / not full ES / not Electron.
         HTTPS TLS <strong>not</strong> in asm — OpenSSL BIO companion
         <code class="inline-code">./spark-engine-fetch-tls</code> under <code class="inline-code">--allow-net</code> only. JS phase-1 only
         (numbers/strings/<code class="inline-code">+</code>/unary <code class="inline-code">-</code>/<code class="inline-code">var</code> num/console.log).</p>
         <p><strong>Live X11 (real window, not dry):</strong></p>
         <pre class="doc__pre"><code class="language-bash">make spark-engine-show
-        ./spark --dry-run examples/engine_pipeline.spark   # paints pipeline.ppm
-        ./spark --live examples/engine_pipeline.spark      # opens X11 from that PPM
+        ./spark --dry-run examples/engine_pipeline.spark # paints pipeline.ppm
+        ./spark --live examples/engine_pipeline.spark # opens X11 from that PPM
         ./spark-engine-show --ppm out/engine/pipeline.ppm --hold 3000
         </code></pre>
         <p>Same dry/<code class="inline-code">--live</code> split: <code class="inline-code">examples/browser_show.spark</code>,
         <code class="inline-code">examples/browser_engine_render.spark</code>. Dry tests never open X11.</p>
         <ul class="doc__ul">
         <li><strong>browser run|open|start</strong> — session under <code class="inline-code">out/browser/</code>
-          (<code class="inline-code">session.json</code>). Dry-run never launches a GUI. Session JSON
-          includes <code class="inline-code">disable_quic:false</code> by default (QUIC ON).</li>
+         (<code class="inline-code">session.json</code>). Dry-run never launches a GUI. Session JSON
+         includes <code class="inline-code">disable_quic:false</code> by default (QUIC ON).</li>
         <li><strong>browser flags</strong> — reports disable_quic default / override.</li>
         <li><strong>browser goto</strong> — records navigation URL (requires session).</li>
         <li><strong>browser cdp</strong> — CDP client to Qt <code class="inline-code">:9222</code>
-          (<code class="inline-code">status|navigate|evaluate|screenshot</code>). Dry-run returns
-          mocks (<code class="inline-code">claimed:false</code>, never dials). <code class="inline-code">--live</code> forks
-          <code class="inline-code">./spark-browser-cdp</code> (Python in spark-browser). Screenshot
-          optional path; default <code class="inline-code">out/browser/cdp-shot.png</code>.</li>
+         (<code class="inline-code">status|navigate|evaluate|screenshot</code>). Dry-run returns
+         mocks (<code class="inline-code">claimed:false</code>, never dials). <code class="inline-code">--live</code> forks
+         <code class="inline-code">./spark-browser-cdp</code> (Python in spark-browser). Screenshot
+         optional path; default <code class="inline-code">out/browser/cdp-shot.png</code>.</li>
         <li><strong>mitm ca-init</strong> — forks <code class="inline-code">./spark-mitm-ca --init</code> (RSA CA under
-          <code class="inline-code">out/browser/ca/</code> + product <code class="inline-code">spark-browser/data/ca/</code>). Language
-          SoT for MITM trust. Separate from the <strong>encrypt-to-model</strong> gateway
-          (<code class="inline-code">crypto</code> / <code class="inline-code">encrypt</code> / <code class="inline-code">gateway</code> — see below).</li>
+         <code class="inline-code">out/browser/ca/</code> + product <code class="inline-code">spark-browser/data/ca/</code>). Language
+         SoT for MITM trust. Separate from the <strong>encrypt-to-model</strong> gateway
+         (<code class="inline-code">crypto</code> / <code class="inline-code">encrypt</code> / <code class="inline-code">gateway</code> — see below).</li>
         <li><strong>mitm ca-status</strong> — present/missing via helper <code class="inline-code">--status</code>.</li>
         <li><strong>mitm ca-install</strong> — dry-run <strong>plans only</strong> (never auto-trust);
-          <code class="inline-code">--live</code> forks <code class="inline-code">install-ca.sh</code> (NSS / optional <code class="inline-code">--system</code>).</li>
+         <code class="inline-code">--live</code> forks <code class="inline-code">install-ca.sh</code> (NSS / optional <code class="inline-code">--system</code>).</li>
         <li><strong>mitm enable|disable|filter</strong> — owner-local intercept
-          (<code class="inline-code">mitm.json</code>). Dry-run session markers only. <strong><code class="inline-code">--live</code> enable</strong>
-          forks <code class="inline-code">./spark-mitm-h2 serve --daemon</code> (CONNECT h2/h1 + capture</li>
+         (<code class="inline-code">mitm.json</code>). Dry-run session markers only. <strong><code class="inline-code">--live</code> enable</strong>
+         forks <code class="inline-code">./spark-mitm-h2 serve --daemon</code> (CONNECT h2/h1 + capture</li>
         <li>HAR). Qt must <strong>attach</strong>, not start the forge.</li>
         <li><strong>mitm smoke</strong> — forks <code class="inline-code">./spark-mitm-h2 --smoke</code> (HTTPS forge
-          proof; Spark-owned, no GUI).</li>
+         proof; Spark-owned, no GUI).</li>
         <li><strong>mitm disable_quic on|off</strong> — optional Chromium <code class="inline-code">--disable-quic</code>
-          (product default is QUIC ON; use on for TCP h2/h1-only MITM).</li>
+         (product default is QUIC ON; use on for TCP h2/h1-only MITM).</li>
         <li><strong>mitm quic status|listen|smoke|divert</strong> — HTTP/3 lane; <code class="inline-code">smoke</code>
-          forks <code class="inline-code">./spark-mitm-quic</code> (aioquic forge + SNI leaves). UDP MITM
-          via divert→listen (CONNECT-UDP is honest 501 on Qt TCP proxy).</li>
+         forks <code class="inline-code">./spark-mitm-quic</code> (aioquic forge + SNI leaves). UDP MITM
+         via divert→listen (CONNECT-UDP is honest 501 on Qt TCP proxy).</li>
         <li><strong>mitm har export</strong> — writes a real HAR 1.2 file (byte-written).
-          Requires <code class="inline-code">mitm enable</code>. Dry HAR is a synthetic single-entry from
-          goto URL (valid 1.2); live multi-flow HAR comes from
-          <code class="inline-code">./spark-mitm-h2</code> session dir (not from Qt).</li>
+         Requires <code class="inline-code">mitm enable</code>. Dry HAR is a synthetic single-entry from
+         goto URL (valid 1.2); live multi-flow HAR comes from
+         <code class="inline-code">./spark-mitm-h2</code> session dir (not from Qt).</li>
         <li><strong>browser gui</strong> — only with <code class="inline-code">--live</code>; forks
-          <code class="inline-code">./spark-browser-host</code> (Qt <strong>attach-only</strong> to Spark MITM on
-          <code class="inline-code">:8877</code>). Dry-run → error. Shim defaults to Chromium
-          <code class="inline-code">--enable-quic</code>. Optional <code class="inline-code">--disable-quic</code>. Debug: <code class="inline-code">--own-mitm</code>
-          (not product).</li>
+         <code class="inline-code">./spark-browser-host</code> (Qt <strong>attach-only</strong> to Spark MITM on
+         <code class="inline-code">:8877</code>). Dry-run → error. Shim defaults to Chromium
+         <code class="inline-code">--enable-quic</code>. Optional <code class="inline-code">--disable-quic</code>. Debug: <code class="inline-code">--own-mitm</code>
+         (not product).</li>
         </ul>
         <pre class="doc__pre"><code class="inline-code">./spark --dry-run examples/browser_ca.spark
         ./spark --dry-run examples/browser_h2.spark
@@ -1090,7 +1090,7 @@
         <h2 id="encrypt-gateway-encrypt-to-model">Encrypt gateway (encrypt-to-model)</h2>
         <p>Off by default. When enabled, <code class="inline-code">ask</code> seals the prompt and sends a GCM
         envelope to <code class="inline-code">./spark-enc-gateway</code>, which <strong>decrypts inside the gateway
-        process</strong> and only then calls Bifrost. Full docs:
+        process</strong> and only then calls the AI gateway. Full docs:
         <a href="/docs/ai-models.html">ENCRYPT_GATEWAY.md</a>.</p>
         <pre class="doc__pre"><code class="inline-code">crypto probe -&gt; info
         crypto backend openssl
@@ -1116,11 +1116,11 @@
         <ol class="doc__ol">
         <li><code class="inline-code">open</code> <code class="inline-code">/dev/nvidiactl</code>, <code class="inline-code">/dev/nvidia0</code>, <code class="inline-code">/dev/nvidia-uvm</code></li>
         <li><code class="inline-code">ioctl</code> <code class="inline-code">NV_ESC_CHECK_VERSION_STR</code> (<code class="inline-code">0xc04846d2</code>) and
-           <code class="inline-code">NV_ESC_CARD_INFO</code> (<code class="inline-code">0xc90046c8</code>) — numbers from
-           <code class="inline-code">/usr/src/nvidia-*/common/inc/nv-ioctl-numbers.h</code> as data</li>
+         <code class="inline-code">NV_ESC_CARD_INFO</code> (<code class="inline-code">0xc90046c8</code>) — numbers from
+         <code class="inline-code">/usr/src/nvidia-*/common/inc/nv-ioctl-numbers.h</code> as data</li>
         <li>Optional anonymous <code class="inline-code">mmap</code>/<code class="inline-code">munmap</code> path proof</li>
         <li>Prefer compute on minor <strong>0</strong>; refuse reserved minors for
-           prefer/compute when policy marks them off-limits</li>
+         prefer/compute when policy marks them off-limits</li>
         </ol>
         <p><code class="inline-code">fb_bytes</code> comes from <code class="inline-code">NV_ESC_CARD_INFO</code>. Prefer minor <strong>0</strong>.
         Refuse <code class="inline-code">prefer gpu 2</code> when that device is reserved.</p>
@@ -1165,10 +1165,10 @@
         os design name &quot;aikitchen&quot; kind ai_runtime features [scheduler, model_router, sandbox, net] -&gt; blueprint
 
         os specify blueprint {
-          target: x86_64
-          memory_model: flat
-          ai: { agent_runtime: true, model_slots: 4, tool_bus: true }
-          drivers: [serial, framebuffer_stub, virtio_net_stub]
+         target: x86_64
+         memory_model: flat
+         ai: { agent_runtime: true, model_slots: 4, tool_bus: true }
+         drivers: [serial, framebuffer_stub, virtio_net_stub]
         } -&gt; spec
 
         os generate spec into &quot;out/os/agentos&quot; -&gt; tree
@@ -1186,7 +1186,7 @@
         ./spark --dry-run examples/network_analyze.spark
         ./spark --dry-run --allow-net-capture examples/network_capture.spark
         ./spark --dry-run examples/browser_main.spark
-        ./spark --live examples/ask_live.spark          # needs gateway
+        ./spark --live examples/ask_live.spark # needs gateway
         ./spark --version
         </code></pre>
         <p><code class="inline-code">--dry-run</code> is assembly (syscalls + forked helpers). Live packet capture

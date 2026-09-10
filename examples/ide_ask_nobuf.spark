@@ -1,7 +1,7 @@
 # Spark IDE - proven ide ask empty-buffer fail-loud.
 # After run-nobuf 2706bc7. Bare ask with empty buffer exits non-zero
 # (open first).
-# Run: ./spark --dry-run examples/ide_ask_nobuf.spark  (expect rc!=0)
+# Run: ./spark --dry-run examples/ide_ask_nobuf.spark (expect rc!=0)
 # No Electron. No new asm - documents proven fail-loud only.
 
 ide ask

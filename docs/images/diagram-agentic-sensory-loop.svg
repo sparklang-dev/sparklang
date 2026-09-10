@@ -1,46 +1,46 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 320" role="img" aria-labelledby="title desc">
-  <title id="title">Agentic sensory loop</title>
-  <desc id="desc">Closed loop: ears or text into thinking, behaviors and tools, speaking, then back. Eyes remain planned only.</desc>
-  <defs>
-    <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M 0 0 L 10 5 L 0 10 z" fill="#334155"/>
-    </marker>
-  </defs>
-  <rect width="920" height="320" fill="#f8fafc"/>
-  <text x="24" y="36" font-family="ui-sans-serif,system-ui,sans-serif" font-size="16" font-weight="700" fill="#0f172a">Agentic loop  ears ’ brain ’ voice ” tools</text>
-  <text x="24" y="58" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#64748b">Spark local SoT · fail-closed net gates · eyes dashed (not wired)</text>
+ <title id="title">Agentic sensory loop</title>
+ <desc id="desc">Closed loop: ears or text into thinking, behaviors and tools, speaking, then back. Eyes remain planned only.</desc>
+ <defs>
+ <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+ <path d="M 0 0 L 10 5 L 0 10 z" fill="#334155"/>
+ </marker>
+ </defs>
+ <rect width="920" height="320" fill="#f8fafc"/>
+ <text x="24" y="36" font-family="ui-sans-serif,system-ui,sans-serif" font-size="16" font-weight="700" fill="#0f172a">Agentic loop  ears Â· brain Â· voice Â· tools</text>
+ <text x="24" y="58" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#64748b">Spark local SoT Â· fail-closed net gates Â· eyes dashed (not wired)</text>
 
-  <rect x="40" y="100" width="130" height="70" rx="10" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
-  <text x="105" y="130" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#0c4a6e">Ears</text>
-  <text x="105" y="150" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#075985">listen / STT</text>
+ <rect x="40" y="100" width="130" height="70" rx="10" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+ <text x="105" y="130" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#0c4a6e">Ears</text>
+ <text x="105" y="150" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#075985">listen / STT</text>
 
-  <rect x="210" y="100" width="130" height="70" rx="10" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
-  <text x="275" y="130" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#064e3b">Thinking</text>
-  <text x="275" y="150" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#065f46">tiny CPU fwd</text>
+ <rect x="210" y="100" width="130" height="70" rx="10" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+ <text x="275" y="130" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#064e3b">Thinking</text>
+ <text x="275" y="150" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#065f46">tiny CPU fwd</text>
 
-  <rect x="380" y="100" width="150" height="70" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
-  <text x="455" y="130" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#78350f">Behaviors</text>
-  <text x="455" y="150" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#92400e">tools · SoT · pack</text>
+ <rect x="380" y="100" width="150" height="70" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+ <text x="455" y="130" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#78350f">Behaviors</text>
+ <text x="455" y="150" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#92400e">tools Â· SoT Â· pack</text>
 
-  <rect x="570" y="100" width="130" height="70" rx="10" fill="#fae8ff" stroke="#a21caf" stroke-width="2"/>
-  <text x="635" y="130" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#701a75">Speaking</text>
-  <text x="635" y="150" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#86198f">speak / TTS</text>
+ <rect x="570" y="100" width="130" height="70" rx="10" fill="#fae8ff" stroke="#a21caf" stroke-width="2"/>
+ <text x="635" y="130" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#701a75">Speaking</text>
+ <text x="635" y="150" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#86198f">speak / TTS</text>
 
-  <rect x="740" y="100" width="140" height="70" rx="10" fill="#f1f5f9" stroke="#475569" stroke-width="2"/>
-  <text x="810" y="130" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#1e293b">World</text>
-  <text x="810" y="150" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#334155">user / files</text>
+ <rect x="740" y="100" width="140" height="70" rx="10" fill="#f1f5f9" stroke="#475569" stroke-width="2"/>
+ <text x="810" y="130" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#1e293b">World</text>
+ <text x="810" y="150" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#334155">user / files</text>
 
-  <line x1="170" y1="135" x2="210" y2="135" stroke="#334155" stroke-width="2" marker-end="url(#a1)"/>
-  <line x1="340" y1="135" x2="380" y2="135" stroke="#334155" stroke-width="2" marker-end="url(#a1)"/>
-  <line x1="530" y1="135" x2="570" y2="135" stroke="#334155" stroke-width="2" marker-end="url(#a1)"/>
-  <line x1="700" y1="135" x2="740" y2="135" stroke="#334155" stroke-width="2" marker-end="url(#a1)"/>
+ <line x1="170" y1="135" x2="210" y2="135" stroke="#334155" stroke-width="2" marker-end="url(#a1)"/>
+ <line x1="340" y1="135" x2="380" y2="135" stroke="#334155" stroke-width="2" marker-end="url(#a1)"/>
+ <line x1="530" y1="135" x2="570" y2="135" stroke="#334155" stroke-width="2" marker-end="url(#a1)"/>
+ <line x1="700" y1="135" x2="740" y2="135" stroke="#334155" stroke-width="2" marker-end="url(#a1)"/>
 
-  <path d="M 810 170 L 810 230 L 105 230 L 105 170" stroke="#0284c7" stroke-width="2" fill="none" stroke-dasharray="6 4" marker-end="url(#a1)"/>
-  <text x="460" y="220" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#0369a1">next-turn listen / text</text>
+ <path d="M 810 170 L 810 230 L 105 230 L 105 170" stroke="#0284c7" stroke-width="2" fill="none" stroke-dasharray="6 4" marker-end="url(#a1)"/>
+ <text x="460" y="220" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="11" fill="#0369a1">next-turn listen / text</text>
 
-  <path d="M 455 170 L 455 200 L 275 200 L 275 170" stroke="#d97706" stroke-width="2" fill="none" marker-end="url(#a1)"/>
-  <text x="365" y="192" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="10" fill="#92400e">tool result</text>
+ <path d="M 455 170 L 455 200 L 275 200 L 275 170" stroke="#d97706" stroke-width="2" fill="none" marker-end="url(#a1)"/>
+ <text x="365" y="192" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="10" fill="#92400e">tool result</text>
 
-  <rect x="380" y="260" width="200" height="40" rx="8" fill="#fff7ed" stroke="#ea580c" stroke-dasharray="5 4" stroke-width="2"/>
-  <text x="480" y="285" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#9a3412">Eyes  planned stub only</text>
+ <rect x="380" y="260" width="200" height="40" rx="8" fill="#fff7ed" stroke="#ea580c" stroke-dasharray="5 4" stroke-width="2"/>
+ <text x="480" y="285" text-anchor="middle" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#9a3412">Eyes  planned stub only</text>
 </svg>
