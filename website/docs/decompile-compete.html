@@ -119,6 +119,7 @@
                     <ul class="nav-sub__list" aria-labelledby="nav-bench-runtime">
                       <li><a href="/docs/serve.html">Serve</a></li>
                       <li><a href="/docs/ide.html">IDE</a></li>
+                      <li><a href="/docs/lsp.html">LSP / editor</a></li>
                       <li><a href="/ide-web.html">IDE web shell</a></li>
                       <li><a href="/docs/native-network-web.html">Network + web</a></li>
                     </ul>
@@ -340,7 +341,12 @@
         make test-decompile-compete   # unit: richer dump + project
         make decompile-roundtrip      # compile→dump→recompile hash
         make decompile-bench          # metrics + scoreboard JSON
+        # also records elf_local_probe from ./spark-binary-probe --elf
+        ./spark-binary-probe --elf ./spark
         </code></pre>
+        <p>Local ELF probe emits <code class="inline-code">claim: local_elf_probe_not_ghidra</code> and a
+        <code class="inline-code">sections[]</code> index — <strong>still a loss</strong> on Multi-format ELF/PE vs
+        Ghidra/IDA/Binja/OpenBin. Honesty, not a domain flip.</p>
         <p>Analysis project (single file):</p>
         <pre class="doc__pre"><code class="language-bash">PYTHONPATH=python python3 tools/spark-bc-dump/analyze_project.py \
           docs/examples/spark-train-step.sparkbc \

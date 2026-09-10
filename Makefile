@@ -841,6 +841,10 @@ test-ground: spark-ground
 	chmod +x tools/spark-ground/run_ground_gate.sh
 	./tools/spark-ground/run_ground_gate.sh
 
+.PHONY: test-spark-lsp
+test-spark-lsp:
+	PYTHONPATH=tools python3 -m unittest spark_lsp.test_lsp -v
+
 .PHONY: test-model-lab
 test-model-lab: spark spark-model-lab spark-abstain spark-expect spark-http
 	chmod +x tools/spark-model-lab/run_lab_gate.sh

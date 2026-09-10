@@ -207,8 +207,10 @@ def _parity_matrix() -> list[dict[str, str]]:
             "binja": "win",
             "llm4decompile": "win",
             "note": (
-                "Spark section-dump helpers exist for ELF probe; "
-                "not a Ghidra-class decompiler. SPARK_BC first."
+                "Spark ships spark-binary-probe --elf (hdr + "
+                "sections JSON) + spark-section-dump; still not "
+                "Ghidra-class. SPARK_BC first. claim="
+                "local_elf_probe_not_ghidra"
             ),
         },
         {
@@ -242,7 +244,7 @@ def _parity_matrix() -> list[dict[str, str]]:
             "ida": "na",
             "binja": "na",
             "llm4decompile": "na",
-            "note": "K-lane helpers/shadows wrap Spark SoT",
+            "note": "helpers/shadows wrap Spark SoT",
         },
         {
             "category": "Local privacy (no upload)",
@@ -293,6 +295,60 @@ def _summarize(
     return out
 
 
+def _elf_local_probe() -> dict[str, object]:
+    """Measure local ELF probe (not a Ghidra win claim)."""
+    probe = ROOT / "spark-binary-probe"
+    target = ROOT / "spark"
+    if not probe.is_file():
+        return {
+            "status": "skip",
+            "note": "build spark-binary-probe first",
+            "claim": "local_elf_probe_not_ghidra",
+        }
+    if not target.is_file():
+        return {
+            "status": "skip",
+            "note": "./spark missing",
+            "claim": "local_elf_probe_not_ghidra",
+        }
+    try:
+        proc = subprocess.run(
+            [str(probe), "--elf", str(target)],
+            capture_output=True,
+            text=True,
+            timeout=10,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        return {
+            "status": "error",
+            "note": str(exc),
+            "claim": "local_elf_probe_not_ghidra",
+        }
+    try:
+        payload = json.loads(proc.stdout.strip().splitlines()[-1])
+    except (json.JSONDecodeError, IndexError):
+        return {
+            "status": "error",
+            "note": "non-JSON probe output",
+            "claim": "local_elf_probe_not_ghidra",
+        }
+    sections = payload.get("sections") or []
+    return {
+        "status": "ok" if payload.get("ok") else "fail",
+        "op": payload.get("op"),
+        "claim": payload.get("claim", "local_elf_probe_not_ghidra"),
+        "section_count": payload.get("section_count"),
+        "n_sections_listed": len(sections),
+        "elf_class": payload.get("elf_class"),
+        "machine": payload.get("machine"),
+        "note": (
+            "Local ELF64 hdr+sections JSON — still loss vs "
+            "Ghidra/IDA/Binja on Multi-format ELF/PE axis"
+        ),
+    }
+
+
 def build_scoreboard(
     *,
     project_dir: Path | None = None,
@@ -301,6 +357,7 @@ def build_scoreboard(
     rt = run_all()
     fixtures = _spark_fixture_metrics()
     external = _probe_external()
+    elf_probe = _elf_local_probe()
     matrix = _parity_matrix()
     summary = _summarize(matrix)
     project_meta = None
@@ -357,6 +414,7 @@ def build_scoreboard(
         "roundtrip": rt,
         "fixtures": fixtures,
         "external_tools": external,
+        "elf_local_probe": elf_probe,
         "parity": matrix,
         "summary_counts": summary,
         "sample_project": project_meta,

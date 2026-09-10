@@ -140,6 +140,7 @@ MD_LINK_MAP = {
     "AI_PLAYBOOKS.md": "/learn/build-model.html",
     "ENCRYPT_GATEWAY.md": "/docs/ai-models.html",
     "IDE.md": "/docs/ide.html",
+    "LSP.md": "/docs/lsp.html",
     "VOICE.md": "/docs/voice.html",
     "VOICE_ASK.md": "/docs/voice-ask.html",
     "VOICE_EASY.md": "/docs/voice-easy.html",
@@ -239,6 +240,8 @@ DOC_PAGES = [
     ("ide", "IDE.md", "ide.html", "IDE — language ops + GUI",
      "Spark language ide ops, tkinter Spark IDE GUI "
      "(browse/compile/ask/weights), and web shell demo."),
+    ("lsp", "LSP.md", "lsp.html", "Language server / editor",
+     "SparkLang LSP — hover, completion, diagnostics for .spark."),
     ("", "CI_PAGES.md", "ci-pages.html", "CI + Cloudflare Pages",
      "Contributor CI gates and production Pages deploy how-to."),
     ("ai", "AI_MODELS.md", "ai-models.html", "AI models",

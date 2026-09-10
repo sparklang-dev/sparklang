@@ -119,6 +119,7 @@
                     <ul class="nav-sub__list" aria-labelledby="nav-bench-runtime">
                       <li><a href="/docs/serve.html">Serve</a></li>
                       <li><a href="/docs/ide.html">IDE</a></li>
+                      <li><a href="/docs/lsp.html">LSP / editor</a></li>
                       <li><a href="/ide-web.html">IDE web shell</a></li>
                       <li><a href="/docs/native-network-web.html">Network + web</a></li>
                     </ul>
@@ -215,23 +216,23 @@
         <tbody>
         <tr>
         <td>Extract</td>
-        <td>~~Schema validation + JSON-mode + retry on miss~~ <strong>done</strong> (live + <code class="inline-code">--retries</code> / stub)</td>
+        <td><strong>done</strong> (live + <code class="inline-code">--retries</code> / stub)</td>
         </tr>
         <tr>
         <td>Ask</td>
-        <td>~~Streaming token/SSE path~~ <strong>done</strong> (<code class="inline-code">--stream</code> / <code class="inline-code">ask stream</code>)</td>
+        <td><strong>done</strong> (<code class="inline-code">--stream</code> / <code class="inline-code">ask stream</code>)</td>
         </tr>
         <tr>
         <td>Eval</td>
-        <td>Expectation pass/fail harness (not only alias compare)</td>
+        <td><strong>done</strong> — <code class="inline-code">expect equal</code> / <code class="inline-code">contains</code>; <code class="inline-code">make test-expect</code></td>
         </tr>
         <tr>
         <td>Escape</td>
-        <td>~~Live <code class="inline-code">--allow-shell</code> argv policy; JS / C host FFI~~ <strong>done</strong></td>
+        <td><strong>done</strong> — live <code class="inline-code">--allow-shell</code>; JS / C host FFI</td>
         </tr>
         <tr>
         <td>Accounting</td>
-        <td>~~Wall-clock latency on live ask; run-level rollup~~ <strong>done</strong></td>
+        <td><strong>done</strong> — live wall-clock + run-level rollup</td>
         </tr>
         <tr>
         <td>Builder</td>
@@ -239,11 +240,11 @@
         </tr>
         <tr>
         <td>LSP</td>
-        <td>Prefer editor LSP + highlighting over IDE chrome</td>
+        <td><strong>done</strong> — <code class="inline-code">tools/spark_lsp</code> + extension v0.2; <a href="/docs/lsp.html">LSP.md</a></td>
         </tr>
         <tr>
         <td>Receptionist</td>
-        <td>Promote <code class="inline-code">examples/receptionist_goal.spark</code> off <code class="inline-code">[goal]</code> when transfer + eval syntax exist</td>
+        <td>Dry path <strong>done</strong> (<code class="inline-code">examples/receptionist.spark</code> + expect); live transfer/hold/hangup still <strong>goal</strong></td>
         </tr>
         <tr>
         <td>Releases</td>

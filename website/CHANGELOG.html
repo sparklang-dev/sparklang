@@ -131,6 +131,7 @@
                     <ul class="nav-sub__list" aria-labelledby="nav-bench-runtime">
                       <li><a href="/docs/serve.html">Serve</a></li>
                       <li><a href="/docs/ide.html">IDE</a></li>
+                      <li><a href="/docs/lsp.html">LSP / editor</a></li>
                       <li><a href="/ide-web.html">IDE web shell</a></li>
                       <li><a href="/docs/native-network-web.html">Network + web</a></li>
                     </ul>
@@ -158,6 +159,10 @@
         <article class="doc__body">
 <h1>Changelog</h1>
 <p>All notable user-facing releases of <strong>SparkLang</strong> (the Spark programming language) are listed here. Site and installers track <code>website/downloads/manifest.json</code>.</p>
+<h2>0.6.60 — 2026-09-09</h2>
+<ul>
+<li><strong>Competitive weaknesses close:</strong> editor <strong>LSP</strong> (<code>tools/spark_lsp</code> + extension v0.2 hover/completion/diagnostics; <code>make test-spark-lsp</code>); dry <strong>receptionist</strong> with <code>expect</code> gates (<code>examples/receptionist.spark</code>); local <strong>ELF probe</strong> sections JSON (<code>spark-binary-probe --elf</code>, scoreboard <code>elf_local_probe</code> — still honest <strong>loss</strong> vs Ghidra on Multi-format ELF/PE); ROADMAP/ADOPTION sync (eval + LSP done; live transfer SM remains goal).</li>
+</ul>
 <h2>0.6.59 — 2026-09-09</h2>
 <ul>
 <li><strong>Site polish / leak scrub:</strong> drop <code>(owner hierarchy)</code> from public language tiers + README lowest-level heading; scrub operator parentheticals (<code>owner cite</code>, <code>owner addendum</code>, <code>OWNER-CONFIRM</code>, lane letters in living docs headings/body); trim meta-description &quot;beat Claude&quot; / &quot;Never 6000&quot; spam (honest eval/coder/factory notes stay once where they belong); remove SoapBox-local report path from public README. <code>make docs-html</code> / <code>docs-check</code> green.</li>

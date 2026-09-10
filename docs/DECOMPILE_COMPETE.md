@@ -51,7 +51,13 @@ make spark-bootstrap spark
 make test-decompile-compete   # unit: richer dump + project
 make decompile-roundtrip      # compile→dump→recompile hash
 make decompile-bench          # metrics + scoreboard JSON
+# also records elf_local_probe from ./spark-binary-probe --elf
+./spark-binary-probe --elf ./spark
 ```
+
+Local ELF probe emits `claim: local_elf_probe_not_ghidra` and a
+`sections[]` index — **still a loss** on Multi-format ELF/PE vs
+Ghidra/IDA/Binja/OpenBin. Honesty, not a domain flip.
 
 Analysis project (single file):
 

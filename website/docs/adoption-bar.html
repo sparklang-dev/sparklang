@@ -119,6 +119,7 @@
                     <ul class="nav-sub__list" aria-labelledby="nav-bench-runtime">
                       <li><a href="/docs/serve.html">Serve</a></li>
                       <li><a href="/docs/ide.html">IDE</a></li>
+                      <li><a href="/docs/lsp.html">LSP / editor</a></li>
                       <li><a href="/ide-web.html">IDE web shell</a></li>
                       <li><a href="/docs/native-network-web.html">Network + web</a></li>
                     </ul>
@@ -262,6 +263,11 @@
         <td><code class="inline-code">expect equal</code> / <code class="inline-code">expect contains</code> vs bound vars or <code class="inline-code">fixture "PATH"</code>; exit 0/1. Gate: <code class="inline-code">make test-expect</code></td>
         </tr>
         <tr>
+        <td>Editor LSP + highlighting</td>
+        <td><strong>done</strong></td>
+        <td><code class="inline-code">tools/spark_lsp</code> stdio LSP + VS Code/Cursor extension hover/completion/diagnostics. Gate: <code class="inline-code">make test-spark-lsp</code>. Doc: <a href="/docs/lsp.html">LSP.md</a></td>
+        </tr>
+        <tr>
         <td>Voice production telephony</td>
         <td><strong>won't (soon)</strong></td>
         <td>Gated demo + honest gaps in VOICE.md / ROADMAP — not sold as production</td>
@@ -292,9 +298,14 @@
         <td><code class="inline-code">make sdk-pack</code> / <code class="inline-code">make dist</code> → <code class="inline-code">out/sdk-pack/sparklang-sdk-*.tar.gz</code> (runtime + SDK + IDE + GUI + helpers/shadows/tools). Gate: <code class="inline-code">make test-sdk-pack</code>. Page: <a href="/docs/sdk-ide-download.html">/docs/sdk-ide-download.html</a></td>
         </tr>
         <tr>
-        <td>Production receptionist workflow</td>
+        <td>Dry receptionist workflow</td>
+        <td><strong>done</strong></td>
+        <td><code class="inline-code">examples/receptionist.spark</code> — classify + retrieve + ask + shell queue + <code class="inline-code">expect</code> gates. Gate: dry-run exit 0</td>
+        </tr>
+        <tr>
+        <td>Production receptionist (transfer SM)</td>
         <td><strong>goal</strong></td>
-        <td><code class="inline-code">examples/receptionist_goal.spark</code> marked <code class="inline-code">[goal]</code> — dry sketch, not a live claim</td>
+        <td><code class="inline-code">examples/receptionist_goal.spark</code> — live transfer/hold/hangup language still missing</td>
         </tr>
         </tbody>
         </table></div>
@@ -312,10 +323,11 @@
         </ol>
         <h2 id="worth-using-over-script-gateway">Worth using over script + gateway</h2>
         <p>Shipped enough to dry-demo RAG + ask + classify + http get/post (with
-        auth/retries), streaming <code class="inline-code">ask</code>, and live <code class="inline-code">extract</code> (validate +
-        retry) in one file. Still missing for a clear “shorter than
-        Python+gateway” win on production paths: a dry-runnable
-        receptionist that is more than a <code class="inline-code">[goal]</code> sketch.</p>
+        auth/retries), streaming <code class="inline-code">ask</code>, live <code class="inline-code">extract</code> (validate + retry), and a
+        dry-runnable receptionist with <code class="inline-code">expect</code> gates
+        (<code class="inline-code">examples/receptionist.spark</code>). Still missing for production paths:
+        live transfer / hold / hangup language (see
+        <code class="inline-code">examples/receptionist_goal.spark</code>).</p>
         <h2 id="voice-honest">Voice — honest</h2>
         <p>Optional <code class="inline-code">listen</code> / <code class="inline-code">speak</code> / <code class="inline-code">voice</code> / gated PSTN exist as language
         surface and dry demos. <strong>Not</strong> production barge-in / EOU / SM transfer
@@ -348,14 +360,15 @@
           <code class="inline-code">model compare</code> remains an eval helper, not the hero loop.</li>
         </ul>
         <h2 id="the-real-bar-goal-not-claim">The real bar (goal, not claim)</h2>
-        <p>One generic receptionist-style workflow (fallback + transfer), shorter
-        and easier to dry-test than Python+gateway — <strong>no store/PII examples</strong>.</p>
-        <p>→ <code class="inline-code">examples/receptionist_goal.spark</code> (<code class="inline-code">[goal]</code>). When syntax for transfer
-        lands, promote off the goal tag. Expectation pass/fail is shipped
-        (<code class="inline-code">expect equal</code> / <code class="inline-code">expect contains</code>).</p>
+        <p>Dry receptionist with expect gates is shipped:
+        <code class="inline-code">examples/receptionist.spark</code> (classify → retrieve → ask → shell
+        queue → <code class="inline-code">expect</code>). <strong>No store/PII.</strong></p>
+        <p>Still a <strong>goal</strong> (not a claim): live transfer / hold / hangup /
+        barge-in language — marked in <code class="inline-code">examples/receptionist_goal.spark</code>.</p>
         <h2 id="related">Related</h2>
         <ul class="doc__ul">
         <li><a href="/docs/roadmap.html">ROADMAP.md</a></li>
+        <li><a href="/docs/lsp.html">LSP.md</a></li>
         <li><a href="/docs/language.html">LANGUAGE.md</a></li>
         <li><a href="/docs/release.html">RELEASE.md</a></li>
         <li><a href="/docs/voice.html">VOICE.md</a></li>

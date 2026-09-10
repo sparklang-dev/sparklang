@@ -113,6 +113,7 @@ NAV_MENUS: tuple[NavMenu, ...] = (
                 (
                     ("/docs/serve.html", "Serve"),
                     ("/docs/ide.html", "IDE"),
+                    ("/docs/lsp.html", "LSP / editor"),
                     ("/ide-web.html", "IDE web shell"),
                     ("/docs/native-network-web.html", "Network + web"),
                 ),

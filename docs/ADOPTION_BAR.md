@@ -27,13 +27,15 @@ Not Apache Spark. Not AdaCore SPARK.
 | Cost/latency/token accounting | **done** | Dry zeros; live wall-clock `latency_ms` + gateway `usage` when present; run-level `[accounting-run]` rollup. Never invents tokens |
 | Streaming `ask` | **done** | Companion `./spark-ask-http --stream` (SSE deltas + `--out` accumulate); language `ask stream "…"` under `--live`; dry gate `stream=1` |
 | Eval vs expectations (pass/fail) | **done** | `expect equal` / `expect contains` vs bound vars or `fixture "PATH"`; exit 0/1. Gate: `make test-expect` |
+| Editor LSP + highlighting | **done** | `tools/spark_lsp` stdio LSP + VS Code/Cursor extension hover/completion/diagnostics. Gate: `make test-spark-lsp`. Doc: [LSP.md](LSP.md) |
 | Voice production telephony | **won't (soon)** | Gated demo + honest gaps in VOICE.md / ROADMAP — not sold as production |
 | Packet capture / MITM / browser automation | **won't (focus)** | Still in LANGUAGE; de-emphasized on landing — prefer LSP + highlighting |
 | Homegrown IDE as product chrome | **won't (focus) / keep tree** | Prefer LSP for editor story; language `ide` ops + IDE tree **kept**. Hard-delete plan **revoked** 2026-09-02 (rename yes; delete no) |
 | Model-build as training claim | **won't** | Blueprint / eval sugar only; demoted on landing |
 | SPARK_BC Builder factory | **done (multi-outer + scale fixture)** | Spark → `--compile` → `.sparkbc` with `TRAIN`/`STEP`/`TRAIN_STATUS`; `--run-bc` TRAIN dry + STEP multi-outer CPU SGD (bootstrap or GAS); `checkpoint.json` loss curve; post-STEP `trained=true` / `not_sgd=false` when grads apply. Serve optional MLP0. Opt-in `make spark-sgd-proof-scale` (larger JSONL + dim/n_layer; CI stays tiny). GAS wrappers **implemented**. **Not beat Claude.** Hub: [FACTORY.md](FACTORY.md) / `/docs/factory.html`; Builder [SPARK_BUILDER.md](SPARK_BUILDER.md) |
 | SDK + IDE + GUI download pack | **done** | `make sdk-pack` / `make dist` → `out/sdk-pack/sparklang-sdk-*.tar.gz` (runtime + SDK + IDE + GUI + helpers/shadows/tools). Gate: `make test-sdk-pack`. Page: [/docs/sdk-ide-download.html](/docs/sdk-ide-download.html) |
-| Production receptionist workflow | **goal** | `examples/receptionist_goal.spark` marked `[goal]` — dry sketch, not a live claim |
+| Dry receptionist workflow | **done** | `examples/receptionist.spark` — classify + retrieve + ask + shell queue + `expect` gates. Gate: dry-run exit 0 |
+| Production receptionist (transfer SM) | **goal** | `examples/receptionist_goal.spark` — live transfer/hold/hangup language still missing |
 
 ## Escape hatch (P0 design)
 
@@ -51,10 +53,11 @@ Without both directions, a DSL dies:
 ## Worth using over script + gateway
 
 Shipped enough to dry-demo RAG + ask + classify + http get/post (with
-auth/retries), streaming `ask`, and live `extract` (validate +
-retry) in one file. Still missing for a clear “shorter than
-Python+gateway” win on production paths: a dry-runnable
-receptionist that is more than a `[goal]` sketch.
+auth/retries), streaming `ask`, live `extract` (validate + retry), and a
+dry-runnable receptionist with `expect` gates
+(`examples/receptionist.spark`). Still missing for production paths:
+live transfer / hold / hangup language (see
+`examples/receptionist_goal.spark`).
 
 ## Voice — honest
 
@@ -94,16 +97,17 @@ Keep these off the hero; they belong here and in docs:
 
 ## The real bar (goal, not claim)
 
-One generic receptionist-style workflow (fallback + transfer), shorter
-and easier to dry-test than Python+gateway — **no store/PII examples**.
+Dry receptionist with expect gates is shipped:
+`examples/receptionist.spark` (classify → retrieve → ask → shell
+queue → `expect`). **No store/PII.**
 
-→ `examples/receptionist_goal.spark` (`[goal]`). When syntax for transfer
-lands, promote off the goal tag. Expectation pass/fail is shipped
-(`expect equal` / `expect contains`).
+Still a **goal** (not a claim): live transfer / hold / hangup /
+barge-in language — marked in `examples/receptionist_goal.spark`.
 
 ## Related
 
 - [ROADMAP.md](ROADMAP.md)
+- [LSP.md](LSP.md)
 - [LANGUAGE.md](LANGUAGE.md)
 - [RELEASE.md](RELEASE.md)
 - [VOICE.md](VOICE.md)
