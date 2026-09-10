@@ -1,7 +1,9 @@
-"""TinyCoder — load/save owned weights + greedy generate.
+"""TinyCoder — reference implementation: owned weights + generate.
 
-Brain = Spark safetensors we train in-repo. Optional compile tools
-sit on top; they are not the model.
+Brain = Spark safetensors we train in-repo. This is the reference
+for the training pipeline; the product coder is the self-hosted
+Qwen3-Coder-30B endpoint (see `real_coder.py`). Optional compile
+tools sit on top; they are not the model.
 """
 
 from __future__ import annotations
@@ -113,7 +115,6 @@ class TinyCoder:
             "profile": PROFILE,
             "path": "owned-greedy",
             "trained": str(self.meta.get("trained", "false")),
-            "beats_claude": False,
             "device": "cpu",
         }
 

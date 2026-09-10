@@ -47,5 +47,5 @@ else
   echo "WARN dist/spark-sdk/ absent (run: make sdk-pack)"
 fi
 
-echo "device=cpu never=rtx-pro-6000 beats_claude=false"
+echo "device=cpu never=rtx-pro-6000"
 exit "$fail"

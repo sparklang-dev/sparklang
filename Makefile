@@ -550,11 +550,13 @@ spark-eval-claude:
 test-spark-eval:
 	PYTHONPATH=python python3 tools/spark-eval/test_eval.py
 
-# Owned Spark coding model (M-lane): TinyCoder written+trained here.
-# Prefers RTX 5090 when available; CPU fallback. Never 6000.
-# Not a HF/Claude wrapper. Not beat Claude.
-# Tiny = CI/default. Large = opt-in (dim 64 / n_layer 4).
-.PHONY: spark-coder-train spark-coder-train-large test-spark-coder
+# Spark coder (M-lane). Product coder = self-hosted Qwen3-Coder-30B
+# endpoint (real_coder.py; SPARK_CODER_URL, default :8003) — offline,
+# no API keys. In-repo TinyCoder = reference trainer proving the
+# training pipeline. Prefers RTX 5090 when available; CPU fallback.
+# Never 6000. Tiny = CI/default. Large = opt-in (dim 64 / n_layer 4).
+.PHONY: spark-coder-train spark-coder-train-large test-spark-coder \
+	spark-coder-eval-real
 spark-coder-train: spark-bootstrap
 	@mkdir -p models/spark-coder
 	@rm -f models/spark-coder/weights.safetensors \
@@ -575,8 +577,8 @@ spark-coder-train: spark-bootstrap
 	@test -f models/spark-coder/checkpoint.json
 	@test -f models/spark-coder/arch.json
 
-# Opt-in large coder: dim 64 / n_layer 4. Prefer 5090. Never 6000.
-# Not GHA default. Still does not beat Claude.
+# Opt-in large reference trainer config: dim 64 / n_layer 4.
+# Prefer 5090. Never 6000. Not GHA default.
 spark-coder-train-large: spark-bootstrap
 	@mkdir -p models/spark-coder-large
 	@rm -f models/spark-coder-large/weights.safetensors \
@@ -595,12 +597,18 @@ spark-coder-train-large: spark-bootstrap
 	@test -f models/spark-coder-large/arch.json
 	@python3 -c "import json; a=json.load(open('models/spark-coder-large/arch.json')); \
 	  assert a['scale']=='large' and a['dim']>=64 and a['n_layer']>=4; \
-	  assert a['beats_claude'] is False; assert a['never']=='rtx-pro-6000'; \
+	  assert 'beats_claude' not in a; assert a['never']=='rtx-pro-6000'; \
 	  print('large ok dim', a['dim'], 'n_layer', a['n_layer'], 'never', a['never'])"
 
 test-spark-coder: spark-bootstrap
 	PYTHONPATH=python python3 -m unittest \
 	  sparklang.spark_coder.test_spark_coder -v
+
+# Real product-coder eval: execution-graded tasks against the
+# self-hosted 30B endpoint (SPARK_CODER_URL, default :8003).
+# Exits nonzero when the endpoint is down — never fakes numbers.
+spark-coder-eval-real:
+	PYTHONPATH=python python3 tools/spark-code/eval_real.py
 
 # Weight gallery: catalog tiny→xl kinds; emit scale+large samples;
 # write website catalog JSON. Play/diff/stats on CPU. Never 6000.

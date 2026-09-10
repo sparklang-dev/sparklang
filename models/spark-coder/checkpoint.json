@@ -1,9 +1,9 @@
 {
   "profile": "spark-coder",
+  "scale": "tiny",
   "trained": true,
   "not_sgd": false,
   "sgd": true,
-  "beats_claude": false,
   "device": "cuda:5090",
   "gpu_name": "NVIDIA GeForce RTX 5090",
   "device_pick": {
@@ -23,80 +23,82 @@
   },
   "never": "rtx-pro-6000",
   "brain": "owned-weights",
-  "loss_before": 5.620311260223389,
-  "loss_after": 2.041017532348633,
+  "loss_before": 5.622397422790527,
+  "loss_after": 2.0331051349639893,
   "loss_curve": [
     {
       "outer": 0,
-      "loss": 5.620311260223389,
+      "loss": 5.622397422790527,
       "phase": "start",
       "device": "NVIDIA GeForce RTX 5090"
     },
     {
       "outer": 1,
-      "loss": 3.814472198486328,
+      "loss": 3.756948471069336,
       "device": "NVIDIA GeForce RTX 5090"
     },
     {
       "outer": 2,
-      "loss": 3.007906675338745,
+      "loss": 2.9583516120910645,
       "device": "NVIDIA GeForce RTX 5090"
     },
     {
       "outer": 3,
-      "loss": 2.6064400672912598,
+      "loss": 2.567324161529541,
       "device": "NVIDIA GeForce RTX 5090"
     },
     {
       "outer": 4,
-      "loss": 2.357725143432617,
+      "loss": 2.327977418899536,
       "device": "NVIDIA GeForce RTX 5090"
     },
     {
       "outer": 5,
-      "loss": 2.187459945678711,
+      "loss": 2.165562152862549,
       "device": "NVIDIA GeForce RTX 5090"
     },
     {
       "outer": 6,
-      "loss": 2.0628013610839844,
+      "loss": 2.046931028366089,
       "device": "NVIDIA GeForce RTX 5090"
     },
     {
       "outer": 7,
-      "loss": 1.968820333480835,
+      "loss": 1.95710027217865,
       "device": "NVIDIA GeForce RTX 5090"
     },
     {
       "outer": 8,
-      "loss": 1.8961758613586426,
+      "loss": 1.8872188329696655,
       "device": "NVIDIA GeForce RTX 5090"
     },
     {
       "outer": 9,
-      "loss": 1.8384418487548828,
+      "loss": 1.8313419818878174,
       "device": "NVIDIA GeForce RTX 5090"
     },
     {
       "outer": 10,
-      "loss": 1.7913000583648682,
+      "loss": 1.7854840755462646,
       "device": "NVIDIA GeForce RTX 5090"
     },
     {
       "outer": "first_byte",
-      "loss": 0.7216895818710327,
+      "loss": 0.7218438982963562,
       "phase": "prove_overfit",
       "device": "NVIDIA GeForce RTX 5090"
     }
   ],
   "n_pairs_expanded": 768,
   "weights": "models/spark-coder/weights.safetensors",
-  "weights_sha256": "91e9dcb4bf50311b8b6e30cb71be1a2a7a0c298b05b1bdbd6b921c9cae0eead6",
+  "weights_sha256": "43c455cc3091a01b9891af0ab08cd13277099d3d69bf8b7fbe72f1ddd8098c67",
   "outer": 10,
   "inner": 10,
   "lr": 0.2,
   "arch": {
     "profile": "spark-coder",
+    "scale": "tiny",
+    "ci_default": true,
     "vocab": 256,
     "dim": 32,
     "n_layer": 2,
@@ -106,10 +108,10 @@
     "mlp": 128,
     "genome": "SPARK_BC",
     "factory": "Spark language",
-    "beats_claude": false,
     "device": "cpu",
+    "prefer_device": "rtx-5090",
     "never": "rtx-pro-6000",
     "brain": "owned-weights",
-    "note": "TinyCoder written+trained in sparklang; not a downloaded base model"
+    "note": "reference TinyCoder written+trained in sparklang (config=tiny); proves the training pipeline \u2014 the product coder is the self-hosted 30B endpoint; never 6000"
   }
 }
