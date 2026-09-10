@@ -187,11 +187,11 @@
         <h3 id="hallucination">Hallucination</h3>
         <p>Fluent falsehoods without tools or grounding. Prefer retrieve /
         expect / tests over vibes.</p>
-        <h3 id="jailbreaks-prompt-injection">Jailbreaks / prompt injection</h3>
+        <h3 id="jailbreaks--prompt-injection">Jailbreaks / prompt injection</h3>
         <p>Untrusted text steers tools. Keep tools on allowlists; default dry.</p>
         <h3 id="data-exfiltration">Data exfiltration</h3>
         <p>Tool calls or verbose logs can leak secrets. Log args; redact.</p>
-        <h3 id="bias-dual-use">Bias &amp; dual-use</h3>
+        <h3 id="bias--dual-use">Bias &amp; dual-use</h3>
         <p>Capability ≠ permission. Do not treat model output as policy.</p>
         <h3 id="eval-hacking">Eval hacking</h3>
         <p>Optimize the benchmark, miss the job. Treat wins as hypotheses.</p>
@@ -243,11 +243,11 @@
         </tbody>
         </table></div>
         <h2 id="grounding">Grounding</h2>
-        <h3 id="grounded-generation-anti-guess">Grounded generation / anti-guess</h3>
+        <h3 id="grounded-generation--anti-guess">Grounded generation / anti-guess</h3>
         <p><strong>Goal:</strong> make it <strong>nearly impossible to pass CI while guessing</strong> —
         abstain, retrieve/expect, tool allowlists, verify-before-speak,
         structured outputs. Not magic weights.</p>
-        <h3 id="modify-adapt-path-qwen-class-spark-owned">Modify / adapt path (Qwen-class + Spark-owned)</h3>
+        <h3 id="modify--adapt-path-qwen-class--spark-owned">Modify / adapt path (Qwen-class + Spark-owned)</h3>
         <p>Language already has attach-only modify:</p>
         <pre class="doc__pre"><code class="language-text">model modify keep_existing &quot;out/train/existing-lora&quot; \
          add &quot;out/train/job-dry-001/adapter.bin&quot; \

@@ -18,7 +18,7 @@ NVML_LIB ?= /usr/lib/x86_64-linux-gnu/libnvidia-ml.so.1
 	test-bootstrap test-sparkbc test-sparkbc-e2e sparkbc-e2e \
 	spark-bc spark-bc-pack-hello sparkasm \
 	test-sparkasm test-sparkasm-control docs-docx function-catalog \
-	playbooks-catalog spark-eval spark-eval-claude test-spark-eval \
+	playbooks-catalog spark-eval spark-eval-frontier test-spark-eval \
 	spark-sgd-proof spark-sgd-proof-scale docs-html docs-check \
 	sdk-pack dist test-sdk-pack spark-bc-gui \
 	helpers tools-test test-senses \
@@ -525,27 +525,27 @@ model-probe:
 	bash tools/model_probe/probe.sh
 
 # Frozen copy/recall + next-token probes. Dry default; optional WEIGHTS=
-# or SPARK_EVAL_WEIGHTS. Optional CLAUDE=off|auto|on (default off).
-# Exit 0 = harness ran (not a beat-Claude claim). Never invents keys.
-CLAUDE ?= off
+# or SPARK_EVAL_WEIGHTS. Optional FRONTIER=off|auto|on (default off).
+# Exit 0 = harness ran (not a frontier-win claim). Never invents keys.
+FRONTIER ?= off
 .PHONY: spark-eval
 spark-eval:
 	@if [ -n "$(WEIGHTS)" ]; then \
 	  PYTHONPATH=python python3 tools/spark-eval/run.py \
-	    --claude "$(CLAUDE)" --weights "$(WEIGHTS)"; \
+	    --frontier "$(FRONTIER)" --weights "$(WEIGHTS)"; \
 	elif [ -n "$${SPARK_EVAL_WEIGHTS}" ]; then \
 	  PYTHONPATH=python python3 tools/spark-eval/run.py \
-	    --claude "$(CLAUDE)" --weights "$${SPARK_EVAL_WEIGHTS}"; \
+	    --frontier "$(FRONTIER)" --weights "$${SPARK_EVAL_WEIGHTS}"; \
 	else \
 	  PYTHONPATH=python python3 tools/spark-eval/run.py \
-	    --claude "$(CLAUDE)"; \
+	    --frontier "$(FRONTIER)"; \
 	fi
 
-# Head-to-head measurement: Spark scores + Claude baseline if creds
-# exist; otherwise status skipped_no_credentials. Never claims win.
-.PHONY: spark-eval-claude
-spark-eval-claude:
-	@$(MAKE) spark-eval CLAUDE=auto WEIGHTS="$(WEIGHTS)"
+# Head-to-head measurement: Spark scores + frontier-API baseline if
+# creds exist; otherwise status skipped_no_credentials. No win claim.
+.PHONY: spark-eval-frontier
+spark-eval-frontier:
+	@$(MAKE) spark-eval FRONTIER=auto WEIGHTS="$(WEIGHTS)"
 
 .PHONY: test-spark-eval
 test-spark-eval:
@@ -652,7 +652,10 @@ test-weights-play:
 
 # Voice easy — owned STT/TTS heads (tiny CI + large opt-in).
 # Prefer RTX 5090; NEVER RTX PRO 6000. Not ElevenLabs overnight.
-.PHONY: voice-easy test-voice-easy voice-easy-large
+.PHONY: voice-easy test-voice-easy voice-easy-large voice-easy-fetch
+voice-easy-fetch:
+	python3 tools/spark-voice/fetch_models.py
+
 voice-easy:
 	chmod +x spark-voice tools/spark-voice/cli.py
 	./spark-voice easy --dry --device auto --scale tiny
@@ -668,8 +671,8 @@ voice-easy-large:
 	./spark-voice easy --scale large --device auto
 
 # Multi-outer CPU SGD + layer-0 attn proof + measurement-only eval.
-# Never claims beat Claude. CPU only. Tiny fixture = GHA/CI default.
-# Asserts frozen probe scores >0 after attn train (not a Claude win).
+# No frontier-parity claim. CPU only. Tiny fixture = GHA/CI default.
+# Asserts frozen probe scores >0 after attn train (not a win claim).
 .PHONY: spark-sgd-proof
 spark-sgd-proof: spark-bootstrap
 	@mkdir -p out/train/sgd-proof
@@ -700,7 +703,7 @@ spark-sgd-proof: spark-bootstrap
 	  print('eval_nonzero_ok')"
 
 # Opt-in local scale proof: larger JSONL + dim/n_layer knobs.
-# Still CPU-fast; not overnight; not GHA default. Not beat Claude.
+# Still CPU-fast; not overnight; not GHA default. No parity claim.
 # Knobs: SPARK_SGD_DIM SPARK_SGD_N_LAYER SPARK_SGD_OUTER SPARK_SGD_INNER
 .PHONY: spark-sgd-proof-scale
 spark-sgd-proof-scale: spark-bootstrap

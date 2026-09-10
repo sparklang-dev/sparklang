@@ -268,7 +268,7 @@
         <h3 id="code-section">Code section</h3>
         <p>Stream of <code class="inline-code">u8 opcode</code> plus opcode-specific <code class="inline-code">u16le</code> const indices.
         <code class="inline-code">HALT</code> has no operands. Execution starts at byte 0.</p>
-        <h2 id="stack-frame-model">Stack / frame model</h2>
+        <h2 id="stack--frame-model">Stack / frame model</h2>
         <p><strong>Frame (used in Phase 0):</strong></p>
         <ul class="doc__ul">
         <li><code class="inline-code">model_alias</code> — LANGUAGE <code class="inline-code">model &lt;alias&gt;</code> / hello <code class="inline-code">model code</code></li>
@@ -277,7 +277,7 @@
         </ul>
         <p><strong>Operand stack:</strong> reserved. Phase 0 hello never pushes or pops.
         No stack opcodes this phase (would be inventing).</p>
-        <h2 id="opcode-table-phase-0-phase-4">Opcode table (Phase 0 + Phase 4)</h2>
+        <h2 id="opcode-table-phase-0--phase-4">Opcode table (Phase 0 + Phase 4)</h2>
         <p>Mapped 1:1 to LANGUAGE.md statement starts. Voice merge keeps
         <code class="inline-code">0x06 EXTRACT</code>, <code class="inline-code">0x07 PIPELINE</code>, <code class="inline-code">0x09 LISTEN</code>, <code class="inline-code">0x0a SPEAK</code>,
         <code class="inline-code">0x0d VOICE</code>; engine/IDE <code class="inline-code">0x0e–0x1a</code>; review/browser/mitm
@@ -540,7 +540,7 @@
         disk, validates, then prints <code class="inline-code">[extract] &lt;json&gt;</code> and binds. A missing
         fixture or a failed field check returns non-zero — it does not fall
         back to a built-in value.</p>
-        <h3 id="tool-with-with-end-phase-4-second-family">TOOL / WITH / WITH_END (Phase 4 second family)</h3>
+        <h3 id="tool--with--with_end-phase-4-second-family">TOOL / WITH / WITH_END (Phase 4 second family)</h3>
         <p>LANGUAGE form in <code class="inline-code">examples/tool_agent.spark</code> (same bytes as
         <code class="inline-code">bootstrap/fixtures/tool_agent.spark</code>):</p>
         <pre class="doc__pre"><code class="inline-code">tool weather(city: string) -&gt; string { &quot;stub:local&quot; }
@@ -600,7 +600,7 @@
         <p>PRINT of a bound name: <code class="inline-code">[print] &lt;value&gt;\n</code> (<code class="inline-code">vm.c</code> <code class="inline-code">op_print</code>).
         Unbound name prints the ident (same as <code class="inline-code">vm.c</code>).
         MODEL: <code class="inline-code">[model] &lt;alias&gt;\n</code>.</p>
-        <h2 id="hellosparkbc-hex-layout">hello.sparkbc hex / layout</h2>
+        <h2 id="hellosparkbc-hex--layout">hello.sparkbc hex / layout</h2>
         <p>Packer (encoding, not a compiler): <code class="inline-code">bootstrap/bc_pack_hello.c</code> +
         <code class="inline-code">bootstrap/bc_write.c</code>. Reconstruct by packing the three strings
         and four ops above, or <code class="inline-code">make spark-bc-pack-hello</code> and write the
@@ -614,7 +614,7 @@
         03 02 00 PRINT const2
         00 HALT
         </code></pre>
-        <h2 id="builder-spark-created-binary-weights">Builder (Spark-created binary + weights)</h2>
+        <h2 id="builder-spark-created-binary--weights">Builder (Spark-created binary + weights)</h2>
         <p><strong>SPARK_BC is the orchestration ISA — not neural weights.</strong> Full
         engineer reproduction (programs, commands, sha256 table, GAS
         <code class="inline-code">--compile</code> / <code class="inline-code">--run-bc</code>, model lab, Pages deploy):

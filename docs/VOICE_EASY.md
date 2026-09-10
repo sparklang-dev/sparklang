@@ -1,109 +1,135 @@
-# Voice easy — train STT / TTS in 3 steps
+# Voice easy — real open-weight STT / TTS in 3 steps
 
-Piece-of-cake path for **owned** Spark voice-related heads we write
-and train in this repo. Companion to [VOICE.md](VOICE.md) and
-[Model aspects](MODEL_ASPECTS.md) (ears/speaking).
+Piece-of-cake path for Spark voice: **real ears** (speech-to-text)
+and a **real voice** (text-to-speech), built on best-in-class open
+weights — Whisper-class ASR and Kokoro-class TTS — self-hosted,
+running offline after a one-time fetch, with **no API keys**.
 
-Owned Spark STT/TTS heads trained in this repo — not a vendor TTS SaaS.
-Prefer CPU or a consumer GPU for optional train.
+These models are **pretrained by their upstream authors, not by us**:
+
+| Piece | Model | License | Size on disk |
+|-------|-------|---------|--------------|
+| STT (ears) | `faster-whisper` CTranslate2 port of OpenAI **Whisper large-v3-turbo** (real lane) / `tiny` (CI smoke) | MIT | 1.6 GB / 75 MB |
+| TTS (voice) | **Kokoro-82M** via `kokoro-onnx` (`kokoro-v1.0.onnx` + `voices-v1.0.bin`) | Apache-2.0 | 338 MB |
+
+Weights are fetched once into `models/spark-voice-stt/` and
+`models/spark-voice-tts/` (both gitignored) by a pinned,
+checksummed fetcher, then every wrapper path runs **fully offline**
+(`HF_HUB_OFFLINE=1`, `local_files_only=True`, no network).
 
 ## 3 steps
 
 ```bash
-# 1) Env check (no secrets)
-./spark-voice env --dry
+# 1) Fetch the real weights once (pinned sha256 + size per file)
+make voice-easy-fetch
+# same as: ./spark-voice fetch   (or python3 tools/spark-voice/fetch_models.py)
 
-# 2) Tiny happy path (CI / laptop) — fixtures → train → prove
-./spark-voice easy --dry --device auto
+# 2) Eval + roundtrip on real speech (CI smoke scale)
+make voice-easy
 
-# 3) Status
+# 3) Status — which weights are present, sizes, devices
 ./spark-voice status
 ```
 
-Outputs:
+`./spark-voice env` prints the environment check (weights presence,
+LJSpeech presence, devices). No secrets are read or printed.
 
-- `models/spark-voice-easy/weights.safetensors` (+ `arch.json`,
- `checkpoint.json`)
-- `out/voice_easy/fixtures/` — owned tone WAVs + phrases
-- `out/voice_easy/roundtrip/` — TTS dry WAVs + `roundtrip.json`
+## Honest evaluation (measured, not asserted)
+
+The eval lane scores the real pipeline on **held-out clips from
+LJSpeech-1.1** (public-domain audiobook speech, single speaker,
+English; `data/voice/`, gitignored, fetched separately). Text is
+normalized (case/punctuation/whitespace) before scoring; WER and CER
+are computed in-repo with stdlib Levenshtein — no vendor metric
+package, no file-size "gates", no train-set accuracy.
+
+Measured on this repo's dev box (CPU, int8, 2026-09-10):
+
+| Eval | Models | n | WER | CER |
+|------|--------|---|-----|-----|
+| STT on held-out LJSpeech clips | Whisper large-v3-turbo | 50 | **2.67%** | **2.82%** |
+| TTS → STT roundtrip | Kokoro-82M (`af_heart`) → Whisper large-v3-turbo | 20 | **1.67%** | **2.08%** |
+| STT smoke (CI scale) | Whisper tiny | 8 | 4.66% | 1.42% |
+| Roundtrip smoke (CI scale) | Kokoro-82M → Whisper tiny | 4 | 1.09% | 0.68% |
+
+Reproduce:
+
+```bash
+make voice-easy-fetch
+./spark-voice easy --scale large --device cpu   # writes out/voice_easy/eval/eval_report.json
+```
+
+The roundtrip row is the honest intelligibility signal: Kokoro
+synthesizes real held-out LJSpeech transcripts it never saw as audio,
+Whisper transcribes the synthesized speech back, and we score the
+text against the reference transcript.
 
 ## Scales
 
-| Scale | How | Dims / steps | Device |
-|-------|-----|--------------|--------|
-| **tiny** (default) | `--scale tiny` or omit | dim 16, ~12 steps | CPU fine; CI |
-| **large** (opt-in) | `--scale large` or `VOICE_SCALE=large` | dim 256, ~80 steps | Consumer GPU suggested; ~2 GiB VRAM hint |
+`tiny` / `large` now mean **eval-subset size + model variant** —
+nothing else:
+
+| Scale | STT variant | STT clips | Roundtrip utterances | Use |
+|-------|-------------|-----------|----------------------|-----|
+| **tiny** (default) | Whisper `tiny` | 8 | 4 | CI smoke, laptops |
+| **large** (opt-in) | Whisper `large-v3-turbo` | 50 | 20 | Real measurement |
 
 ```bash
-# Large — opt-in; prefers a consumer GPU; fail closed without one
-./spark-voice easy --scale large --device auto
-
-# Large on CPU only when you explicitly ask (still owned weights)
-./spark-voice easy --scale large --device cpu
+./spark-voice easy --scale tiny  --device cpu   # CI smoke
+./spark-voice easy --scale large --device cpu   # full numbers
 ```
 
-Large ≠ production vendor quality. It is a **bigger owned head** for
-local experiments — covers fixture-scale STT classify + PCM
-tone TTS.
+## Devices (hard rule)
 
-### Fail closed (device guard)
-
-If `--scale large` and the visible GPU is reserved for other
-workloads, Spark **refuses** (exit 2) unless you pass
-`--device cpu`. Training never routes to reserved devices.
-
-## Flags
+CPU int8 is the default everywhere. GPU eval is allowed **only** on a
+consumer GPU via `CUDA_VISIBLE_DEVICES=1` (RTX 5090). The reserved
+voice-serving GPU (RTX PRO 6000) is **never** touched — `device.py`
+refuses it in every path.
 
 | Flag / env | Meaning |
 |------------|---------|
-| `--dry` | CI-friendly (clamped steps) |
-| `--device auto\|cpu\|…` | device pick; auto prefers a consumer GPU (or CPU) |
-| `--scale tiny\|large` | model size |
+| `--device auto\|cpu\|5090` | auto prefers CPU int8; 5090 only when free |
+| `--scale tiny\|large` | eval subset + STT variant (see above) |
+| `--dry` | plan only — no eval, no synthesis |
 | `VOICE_SCALE=large` | same as `--scale large` when flag omitted |
 
-## Reuse ears / speaking
+## No training here
 
-Language `listen` / `speak` and `./spark-stt-tts` stay the live
-sidecar path ([VOICE.md](VOICE.md)). Voice-easy trains a **separate
-owned head** under `models/spark-voice-easy/` so the training path
-is obvious:
+These are pretrained upstream weights. `spark-voice train` is an
+honest no-op stub that points at `fetch` + `easy`; there is nothing
+to train in this lane and no train@ unit is involved.
 
-```text
-ears (fixtures / spark-stt-tts)
- → voice-easy STT head (classify phrases)
-brain (optional spark-coder / dump ask)
- → voice-easy TTS head (PCM params)
-speaking (roundtrip WAV / spark-stt-tts speak)
-```
-
-## External STT / TTS sidecars (later)
-
-Plug vendors **outside** these owned weights — same gates as voice:
-
-| Gate | Meaning |
-|------|---------|
-| `SPARK_STT_CMD` / `SPARK_TTS_CMD` | Local shell (`%i` / `%o`) |
-| `SPARK_STT_NET=1` + URL | HTTP STT |
-| `SPARK_TTS_NET=1` + URL | HTTP TTS |
-
-URL without gate → fail closed. Never commit Bearer keys.
-
-## IDE
-
-Spark IDE extension command **“Spark: Voice easy train”** runs
-`./spark-voice easy --dry` (CLI-first; stub task hook).
-
-## CLI / CI
+## CLI surface
 
 ```bash
-./spark-voice easy --dry # dry tiny happy path
-./spark-voice easy --scale large --device auto # opt-in local large
+./spark-voice env      # environment check (no secrets)
+./spark-voice fetch    # pinned, checksummed weight download
+./spark-voice easy     # STT eval + TTS→STT roundtrip
+./spark-voice prove    # roundtrip only
+./spark-voice status   # weights present? sizes? eval report?
+```
+
+When weights are not fetched, `easy`/`prove` **skip loudly**
+(`status: skipped_no_weights`) and tell you to run `fetch` — they
+never fall back to a fake.
+
+## Make / CI
+
+```bash
+make voice-easy-fetch  # one-time real weight download
+make voice-easy        # dry tiny happy path (CI-safe)
+make test-voice-easy   # unit tests always run; integration skips
+                       # loudly without weights (GHA green either way)
+make voice-easy-large  # opt-in real measurement (needs fetch first)
 ```
 
 ## Scope
+
 | Claim | Status |
 |-------|--------|
-| Owned STT/TTS heads we train | **yes** (tiny + large) |
-| CI dry green | **yes** (`make test-voice-easy`) |
-| Vendor mega-TTS overnight | Out of scope |
-| Marketing win banners | Out of scope |
+| Real open-weight STT (Whisper-class) | **yes** — measured WER above |
+| Real open-weight TTS (Kokoro-class) | **yes** — measured roundtrip above |
+| Self-hosted, offline after fetch, no API keys | **yes** |
+| CI green without multi-GB downloads | **yes** (unit tests + loud skips) |
+| Frontier/proprietary parity | **not claimed** — numbers above are the claim |
+| Multi-speaker / multilingual eval | Out of scope (LJSpeech is one English speaker) |

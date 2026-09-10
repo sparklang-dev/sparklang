@@ -11,7 +11,7 @@ Usage:
       --add PATH [--out PATH]
 
 Exit 0 when verified; exit 2 when abstain / refuse (CI-fail guess).
-Does not beat Claude. Never 6000.
+No frontier-parity claim. Never 6000.
 """
 
 from __future__ import annotations

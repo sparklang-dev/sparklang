@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Build the SparkLang SDK + runtime + IDE + GUI download pack.
 # Output: out/sdk-pack/sparklang-sdk-<ver>.tar.gz + MANIFEST.json
-# Never 6000. Does not claim beat Claude.
+# Never 6000. No frontier-parity claim.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -369,8 +369,8 @@ Quick start
   # IDE (Cursor or VS Code)
   ./bin/spark-ide
 
-CPU only. Never RTX PRO 6000. Does not claim beat Claude.
-Owned coder brain = models/spark-coder (not Claude/HF).
+CPU only. Never RTX PRO 6000. No frontier-parity claim.
+Owned coder brain = models/spark-coder (not a frontier/HF API).
 
 Docs: https://sparklang.dev/docs/sdk-ide-download.html
        https://sparklang.dev/docs/spark-coder.html
@@ -455,7 +455,7 @@ payload = {
     },
     "notes": [
         "CPU runtime only — never RTX PRO 6000",
-        "Does not claim beat Claude",
+        "No frontier-parity claim",
         "GUI uses real --compile + bc_dump.format_dump",
         "Includes helpers + shadows + BC dump tools",
         "spark-coder owned weights when models/spark-coder present",

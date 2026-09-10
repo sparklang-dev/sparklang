@@ -8,4 +8,4 @@ Isolated copy → build → verify helpers for compile/decompile workflows.
 | `shadow_build.sh` | `make spark-bootstrap` + `--compile` in the shadow |
 | `shadow_verify.sh` | sha256 vs golden + SPARK_BC decode check |
 
-CPU only. Never 6000. Does not claim beat Claude.
+CPU only. Never 6000. No frontier-parity claim.

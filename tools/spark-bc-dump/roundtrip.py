@@ -3,7 +3,7 @@
 
 SoT win Spark already has: deterministic ``--compile`` bytes.
 Dump sits in the middle as inspect proof — not source recovery.
-Does not beat Claude. Never 6000.
+No frontier-parity claim. Never 6000.
 """
 
 from __future__ import annotations

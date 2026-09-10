@@ -550,7 +550,7 @@ def format_dump_html(
             *rows,
             "</tbody></table>",
             "<p><em>SPARK_BC inspect — not ELF/PE decompile; "
-            "not lossless source recovery. Does not beat Claude."
+            "not lossless source recovery. No frontier-parity claim."
             "</em></p>",
             "</body></html>",
             "",

@@ -179,17 +179,17 @@
         <a href="/docs/programming-guide.html">Programming guide</a>
         <a href="/downloads.html">Downloads</a>
       </nav>      <article class="doc__body">
-        <h1 id="multimodal-stt-tts-vision">Multimodal — STT, TTS, vision</h1>
+        <h1 id="multimodal--stt-tts-vision">Multimodal — STT, TTS, vision</h1>
         <p>Language models eat <strong>tokens</strong>. Multimodal systems add encoders that
         map audio or images into that shared space (or into tool side-channels).</p>
         <p><img class="doc__img" alt="Multimodal I/O schematic" src="/docs/images/diagram-knowledge-multimodal.svg?v=0.6.58" /></p>
-        <h2 id="speech-text-stt-asr">Speech → text (STT / ASR)</h2>
+        <h2 id="speech--text-stt--asr">Speech → text (STT / ASR)</h2>
         <p>Automatic speech recognition turns waveforms into text (or token
         lattices). Modern stacks use encoder-decoders or CTC/transducer
         hybrids; many products wrap cloud STT behind an API.</p>
         <p><strong>Spark:</strong> <code class="inline-code">listen</code> companions, dry stubs, gated live STT —
         <a href="/docs/voice.html">VOICE.md</a>. Not production telephony.</p>
-        <h2 id="text-speech-tts">Text → speech (TTS)</h2>
+        <h2 id="text--speech-tts">Text → speech (TTS)</h2>
         <p>TTS maps text (or phonemes) to audio. Neural vocoders dominate;
         latency and voice cloning ethics matter in production.</p>
         <p><strong>Spark:</strong> <code class="inline-code">speak</code> companions, gated live — same voice doc.

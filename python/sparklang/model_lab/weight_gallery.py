@@ -3,7 +3,7 @@
 Lists tiny **and** large Spark stub configs (scale / multi-layer /
 xl). Opt-in generate on RTX 5090; **never** the voice 6000.
 Not production LLM weights. Dump/compile stay SoT for BC.
-Does not beat Claude.
+No frontier-parity claim.
 """
 
 from __future__ import annotations
@@ -294,7 +294,7 @@ def inspect_weights(path: str | Path) -> dict[str, Any]:
         "tensors": rows,
         "honesty": (
             "Tiny/large Spark stub weights — not a production LLM. "
-            "Does not beat Claude. Never train on RTX PRO 6000."
+            "No frontier-parity claim. Never train on RTX PRO 6000."
         ),
     }
 
@@ -526,7 +526,7 @@ def play_forward(
         "never": "rtx-pro-6000",
         "note": (
             "Stub forward only — not production generation. "
-            "Does not beat Claude."
+            "No frontier-parity claim."
         ),
     }
 

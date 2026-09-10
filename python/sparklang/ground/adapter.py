@@ -77,8 +77,8 @@ def attach_adapter_manifest(
         "note": (
             "Thin Spark adapter API — attach LoRA-style / abstain "
             "hooks. Recompile ≠ semantics. Full Qwen SFT is "
-            "operator opt-in on 5090, never 6000. Does not beat "
-            "Claude."
+            "operator opt-in on 5090, never 6000. No "
+            "frontier-parity claim."
         ),
     }
     out_path = Path(out)

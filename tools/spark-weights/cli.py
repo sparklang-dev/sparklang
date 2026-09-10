@@ -2,7 +2,7 @@
 """spark-weights — catalog / view / play Spark stub weights.
 
 Supports tiny through xl profiles. Opt-in 5090 for XL generate;
-never the voice 6000. Does not beat Claude.
+never the voice 6000. No frontier-parity claim.
 """
 
 from __future__ import annotations

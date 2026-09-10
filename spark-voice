@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# spark-voice — owned voice-easy train / STT / TTS CLI wrapper.
+# spark-voice — real open-weight STT / TTS voice-easy CLI wrapper.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 exec python3 "$ROOT/tools/spark-voice/cli.py" "$@"

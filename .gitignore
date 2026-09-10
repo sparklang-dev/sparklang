@@ -65,6 +65,15 @@ __pycache__/
 .pytest_cache/
 .venv/
 
+# Voice-easy real open weights + eval dataset (fetch-once, never commit)
+models/spark-voice-stt/
+models/spark-voice-tts/
+data/voice/
+
+# Local helper binaries (built artifacts, never commit)
+/spark-serve-ref
+/spark-voice-loop
+
 # Cloudflare Pages local preview (repo root + website/)
 .wrangler/
 website/.wrangler/

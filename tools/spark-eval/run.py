@@ -2,9 +2,9 @@
 """Spark eval harness — frozen copy/recall + next-token probes.
 
 Dry fixture (default) or Spark safetensors via --weights /
-SPARK_EVAL_WEIGHTS. Optional Claude API baseline when credentials
-already exist on the box (--claude auto|on|off). Prints scores;
-exits 0 on harness success. Does not claim beat Claude. Never uses
+SPARK_EVAL_WEIGHTS. Optional frontier-API baseline when credentials
+already exist on the box (--frontier auto|on|off). Prints scores;
+exits 0 on harness success. Never claims a frontier win. Never uses
 GPU-1 / the 6000. Never invents API keys.
 """
 
@@ -23,13 +23,13 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "python"))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from claude_baseline import (  # noqa: E402
+from frontier_baseline import (  # noqa: E402
     comparison_table,
-    run_claude_baseline,
+    run_frontier_baseline,
 )
 
 SUITE_DEFAULT = ROOT / "examples" / "eval" / "suite.json"
-_CLAUDE_MODES = ("off", "auto", "on")
+_FRONTIER_MODES = ("off", "auto", "on")
 
 
 def _load_jsonl(path: Path) -> list[dict[str, Any]]:
@@ -251,7 +251,7 @@ def score_next_token_weights(
     return ok / float(len(rows))
 
 
-def _normalize_claude_mode(raw: str | None) -> str:
+def _normalize_frontier_mode(raw: str | None) -> str:
     """Map CLI/env to off|auto|on."""
     if raw is None or not str(raw).strip():
         return "off"
@@ -260,9 +260,9 @@ def _normalize_claude_mode(raw: str | None) -> str:
         return "off"
     if mode in ("1", "true", "yes"):
         return "on"
-    if mode not in _CLAUDE_MODES:
+    if mode not in _FRONTIER_MODES:
         raise ValueError(
-            "claude mode must be off|auto|on (got %r)" % raw
+            "frontier mode must be off|auto|on (got %r)" % raw
         )
     return mode
 
@@ -271,10 +271,10 @@ def run_suite(
     suite_path: Path,
     weights_path: Path | None,
     *,
-    claude_mode: str = "off",
+    frontier_mode: str = "off",
 ) -> dict[str, Any]:
     """Run frozen suite; return result dict with scores."""
-    claude_mode = _normalize_claude_mode(claude_mode)
+    frontier_mode = _normalize_frontier_mode(frontier_mode)
     suite = json.loads(suite_path.read_text(encoding="utf-8"))
     mode = "weights" if weights_path else "dry"
     weights: dict[str, Any] | None = None
@@ -330,12 +330,12 @@ def run_suite(
     def _rows_for(fixture_rel: str) -> list[dict[str, Any]]:
         return _load_jsonl(ROOT / fixture_rel)
 
-    claude = run_claude_baseline(
+    frontier = run_frontier_baseline(
         probes,
         _rows_for,
-        mode=claude_mode,
+        mode=frontier_mode,
     )
-    compare = comparison_table(results, claude)
+    compare = comparison_table(results, frontier)
 
     out: dict[str, Any] = {
         "harness": "spark-eval",
@@ -343,11 +343,11 @@ def run_suite(
         "mode": mode,
         "claim": "none",
         "note": (
-            "Scores only — Spark / SparkLang does not claim beat "
-            "Claude. Optional Claude baseline is measurement."
+            "Scores only — Spark / SparkLang makes no frontier "
+            "win claim. Optional frontier baseline is measurement."
         ),
         "probes": results,
-        "claude_baseline": claude,
+        "frontier_baseline": frontier,
         "comparison": compare,
     }
     if weights_path is not None:
@@ -361,11 +361,11 @@ def run_suite(
 
 
 def main() -> int:
-    """CLI: dry/weights + optional Claude; print JSON; exit 0/2."""
+    """CLI: dry/weights + optional frontier; print JSON; 0/2."""
     ap = argparse.ArgumentParser(
         description=(
             "Spark frozen eval probes (copy/recall, next-token). "
-            "Optional Claude baseline if credentials exist. "
+            "Optional frontier-API baseline if credentials exist. "
             "Exit 0 = harness ran; not a win claim."
         )
     )
@@ -382,10 +382,10 @@ def main() -> int:
         help="Spark safetensors (else dry fixture)",
     )
     ap.add_argument(
-        "--claude",
+        "--frontier",
         default=None,
-        help="Claude baseline: off|auto|on (default off; "
-        "env SPARK_EVAL_CLAUDE)",
+        help="frontier-API baseline: off|auto|on (default off; "
+        "env SPARK_EVAL_FRONTIER)",
     )
     args = ap.parse_args()
     weights = args.weights
@@ -399,18 +399,18 @@ def main() -> int:
         )
         return 2
 
-    claude_raw = args.claude
-    if claude_raw is None:
-        claude_raw = os.environ.get("SPARK_EVAL_CLAUDE", "off")
+    frontier_raw = args.frontier
+    if frontier_raw is None:
+        frontier_raw = os.environ.get("SPARK_EVAL_FRONTIER", "off")
     try:
-        claude_mode = _normalize_claude_mode(claude_raw)
+        frontier_mode = _normalize_frontier_mode(frontier_raw)
     except ValueError as exc:
         print("spark-eval: %s" % exc, file=sys.stderr)
         return 2
 
     try:
         result = run_suite(
-            args.suite, weights, claude_mode=claude_mode
+            args.suite, weights, frontier_mode=frontier_mode
         )
     except (
         OSError,
@@ -421,13 +421,13 @@ def main() -> int:
         print("spark-eval: %s" % exc, file=sys.stderr)
         return 2
 
-    claude = result.get("claude_baseline") or {}
-    if claude_mode == "on" and claude.get("status") not in (
+    frontier = result.get("frontier_baseline") or {}
+    if frontier_mode == "on" and frontier.get("status") not in (
         "ran",
     ):
-        err = claude.get("error") or claude.get("status")
+        err = frontier.get("error") or frontier.get("status")
         print(
-            "spark-eval: Claude baseline required but %s" % err,
+            "spark-eval: frontier baseline required but %s" % err,
             file=sys.stderr,
         )
         print(json.dumps(result, indent=2, sort_keys=False))
@@ -440,28 +440,31 @@ def main() -> int:
             "spark %-16s %.4f  (n=%d, %s)"
             % (p["name"], p["score"], p["n"], p["metric"])
         )
-    cstat = claude.get("status", "off")
-    print("claude_baseline status=%s" % cstat)
+    cstat = frontier.get("status", "off")
+    print("frontier_baseline status=%s" % cstat)
     if cstat == "ran":
-        for p in claude.get("probes") or []:
+        for p in frontier.get("probes") or []:
             print(
-                "claude %-15s %.4f  (n=%d, %s)"
+                "frontier %-13s %.4f  (n=%d, %s)"
                 % (p["name"], p["score"], p["n"], p["metric"])
             )
         for row in (result.get("comparison") or {}).get(
             "rows"
         ) or []:
             print(
-                "compare %-14s spark=%s claude=%s"
+                "compare %-14s spark=%s frontier=%s"
                 % (
                     row["name"],
                     row.get("spark_score"),
-                    row.get("claude_score"),
+                    row.get("frontier_score"),
                 )
             )
     print(
-        "mode=%s claim=%s — not beat Claude"
-        % (result["mode"], result["claim"])
+        "mode=%s claim=%s — no frontier win claim"
+        % (
+            result["mode"],
+            result["claim"],
+        )
     )
     return 0
 

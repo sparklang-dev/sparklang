@@ -1,7 +1,7 @@
 """Builder whose genome is SPARK_BC bytes — not imported weights.
 
 Implemented: decode a real .sparkbc, emit stub + init weights,
-tiny CPU serve forward. Planned: owner train-grant toward beat-Claude.
+tiny CPU serve forward. Further training needs an owner grant.
 """
 
 from __future__ import annotations

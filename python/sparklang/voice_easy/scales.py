@@ -1,6 +1,14 @@
-"""Tiny (CI) vs large (opt-in) voice-easy train configs.
+"""Voice-easy scales: tiny (CI smoke) vs large (real measurement).
 
-Large ≠ production vendor TTS overnight. Owned dims/steps only.
+Scales now mean **eval subset size + model variant**, nothing else:
+
+- tiny  — Whisper ``tiny`` + Kokoro, 8-clip STT smoke, 4-utterance
+  roundtrip. CPU-fast; the CI default.
+- large — Whisper ``large-v3-turbo`` + Kokoro, ≥50-clip STT eval,
+  ≥20-utterance roundtrip. The real measurement lane.
+
+No owned toy heads, no fake dims. Weights are pretrained open
+models fetched once (Whisper MIT / Kokoro Apache-2.0), then offline.
 """
 
 from __future__ import annotations
@@ -8,40 +16,28 @@ from __future__ import annotations
 import os
 from typing import Any
 
-# Tiny = default CI / piece-of-cake demo (CPU-fast).
-# Large = opt-in; prefers RTX 5090; never 6000; VRAM hint honest.
 SCALES: dict[str, dict[str, Any]] = {
     "tiny": {
         "name": "tiny",
-        "dim": 16,
-        "n_head": 2,
-        "n_layer": 1,
-        "mlp": 64,
-        "steps": 48,
-        "lr": 0.35,
-        "n_phrases": 6,
-        "feat_bins": 8,
-        "vram_gi_hint": 0.05,
+        "stt_variant": "tiny",
+        "stt_clips": 8,
+        "roundtrip_utts": 4,
         "prefer_gpu": False,
         "require_5090": False,
-        "note": "CI / piece-of-cake demo",
+        "vram_gi_hint": 0.5,
+        "note": "CI smoke — Whisper tiny + Kokoro on CPU",
     },
     "large": {
         "name": "large",
-        "dim": 256,
-        "n_head": 8,
-        "n_layer": 4,
-        "mlp": 1024,
-        "steps": 80,
-        "lr": 0.06,
-        "n_phrases": 32,
-        "feat_bins": 32,
-        "vram_gi_hint": 2.0,
+        "stt_variant": "large-v3-turbo",
+        "stt_clips": 50,
+        "roundtrip_utts": 20,
         "prefer_gpu": True,
-        "require_5090": True,
+        "require_5090": False,
+        "vram_gi_hint": 3.0,
         "note": (
-            "Opt-in larger owned head — still not ElevenLabs; "
-            "prefer 5090; never 6000"
+            "Real measurement — Whisper large-v3-turbo + Kokoro; "
+            "CPU int8 default, RTX 5090 optional (never 6000)"
         ),
     },
 }
@@ -62,5 +58,5 @@ def resolve_scale(
         )
     cfg = dict(SCALES[raw])
     cfg["never"] = "rtx-pro-6000"
-    cfg["brain"] = "owned-weights"
+    cfg["weights"] = "pretrained-open"
     return cfg

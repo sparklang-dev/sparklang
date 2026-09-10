@@ -70,7 +70,7 @@ class AnalyzeLoopTests(unittest.TestCase):
         self.assertEqual(meta["ask_status"], "no_weights")
         ask = (out / "ASK.md").read_text(encoding="utf-8")
         self.assertIn("capability note", ask.lower())
-        self.assertIn("does **not** beat claude", ask.lower())
+        self.assertIn("frontier-parity claim", ask.lower())
 
     def test_ask_with_weights_when_present(self) -> None:
         """Owned TinyCoder path writes ASK.md when weights exist."""

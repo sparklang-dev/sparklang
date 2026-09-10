@@ -33,8 +33,8 @@ from sparklang.model_lab.bc_dump import (  # noqa: E402
 
 HONESTY = (
     "Honest note: TinyCoder is a tiny owned Spark model — "
-    "not OpenBin-level binary RE Q&A, and it does not beat "
-    "Claude. Prefer dump.txt / ops.json as SoT."
+    "not OpenBin-level binary RE Q&A, and it makes no "
+    "frontier-parity claim. Prefer dump.txt / ops.json as SoT."
 )
 
 WEAK_MARKERS = (

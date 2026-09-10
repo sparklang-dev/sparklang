@@ -2,7 +2,7 @@
 
 Launch: ``python3 -m spark_bc_gui`` or ``./bin/spark-bc-gui``.
 Dark engineer chrome (Spark palette). Functions first — not an
-OpenBin clone. Never 6000. Does not claim beat Claude.
+OpenBin clone. Never 6000. No frontier-parity claim.
 """
 
 from __future__ import annotations

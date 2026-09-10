@@ -179,7 +179,7 @@
         <a href="/docs/programming-guide.html">Programming guide</a>
         <a href="/downloads.html">Downloads</a>
       </nav>      <article class="doc__body">
-        <h1 id="decompile-compete-capability-measured-scoreboard">Decompile compete — capability + measured scoreboard</h1>
+        <h1 id="decompile-compete--capability--measured-scoreboard">Decompile compete — capability + measured scoreboard</h1>
         <p>How Spark competes at every level on <strong>SPARK_BC</strong> without
         false marketing. Spark / SparkLang only.</p>
         <p><strong>Never</strong> publish “Spark beats Ghidra / IDA / Binary Ninja /
@@ -189,7 +189,7 @@
         <p>Related: <a href="/docs/decompile.html">Decompile</a> ·
         <a href="/docs/llm-decompile.html">research/LLM_DECOMPILE.md</a> ·
         site <a href="/docs/decompile-compete.html">/docs/decompile-compete.html</a>.</p>
-        <h2 id="beat-axes-spark-bc-domain-where-we-can-actually-win">Beat-axes (SPARK_BC domain — where we can actually win)</h2>
+        <h2 id="beat-axes-spark_bc-domain--where-we-can-actually-win">Beat-axes (SPARK_BC domain — where we can actually win)</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
@@ -219,16 +219,123 @@
         <p>Classic RE tools win <strong>ELF/PE/mach-O</strong> interactive decompile.
         That is <strong>loss / N/A</strong> for Spark SoT — not a silent claim.</p>
         <h2 id="feature-parity-matrix">Feature parity matrix</h2>
-        <p>Legend: <strong>win</strong> / <strong>tie</strong> / <strong>loss</strong> / <strong>na</strong> (wrong domain) /
-        <strong>not probed</strong> (tool absent, or no scripted byte-level probe on the
-        bench box). Every badge is <strong>computed</strong> by
-        <code class="inline-code">tools/spark-bc-dump/decompile_bench.py</code> from measured
-        probe output — round-trip %, symbol/xref extraction on real bytes, the local
-        ELF probe, and byte-level probes of any competitor tool actually present.
-        The matrix is rendered from
-        <code class="inline-code">website/data/decompile-scoreboard.json</code> in the
-        <a href="#measured-scoreboard-data-driven">measured scoreboard</a> below —
-        there is no hand-painted table on this page.</p>
+        <p>Legend: <strong>win</strong> / <strong>tie</strong> / <strong>loss</strong> / <strong>na</strong> (wrong domain or not
+        claimed). Values are also emitted in
+        <code class="inline-code">website/data/decompile-scoreboard.json</code> by the bench.</p>
+        <div class="doc__table-wrap"><table class="doc__table">
+        <thead>
+        <tr>
+        <th>Category</th>
+        <th>Spark</th>
+        <th>OpenBin</th>
+        <th>Ghidra</th>
+        <th>IDA</th>
+        <th>Binja</th>
+        <th>LLM4Decompile</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+        <td>Native dump fidelity (SPARK_BC)</td>
+        <td>win</td>
+        <td>na</td>
+        <td>na</td>
+        <td>na</td>
+        <td>na</td>
+        <td>na</td>
+        </tr>
+        <tr>
+        <td>Round-trip reassemble (compile hash)</td>
+        <td>win</td>
+        <td>na</td>
+        <td>loss</td>
+        <td>loss</td>
+        <td>loss</td>
+        <td>loss</td>
+        </tr>
+        <tr>
+        <td>IDE explore</td>
+        <td>win</td>
+        <td>tie</td>
+        <td>tie</td>
+        <td>tie</td>
+        <td>tie</td>
+        <td>na</td>
+        </tr>
+        <tr>
+        <td>Ask / voice assist</td>
+        <td>tie</td>
+        <td>tie</td>
+        <td>na</td>
+        <td>na</td>
+        <td>na</td>
+        <td>tie</td>
+        </tr>
+        <tr>
+        <td>Report export (txt/json/html project)</td>
+        <td>win</td>
+        <td>tie</td>
+        <td>tie</td>
+        <td>tie</td>
+        <td>tie</td>
+        <td>na</td>
+        </tr>
+        <tr>
+        <td>Multi-format ELF/PE</td>
+        <td>loss</td>
+        <td>win</td>
+        <td>win</td>
+        <td>win</td>
+        <td>win</td>
+        <td>win</td>
+        </tr>
+        <tr>
+        <td>LLM-assist decompile</td>
+        <td>na</td>
+        <td>win</td>
+        <td>tie</td>
+        <td>tie</td>
+        <td>tie</td>
+        <td>win</td>
+        </tr>
+        <tr>
+        <td>Batch / fixtures harness</td>
+        <td>win</td>
+        <td>tie</td>
+        <td>tie</td>
+        <td>tie</td>
+        <td>tie</td>
+        <td>tie</td>
+        </tr>
+        <tr>
+        <td>Shadows / helpers</td>
+        <td>win</td>
+        <td>na</td>
+        <td>na</td>
+        <td>na</td>
+        <td>na</td>
+        <td>na</td>
+        </tr>
+        <tr>
+        <td>Local privacy (no upload)</td>
+        <td>win</td>
+        <td>loss</td>
+        <td>win</td>
+        <td>win</td>
+        <td>win</td>
+        <td>tie</td>
+        </tr>
+        <tr>
+        <td>Integrated train / weights</td>
+        <td>win</td>
+        <td>na</td>
+        <td>na</td>
+        <td>na</td>
+        <td>na</td>
+        <td>na</td>
+        </tr>
+        </tbody>
+        </table></div>
         <h2 id="commands">Commands</h2>
         <pre class="doc__pre"><code class="language-bash">make spark-bootstrap spark
         make test-decompile-compete # unit: richer dump + project
@@ -259,16 +366,11 @@
         <li><code class="inline-code">docs/examples/decompile-scoreboard.json</code> (mirror)</li>
         <li>sample project: <code class="inline-code">out/decompile-bench/sample-project/</code></li>
         </ul>
-        <p>The site page loads the JSON and renders win/tie/loss/na/not-probed
-        from <strong>disk data</strong> — no hand-painted green checkmarks, no
-        author-declared badges.</p>
+        <p>The site page loads the JSON and renders win/tie/loss/na from
+        <strong>disk data</strong> — no hand-painted green checkmarks.</p>
         <p>External tools (objdump, r2, ghidra, ida, binaryninja, openbin)
-        are probed; if absent → <code class="inline-code">status: absent</code> / <code class="inline-code">verdict: skip</code>
-        and every parity cell for that tool is <strong>not probed</strong>. If
-        present but not a SPARK_BC decoder → <code class="inline-code">verdict: na-sparkbc</code>,
-        with byte-level probe results (e.g. <code class="inline-code">objdump -d</code> on a
-        real <code class="inline-code">.sparkbc</code>, <code class="inline-code">objdump -h</code> on
-        <code class="inline-code">./spark</code>) driving the measured cells.</p>
+        are probed; if absent → <code class="inline-code">status: absent</code> / <code class="inline-code">verdict: skip</code>. If
+        present but not a SPARK_BC decoder → <code class="inline-code">verdict: na-sparkbc</code>.</p>
         <h2 id="what-is-still-not-claimed">What is still not claimed</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>

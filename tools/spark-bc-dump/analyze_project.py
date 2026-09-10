@@ -2,7 +2,7 @@
 """Write a local SPARK_BC analysis project folder + report.
 
 Outputs dump text/JSON/HTML, round-trip JSON (optional), and
-``report.md``. Local-only — no upload. Does not beat Claude.
+``report.md``. Local-only — no upload. No parity claim.
 """
 
 from __future__ import annotations
@@ -84,7 +84,7 @@ def write_project(
             "",
             "Inspect / disasm of **SPARK_BC**, not ELF/PE "
             "decompile and not lossless `.spark` recovery.",
-            "Does **not** beat Claude. Never 6000.",
+            "No frontier-parity claim. Never 6000.",
             "",
         ]
     )

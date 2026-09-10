@@ -20,7 +20,7 @@ def main() -> int:
         description=(
             "CPU multi-outer SGD on Spark lm_head(+embed+attn0) "
             "from fixture JSONL (trained=true; not_sgd=false; "
-            "not beat Claude; never 6000)"
+            "no frontier-parity claim; never 6000)"
         )
     )
     ap.add_argument("--sparkbc", required=True, help="SPARK_BC seed")

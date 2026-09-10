@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Stage K-lane helpers + shadows + spark_kit into dist/spark-sdk/.
 # Additive overlay for I-lane out/sdk-pack when that stage exists.
-# Never 6000. Does not claim beat Claude.
+# Never 6000. No frontier-parity claim.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -81,7 +81,7 @@ SparkLang helpers / shadows / kit (K-lane) — ${VERSION}
   make helpers / make tools-test / make test-spark-analyze
   in the full repo.
 
-CPU only. Never RTX PRO 6000. Does not claim beat Claude.
+CPU only. Never RTX PRO 6000. No frontier-parity claim.
 EOF
 
 # Overlay into I-lane stage if present
