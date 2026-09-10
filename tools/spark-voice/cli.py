@@ -1,14 +1,18 @@
 #!/usr/bin/env python3
-"""spark-voice — piece-of-cake voice train / STT / TTS CLI.
+"""spark-voice — real voice-easy CLI (open weights, offline).
 
-Owned tiny or large heads. Prefer RTX 5090; never 6000.
-Not ElevenLabs. Does not beat Claude. No API keys in git.
+STT: Whisper via faster-whisper (MIT weights, CT2 repack).
+TTS: Kokoro-82M via kokoro-onnx (Apache-2.0 weights).
+Weights fetch once (``fetch``), then every path runs offline.
+CPU int8 default; RTX 5090 optional for the large lane; the
+RTX PRO 6000 is voice-serving only and is never used.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -16,22 +20,26 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "python"))
 
 from sparklang.voice_easy.device import VoiceDeviceError
-from sparklang.voice_easy.model import VoiceEasyModel
+from sparklang.voice_easy.eval_real import run_roundtrip_eval
 from sparklang.voice_easy.pipeline import check_env, run_easy
-from sparklang.voice_easy.roundtrip import prove_roundtrip
 from sparklang.voice_easy.scales import SCALES, resolve_scale
-from sparklang.voice_easy.train import train_voice_easy
+from sparklang.voice_easy.stt_real import (
+    stt_model_dir,
+    stt_weights_present,
+)
+from sparklang.voice_easy.tts_real import (
+    TTS_MODEL_ONNX,
+    TTS_VOICES_BIN,
+    tts_weights_present,
+)
 
-DEFAULT_OUT = "models/spark-voice-easy"
-DEFAULT_FIX = "out/voice_easy/fixtures"
+FETCH_SCRIPT = ROOT / "tools" / "spark-voice" / "fetch_models.py"
 
 
 def _cmd_easy(args: argparse.Namespace) -> int:
-    """Env → fixtures → train → STT/TTS dry prove."""
+    """Env → real STT eval → real TTS roundtrip eval."""
     scale = args.scale
-    if scale is None and not args.dry:
-        scale = None  # resolve from env
-    elif scale is None:
+    if scale is None and args.dry:
         scale = "tiny"
     try:
         result = run_easy(
@@ -47,67 +55,111 @@ def _cmd_easy(args: argparse.Namespace) -> int:
     return 0 if result.get("ok") else 1
 
 
+def _cmd_fetch(args: argparse.Namespace) -> int:
+    """Fetch (or --check) the pinned open-weight model files."""
+    cmd = [sys.executable, str(FETCH_SCRIPT)]
+    if args.check:
+        cmd.append("--check")
+    return subprocess.call(cmd, cwd=str(ROOT))
+
+
 def _cmd_train(args: argparse.Namespace) -> int:
-    """Train owned voice-easy heads."""
-    result = train_voice_easy(
-        out_dir=Path(args.out),
-        fixture_dir=Path(args.fixtures),
-        scale_name=args.scale or resolve_scale(None)["name"],
-        device=args.device,
-        dry=bool(args.dry),
-    )
+    """Honest no-train stub: weights are pretrained; fetch + eval."""
+    result = {
+        "ok": True,
+        "trained": False,
+        "note": (
+            "voice-easy no longer trains toy heads. STT/TTS are "
+            "pretrained open weights (Whisper MIT / Kokoro "
+            "Apache-2.0). Run `./spark-voice fetch` once, then "
+            "`./spark-voice easy --scale large` for the measured "
+            "eval."
+        ),
+        "stt_weights": {
+            "tiny": stt_weights_present("tiny"),
+            "large-v3-turbo": stt_weights_present("large-v3-turbo"),
+        },
+        "tts_weights": tts_weights_present(),
+        "never": "rtx-pro-6000",
+    }
     print(json.dumps(result, indent=2))
-    if result.get("error"):
-        return 2
-    return 0 if result.get("ok") else 1
+    return 0
 
 
 def _cmd_prove(args: argparse.Namespace) -> int:
-    """STT + TTS dry round-trip."""
-    result = prove_roundtrip(
-        weights=Path(args.weights),
-        fixture_dir=Path(args.fixtures),
-        out_dir=Path(args.out),
-    )
-    print(json.dumps(result, indent=2))
-    return 0 if result.get("ok") else 1
-
-
-def _cmd_status(args: argparse.Namespace) -> int:
-    """Show weights / scale honesty."""
-    weights = Path(args.weights)
-    if not weights.is_file():
+    """Real roundtrip: TTS synthesize → STT transcribe → WER/CER."""
+    scale = resolve_scale(args.scale)
+    if not tts_weights_present() or not stt_weights_present(
+        str(scale["stt_variant"])
+    ):
         print(
             json.dumps(
                 {
                     "ok": False,
-                    "status": "no_weights",
-                    "path": str(weights),
-                    "hint": "run: ./spark-voice easy --dry",
-                    "scales": list(SCALES),
-                    "never": "rtx-pro-6000",
+                    "status": "skipped_no_weights",
+                    "hint": "run: ./spark-voice fetch",
                 },
                 indent=2,
             )
         )
         return 2
-    model = VoiceEasyModel.load(weights)
-    print(
-        json.dumps(
-            {
-                "ok": True,
-                "path": str(weights),
-                "trained": model.meta.get("trained"),
-                "scale": model.meta.get("scale"),
-                "dim": model.dim,
-                "n_phrases": model.n_phrases,
-                "never": "rtx-pro-6000",
-                "brain": "owned-weights",
-                "vram_gi_hint": model.meta.get("vram_gi_hint"),
-            },
-            indent=2,
-        )
+    device = "cpu"
+    if args.device in ("auto", "5090"):
+        pick = None
+        try:
+            from sparklang.voice_easy.device import pick_voice_device
+
+            pick = pick_voice_device(scale=scale, force=args.device)
+        except VoiceDeviceError as exc:
+            print(json.dumps({"ok": False, "error": str(exc)}, indent=2))
+            return 2
+        if pick.get("device") == "cuda":
+            device = "cuda"
+    result = run_roundtrip_eval(
+        n_utts=int(scale["roundtrip_utts"]),
+        stt_variant=str(scale["stt_variant"]),
+        device=device,
+        out_dir=Path(args.out),
     )
+    print(json.dumps(result, indent=2))
+    return 0 if result.get("ok") else 1
+
+
+def _dir_size(path: Path) -> int:
+    """Total bytes under a dir (0 when missing)."""
+    if not path.is_dir():
+        return 0
+    return sum(p.stat().st_size for p in path.rglob("*") if p.is_file())
+
+
+def _cmd_status(args: argparse.Namespace) -> int:
+    """Show fetched weights, sizes, and last eval report."""
+    del args
+    report = ROOT / "out" / "voice_easy" / "eval" / "eval_report.json"
+    status = {
+        "ok": True,
+        "stt": {
+            v: {
+                "present": stt_weights_present(v),
+                "dir": str(stt_model_dir(v)),
+                "bytes": _dir_size(stt_model_dir(v)),
+            }
+            for v in ("tiny", "large-v3-turbo")
+        },
+        "tts": {
+            "present": tts_weights_present(),
+            "model": str(TTS_MODEL_ONNX),
+            "voices": str(TTS_VOICES_BIN),
+            "bytes": _dir_size(TTS_MODEL_ONNX.parent),
+        },
+        "last_eval_report": (
+            str(report) if report.is_file() else None
+        ),
+        "scales": {name: cfg["note"] for name, cfg in SCALES.items()},
+        "weights": "pretrained-open (Whisper MIT / Kokoro Apache-2.0)",
+        "never": "rtx-pro-6000",
+    }
+    print(json.dumps(status, indent=2))
     return 0
 
 
@@ -122,66 +174,70 @@ def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(
         prog="spark-voice",
         description=(
-            "Owned Spark voice-easy train / STT / TTS. "
-            "Tiny (CI) or large (opt-in). Prefer 5090; never 6000. "
-            "Not beat Claude."
+            "Spark voice-easy on real open weights (Whisper STT + "
+            "Kokoro TTS). Fetch once, then offline. CPU default; "
+            "5090 optional; never the RTX PRO 6000."
         ),
     )
     sub = ap.add_subparsers(dest="cmd", required=True)
 
     p_easy = sub.add_parser(
         "easy",
-        help="check env → fixtures → train → STT/TTS dry prove",
+        help="env check → real STT WER eval → TTS roundtrip eval",
     )
     p_easy.add_argument(
         "--dry",
         action="store_true",
-        help="CI-friendly dry path (default scale tiny)",
+        help="CI-friendly path (default scale tiny; loud skip when "
+        "weights are not fetched)",
     )
     p_easy.add_argument(
         "--device",
         default="auto",
         choices=("auto", "cpu", "5090"),
-        help="auto prefers RTX 5090; never 6000",
+        help="auto prefers RTX 5090 when free; never 6000",
     )
     p_easy.add_argument(
         "--scale",
         default=None,
         choices=("tiny", "large"),
-        help="tiny=CI demo; large=opt-in (VOICE_SCALE also)",
+        help="tiny=CI smoke; large=real measurement (VOICE_SCALE too)",
     )
     p_easy.set_defaults(func=_cmd_easy)
 
-    p_tr = sub.add_parser("train", help="train owned heads")
-    p_tr.add_argument("--out", default=DEFAULT_OUT)
-    p_tr.add_argument("--fixtures", default=DEFAULT_FIX)
-    p_tr.add_argument("--dry", action="store_true")
-    p_tr.add_argument(
+    p_fetch = sub.add_parser(
+        "fetch", help="fetch pinned open-weight models (once)"
+    )
+    p_fetch.add_argument(
+        "--check",
+        action="store_true",
+        help="verify pinned files only; no network",
+    )
+    p_fetch.set_defaults(func=_cmd_fetch)
+
+    p_tr = sub.add_parser(
+        "train",
+        help="honest no-train stub (pretrained weights; see fetch)",
+    )
+    p_tr.set_defaults(func=_cmd_train)
+
+    p_pr = sub.add_parser(
+        "prove", help="real TTS→STT roundtrip with WER/CER"
+    )
+    p_pr.add_argument("--out", default="out/voice_easy/roundtrip")
+    p_pr.add_argument(
         "--device",
         default="auto",
         choices=("auto", "cpu", "5090"),
     )
-    p_tr.add_argument(
+    p_pr.add_argument(
         "--scale",
         default=None,
         choices=("tiny", "large"),
     )
-    p_tr.set_defaults(func=_cmd_train)
-
-    p_pr = sub.add_parser("prove", help="STT/TTS dry round-trip")
-    p_pr.add_argument(
-        "--weights",
-        default=str(Path(DEFAULT_OUT) / "weights.safetensors"),
-    )
-    p_pr.add_argument("--fixtures", default=DEFAULT_FIX)
-    p_pr.add_argument("--out", default="out/voice_easy/roundtrip")
     p_pr.set_defaults(func=_cmd_prove)
 
-    p_st = sub.add_parser("status", help="weights status")
-    p_st.add_argument(
-        "--weights",
-        default=str(Path(DEFAULT_OUT) / "weights.safetensors"),
-    )
+    p_st = sub.add_parser("status", help="weights + eval status")
     p_st.set_defaults(func=_cmd_status)
 
     p_env = sub.add_parser("env", help="env check (no secrets)")

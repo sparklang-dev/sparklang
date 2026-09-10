@@ -72,12 +72,12 @@
 {"messages": [{"role": "user", "content": "spark factory FAQ: fixture lane ownership"}, {"role": "assistant", "content": "scale fixtures owns scale fixtures and dims"}]}
 {"messages": [{"role": "user", "content": "short reply needed for: fixture lane ownership"}, {"role": "assistant", "content": "scale fixtures owns scale fixtures and dims"}]}
 {"messages": [{"role": "user", "content": "CPU-only context: fixture lane ownership"}, {"role": "assistant", "content": "scale fixtures owns scale fixtures and dims"}]}
-{"messages": [{"role": "user", "content": "eval lane ownership"}, {"role": "assistant", "content": "eval harness owns Claude measurement harness"}]}
-{"messages": [{"role": "user", "content": "please answer briefly: eval lane ownership"}, {"role": "assistant", "content": "eval harness owns Claude measurement harness"}]}
-{"messages": [{"role": "user", "content": "operator question \u2014 eval lane ownership"}, {"role": "assistant", "content": "eval harness owns Claude measurement harness"}]}
-{"messages": [{"role": "user", "content": "spark factory FAQ: eval lane ownership"}, {"role": "assistant", "content": "eval harness owns Claude measurement harness"}]}
-{"messages": [{"role": "user", "content": "short reply needed for: eval lane ownership"}, {"role": "assistant", "content": "eval harness owns Claude measurement harness"}]}
-{"messages": [{"role": "user", "content": "CPU-only context: eval lane ownership"}, {"role": "assistant", "content": "eval harness owns Claude measurement harness"}]}
+{"messages": [{"role": "user", "content": "eval lane ownership"}, {"role": "assistant", "content": "eval harness owns frontier measurement harness"}]}
+{"messages": [{"role": "user", "content": "please answer briefly: eval lane ownership"}, {"role": "assistant", "content": "eval harness owns frontier measurement harness"}]}
+{"messages": [{"role": "user", "content": "operator question \u2014 eval lane ownership"}, {"role": "assistant", "content": "eval harness owns frontier measurement harness"}]}
+{"messages": [{"role": "user", "content": "spark factory FAQ: eval lane ownership"}, {"role": "assistant", "content": "eval harness owns frontier measurement harness"}]}
+{"messages": [{"role": "user", "content": "short reply needed for: eval lane ownership"}, {"role": "assistant", "content": "eval harness owns frontier measurement harness"}]}
+{"messages": [{"role": "user", "content": "CPU-only context: eval lane ownership"}, {"role": "assistant", "content": "eval harness owns frontier measurement harness"}]}
 {"messages": [{"role": "user", "content": "HTTP serve API lane"}, {"role": "assistant", "content": "HTTP serve owns HTTP serve API"}]}
 {"messages": [{"role": "user", "content": "please answer briefly: HTTP serve API lane"}, {"role": "assistant", "content": "HTTP serve owns HTTP serve API"}]}
 {"messages": [{"role": "user", "content": "operator question \u2014 HTTP serve API lane"}, {"role": "assistant", "content": "HTTP serve owns HTTP serve API"}]}
@@ -138,7 +138,7 @@
 {"messages": [{"role": "user", "content": "spark factory FAQ: embed training default"}, {"role": "assistant", "content": "train embed and lm_head together"}]}
 {"messages": [{"role": "user", "content": "short reply needed for: embed training default"}, {"role": "assistant", "content": "train embed and lm_head together"}]}
 {"messages": [{"role": "user", "content": "CPU-only context: embed training default"}, {"role": "assistant", "content": "train embed and lm_head together"}]}
-{"messages": [{"role": "user", "content": "I need a clear operator note: we grew the CE fixture so local proof can stress longer sequences, but GitHub Actions must keep the tiny dataset.jsonl default so CI stays CPU-fast. Confirm the makefile target names and that competitive-AI-win remains false."}, {"role": "assistant", "content": "use spark-sgd-proof for CI tiny; spark-sgd-proof-scale locally; beats_claude stays false"}]}
+{"messages": [{"role": "user", "content": "I need a clear operator note: we grew the CE fixture so local proof can stress longer sequences, but GitHub Actions must keep the tiny dataset.jsonl default so CI stays CPU-fast. Confirm the makefile target names and that competitive-AI-win remains false."}, {"role": "assistant", "content": "use spark-sgd-proof for CI tiny; spark-sgd-proof-scale locally; no frontier-parity claim stays"}]}
 {"messages": [{"role": "user", "content": "Walk through shape checks only: emit init weights with dim=64 and n_layer=4, verify spark.embed.weight is [256,64], lm_head matches, and layer count is four \u2014 no overnight train required."}, {"role": "assistant", "content": "shape check passes on dim 64 and four layers without overnight"}]}
 {"messages": [{"role": "user", "content": "If someone confuses East 33rd Full Cycle prices with FasCard thirty-minute dryer start, remind them Spark factory docs do not invent laundry prices; this fixture is language-only."}, {"role": "assistant", "content": "Spark fixtures are language training pairs only"}]}
 {"messages": [{"role": "user", "content": "Write a calm status line after spark-sgd-proof-scale finishes: include that device=cpu, never=rtx-pro-6000, and scores from spark-eval are measurement-only."}, {"role": "assistant", "content": "scale proof done on cpu; eval scores only; measurement only."}]}

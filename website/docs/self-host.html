@@ -184,7 +184,7 @@
           Install from <a href="/downloads.html">Downloads</a> and start with
           <a href="/learn/getting-started.html">Getting started</a>.</p>
         </div>
-        <h1 id="spark-self-host-path-a-b-bootstrap-c">Spark self-host path (A + B bootstrap + C)</h1>
+        <h1 id="spark-self-host-path-a--b-bootstrap--c">Spark self-host path (A + B bootstrap + C)</h1>
         <p><strong>Destination:</strong> Spark hosts Spark — VM and compiler authored as
         <code class="inline-code">.spark</code> under <code class="inline-code">selfhost/</code>, not forever hand-written GAS.</p>
         <p><strong>Execution SoT:</strong> bytecode (<code class="inline-code">docs/SPARK_BC.md</code> / <code class="inline-code">bootstrap/bc_vm.c</code>)
@@ -232,7 +232,7 @@
         forever.”</p>
         <hr class="doc__hr" />
         <h2 id="stages-evidence-gates">Stages (evidence gates)</h2>
-        <h3 id="stage-0-scaffold-a-seeds-current">Stage 0 — Scaffold + A seeds (current)</h3>
+        <h3 id="stage-0--scaffold--a-seeds-current">Stage 0 — Scaffold + A seeds (current)</h3>
         <ul class="doc__ul">
         <li><code class="inline-code">./spark</code> ELF from GAS still interprets language ops under
          <code class="inline-code">--dry-run</code> / <code class="inline-code">--live</code>.</li>
@@ -242,7 +242,7 @@
         <li><strong>Gate:</strong> <code class="inline-code">make</code> + <code class="inline-code">./spark --dry-run examples/hello.spark</code> works;
          <code class="inline-code">make test-selfhost-lex</code> green.</li>
         </ul>
-        <h3 id="stage-1-bootstrap-b-runs-a-subset-real-advanced">Stage 1 — Bootstrap B runs a subset ← <strong>REAL (advanced)</strong></h3>
+        <h3 id="stage-1--bootstrap-b-runs-a-subset--real-advanced">Stage 1 — Bootstrap B runs a subset ← <strong>REAL (advanced)</strong></h3>
         <ul class="doc__ul">
         <li>Thin C VM under <code class="inline-code">bootstrap/</code> → <code class="inline-code">spark-bootstrap</code> / <code class="inline-code">sparkc</code>.</li>
         <li>Dry-parity (proven): <code class="inline-code">model</code> / <code class="inline-code">ask</code> / <code class="inline-code">print</code> / <code class="inline-code">let</code> +
@@ -263,7 +263,7 @@
         <li>See <code class="inline-code">bootstrap/README.md</code>. Growing A lex seeds does <strong>not</strong> skip
          running self-host sources on B.</li>
         </ul>
-        <h3 id="stage-2-assembler-c-replaces-hand-gas-authoring-real-phase-1">Stage 2 — Assembler C replaces hand-GAS authoring ← <strong>REAL (phase-1)</strong></h3>
+        <h3 id="stage-2--assembler-c-replaces-hand-gas-authoring--real-phase-1">Stage 2 — Assembler C replaces hand-GAS authoring ← <strong>REAL (phase-1)</strong></h3>
         <ul class="doc__ul">
         <li><code class="inline-code">sparkasm</code> assembles Spark-asm IR → objects/binaries.</li>
         <li>Phase-1 proven: push/pop/push-imm/call/ret/jmp/cmp/test/jcc/add/sub/
@@ -281,14 +281,14 @@
          <code class="inline-code">expected_*.tokens.jsonl</code>. Spark-hosted <code class="inline-code">lexer.spark</code> scan is
          <strong>not</strong> the golden producer (seed catalog only).</li>
         </ul>
-        <h3 id="stage-3-lexer-on-b-real-phase-2">Stage 3 — Lexer on B ← <strong>REAL (Phase 2)</strong></h3>
+        <h3 id="stage-3--lexer-on-b--real-phase-2">Stage 3 — Lexer on B ← <strong>REAL (Phase 2)</strong></h3>
         <ul class="doc__ul">
         <li><code class="inline-code">spark-bootstrap --lex</code> links <code class="inline-code">selfhost/lex.c</code> (same JSONL as
          <code class="inline-code">./selfhost/spark-lex</code>).</li>
         <li><strong>Gate met:</strong> <code class="inline-code">make test-selfhost-lex</code> (17/17 via spark-lex <strong>and</strong>
          <code class="inline-code">--lex</code>).</li>
         </ul>
-        <h3 id="stage-4-partial-c-compile-spark-bc-phases-35">Stage 4 partial — C compile → SPARK_BC (Phases 3–5)</h3>
+        <h3 id="stage-4-partial--c-compile--spark_bc-phases-35">Stage 4 partial — C compile → SPARK_BC (Phases 3–5)</h3>
         <ul class="doc__ul">
         <li><code class="inline-code">spark-bootstrap --compile file.spark -o out.sparkbc</code></li>
         <li>C driver: <code class="inline-code">bootstrap/spark_parse.c</code> lowers LANGUAGE forms in
@@ -308,7 +308,7 @@
         <li><strong>Not done:</strong> Spark-hosted compiler; full tree-walk deletion;
          <code class="inline-code">include</code>/<code class="inline-code">builder</code>/<code class="inline-code">implement</code>/<code class="inline-code">model analyze</code> on BC; Stage 5/6.</li>
         </ul>
-        <h3 id="stage-4-spark-compiles-spark-full-not-started">Stage 4 — Spark compiles Spark (full) ← <strong>NOT STARTED</strong></h3>
+        <h3 id="stage-4--spark-compiles-spark-full--not-started">Stage 4 — Spark compiles Spark (full) ← <strong>NOT STARTED</strong></h3>
         <ul class="doc__ul">
         <li>Self-host compiler emits IR or objects (via C assembler / later
          Spark-hosted assemble).</li>
@@ -319,7 +319,7 @@
         <li>Phase 3: C <code class="inline-code">--compile</code> is a bootstrap, not Stage 4 complete.</li>
         <li>Parser/grammar <code class="inline-code">.spark</code> files are catalogs only.</li>
         </ul>
-        <h3 id="stage-5-kick-the-ladder-not-started">Stage 5 — Kick the ladder ← <strong>NOT STARTED</strong></h3>
+        <h3 id="stage-5--kick-the-ladder--not-started">Stage 5 — Kick the ladder ← <strong>NOT STARTED</strong></h3>
         <ul class="doc__ul">
         <li>Default <code class="inline-code">./spark</code> (or successor name) is B/self-host built, not
          <code class="inline-code">as</code>+<code class="inline-code">ld</code> of <code class="inline-code">asm/spark.s</code>.</li>
@@ -329,7 +329,7 @@
          GAS. SPARK_BC → ELF via <code class="inline-code">spark-bc-emit</code> + <code class="inline-code">sparkasm</code> is proven
          (<code class="inline-code">make test-bc-emit</code>), not the product default.</li>
         </ul>
-        <h3 id="stage-6-downloads-product-default-not-started">Stage 6 — downloads / product default ← <strong>NOT STARTED</strong></h3>
+        <h3 id="stage-6--downloads--product-default--not-started">Stage 6 — downloads / product default ← <strong>NOT STARTED</strong></h3>
         <ul class="doc__ul">
         <li><code class="inline-code">make spark</code> remains the GAS ELF. Do not default downloads to BC.</li>
         </ul>
@@ -482,7 +482,7 @@
         <li>Cross-links only; ops must already appear in <code class="inline-code">LANGUAGE.md</code>.</li>
         </ul>
         <hr class="doc__hr" />
-        <h2 id="run-scaffold-seed">Run (scaffold + seed)</h2>
+        <h2 id="run-scaffold--seed">Run (scaffold + seed)</h2>
         <pre class="doc__pre"><code class="language-bash"># Phase 0 — bytecode on B (destination runner for hello)
         ./spark-bootstrap --run-bc selfhost/fixtures/hello.sparkbc
         make test-sparkbc

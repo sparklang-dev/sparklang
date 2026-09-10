@@ -617,7 +617,7 @@ def build_scoreboard(
         "never": [
             "false marketing beats-all",
             "RTX PRO 6000",
-            "beat Claude invention",
+            "frontier-win invention",
             "copy OpenBin code",
         ],
     }

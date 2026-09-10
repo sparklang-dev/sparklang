@@ -179,7 +179,7 @@
         <a href="/docs/programming-guide.html">Programming guide</a>
         <a href="/downloads.html">Downloads</a>
       </nav>      <article class="doc__body">
-        <h1 id="ai-model-aspects-sensory-mapping-for-agentic-spark">AI model aspects — sensory mapping for agentic Spark</h1>
+        <h1 id="ai-model-aspects--sensory-mapping-for-agentic-spark">AI model aspects — sensory mapping for agentic Spark</h1>
         <p>Engineer map of the <strong>Spark / SparkLang</strong> AI model <strong>as a whole
         system</strong>: how text, tools, memory, and optional senses plug into
         bytecode + weights + serve. Not marketing. Not God/Loom metaphors.</p>
@@ -426,7 +426,7 @@
         </tbody>
         </table></div>
         <hr class="doc__hr" />
-        <h2 id="system-diagram-ears-brain-voice-tools">System diagram — ears → brain → voice ↔ tools</h2>
+        <h2 id="system-diagram--ears--brain--voice--tools">System diagram — ears → brain → voice ↔ tools</h2>
         <p><img class="doc__img" alt="Ears to brain to voice" src="/docs/images/diagram-ears-brain-voice.svg" /></p>
         <p><img class="doc__img" alt="Agentic sensory loop" src="/docs/images/diagram-agentic-sensory-loop.svg" /></p>
         <pre class="mermaid">flowchart LR
@@ -446,7 +446,7 @@
         speaking (or <code class="inline-code">print</code>) leaves the system → the next turn may listen
         again. Eyes stay <strong>dashed</strong>: planned contract only.</p>
         <hr class="doc__hr" />
-        <h2 id="ears-stt-audio-in">Ears — STT / audio in</h2>
+        <h2 id="ears--stt--audio-in">Ears — STT / audio in</h2>
         <p><img class="doc__img" alt="Ears dataflow" src="/docs/images/diagram-sense-ears.svg" /></p>
         <h3 id="plain-language">Plain language</h3>
         <p><strong>Ears</strong> turn sound into text the rest of Spark can bind (<code class="inline-code">-&gt;</code>) and
@@ -502,7 +502,7 @@
          CMD --> BIND
          WH --> BIND
          HTTP --> BIND</pre>
-        <h3 id="opcodes-cli-makefile-today">Opcodes / CLI / makefile today</h3>
+        <h3 id="opcodes--cli--makefile-today">Opcodes / CLI / makefile today</h3>
         <pre class="doc__pre"><code class="language-bash">make # builds spark-stt-tts
         ./spark --dry-run examples/voice_turn.spark
         ./spark --live examples/voice_live.spark
@@ -605,7 +605,7 @@
         discipline) · <a href="/docs/weight-gallery.html">Weight gallery</a> ·
         <a href="/docs/ci-pages.html">CI_PAGES.md</a>.</p>
         <hr class="doc__hr" />
-        <h2 id="eyes-vision-image-in">Eyes — vision / image in</h2>
+        <h2 id="eyes--vision--image-in">Eyes — vision / image in</h2>
         <p><img class="doc__img" alt="Eyes vision stub" src="/docs/images/diagram-sense-eyes.svg" /></p>
         <h3 id="plain-language">Plain language</h3>
         <p><strong>Eyes</strong> would turn images into captions or visual tokens the brain
@@ -644,7 +644,7 @@
         <pre class="doc__pre"><code class="language-bash">make test-senses
         python3 -m unittest python/sparklang/senses/test_senses.py
         </code></pre>
-        <h3 id="dataflow-planned-dashed">Dataflow (planned — dashed)</h3>
+        <h3 id="dataflow-planned--dashed">Dataflow (planned — dashed)</h3>
         <pre class="mermaid">flowchart LR
          IMG["PNG / JPEG path"]
          ENC["Vision encoder — planned"]
@@ -681,7 +681,7 @@
         <p>Senses package under <code class="inline-code">python/sparklang/senses/</code> · Factory status in
         <a href="/docs/factory.html">Factory hub</a> · Adoption: <a href="/docs/adoption-bar.html">ADOPTION_BAR.md</a>.</p>
         <hr class="doc__hr" />
-        <h2 id="speaking-tts-audio-out">Speaking — TTS / audio out</h2>
+        <h2 id="speaking--tts--audio-out">Speaking — TTS / audio out</h2>
         <p><img class="doc__img" alt="Speaking dataflow" src="/docs/images/diagram-sense-speaking.svg" /></p>
         <h3 id="plain-language">Plain language</h3>
         <p><strong>Speaking</strong> turns text (or the last bound value) into audio the user
@@ -732,7 +732,7 @@
          TXT --> PCM --> WAV
          TXT --> CMD --> WAV
          TXT --> HTTP --> WAV</pre>
-        <h3 id="opcodes-cli-makefile">Opcodes / CLI / makefile</h3>
+        <h3 id="opcodes--cli--makefile">Opcodes / CLI / makefile</h3>
         <pre class="doc__pre"><code class="language-bash">./spark --dry-run examples/voice_turn.spark
         ./spark-stt-tts speak --text &quot;hi&quot; --out /tmp/spark-voice-test.wav
         ./spark --dry-run examples/voice_copy.spark # written model path
@@ -799,13 +799,13 @@
         <p><a href="/docs/voice.html">VOICE.md</a> · <a href="/docs/model-training.html">MODEL_TRAINING.md</a>
         (reply pack) · templates under <code class="inline-code">templates/voice_models/</code>.</p>
         <hr class="doc__hr" />
-        <h2 id="thinking-llm-forward-generation">Thinking — LLM forward / generation</h2>
+        <h2 id="thinking--llm-forward--generation">Thinking — LLM forward / generation</h2>
         <p><img class="doc__img" alt="Thinking forward path" src="/docs/images/diagram-sense-thinking.svg" /></p>
         <h3 id="plain-language">Plain language</h3>
         <p><strong>Thinking</strong> is how Spark turns tokens into the next token / ask text
         — either the <strong>owned tiny CPU serve path</strong> or an <strong>optional live
         gateway</strong> <code class="inline-code">ask</code> (not required for dry demos).</p>
-        <h3 id="engineering-stack-tiny-cpu-serve-weights">Engineering stack — tiny CPU serve (weights)</h3>
+        <h3 id="engineering-stack--tiny-cpu-serve-weights">Engineering stack — tiny CPU serve (weights)</h3>
         <p>When MLP tensors exist (<a href="/docs/serve.html">Serve</a>):</p>
         <pre class="doc__pre"><code class="language-text">embed (mean pool) → attention (single-layer causal MHA)
          → MLP (SwiGLU) → RMSNorm → lm_head
@@ -842,7 +842,7 @@
         </tr>
         </tbody>
         </table></div>
-        <h3 id="language-ask-classify-extract">Language <code class="inline-code">ask</code> / classify / extract</h3>
+        <h3 id="language-ask--classify--extract">Language <code class="inline-code">ask</code> / classify / extract</h3>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
@@ -878,7 +878,7 @@
          OUT["logits / text"]
          IN --> EMB --> AT --> MLP --> HN --> LH --> OUT
          GW["Optional gateway ask"] -.-> OUT</pre>
-        <h3 id="cli-makefile">CLI / makefile</h3>
+        <h3 id="cli--makefile">CLI / makefile</h3>
         <pre class="doc__pre"><code class="language-bash">make spark-serve
         ./spark-serve docs/examples/spark-builder.sparkbc /tmp/serve-dry-001
 
@@ -939,7 +939,7 @@
         <a href="/docs/spark-coder.html">Spark coder</a> · <a href="/docs/weight-gallery.html">Weight gallery</a> ·
         <a href="/docs/ai-models.html#live-gateway-integration-wired-today">ASK_LIVE.md</a>.</p>
         <hr class="doc__hr" />
-        <h2 id="behaviors-policies-tools-turn-taking">Behaviors — policies, tools, turn-taking</h2>
+        <h2 id="behaviors--policies-tools-turn-taking">Behaviors — policies, tools, turn-taking</h2>
         <p><img class="doc__img" alt="Behavior and tool loop" src="/docs/images/diagram-behavior-tool-loop.svg" /></p>
         <p><img class="doc__img" alt="Behaviors detail" src="/docs/images/diagram-sense-behaviors.svg" /></p>
         <h3 id="plain-language">Plain language</h3>
@@ -1030,7 +1030,7 @@
          ASK --> OUT
          TR --> EV
          EV -.->|scores only; never win claim| POL</pre>
-        <h3 id="train-eval-behavior-adjacent">Train / eval (behavior adjacent)</h3>
+        <h3 id="train--eval-behavior-adjacent">Train / eval (behavior adjacent)</h3>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
@@ -1098,7 +1098,7 @@
         (grounded / anti-guess) ·
         <a href="/docs/adoption-bar.html">ADOPTION_BAR.md</a> · <a href="/docs/spark-coder.html">Spark coder</a>.</p>
         <hr class="doc__hr" />
-        <h2 id="memory-context-cross-cutting">Memory &amp; context (cross-cutting)</h2>
+        <h2 id="memory--context-cross-cutting">Memory &amp; context (cross-cutting)</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
@@ -1143,7 +1143,7 @@
         <p>Do not invent a context-window size for production marketing — read
         live dims from weights / control asm when measuring.</p>
         <hr class="doc__hr" />
-        <h2 id="comparison-spark-local-sot-vs-openbin-ask-production-voice-stacks">Comparison — Spark local SoT vs OpenBin Ask / production voice stacks</h2>
+        <h2 id="comparison--spark-local-sot-vs-openbin-ask--production-voice-stacks">Comparison — Spark local SoT vs OpenBin Ask / production voice stacks</h2>
         <p>Spark is the <strong>local</strong> language + bytecode + weights SoT. Other
         products are related reading — <strong>not</strong> clones and <strong>not</strong> substitutes
         for Spark recovery / serve proofs.</p>
@@ -1250,7 +1250,7 @@
         see <a href="/docs/voice.html">VOICE.md</a> and <a href="/docs/ai-models.html#live-gateway-integration-wired-today">ASK_LIVE.md</a>. Prefer
         passive / dry proofs when PSTN guards or missing keys apply.</p>
         <hr class="doc__hr" />
-        <h2 id="runtime-serve-wiring-thinking-surface">Runtime / serve wiring (thinking surface)</h2>
+        <h2 id="runtime--serve-wiring-thinking-surface">Runtime / serve wiring (thinking surface)</h2>
         <pre class="doc__pre"><code class="language-bash">make spark-serve-api
         ./spark-serve-api --weights …/weights.safetensors --http \
          --host 127.0.0.1 --port 8765
@@ -1338,7 +1338,7 @@
         </tbody>
         </table></div>
         <hr class="doc__hr" />
-        <h2 id="quick-links-forge-bench">Quick links (Forge + Bench)</h2>
+        <h2 id="quick-links-forge--bench">Quick links (Forge + Bench)</h2>
         <ul class="doc__ul">
         <li><a href="/docs/factory.html">Factory hub</a> · <a href="/docs/diagrams.html">Diagrams</a> · <a href="/docs/knowledge.html">Knowledge</a></li>
         <li><a href="/docs/voice.html">VOICE.md</a> · <a href="/docs/ai-models.html">AI_MODELS.md</a> · <a href="/docs/ai-models.html#live-gateway-integration-wired-today">ASK_LIVE.md</a></li>

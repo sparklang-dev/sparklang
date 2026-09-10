@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Shadow copy, shadow-build dir, and hash verify for Spark artifacts.
 
-Never 6000. Does not claim beat Claude.
+Never 6000. No frontier-parity claim.
 """
 
 from __future__ import annotations

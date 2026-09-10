@@ -1,7 +1,7 @@
 # TRAIN → STEP → TRAIN_STATUS in one SPARK_BC stream.
 # STEP 0x28 is a dry loop tick: ARTIFACT + Spark-created weights.
 # Honest: dry ≠ trained. Tiny bytecode-hash delta only — not SGD.
-# No GPU. No 6000. No god copy. No Loom. No imported Claude/Grok.
+# No GPU. No 6000. No god copy. No Loom. No imported frontier models.
 #
 # Compile:
 # ./spark-bootstrap --compile examples/spark_train_step.spark \

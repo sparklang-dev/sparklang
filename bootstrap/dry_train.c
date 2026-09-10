@@ -102,7 +102,7 @@ const char *spark_pick_train_step(const char *job_id, int step_n)
 		     "\"marker\":\"out/train/%s/ARTIFACT\","
 		     "\"weights\":\"out/train/%s/weights.safetensors\"},"
 		     "\"note\":\"CPU multi-outer SGD STEP — real grads "
-		     "on Spark tensors; tiny; not beat Claude\"}",
+		     "on Spark tensors; tiny; no frontier-parity claim\"}",
 		     job_id, step_n, job_id, job_id) >=
 	    (int)sizeof(step_buf))
 		return NULL;
@@ -214,7 +214,7 @@ int spark_bump_train_step(const char *out_dir, const char *job_id,
 		     "weights=%s/weights.safetensors\n"
 		     "checkpoint=%s/checkpoint.json\n"
 		     "note=CPU multi-outer SGD -- real grads; "
-		     "tiny; not beat Claude\n",
+		     "tiny; no frontier-parity claim\n",
 		     job_id, step_n, out_dir, out_dir);
 	if (n < 0 || n >= (int)sizeof(body))
 		return 1;

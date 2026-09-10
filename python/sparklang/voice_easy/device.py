@@ -1,7 +1,8 @@
 """Device pick for voice-easy — 5090 prefer, never 6000.
 
-Large scale fails closed when only the PRO 6000 is visible unless
-the caller explicitly forces ``--device cpu``.
+The RTX PRO 6000 is voice-serving only: eval never routes there.
+CPU (int8) is the default; the 5090 is an explicit opt-in for the
+large eval lane.
 """
 
 from __future__ import annotations
@@ -20,7 +21,7 @@ def pick_voice_device(
     scale: dict[str, Any],
     force: str = "auto",
 ) -> dict[str, Any]:
-    """Pick train device for the given scale config.
+    """Pick eval device for the given scale config.
 
     force: auto | cpu | 5090
     """
@@ -51,11 +52,11 @@ def pick_voice_device(
     if need_5090 and pick.get("device") == "cpu":
         if only_6000 or force == "5090":
             raise VoiceDeviceError(
-                "large voice-easy refused: RTX PRO 6000 is "
-                "voice-serving only — never train here. Free the "
+                "voice-easy large refused: RTX PRO 6000 is "
+                "voice-serving only — never eval here. Free the "
                 "RTX 5090 (~%.1f GiB hint) or pass --device cpu "
                 "explicitly."
-                % float(scale.get("vram_gi_hint") or 2.0)
+                % float(scale.get("vram_gi_hint") or 3.0)
             )
 
     if force == "5090" and pick.get("device") != "cuda":

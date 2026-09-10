@@ -67,7 +67,7 @@ def tool_loop_complete(
     """Score authored candidates with TinyCoder; compile winner.
 
     Deterministic: model ranks first-byte / prompt affinity; tools
-    compile. Does not invent HF/Claude completions as the brain.
+    compile. Does not invent HF/frontier-API completions as the brain.
     """
     work_dir.mkdir(parents=True, exist_ok=True)
     ranked: list[dict[str, Any]] = []

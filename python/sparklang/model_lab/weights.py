@@ -720,7 +720,7 @@ def apply_sgd_step(
     dim: int | None = None,
     n_layer: int | None = None,
 ) -> dict[str, Any]:
-    """Multi-outer CPU SGD on Spark tensors (tiny; not beat Claude).
+    """Multi-outer CPU SGD on Spark tensors (tiny; no parity claim).
 
     Fixture JSONL → layer-0 causal attn (default) or mean-pool
     embed → CE on lm_head (+ optional embed / attn grads).
@@ -748,7 +748,7 @@ def apply_sgd_step(
             command=command
             or (
                 "SGD STEP seed from SPARK_BC "
-                "(CPU; not beat Claude)"
+                "(CPU; no frontier-parity claim)"
             ),
             dim=dim,
             n_layer=n_layer,
@@ -1000,12 +1000,12 @@ def apply_sgd_step(
     meta["factory"] = meta.get("factory") or "Spark language"
     meta["goal"] = (
         "multi-outer CPU SGD on Spark tensors; "
-        "does not beat Claude"
+        "no frontier-parity claim"
     )
     meta["note"] = (
         "CPU multi-outer SGD updated "
         + meta["sgd_tensor"]
-        + "; trained=true; not_sgd=false; not beat Claude"
+        + "; trained=true; not_sgd=false; no frontier-parity claim"
     )
     base_der = meta.get("derivation") or "SPARK_BC init"
     meta["derivation"] = (

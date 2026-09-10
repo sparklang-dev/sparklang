@@ -1,7 +1,10 @@
-"""Voice easy train — owned STT/TTS heads (tiny + large scales).
+"""Voice easy — real STT/TTS on pretrained open weights, offline.
 
-Piece-of-cake path for training Spark voice-related weights we write
-here. Not ElevenLabs/Kokoro. Never RTX PRO 6000. Does not beat Claude.
+STT (ears): Whisper via faster-whisper / CTranslate2 (MIT weights).
+TTS (voice): Kokoro-82M via kokoro-onnx (Apache-2.0 weights).
+Weights fetch once into ``models/`` (gitignored), then every path
+runs offline. CPU int8 default; RTX 5090 optional; the RTX PRO 6000
+is voice-serving only and never used here.
 """
 
 from __future__ import annotations

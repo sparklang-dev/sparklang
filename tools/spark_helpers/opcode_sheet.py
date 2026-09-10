@@ -17,7 +17,7 @@ def main() -> int:
     lines = [
         "# SparkLang SPARK_BC opcode sheet",
         "# Generated from sparklang.model_lab.bc_dump (not invented).",
-        "# Never 6000. Does not claim beat Claude.",
+        "# Never 6000. No frontier-parity claim.",
         "",
         "| hex | name | arity |",
         "| --- | ---- | ----- |",

@@ -57,7 +57,7 @@ class VoiceAskTests(unittest.TestCase):
         self.assertEqual(out["engine"], "dump_facts")
         self.assertIn("TRAIN", out["answer"])
         self.assertIn(
-            "does not beat claude",
+            "frontier-parity claim",
             out["answer"].lower(),
         )
 

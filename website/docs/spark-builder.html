@@ -179,7 +179,7 @@
         <a href="/docs/programming-guide.html">Programming guide</a>
         <a href="/downloads.html">Downloads</a>
       </nav>      <article class="doc__body">
-        <h1 id="builder-spark-bc-factory">Builder — SPARK_BC factory</h1>
+        <h1 id="builder--spark_bc-factory">Builder — SPARK_BC factory</h1>
         <p>Engineer reproduction guide. A stranger with this repo and a built
         <code class="inline-code">./spark-bootstrap</code> + <code class="inline-code">./spark</code> can re-create every published artifact
         from the commands below. Do not invent hashes — cite <code class="inline-code">sha256sum</code> of
@@ -333,7 +333,7 @@
         <h2 id="reproduce-from-a-clean-tree">Reproduce from a clean tree</h2>
         <p>Requires: <code class="inline-code">make</code> (or at least <code class="inline-code">spark-bootstrap</code> + <code class="inline-code">spark</code>), Python 3 for
         the dump tool.</p>
-        <h3 id="1-compile-published-paths">1) Compile → published paths</h3>
+        <h3 id="1-compile--published-paths">1) Compile → published paths</h3>
         <pre class="doc__pre"><code class="language-bash">./spark-bootstrap --compile examples/spark_builder.spark \
          -o docs/examples/spark-builder.sparkbc
 
@@ -349,7 +349,7 @@
         <p>Verify bytes match the published hashes (see <a href="#published-files--sha256">Published files</a>):</p>
         <pre class="doc__pre"><code class="language-bash">sha256sum docs/examples/spark-*.sparkbc
         </code></pre>
-        <h3 id="2-dump-hex-decode-init-weights-from-compiler-seed">2) Dump hex + decode (+ init weights from compiler seed)</h3>
+        <h3 id="2-dump-hex--decode--init-weights-from-compiler-seed">2) Dump hex + decode (+ init weights from compiler seed)</h3>
         <pre class="doc__pre"><code class="language-bash">PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
          docs/examples/spark-builder.sparkbc \
          --source examples/spark_builder.spark \
@@ -373,7 +373,7 @@
         </code></pre>
         <p>Site mirrors of dumps live under <code class="inline-code">website/docs/examples/</code>. Copy
         txt/json dumps there when regenerating the site; do not invent hex.</p>
-        <h3 id="3-execute-bytecode-train-dry-step-cpu-sgd">3) Execute bytecode (TRAIN dry + STEP CPU SGD)</h3>
+        <h3 id="3-execute-bytecode-train-dry--step-cpu-sgd">3) Execute bytecode (TRAIN dry + STEP CPU SGD)</h3>
         <pre class="doc__pre"><code class="language-bash">./spark-bootstrap --run-bc docs/examples/spark-builder.sparkbc
         ./spark-bootstrap --run-bc docs/examples/spark-train-step.sparkbc
         # Same path via GAS (forks spark-bootstrap bc_vm):
@@ -423,7 +423,7 @@
         # attn+MLP tensors exist; + weights.safetensors (init if missing)
         # Or: ./spark-serve docs/examples/spark-builder.sparkbc /tmp/serve-dry-001
         </code></pre>
-        <h3 id="6c-serve-http-stdio-api-serve-api-path">6c) Serve HTTP / stdio API (serve API path)</h3>
+        <h3 id="6c-serve-http--stdio-api-serve-api-path">6c) Serve HTTP / stdio API (serve API path)</h3>
         <p>Wraps the same tiny CPU forward behind a local JSON API
         (predict next-token + embeddings). Uses whatever tensors
         <code class="inline-code">serve.py</code> already runs (attention when present).
@@ -477,7 +477,7 @@
         <code class="inline-code">examples/fixtures/train/scale_config.json</code> +
         <code class="inline-code">dataset_scale.jsonl</code>. Shape checks live in <code class="inline-code">make test-sparkbc</code>
         (no overnight train). <strong>Measurement only.</strong></p>
-        <h2 id="eval-harness-measure-later-measurement-only">Eval harness (measure later — measurement only.)</h2>
+        <h2 id="eval-harness-measure-later--measurement-only">Eval harness (measure later — measurement only.)</h2>
         <p>Frozen tiny probes live under <code class="inline-code">examples/eval/</code> (copy/recall +
         next-token fixtures). Runner: <code class="inline-code">tools/spark-eval/run.py</code>.</p>
         <pre class="doc__pre"><code class="language-bash">make spark-eval
@@ -493,7 +493,7 @@
         <li>Suite JSON: <code class="inline-code">examples/eval/suite.json</code> (<code class="inline-code">claim: none</code>).</li>
         <li>Gate: <code class="inline-code">make test-spark-eval</code>.</li>
         </ul>
-        <h3 id="evaluation-spark-sparklang">Evaluation (Spark / SparkLang)</h3>
+        <h3 id="evaluation-spark--sparklang">Evaluation (Spark / SparkLang)</h3>
         <ul class="doc__ul">
         <li>Product name in docs and scores: <strong>Spark</strong> / <strong>SparkLang</strong> only.</li>
         <li>Harness output always sets <code class="inline-code">claim: none</code> and no marketing-win flag.</li>
@@ -502,7 +502,7 @@
         <li>Dry Spark oracle scores are fixture plumbing, not model quality.</li>
         <li>Weights-mode scores of <code class="inline-code">0.0</code> are misses until proven otherwise.</li>
         </ul>
-        <h2 id="published-files-sha256">Published files — sha256</h2>
+        <h2 id="published-files--sha256">Published files — sha256</h2>
         <p>Hashes from <code class="inline-code">sha256sum</code> on disk at doc authoring time (<code class="inline-code">51e4dbd</code> tree).
         Re-run <code class="inline-code">sha256sum</code> after recompile; mismatch means drift — update this
         table from disk, do not invent.</p>
@@ -568,7 +568,7 @@
         <li>Lab verbs stay <strong>GAS-first</strong> (no SPARK_BC opcode yet for reverse /
          compile / modify). Train <strong>does</strong> encode as <code class="inline-code">0x26</code> / <code class="inline-code">0x27</code> / <code class="inline-code">0x28</code>.</li>
         </ul>
-        <h2 id="gaps-blocked-later">Gaps / BLOCKED / later</h2>
+        <h2 id="gaps--blocked--later">Gaps / BLOCKED / later</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>

@@ -225,7 +225,7 @@
         sources above and against Spark’s local dump / compile SoT.
         Prefer the canonical paper / product URLs listed here over overview
         text.</p>
-        <h2 id="overview-llm-decompilers-native-binaries">Overview (LLM decompilers — native binaries)</h2>
+        <h2 id="overview-llm-decompilers--native-binaries">Overview (LLM decompilers — native binaries)</h2>
         <p>LLM decompilers translate binaries / assembly → high-level C/C++
         (or readable pseudocode). Two common shapes:</p>
         <div class="doc__table-wrap"><table class="doc__table">
@@ -261,7 +261,7 @@
         <p><em>Caption: Spark SoT (left) vs optional LLM assist (right). Assist may
         suggest names or draft source; it must not pack or silently rewrite
         <code class="inline-code">.sparkbc</code>.</em></p>
-        <h3 id="how-llms-typically-assist-compile-decompile">How LLMs typically assist compile / decompile</h3>
+        <h3 id="how-llms-typically-assist-compile--decompile">How LLMs typically assist compile / decompile</h3>
         <p><img class="doc__img" alt="LLM assist flows" src="/docs/images/diagram-llm-compile-decompile.svg?v=0.6.60" /></p>
         <p><em>Caption: Industry pattern — decompile: bytes/asm → LLM guess →
         human verify. Compile assist: intent → LLM draft → </em><em>Spark</em><em>
@@ -295,7 +295,7 @@
         </tr>
         </tbody>
         </table></div>
-        <h3 id="decompai-agent-style-re-not-a-seq2seq-model">DecompAI — agent-style RE (not a seq2seq model)</h3>
+        <h3 id="decompai--agent-style-re-not-a-seq2seq-model">DecompAI — agent-style RE (not a seq2seq model)</h3>
         <p><strong>DecompAI</strong> (community write-ups +
         <a href="https://github.com/louisgthier/decompai">louisgthier/decompai</a>) is an
         <strong>LLM agent</strong> (LangGraph / Gradio, ReAct-style) that <strong>orchestrates
@@ -308,7 +308,7 @@
         <strong>not</strong> a verified SPARK_BC→<code class="inline-code">.spark</code> recovery pipeline, and not
         proof that agent output is ground truth.</p>
         <h2 id="survey-cited">Survey (cited)</h2>
-        <h3 id="specialized-decompile-llms-seq2seq-staged">Specialized decompile LLMs (seq2seq / staged)</h3>
+        <h3 id="specialized-decompile-llms-seq2seq--staged">Specialized decompile LLMs (seq2seq / staged)</h3>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
@@ -428,7 +428,7 @@
         than classical decompilers on some benches. <strong>None of this is a
         SPARK_BC fidelity claim.</strong> See also the Plain English overview
         section below.</p>
-        <h3 id="traditional-decompiler-general-llm-assistants">Traditional decompiler + general LLM assistants</h3>
+        <h3 id="traditional-decompiler--general-llm-assistants">Traditional decompiler + general LLM assistants</h3>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
@@ -460,7 +460,7 @@
         </tr>
         </tbody>
         </table></div>
-        <h3 id="commercial-online-ai-decompiler-products">Commercial / online AI decompiler products</h3>
+        <h3 id="commercial--online-ai-decompiler-products">Commercial / online AI decompiler products</h3>
         <p>Distinct from <strong>open research</strong> models (LLM4Decompile, Nova, SK², …):</p>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
@@ -525,12 +525,12 @@
         framed in industry writing (stages, assist roles, failure modes).
         It does <strong>not</strong> change Spark policy: dump/<code class="inline-code">--compile</code>/<code class="inline-code">--run-bc</code>
         remain SoT; LLM text is assist; no perfect SPARK_BC recovery claim;</p>
-        <h3 id="bytecode-other-re-note">Bytecode / other RE note</h3>
+        <h3 id="bytecode--other-re-note">Bytecode / other RE note</h3>
         <p>Native x86/ARM C recovery dominates the literature. JVM/Python/WASM
         and custom ISAs (including <strong>SPARK_BC</strong>) are <strong>under-covered</strong>. Do
         not assume LLM4Decompile-style models or DecompAI tool loops transfer
         to Spark orchestration opcodes without new data and evals.</p>
-        <h2 id="how-this-maps-to-spark-spark-bc">How this maps to Spark SPARK_BC</h2>
+        <h2 id="how-this-maps-to-spark-spark_bc">How this maps to Spark SPARK_BC</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>

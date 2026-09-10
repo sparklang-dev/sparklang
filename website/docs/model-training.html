@@ -278,7 +278,7 @@
         </tr>
         </tbody>
         </table></div>
-        <h2 id="backends-trainbackend-spark-train-backend">Backends (<code class="inline-code">train.backend</code> / <code class="inline-code">SPARK_TRAIN_BACKEND</code>)</h2>
+        <h2 id="backends-trainbackend--spark_train_backend">Backends (<code class="inline-code">train.backend</code> / <code class="inline-code">SPARK_TRAIN_BACKEND</code>)</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
@@ -347,7 +347,7 @@
         <p><code class="inline-code">state</code> is the poll field (not <code class="inline-code">status</code>). Companion uses plain HTTP
         (TLS must terminate upstream for <code class="inline-code">https://</code> — MVP dies with a clear
         config error).</p>
-        <h2 id="reference-methods-in-repo-not-lora">Reference methods (in-repo) — not LoRA</h2>
+        <h2 id="reference-methods-in-repo--not-lora">Reference methods (in-repo) — not LoRA</h2>
         <p><code class="inline-code">tools/spark-train-ref/</code> implements the HTTP contract with <strong>four</strong>
         SparkLang-native CPU methods. None are LoRA / HF PEFT. None use a
         reserved GPU. None invent <code class="inline-code">train@</code> grants.</p>
@@ -469,7 +469,7 @@
         product story: not LoRA-by-default, not a marker file pretending to be
         weights. Larger full-SFT / multi-node remain advanced backends behind
         the same contract.</p>
-        <h2 id="voice-text-overlay-spark-reply-pack">Voice + text overlay (<code class="inline-code">spark_reply_pack</code>)</h2>
+        <h2 id="voice--text-overlay-spark_reply_pack">Voice + text overlay (<code class="inline-code">spark_reply_pack</code>)</h2>
         <p>Dataset JSONL may add fields on each chat row:</p>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>

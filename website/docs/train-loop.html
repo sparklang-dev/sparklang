@@ -179,7 +179,7 @@
         <a href="/docs/programming-guide.html">Programming guide</a>
         <a href="/downloads.html">Downloads</a>
       </nav>      <article class="doc__body">
-        <h1 id="train-loop-outer-inner-sgd">Train loop — outer / inner SGD</h1>
+        <h1 id="train-loop--outer--inner-sgd">Train loop — outer / inner SGD</h1>
         <p>How <code class="inline-code">STEP</code> applies <strong>CPU</strong> SGD on Spark safetensors. Spark /
         SparkLang only. Implementation SoT:
         <code class="inline-code">python/sparklang/model_lab/</code> + <code class="inline-code">tools/spark-bc-dump/apply_step.py</code>.
@@ -234,7 +234,7 @@
         <li>Optional: embed grads when the helper enables them.</li>
         <li>Device: <strong>CPU</strong> default; a consumer GPU is optional.</li>
         </ul>
-        <h2 id="checkpoint-loss-curve">Checkpoint / loss curve</h2>
+        <h2 id="checkpoint--loss-curve">Checkpoint / loss curve</h2>
         <p><code class="inline-code">checkpoint.json</code> (after a successful STEP) includes:</p>
         <ul class="doc__ul">
         <li><code class="inline-code">loss_before</code> / <code class="inline-code">loss_after</code> (after must be <strong>lower</strong> or fail loud)</li>
@@ -244,7 +244,7 @@
         </ul>
         <p><code class="inline-code">ARTIFACT</code> under <code class="inline-code">out/train/&lt;job&gt;/</code> lists weights + checkpoint paths
         and <code class="inline-code">not_sgd=false</code> / <code class="inline-code">trained=true</code> only when grads applied.</p>
-        <h2 id="fixtures-scale">Fixtures + scale</h2>
+        <h2 id="fixtures--scale">Fixtures + scale</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
@@ -273,7 +273,7 @@
         </table></div>
         <p>Do not claim FineWeb-scale data. Seed BPE corpus is separate:
         <a href="/docs/tokenizer.html">TOKENIZER.md</a>. Larger Spark stubs still <strong>measurement only</strong>.</p>
-        <h2 id="spark-bc-program-path">SPARK_BC program path</h2>
+        <h2 id="spark_bc-program-path">SPARK_BC program path</h2>
         <ol class="doc__ol">
         <li><code class="inline-code">TRAIN</code> (<code class="inline-code">0x26</code>) — dry accept + <code class="inline-code">ARTIFACT</code> stub (<code class="inline-code">trained=false</code>)</li>
         <li><code class="inline-code">STEP</code> (<code class="inline-code">0x28</code>) — runs this loop</li>

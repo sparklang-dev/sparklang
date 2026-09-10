@@ -2,7 +2,7 @@
 
 Wraps ``spark-bootstrap --compile``, ``sparklang.model_lab.bc_dump``,
 optional ``spark_ask`` / TinyCoder, safetensors list/play, helpers and
-shadows. No invented bytecode. Never 6000. Does not claim beat Claude.
+shadows. No invented bytecode. Never 6000. No frontier-parity claim.
 Not an OpenBin clone — Spark-native workflow only.
 """
 
@@ -22,7 +22,7 @@ from typing import Any
 
 HONESTY = (
     "Honest note: Spark Ask uses dump SoT + optional tiny owned "
-    "coder. Not OpenBin-level RE Q&A. Does not beat Claude."
+    "coder. Not OpenBin-level RE Q&A. No frontier-parity claim."
 )
 
 

@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Optional Claude API baseline for spark-eval (honest measurement).
+"""Optional frontier-API baseline for spark-eval (honest measurement).
 
-Calls Anthropic only when a real key is already on the box. Never
-invents credentials. Never sets a beat-Claude claim to a win.
-CPU / HTTPS only — never GPU-1 / the 6000.
+Calls the Anthropic Messages API only when a real key is already on
+the box. Never invents credentials. Never upgrades ``claim`` to a
+win — side-by-side scores are measurement only. CPU / HTTPS only —
+never GPU-1 / the 6000.
 """
 
 from __future__ import annotations
@@ -17,23 +18,23 @@ from typing import Any, Callable
 
 # Env names checked in order. Values are never logged.
 _KEY_ENVS = (
-    "SPARK_EVAL_CLAUDE_API_KEY",
+    "SPARK_EVAL_FRONTIER_API_KEY",
     "ANTHROPIC_API_KEY",
-    "CLAUDE_API_KEY",
 )
 
+# Anthropic model id for the cheap baseline tier (API identifier).
 _DEFAULT_MODEL = "claude-3-5-haiku-latest"
 _API_URL = "https://api.anthropic.com/v1/messages"
 _ANTHROPIC_VERSION = "2023-06-01"
 
 
-def discover_claude_api_key() -> tuple[str | None, str]:
+def discover_frontier_api_key() -> tuple[str | None, str]:
     """Return (key_or_none, status). status is machine-readable."""
     for name in _KEY_ENVS:
         raw = os.environ.get(name, "").strip()
         if raw:
             return raw, "credentials_env:%s" % name
-    key_file = os.environ.get("SPARK_EVAL_CLAUDE_KEY_FILE", "").strip()
+    key_file = os.environ.get("SPARK_EVAL_FRONTIER_KEY_FILE", "").strip()
     if key_file:
         path = Path(key_file)
         if path.is_file():
@@ -45,10 +46,10 @@ def discover_claude_api_key() -> tuple[str | None, str]:
     return None, "skipped_no_credentials"
 
 
-def claude_model() -> str:
-    """Model id from env or default Haiku (cheap baseline)."""
+def frontier_model() -> str:
+    """Model id from env or the default cheap baseline tier."""
     return (
-        os.environ.get("SPARK_EVAL_CLAUDE_MODEL", "").strip()
+        os.environ.get("SPARK_EVAL_FRONTIER_MODEL", "").strip()
         or _DEFAULT_MODEL
     )
 
@@ -62,7 +63,7 @@ def _post_messages(
 ) -> str:
     """One Messages API completion; returns assistant text."""
     body = {
-        "model": claude_model(),
+        "model": frontier_model(),
         "max_tokens": max_tokens,
         "messages": [
             {"role": "user", "content": user_text},
@@ -104,7 +105,7 @@ def predict_copy_recall(
     *,
     opener: Callable[..., Any] | None = None,
 ) -> str:
-    """Ask Claude to answer the copy/recall probe exactly."""
+    """Ask the frontier model to answer the copy/recall probe."""
     user = (
         "You are a exact-string baseline. Reply with ONLY the "
         "requested string — no quotes, no explanation.\n\n"
@@ -121,7 +122,7 @@ def predict_next_token(
     *,
     opener: Callable[..., Any] | None = None,
 ) -> str:
-    """Ask Claude for the single next UTF-8 character."""
+    """Ask the frontier model for the single next UTF-8 character."""
     user = (
         "Complete the next single character after this context. "
         "Reply with ONLY that one character.\n\n"
@@ -135,13 +136,13 @@ def predict_next_token(
     return text[0]
 
 
-def score_copy_recall_claude(
+def score_copy_recall_frontier(
     rows: list[dict[str, Any]],
     api_key: str,
     *,
     opener: Callable[..., Any] | None = None,
 ) -> float:
-    """Exact-match accuracy for copy_recall rows via Claude."""
+    """Exact-match accuracy for copy_recall rows via frontier API."""
     if not rows:
         return 0.0
     ok = 0
@@ -156,13 +157,13 @@ def score_copy_recall_claude(
     return ok / float(len(rows))
 
 
-def score_next_token_claude(
+def score_next_token_frontier(
     rows: list[dict[str, Any]],
     api_key: str,
     *,
     opener: Callable[..., Any] | None = None,
 ) -> float:
-    """Next-char accuracy for next_token rows via Claude."""
+    """Next-char accuracy for next_token rows via frontier API."""
     if not rows:
         return 0.0
     ok = 0
@@ -175,42 +176,42 @@ def score_next_token_claude(
     return ok / float(len(rows))
 
 
-def run_claude_baseline(
+def run_frontier_baseline(
     probes: list[dict[str, Any]],
     load_rows: Callable[[str], list[dict[str, Any]]],
     *,
     mode: str,
     opener: Callable[..., Any] | None = None,
 ) -> dict[str, Any]:
-    """Run or skip Claude baseline. Never a beat-Claude claim.
+    """Run or skip the frontier-API baseline. Never a win claim.
 
     mode: off | auto | on
     """
     base: dict[str, Any] = {
         "requested": mode,
         "status": "off",
-        "model": claude_model(),
+        "model": frontier_model(),
         "probes": [],
         "claim": "none",
         "note": (
-            "Optional API baseline only. Side-by-side scores are "
-            "measurement — Spark / SparkLang never claims beat "
-            "Claude from this harness."
+            "Optional frontier-API baseline only. Side-by-side "
+            "scores are measurement — Spark / SparkLang never "
+            "claims a frontier win from this harness."
         ),
     }
     if mode == "off":
         base["status"] = "off"
         return base
 
-    key, status = discover_claude_api_key()
+    key, status = discover_frontier_api_key()
     if key is None:
         base["status"] = status
         if mode == "on":
             base["error"] = (
-                "CLAUDE=on but no credentials on box "
-                "(checked SPARK_EVAL_CLAUDE_API_KEY, "
-                "ANTHROPIC_API_KEY, CLAUDE_API_KEY, "
-                "SPARK_EVAL_CLAUDE_KEY_FILE)"
+                "FRONTIER=on but no credentials on box "
+                "(checked SPARK_EVAL_FRONTIER_API_KEY, "
+                "ANTHROPIC_API_KEY, "
+                "SPARK_EVAL_FRONTIER_KEY_FILE)"
             )
         return base
 
@@ -222,11 +223,11 @@ def run_claude_baseline(
             fixture = str(probe["fixture"])
             rows = load_rows(fixture)
             if kind == "copy_recall":
-                score = score_copy_recall_claude(
+                score = score_copy_recall_frontier(
                     rows, key, opener=opener
                 )
             elif kind == "next_token":
-                score = score_next_token_claude(
+                score = score_next_token_frontier(
                     rows, key, opener=opener
                 )
             else:
@@ -238,7 +239,7 @@ def run_claude_baseline(
                     "metric": probe.get("metric", kind),
                     "n": len(rows),
                     "score": round(float(score), 6),
-                    "system": "claude",
+                    "system": "frontier",
                 }
             )
     except (
@@ -266,11 +267,11 @@ def run_claude_baseline(
 
 def comparison_table(
     spark_probes: list[dict[str, Any]],
-    claude_block: dict[str, Any],
+    frontier_block: dict[str, Any],
 ) -> dict[str, Any]:
-    """Side-by-side Spark vs Claude scores; never a win claim."""
+    """Side-by-side Spark vs frontier scores; never a win claim."""
     by_name = {
-        str(p["name"]): p for p in (claude_block.get("probes") or [])
+        str(p["name"]): p for p in (frontier_block.get("probes") or [])
     }
     rows: list[dict[str, Any]] = []
     for sp in spark_probes:
@@ -279,7 +280,7 @@ def comparison_table(
         row: dict[str, Any] = {
             "name": name,
             "spark_score": sp.get("score"),
-            "claude_score": None if cp is None else cp.get("score"),
+            "frontier_score": None if cp is None else cp.get("score"),
         }
         rows.append(row)
     return {
@@ -287,6 +288,6 @@ def comparison_table(
         "claim": "none",
         "note": (
             "Head-to-head measurement table only. "
-            "Higher Spark score ≠ beat Claude claim."
+            "Higher Spark score is not a frontier win claim."
         ),
     }

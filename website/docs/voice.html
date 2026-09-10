@@ -206,7 +206,7 @@
         voice pstn dial &quot;+1…&quot; -&gt; call
         voice pstn hangup &quot;CALL_ID&quot;
         </code></pre>
-        <h2 id="live-stt-tts-listen-speak">Live STT / TTS (<code class="inline-code">listen</code> / <code class="inline-code">speak</code>)</h2>
+        <h2 id="live-stt--tts-listen--speak">Live STT / TTS (<code class="inline-code">listen</code> / <code class="inline-code">speak</code>)</h2>
         <p><code class="inline-code">--dry-run</code> / <code class="inline-code">make test</code> stay <strong>offline</strong> (stub transcript + tiny WAV
         marker). <code class="inline-code">--live</code> forks <code class="inline-code">./spark-stt-tts</code> — real WAV I/O, mic, synth,
         or HTTP vendors when explicitly gated on.</p>
@@ -236,7 +236,7 @@
         </tr>
         </tbody>
         </table></div>
-        <h3 id="network-vendors-off-by-default">Network vendors — OFF by default</h3>
+        <h3 id="network-vendors--off-by-default">Network vendors — OFF by default</h3>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
@@ -288,7 +288,7 @@
         ask / speak — runnable by the VM.</p>
         <pre class="doc__pre"><code class="language-bash">./spark --dry-run examples/voice_coder.spark
         </code></pre>
-        <h2 id="copier-written-voice-model">Copier → written voice model</h2>
+        <h2 id="copier--written-voice-model">Copier → written voice model</h2>
         <p>Extracts PCM feature coeffs into:</p>
         <pre class="doc__pre"><code class="inline-code">out/voice_models/&lt;name&gt;/manifest.json
         out/voice_models/&lt;name&gt;/features.bin
@@ -323,7 +323,7 @@
         </code></pre>
         <p>Docs: <a href="/docs/voice-easy.html">Voice easy</a> →
         <a href="/docs/voice-easy.html">/docs/voice-easy.html</a>.</p>
-        <h2 id="pstn-capability-on-default-off">PSTN — capability on, default OFF</h2>
+        <h2 id="pstn--capability-on-default-off">PSTN — capability on, default OFF</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
@@ -362,7 +362,7 @@
         (only when explicitly enabled): <code class="inline-code">SPARK_PSTN_OVERRIDE_DIVERT=1</code>.</p>
         <p>Also honors <code class="inline-code">SPARK_PSTN_CARRIER_DIVERT</code> / <code class="inline-code">SPARK_PSTN_REFUSE_LIVE_INJECT</code>
         in combination with the ledger map.</p>
-        <h3 id="dry-run-make-test">Dry-run / make test</h3>
+        <h3 id="dry-run--make-test">Dry-run / make test</h3>
         <p><code class="inline-code">--dry-run</code> never forks <code class="inline-code">spark-pstn-dial</code>. Emits
         <code class="inline-code">claimed:false</code>. <code class="inline-code">make test</code> / <code class="inline-code">make voice-test</code> prove default-off.</p>
         <h3 id="enable-recipe">Enable recipe</h3>
@@ -413,7 +413,7 @@
         </tr>
         </tbody>
         </table></div>
-        <h2 id="tiny-vs-large-voice-weight-play">Tiny vs large (voice / weight play)</h2>
+        <h2 id="tiny-vs-large-voice--weight-play">Tiny vs large (voice / weight play)</h2>
         <p>Voice model write/copy and weight playgrounds follow the <strong>same</strong>
         scale table as spark-coder + factory scale fixtures:</p>
         <div class="doc__table-wrap"><table class="doc__table">

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Unit tests for spark-eval + optional Claude baseline honesty."""
+"""Unit tests for spark-eval + optional frontier baseline honesty."""
 
 from __future__ import annotations
 
@@ -15,7 +15,7 @@ EVAL = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT / "python"))
 sys.path.insert(0, str(EVAL))
 
-import claude_baseline as cb  # noqa: E402
+import frontier_baseline as fb  # noqa: E402
 import run as spark_eval  # noqa: E402
 
 
@@ -25,7 +25,7 @@ class DiscoverKeyTests(unittest.TestCase):
     def test_unset_skips(self) -> None:
         """No env → skipped_no_credentials."""
         with mock.patch.dict(os.environ, {}, clear=True):
-            key, status = cb.discover_claude_api_key()
+            key, status = fb.discover_frontier_api_key()
         self.assertIsNone(key)
         self.assertEqual(status, "skipped_no_credentials")
 
@@ -33,16 +33,16 @@ class DiscoverKeyTests(unittest.TestCase):
         """ANTHROPIC_API_KEY is accepted when set."""
         env = {"ANTHROPIC_API_KEY": "sk-test-not-real"}
         with mock.patch.dict(os.environ, env, clear=True):
-            key, status = cb.discover_claude_api_key()
+            key, status = fb.discover_frontier_api_key()
         self.assertEqual(key, "sk-test-not-real")
         self.assertTrue(status.startswith("credentials_env:"))
 
 
-class ClaudeBaselineHonestyTests(unittest.TestCase):
-    """Baseline never upgrades claim; no beats_claude field."""
+class FrontierBaselineHonestyTests(unittest.TestCase):
+    """Baseline never upgrades the claim field."""
 
     def test_auto_skip_without_creds(self) -> None:
-        """auto + no key → skip status, no beats_claude field."""
+        """auto + no key → skip status, claim stays none."""
         probes = [
             {
                 "name": "copy_recall",
@@ -56,25 +56,24 @@ class ClaudeBaselineHonestyTests(unittest.TestCase):
             return [{"prompt": "x", "want": "y"}]
 
         with mock.patch.dict(os.environ, {}, clear=True):
-            out = cb.run_claude_baseline(
+            out = fb.run_frontier_baseline(
                 probes, load, mode="auto"
             )
         self.assertEqual(out["status"], "skipped_no_credentials")
-        self.assertNotIn("beats_claude", out)
         self.assertEqual(out["claim"], "none")
 
     def test_on_missing_creds_status(self) -> None:
         """on + no key → error field, still no win claim."""
         with mock.patch.dict(os.environ, {}, clear=True):
-            out = cb.run_claude_baseline(
+            out = fb.run_frontier_baseline(
                 [], lambda _: [], mode="on"
             )
         self.assertEqual(out["status"], "skipped_no_credentials")
         self.assertIn("error", out)
-        self.assertNotIn("beats_claude", out)
+        self.assertEqual(out["claim"], "none")
 
-    def test_ran_still_not_beat(self) -> None:
-        """Even with mocked Claude scores, no beats_claude field."""
+    def test_ran_still_not_a_win(self) -> None:
+        """Even with mocked frontier scores, claim stays none."""
 
         class _Resp:
             def __enter__(self) -> "_Resp":
@@ -108,35 +107,35 @@ class ClaudeBaselineHonestyTests(unittest.TestCase):
 
         env = {"ANTHROPIC_API_KEY": "sk-test"}
         with mock.patch.dict(os.environ, env, clear=True):
-            out = cb.run_claude_baseline(
+            out = fb.run_frontier_baseline(
                 probes, load, mode="auto", opener=opener
             )
         self.assertEqual(out["status"], "ran")
         self.assertEqual(out["probes"][0]["score"], 1.0)
-        self.assertNotIn("beats_claude", out)
         self.assertEqual(out["claim"], "none")
 
     def test_comparison_never_claims_win(self) -> None:
-        """Spark higher than Claude still claim none."""
+        """Spark higher than frontier still claim none."""
         spark = [{"name": "a", "score": 1.0}]
-        claude = {"probes": [{"name": "a", "score": 0.0}]}
-        table = cb.comparison_table(spark, claude)
-        self.assertNotIn("beats_claude", table)
+        frontier = {
+            "probes": [{"name": "a", "score": 0.0}],
+        }
+        table = fb.comparison_table(spark, frontier)
         self.assertEqual(table["claim"], "none")
         self.assertEqual(table["rows"][0]["spark_score"], 1.0)
-        self.assertEqual(table["rows"][0]["claude_score"], 0.0)
+        self.assertEqual(table["rows"][0]["frontier_score"], 0.0)
 
 
 class RunSuiteTests(unittest.TestCase):
-    """End-to-end suite dry path + Claude auto skip."""
+    """End-to-end suite dry path + frontier auto skip."""
 
-    def test_dry_suite_claude_auto_skip(self) -> None:
-        """make spark-eval CLAUDE=auto without keys stays honest."""
+    def test_dry_suite_frontier_auto_skip(self) -> None:
+        """make spark-eval FRONTIER=auto without keys stays honest."""
         with mock.patch.dict(os.environ, {}, clear=True):
             result = spark_eval.run_suite(
                 spark_eval.SUITE_DEFAULT,
                 None,
-                claude_mode="auto",
+                frontier_mode="auto",
             )
         self.assertEqual(result["claim"], "none")
         self.assertNotIn("beats_claude", result)
@@ -145,9 +144,9 @@ class RunSuiteTests(unittest.TestCase):
         for p in result["probes"]:
             self.assertEqual(p["score"], 1.0)
             self.assertEqual(p["system"], "spark")
-        base = result["claude_baseline"]
+        base = result["frontier_baseline"]
         self.assertEqual(base["status"], "skipped_no_credentials")
-        self.assertNotIn("beats_claude", base)
+        self.assertEqual(base["claim"], "none")
 
     def test_weights_mode_runs(self) -> None:
         """Init safetensors path still scores (often 0.0)."""
@@ -160,13 +159,12 @@ class RunSuiteTests(unittest.TestCase):
             result = spark_eval.run_suite(
                 spark_eval.SUITE_DEFAULT,
                 weights,
-                claude_mode="off",
+                frontier_mode="off",
             )
         self.assertEqual(result["mode"], "weights")
         self.assertEqual(result["claim"], "none")
-        self.assertNotIn("beats_claude", result)
         self.assertEqual(
-            result["claude_baseline"]["status"], "off"
+            result["frontier_baseline"]["status"], "off"
         )
 
 

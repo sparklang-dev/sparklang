@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # SparkBC e2e gate: compile spark_train_step → dump TRAIN/STEP →
 # bootstrap --run-bc → GAS ./spark --run-bc → assert ARTIFACT.
-# STEP runs multi-outer CPU SGD (trained=true). Not beat Claude.
+# STEP runs multi-outer CPU SGD (trained=true). No parity claim.
 #
 # STEP weights + loss drop are covered by make test-sparkbc.
 # This gate asserts ARTIFACT + opcode stream.

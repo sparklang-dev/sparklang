@@ -4,8 +4,8 @@ Forced grounding for Qwen-class and Spark-owned models. Does **not**
 claim literal impossibility of all lies. Makes guessing fail CI via
 expect / fixture / dump / schema gates and abstain.
 
-Prefer RTX **5090** for opt-in external SFT; **never** RTX PRO **6000**.
-Does **not** beat Claude.
+Prefer RTX **5090** for opt-in external SFT; **never** RTX PRO
+**6000**. No frontier-parity claim.
 """
 
 from __future__ import annotations

@@ -517,7 +517,7 @@ rm -f "$builder_tmp"
 
 # STEP 0x28: TRAIN → STEP → TRAIN_STATUS in one stream.
 # STEP runs CPU SGD → out/train/<job>/weights.safetensors
-# (trained=true, not_sgd=false). Tiny; not beat Claude.
+# (trained=true, not_sgd=false). Tiny; no frontier-parity claim.
 step_src="examples/spark_train_step.spark"
 step_pub="docs/examples/spark-train-step.sparkbc"
 step_tmp="$(mktemp)"

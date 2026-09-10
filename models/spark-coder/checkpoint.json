@@ -91,7 +91,7 @@
   ],
   "n_pairs_expanded": 768,
   "weights": "models/spark-coder/weights.safetensors",
-  "weights_sha256": "43c455cc3091a01b9891af0ab08cd13277099d3d69bf8b7fbe72f1ddd8098c67",
+  "weights_sha256": "959d1f5d4d192a7e4d9edbf5262b38c30c76bcf62e78d765e58ebad4fb72d8a8",
   "outer": 10,
   "inner": 10,
   "lr": 0.2,

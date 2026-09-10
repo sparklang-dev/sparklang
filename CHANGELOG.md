@@ -313,7 +313,7 @@ language) are listed here. Site and installers track
  prove / tool-loop. Packaged under `models/spark-coder/` and SDK
  pack when trained. Docs: [SPARK_CODER.md](docs/SPARK_CODER.md) →
  `/docs/spark-coder.html`. Gate: `make test-spark-coder` /
- `make spark-coder-train`. **Not** a HF/Claude/Bifrost brain.
+ `make spark-coder-train`. **Not** a HF/frontier-API/Bifrost brain.
 
 ## 0.6.41 — 2026-09-09
 
@@ -402,7 +402,7 @@ language) are listed here. Site and installers track
  (ISA), build models + weights/checkpoints, tokenizer/BPE, train
  loop (outer/inner SGD; scale fixture linked), architecture
  (embed/RMSNorm/lm_head/MLP; attention honest/partial), serve
- forward + HTTP/stdio API (serve API path linked), eval harness (Claude baseline linked; measurement only), makefile targets
+ forward + HTTP/stdio API (serve API path linked), eval harness (frontier-API baseline linked; measurement only), makefile targets
  CI/Pages contributor how-to. Hub: [FACTORY.md](docs/FACTORY.md)
  → `/docs/factory.html`. Also: `/docs/compile.html`
  `/docs/decompile.html`, `/docs/spark-bc.html`
@@ -444,8 +444,8 @@ language) are listed here. Site and installers track
 
 
 
-- **Claude eval baseline (honest):** `make spark-eval-claude` /
- `CLAUDE=auto|on|off` runs Spark frozen probes plus an optional
+- **Frontier-API eval baseline (honest):** `make spark-eval-frontier` /
+ `FRONTIER=auto|on|off` runs Spark frozen probes plus an optional
  Anthropic Messages baseline **only if** credentials already exist
  on the box. No key → `skipped_no_credentials` (clear status).
  Side-by-side comparison table; Never invents keys.

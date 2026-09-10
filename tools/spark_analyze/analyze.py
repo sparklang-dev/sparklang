@@ -7,7 +7,7 @@ methods elsewhere — not a clone):
   compile (if needed) → dump → ops list → REPORT.md stub
   → screenshot placeholder → optional serve → optional Ask stub
 
-Dump remains SoT. Never uploads. Never 6000. Does not beat Claude.
+Dump remains SoT. Never uploads. Never 6000. No parity claim.
 """
 
 from __future__ import annotations
@@ -81,7 +81,7 @@ The dump file (`dump.txt`) is the deterministic SoT.
 ## Honesty
 
 - Not OpenBin / OpenAPK / Ghidra / JADX.
-- Does **not** beat Claude.
+- No frontier-parity claim.
 - Never RTX PRO 6000.
 - No cloud upload from this tool.
 """
@@ -114,7 +114,7 @@ Or point at weights:
 ```
 
 TinyCoder is a **toy** coding model on authored fixtures.
-It does **not** beat Claude. Prefer `dump.txt` / `ops.json`
+It makes **no** frontier-parity claim. Prefer `dump.txt` / `ops.json`
 as SoT.
 """
 
@@ -128,8 +128,8 @@ Generated: {ts}
 ## Model honesty
 
 - Brain: **owned** TinyCoder (`spark-coder`)
-- Not Claude, not OpenBin Ask, not Bifrost SaaS
-- Does **not** beat Claude
+- Not a frontier API, not OpenBin Ask, not Bifrost SaaS
+- No frontier-parity claim
 - Prefer dump/ops as SoT if this text conflicts
 
 ## Ops context (from dump)
@@ -428,7 +428,7 @@ def main(argv: list[str] | None = None) -> int:
         prog="spark-analyze",
         description=(
             "Local Spark analysis folder: compile→dump→report. "
-            "No upload. Never 6000. Does not beat Claude."
+            "No upload. Never 6000. No frontier-parity claim."
         ),
     )
     ap.add_argument("input", help="path to .spark or .sparkbc")

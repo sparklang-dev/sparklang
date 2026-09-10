@@ -179,10 +179,10 @@
         <a href="/docs/programming-guide.html">Programming guide</a>
         <a href="/downloads.html">Downloads</a>
       </nav>      <article class="doc__body">
-        <h1 id="ci-cloudflare-pages-contributors">CI + Cloudflare Pages (contributors)</h1>
+        <h1 id="ci--cloudflare-pages-contributors">CI + Cloudflare Pages (contributors)</h1>
         <p>How factory docs and gates reach <strong>sparklang.dev</strong>. Spark /
         SparkLang only. Full release cut: <a href="/docs/release.html">RELEASE.md</a>.</p>
-        <h2 id="local-docs-regen-check">Local docs regen + check</h2>
+        <h2 id="local-docs-regen--check">Local docs regen + check</h2>
         <pre class="doc__pre"><code class="language-bash">make docs-html # python3 tools/md_to_doc_html.py --all-stale
         make docs-check # regen + --check + tools/test_docs_nav.py
         </code></pre>
@@ -203,15 +203,34 @@
         <p>PRs should keep these green. Docs-only PRs still run
         <code class="inline-code">make docs-check</code> locally before push.</p>
         <h2 id="production-pages-deploy">Production Pages deploy</h2>
-        <p>Project: <strong><code class="inline-code">sparklang-dev</code></strong>. Branch: <strong><code class="inline-code">production</code></strong>.</p>
-        <pre class="doc__pre"><code class="language-bash"># on the tip SHA you are shipping
-        make docs-html
+        <p>Project: <strong><code class="inline-code">sparklang-dev</code></strong>. Branch: <strong><code class="inline-code">production</code></strong>.
+        The project is <strong>direct upload</strong> (no git integration — verified
+        2026-09-10: API <code class="inline-code">source: null</code>). Deploys are therefore manual;
+        the canonical path is the atomic full-tree script:</p>
+        <pre class="doc__pre"><code class="language-bash"># on the tip SHA you are shipping (merged to main, clean tree)
+        make docs-html   # only when docs/*.md changed — regen is its own lane
         # mirror CHANGELOG.html if needed
-        npx wrangler pages deploy website \
-         --project-name=sparklang-dev \
-         --branch=production \
-         --commit-hash=&quot;$(git rev-parse HEAD)&quot;
+        make deploy-site   # == tools/deploy-site.sh
         </code></pre>
+        <p><code class="inline-code">tools/deploy-site.sh</code> runs exactly one
+        <code class="inline-code">wrangler pages deploy website --project-name=sparklang-dev
+        --branch=production --commit-hash=&lt;HEAD&gt;</code> — the <strong>whole</strong> <code class="inline-code">website/</code>
+        tree, every time. No rsync filters, no partial syncs, no per-file
+        picks. It refuses a dirty <code class="inline-code">website/</code> tree (<code class="inline-code">--allow-dirty</code> overrides)
+        and a HEAD that is not on <code class="inline-code">origin/main</code> (<code class="inline-code">--allow-unmerged</code>
+        overrides). Pages deployments are immutable bundles, so the site
+        flips atomically.</p>
+        <p><strong>Why (2026-09-10 incident):</strong> ad-hoc manual deploys from stale
+        local checkouts rolled sparklang.dev ~6 commits backwards (last
+        upload wins), and a filtered docs rsync once dropped
+        <code class="inline-code">spark-self.init.safetensors</code>. One script, full tree, merged-tip
+        only — that class of drift cannot happen.</p>
+        <p><strong>Upgrade path (owner-side, not CLI-able):</strong> connecting the Pages
+        project to GitHub (merge-to-main = auto deploy) requires the
+        Cloudflare GitHub App flow in the dashboard; a GitHub Actions
+        deploy workflow would need a <code class="inline-code">CLOUDFLARE_API_TOKEN</code> repo secret
+        (not provisioned). Until one of those exists, run
+        <code class="inline-code">make deploy-site</code> after each merge to main.</p>
         <p><strong>Auth:</strong> Wrangler OAuth on the deploy host is often under
         <code class="inline-code">~/.config/.wrangler/</code> (leading <strong>dot</strong>). That is not
         <code class="inline-code">~/.config/wrangler/</code>. Do not invent or print tokens.</p>

@@ -1,220 +1,221 @@
 {
- "root": "/home/mike/workspaces/sparklang-public-weight-gallery",
- "kinds": [
- {
- "id": "init",
- "title": "Init / dry ARTIFACT weights",
- "role": "SPARK_BC-seeded Xavier tensors; trained=false",
- "paths": [
- "docs/examples/spark-self.init.safetensors",
- "out/train/*/weights.safetensors"
- ],
- "make": "emit via model_lab / BUILD_MODELS"
- },
- {
- "id": "sgd",
- "title": "Post-STEP SGD weights",
- "role": "lm_head (+ embed / attn when train_attn) after CPU or consumer-GPU SGD",
- "paths": [
- "out/train/sgd-proof/weights.safetensors",
- "out/train/sgd-proof-scale/weights.safetensors"
- ],
- "make": "make spark-sgd-proof / spark-sgd-proof-scale"
- },
- {
- "id": "checkpoint",
- "title": "Checkpoints / loss-curve companions",
- "role": "checkpoint.json next to weights (not tensors)",
- "paths": [
- "out/train/sgd-proof/checkpoint.json",
- "models/spark-coder/checkpoint.json"
- ],
- "make": "written by apply_step / spark-coder-train"
- },
- {
- "id": "scale",
- "title": "Scale fixture weights",
- "role": "dim\u226564, n_layer\u22654 CPU-fast stubs",
- "paths": [
- "out/train/sgd-proof-scale/weights.safetensors",
- "out/gallery/scale/weights.safetensors"
- ],
- "make": "make spark-sgd-proof-scale or weight-gallery"
- },
- {
- "id": "spark-coder",
- "title": "Owned spark-coder TinyCoder",
- "role": "models/spark-coder trained in-repo",
- "paths": [
- "models/spark-coder/weights.safetensors"
- ],
- "make": "./spark-code train --scale tiny"
- },
- {
- "id": "spark-coder-large",
- "title": "spark-coder larger variant (if present)",
- "role": "models/spark-coder-large or gallery large emit",
- "paths": [
- "models/spark-coder-large/weights.safetensors",
- "out/gallery/large/weights.safetensors",
- "out/gallery/xl/weights.safetensors"
- ],
- "make": "make weight-gallery PROFILE=large|xl"
- },
- {
- "id": "models-dir",
- "title": "Any safetensors under models/",
- "role": "scan models/**/*.safetensors",
- "paths": [
- "models/**/*.safetensors"
- ],
- "make": "owned packs only"
- },
- {
- "id": "examples",
- "title": "Example / docs outputs",
- "role": "docs/examples + example train ARTIFACT siblings",
- "paths": [
- "docs/examples/*.safetensors",
- "examples/**/*.safetensors"
- ],
- "make": "checked-in init + generated"
- }
- ],
- "profiles": {
- "tiny": {
- "dim": 32,
- "n_layer": 2,
- "label": "Tiny control stub",
- "prefer_5090": false
- },
- "scale": {
- "dim": 64,
- "n_layer": 4,
- "label": "Scale fixture",
- "prefer_5090": false
- },
- "large": {
- "dim": 128,
- "n_layer": 8,
- "label": "Large multi-layer + attn tensors",
- "prefer_5090": false
- },
- "xl": {
- "dim": 256,
- "n_layer": 8,
- "label": "XL stub (opt-in consumer GPU generate)",
- "prefer_5090": true
- }
- },
- "files": [
- {
- "path": "docs/examples/spark-self.init.safetensors",
- "kind": "init",
- "size_class": "tiny",
- "file_sha256": "60b9b7297cb5e2d8362702144a9d9c15487e65dd11783ba7d499499b500198cf",
- "n_tensors": 21,
- "arch": {
- "vocab": 256,
- "dim": 32,
- "n_layer": 2,
- "n_head": 4,
- "n_kv": 2,
- "head_dim": 8,
- "mlp": 128
- },
- "trained": "false",
- "roles": [
- "attn",
- "embed",
- "lm_head",
- "mlp",
- "norm"
- ]
- },
- {
- "path": "models/spark-coder/weights.safetensors",
- "kind": "spark-coder",
- "size_class": "tiny",
- "file_sha256": "91e9dcb4bf50311b8b6e30cb71be1a2a7a0c298b05b1bdbd6b921c9cae0eead6",
- "n_tensors": 21,
- "arch": {
- "vocab": 256,
- "dim": 32,
- "n_layer": 2,
- "n_head": 4,
- "n_kv": 2,
- "head_dim": 8,
- "mlp": 128
- },
- "trained": "true",
- "roles": [
- "attn",
- "embed",
- "lm_head",
- "mlp",
- "norm"
- ]
- },
- {
- "path": "out/gallery/large/weights.safetensors",
- "kind": "spark-coder-large",
- "size_class": "large",
- "file_sha256": "a120ee5bb003ff2e65c41d8f024129b5fd5f5966f96c2d8ec8f9e551783d19ce",
- "n_tensors": 75,
- "arch": {
- "vocab": 256,
- "dim": 128,
- "n_layer": 8,
- "n_head": 4,
- "n_kv": 2,
- "head_dim": 32,
- "mlp": 512
- },
- "trained": "false",
- "roles": [
- "attn",
- "embed",
- "lm_head",
- "mlp",
- "norm"
- ]
- },
- {
- "path": "out/gallery/scale/weights.safetensors",
- "kind": "scale",
- "size_class": "scale",
- "file_sha256": "16f4269f2cb8941a18a19f0c4c0595a1c7cb84df960a14687bd457c0fedf7386",
- "n_tensors": 39,
- "arch": {
- "vocab": 256,
- "dim": 64,
- "n_layer": 4,
- "n_head": 4,
- "n_kv": 2,
- "head_dim": 16,
- "mlp": 256
- },
- "trained": "false",
- "roles": [
- "attn",
- "embed",
- "lm_head",
- "mlp",
- "norm"
- ]
- }
- ],
- "checkpoints": [
- "models/spark-coder/checkpoint.json"
- ],
- "role_explainers": {
- "embed": "Token/byte embedding table. Serve looks up rows for prompt bytes, then mean-pools or feeds attn0. Init mixes SPARK_BC bytes into early rows.",
- "lm_head": "Projects the final hidden vector to vocab logits. Primary STEP SGD target (CE on next-byte).",
- "norm": "RMSNorm scale vector (final_norm or per-block). Stabilizes magnitudes before MLP / lm_head.",
- "attn": "Layer attention q/k/v/o (+ attn_norm). Allocated at init; used in serve when present; SGD when train_attn.",
- "mlp": "SwiGLU MLP (up/gate/down + mlp_norm). Single layer runs in tiny CPU serve when tensors exist.",
- "other": "Named Spark tensor outside the common embed/attn/mlp/lm_head map \u2014 still F32 stub weights, not HF imports."
- },
- "note": "Gallery lists tiny and large stub configs. Opt-in XL generate suggests a consumer GPU (or CPU)."
+  "root": "/home/mike/workspaces/sparklang",
+  "kinds": [
+    {
+      "id": "init",
+      "title": "Init / dry ARTIFACT weights",
+      "role": "SPARK_BC-seeded Xavier tensors; trained=false",
+      "paths": [
+        "docs/examples/spark-self.init.safetensors",
+        "out/train/*/weights.safetensors"
+      ],
+      "make": "emit via model_lab / BUILD_MODELS"
+    },
+    {
+      "id": "sgd",
+      "title": "Post-STEP SGD weights",
+      "role": "lm_head (+ embed / attn0 when train_attn) after CPU or 5090 SGD",
+      "paths": [
+        "out/train/sgd-proof/weights.safetensors",
+        "out/train/sgd-proof-scale/weights.safetensors"
+      ],
+      "make": "make spark-sgd-proof / spark-sgd-proof-scale"
+    },
+    {
+      "id": "checkpoint",
+      "title": "Checkpoints / loss-curve companions",
+      "role": "checkpoint.json next to weights (not tensors)",
+      "paths": [
+        "out/train/sgd-proof/checkpoint.json",
+        "models/spark-coder/checkpoint.json"
+      ],
+      "make": "written by apply_step / spark-coder-train"
+    },
+    {
+      "id": "scale",
+      "title": "Scale fixture weights (F-lane)",
+      "role": "dim\u226564, n_layer\u22654 CPU-fast stubs",
+      "paths": [
+        "out/train/sgd-proof-scale/weights.safetensors",
+        "out/gallery/scale/weights.safetensors"
+      ],
+      "make": "make spark-sgd-proof-scale or weight-gallery"
+    },
+    {
+      "id": "spark-coder",
+      "title": "Owned spark-coder TinyCoder",
+      "role": "models/spark-coder trained in-repo",
+      "paths": [
+        "models/spark-coder/weights.safetensors"
+      ],
+      "make": "make spark-coder-train"
+    },
+    {
+      "id": "spark-coder-large",
+      "title": "spark-coder larger variant (if present)",
+      "role": "models/spark-coder-large or gallery large emit",
+      "paths": [
+        "models/spark-coder-large/weights.safetensors",
+        "out/gallery/large/weights.safetensors",
+        "out/gallery/xl/weights.safetensors"
+      ],
+      "make": "make weight-gallery PROFILE=large|xl"
+    },
+    {
+      "id": "models-dir",
+      "title": "Any safetensors under models/",
+      "role": "scan models/**/*.safetensors",
+      "paths": [
+        "models/**/*.safetensors"
+      ],
+      "make": "owned packs only"
+    },
+    {
+      "id": "examples",
+      "title": "Example / docs outputs",
+      "role": "docs/examples + example train ARTIFACT siblings",
+      "paths": [
+        "docs/examples/*.safetensors",
+        "examples/**/*.safetensors"
+      ],
+      "make": "checked-in init + generated"
+    }
+  ],
+  "profiles": {
+    "tiny": {
+      "dim": 32,
+      "n_layer": 2,
+      "label": "Tiny control stub",
+      "prefer_5090": false
+    },
+    "scale": {
+      "dim": 64,
+      "n_layer": 4,
+      "label": "F-lane scale fixture",
+      "prefer_5090": false
+    },
+    "large": {
+      "dim": 128,
+      "n_layer": 8,
+      "label": "Large multi-layer + attn tensors",
+      "prefer_5090": false
+    },
+    "xl": {
+      "dim": 256,
+      "n_layer": 8,
+      "label": "XL stub (opt-in 5090 generate)",
+      "prefer_5090": true
+    }
+  },
+  "files": [
+    {
+      "path": "docs/examples/spark-self.init.safetensors",
+      "kind": "init",
+      "size_class": "tiny",
+      "file_sha256": "60b9b7297cb5e2d8362702144a9d9c15487e65dd11783ba7d499499b500198cf",
+      "n_tensors": 21,
+      "arch": {
+        "vocab": 256,
+        "dim": 32,
+        "n_layer": 2,
+        "n_head": 4,
+        "n_kv": 2,
+        "head_dim": 8,
+        "mlp": 128
+      },
+      "trained": "false",
+      "roles": [
+        "attn",
+        "embed",
+        "lm_head",
+        "mlp",
+        "norm"
+      ]
+    },
+    {
+      "path": "models/spark-coder/weights.safetensors",
+      "kind": "spark-coder",
+      "size_class": "tiny",
+      "file_sha256": "959d1f5d4d192a7e4d9edbf5262b38c30c76bcf62e78d765e58ebad4fb72d8a8",
+      "n_tensors": 21,
+      "arch": {
+        "vocab": 256,
+        "dim": 32,
+        "n_layer": 2,
+        "n_head": 4,
+        "n_kv": 2,
+        "head_dim": 8,
+        "mlp": 128
+      },
+      "trained": "true",
+      "roles": [
+        "attn",
+        "embed",
+        "lm_head",
+        "mlp",
+        "norm"
+      ]
+    },
+    {
+      "path": "out/train/job-dry-001/weights.safetensors",
+      "kind": "sgd",
+      "size_class": "tiny",
+      "file_sha256": "02d3dd3073f20a4eb8f3927293e6563f10d95e58a6a775bebfe3a36e8109916d",
+      "n_tensors": 21,
+      "arch": {
+        "vocab": 256,
+        "dim": 32,
+        "n_layer": 2,
+        "n_head": 4,
+        "n_kv": 2,
+        "head_dim": 8,
+        "mlp": 128
+      },
+      "trained": "true",
+      "roles": [
+        "attn",
+        "embed",
+        "lm_head",
+        "mlp",
+        "norm"
+      ]
+    },
+    {
+      "path": "out/train/sgd-proof/weights.safetensors",
+      "kind": "sgd",
+      "size_class": "tiny",
+      "file_sha256": "ed09e696b5c44a55ca8d9611bb36b5543e14e61e2ed8ccaf9bf0b0f8c6469f02",
+      "n_tensors": 21,
+      "arch": {
+        "vocab": 256,
+        "dim": 32,
+        "n_layer": 2,
+        "n_head": 4,
+        "n_kv": 2,
+        "head_dim": 8,
+        "mlp": 128
+      },
+      "trained": "true",
+      "roles": [
+        "attn",
+        "embed",
+        "lm_head",
+        "mlp",
+        "norm"
+      ]
+    }
+  ],
+  "checkpoints": [
+    "out/train/sgd-proof/checkpoint.json",
+    "models/spark-coder/checkpoint.json"
+  ],
+  "role_explainers": {
+    "embed": "Token/byte embedding table. Serve looks up rows for prompt bytes, then mean-pools or feeds attn0. Init mixes SPARK_BC bytes into early rows.",
+    "lm_head": "Projects the final hidden vector to vocab logits. Primary STEP SGD target (CE on next-byte).",
+    "norm": "RMSNorm scale vector (final_norm or per-block). Stabilizes magnitudes before MLP / lm_head.",
+    "attn": "Layer attention q/k/v/o (+ attn_norm). Allocated at init; used in serve when present; SGD when train_attn.",
+    "mlp": "SwiGLU MLP (up/gate/down + mlp_norm). Layer-0 runs in tiny CPU serve when tensors exist.",
+    "other": "Named Spark tensor outside the common embed/attn/mlp/lm_head map \u2014 still F32 stub weights, not HF imports."
+  },
+  "note": "Gallery lists tiny and large stub configs. Opt-in XL generate prefers 5090; never 6000."
 }

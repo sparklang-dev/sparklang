@@ -32,9 +32,9 @@ jobs:
       - name: make test-spark-eval
         run: make test-spark-eval
 
-      # Claude baseline auto-skips without secrets (honest status).
-      - name: make spark-eval-claude
-        run: make spark-eval-claude
+      # Frontier baseline auto-skips without secrets (honest status).
+      - name: make spark-eval-frontier
+        run: make spark-eval-frontier
 
       - name: make test-serve-api
         run: make test-serve-api

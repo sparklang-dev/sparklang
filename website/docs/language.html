@@ -212,7 +212,7 @@
         <li><strong><code class="inline-code">{name}</code></strong> in ask/<code class="inline-code">?</code> prompts — bootstrap interpolates <code class="inline-code">let</code> bindings</li>
         </ul>
         <p>See <code class="inline-code">LANGUAGE_IMPROVEMENTS.md</code> for the full DX changelog.</p>
-        <h3 id="use-id-model-id"><code class="inline-code">use &lt;id&gt;</code> / <code class="inline-code">model &lt;id&gt;</code></h3>
+        <h3 id="use-id--model-id"><code class="inline-code">use &lt;id&gt;</code> / <code class="inline-code">model &lt;id&gt;</code></h3>
         <p>Set the default model for following calls. Pass an <strong>explicit</strong> HF id,
         checkpoint path, or configured gateway model string. SparkLang is <strong>not</strong>
         a the AI gateway plugin — there is no per-task alias roulette.</p>
@@ -228,7 +228,7 @@
         <p>Optional <strong><code class="inline-code">spark.toml</code></strong> (<code class="inline-code">model = "…"</code>) is read by the <strong>bootstrap</strong>
         VM on startup; <code class="inline-code">./spark</code> (GAS) still needs a <code class="inline-code">model</code>/<code class="inline-code">use</code> line in the file.</p>
         <h2 id="statements">Statements</h2>
-        <h3 id="model-reverse-compile-train-modify-lab-pipeline"><code class="inline-code">model reverse</code> / <code class="inline-code">compile</code> / <code class="inline-code">train</code> / <code class="inline-code">modify</code> (lab pipeline)</h3>
+        <h3 id="model-reverse--compile--train--modify-lab-pipeline"><code class="inline-code">model reverse</code> / <code class="inline-code">compile</code> / <code class="inline-code">train</code> / <code class="inline-code">modify</code> (lab pipeline)</h3>
         <p>Inspect a <strong>local published</strong> checkpoint, compile the <code class="inline-code">.spark</code> program
         to SPARK_BC, <strong>build</strong> a new adapter/head, and <strong>modify</strong> an existing
         stack <strong>without deleting special training</strong>. Flagship:
@@ -253,7 +253,7 @@
         <p>Dry: <code class="inline-code">./spark --dry-run examples/model_lab.spark</code>. Gate:
         <code class="inline-code">make test-model-lab</code>. Inventable facts still use SoT +
         <a href="/docs/abstain-heads.html">ABSTAIN_HEADS.md</a>. Never <code class="inline-code">auto</code>/<code class="inline-code">code</code>/<code class="inline-code">fast</code>.</p>
-        <h3 id="model-analyze-compare-improve-train-step-status-plan"><code class="inline-code">model analyze</code> / <code class="inline-code">compare</code> / <code class="inline-code">improve</code> / <code class="inline-code">train</code> / <code class="inline-code">step</code> / <code class="inline-code">status</code> / <code class="inline-code">plan</code></h3>
+        <h3 id="model-analyze--compare--improve--train--step--status--plan"><code class="inline-code">model analyze</code> / <code class="inline-code">compare</code> / <code class="inline-code">improve</code> / <code class="inline-code">train</code> / <code class="inline-code">step</code> / <code class="inline-code">status</code> / <code class="inline-code">plan</code></h3>
         <p>Analyze and compare reachable models, propose improvements, <strong>train</strong>
         real jobs (weights/adapters/checkpoints), run one dry <strong>step</strong>, poll
         <strong>status</strong>, or export an optional markdown <strong>plan</strong>. Dry-run uses
@@ -290,7 +290,7 @@
         model step &quot;job-dry-001&quot; -&gt; step # CPU SGD tick (0x28)
         model status &quot;job-dry-001&quot; -&gt; status # polls that job id
         </code></pre>
-        <h3 id="model-step-spark-bc-step-0x28"><code class="inline-code">model step</code> (SPARK_BC <code class="inline-code">STEP</code> <code class="inline-code">0x28</code>)</h3>
+        <h3 id="model-step-spark_bc-step-0x28"><code class="inline-code">model step</code> (SPARK_BC <code class="inline-code">STEP</code> <code class="inline-code">0x28</code>)</h3>
         <p>One training-loop tick in the binary — <strong>multi-pass CPU SGD</strong> on
         Spark tensors (fixture JSONL → CE on <code class="inline-code">lm_head</code>+embed; loss curve in
         <code class="inline-code">checkpoint.json</code>). Syntax:
@@ -325,7 +325,7 @@
         <code class="inline-code">local-yield</code> (optional allowlisted <code class="inline-code">train@</code> unit), <code class="inline-code">huggingface</code>
         (reserved — not wired). Env: <code class="inline-code">SPARK_TRAIN_BACKEND</code>, <code class="inline-code">SPARK_TRAIN_URL</code>,
         optional <code class="inline-code">SPARK_TRAIN_TOKEN</code>. See <a href="/docs/model-training.html">MODEL_TRAINING.md</a>.</p>
-        <h3 id="head-abstain-train-attach-ask"><code class="inline-code">head abstain</code> / <code class="inline-code">train</code> / <code class="inline-code">attach</code> / <code class="inline-code">ask</code></h3>
+        <h3 id="head-abstain--train--attach--ask"><code class="inline-code">head abstain</code> / <code class="inline-code">train</code> / <code class="inline-code">attach</code> / <code class="inline-code">ask</code></h3>
         <p>Decode-layer abstain / IDK gating for <strong>local</strong> models (and dry stubs).
         Companion <code class="inline-code">./spark-abstain</code>. Design: <a href="/docs/abstain-heads.html">ABSTAIN_HEADS.md</a>.</p>
         <pre class="doc__pre"><code class="inline-code">head abstain internal model &quot;path&quot; weights &quot;out/heads/abstain.pt&quot; threshold 0.7 idk &quot;I don't know.&quot; -&gt; gate
@@ -354,7 +354,7 @@
         (latency, tokens/s, quality proxy, tool JSON %), failure_modes,
         concrete <code class="inline-code">reasons[]</code>, risks on improve/plan.</p>
         <p>Examples: <code class="inline-code">examples/model_train.spark</code>, <code class="inline-code">examples/model_improve.spark</code>.</p>
-        <h3 id="ask-generate"><code class="inline-code">ask</code> / <code class="inline-code">generate</code> / <code class="inline-code">?</code></h3>
+        <h3 id="ask--generate--"><code class="inline-code">ask</code> / <code class="inline-code">generate</code> / <code class="inline-code">?</code></h3>
         <p><strong>Bootstrap only:</strong> <code class="inline-code">{topic}</code> in the quoted prompt resolves <code class="inline-code">let topic "…"</code>
         bindings (fail loud if missing). GAS dry-run matches fixtures on prompt
         substrings (e.g. <code class="inline-code">Summarize:</code> still hits the summary stub even with <code class="inline-code">{doc}</code>).</p>
@@ -376,7 +376,7 @@
         <code class="inline-code">SPARK_ACCOUNT_FILE</code>). End of a live <code class="inline-code">./spark --live</code> run prints
         <code class="inline-code">[accounting-run]</code> via <code class="inline-code">./spark-ask-http --rollup</code>. See
         <a href="/docs/ai-models.html#live-gateway-integration-wired-today">ASK_LIVE.md</a>.</p>
-        <h3 id="ask-probe-gateway-probe"><code class="inline-code">ask probe</code> / <code class="inline-code">gateway probe</code></h3>
+        <h3 id="ask-probe--gateway-probe"><code class="inline-code">ask probe</code> / <code class="inline-code">gateway probe</code></h3>
         <p>Dry gateway probe credential check (no network under <code class="inline-code">--dry-run</code>):</p>
         <pre class="doc__pre"><code class="inline-code">ask probe -&gt; info
         gateway probe -&gt; info
@@ -384,7 +384,7 @@
         <p>Companion <code class="inline-code">./spark-ask-probe --dry|--live</code>. On miss/401 → exit <strong>4</strong>,
         print credential unavailable — never invent routing, never ask to mint
         PAT, never reuse <code class="inline-code">cursor-ide</code>.</p>
-        <h3 id="embed-retrieve-first-class"><code class="inline-code">embed</code> / <code class="inline-code">retrieve</code> (first-class)</h3>
+        <h3 id="embed--retrieve-first-class"><code class="inline-code">embed</code> / <code class="inline-code">retrieve</code> (first-class)</h3>
         <p>Gateway-shaped RAG surface. Dry-run uses fixtures under
         <code class="inline-code">examples/fixtures/rag/</code> (same JSON as <code class="inline-code">bootstrap/dry_rag.c</code>).
         Live forks <code class="inline-code">./spark-rag-http</code>.</p>
@@ -408,7 +408,7 @@
         <code class="inline-code">embed</code>; <code class="inline-code">RAG_GATEWAY_URL</code> (default <code class="inline-code">:4620</code>) +
         <code class="inline-code">RAG_GATEWAY_API_KEY</code> or <code class="inline-code">SPARK_GATEWAY_KEY</code> for <code class="inline-code">retrieve</code>.
         Prefer gateway keys — <code class="inline-code">OPENAI_API_KEY</code> is wire-compat only.</p>
-        <h3 id="shell-run-escape-hatch-p0"><code class="inline-code">shell</code> / <code class="inline-code">run</code> (escape hatch — P0)</h3>
+        <h3 id="shell--run-escape-hatch--p0"><code class="inline-code">shell</code> / <code class="inline-code">run</code> (escape hatch — P0)</h3>
         <p>Call the host from <code class="inline-code">.spark</code>, and (design) embed <code class="inline-code">.spark</code> from a host
         language. Closed DSLs die without this.</p>
         <pre class="doc__pre"><code class="inline-code">shell &quot;echo hello&quot; -&gt; out
@@ -454,7 +454,7 @@
         (from <code class="inline-code">.spark</code> → host), <code class="inline-code">examples/shell_refuse.spark</code> (fail loud),
         <code class="inline-code">examples/python/host_embed.py</code>, <code class="inline-code">examples/js/host_embed.js</code>,
         <code class="inline-code">examples/c/host_embed.c</code> (host → <code class="inline-code">.spark</code>).</p>
-        <h3 id="http-get-http-post-shipped"><code class="inline-code">http get</code> / <code class="inline-code">http post</code> (shipped)</h3>
+        <h3 id="http-get--http-post-shipped"><code class="inline-code">http get</code> / <code class="inline-code">http post</code> (shipped)</h3>
         <p>Generic HTTP client ops — <strong>not</strong> the AI gateway-specific and <strong>not</strong>
         <code class="inline-code">engine fetch</code> <code class="inline-code">file://</code>. Dry-run never dials the network.</p>
         <pre class="doc__pre"><code class="inline-code">http get &quot;https://example.com/&quot; fixture &quot;examples/fixtures/http/get_ok.json&quot; timeout 5 -&gt; resp
@@ -620,7 +620,7 @@
          from message -&gt; tags
         </code></pre>
         <p>Dry-run returns <code class="inline-code">{ label, confidence, reasons }</code>. Invalid labels fail loud.</p>
-        <h3 id="listen-speak-voice-first-class"><code class="inline-code">listen</code> / <code class="inline-code">speak</code> / <code class="inline-code">voice</code> (first-class)</h3>
+        <h3 id="listen--speak--voice-first-class"><code class="inline-code">listen</code> / <code class="inline-code">speak</code> / <code class="inline-code">voice</code> (first-class)</h3>
         <p>Provider-agnostic STT/TTS primitives. Extended voice surface
         (review / code / copy / model / pstn): <a href="/docs/voice.html">VOICE.md</a>.</p>
         <pre class="doc__pre"><code class="inline-code">listen &quot;input.wav&quot; -&gt; transcript
@@ -664,7 +664,7 @@
         <pre class="doc__pre"><code class="inline-code">include &quot;lib/ai.spark&quot;
         ? &quot;Hello&quot; -&gt; reply
         </code></pre>
-        <h3 id="tool-with-tools"><code class="inline-code">tool</code> / <code class="inline-code">with tools</code></h3>
+        <h3 id="tool--with-tools"><code class="inline-code">tool</code> / <code class="inline-code">with tools</code></h3>
         <pre class="doc__pre"><code class="inline-code">tool weather(city: string) -&gt; string { &quot;stub:local&quot; }
 
         with tools [weather] {
@@ -676,9 +676,9 @@
         inside an active scope returns <code class="inline-code">[tool:&lt;name&gt;] stub:local</code> (not a
         generic model string). Fail loud if <code class="inline-code">with tools</code> lacks <code class="inline-code">[…]</code> or no
         prior <code class="inline-code">tool</code> registration matching the list.</p>
-        <h3 id="let-print-set"><code class="inline-code">let</code> / <code class="inline-code">print</code> / <code class="inline-code">set</code></h3>
+        <h3 id="let--print--set"><code class="inline-code">let</code> / <code class="inline-code">print</code> / <code class="inline-code">set</code></h3>
         <p>Bindings and output for reviewable scripts.</p>
-        <h3 id="review-builder-implement-first-class"><code class="inline-code">review</code> / <code class="inline-code">builder</code> / <code class="inline-code">implement</code> (first-class)</h3>
+        <h3 id="review--builder--implement-first-class"><code class="inline-code">review</code> / <code class="inline-code">builder</code> / <code class="inline-code">implement</code> (first-class)</h3>
         <p>Review AI-written or web-context code <strong>without executing it</strong>. Builder
         picks a target level and codegen; implement writes artifacts.</p>
         <pre class="doc__pre"><code class="inline-code">review path &quot;examples/fixtures/sample.js&quot; -&gt; report
@@ -773,7 +773,7 @@
         instruction). Proven new forms: <code class="inline-code">examples/ide_new_forms.spark</code> (bare
         + quoted path). Proven run forms: <code class="inline-code">examples/ide_run_forms.spark</code> (bare
         + <code class="inline-code">-&gt; ran</code>). Keymap <code class="inline-code">n</code>→new is <strong>not</strong> proven. See <a href="/docs/ide.html">IDE.md</a>.</p>
-        <h2 id="ide-keymap-ide-keys-ide-key">IDE keymap (<code class="inline-code">ide keys</code> / <code class="inline-code">ide key</code>)</h2>
+        <h2 id="ide-keymap-ide-keys--ide-key">IDE keymap (<code class="inline-code">ide keys</code> / <code class="inline-code">ide key</code>)</h2>
         <p>Asm: <code class="inline-code">asm/ide_keys.s</code>. Example: <code class="inline-code">examples/ide_keys.spark</code>.
         Script fixture: <code class="inline-code">examples/fixtures/ide/cmds.txt</code>.
         Verified under <code class="inline-code">--dry-run</code> (<code class="inline-code">rc=0</code>). Open/save use shared <code class="inline-code">ide_buf</code>.
@@ -911,7 +911,7 @@
         ./spark-net-capture --probe
         ./spark --dry-run --allow-net-capture examples/network_capture.spark
         </code></pre>
-        <h2 id="browser-mitm-language-sot">Browser / MITM (language SoT)</h2>
+        <h2 id="browser--mitm-language-sot">Browser / MITM (language SoT)</h2>
         <p><code class="inline-code">.spark</code> programs <strong>are</strong> the browser driver. Asm dispatch in
         <code class="inline-code">asm/browser_ops.s</code> — not a Python stub.</p>
         <h3 id="canonical-entrypoints-only-these">Canonical entrypoints (only these)</h3>
@@ -963,7 +963,7 @@
         engine paint fixture
         js eval &quot;1+1&quot;
         </code></pre>
-        <h3 id="engine-b-spark-asm-product-render-path">Engine B (Spark asm — product render path)</h3>
+        <h3 id="engine-b-spark-asm--product-render-path">Engine B (Spark asm — product render path)</h3>
         <p>Not Chromium / not Qt. Real ops only:</p>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
@@ -1128,7 +1128,7 @@
         cuda memstat -&gt; stats
         cuda prefer gpu 0
         </code></pre>
-        <h3 id="cuda-pcie-pcie-probe-live-sysfs"><code class="inline-code">cuda pcie</code> / <code class="inline-code">pcie probe</code> (live sysfs)</h3>
+        <h3 id="cuda-pcie--pcie-probe-live-sysfs"><code class="inline-code">cuda pcie</code> / <code class="inline-code">pcie probe</code> (live sysfs)</h3>
         <p><strong>First-class hardware capability</strong> in <code class="inline-code">asm/pcie_ops.s</code> (additive; does
         not touch voice/browser asm). Reads live PCI link attrs only — never
         invents Gen/width:</p>
@@ -1157,7 +1157,7 @@
         <code class="inline-code">errno=</code> on denial.</p>
         <pre class="doc__pre"><code class="inline-code">memory pin &quot;buffer&quot; size 1M -&gt; buf
         </code></pre>
-        <h2 id="os-os-blueprints-for-ai-agents"><code class="inline-code">os</code> (OS blueprints for AI / agents)</h2>
+        <h2 id="os-os-blueprints-for-ai--agents"><code class="inline-code">os</code> (OS blueprints for AI / agents)</h2>
         <p>Spark generates <strong>OS blueprints + educational bootable stubs</strong>, not a
         host OS install. Output: <code class="inline-code">out/os/&lt;name&gt;/</code>. Bounds:
         <code class="inline-code">OS_DESIGN.md</code>.</p>
