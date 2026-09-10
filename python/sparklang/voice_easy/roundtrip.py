@@ -102,7 +102,6 @@ def prove_roundtrip(
         "n": len(pairs),
         "trained": str(model.meta.get("trained")),
         "scale": model.meta.get("scale"),
-        "beats_claude": False,
         "never": "rtx-pro-6000",
         "details": details,
         "note": (

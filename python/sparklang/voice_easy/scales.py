@@ -61,7 +61,6 @@ def resolve_scale(
             "set --scale or VOICE_SCALE" % raw
         )
     cfg = dict(SCALES[raw])
-    cfg["beats_claude"] = False
     cfg["never"] = "rtx-pro-6000"
     cfg["brain"] = "owned-weights"
     return cfg

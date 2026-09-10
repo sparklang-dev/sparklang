@@ -260,7 +260,6 @@ def answer_with_tinycoder(
         "completion": completion,
         "answer": ("%s\n\n%s" % (body, HONESTY)).strip(),
         "trained": gen.get("trained"),
-        "beats_claude": False,
     }
 
 
@@ -279,8 +278,7 @@ def answer_question(
             "engine": "empty",
             "weak": True,
             "answer": "No question heard. " + HONESTY,
-            "beats_claude": False,
-        }
+            }
 
     factual = _factual_answer(q, ctx)
     if factual:
@@ -288,8 +286,7 @@ def answer_question(
             "engine": "dump_facts",
             "weak": False,
             "answer": factual + "\n\n" + HONESTY,
-            "beats_claude": False,
-        }
+            }
 
     wpath = weights
     if wpath is None:
@@ -307,8 +304,7 @@ def answer_question(
                     "TinyCoder failed (%s). Dump remains SoT. %s"
                     % (exc, HONESTY)
                 ),
-                "beats_claude": False,
-            }
+                    }
 
     names = _ops_names(ctx.get("ops") or [])
     return {
@@ -325,7 +321,6 @@ def answer_question(
                 HONESTY,
             )
         ),
-        "beats_claude": False,
     }
 
 
@@ -527,7 +522,6 @@ def run_ask(
         "context_kind": ctx.get("kind"),
         "sha256": ctx.get("sha256"),
         "ops": len(_ops_names(ctx.get("ops") or [])),
-        "beats_claude": False,
         "never": "rtx-pro-6000",
         "openbin_login": False,
     }

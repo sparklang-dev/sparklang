@@ -39,10 +39,10 @@ class DiscoverKeyTests(unittest.TestCase):
 
 
 class ClaudeBaselineHonestyTests(unittest.TestCase):
-    """Baseline never upgrades claim / beats_claude."""
+    """Baseline never upgrades claim; no beats_claude field."""
 
     def test_auto_skip_without_creds(self) -> None:
-        """auto + no key → skip status, beats_claude false."""
+        """auto + no key → skip status, no beats_claude field."""
         probes = [
             {
                 "name": "copy_recall",
@@ -60,7 +60,7 @@ class ClaudeBaselineHonestyTests(unittest.TestCase):
                 probes, load, mode="auto"
             )
         self.assertEqual(out["status"], "skipped_no_credentials")
-        self.assertIs(out["beats_claude"], False)
+        self.assertNotIn("beats_claude", out)
         self.assertEqual(out["claim"], "none")
 
     def test_on_missing_creds_status(self) -> None:
@@ -71,10 +71,10 @@ class ClaudeBaselineHonestyTests(unittest.TestCase):
             )
         self.assertEqual(out["status"], "skipped_no_credentials")
         self.assertIn("error", out)
-        self.assertIs(out["beats_claude"], False)
+        self.assertNotIn("beats_claude", out)
 
     def test_ran_still_not_beat(self) -> None:
-        """Even with mocked Claude scores, beats_claude stays False."""
+        """Even with mocked Claude scores, no beats_claude field."""
 
         class _Resp:
             def __enter__(self) -> "_Resp":
@@ -113,18 +113,15 @@ class ClaudeBaselineHonestyTests(unittest.TestCase):
             )
         self.assertEqual(out["status"], "ran")
         self.assertEqual(out["probes"][0]["score"], 1.0)
-        self.assertIs(out["beats_claude"], False)
+        self.assertNotIn("beats_claude", out)
         self.assertEqual(out["claim"], "none")
 
     def test_comparison_never_claims_win(self) -> None:
         """Spark higher than Claude still claim none."""
         spark = [{"name": "a", "score": 1.0}]
-        claude = {
-            "probes": [{"name": "a", "score": 0.0}],
-            "beats_claude": False,
-        }
+        claude = {"probes": [{"name": "a", "score": 0.0}]}
         table = cb.comparison_table(spark, claude)
-        self.assertIs(table["beats_claude"], False)
+        self.assertNotIn("beats_claude", table)
         self.assertEqual(table["claim"], "none")
         self.assertEqual(table["rows"][0]["spark_score"], 1.0)
         self.assertEqual(table["rows"][0]["claude_score"], 0.0)
@@ -142,7 +139,7 @@ class RunSuiteTests(unittest.TestCase):
                 claude_mode="auto",
             )
         self.assertEqual(result["claim"], "none")
-        self.assertIs(result["beats_claude"], False)
+        self.assertNotIn("beats_claude", result)
         self.assertEqual(result["mode"], "dry")
         self.assertEqual(len(result["probes"]), 2)
         for p in result["probes"]:
@@ -150,7 +147,7 @@ class RunSuiteTests(unittest.TestCase):
             self.assertEqual(p["system"], "spark")
         base = result["claude_baseline"]
         self.assertEqual(base["status"], "skipped_no_credentials")
-        self.assertIs(base["beats_claude"], False)
+        self.assertNotIn("beats_claude", base)
 
     def test_weights_mode_runs(self) -> None:
         """Init safetensors path still scores (often 0.0)."""
@@ -167,7 +164,7 @@ class RunSuiteTests(unittest.TestCase):
             )
         self.assertEqual(result["mode"], "weights")
         self.assertEqual(result["claim"], "none")
-        self.assertIs(result["beats_claude"], False)
+        self.assertNotIn("beats_claude", result)
         self.assertEqual(
             result["claude_baseline"]["status"], "off"
         )

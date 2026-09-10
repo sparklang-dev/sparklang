@@ -37,7 +37,7 @@ def dump_path(path: Path) -> str:
         "# SparkLang SPARK_BC hexdump",
         "# path=%s" % path,
         "# sha256=%s size=%d" % (bc["sha256"], bc["size"]),
-        "# never=rtx-pro-6000 beats_claude=false",
+        "# never=rtx-pro-6000",
         "",
     ]
     return "\n".join(hdr) + hexdump(bc["raw"]) + "\n"

@@ -216,6 +216,5 @@
  "mlp": "SwiGLU MLP (up/gate/down + mlp_norm). Single layer runs in tiny CPU serve when tensors exist.",
  "other": "Named Spark tensor outside the common embed/attn/mlp/lm_head map \u2014 still F32 stub weights, not HF imports."
  },
- "note": "Gallery lists tiny and large stub configs. Opt-in XL generate suggests a consumer GPU (or CPU).",
- "beats_frontier": false
+ "note": "Gallery lists tiny and large stub configs. Opt-in XL generate suggests a consumer GPU (or CPU)."
 }

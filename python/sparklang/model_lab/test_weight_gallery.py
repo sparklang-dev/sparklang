@@ -76,7 +76,7 @@ class TestWeightGallery(unittest.TestCase):
         self.assertIn("argmax", out["forward"])
         self.assertEqual(out["device"], "cpu")
         self.assertEqual(out["never"], "rtx-pro-6000")
-        self.assertIs(out["beats_claude"], False)
+        self.assertNotIn("beats_claude", out)
 
     def test_compare_identical(self) -> None:
         """Diff of same file reports identical."""

@@ -6,7 +6,14 @@ tools (objdump / ghidra / r2 / openbin) are probed and **skipped
 cleanly** when absent — never fake green. Domain is SPARK_BC first;
 ELF/PE classic RE is N/A for Spark SoT wins.
 
-Does not beat Claude. Never 6000. Do not copy OpenBin code.
+Every parity badge is COMPUTED from measured probe output:
+round-trip %, symbol/xref extraction on real bytes, the local ELF
+probe, and byte-level probes of any competitor tool actually present
+on this box. A competitor that is absent — or present without a
+scripted byte-level probe for that category — renders
+``not probed``. Never a declared win/tie/loss.
+
+Never 6000. Do not copy OpenBin code.
 """
 
 from __future__ import annotations
@@ -42,6 +49,105 @@ PUBLISHED = [
 
 def _which(name: str) -> str | None:
     return shutil.which(name)
+
+
+NOT_PROBED = "not probed"
+
+# Parity columns (order matters for the site table). objdump is a
+# binutils disassembler, not a decompile suite, but it is the one
+# tool with a scripted byte-level probe here, so it earns a column.
+PARITY_TOOLS = [
+    "spark",
+    "objdump",
+    "openbin",
+    "ghidra",
+    "ida",
+    "binja",
+    "llm4decompile",
+]
+
+# Parity column → external probe row name (spark has no external).
+_TOOL_ROW_NAME = {
+    "objdump": "objdump",
+    "openbin": "openbin",
+    "ghidra": "ghidra",
+    "ida": "ida",
+    "binja": "binaryninja",
+}
+
+
+def _run_bytes_probe(argv: list[str]) -> tuple[int | None, str]:
+    """Run a byte-level tool probe; return (returncode, snippet)."""
+    try:
+        proc = subprocess.run(
+            argv,
+            capture_output=True,
+            text=True,
+            timeout=8,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        return None, str(exc)
+    out = ((proc.stdout or "") + " " + (proc.stderr or "")).strip()
+    return proc.returncode, out[:160]
+
+
+def _probe_tool_sparkbc(
+    tool: str, fixture: Path
+) -> dict[str, str] | None:
+    """Byte-probe: can this tool decode a real .sparkbc?
+
+    Returns None when there is no scripted probe for the tool —
+    presence on PATH is not evidence of capability.
+    """
+    if tool == "objdump":
+        rc, snip = _run_bytes_probe(["objdump", "-d", str(fixture)])
+        if rc is None:
+            return {"verdict": NOT_PROBED, "note": snip}
+        if rc == 0:
+            return {
+                "verdict": "win",
+                "note": "objdump accepted SPARK_BC bytes (measured)",
+            }
+        return {
+            "verdict": "na",
+            "note": (
+                "measured: objdump rejects SPARK_BC "
+                "(not its format): %s" % snip
+            ),
+        }
+    return None
+
+
+def _probe_tool_elf(
+    tool: str, target: Path
+) -> dict[str, str] | None:
+    """Byte-probe: can this tool list ELF sections on real bytes?
+
+    Returns None when there is no scripted probe for the tool.
+    """
+    if tool == "objdump":
+        if not target.is_file():
+            return {
+                "verdict": NOT_PROBED,
+                "note": "./spark not built on this box",
+            }
+        rc, snip = _run_bytes_probe(["objdump", "-h", str(target)])
+        if rc is None:
+            return {"verdict": NOT_PROBED, "note": snip}
+        if rc == 0:
+            return {
+                "verdict": "win",
+                "note": (
+                    "measured: objdump -h listed ELF sections "
+                    "on ./spark"
+                ),
+            }
+        return {
+            "verdict": "loss",
+            "note": "measured: objdump -h failed: %s" % snip,
+        }
+    return None
 
 
 def _probe_external() -> list[dict[str, object]]:
@@ -132,160 +238,244 @@ def _spark_fixture_metrics() -> list[dict[str, object]]:
     return rows
 
 
-def _parity_matrix() -> list[dict[str, str]]:
-    """Honest capability matrix (not invented green checks)."""
-    # spark / openbin / ghidra / ida / binja / llm4decompile
-    return [
+def _competitor_cells(
+    external: list[dict[str, object]],
+    *,
+    sparkbc_fixture: Path,
+    elf_target: Path,
+) -> dict[str, dict[str, object]]:
+    """Measured competitor state per parity column.
+
+    For each tool: presence from the external probe list, plus
+    byte-level probes where scripted. Capability without a
+    byte-level probe is NOT_PROBED — presence is not evidence.
+    """
+    by_name = {str(r.get("tool")): r for r in external}
+    cells: dict[str, dict[str, object]] = {}
+    for col, row_name in _TOOL_ROW_NAME.items():
+        row = by_name.get(row_name) or {}
+        present = row.get("status") == "present"
+        cells[col] = {
+            "present": present,
+            "sparkbc": (
+                _probe_tool_sparkbc(col, sparkbc_fixture)
+                if present
+                else None
+            ),
+            "elf": (
+                _probe_tool_elf(col, elf_target) if present else None
+            ),
+        }
+    # llm4decompile is never probed on this box (no local binary).
+    cells["llm4decompile"] = {
+        "present": False,
+        "sparkbc": None,
+        "elf": None,
+    }
+    return cells
+
+
+def _comp_cell(
+    comp: dict[str, dict[str, object]],
+    tool: str,
+    probe_kind: str | None,
+) -> str:
+    """Computed competitor badge for one category cell."""
+    if tool == "spark":
+        raise ValueError("spark cells are computed separately")
+    state = comp.get(tool) or {}
+    if not state.get("present"):
+        return NOT_PROBED
+    if probe_kind is None:
+        return NOT_PROBED
+    probe = state.get(probe_kind)
+    if not probe:
+        return NOT_PROBED
+    return str(probe.get("verdict") or NOT_PROBED)
+
+
+def _parity_matrix(
+    fixtures: list[dict[str, object]],
+    rt: dict[str, object],
+    elf_probe: dict[str, object],
+    project_meta: dict[str, object] | None,
+    external: list[dict[str, object]],
+) -> list[dict[str, str]]:
+    """Compute every badge from measured probe output.
+
+    Spark cells derive from fixture metrics, the round-trip gate,
+    the local ELF probe, and the sample project write. Competitor
+    cells derive from byte-level probes of tools actually present;
+    anything else is ``not probed`` — never a declared badge.
+    """
+    comp = _competitor_cells(
+        external,
+        sparkbc_fixture=PUBLISHED[0],
+        elf_target=ROOT / "spark",
+    )
+    ok_fixtures = [f for f in fixtures if f.get("status") == "ok"]
+    n_ok = len(ok_fixtures)
+    all_ok = n_ok == len(fixtures) and n_ok > 0
+    symbols_ok = all_ok and all(
+        int(f.get("n_symbols") or 0) > 0
+        and int(f.get("n_const_refs") or 0) > 0
+        for f in ok_fixtures
+    )
+    rt_pct = float(rt.get("round_trip_pct") or 0.0)
+    rt_ok = rt.get("status") == "pass" and rt_pct == 100.0
+    project_ok = bool(project_meta and project_meta.get("files"))
+    elf_status = str(elf_probe.get("status") or "skip")
+
+    def _spark_native() -> str:
+        return "win" if all_ok and symbols_ok else "loss"
+
+    def _spark_roundtrip() -> str:
+        if rt_ok:
+            return "win"
+        return "tie" if rt_pct >= 50.0 else "loss"
+
+    def _spark_elf() -> str:
+        # Local probe lists hdr+sections only — an honest loss vs
+        # full RE suites even when the probe ran clean.
+        if elf_status in ("ok", "fail"):
+            return "loss"
+        return NOT_PROBED
+
+    rows = [
         {
             "category": "Native dump fidelity (SPARK_BC)",
-            "spark": "win",
-            "openbin": "na",
-            "ghidra": "na",
-            "ida": "na",
-            "binja": "na",
-            "llm4decompile": "na",
+            "spark": _spark_native(),
+            "objdump": _comp_cell(comp, "objdump", "sparkbc"),
+            "openbin": _comp_cell(comp, "openbin", "sparkbc"),
+            "ghidra": _comp_cell(comp, "ghidra", "sparkbc"),
+            "ida": _comp_cell(comp, "ida", "sparkbc"),
+            "binja": _comp_cell(comp, "binja", "sparkbc"),
+            "llm4decompile": _comp_cell(
+                comp, "llm4decompile", "sparkbc"
+            ),
             "note": (
-                "Only Spark decodes SPBC SoT; classics target "
-                "ELF/PE/mach-O"
+                "Spark: %d/%d published fixtures decoded with "
+                "symbols+xrefs+sections. Competitors need a "
+                "byte-level SPARK_BC probe to score."
+                % (n_ok, len(fixtures))
             ),
         },
         {
             "category": "Round-trip reassemble (compile hash)",
-            "spark": "win",
-            "openbin": "na",
-            "ghidra": "loss",
-            "ida": "loss",
-            "binja": "loss",
-            "llm4decompile": "loss",
+            "spark": _spark_roundtrip(),
+            "objdump": _comp_cell(comp, "objdump", None),
+            "openbin": _comp_cell(comp, "openbin", None),
+            "ghidra": _comp_cell(comp, "ghidra", None),
+            "ida": _comp_cell(comp, "ida", None),
+            "binja": _comp_cell(comp, "binja", None),
+            "llm4decompile": _comp_cell(comp, "llm4decompile", None),
             "note": (
-                "Spark: compile→dump→recompile 100% on fixtures. "
-                "LLM recompile≠fidelity (arXiv:2609.05370)"
+                "Spark: compile→dump→recompile %.1f%% (%d/%d) on "
+                "published fixtures. No competitor SPARK_BC "
+                "round-trip probe exists."
+                % (
+                    rt_pct,
+                    rt.get("n_pass") or 0,
+                    rt.get("n_total") or 0,
+                )
             ),
         },
         {
-            "category": "IDE explore (SPARK_BC GUI / dump)",
-            "spark": "win",
-            "openbin": "tie",
-            "ghidra": "tie",
-            "ida": "tie",
-            "binja": "tie",
-            "llm4decompile": "na",
-            "note": (
-                "Spark has local dump/GUI for SPBC; classics "
-                "win general binary IDE — different domain"
+            "category": "Symbol + xref extraction (SPARK_BC)",
+            "spark": "win" if symbols_ok else "loss",
+            "objdump": _comp_cell(comp, "objdump", "sparkbc"),
+            "openbin": _comp_cell(comp, "openbin", "sparkbc"),
+            "ghidra": _comp_cell(comp, "ghidra", "sparkbc"),
+            "ida": _comp_cell(comp, "ida", "sparkbc"),
+            "binja": _comp_cell(comp, "binja", "sparkbc"),
+            "llm4decompile": _comp_cell(
+                comp, "llm4decompile", "sparkbc"
             ),
-        },
-        {
-            "category": "Ask / voice assist",
-            "spark": "tie",
-            "openbin": "tie",
-            "ghidra": "na",
-            "ida": "na",
-            "binja": "na",
-            "llm4decompile": "tie",
             "note": (
-                "Optional LLM assist exists in research/product "
-                "space; Spark keeps LLM off SoT"
+                "Spark: string-pool symbols + const/op xrefs "
+                "verified on %d fixture(s) from real bytes."
+                % n_ok
             ),
         },
         {
             "category": "Report export (txt/json/html project)",
-            "spark": "win",
-            "openbin": "tie",
-            "ghidra": "tie",
-            "ida": "tie",
-            "binja": "tie",
-            "llm4decompile": "na",
-            "note": "Spark ships analyze_project local folder",
-        },
-        {
-            "category": "Multi-format ELF/PE",
-            "spark": "loss",
-            "openbin": "win",
-            "ghidra": "win",
-            "ida": "win",
-            "binja": "win",
-            "llm4decompile": "win",
+            "spark": "win" if project_ok else "loss",
+            "objdump": _comp_cell(comp, "objdump", None),
+            "openbin": _comp_cell(comp, "openbin", None),
+            "ghidra": _comp_cell(comp, "ghidra", None),
+            "ida": _comp_cell(comp, "ida", None),
+            "binja": _comp_cell(comp, "binja", None),
+            "llm4decompile": _comp_cell(comp, "llm4decompile", None),
             "note": (
-                "Spark ships spark-binary-probe --elf (hdr + "
-                "sections JSON) + spark-section-dump; still not "
-                "Ghidra-class. SPARK_BC first. claim="
-                "local_elf_probe_not_ghidra"
+                "Spark: analyze_project wrote %s."
+                % (
+                    ", ".join(project_meta["files"])
+                    if project_ok
+                    else "no sample project this run"
+                )
             ),
         },
         {
-            "category": "LLM-assist decompile",
-            "spark": "na",
-            "openbin": "win",
-            "ghidra": "tie",
-            "ida": "tie",
-            "binja": "tie",
-            "llm4decompile": "win",
+            "category": "Multi-format ELF/PE",
+            "spark": _spark_elf(),
+            "objdump": _comp_cell(comp, "objdump", "elf"),
+            "openbin": _comp_cell(comp, "openbin", "elf"),
+            "ghidra": _comp_cell(comp, "ghidra", "elf"),
+            "ida": _comp_cell(comp, "ida", "elf"),
+            "binja": _comp_cell(comp, "binja", "elf"),
+            "llm4decompile": _comp_cell(comp, "llm4decompile", "elf"),
             "note": (
-                "Spark does not claim LLM source recovery; "
-                "research note only"
+                "Spark: spark-binary-probe --elf status=%s "
+                "(hdr+sections only — not Ghidra-class). "
+                "Competitors need a byte-level ELF probe."
+                % elf_status
             ),
         },
         {
             "category": "Batch / fixtures harness",
-            "spark": "win",
-            "openbin": "tie",
-            "ghidra": "tie",
-            "ida": "tie",
-            "binja": "tie",
-            "llm4decompile": "tie",
-            "note": "make decompile-bench + roundtrip fixtures",
-        },
-        {
-            "category": "Shadows / helpers",
-            "spark": "win",
-            "openbin": "na",
-            "ghidra": "na",
-            "ida": "na",
-            "binja": "na",
-            "llm4decompile": "na",
-            "note": "helpers/shadows wrap Spark SoT",
-        },
-        {
-            "category": "Local privacy (no upload)",
-            "spark": "win",
-            "openbin": "loss",
-            "ghidra": "win",
-            "ida": "win",
-            "binja": "win",
-            "llm4decompile": "tie",
+            "spark": "win" if all_ok else "loss",
+            "objdump": _comp_cell(comp, "objdump", None),
+            "openbin": _comp_cell(comp, "openbin", None),
+            "ghidra": _comp_cell(comp, "ghidra", None),
+            "ida": _comp_cell(comp, "ida", None),
+            "binja": _comp_cell(comp, "binja", None),
+            "llm4decompile": _comp_cell(comp, "llm4decompile", None),
             "note": (
-                "OpenBin online path may upload after login; "
-                "Spark dump stays local"
+                "Spark: make decompile-bench measured %d/%d "
+                "fixtures ok this run." % (n_ok, len(fixtures))
             ),
         },
         {
-            "category": "Integrated train / weights",
-            "spark": "win",
-            "openbin": "na",
-            "ghidra": "na",
-            "ida": "na",
-            "binja": "na",
-            "llm4decompile": "na",
-            "note": "TRAIN/STEP + init weights from same BC",
+            "category": "Local privacy (no upload)",
+            "spark": "win" if all_ok else "loss",
+            "objdump": _comp_cell(comp, "objdump", None),
+            "openbin": _comp_cell(comp, "openbin", None),
+            "ghidra": _comp_cell(comp, "ghidra", None),
+            "ida": _comp_cell(comp, "ida", None),
+            "binja": _comp_cell(comp, "binja", None),
+            "llm4decompile": _comp_cell(comp, "llm4decompile", None),
+            "note": (
+                "Spark: this bench parsed %d fixture(s) in-process "
+                "on disk; no network calls. Competitor privacy "
+                "is not probeable here." % n_ok
+            ),
         },
     ]
+    return rows
 
 
 def _summarize(
     matrix: list[dict[str, str]],
 ) -> dict[str, dict[str, int]]:
-    tools = [
-        "spark",
-        "openbin",
-        "ghidra",
-        "ida",
-        "binja",
-        "llm4decompile",
-    ]
     out: dict[str, dict[str, int]] = {}
-    for t in tools:
-        counts = {"win": 0, "tie": 0, "loss": 0, "na": 0}
+    for t in PARITY_TOOLS:
+        counts = {
+            "win": 0,
+            "tie": 0,
+            "loss": 0,
+            "na": 0,
+            NOT_PROBED: 0,
+        }
         for row in matrix:
             v = row.get(t, "na")
             if v not in counts:
@@ -358,8 +548,6 @@ def build_scoreboard(
     fixtures = _spark_fixture_metrics()
     external = _probe_external()
     elf_probe = _elf_local_probe()
-    matrix = _parity_matrix()
-    summary = _summarize(matrix)
     project_meta = None
     step = ROOT / "docs/examples/spark-train-step.sparkbc"
     if project_dir is not None and step.is_file():
@@ -375,17 +563,25 @@ def build_scoreboard(
             label="decompile-bench sample project",
             roundtrip=rt if isinstance(rt, dict) else None,
         )
+    matrix = _parity_matrix(
+        fixtures,
+        rt if isinstance(rt, dict) else {},
+        elf_probe,
+        project_meta,
+        external,
+    )
+    summary = _summarize(matrix)
     ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%MZ")
     return {
         "generated_at": ts,
         "generator": "tools/spark-bc-dump/decompile_bench.py",
         "domain": "SPARK_BC",
         "honesty": (
-            "Measured Spark metrics on SPARK_BC fixtures only. "
-            "Do NOT publish 'Spark beats Ghidra/IDA/Binary Ninja/"
-            "LLM4Decompile/OpenBin' without this JSON. Classic "
-            "tools win ELF/PE; Spark wins SPBC round-trip + "
-            "local structured dump + privacy + train/weights."
+            "Every badge in this JSON is computed from measured "
+            "probe output on this box (round-trip %, symbol/xref "
+            "extraction on real bytes, local ELF probe, byte-level "
+            "tool probes). Absent or unprobed tools render "
+            "'not probed' — never a declared win/tie/loss."
         ),
         "beat_axes": [
             {

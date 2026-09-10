@@ -57,6 +57,11 @@ jobs:
       # Voice ask loop (STT/TTS dry + dump context)
       - name: make test-spark-ask
         run: make test-spark-ask
+
+      # JS/Python SPARK_BC parser parity (website/js/sparkbc.js vs
+      # bc_dump.py on published fixtures; node is on the runner).
+      - name: make test-js-parity
+        run: make test-js-parity
 # Voice easy — owned STT/TTS heads (tiny dry; never 6000)
       - name: make test-voice-easy
         run: make test-voice-easy

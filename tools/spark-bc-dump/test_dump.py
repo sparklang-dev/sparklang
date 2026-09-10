@@ -215,7 +215,7 @@ def test_sgd_step_loss_drops() -> dict:
         assert r1["not_sgd"] is False
         assert r1["sgd"] is True
         assert r1["train_attn"] is True
-        assert r1["beats_claude"] is False
+        assert "beats_claude" not in r1
         assert r1["loss_after"] < r1["loss_before"]
         assert r1["outer_steps"] == 2
         assert r1["dataset_n"] >= 12
@@ -225,7 +225,7 @@ def test_sgd_step_loss_drops() -> dict:
         assert curve[-1]["loss"] == r1["loss_after"]
         assert ckpt.is_file()
         ck = json.loads(ckpt.read_text(encoding="utf-8"))
-        assert ck["beats_claude"] is False
+        assert "beats_claude" not in ck
         assert ck["device"] == "cpu"
         assert ck["never"] == "rtx-pro-6000"
         assert ck.get("train_attn") is True
@@ -274,7 +274,7 @@ def test_scale_fixture_loads() -> dict:
     long_n = sum(1 for u, _a in scale_pairs if len(u) >= 40)
     assert long_n >= 24
     meta = json.loads(cfg.read_text(encoding="utf-8"))
-    assert meta.get("beats_claude") is False
+    assert "beats_claude" not in meta
     assert meta.get("device") == "cpu"
     assert meta.get("never") == "rtx-pro-6000"
     assert meta.get("ci_default") is False
@@ -337,7 +337,7 @@ def test_scale_arch_shapes() -> dict:
         assert r["arch_dim"] == 64
         assert r["arch_n_layer"] == 4
         assert r["loss_after"] < r["loss_before"]
-        assert r["beats_claude"] is False
+        assert "beats_claude" not in r
         assert r["device"] == "cpu"
         return {
             "dim": 64,

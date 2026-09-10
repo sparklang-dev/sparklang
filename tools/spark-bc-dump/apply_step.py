@@ -139,9 +139,9 @@ def main() -> int:
             file=sys.stderr,
         )
         return 2
-    if result.get("beats_claude") is not False:
+    if "beats_claude" in result:
         print(
-            "error: beats_claude must stay false",
+            "error: beats_claude field is removed from tool output",
             file=sys.stderr,
         )
         return 2

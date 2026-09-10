@@ -35,7 +35,6 @@ def check_env(*, dry: bool = False) -> dict[str, Any]:
             "(SPARK_STT_CMD / SPARK_TTS_CMD / net gates)."
         ),
         "never": "rtx-pro-6000",
-        "beats_claude": False,
     }
 
 
@@ -92,7 +91,6 @@ def run_easy(
             "phase": "train",
             "env": env,
             "train": train,
-            "beats_claude": False,
             "never": "rtx-pro-6000",
         }
 
@@ -115,7 +113,6 @@ def run_easy(
             ),
             "test": "make test-voice-easy",
         },
-        "beats_claude": False,
         "never": "rtx-pro-6000",
         "honesty": (
             "Tiny/large owned heads — not ElevenLabs/Kokoro "

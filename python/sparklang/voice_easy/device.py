@@ -41,7 +41,6 @@ def pick_voice_device(
     pick = dict(pick)
     pick["scale"] = scale.get("name", "tiny")
     pick["vram_gi_hint"] = float(scale.get("vram_gi_hint") or 0)
-    pick["beats_claude"] = False
 
     refused = list(pick.get("refused") or [])
     only_6000 = bool(refused) and all(

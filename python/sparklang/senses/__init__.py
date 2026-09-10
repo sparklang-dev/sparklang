@@ -30,5 +30,4 @@ def voice_train_hint() -> dict[str, str]:
         "large": "./spark-voice easy --scale large --device auto",
         "docs": "docs/VOICE_EASY.md",
         "never": "rtx-pro-6000",
-        "beats_claude": "false",
     }

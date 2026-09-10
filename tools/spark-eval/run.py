@@ -342,7 +342,6 @@ def run_suite(
         "suite": str(suite_path.relative_to(ROOT)),
         "mode": mode,
         "claim": "none",
-        "beats_claude": False,
         "note": (
             "Scores only — Spark / SparkLang does not claim beat "
             "Claude. Optional Claude baseline is measurement."
@@ -461,12 +460,8 @@ def main() -> int:
                 )
             )
     print(
-        "mode=%s claim=%s beats_claude=%s — not beat Claude"
-        % (
-            result["mode"],
-            result["claim"],
-            result.get("beats_claude"),
-        )
+        "mode=%s claim=%s — not beat Claude"
+        % (result["mode"], result["claim"])
     )
     return 0
 

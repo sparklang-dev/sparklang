@@ -37,7 +37,7 @@ class AnalyzeLoopTests(unittest.TestCase):
         meta = run_analyze(self.bc, out_dir=out, root=ROOT)
         self.assertTrue(meta["ok"])
         self.assertFalse(meta["uploads"])
-        self.assertFalse(meta["beats_claude"])
+        self.assertNotIn("beats_claude", meta)
         self.assertGreater(meta["ops"], 0)
         self.assertTrue((out / "program.sparkbc").is_file())
         self.assertTrue((out / "dump.txt").is_file())

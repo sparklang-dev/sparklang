@@ -24,6 +24,5 @@
  },
  "device": "prefer rtx-5090; cpu ok",
  "never": "rtx-pro-6000",
- "beats_claude": false,
  "note": "Tiny = CI/default. Large = opt-in local (not GHA). Aligns with scale fixtures train scale_config dim/n_layer. Voice/weight play paths use the same tiny|large + 5090 / consumer-GPU train rules. Measurement only — not a marketing win."
 }

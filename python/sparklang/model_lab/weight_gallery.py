@@ -374,7 +374,6 @@ def catalog(
             "Gallery lists tiny and large stub configs. "
             "Opt-in XL generate prefers 5090; never 6000."
         ),
-        "beats_claude": False,
     }
 
 
@@ -495,7 +494,6 @@ def compare_weights(
         "file_sha_b": _file_sha256(pb),
         "identical_files": _file_sha256(pa) == _file_sha256(pb),
         "tensors": rows,
-        "beats_claude": False,
     }
 
 
@@ -530,7 +528,6 @@ def play_forward(
             "Stub forward only — not production generation. "
             "Does not beat Claude."
         ),
-        "beats_claude": False,
     }
 
 
@@ -614,7 +611,6 @@ def generate_profile(
     result["size_class"] = profile
     result["device_pick"] = device
     result["never"] = "rtx-pro-6000"
-    result["beats_claude"] = False
     result["label"] = spec["label"]
     return result
 
