@@ -108,7 +108,8 @@ static int emit_exports_only(const unsigned char *p, size_t map_sz,
   return 0;
 }
 
-static int understand(const char *path, const char *focus, int exports_only) {
+static int understand(const char *path, const char *focus, int exports_only,
+                      int elf_mode) {
   int fd = open(path, O_RDONLY);
   if (fd < 0) {
     fprintf(stderr, "open: %s\n", strerror(errno));
@@ -158,9 +159,11 @@ static int understand(const char *path, const char *focus, int exports_only) {
     return rc;
   }
   const Elf64_Ehdr *eh = (const Elf64_Ehdr *)p;
-  printf("{\"op\":\"understand\",\"ok\":true,\"path\":\"%s\",\"size\":%lld,"
-         "\"focus\":\"%s\",\"machine_disasm\":\"use_spark_binary_disasm\",",
-         path, (long long)st.st_size, focus ? focus : "general");
+  printf("{\"op\":\"%s\",\"ok\":true,\"path\":\"%s\",\"size\":%lld,"
+         "\"focus\":\"%s\",\"machine_disasm\":\"use_spark_binary_disasm\","
+         "\"claim\":\"local_elf_probe_not_ghidra\",",
+         elf_mode ? "elf" : "understand", path, (long long)st.st_size,
+         focus ? focus : "general");
   print_elf_hdr_fields(eh);
 
   const Elf64_Shdr *sh = NULL;
@@ -187,6 +190,31 @@ static int understand(const char *path, const char *focus, int exports_only) {
   }
   if (text)
     printf(",\"text_size\":%llu", (unsigned long long)text->sh_size);
+
+  /* Section index for --elf (local probe; not Ghidra-class). */
+  if (elf_mode && sh && shstr) {
+    printf(",\"sections\":[");
+    int sfirst = 1;
+    int capped = eh->e_shnum > 64 ? 64 : eh->e_shnum;
+    for (int i = 0; i < capped; i++) {
+      const char *nm = shstr + sh[i].sh_name;
+      if (!sfirst)
+        putchar(',');
+      sfirst = 0;
+      printf("{\"name\":\"");
+      for (const char *c = nm; *c; c++) {
+        if (*c == '"' || *c == '\\')
+          putchar('\\');
+        putchar(*c);
+      }
+      printf("\",\"type\":%u,\"size\":%llu,\"addr\":\"0x%llx\"}",
+             sh[i].sh_type, (unsigned long long)sh[i].sh_size,
+             (unsigned long long)sh[i].sh_addr);
+    }
+    printf("],\"section_count\":%u,\"section_cap\":%d", eh->e_shnum,
+           capped);
+  }
+
   printf(",\"exports\":[");
   int first = 1, n = 0;
   if (dynsym && dynstr &&
@@ -277,6 +305,8 @@ int main(int argc, char **argv) {
   if (!strcmp(op, "disasm"))
     return run_disasm(path, off, len);
   if (!strcmp(op, "exports"))
-    return understand(path, focus, 1);
-  return understand(path, focus, 0);
+    return understand(path, focus, 1, 0);
+  if (!strcmp(op, "elf"))
+    return understand(path, focus, 0, 1);
+  return understand(path, focus, 0, 0);
 }

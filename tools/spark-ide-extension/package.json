@@ -1,13 +1,15 @@
 {
   "name": "spark-lang",
   "displayName": "SparkLang",
-  "description": "Syntax highlighting for Spark (.spark) AI language",
-  "version": "0.1.1",
+  "description": "SparkLang language support — highlighting, hover, completion, LSP diagnostics for .spark",
+  "version": "0.2.0",
   "publisher": "sparklang",
   "engines": { "vscode": "^1.85.0" },
-  "categories": ["Programming Languages"],
+  "categories": ["Programming Languages", "Linters"],
   "activationEvents": [
-    "onCommand:spark.voiceEasyTrain"
+    "onLanguage:spark",
+    "onCommand:spark.voiceEasyTrain",
+    "onCommand:spark.checkBuffer"
   ],
   "main": "./extension.js",
   "contributes": {
@@ -37,13 +39,17 @@
         "command": "spark.voiceEasyTrain",
         "title": "Spark: Voice easy train",
         "category": "Spark"
+      },
+      {
+        "command": "spark.checkBuffer",
+        "title": "Spark: Check buffer (LSP diagnostics)",
+        "category": "Spark"
       }
     ],
     "menus": {
       "commandPalette": [
-        {
-          "command": "spark.voiceEasyTrain"
-        }
+        { "command": "spark.voiceEasyTrain" },
+        { "command": "spark.checkBuffer" }
       ]
     }
   }

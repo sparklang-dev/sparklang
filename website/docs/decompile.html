@@ -119,6 +119,7 @@
                     <ul class="nav-sub__list" aria-labelledby="nav-bench-runtime">
                       <li><a href="/docs/serve.html">Serve</a></li>
                       <li><a href="/docs/ide.html">IDE</a></li>
+                      <li><a href="/docs/lsp.html">LSP / editor</a></li>
                       <li><a href="/ide-web.html">IDE web shell</a></li>
                       <li><a href="/docs/native-network-web.html">Network + web</a></li>
                     </ul>
@@ -304,6 +305,9 @@
         <a href="/docs/model-training.html">MODEL_LAB.md</a>.</p>
         <h2 id="elf-machine-disassembly-not-spark-bc">ELF / machine disassembly (not SPARK_BC)</h2>
         <pre class="doc__pre"><code class="language-bash">make machine-proof   # ELF64 + _start when binary exists
+        ./spark-binary-probe --elf ./spark   # hdr + sections JSON
+        # claim: local_elf_probe_not_ghidra — still not Ghidra-class
+        make decompile-bench                 # records elf_local_probe
         </code></pre>
         <p>Language <code class="inline-code">binary</code> artifacts under <code class="inline-code">out/decompile/&lt;basename&gt;/</code>
         (<code class="inline-code">ALL_SECTIONS.disasm</code>, …) are <strong>ELF section dumps</strong>, not SPARK_BC

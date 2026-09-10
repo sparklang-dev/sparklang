@@ -187,6 +187,9 @@ make test-model-lab
 
 ```bash
 make machine-proof   # ELF64 + _start when binary exists
+./spark-binary-probe --elf ./spark   # hdr + sections JSON
+# claim: local_elf_probe_not_ghidra — still not Ghidra-class
+make decompile-bench                 # records elf_local_probe
 ```
 
 Language `binary` artifacts under `out/decompile/<basename>/`

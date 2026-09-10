@@ -1,10 +1,10 @@
-# [goal] Generic receptionist-style workflow
-# Not a production claim. No store/PII. Dry-run sketch for the adoption bar:
-# fallback + transfer intent, shorter to read than Python+gateway glue.
-# When transfer language ops ship, promote off [goal].
-# Expectation pass/fail is shipped: expect equal / expect contains.
+# [goal] Live transfer / hold / hangup language ops — not shipped yet.
+# Dry-runnable receptionist with expect gates:
+#   examples/receptionist.spark
+#   ./spark --dry-run examples/receptionist.spark
 #
-#   ./spark --dry-run examples/receptionist_goal.spark
+# This file stays the production-telephony goal marker.
+# See docs/ADOPTION_BAR.md · docs/ROADMAP.md · docs/VOICE.md
 
 model fast
 
@@ -12,16 +12,5 @@ classify Intent { support, sales, transfer, spam } from "I need to speak to a hu
 
 print intent
 
-retrieve "dry-run language fallback policy" from project "docs" -> hits
-print hits
-
-ask "Guest intent support. Using only policy hits, give one short reply." -> reply
-print reply
-
-# Escape hatch sketch (dry allowlist):
-shell "echo transfer-queue" -> side
-print side
-
-# [goal] transfer / hold / hangup — not language yet.
-# Expectation pass/fail is shipped: expect equal / expect contains.
-# See docs/ADOPTION_BAR.md · docs/ROADMAP.md
+# [goal] transfer / hold / hangup / barge-in — language not yet.
+# Dry path uses shell escape hatch in examples/receptionist.spark.

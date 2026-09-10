@@ -30,14 +30,14 @@ Prioritized against the adoption bar. Status: **done** / **next** / **won't**
 
 | Track | What |
 |-------|------|
-| Extract | ~~Schema validation + JSON-mode + retry on miss~~ **done** (live + `--retries` / stub) |
-| Ask | ~~Streaming token/SSE path~~ **done** (`--stream` / `ask stream`) |
-| Eval | Expectation pass/fail harness (not only alias compare) |
-| Escape | ~~Live `--allow-shell` argv policy; JS / C host FFI~~ **done** |
-| Accounting | ~~Wall-clock latency on live ask; run-level rollup~~ **done** |
+| Extract | **done** (live + `--retries` / stub) |
+| Ask | **done** (`--stream` / `ask stream`) |
+| Eval | **done** — `expect equal` / `contains`; `make test-expect` |
+| Escape | **done** — live `--allow-shell`; JS / C host FFI |
+| Accounting | **done** — live wall-clock + run-level rollup |
 | Builder | STEP→weights **done** (dry `weights.safetensors`); later owner train toward beat-Claude — not claimed today |
-| LSP | Prefer editor LSP + highlighting over IDE chrome |
-| Receptionist | Promote `examples/receptionist_goal.spark` off `[goal]` when transfer + eval syntax exist |
+| LSP | **done** — `tools/spark_lsp` + extension v0.2; [LSP.md](LSP.md) |
+| Receptionist | Dry path **done** (`examples/receptionist.spark` + expect); live transfer/hold/hangup still **goal** |
 | Releases | Cut GitHub Release tags from CHANGELOG (see RELEASE.md); Pages = human CF dashboard (no wrangler) |
 
 ## Done (rename)

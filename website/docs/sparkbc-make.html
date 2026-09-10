@@ -119,6 +119,7 @@
                     <ul class="nav-sub__list" aria-labelledby="nav-bench-runtime">
                       <li><a href="/docs/serve.html">Serve</a></li>
                       <li><a href="/docs/ide.html">IDE</a></li>
+                      <li><a href="/docs/lsp.html">LSP / editor</a></li>
                       <li><a href="/ide-web.html">IDE web shell</a></li>
                       <li><a href="/docs/native-network-web.html">Network + web</a></li>
                     </ul>
@@ -215,7 +216,11 @@
         </tr>
         <tr>
         <td><code class="inline-code">make decompile-bench</code></td>
-        <td>SPARK_BC metrics + <code class="inline-code">website/data/decompile-scoreboard.json</code></td>
+        <td>SPARK_BC metrics + <code class="inline-code">website/data/decompile-scoreboard.json</code> (+ <code class="inline-code">elf_local_probe</code>)</td>
+        </tr>
+        <tr>
+        <td><code class="inline-code">make test-spark-lsp</code></td>
+        <td>Editor LSP static diagnostics gate</td>
         </tr>
         <tr>
         <td><code class="inline-code">make spark-sgd-proof</code></td>

@@ -20,6 +20,7 @@ invented menus. Language `ide` ops remain on the GAS scaffold.
 | Paint bind | status path strip + gutter + AI strip → PPM | **Works** — `b029a4a` |
 | Cursor workspace | `make ide` interim editor host | **Works** — not the product |
 | Spark IDE GUI | `make spark-bc-gui` / `bin/spark-bc-gui` | **Works** — §0 |
+| Editor LSP + highlighting | `tools/spark_lsp` + extension v0.2 | **Works** — [LSP.md](LSP.md) |
 | Web IDE demo | `/docs/ide-shell.html` layout mirror | **Works** — demo |
 | CLI `./spark --dry-run` / `--live` | Primary runtime today | **Works** |
 | Electron / VS Code fork | — | **Not the product** |

@@ -1,0 +1,31 @@
+# Dry-runnable receptionist-style workflow (adoption bar).
+# Not production telephony — no barge-in / hold / hangup / transfer SM.
+# Transfer intent uses the shell escape hatch (dry allowlist echo).
+# Expectation pass/fail gates the dry path (exit 0/1).
+#
+#   ./spark --dry-run examples/receptionist.spark
+#
+# Live transfer/hold language ops remain a goal — see
+# examples/receptionist_goal.spark and docs/ADOPTION_BAR.md.
+
+model fast
+
+classify Intent { support, sales, transfer, spam } from "I need to speak to a human about my order" min_confidence 0.7 -> intent
+
+print intent
+
+retrieve "dry-run language fallback policy" from project "docs" -> hits
+print hits
+
+ask "Guest intent support. Using only policy hits, give one short reply." -> reply
+print reply
+
+# Escape hatch: queue a human (dry fixture — no exec without --allow-shell)
+shell "echo transfer-queue" -> side
+print side
+
+expect contains intent "support"
+expect contains intent "confidence"
+expect contains side "ok"
+expect contains side "dry-run"
+expect contains reply "help"
