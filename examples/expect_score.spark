@@ -1,0 +1,4 @@
+# expect score — helper must beat baseline on synthetic fixtures.
+# ./spark --dry-run examples/expect_score.spark
+
+expect score replay "examples/fixtures/voice_loop/*.spark" with helper "out/pref-001" >= baseline "out/none"

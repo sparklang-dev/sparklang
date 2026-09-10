@@ -1,0 +1,9 @@
+# live capture — train-ref /replay + methods note
+{
+  "op": "replay",
+  "fixture": "examples/fixtures/voice_loop/stall.spark",
+  "helper": "out/pref-001",
+  "score": 0.73,
+  "note": "CPU replay \u2014 Trainer contract"
+}
+methods: spark_distill_cpu,spark_pref_pack,spark_playbook_fit,spark_faq_index,spark_reply_pack

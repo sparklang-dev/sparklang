@@ -452,6 +452,90 @@ Flagship train→status→expect: `examples/train_eval.spark` (exit 0) and
 
 **Not shipped:** regex `match`, streaming ask assertions.
 
+### `expect score` (helper ≥ baseline)
+
+Replay a synthetic fixture set **with** a helper pack and **without**
+(baseline). Fail loud if helper mean score is not ≥ baseline.
+**Language + companion** (`./spark-voice-loop`); no new SPARK_BC opcode.
+Dry-run / CPU heuristic — not a live judge model.
+
+```
+expect score replay "examples/fixtures/voice_loop/*.spark" \
+  with helper "out/pref-001" >= baseline "out/none"
+```
+
+Trainer HTTP also exposes `POST /replay {fixture, helper}` on
+`tools/spark-train-ref` (see [MODEL_TRAINING.md](MODEL_TRAINING.md)).
+Gate: `make test-expect-score`. Example:
+`examples/expect_score.spark`.
+
+### `model pairs` (dataset primitive)
+
+Emit preference / reply / playbook **inputs** from a JSONL turns file.
+Filters: `where class = "…"`, `min_gap N`. Synthetic fixtures only.
+
+```
+model pairs from "examples/fixtures/voice_loop/turns.jsonl" \
+  schema "context,target_turn,candidate_turn,score_target,score_candidate,class" \
+  where class = "stall" min_gap 2 -> ds
+```
+
+Dry-run writes `out/voice_loop/pairs-*.json`. Gate: `make test-pairs`.
+
+### `model serve helper`
+
+Serve a pref ranker / reply pack / playbook router as local HTTP.
+`mode "shadow"` logs beside a turn; `mode "live"` returns rank JSON.
+Dry-run plans the endpoint; live: `python3 tools/spark-serve-ref/server.py`.
+
+```
+model serve helper "out/pref-001" as "ranker" port 8091 mode "shadow"
+```
+
+Gate: `make test-serve-helper`. Example: `examples/serve_helper.spark`.
+
+### `ground fact` (verify-before-speak)
+
+Lookup a key in a facts JSON file before speaking numbers, hours, or
+names. Missing key → `else abstain` (or `else fail`).
+
+```
+ground fact "desk_hours" from "examples/fixtures/voice_loop/facts.json" \
+  else abstain
+```
+
+Companion path also: `./spark-ground`. Gate: `make test-ground-lang`.
+Safety: [knowledge/SAFETY_LIMITS.md](knowledge/SAFETY_LIMITS.md).
+
+### `bench` (two-agent scoreboard)
+
+Score synthetic **agent-a** vs **agent-b** across class labels. Writes
+per-class score/gap JSON.
+
+```
+bench fixtures "examples/fixtures/voice_loop/*.spark" \
+  against "agent-a" "agent-b" \
+  classes "turn_taking,stall,dead_air,interrupt,filler,handoff,grounded" \
+  -> board
+```
+
+Gate: `make test-bench`. Example: `examples/bench_agents.spark`.
+
+### `schedule nightly`
+
+Capture → pairs → train → expect → serve with a JSON summary artifact.
+Reference timer: `tools/spark-schedule-ref/`.
+
+```
+schedule nightly "examples/pairs_basic.spark" \
+  pairs "examples/fixtures/voice_loop/turns.jsonl" \
+  helper "out/pref-001" -> summary
+```
+
+Gate: `make test-schedule`. Example: `examples/schedule_nightly.spark`.
+
+Knowledge hub: [Voice agent loop](knowledge/VOICE_AGENT_LOOP.md).
+
 ### `classify` (first-class)
 
 Single-label (default) or `multi`:
@@ -577,7 +661,7 @@ network). **A** opt-in — remote `http(s)://` + `--allow-net` → curl fetch
 a clear error instructing `--allow-net` — never dial, never a silent stub,
 never a permanent QUESTION menu.
 
-Honest framing: implement = codegen into `.spark` / suggestion files the
+Current framing: implement = codegen into `.spark` / suggestion files the
 asm VM can re-run or humans can read — not magical self-modifying Linux apps.
 
 ## IDE core (`ide`)
@@ -892,7 +976,7 @@ Same dry/`--live` split: `examples/browser_show.spark`,
  (product default is QUIC ON; use on for TCP h2/h1-only MITM).
 - **mitm quic status|listen|smoke|divert** — HTTP/3 lane; `smoke`
  forks `./spark-mitm-quic` (aioquic forge + SNI leaves). UDP MITM
- via divert→listen (CONNECT-UDP is honest 501 on Qt TCP proxy).
+ via divert→listen (CONNECT-UDP is Current 501 on Qt TCP proxy).
 - **mitm har export** — writes a real HAR 1.2 file (byte-written).
  Requires `mitm enable`. Dry HAR is a synthetic single-entry from
  goto URL (valid 1.2); live multi-flow HAR comes from
@@ -999,7 +1083,7 @@ NVML cross-checks; it is **not** required for `cuda` language ops.
 
 ### `memory pin`
 
-Real `mmap` + `mlock` syscalls in `asm/cuda_ops.s`. Fail loud with
+`mmap` + `mlock` syscalls in `asm/cuda_ops.s`. Fail loud with
 `errno=` on denial.
 
 ```

@@ -1,0 +1,4 @@
+# live capture — schedule nightly
+[spark] dry-run via assembly VM (machine code)
+{"op":"schedule","kind":"nightly","mode":"dry-run","program":"examples/pairs_basic.spark","ts":"2026-09-10T07:43:27Z","ok":true,"steps":[{"step":"capture","program":"examples/pairs_basic.spark","ok":true,"note":"program path recorded \u2014 no live dial"},{"step":"pairs","ok":true,"n_out":9,"artifact":"out/voice_loop/pairs-nightly.json"},{"step":"train","ok":true,"helper":"out/pref-001","note":"dry writes ARTIFACT stub when missing"},{"step":"expect","ok":true,"helper_mean":0.7,"baseline_mean":0.43},{"step":"serve","ok":true,"mode":"shadow","log":"out/voice_loop/serve-shadow.jsonl"}],"note":"nightly loop summary \u2014 CPU/dry only","artifact":"out/voice_loop/nightly-summary.json"}
+[spark] ok

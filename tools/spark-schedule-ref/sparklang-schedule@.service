@@ -1,0 +1,18 @@
+# Template unit for SparkLang nightly voice-loop (CPU).
+# Install: copy to ~/.config/systemd/user/sparklang-schedule@.service
+# Enable: systemctl --user enable --now sparklang-schedule@demo.timer
+# The instance name is informational only.
+
+[Unit]
+Description=SparkLang nightly voice-loop (%i)
+After=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/workspaces/sparklang
+Environment=PYTHONPATH=%h/workspaces/sparklang/python
+ExecStart=/usr/bin/python3 tools/spark-schedule-ref/run_schedule.py --program examples/pairs_basic.spark --dry
+Nice=10
+
+[Install]
+WantedBy=default.target

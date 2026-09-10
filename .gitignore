@@ -74,3 +74,6 @@ spark-bc-emit
 /examples/c/host_embed
 dist/
 build/
+
+/spark-voice-loop
+/spark-serve-ref

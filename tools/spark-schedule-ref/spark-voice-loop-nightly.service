@@ -1,0 +1,12 @@
+# Companion oneshot for tools/spark-schedule-ref timer.
+# WorkingDirectory must be the SparkLang checkout.
+
+[Unit]
+Description=SparkLang voice-loop nightly oneshot
+Documentation=https://sparklang.dev/docs/knowledge-voice-agent-loop.html
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/workspaces/sparklang
+Environment=PYTHONPATH=%h/workspaces/sparklang/python
+ExecStart=%h/workspaces/sparklang/spark-voice-loop --live --stmt-file examples/voice_loop/schedule.spark --out out/voice_loop/nightly-summary.json

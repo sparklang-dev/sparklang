@@ -67,6 +67,9 @@
 .extern extract_feed
 .extern extract_pending
 .extern expect_dispatch
+.extern voice_loop_run
+.extern voice_loop_model_hook
+.extern voice_loop_expect_hook
 .extern abstain_dispatch
 .extern pcie_ops_dispatch
 .extern voice_ops_dispatch
@@ -508,6 +511,9 @@ kw_use:     .ascii "use"
 kw_print:   .ascii "print"
 kw_extract: .ascii "extract"
 kw_expect:  .ascii "expect"
+kw_ground:  .ascii "ground"
+kw_bench:   .ascii "bench"
+kw_schedule:.ascii "schedule"
 kw_head:    .ascii "head"
 kw_tool:    .ascii "tool"
 kw_voice:   .ascii "voice"
@@ -1205,6 +1211,27 @@ il_kw:
     call    keyword_match
     test    rax, rax
     jnz     do_expect
+
+    mov     rsi, rbx
+    lea     rdi, [rip+kw_ground]
+    mov     rdx, 6
+    call    keyword_match
+    test    rax, rax
+    jnz     do_voice_loop
+
+    mov     rsi, rbx
+    lea     rdi, [rip+kw_bench]
+    mov     rdx, 5
+    call    keyword_match
+    test    rax, rax
+    jnz     do_voice_loop
+
+    mov     rsi, rbx
+    lea     rdi, [rip+kw_schedule]
+    mov     rdx, 8
+    call    keyword_match
+    test    rax, rax
+    jnz     do_voice_loop
 
     mov     rsi, rbx
     lea     rdi, [rip+kw_head]
@@ -1985,6 +2012,10 @@ do_model:
     lea     rsi, [rip+msg_model]
     mov     rdx, msg_model_len
     call    write_stdout
+    # pairs / serve helper → voice-loop companion (no SPARK_BC)
+    call    voice_loop_model_hook
+    test    rax, rax
+    jnz     il_done
     # analyze|compare|improve|train|step|build|reverse|compile|modify
     # live in asm/model_ops.s
     # train/step/status = SPARK_BC TRAIN 0x26 / STEP 0x28 /
@@ -2118,7 +2149,14 @@ do_extract:
     jmp     il_done
 
 do_expect:
+    call    voice_loop_expect_hook
+    test    rax, rax
+    jnz     il_done
     call    expect_dispatch
+    jmp     il_done
+
+do_voice_loop:
+    call    voice_loop_run
     jmp     il_done
 
 do_head:

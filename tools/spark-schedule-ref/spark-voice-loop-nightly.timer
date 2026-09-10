@@ -1,0 +1,15 @@
+# Reference systemd user timer for schedule nightly (CPU loop).
+# Install (operator): copy to ~/.config/systemd/user/ and enable.
+# Does not dial telephony. Synthetic program path only.
+
+[Unit]
+Description=SparkLang voice-loop nightly (capture→pairs→train→expect→serve)
+Documentation=https://sparklang.dev/docs/knowledge-voice-agent-loop.html
+
+[Timer]
+OnCalendar=*-*-* 02:15:00
+Persistent=true
+Unit=spark-voice-loop-nightly.service
+
+[Install]
+WantedBy=timers.target

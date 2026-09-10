@@ -51,6 +51,7 @@
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-systems">
                       <li><a href="/docs/knowledge-multimodal.html">Multimodal</a></li>
                       <li><a href="/docs/knowledge-agents.html">Agents & tools</a></li>
+                      <li><a href="/docs/knowledge-voice-loop.html">Voice agent loop</a></li>
                     </ul>
                   </li>
                   <li class="nav-sub">
@@ -297,7 +298,7 @@
         </tr>
         <tr>
         <td><code class="inline-code">huggingface</code></td>
-        <td>Reserved id — not wired in MVP (do not claim Hub publish)</td>
+        <td>Reserved id — not wired in MVP (Hub publish not wired)</td>
         </tr>
         </tbody>
         </table></div>
@@ -347,8 +348,20 @@
         <p><code class="inline-code">state</code> is the poll field (not <code class="inline-code">status</code>). Companion uses plain HTTP
         (TLS must terminate upstream for <code class="inline-code">https://</code> — MVP dies with a clear
         config error).</p>
+        <h3 id="replay-helper-score">Replay (helper score)</h3>
+        <pre class="doc__pre"><code class="inline-code">POST {SPARK_TRAIN_URL}/replay
+        Content-Type: application/json
+
+        {&quot;fixture&quot;:&quot;examples/fixtures/voice_loop/stall.spark&quot;,&quot;helper&quot;:&quot;out/pref-001&quot;}
+        </code></pre>
+        <p>Response:</p>
+        <pre class="doc__pre"><code class="inline-code">{&quot;op&quot;:&quot;replay&quot;,&quot;fixture&quot;:&quot;…&quot;,&quot;helper&quot;:&quot;…&quot;,&quot;score&quot;:0.73,&quot;note&quot;:&quot;…&quot;}
+        </code></pre>
+        <p>Also implemented on <code class="inline-code">tools/spark-serve-ref</code> as <code class="inline-code">POST /replay</code>.
+        Used by language <code class="inline-code">expect score replay …</code>. Gate:
+        <code class="inline-code">make test-train-replay</code>.</p>
         <h2 id="reference-methods-in-repo-not-lora">Reference methods (in-repo) — not LoRA</h2>
-        <p><code class="inline-code">tools/spark-train-ref/</code> implements the HTTP contract with <strong>four</strong>
+        <p><code class="inline-code">tools/spark-train-ref/</code> implements the HTTP contract with <strong>five</strong>
         SparkLang-native CPU methods. None are LoRA / HF PEFT. None use a
         reserved GPU. None invent <code class="inline-code">train@</code> grants.</p>
         <div class="doc__table-wrap"><table class="doc__table">

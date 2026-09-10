@@ -14,6 +14,8 @@ HTTP contract:
   POST {SPARK_TRAIN_URL}/jobs
     {"dataset","base","out","backend","method"?}
   GET {SPARK_TRAIN_URL}/jobs/{id}
+  POST {SPARK_TRAIN_URL}/replay
+    {"fixture","helper"?}  — CPU expect-score replay (Trainer contract)
 
 CPU only. No LoRA / HF PEFT / voice GPU.
 """
@@ -111,6 +113,42 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_POST(self) -> None:  # noqa: N802
         path = urlparse(self.path).path.rstrip("/") or "/"
+        if path in (f"{PREFIX}/replay", "/replay"):
+            req = _json_body(self)
+            fixture = str(req.get("fixture") or "")
+            helper = req.get("helper")
+            helper_s = (
+                str(helper) if helper not in (None, "", "null") else None
+            )
+            try:
+                # Local import keeps train-ref usable without voice_loop
+                # on PYTHONPATH when only training.
+                import sys
+                from pathlib import Path as _P
+
+                root = _P(__file__).resolve().parents[2]
+                py = str(root / "python")
+                if py not in sys.path:
+                    sys.path.insert(0, py)
+                from sparklang.voice_loop.expect_score import (  # noqa: E402
+                    http_replay,
+                )
+
+                payload = http_replay(fixture, helper_s)
+            except (OSError, ValueError, FileNotFoundError, ImportError) as exc:
+                _send(
+                    self,
+                    400,
+                    {
+                        "error": "replay_failed",
+                        "detail": str(exc),
+                        "fixture": fixture,
+                        "helper": helper_s,
+                    },
+                )
+                return
+            _send(self, 200, payload)
+            return
         if path != f"{PREFIX}/jobs":
             _send(self, 404, {"error": "not_found", "path": path})
             return

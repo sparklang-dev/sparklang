@@ -51,6 +51,7 @@
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-systems">
                       <li><a href="/docs/knowledge-multimodal.html">Multimodal</a></li>
                       <li><a href="/docs/knowledge-agents.html">Agents & tools</a></li>
+                      <li><a href="/docs/knowledge-voice-loop.html">Voice agent loop</a></li>
                     </ul>
                   </li>
                   <li class="nav-sub">
@@ -180,7 +181,7 @@
         <a href="/downloads.html">Downloads</a>
       </nav>      <article class="doc__body">
         <h1 id="whats-shipping-today-sparklang">What's shipping today (SparkLang)</h1>
-        <p>Honest checklist against the critique: table stakes, escape hatch,
+        <p>Current checklist against the critique: table stakes, escape hatch,
         worth-using ops, voice status, what we drop, and the production-style
         workflow goal. <strong>Spark is not tied to a single AI gateway</strong> — gateway is optional
         live I/O.</p>
@@ -250,7 +251,7 @@
         <tr>
         <td>Cost/latency/token accounting</td>
         <td><strong>done</strong></td>
-        <td>Dry zeros; live wall-clock <code class="inline-code">latency_ms</code> + gateway <code class="inline-code">usage</code> when present; run-level <code class="inline-code">[accounting-run]</code> rollup. Never invents tokens</td>
+        <td>Dry zeros; live wall-clock <code class="inline-code">latency_ms</code> + gateway <code class="inline-code">usage</code> when present; run-level <code class="inline-code">[accounting-run]</code> rollup. Missing usage stays blank — no invented tokens</td>
         </tr>
         <tr>
         <td>Streaming <code class="inline-code">ask</code></td>
@@ -270,7 +271,7 @@
         <tr>
         <td>Voice production telephony</td>
         <td><strong>won't (soon)</strong></td>
-        <td>Gated demo + honest gaps in VOICE.md / ROADMAP — not sold as production</td>
+        <td>Gated demo + Known gaps in VOICE.md / ROADMAP — not sold as production</td>
         </tr>
         <tr>
         <td>Packet capture / MITM / browser automation</td>
@@ -303,6 +304,11 @@
         <td><code class="inline-code">examples/receptionist.spark</code> — classify + retrieve + ask + shell queue + <code class="inline-code">expect</code> gates. Gate: dry-run exit 0</td>
         </tr>
         <tr>
+        <td>Voice agent loop (pairs / expect score / serve / ground / bench / schedule)</td>
+        <td><strong>done (dry + CPU)</strong></td>
+        <td>Language + <code class="inline-code">./spark-voice-loop</code> companion; no new SPARK_BC opcodes. Synthetic fixtures only. Live HTTP: <code class="inline-code">spark-serve-ref</code> + train-ref <code class="inline-code">/replay</code>. Gates: <code class="inline-code">make test-pairs</code> … <code class="inline-code">test-schedule</code> / <code class="inline-code">test-train-replay</code>. Doc: <a href="/docs/knowledge-voice-loop.html">VOICE_AGENT_LOOP.md</a></td>
+        </tr>
+        <tr>
         <td>Production receptionist (transfer SM)</td>
         <td><strong>goal</strong></td>
         <td><code class="inline-code">examples/receptionist_goal.spark</code> — live transfer/hold/hangup language still missing</td>
@@ -328,7 +334,7 @@
         (<code class="inline-code">examples/receptionist.spark</code>). Still missing for production paths:
         live transfer / hold / hangup language (see
         <code class="inline-code">examples/receptionist_goal.spark</code>).</p>
-        <h2 id="voice-honest">Voice — honest</h2>
+        <h2 id="voice-current">Voice — Current</h2>
         <p>Optional <code class="inline-code">listen</code> / <code class="inline-code">speak</code> / <code class="inline-code">voice</code> / gated PSTN exist as language
         surface and dry demos. <strong>Not</strong> production barge-in / EOU / SM transfer
         / named telephony adapters. See <a href="/docs/voice.html">VOICE.md</a> gaps.</p>
@@ -354,7 +360,7 @@
          on text-only bases, behavior lock, inventable → SoT or IDK).
          Same HTTP contract; select with POST <code class="inline-code">method</code> / <code class="inline-code">SPARK_TRAIN_METHOD</code>.
          Captures under <code class="inline-code">website/docs/examples/live-train-*.txt</code>.
-         Do not claim LoRA or voice-GPU training on sparklang.dev.</li>
+         Public docs describe the CPU train methods that ship.</li>
         <li><strong>Expectation pass/fail</strong> is shipped (<code class="inline-code">expect equal</code> / <code class="inline-code">expect contains</code>).
          Homepage flagship is train → status → expect (<code class="inline-code">examples/train_eval.spark</code>).
          <code class="inline-code">model compare</code> remains an eval helper, not the hero loop.</li>

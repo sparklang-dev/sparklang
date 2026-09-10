@@ -1,0 +1,4 @@
+# live capture — expect score
+[spark] dry-run via assembly VM (machine code)
+{"op":"expect_score","mode":"dry-run","fixture_glob":"examples/fixtures/voice_loop/*.spark","helper":"out/pref-001","baseline":"out/none","n":4,"helper_mean":0.7,"baseline_mean":0.43,"pass":true,"detail":[{"fixture":"examples/fixtures/voice_loop/grounded.spark","helper_score":0.77,"baseline_score":0.5,"delta":0.27},{"fixture":"examples/fixtures/voice_loop/stall.spark","helper_score":0.73,"baseline_score":0.46,"delta":0.27},{"fixture":"examples/fixtures/voice_loop/turn_cues.spark","helper_score":0.68,"baseline_score":0.41,"delta":0.27},{"fixture":"examples/fixtures/voice_loop/turn_taking.spark","helper_score":0.62,"baseline_score":0.35,"delta":0.27}],"note":"CPU replay heuristic \u2014 not a live judge model"}
+[spark] ok
