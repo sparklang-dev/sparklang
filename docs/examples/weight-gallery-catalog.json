@@ -14,7 +14,7 @@
  {
  "id": "sgd",
  "title": "Post-STEP SGD weights",
- "role": "lm_head (+ embed / attn0 when train_attn) after CPU or 5090 SGD",
+ "role": "lm_head (+ embed / attn when train_attn) after CPU or consumer-GPU SGD",
  "paths": [
  "out/train/sgd-proof/weights.safetensors",
  "out/train/sgd-proof-scale/weights.safetensors"
@@ -48,7 +48,7 @@
  "paths": [
  "models/spark-coder/weights.safetensors"
  ],
- "make": "make spark-coder-train"
+ "make": "./spark-code train --scale tiny"
  },
  {
  "id": "spark-coder-large",
@@ -103,7 +103,7 @@
  "xl": {
  "dim": 256,
  "n_layer": 8,
- "label": "XL stub (opt-in 5090 generate)",
+ "label": "XL stub (opt-in consumer GPU generate)",
  "prefer_5090": true
  }
  },
@@ -213,9 +213,9 @@
  "lm_head": "Projects the final hidden vector to vocab logits. Primary STEP SGD target (CE on next-byte).",
  "norm": "RMSNorm scale vector (final_norm or per-block). Stabilizes magnitudes before MLP / lm_head.",
  "attn": "Layer attention q/k/v/o (+ attn_norm). Allocated at init; used in serve when present; SGD when train_attn.",
- "mlp": "SwiGLU MLP (up/gate/down + mlp_norm). Layer-0 runs in tiny CPU serve when tensors exist.",
+ "mlp": "SwiGLU MLP (up/gate/down + mlp_norm). Single layer runs in tiny CPU serve when tensors exist.",
  "other": "Named Spark tensor outside the common embed/attn/mlp/lm_head map \u2014 still F32 stub weights, not HF imports."
  },
- "note": "Gallery lists tiny and large stub configs. Opt-in XL generate prefers RTX 5090 (or CPU).",
- "beats_claude": false
+ "note": "Gallery lists tiny and large stub configs. Opt-in XL generate suggests a consumer GPU (or CPU).",
+ "beats_frontier": false
 }

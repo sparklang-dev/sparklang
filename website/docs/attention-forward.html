@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Attention / MLP / serve — Spark</title>
-    <meta name="description" content="Current status: init attn tensors, MLP0 serve forward, attention math planned." />
+    <meta name="description" content="Current status: init attention tensors, MLP serve forward, attention math planned." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
     <link rel="stylesheet" href="/css/tokens.css?v=navsub0909" />
@@ -180,14 +180,14 @@
         <a href="/downloads.html">Downloads</a>
       </nav>      <article class="doc__body">
         <h1 id="attention-heads-mlp-serve-forward">Attention heads / MLP / serve forward</h1>
-        <p>Honest status of <strong>neural forward</strong> pieces next to SPARK_BC.
-        Spark / SparkLang only. Documents tip/<code class="inline-code">main</code> after attention train + serve landed.</p>
+        <p>Status of <strong>neural forward</strong> pieces next to SPARK_BC.
+        Spark / SparkLang only.</p>
         <h2 id="summary-table">Summary table</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
         <th>Piece</th>
-        <th>On tip (<code class="inline-code">main</code>)</th>
+        <th>Status</th>
         <th>Notes</th>
         </tr>
         </thead>
@@ -203,14 +203,14 @@
         <td>same</td>
         </tr>
         <tr>
-        <td>Tiny CPU serve: embed → <strong>attn0</strong> → optional <strong>MLP0</strong> → RMSNorm → lm_head</td>
+        <td>Tiny CPU serve: embed → <strong>attention</strong> → optional <strong>MLP</strong> → RMSNorm → lm_head</td>
         <td><strong>implemented</strong></td>
-        <td><code class="inline-code">serve.py</code> / <code class="inline-code">dump.py --serve</code> when layer-0 attn tensors exist</td>
+        <td><code class="inline-code">serve.py</code> / <code class="inline-code">dump.py --serve</code> when attention tensors exist</td>
         </tr>
         <tr>
-        <td>Tiny CPU serve: attention (last-query causal MHA / GQA)</td>
+        <td>Tiny CPU serve: attention (causal MHA / GQA)</td>
         <td><strong>implemented</strong></td>
-        <td>layer-0 attention; no RoPE math yet</td>
+        <td>single-layer attention; no rotary embeddings yet</td>
         </tr>
         <tr>
         <td><code class="inline-code">control.sparkasm</code> ATTN / ROPE macros</td>
@@ -218,7 +218,7 @@
         <td><code class="inline-code">make test-sparkasm-control</code> — not a tensor VM</td>
         </tr>
         <tr>
-        <td>Attention train (layer-0)</td>
+        <td>Attention train</td>
         <td><strong>implemented</strong></td>
         <td><code class="inline-code">apply_sgd_step</code> default <code class="inline-code">train_attn=True</code>; <code class="inline-code">--no-train-attn</code> = mean-pool CE</td>
         </tr>
@@ -230,7 +230,7 @@
         <tr>
         <td>Optional GPU train</td>
         <td><strong>CPU default</strong></td>
-        <td>Prefer consumer GPU (e.g. RTX 5090) when used</td>
+        <td>Prefer a consumer GPU when used</td>
         </tr>
         </tbody>
         </table></div>
@@ -242,33 +242,33 @@
          docs/examples/spark-builder.sparkbc \
          --serve /tmp/serve-dry-001
         </code></pre>
-        <p>Writes <code class="inline-code">SERVE</code> with <code class="inline-code">forward=true</code> and honest <code class="inline-code">trained</code> from
-        weights meta. Path string when layer-0 attn (+ optional MLP)
+        <p>Writes <code class="inline-code">SERVE</code> with <code class="inline-code">forward=true</code> and <code class="inline-code">trained</code> from
+        weights meta. Path string when attention (+ optional MLP)
         tensors exist:</p>
-        <p><code class="inline-code">embed-&gt;attn0-&gt;mlp0-&gt;rms_norm-&gt;lm_head</code></p>
+        <p><code class="inline-code">embed-&gt;attn-&gt;mlp-&gt;rms_norm-&gt;lm_head</code></p>
         <p>Code: <code class="inline-code">python/sparklang/model_lab/serve.py</code> (<code class="inline-code">_attn_block</code>,
         <code class="inline-code">_mlp_block</code>, <code class="inline-code">run_tiny_forward</code>) and
         <code class="inline-code">python/sparklang/model_lab/attn.py</code>. Gate: <code class="inline-code">make test-sparkbc</code>
         → <code class="inline-code">tools/spark-bc-dump/test_dump.py</code>.</p>
         <p><strong>Not</strong> a production LLM. <strong>Not</strong> multi-layer full-decode /
-        RoPE. Fixture-scale only.</p>
-        <h2 id="attention-train-layer-0-attention-on-tip">Attention train (layer-0 attention on tip)</h2>
+        rotary embeddings. Fixture-scale only.</p>
+        <h2 id="attention-train">Attention train</h2>
         <pre class="doc__pre"><code class="language-bash">make spark-sgd-proof
         # asserts train_attn, copy_recall&gt;0, next_token&gt;0, claim=none
         </code></pre>
         <ul class="doc__ul">
-        <li>Module: <code class="inline-code">python/sparklang/model_lab/attn.py</code> (last-query causal
+        <li>Module: <code class="inline-code">python/sparklang/model_lab/attn.py</code> (causal
          MHA forward + backward).</li>
         <li>SGD: <code class="inline-code">weights.py</code> <code class="inline-code">apply_sgd_step(..., train_attn=True)</code> via
          <code class="inline-code">tools/spark-bc-dump/apply_step.py</code>.</li>
-        <li>Eval path uses attn0 when weights present
+        <li>Eval path uses attention when weights present
          (<code class="inline-code">tools/spark-eval/run.py</code>).</li>
         <li>Docs: <a href="/docs/spark-builder.html">SPARK_BC Builder</a>. Changelog <strong>0.6.44</strong>.</li>
         </ul>
-        <p><strong>Not</strong> claiming multi-head production quality or Claude-parity.</p>
-        <h2 id="mlp0-what-exists">MLP0 (what exists)</h2>
-        <p>Layer-0 SwiGLU-style block on CPU when tensors are present
-        (CHANGELOG <strong>0.6.32</strong>). Used in serve after attn0 (or mean-pool
+        <p><strong>Not</strong> claiming multi-head production quality or frontier parity.</p>
+        <h2 id="mlp-what-exists">MLP (what exists)</h2>
+        <p>SwiGLU-style block on CPU when tensors are present
+        (CHANGELOG <strong>0.6.32</strong>). Used in serve after attention (or mean-pool
         when <code class="inline-code">--no-train-attn</code> / missing attn tensors). Still fixture-scale.</p>
         <h2 id="spark-bc-vs-tensor-asm">SPARK_BC vs tensor asm</h2>
         <div class="doc__table-wrap"><table class="doc__table">

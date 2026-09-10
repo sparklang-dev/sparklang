@@ -189,8 +189,8 @@ Only when **all** hold:
  Spark **does not** invent train-grant tokens
 
 Then the companion may run `systemctl start train@<unit>`. Training
-compute policy on shared hosts: coding GPU only via the yield unit;
-do not place Spark training on reserved voice GPUs.
+compute policy on shared hosts: GPU training only via the training
+unit above; never on devices reserved for other workloads.
 
 ## What `model build` means now
 

@@ -264,11 +264,12 @@
         </code></pre>
         <ul class="doc__ul">
         <li><strong>Spark-owned</strong> bases (TinyCoder / STEP / reply-pack): train on
-         CPU or <strong>5090</strong> via existing factory / coder lanes.</li>
+         CPU or a consumer GPU via existing factory / coder lanes.</li>
         <li><strong>External bases</strong> (e.g. local Qwen HF dir): reverse/inspect via
          <code class="inline-code">./spark-model-lab</code>; attach adapters/heads with
          <code class="inline-code">keep_special_training</code>. <strong>Full Qwen SFT</strong> is <strong>opt-in
-         large</strong> on <strong>5090</strong> — <strong>never</strong> the reserved voice GPUs. - Owned homepage methods are <strong>not</strong> LoRA theater; see
+         large</strong> on a consumer GPU.</li>
+        <li>Owned homepage methods are <strong>not</strong> LoRA theater; see
          <a href="/docs/knowledge-training.html">TRAINING.md</a> · <a href="/docs/model-training.html">MODEL_LAB.md</a>.</li>
         </ul>
         <h3 id="functions-forced-grounding">Functions (forced grounding)</h3>

@@ -65,13 +65,12 @@ flowchart TB
  end
 
  subgraph serve["Serve"]
- SERVEF["dump.py --serve / spark-serve<br/>MLP0 forward"]
+ SERVEF["dump.py --serve / spark-serve<br/>MLP forward"]
  API["spark-serve-api<br/>shadow: HTTP/stdio over serve.py"]
  end
 
  subgraph measure["Eval helpers"]
  EVAL["make spark-eval"]
- CLAUDE["spark-eval-claude<br/>optional baseline; never win claim"]
  end
 
  SP --> BOOT
@@ -87,7 +86,6 @@ flowchart TB
  WTS --> SERVEF
  SERVEF --> API
  WTS --> EVAL
- EVAL --> CLAUDE
  ASM -.->|not SPARK_BC| DUMP
 ```
 

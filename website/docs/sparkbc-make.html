@@ -224,7 +224,7 @@
         </tr>
         <tr>
         <td><code class="inline-code">make spark-sgd-proof</code></td>
-        <td>Multi-outer CPU SGD → <code class="inline-code">checkpoint.json</code> loss drop → <code class="inline-code">make spark-eval WEIGHTS=…</code></td>
+        <td>Multi-pass CPU SGD → <code class="inline-code">checkpoint.json</code> loss drop → <code class="inline-code">make spark-eval WEIGHTS=…</code></td>
         </tr>
         <tr>
         <td><code class="inline-code">make spark-sgd-proof-scale</code></td>
@@ -232,7 +232,7 @@
         </tr>
         <tr>
         <td><code class="inline-code">make spark-coder-train</code></td>
-        <td>Owned TinyCoder <strong>tiny</strong> (CI/default); prefer 5090</td>
+        <td>Owned TinyCoder <strong>tiny</strong> (CI/default)</td>
         </tr>
         <tr>
         <td><code class="inline-code">make spark-coder-train-large</code></td>
@@ -248,15 +248,11 @@
         </tr>
         <tr>
         <td><code class="inline-code">make weight-gallery-xl</code></td>
-        <td>Opt-in XL emit (prefer 5090)</td>
+        <td>Opt-in XL emit</td>
         </tr>
         <tr>
         <td><code class="inline-code">make spark-eval</code></td>
         <td>Frozen copy/recall + next-token probes; exit 0 = harness ran (<strong>measurement only</strong>)</td>
-        </tr>
-        <tr>
-        <td><code class="inline-code">make spark-eval-claude</code></td>
-        <td>Same + optional Anthropic baseline (skip if no key)</td>
         </tr>
         <tr>
         <td><code class="inline-code">make test-spark-eval</code></td>
@@ -292,7 +288,7 @@
         </tr>
         <tr>
         <td><code class="inline-code">make voice-easy-large</code></td>
-        <td>Opt-in large voice-easy (prefer 5090; not default CI)</td>
+        <td>Opt-in large voice-easy (not default CI)</td>
         </tr>
         </tbody>
         </table></div>
@@ -300,7 +296,6 @@
         make sparkbc-e2e
         make spark-sgd-proof
         make spark-eval
-        make spark-eval-claude
         make docs-check
         make tools-test
         make sdk-pack
@@ -450,7 +445,6 @@
         <h2 id="never">Never</h2>
         <ul class="doc__ul">
         <li>Claim <code class="inline-code">spark-eval</code> scores as a competitive AI win.</li>
-        <li>Do not route factory train onto reserved voice GPUs.</li>
         <li>Treat empty / failing gates as soft success.</li>
         </ul>
         <h2 id="related">Related</h2>

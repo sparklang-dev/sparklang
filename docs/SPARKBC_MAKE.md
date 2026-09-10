@@ -18,15 +18,14 @@ ISA: [SPARK_BC.md](SPARK_BC.md). Story:
 | `make decompile-roundtrip` | compile→dump→recompile sha256 on published fixtures |
 | `make decompile-bench` | SPARK_BC metrics + `website/data/decompile-scoreboard.json` (+ `elf_local_probe`) |
 | `make test-spark-lsp` | Editor LSP static diagnostics gate |
-| `make spark-sgd-proof` | Multi-outer CPU SGD → `checkpoint.json` loss drop → `make spark-eval WEIGHTS=…` |
+| `make spark-sgd-proof` | Multi-pass CPU SGD → `checkpoint.json` loss drop → `make spark-eval WEIGHTS=…` |
 | `make spark-sgd-proof-scale` | Local opt-in larger JSONL + dim/n_layer (scale fixtures; not default CI) |
-| `make spark-coder-train` | Owned TinyCoder **tiny** (CI/default); prefer 5090 |
+| `make spark-coder-train` | Owned TinyCoder **tiny** (CI/default) |
 | `make spark-coder-train-large` | Opt-in **large** coder (dim 64 / n_layer 4); not GHA default |
 | `make weight-gallery` | Catalog + emit scale/large samples + website catalog JSON |
 | `make test-weights-play` | Weight gallery unit + CLI play/diff/stats |
-| `make weight-gallery-xl` | Opt-in XL emit (prefer 5090) |
+| `make weight-gallery-xl` | Opt-in XL emit |
 | `make spark-eval` | Frozen copy/recall + next-token probes; exit 0 = harness ran (**measurement only**) |
-| `make spark-eval-claude` | Same + optional Anthropic baseline (skip if no key) |
 | `make test-spark-eval` | Unit gate for eval harness |
 | `make docs-html` / `make docs-check` | Regen `website/docs/*` + nav link check |
 | `make spark-serve-api` / `make test-serve-api` | serve API path HTTP/stdio predict + embeddings |
@@ -35,14 +34,13 @@ ISA: [SPARK_BC.md](SPARK_BC.md). Story:
 | `make test-spark-analyze` | Project-loop analyze folder gate |
 | `make sdk-pack` / `make dist` | Stage `dist/spark-sdk/` (helpers overlay when present) |
 | `make voice-easy` / `make test-voice-easy` | Owned voice STT/TTS heads — tiny dry (CI) |
-| `make voice-easy-large` | Opt-in large voice-easy (prefer 5090; not default CI) |
+| `make voice-easy-large` | Opt-in large voice-easy (not default CI) |
 
 ```bash
 make test-sparkbc
 make sparkbc-e2e
 make spark-sgd-proof
 make spark-eval
-make spark-eval-claude
 make docs-check
 make tools-test
 make sdk-pack
@@ -110,7 +108,6 @@ docs match tip.
 ## Never
 
 - Claim `spark-eval` scores as a competitive AI win.
-- Do not route factory train onto reserved voice GPUs.
 - Treat empty / failing gates as soft success.
 
 ## Related

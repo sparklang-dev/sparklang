@@ -76,11 +76,12 @@ this tool):
 ```
 
 - **Spark-owned** bases (TinyCoder / STEP / reply-pack): train on
- CPU or **5090** via existing factory / coder lanes.
+ CPU or a consumer GPU via existing factory / coder lanes.
 - **External bases** (e.g. local Qwen HF dir): reverse/inspect via
  `./spark-model-lab`; attach adapters/heads with
  `keep_special_training`. **Full Qwen SFT** is **opt-in
- large** on **5090** — **never** the reserved voice GPUs. - Owned homepage methods are **not** LoRA theater; see
+ large** on a consumer GPU.
+- Owned homepage methods are **not** LoRA theater; see
  [TRAINING.md](TRAINING.md) · [MODEL_LAB.md](../MODEL_LAB.md).
 
 ### Functions (forced grounding)

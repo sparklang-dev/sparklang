@@ -1,6 +1,6 @@
 # What's shipping today (SparkLang)
 
-Honest checklist against the critique: table stakes, escape hatch,
+Checklist against the critique: table stakes, escape hatch,
 worth-using ops, voice status, what we drop, and the production-style
 workflow goal. **Spark is not tied to a single AI gateway** — gateway is optional
 live I/O.
@@ -28,11 +28,11 @@ Not Apache Spark. Not AdaCore SPARK.
 | Streaming `ask` | **done** | Companion `./spark-ask-http --stream` (SSE deltas + `--out` accumulate); language `ask stream "…"` under `--live`; dry gate `stream=1` |
 | Eval vs expectations (pass/fail) | **done** | `expect equal` / `expect contains` vs bound vars or `fixture "PATH"`; exit 0/1. Gate: `make test-expect` |
 | Editor LSP + highlighting | **done** | `tools/spark_lsp` stdio LSP + VS Code/the local IDE extension hover/completion/diagnostics. Gate: `make test-spark-lsp`. Doc: [LSP.md](LSP.md) |
-| Voice production telephony | **won't (soon)** | Gated demo + honest gaps in VOICE.md / ROADMAP — not sold as production |
+| Voice production telephony | **won't (soon)** | Gated demo + gaps in VOICE.md / ROADMAP — not sold as production |
 | Packet capture / MITM / browser automation | **won't (focus)** | Still in LANGUAGE; de-emphasized on landing — prefer LSP + highlighting |
 | Homegrown IDE as product chrome | **won't (focus) / keep tree** | Prefer LSP for editor story; language `ide` ops + IDE tree **kept**. Hard-delete plan **revoked** 2026-09-02 (rename yes; delete no) |
 | Model-build as training claim | **won't** | Blueprint / eval sugar only; demoted on landing |
-| SPARK_BC Builder factory | **done (multi-outer + scale fixture)** | Spark → `--compile` → `.sparkbc` with `TRAIN`/`STEP`/`TRAIN_STATUS`; `--run-bc` TRAIN dry + STEP multi-outer CPU SGD (bootstrap or GAS); `checkpoint.json` loss curve; post-STEP `trained=true` / `not_sgd=false` when grads apply. Serve optional MLP0. Opt-in `make spark-sgd-proof-scale` (larger JSONL + dim/n_layer; CI stays tiny). GAS wrappers **implemented**. **Measurement only.** Hub: [Factory hub](FACTORY.md) / `/docs/factory.html`; Builder [SPARK_BC Builder](SPARK_BUILDER.md) |
+| SPARK_BC Builder factory | **done (multi-pass + scale fixture)** | Spark → `--compile` → `.sparkbc` with `TRAIN`/`STEP`/`TRAIN_STATUS`; `--run-bc` TRAIN dry + STEP multi-pass CPU SGD (bootstrap or GAS); `checkpoint.json` loss curve; post-STEP `trained=true` / `not_sgd=false` when grads apply. Serve optional MLP. Opt-in `make spark-sgd-proof-scale` (larger JSONL + dim/n_layer; CI stays tiny). GAS wrappers **implemented**. **Measurement only.** Hub: [Factory hub](FACTORY.md) / `/docs/factory.html`; Builder [SPARK_BC Builder](SPARK_BUILDER.md) |
 | SDK + IDE + GUI download pack | **done** | `make sdk-pack` / `make dist` → `out/sdk-pack/sparklang-sdk-*.tar.gz` (runtime + SDK + IDE + GUI + helpers/shadows/tools). Gate: `make test-sdk-pack`. Page: [/docs/sdk-ide-download.html](/docs/sdk-ide-download.html) |
 | Dry receptionist workflow | **done** | `examples/receptionist.spark` — classify + retrieve + ask + shell queue + `expect` gates. Gate: dry-run exit 0 |
 | Production receptionist (transfer SM) | **goal** | `examples/receptionist_goal.spark` — live transfer/hold/hangup language still missing |
@@ -59,7 +59,7 @@ dry-runnable receptionist with `expect` gates
 live transfer / hold / hangup language (see
 `examples/receptionist_goal.spark`).
 
-## Voice — honest
+## Voice
 
 Optional `listen` / `speak` / `voice` / gated PSTN exist as language
 surface and dry demos. **Not** production barge-in / EOU / SM transfer

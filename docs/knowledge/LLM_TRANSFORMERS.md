@@ -2,7 +2,7 @@
 
 What a **large language model** is doing under the hood — engineer
 sketch for Spark readers. Spark’s owned TinyCoder and SPARK_BC
-attention path are **tiny and honest**; they do not pretend to be
+attention path are **tiny**; they do not pretend to be
 frontier LLMs and **do measurement only.**.
 
 ![Transformer block schematic](/docs/images/diagram-knowledge-transformer.svg?v=0.6.58)
@@ -63,8 +63,8 @@ flowchart TB
 ## Capability status
 | Capability | Status |
 |------------|--------|
-| Layer-0 last-query attention train/serve | **Yes** |
-| Full RoPE / multi-layer production decode | **Not yet** |
+| Single-layer causal attention train/serve | **Yes** |
+| Full rotary embeddings / multi-layer production decode | **Not yet** |
 
 Continue: [Training stack](TRAINING.md) · [Inference](INFERENCE.md) ·
 [Architecture](ARCHITECTURE.md) · [Factory hub](FACTORY.md).

@@ -1,6 +1,6 @@
 # Spark IDE
 
-Honest status of programming Spark in an IDE **today**.
+Status of programming Spark in an IDE **today**.
 
 Today’s `./spark` ELF is the **GAS scaffold** for IDE ops (`asm/`).
 **Authoring SoT DECIDED (A+B+C):** destination self-host in Spark (A);
@@ -440,7 +440,7 @@ Agent card: [AGENTS.md](../AGENTS.md). Rules:
 | Editor model override (when ON) | `http://127.0.0.1:4010/cursor/v1` | gateway aliases `fast` / `code` / `code-bulk` / `code-max` / `best` |
 | Terminal live `ask` | `AI_GATEWAY_URL=http://127.0.0.1:4000` + Bearer `sk-bf-*` | `model` in `.spark` |
 
-Never commit keys. Never route coding to voice GPU aliases.
+Never commit keys.
 Public the AI gateway probes use a gateway probe credential only — [ASK_LIVE.md](ASK_LIVE.md).
 
 ### AI coding playbooks (catalog)
@@ -459,7 +459,7 @@ Regenerate catalog (committed JSON + snippets):
 make playbooks-catalog
 ```
 
-**Honest site run:** the playground has **no WASM** Spark runtime.
+**Site run:** the playground has **no WASM** Spark runtime.
 Selecting a playbook only loads fixture source into the editor.
 **Run dry-run** for a playbook **fails loud** with a
 [Downloads](https://sparklang.dev/downloads.html) link — it does **not**

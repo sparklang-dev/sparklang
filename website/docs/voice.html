@@ -317,9 +317,8 @@
         <code class="inline-code">out/voice_models/</code>.</p>
         <h2 id="voice-easy-train-owned-heads">Voice easy train (owned heads)</h2>
         <p>Piece-of-cake path for <strong>training</strong> owned STT/TTS heads (tiny CI or
-        large opt-in). Not vendor neural clone. Prefer 5090</p>
-        <pre class="doc__pre"><code class="language-bash">make voice-easy
-        ./spark-voice easy --dry --device auto
+        large opt-in). Not a vendor neural clone.</p>
+        <pre class="doc__pre"><code class="language-bash">./spark-voice easy --dry --device auto
         ./spark-voice easy --scale large --device auto # opt-in
         </code></pre>
         <p>Docs: <a href="/docs/voice-easy.html">Voice easy</a> →
@@ -434,15 +433,14 @@
         <tr>
         <td><strong>large</strong></td>
         <td>Opt-in local</td>
-        <td><code class="inline-code">make spark-coder-train-large</code> / <code class="inline-code">make spark-sgd-proof-scale</code>; prefer <strong>RTX 5090</strong></td>
+        <td><code class="inline-code">./spark-code train --scale large</code> / <code class="inline-code">make spark-sgd-proof-scale</code>; consumer GPU optional</td>
         </tr>
         </tbody>
         </table></div>
-        <p><strong>Never</strong> route Spark voice/weight <strong>train</strong> onto GPUs reserved for
-        other production voice stacks — prefer CPU / RTX <strong>5090</strong>
-        (<a href="/docs/factory.html">Factory hub</a>). Larger stubs still <strong>measurement only</strong>.
+        <p>Spark train runs on CPU (default) or a consumer GPU. Larger stubs
+        still <strong>measurement only</strong>.
         Details: <a href="/docs/spark-coder.html">Spark coder</a> · <a href="/docs/train-loop.html">Train loop</a>.</p>
-        <h2 id="production-gaps-honest-not-sold-as-telephony">Production gaps (honest — not sold as telephony)</h2>
+        <h2 id="production-gaps-not-sold-as-telephony">Production gaps (not sold as telephony)</h2>
         <p>Spark voice is a <strong>language/demo surface</strong>, not a production call center.</p>
         <p><strong>Not shipped as production:</strong> barge-in; end-of-utterance / silence;
         latency budgets; call state machine (transfer / hold / hangup / voicemail /

@@ -19,7 +19,7 @@ Dump / `--compile` / `--run-bc` stay SoT. Companions: `./spark-stt-tts` · brain
 make helpers
 make spark-stt-tts # optional for live STT/TTS
 # optional tiny brain:
-make spark-coder-train
+./spark-code train --scale tiny
 
 # Text (no mic) — dump facts / TinyCoder
 ./spark-ask docs/examples/spark-train-step.sparkbc \

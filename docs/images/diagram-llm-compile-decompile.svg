@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 300" role="img" aria-labelledby="t5 d5">
  <title id="t5">How LLMs typically assist compile and decompile</title>
- <desc id="d5">Typical LLM assist flows for decompile and compile with honest limits</desc>
+ <desc id="d5">Typical LLM assist flows for decompile and compile with clear limits</desc>
  <defs>
  <marker id="arrow5" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
  <path d="M0,0 L6,3 L0,6 Z" fill="#334155"/>

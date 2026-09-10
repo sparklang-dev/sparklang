@@ -191,14 +191,14 @@
          --serve /tmp/serve-dry-001 \
          --serve-weights /path/to/weights.safetensors # optional
         </code></pre>
-        <p>Writes <code class="inline-code">SERVE</code> with <code class="inline-code">forward=true</code> and honest <code class="inline-code">trained</code> from weights
+        <p>Writes <code class="inline-code">SERVE</code> with <code class="inline-code">forward=true</code> and <code class="inline-code">trained</code> from weights
         meta. Forward path when MLP tensors exist:</p>
-        <p><code class="inline-code">embed_mean_pool-&gt;mlp0-&gt;rms_norm-&gt;lm_head</code></p>
+        <p><code class="inline-code">embed_mean_pool-&gt;mlp-&gt;rms_norm-&gt;lm_head</code></p>
         <p>Code: <code class="inline-code">python/sparklang/model_lab/serve.py</code>. Gate:
         <code class="inline-code">make test-sparkbc</code> (<code class="inline-code">test_serve_forward</code>).</p>
         <p>Architecture: <a href="/docs/architecture.html">Architecture</a> ·
         <a href="/docs/attention-forward.html">Attention / forward</a>.</p>
-        <h2 id="http-stdio-api-serve-api-path-on-tip">HTTP / stdio API (serve API path — on tip)</h2>
+        <h2 id="http-stdio-api-serve-api-path">HTTP / stdio API (serve API path)</h2>
         <pre class="doc__pre"><code class="language-bash">make spark-serve-api
         ./spark-serve-api --weights /tmp/serve-dry-001/weights.safetensors \
          --http --host 127.0.0.1 --port 8765
@@ -245,17 +245,15 @@
         </table></div>
         <p>Implementation: <code class="inline-code">python/sparklang/model_lab/serve_api.py</code> wraps
         <code class="inline-code">run_tiny_forward</code> / <code class="inline-code">run_tiny_embed</code> — same path as file SERVE
-        (now <strong>attn0</strong> when tensors exist; layer-0 attention). Builder §6c:
+        (now with <strong>attention</strong> when tensors exist). Builder §6c:
         <a href="/docs/spark-builder.html">SPARK_BC Builder</a>.</p>
         <p>Optional live <strong>gateway</strong> ask/embed (the AI gateway etc.) is a different
         surface — <a href="/docs/ai-models.html">AI_MODELS.md</a> / <a href="/docs/ai-models.html#live-gateway-integration-wired-today">ASK_LIVE.md</a>.</p>
         <h2 id="never">Never</h2>
         <ul class="doc__ul">
         <li>Claim production LLM serving.</li>
-        <li>Claim multi-layer / RoPE / KV-cache decode (layer-0 last-query
-         only).</li>
+        <li>Claim multi-layer / rotary-embedding / KV-cache decode.</li>
         <li>Claim a competitive AI win from SERVE / predict JSON.</li>
-        <li>Bind serve training to the 6000.</li>
         </ul>
         <h2 id="related">Related</h2>
         <ul class="doc__ul">

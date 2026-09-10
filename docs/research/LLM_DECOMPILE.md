@@ -116,7 +116,7 @@ map linearized assembly → C in one generative pass.
 Reddit thread:
 https://www.reddit.com/r/ReverseEngineering/comments/1kt2gcb/decompai_an_llmpowered_reverse_engineering_agent/
 
-Honest limits: exploratory RE accelerator for supported binaries —
+Limits: exploratory RE accelerator for supported binaries —
 **not** a verified SPARK_BC→`.spark` recovery pipeline, and not
 proof that agent output is ground truth.
 
@@ -172,9 +172,9 @@ section below.
 | Tool / pattern | Role | Cite |
 |----------------|------|------|
 | **Ghidra / IDA / Binary Ninja** | Deterministic (or heuristic) decompile → pseudocode | Industry SoT for native RE; LLM papers refine *their* output |
-| **GhidraMCP / ReVa / Better-Ghidra-MCP / GhidraGPT** | MCP or plugin bridges so Claude/GPT/Codex rename, comment, explain | e.g. [LaurieWired/GhidraMCP](https://github.com/LaurieWired/GhidraMCP), [cyberkaida/reverse-engineering-assistant](https://github.com/cyberkaida/reverse-engineering-assistant), [Better-Ghidra-MCP](https://github.com/TheFlashBold/Better-Ghidra-MCP), [GhidraGPT](https://github.com/weirdmachine64/GhidraGPT) |
+| **GhidraMCP / ReVa / Better-Ghidra-MCP / GhidraGPT** | MCP or plugin bridges so hosted LLM assistants rename, comment, explain | e.g. [LaurieWired/GhidraMCP](https://github.com/LaurieWired/GhidraMCP), [cyberkaida/reverse-engineering-assistant](https://github.com/cyberkaida/reverse-engineering-assistant), [Better-Ghidra-MCP](https://github.com/TheFlashBold/Better-Ghidra-MCP), [GhidraGPT](https://github.com/weirdmachine64/GhidraGPT) |
 | **DecompAI (agent)** | Tool-loop RE over binaries (see above) | [GitHub](https://github.com/louisgthier/decompai) · [Reddit](https://www.reddit.com/r/ReverseEngineering/comments/1kt2gcb/decompai_an_llmpowered_reverse_engineering_agent/) |
-| **Claude / GPT / Codex as RE assistants** | Read dump/pseudocode; suggest names, summaries, patches | Useful for readability; **not** proven SPARK_BC→`.spark` fidelity |
+| **Hosted LLM assistants as RE helpers** | Read dump/pseudocode; suggest names, summaries, patches | Useful for readability; **not** proven SPARK_BC→`.spark` fidelity |
 
 ### Commercial / online AI decompiler products
 
@@ -263,7 +263,7 @@ are wrong. Always recompile and re-dump to verify.
 2. Optional later: LLM assist lane that consumes **dump text** only
  (comments / rename proposals) — never silent rewrite of `.sparkbc`.
 3. Do **not** claim Spark “beats” LLM4Decompile / Nova / DecompAI /
- Claude / OpenBin on native binary benchmarks — different problem,
+ OpenBin on native binary benchmarks — different problem,
  different metrics.
 4. If evaluating assist: measure dump→suggested-name accuracy and
  recompile round-trip — and remember **recompile more ≠ preserve
@@ -272,8 +272,7 @@ are wrong. Always recompile and re-dump to verify.
  Quarkslab caution: tool traces can still cheat or invent; require
  dump/`--run-bc` gates. Prefer **local** artifacts over third-party
  upload for proprietary SPARK_BC.
-6. Prefer CPU / RTX **5090** for any SPARK_BC factory GPU train
- (see [Factory hub](../FACTORY.md)); leave reserved GPUs alone.
+6. Prefer CPU or a consumer GPU for any SPARK_BC factory GPU train.
 
 ## Operator brief (short)
 
@@ -298,8 +297,6 @@ are wrong. Always recompile and re-dump to verify.
  guaranteed recovery.
 - Spark path: compile/dump/run deterministic; LLM optional for docs-
  level assist only.
-- Honest bar: no perfect SPARK_BC decompile claim; no competitive AI win claim /
- no beat these models/products. GPU train: see factory policy.
 
 ## Related
 

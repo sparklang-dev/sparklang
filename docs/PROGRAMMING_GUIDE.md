@@ -661,7 +661,7 @@ spark.code-workspace # editor workspace (IDE.md)
 | `ask probe` fail | probe credential path — see ASK_LIVE.md |
 | `review url` blocked | Remote needs `--allow-net`; use `file://` offline |
 | `browser gui` in dry | Expected fail — use dry `browser run` or `--live` |
-| Prefer GPU 2 | Refused (voice GPU) — see `examples/neg/cuda_prefer_*` |
+| Prefer GPU 2 | Refused (reserved device) — see `examples/neg/cuda_prefer_*` |
 
 Negative corpus: `examples/neg/` (tests expect **non-zero** exit + error text).
 
@@ -838,7 +838,7 @@ product render SoT. See [SELF_HOST.md](SELF_HOST.md).
 
 ---
 
-## 11. Honest gaps (not in the language)
+## 11. Gaps (not in the language)
 
 Standard-tutorial topics that are **not** Spark syntax today — omit from
 examples; do not invent:

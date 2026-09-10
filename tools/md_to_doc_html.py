@@ -217,7 +217,7 @@ DOC_PAGES = [
     ("ma", "MODEL_ASPECTS.md", "model-aspects.html",
      "AI model aspects",
      "Behaviors, ears/STT, eyes/vision, speaking/TTS, thinking, "
-     "memory, tools, train, eval, serve — honest status table."),
+     "memory, tools, train, eval, serve — status table."),
     ("vo", "VOICE.md", "voice.html", "Voice — STT / TTS / PSTN",
      "Spark listen/speak companions, dry stubs, gated live STT/TTS "
      "and PSTN. Not production telephony."),
@@ -269,18 +269,19 @@ DOC_PAGES = [
     ("rd", "research/LLM_DECOMPILE.md", "llm-decompile.html",
      "LLM decompile research",
      "Survey of LLM decompile tools vs Spark SPARK_BC "
-     "deterministic dump — citations and honest limits."),
+     "deterministic dump — citations and limits."),
     ("bm", "BUILD_MODELS.md", "build-models.html",
      "Build models — TRAIN / STEP",
      "TRAIN, STEP, ARTIFACT, weights, and checkpoints on CPU "
      "fixtures."),
     ("tl", "TRAIN_LOOP.md", "train-loop.html",
      "Train loop — outer / inner SGD",
-     "Multi-outer CPU SGD, fixtures, checkpoints, loss curves."),
+     "Multi-pass CPU SGD, fixtures, checkpoints, loss curves."),
     ("sc", "SPARK_CODER.md", "spark-coder.html",
      "Spark coder — owned TinyCoder",
      "In-repo TinyCoder layers + SGD on coding fixtures. "
-     "Not a downloaded HF/Claude substitute; see coder status table."),
+     "Not a downloaded frontier-model substitute; see the coder "
+     "status table."),
     ("wg", "WEIGHT_GALLERY.md", "weight-gallery.html",
      "Weight gallery — view / play / understand",
      "Catalog tiny through xl Spark stub weights; inspect, "
@@ -290,7 +291,7 @@ DOC_PAGES = [
      "Embed, RMSNorm, lm_head, MLP/SwiGLU, attention status."),
     ("af", "ATTENTION_FORWARD.md", "attention-forward.html",
      "Attention / MLP / serve",
-     "Current status: init attn tensors, MLP0 serve forward, "
+     "Current status: init attention tensors, MLP serve forward, "
      "attention math planned."),
     ("tk", "TOKENIZER.md", "tokenizer.html", "Tokenizer — BPE seed vocab",
      "From-nothing byte-level BPE seed vocab for Spark."),

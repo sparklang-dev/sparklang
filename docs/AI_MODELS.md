@@ -10,7 +10,7 @@ plain `.spark` files you can diff, dry-run, and ship.
 `retrieve` via gateway env is **optional** (`./spark --live`).
 
 **Related:** [Model aspects](MODEL_ASPECTS.md) (behaviors + ears/eyes/speaking +
-thinking + tools — honest status) ·
+thinking + tools — status) ·
 [SPARK_BC Builder](SPARK_BUILDER.md) (full factory E2E —
 SPARK_BC vs weights; `TRAIN` `0x26` / `STEP` `0x28` /
 `TRAIN_STATUS` `0x27`; sha256 table; GAS `--run-bc`/`--compile` wrappers; dry ≠ trained) ·
@@ -26,12 +26,12 @@ SPARK_BC vs weights; `TRAIN` `0x26` / `STEP` `0x28` /
 
 ## What Spark means for model create / modify
 
-| Goal | Spark today | Honest limits |
-|------|-------------|---------------|
+| Goal | Spark today | Limits |
+|------|-------------|--------|
 | **Train / build** real jobs | `model train` / `model build` → job; `model status` | Dry fixtures; live `./spark-train-http`. **`spark_reply_pack`** overlays voice+text on text-only bases and refuses inventable rows without SoT — see [MODEL_TRAINING.md](MODEL_TRAINING.md) |
 | **Reverse / inspect** | `model reverse` / `model inspect` → architecture JSON | Local `config.json` + index names only; [MODEL_LAB.md](MODEL_LAB.md) |
 | **Compile program** | `model compile "….spark" into "….sparkbc"` | SPARK_BC of the **program**, not a transformer compiler |
-| **Builder from SPARK_BC** | `--compile` Spark → `.sparkbc` (incl. `0x26`/`0x28`/`0x27`); dump; emit init weights; `--run-bc` TRAIN dry + STEP CPU SGD (bootstrap or GAS) | Tiny SGD ≠ Claude; GAS `--run-bc` / `--compile` wrappers **implemented**; STEP→weights **CPU SGD** (`trained=true`); later stages may grow train/eval (not a published claim); [SPARK_BC Builder](SPARK_BUILDER.md) |
+| **Builder from SPARK_BC** | `--compile` Spark → `.sparkbc` (incl. `0x26`/`0x28`/`0x27`); dump; emit init weights; `--run-bc` TRAIN dry + STEP CPU SGD (bootstrap or GAS) | Tiny fixture-scale SGD; GAS `--run-bc` / `--compile` wrappers **implemented**; STEP→weights **CPU SGD** (`trained=true`); later stages may grow train/eval (not a published claim); [SPARK_BC Builder](SPARK_BUILDER.md) |
 | **Modify existing** | `model modify keep_existing …` | Attach adapters/heads; **never** delete special training |
 | **Abstain / IDK heads** | `head abstain|train|attach|ask` | Probe on frozen local LLM; SELECT before SAMPLE; [ABSTAIN_HEADS.md](ABSTAIN_HEADS.md) |
 | **Analyze** reachable models | `model analyze "…" -> report` | Dry-run = fixtures under `examples/fixtures/models/`; not live leaderboards |

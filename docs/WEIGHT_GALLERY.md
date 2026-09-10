@@ -16,7 +16,7 @@ Hub: [Factory hub](FACTORY.md). Arch roles: [Architecture](ARCHITECTURE.md).
 | `tiny` | 32 | 2 | Default init / spark-coder |
 | `scale` | 64 | 4 | Scale fixture (`spark-sgd-proof-scale`) |
 | `large` | 128 | 8 | Multi-layer + full attn tensor set |
-| `xl` | 256 | 8 | Opt-in; prefer 5090 generate |
+| `xl` | 256 | 8 | Opt-in; consumer GPU suggested |
 
 Larger spark-coder variant path (when present):
 `models/spark-coder-large/weights.safetensors`.
@@ -72,9 +72,7 @@ and interactive browser [/weight-playground.html](/weight-playground.html)
 # CPU scale + large samples under out/gallery/
 make weight-gallery
 
-# XL prefers 5090 (falls back to CPU)
-PYTHONPATH=python python3 tools/spark-weights/cli.py generate xl --5090
-# or force CPU:
+# XL on CPU:
 PYTHONPATH=python python3 tools/spark-weights/cli.py generate xl --cpu
 ```
 
@@ -84,11 +82,11 @@ PYTHONPATH=python python3 tools/spark-weights/cli.py generate xl --cpu
 |------|----------------|
 | **embed** | Byte/token table; prompt rows → mean-pool or attn0 |
 | **attn** | Layer q/k/v/o (+ norm); multi-layer on large/xl |
-| **mlp** | SwiGLU up/gate/down; layer-0 in tiny CPU serve |
+| **mlp** | SwiGLU up/gate/down; single-layer in tiny CPU serve |
 | **norm** | RMSNorm scales before MLP / lm_head |
 | **lm_head** | Hidden → vocab logits; primary STEP CE target |
 
-Forward sketch: `embed → attn0? → mlp0? → rms_norm → lm_head`
+Forward sketch: `embed → attn? → mlp? → rms_norm → lm_head`
 ([Serve](SERVE.md), [Attention / forward](ATTENTION_FORWARD.md)).
 
 ## Make targets
@@ -97,7 +95,7 @@ Forward sketch: `embed → attn0? → mlp0? → rms_norm → lm_head`
 |--------|------|
 | `make weight-gallery` | Emit scale+large samples, write catalog JSON |
 | `make test-weights-play` | Unit + CLI play/diff/stats smoke |
-| `make weight-gallery-xl` | Opt-in XL emit (`--5090`) |
+| `make weight-gallery-xl` | Opt-in XL emit |
 
 SDK pack includes checked-in init safetensors + catalog JSON when
 present; regenerate large samples via the make targets above (CI

@@ -192,13 +192,12 @@
         <h2 id="text-speech-tts">Text → speech (TTS)</h2>
         <p>TTS maps text (or phonemes) to audio. Neural vocoders dominate;
         latency and voice cloning ethics matter in production.</p>
-        <p><strong>Spark:</strong> <code class="inline-code">speak</code> companions, dry/live gated — same voice doc.
-        Product voice stacks elsewhere may pin GPUs; <strong>Spark docs never
-        claim reserved voice GPUs</strong> for train.</p>
+        <p><strong>Spark:</strong> <code class="inline-code">speak</code> companions, gated live — same voice doc.
+        Spark train stays on CPU or a consumer GPU.</p>
         <h2 id="vision">Vision</h2>
         <p>Image encoders (ViT-style patches, CNN towers) project pixels into
         embeddings the LLM can attend to — “see” as <strong>tokens</strong>, not magic.</p>
-        <p><strong>Spark:</strong> eyes / vision runtime is an <strong>honest stub</strong> —
+        <p><strong>Spark:</strong> eyes / vision runtime is a <strong>stub</strong> —
         <a href="/docs/model-aspects.html">Model aspects</a>. Do not invent live vision.</p>
         <pre class="mermaid">flowchart LR
          mic[Audio] --> stt[STT]

@@ -1,6 +1,6 @@
 # Decompile compete — capability + measured scoreboard
 
-Honest path to compete at every level on **SPARK_BC** without
+How Spark competes at every level on **SPARK_BC** without
 false marketing. Spark / SparkLang only.
 
 **Never** publish “Spark beats Ghidra / IDA / Binary Ninja /

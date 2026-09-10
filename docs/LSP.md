@@ -36,7 +36,7 @@ python3 tools/spark_lsp/server.py
 Capabilities: `textDocumentSync`, `hoverProvider`,
 `completionProvider`, `publishDiagnostics`.
 
-## Diagnostics (honest)
+## Diagnostics
 
 | Code | Severity | Meaning |
 |------|----------|---------|

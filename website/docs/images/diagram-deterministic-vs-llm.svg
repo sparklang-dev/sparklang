@@ -13,7 +13,7 @@
  </style>
  </defs>
  <rect x="8" y="8" width="904" height="264" fill="#f8fafc" stroke="#cbd5e1" rx="8"/>
- <text x="20" y="28" class="cap">Deterministic Spark tools vs optional LLM assist (honest split)</text>
+ <text x="20" y="28" class="cap">Deterministic Spark tools vs optional LLM assist (clear split)</text>
 
  <rect class="sot" x="24" y="48" width="420" height="200"/>
  <text x="234" y="76" text-anchor="middle" class="lbl">SoT  deterministic Spark</text>

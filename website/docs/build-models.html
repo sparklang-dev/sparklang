@@ -181,8 +181,7 @@
       </nav>      <article class="doc__body">
         <h1 id="build-models-train-step-artifact">Build models — TRAIN / STEP / ARTIFACT</h1>
         <p>How Spark <strong>programs</strong> training in SPARK_BC and what lands on disk.
-        Prefer CPU or a consumer GPU for train. (voice GPU). CPU fixtures only unless a future owner grant says
-        otherwise.</p>
+        Train runs on CPU (default) or a consumer GPU. CPU fixtures only.</p>
         <p>Full factory: <a href="/docs/spark-builder.html">SPARK_BC Builder</a>. Language verbs:
         <a href="/docs/model-training.html">MODEL_TRAINING.md</a> · <a href="/docs/language.html">LANGUAGE.md</a>.</p>
         <h2 id="opcodes-in-the-binary">Opcodes in the binary</h2>
@@ -206,7 +205,7 @@
         <td><code class="inline-code">0x28</code></td>
         <td><code class="inline-code">STEP</code></td>
         <td><code class="inline-code">model step</code></td>
-        <td>multi-outer <strong>CPU SGD</strong> → <code class="inline-code">weights.safetensors</code> + <code class="inline-code">checkpoint.json</code>; <code class="inline-code">trained=true</code> / <code class="inline-code">not_sgd=false</code> when grads apply</td>
+        <td>multi-pass <strong>CPU SGD</strong> → <code class="inline-code">weights.safetensors</code> + <code class="inline-code">checkpoint.json</code>; <code class="inline-code">trained=true</code> / <code class="inline-code">not_sgd=false</code> when grads apply</td>
         </tr>
         <tr>
         <td><code class="inline-code">0x27</code></td>
@@ -261,13 +260,13 @@
         </tr>
         <tr>
         <td>STEP weights</td>
-        <td>Multi-outer CE on <code class="inline-code">lm_head</code> (+ optional embed); tiny fixture</td>
+        <td>Multi-pass CE on <code class="inline-code">lm_head</code> (+ optional embed); tiny fixture</td>
         </tr>
         </tbody>
         </table></div>
         <p>Init tensor layout (including <strong>unused</strong> attn Q/K/V/O slots):
         <code class="inline-code">python/sparklang/model_lab/weights.py</code>. Serve path today uses
-        MLP0 only — <a href="/docs/attention-forward.html">Attention / forward</a>.</p>
+        the MLP only — <a href="/docs/attention-forward.html">Attention / forward</a>.</p>
         <h2 id="makefile-targets">Makefile targets</h2>
         <pre class="doc__pre"><code class="language-bash">make test-sparkbc # includes dump + SGD loss-drop asserts
         make sparkbc-e2e # TRAIN→STEP→ARTIFACT (+ GAS --run-bc)
@@ -280,13 +279,6 @@
         <p><code class="inline-code">./spark-train-http</code> remains the live HTTP job path
         (<a href="/docs/model-training.html">MODEL_TRAINING.md</a>). <code class="inline-code">backend</code> on train lines
         is parsed and skipped in SPARK_BC (not an operand).</p>
-        <h2 id="honest-bar">Honest bar</h2>
-        <ul class="doc__ul">
-        <li>Multi-outer CPU SGD on tiny Spark tensors — <strong>yes</strong> (tip
-         <code class="inline-code">make spark-sgd-proof</code>).</li>
-        <li>Production LLM / Competitive AI win claims — <strong>no</strong>.</li>
-        <li>6000 train — <strong>never</strong> from this lane.</li>
-        </ul>
         <h2 id="related">Related</h2>
         <ul class="doc__ul">
         <li><a href="/docs/compile.html">Compile</a> · <a href="/docs/decompile.html">Decompile</a></li>

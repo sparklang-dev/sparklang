@@ -107,7 +107,7 @@
  html += "</tbody></table></div>";
  html +=
  "<p><em>" +
- esc(data.honesty || "") +
+ esc(data.note || data.honesty || "") +
  "</em></p>";
  const ext = data.external_tools || [];
  if (ext.length) {

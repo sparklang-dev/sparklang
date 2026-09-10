@@ -265,9 +265,9 @@
         Selfhost train seed: <code class="inline-code">selfhost/compile_train.spark</code> →
         <code class="inline-code">docs/examples/spark-selfhost-train.sparkbc</code>. Bootstrap
         <code class="inline-code">./spark-bootstrap --run-bc</code> <strong>or</strong> GAS <code class="inline-code">./spark --run-bc</code> runs that
-        binary (TRAIN accept dry; STEP = multi-outer CPU SGD). GAS <code class="inline-code">./spark --dry-run</code>
+        binary (TRAIN accept dry; STEP = multi-pass CPU SGD). GAS <code class="inline-code">./spark --dry-run</code>
         runs train verbs from source; GAS <code class="inline-code">--compile</code> wraps bootstrap emit.
-        Emitting TRAIN/STEP ≠ beating Claude. See <a href="/docs/spark-bc.html">SPARK_BC.md</a>
+        Emitting TRAIN/STEP ≠ a trained production model. See <a href="/docs/spark-bc.html">SPARK_BC.md</a>
         and <a href="/docs/spark-builder.html">SPARK_BC Builder</a> (sha256 table + reproduce
         commands). STEP→weights is <strong>CPU SGD</strong>
         (<code class="inline-code">out/train/&lt;job&gt;/weights.safetensors</code>; <code class="inline-code">trained=true</code> /
@@ -291,7 +291,7 @@
         model status &quot;job-dry-001&quot; -&gt; status # polls that job id
         </code></pre>
         <h3 id="model-step-spark-bc-step-0x28"><code class="inline-code">model step</code> (SPARK_BC <code class="inline-code">STEP</code> <code class="inline-code">0x28</code>)</h3>
-        <p>One training-loop tick in the binary — <strong>multi-outer CPU SGD</strong> on
+        <p>One training-loop tick in the binary — <strong>multi-pass CPU SGD</strong> on
         Spark tensors (fixture JSONL → CE on <code class="inline-code">lm_head</code>+embed; loss curve in
         <code class="inline-code">checkpoint.json</code>). Syntax:
         <code class="inline-code">model step "job-id" -&gt; bind</code>. Compiles to <code class="inline-code">STEP</code> (job_id, bind).
@@ -306,7 +306,7 @@
         Focused gate: <code class="inline-code">make sparkbc-e2e</code> (compile → dump TRAIN/STEP →
         <code class="inline-code">--run-bc</code> → assert <code class="inline-code">ARTIFACT</code>). Step-updated weights are
         <strong>CPU SGD</strong> (<code class="inline-code">weights.safetensors</code>; <code class="inline-code">trained=true</code>;
-        <code class="inline-code">not_sgd=false</code>; loss must drop). Multi-outer; <strong>measurement only.</strong>.</p>
+        <code class="inline-code">not_sgd=false</code>; loss must drop). Multi-pass; <strong>measurement only.</strong></p>
         <p>Optional <strong><code class="inline-code">method "…"</code></strong> selects the training algorithm
         (<code class="inline-code">spark_distill_cpu</code> | <code class="inline-code">spark_pref_pack</code> | <code class="inline-code">spark_playbook_fit</code> |
         <code class="inline-code">spark_faq_index</code> | <code class="inline-code">spark_reply_pack</code>).
@@ -704,7 +704,7 @@
         + same static scan. Without <code class="inline-code">--allow-net</code>, remote URLs exit non-zero with
         a clear error instructing <code class="inline-code">--allow-net</code> — never dial, never a silent stub,
         never a permanent QUESTION menu.</p>
-        <p>Honest framing: implement = codegen into <code class="inline-code">.spark</code> / suggestion files the
+        <p>Implement = codegen into <code class="inline-code">.spark</code> / suggestion files the
         asm VM can re-run or humans can read — not magical self-modifying Linux apps.</p>
         <h2 id="ide-core-ide">IDE core (<code class="inline-code">ide</code>)</h2>
         <p>Asm: <code class="inline-code">asm/ide_ops.s</code>. Examples: <code class="inline-code">examples/ide_hello.spark</code>,
@@ -1067,7 +1067,7 @@
          (product default is QUIC ON; use on for TCP h2/h1-only MITM).</li>
         <li><strong>mitm quic status|listen|smoke|divert</strong> — HTTP/3 lane; <code class="inline-code">smoke</code>
          forks <code class="inline-code">./spark-mitm-quic</code> (aioquic forge + SNI leaves). UDP MITM
-         via divert→listen (CONNECT-UDP is honest 501 on Qt TCP proxy).</li>
+         via divert→listen (CONNECT-UDP returns 501 on Qt TCP proxy).</li>
         <li><strong>mitm har export</strong> — writes a real HAR 1.2 file (byte-written).
          Requires <code class="inline-code">mitm enable</code>. Dry HAR is a synthetic single-entry from
          goto URL (valid 1.2); live multi-flow HAR comes from

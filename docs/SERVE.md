@@ -15,10 +15,10 @@ PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
  --serve-weights /path/to/weights.safetensors # optional
 ```
 
-Writes `SERVE` with `forward=true` and honest `trained` from weights
+Writes `SERVE` with `forward=true` and `trained` from weights
 meta. Forward path when MLP tensors exist:
 
-`embed_mean_pool->mlp0->rms_norm->lm_head`
+`embed_mean_pool->mlp->rms_norm->lm_head`
 
 Code: `python/sparklang/model_lab/serve.py`. Gate:
 `make test-sparkbc` (`test_serve_forward`).
@@ -26,7 +26,7 @@ Code: `python/sparklang/model_lab/serve.py`. Gate:
 Architecture: [Architecture](ARCHITECTURE.md) ·
 [Attention / forward](ATTENTION_FORWARD.md).
 
-## HTTP / stdio API (serve API path — on tip)
+## HTTP / stdio API (serve API path)
 
 ```bash
 make spark-serve-api
@@ -57,7 +57,7 @@ make test-serve-api
 
 Implementation: `python/sparklang/model_lab/serve_api.py` wraps
 `run_tiny_forward` / `run_tiny_embed` — same path as file SERVE
-(now **attn0** when tensors exist; layer-0 attention). Builder §6c:
+(now with **attention** when tensors exist). Builder §6c:
 [SPARK_BC Builder](SPARK_BUILDER.md).
 
 Optional live **gateway** ask/embed (the AI gateway etc.) is a different
@@ -66,10 +66,8 @@ surface — [AI_MODELS.md](AI_MODELS.md) / [ASK_LIVE.md](ASK_LIVE.md).
 ## Never
 
 - Claim production LLM serving.
-- Claim multi-layer / RoPE / KV-cache decode (layer-0 last-query
- only).
+- Claim multi-layer / rotary-embedding / KV-cache decode.
 - Claim a competitive AI win from SERVE / predict JSON.
-- Bind serve training to the 6000.
 
 ## Related
 
