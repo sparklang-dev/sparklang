@@ -56,7 +56,7 @@
                   <li class="nav-sub">
                     <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
-                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
                       <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
                     </ul>
                   </li>
@@ -181,49 +181,49 @@
       </nav>      <article class="doc__body">
         <h1 id="research-llms-that-can-decompile-and-how-that-relates-to-spark">Research: LLMs that can decompile (and how that relates to Spark)</h1>
         <p>Engineer-grade survey for <strong>Spark / SparkLang</strong>. Verified with public
-        papers and tools (2024–2026). Honest about limits.</p>
-        <p><strong>SoT for SPARK_BC remains deterministic</strong> (<code class="inline-code">--compile</code>, <code class="inline-code">dump.py</code>,
+        papers and tools (2024–2026). <strong>SoT for SPARK_BC remains deterministic</strong> (<code class="inline-code">--compile</code>, <code class="inline-code">dump.py</code>,
         <code class="inline-code">--run-bc</code>). Optional LLM assist is for naming / comments / drafts —
         never the authority for bytecode bytes.</p>
-        <p>Companion how-to: <a href="/docs/decompile.html">DECOMPILE.md</a>
+        <p>Companion how-to: <a href="/docs/decompile.html">Decompile</a>
         (<a href="/docs/decompile.html">/docs/decompile.html</a>).
-        Mermaid overview: <a href="/docs/diagrams.html">DIAGRAMS.md</a>
+        Mermaid overview: <a href="/docs/diagrams.html">Diagrams</a>
         (<a href="/docs/diagrams.html">/docs/diagrams.html</a>).</p>
-        <p>Does <strong>not</strong> beat Claude. Does <strong>not</strong> claim any LLM perfectly
-        decompiles SPARK_BC. Spark does <strong>not</strong> claim to beat LLM4Decompile /
-        Nova / DecompAI / Claude on native RE benchmarks.</p>
-        <h2 id="research-links-cite-these">Research links (cite these)</h2>
-        <p>Folded into this page from operator research (full URLs):</p>
+        <p>Does <strong>not</strong> claim any LLM
+        perfectly decompiles SPARK_BC. Native RE benchmarks are a different
+        problem space from SPARK_BC SoT.</p>
+        <h2 id="further-reading">Further reading</h2>
+        <p>Selected public papers, repos, and articles:</p>
         <ol class="doc__ol">
         <li>DecompAI discussion (agent-style RE):
-           https://www.reddit.com/r/ReverseEngineering/comments/1kt2gcb/decompai_an_llmpowered_reverse_engineering_agent/</li>
+         https://www.reddit.com/r/ReverseEngineering/comments/1kt2gcb/decompai_an_llmpowered_reverse_engineering_agent/</li>
         <li>LLM4Decompile discussion:
-           https://www.reddit.com/r/ReverseEngineering/comments/1bfkvbq/llm4decompile_decompiling_binary_code_with_large/</li>
+         https://www.reddit.com/r/ReverseEngineering/comments/1bfkvbq/llm4decompile_decompiling_binary_code_with_large/</li>
         <li>LLM4Decompile project (End/Ref, SK²Decompile, decompile-bench;
-           HF models; re-exec metrics; Ghidra refine path):
-           https://github.com/albertan017/LLM4Decompile</li>
+         HF models; re-exec metrics; Ghidra refine path):
+         https://github.com/albertan017/LLM4Decompile</li>
         <li>End-to-end LLM decompilation survey (ReF, Idioms, SALT, SK²,
-           WaDec, SmartHalo, ICL4Decomp; metrics RRR / R2I / …):
-           https://www.emergentmind.com/topics/end-to-end-llm-decompilation</li>
+         WaDec, SmartHalo, ICL4Decomp; metrics RRR / R2I / …):
+         https://www.emergentmind.com/topics/end-to-end-llm-decompilation</li>
         <li>Quarkslab — defeating (or not) AI-assisted RE; agents route
-           around static hardening; hallucination / cheating; obfuscation
-           as cost multiplier:
-           https://blog.quarkslab.com/defeating-ai-assisted-reverse-engineering-or-at-least-trying-to.html</li>
+         around static hardening; hallucination / cheating; obfuscation
+         as cost multiplier:
+         https://blog.quarkslab.com/defeating-ai-assisted-reverse-engineering-or-at-least-trying-to.html</li>
         <li>Quarkslab reverse-engineering category (continuing RE source —
-           follow alongside the AI-assisted RE article above):
-           https://blog.quarkslab.com/category/reverse-engineering.html</li>
+         follow alongside the AI-assisted RE article above):
+         https://blog.quarkslab.com/category/reverse-engineering.html</li>
         <li>Plain English overview — demystifying decompilation with LLMs
-           (accessible survey / pipeline honesty; not SPARK_BC SoT):
-           https://ai.plainenglish.io/demystifying-decompilation-with-large-language-models-0e63bf067045</li>
+         (accessible survey / pipeline survey; not SPARK_BC SoT):
+         https://ai.plainenglish.io/demystifying-decompilation-with-large-language-models-0e63bf067045</li>
         <li>OpenBin — commercial/online AI decompiler &amp; RE platform
-           (browser + cloud projects; <strong>not</strong> open research weights like
-           LLM4Decompile; <strong>not</strong> SPARK_BC SoT; third-party upload /
-           trust/IP implications):
-           https://openbin.ai/</li>
+         (browser + cloud projects; <strong>not</strong> open research weights like
+         LLM4Decompile; <strong>not</strong> SPARK_BC SoT; third-party upload /
+         trust/IP implications):
+         https://openbin.ai/</li>
         </ol>
-        <p><strong>Secondary (not primary cite):</strong> Google AI Overview / search-cluster
-        snippets on “AI LLM-based decompilers” — useful for theme discovery
-        only. Prefer the canonical paper / product URLs below over overview
+        <p><strong>Also useful for theme discovery</strong> (not primary references): search
+        snippets on “AI LLM-based decompilers” — always verify against the
+        sources above and against Spark’s local dump / compile SoT.
+        Prefer the canonical paper / product URLs listed here over overview
         text.</p>
         <h2 id="overview-llm-decompilers-native-binaries">Overview (LLM decompilers — native binaries)</h2>
         <p>LLM decompilers translate binaries / assembly → high-level C/C++
@@ -257,19 +257,19 @@
         SoT; never treat “it recompiled” as SPARK_BC truth.</p>
         <h2 id="diagrams-function-layout">Diagrams (function layout)</h2>
         <h3 id="deterministic-spark-vs-llm-assist">Deterministic Spark vs LLM assist</h3>
-        <p><img class="doc__img" alt="Deterministic vs LLM" src="/docs/images/diagram-deterministic-vs-llm.svg?v=0.6.58" /></p>
+        <p><img class="doc__img" alt="Deterministic vs LLM" src="/docs/images/diagram-deterministic-vs-llm.svg?v=0.6.60" /></p>
         <p><em>Caption: Spark SoT (left) vs optional LLM assist (right). Assist may
         suggest names or draft source; it must not pack or silently rewrite
         <code class="inline-code">.sparkbc</code>.</em></p>
         <h3 id="how-llms-typically-assist-compile-decompile">How LLMs typically assist compile / decompile</h3>
-        <p><img class="doc__img" alt="LLM assist flows" src="/docs/images/diagram-llm-compile-decompile.svg?v=0.6.58" /></p>
+        <p><img class="doc__img" alt="LLM assist flows" src="/docs/images/diagram-llm-compile-decompile.svg?v=0.6.60" /></p>
         <p><em>Caption: Industry pattern — decompile: bytes/asm → LLM guess →
         human verify. Compile assist: intent → LLM draft → </em><em>Spark</em><em>
         deterministic <code class="inline-code">--compile</code> → dump/<code class="inline-code">--run-bc</code> check. Orange = guessed;
         green = SoT or human gate.</em></p>
         <h3 id="spark-tool-paths-context">Spark tool paths (context)</h3>
-        <p><img class="doc__img" alt="Compile path" src="/docs/images/diagram-compile-path.svg?v=0.6.58" /></p>
-        <p><img class="doc__img" alt="Decompile path" src="/docs/images/diagram-decompile-path.svg?v=0.6.58" /></p>
+        <p><img class="doc__img" alt="Compile path" src="/docs/images/diagram-compile-path.svg?v=0.6.60" /></p>
+        <p><img class="doc__img" alt="Decompile path" src="/docs/images/diagram-decompile-path.svg?v=0.6.60" /></p>
         <p><em>Caption: Same diagrams as the <a href="/docs/decompile.html">decompile how-to</a> —
         where helpers / GUI sit relative to SPARK_BC.</em></p>
         <h2 id="two-different-llm-decompile-shapes">Two different LLM “decompile” shapes</h2>
@@ -366,7 +366,7 @@
         <tr>
         <td><strong>When LLM Decompilers Recompile More and Preserve Less</strong></td>
         <td>Behavioral oracle (Decompile-Diverge): recompile/pass-shipped-tests can still diverge on other inputs; vulns can vanish</td>
-        <td>arXiv 2026-09. <strong>Mandatory Spark honesty cue</strong> for any future LLM assist — recompile metrics can reward the wrong path. <a href="https://arxiv.org/abs/2609.05370">arXiv:2609.05370</a></td>
+        <td>arXiv 2026-09. <strong>Important for Spark</strong> for any future LLM assist — recompile metrics can reward the wrong path. <a href="https://arxiv.org/abs/2609.05370">arXiv:2609.05370</a></td>
         </tr>
         <tr>
         <td><strong>ReF / Idioms / SALT / ICL4Decomp / …</strong></td>
@@ -423,7 +423,7 @@
         <li><strong>R2I</strong> — relative readability (AST-ish)</li>
         <li>Edit similarity, CER (coverage equivalence), Elo-style LLM judges</li>
         </ul>
-        <p>Survey honesty: even strong native numbers leave large failure rates;
+        <p>Survey note: even strong native numbers leave large failure rates;
         LLM output can be more <em>readable</em> while less <em>functionally correct</em>
         than classical decompilers on some benches. <strong>None of this is a
         SPARK_BC fidelity claim.</strong> See also the Plain English overview
@@ -467,14 +467,14 @@
         <tr>
         <th>Product</th>
         <th>What it is</th>
-        <th>Spark honesty</th>
+        <th>Spark status</th>
         </tr>
         </thead>
         <tbody>
         <tr>
         <td><strong>OpenBin</strong> (<a href="https://openbin.ai/">openbin.ai</a>)</td>
         <td>Free / open-source <strong>online</strong> AI reverse-engineering platform (The Open Binary Project): browser UI, cloud projects, Ghidra-backed native decompile + agent Q&amp;A, BYOK LLM keys; sibling OpenAPK for Android. Source: <a href="https://github.com/openbin-ai/platform">openbin-ai/platform</a>. CLI pin: <a href="https://github.com/openbin-ai/platform/releases/tag/openbin-v0.10.0">openbin-v0.10.0</a>.</td>
-        <td><strong>Not</strong> SPARK_BC SoT. Uploading binaries (or decompile artifacts) to a third party has <strong>trust / IP / malware-handling</strong> implications. Spark keeps <strong>local</strong> deterministic <code class="inline-code">dump.py</code> / <code class="inline-code">--compile</code> / <code class="inline-code">--run-bc</code>. Do not treat OpenBin output as verified Spark recovery. See also <a href="/docs/methods-openbin.html">METHODS_OPENBIN.md</a>. Prefer a <strong>gated lab</strong> container if you run their CLI at all; binary stays local.</td>
+        <td><strong>Not</strong> SPARK_BC SoT. Uploading binaries (or decompile artifacts) to a third party has <strong>trust / IP / malware-handling</strong> implications. Spark keeps <strong>local</strong> deterministic <code class="inline-code">dump.py</code> / <code class="inline-code">--compile</code> / <code class="inline-code">--run-bc</code>. Do not treat OpenBin output as verified Spark recovery. See also <a href="/docs/methods-openbin.html">Methods vs OpenBin</a>. Prefer a <strong>gated lab</strong> container if you run their CLI at all; binary stays local.</td>
         </tr>
         </tbody>
         </table></div>
@@ -483,36 +483,36 @@
         <ul class="doc__ul">
         <li>https://blog.quarkslab.com/defeating-ai-assisted-reverse-engineering-or-at-least-trying-to.html</li>
         <li>https://blog.quarkslab.com/category/reverse-engineering.html
-          (Quarkslab RE category — keep as an ongoing source next to the
-          specific AI-assisted RE post)</li>
+         (Quarkslab RE category — keep as an ongoing source next to the
+         specific AI-assisted RE post)</li>
         </ul>
         <p>Takeaways that bind Spark policy (paraphrase, not marketing):</p>
         <ol class="doc__ol">
         <li><strong>Agents route around static hardening</strong> — when CFG/MBA noise is
-           expensive, they lift/emulate/patch instead of “solving”
-           deobfuscation. A fluent narrative ≠ they understood the protect.</li>
+         expensive, they lift/emulate/patch instead of “solving”
+         deobfuscation. A fluent narrative ≠ they understood the protect.</li>
         <li><strong>Hallucination and cheating</strong> — agents take the cheapest path to
-           something answer-shaped (leaked keys, prior session flags, wrong
-           ISA stories). Confidence stays high either way.</li>
+         something answer-shaped (leaked keys, prior session flags, wrong
+         ISA stories). Confidence stays high either way.</li>
         <li><strong>Artifacts lie</strong> — a script that prints the right string may
-           hardcode it or skip the claimed emulator; report quality ≠ proof.</li>
+         hardcode it or skip the claimed emulator; report quality ≠ proof.</li>
         <li><strong>Obfuscation remains a cost multiplier</strong> — not obsolete; it pushes
-           agents onto dynamic / hallucinated paths. Throughput changes; SoT
-           does not.</li>
+         agents onto dynamic / hallucinated paths. Throughput changes; SoT
+         does not.</li>
         </ol>
         <p><strong>Other RE themes on that category index</strong> (link the category; do
-        <strong>not</strong> treat titles as Spark product claims — honesty for tooling
+        <strong>not</strong> treat titles as Spark product claims — status for tooling
         expectations only):</p>
         <ul class="doc__ul">
         <li><strong>Firmware / hardware RE</strong> — black-box secure chips, smartwatch
-          firmware teardown, blinkenlights-style extract paths; slow
-          evidence work, not one-shot LLM “decompile.”</li>
+         firmware teardown, blinkenlights-style extract paths; slow
+         evidence work, not one-shot LLM “decompile.”</li>
         <li><strong>VM attack comparison (QBDI vs TritonDSE)</strong> — dynamic
-          instrumentation / DSE trade-offs against a protected VM; reminds
-          that bytecode-ish VMs need <em>instrumentation evidence</em>, not fluent
-          narrative alone.</li>
+         instrumentation / DSE trade-offs against a protected VM; reminds
+         that bytecode-ish VMs need <em>instrumentation evidence</em>, not fluent
+         narrative alone.</li>
         <li><strong>Obfuscation</strong> — same cost-multiplier theme as the AI-assisted RE
-          post; hardening raises agent cost, it does not mint verified SoT.</li>
+         post; hardening raises agent cost, it does not mint verified SoT.</li>
         </ul>
         <p><strong>Spark implication:</strong> treat any LLM / agent decompile or rename as
         <strong>assist only</strong>. Verified bytes and behavior stay
@@ -524,8 +524,7 @@
         <p>Use as a readable overview of how LLM decompile <em>pipelines</em> are
         framed in industry writing (stages, assist roles, failure modes).
         It does <strong>not</strong> change Spark policy: dump/<code class="inline-code">--compile</code>/<code class="inline-code">--run-bc</code>
-        remain SoT; LLM text is assist; no perfect SPARK_BC recovery claim;
-        does not beat Claude.</p>
+        remain SoT; LLM text is assist; no perfect SPARK_BC recovery claim;</p>
         <h3 id="bytecode-other-re-note">Bytecode / other RE note</h3>
         <p>Native x86/ARM C recovery dominates the literature. JVM/Python/WASM
         and custom ISAs (including <strong>SPARK_BC</strong>) are <strong>under-covered</strong>. Do
@@ -574,54 +573,54 @@
         <h2 id="recommendations-for-spark">Recommendations for Spark</h2>
         <ol class="doc__ol">
         <li>Keep <strong>deterministic decompiler/inspect</strong> (<code class="inline-code">dump.py</code>, <code class="inline-code">--run-bc</code>)
-           as SoT.</li>
+         as SoT.</li>
         <li>Optional later: LLM assist lane that consumes <strong>dump text</strong> only
-           (comments / rename proposals) — never silent rewrite of <code class="inline-code">.sparkbc</code>.</li>
+         (comments / rename proposals) — never silent rewrite of <code class="inline-code">.sparkbc</code>.</li>
         <li>Do <strong>not</strong> claim Spark “beats” LLM4Decompile / Nova / DecompAI /
-           Claude / OpenBin on native binary benchmarks — different problem,
-           different metrics.</li>
+         Claude / OpenBin on native binary benchmarks — different problem,
+         different metrics.</li>
         <li>If evaluating assist: measure dump→suggested-name accuracy and
-           recompile round-trip — and remember <strong>recompile more ≠ preserve
-           more</strong> (<a href="https://arxiv.org/abs/2609.05370">arXiv:2609.05370</a>).</li>
+         recompile round-trip — and remember <strong>recompile more ≠ preserve
+         more</strong> (<a href="https://arxiv.org/abs/2609.05370">arXiv:2609.05370</a>).</li>
         <li>Treat agent loops (DecompAI / OpenBin-class) with the same
-           Quarkslab caution: tool traces can still cheat or invent; require
-           dump/<code class="inline-code">--run-bc</code> gates. Prefer <strong>local</strong> artifacts over third-party
-           upload for proprietary SPARK_BC.</li>
+         Quarkslab caution: tool traces can still cheat or invent; require
+         dump/<code class="inline-code">--run-bc</code> gates. Prefer <strong>local</strong> artifacts over third-party
+         upload for proprietary SPARK_BC.</li>
         <li>Prefer CPU / RTX <strong>5090</strong> for any SPARK_BC factory GPU train
-           (see <a href="/docs/factory.html">FACTORY.md</a>); leave voice-reserved GPUs alone.</li>
+         (see <a href="/docs/factory.html">Factory hub</a>); leave reserved GPUs alone.</li>
         </ol>
         <h2 id="operator-brief-short">Operator brief (short)</h2>
         <ul class="doc__ul">
         <li>Specialized models (LLM4Decompile End/Ref, Nova, SK², AutoDecompiler,
-          DecLLM, HELIOS, ReF) help <strong>native</strong> binary→C with <strong>partial</strong>
-          re-exec; none are SPARK_BC SoT.</li>
+         DecLLM, HELIOS, ReF) help <strong>native</strong> binary→C with <strong>partial</strong>
+         re-exec; none are SPARK_BC SoT.</li>
         <li><strong>DecompileBench</strong> (ACL) and <strong>Recompile More / Preserve Less</strong>
-          both warn: readable / recompilable output can still be semantically
-          wrong — call this out for any future Spark LLM assist.</li>
+         both warn: readable / recompilable output can still be semantically
+         wrong — call this out for any future Spark LLM assist.</li>
         <li><strong>OpenBin</strong> = online commercial/community AI RE product — distinct
-          from open research weights; not Spark SoT; third-party trust/IP.</li>
+         from open research weights; not Spark SoT; third-party trust/IP.</li>
         <li><strong>DecompAI</strong> = agent + tools, not the same as seq2seq decompile
-          models.</li>
+         models.</li>
         <li>Quarkslab: agents evade, hallucinate, and write confident wrong
-          artifacts — another reason LLM ≠ verified decompile SoT. Keep
-          following the RE category index (firmware, QBDI/TritonDSE VM
-          attacks, obfuscation) without scraping it into this page.</li>
+         artifacts — another reason LLM ≠ verified decompile SoT. Keep
+         following the RE category index (firmware, QBDI/TritonDSE VM
+         attacks, obfuscation) without scraping it into this page.</li>
         <li>Plain English demystify piece is a readable overview only — not a
-          SPARK_BC fidelity claim. Google AI Overview clusters are
-          <strong>secondary</strong>.</li>
+         SPARK_BC fidelity claim. Google AI Overview clusters are
+         <strong>secondary</strong>.</li>
         <li>General LLMs + Ghidra plugins excel at <strong>annotation</strong>, not
-          guaranteed recovery.</li>
+         guaranteed recovery.</li>
         <li>Spark path: compile/dump/run deterministic; LLM optional for docs-
-          level assist only.</li>
-        <li>Honest bar: no perfect SPARK_BC decompile claim; no beat Claude /
-          no beat these models/products. GPU train: see factory policy.</li>
+         level assist only.</li>
+        <li>Honest bar: no perfect SPARK_BC decompile claim; no competitive AI win claim /
+         no beat these models/products. GPU train: see factory policy.</li>
         </ul>
         <h2 id="related">Related</h2>
         <ul class="doc__ul">
-        <li><a href="/docs/decompile.html">DECOMPILE.md</a> · <a href="/docs/compile.html">COMPILE.md</a></li>
-        <li><a href="/docs/factory.html">FACTORY.md</a> · <a href="/docs/spark-bc.html">SPARK_BC.md</a></li>
-        <li><a href="/docs/diagrams.html">DIAGRAMS.md</a> (Mermaid; screenshots live on
-          DECOMPILE)</li>
+        <li><a href="/docs/decompile.html">Decompile</a> · <a href="/docs/compile.html">COMPILE.md</a></li>
+        <li><a href="/docs/factory.html">Factory hub</a> · <a href="/docs/spark-bc.html">SPARK_BC.md</a></li>
+        <li><a href="/docs/diagrams.html">Diagrams</a> (Mermaid; screenshots live on
+         DECOMPILE)</li>
         </ul>
       </article>
       </main>

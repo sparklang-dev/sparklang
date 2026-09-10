@@ -2,12 +2,10 @@
 
 Piece-of-cake path for **owned** Spark voice-related heads we write
 and train in this repo. Companion to [VOICE.md](VOICE.md) and
-[MODEL_ASPECTS.md](MODEL_ASPECTS.md) (ears/speaking).
+[Model aspects](MODEL_ASPECTS.md) (ears/speaking).
 
-**Not** ElevenLabs, Kokoro, or a downloaded mega TTS overnight.
-**Never** trains on the RTX PRO **6000** (voice-serving only).
-Prefers RTX **5090** for large. Does **not** beat Claude.
-No API keys in git.
+Owned Spark STT/TTS heads trained in this repo — not a vendor TTS SaaS.
+Prefer CPU or a consumer GPU for optional train.
 
 ## 3 steps
 
@@ -27,7 +25,7 @@ make voice-easy
 Outputs:
 
 - `models/spark-voice-easy/weights.safetensors` (+ `arch.json`,
-  `checkpoint.json`)
+ `checkpoint.json`)
 - `out/voice_easy/fixtures/` — owned tone WAVs + phrases
 - `out/voice_easy/roundtrip/` — TTS dry WAVs + `roundtrip.json`
 
@@ -39,7 +37,7 @@ Outputs:
 | **large** (opt-in) | `--scale large` or `VOICE_SCALE=large` | dim 256, ~80 steps | Prefer **5090**; ~2 GiB VRAM hint |
 
 ```bash
-# Large — opt-in; prefers 5090; fail closed if only 6000 visible
+# Large — opt-in; prefers a consumer GPU; fail closed without one
 ./spark-voice easy --scale large --device auto
 
 # Large on CPU only when you explicitly ask (still owned weights)
@@ -47,14 +45,14 @@ Outputs:
 ```
 
 Large ≠ production vendor quality. It is a **bigger owned head** for
-local experiments — honest about fixture-scale STT classify + PCM
+local experiments — covers fixture-scale STT classify + PCM
 tone TTS.
 
-### Fail closed (6000)
+### Fail closed (reserved voice GPU)
 
 If `VOICE_SCALE=large` / `--scale large` and the only visible GPU is
-the RTX PRO 6000, Spark **refuses** (exit 2) unless you pass
-`--device cpu`. Training never routes to the 6000.
+a reserved voice GPU, Spark **refuses** (exit 2) unless you pass
+`--device cpu`. Training never routes to reserved voice GPUs.
 
 ## Flags
 
@@ -74,9 +72,9 @@ is obvious:
 
 ```text
 ears (fixtures / spark-stt-tts)
-   → voice-easy STT head (classify phrases)
+ → voice-easy STT head (classify phrases)
 brain (optional spark-coder / dump ask)
-   → voice-easy TTS head (PCM params)
+ → voice-easy TTS head (PCM params)
 speaking (roundtrip WAV / spark-stt-tts speak)
 ```
 
@@ -100,17 +98,16 @@ Spark IDE extension command **“Spark: Voice easy train”** runs
 ## Make / CI
 
 ```bash
-make voice-easy          # dry tiny happy path
-make test-voice-easy     # unittest + dry easy (GHA)
-make voice-easy-large    # opt-in local large (not default CI)
+make voice-easy # dry tiny happy path
+make test-voice-easy # unittest + dry easy (GHA)
+make voice-easy-large # opt-in local large (not default CI)
 ```
 
-## Honesty bar
-
+## Scope
 | Claim | Status |
 |-------|--------|
 | Owned STT/TTS heads we train | **yes** (tiny + large) |
 | CI dry green | **yes** (`make test-voice-easy`) |
 | Prefer RTX 5090 (or CPU) for GPU train | **yes** |
-| Replace ElevenLabs overnight | **no** |
-| Beat Claude | **no** |
+| Vendor mega-TTS overnight | Out of scope |
+| Marketing win banners | Out of scope |

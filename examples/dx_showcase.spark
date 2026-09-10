@@ -12,7 +12,7 @@ print intent
 let doc "Machines need balance checks weekly."
 
 pipeline {
-  ask "Summarize: {doc}" -> summary
-  | ask "Translate to Spanish: {summary}" -> es
+ ask "Summarize: {doc}" -> summary
+ | ask "Translate to Spanish: {summary}" -> es
 }
 print es

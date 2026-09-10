@@ -56,7 +56,7 @@
                   <li class="nav-sub">
                     <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
-                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
                       <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
                     </ul>
                   </li>
@@ -186,21 +186,19 @@
         <strong>not</strong> an OpenBin SaaS clone and <strong>not</strong> gated on OpenBin login.
         OpenBin remains a separate research/lab note
         (<a href="/docs/llm-decompile.html">research/LLM_DECOMPILE.md</a>).</p>
-        <p>Dump / <code class="inline-code">--compile</code> / <code class="inline-code">--run-bc</code> stay SoT. <strong>Never</strong> 6000.
-        Does <strong>not</strong> beat Claude. No API keys in git.</p>
-        <p>Companions: <code class="inline-code">./spark-stt-tts</code> · brain: owned <code class="inline-code">spark-coder</code>
+        <p>Dump / <code class="inline-code">--compile</code> / <code class="inline-code">--run-bc</code> stay SoT. Companions: <code class="inline-code">./spark-stt-tts</code> · brain: owned <code class="inline-code">spark-coder</code>
         (TinyCoder) and/or dump-fact answers · map:
-        <a href="/docs/model-aspects.html">MODEL_ASPECTS.md</a> · voice surface:
+        <a href="/docs/model-aspects.html">Model aspects</a> · voice surface:
         <a href="/docs/voice.html">VOICE.md</a>.</p>
         <h2 id="quick-start">Quick start</h2>
         <pre class="doc__pre"><code class="language-bash">make helpers
-        make spark-stt-tts          # optional for live STT/TTS
+        make spark-stt-tts # optional for live STT/TTS
         # optional tiny brain:
         make spark-coder-train
 
         # Text (no mic) — dump facts / TinyCoder
         ./spark-ask docs/examples/spark-train-step.sparkbc \
-          --text &quot;What opcodes are in this dump?&quot;
+         --text &quot;What opcodes are in this dump?&quot;
 
         # Voice loop, offline CI (stub STT + stub WAV)
         ./spark-speak-ask docs/examples/spark-train-step.sparkbc --dry
@@ -261,15 +259,15 @@
         </tr>
         </tbody>
         </table></div>
-        <h2 id="brain-honesty">Brain honesty</h2>
+        <h2 id="answer-quality">Answer quality</h2>
         <ol class="doc__ol">
         <li><strong>Dump facts</strong> — opcodes, sha256, magic SPBC, TRAIN presence
-           answered from decoded dump (preferred SoT).</li>
+         answered from decoded dump (preferred SoT).</li>
         <li><strong>TinyCoder</strong> — when <code class="inline-code">models/spark-coder/weights.safetensors</code>
-           exists, inject dump excerpt + question; greedy generate.</li>
-        <li><strong>Weak / missing</strong> — honesty footer: TinyCoder is <strong>tiny</strong>, not
-           OpenBin-level RE Q&amp;A, does <strong>not</strong> beat Claude. Prefer
-           <code class="inline-code">dump.txt</code> / <code class="inline-code">ops.json</code>.</li>
+         exists, inject dump excerpt + question; greedy generate.</li>
+        <li><strong>Weak / missing</strong> — note: TinyCoder is <strong>tiny</strong>, not
+         OpenBin-level RE Q&amp;A, Prefer
+         <code class="inline-code">dump.txt</code> / <code class="inline-code">ops.json</code>.</li>
         </ol>
         <h2 id="stt-tts-gates">STT / TTS gates</h2>
         <p>Same gates as <a href="/docs/voice.html">VOICE.md</a>:</p>
@@ -304,24 +302,23 @@
         <pre class="doc__pre"><code class="language-bash">make test-spark-ask
         # or:
         PYTHONPATH=python:tools python3 -m unittest \
-          tools.spark_ask.test_voice_ask -v
+         tools.spark_ask.test_voice_ask -v
         </code></pre>
         <h2 id="grounding-anti-guess">Grounding / anti-guess</h2>
         <p>Dump facts are the SoT for opcode / sha answers. For inventable
         prices or free generate, use forced grounding — abstain unless
         expect / fixture / dump match:</p>
         <pre class="doc__pre"><code class="language-bash">./spark-ground ask --prompt &quot;…&quot; --dump dump.txt \
-          --candidate &quot;…&quot;   # miss → exit 2
+         --candidate &quot;…&quot; # miss → exit 2
         make test-ground
         </code></pre>
         <p>See <a href="/docs/knowledge-safety.html">knowledge/SAFETY_LIMITS.md</a>
-        (Grounded generation / anti-guess). Recompile ≠ semantics.
-        Does <strong>not</strong> beat Claude.</p>
+        (Grounded generation / anti-guess). Recompile ≠ semantics.</p>
         <h2 id="related">Related</h2>
         <ul class="doc__ul">
         <li>Loop UX: <a href="/workflow.html">/workflow.html</a></li>
         <li>Analyze project folder: <code class="inline-code">helpers/spark-analyze</code> (when present)</li>
-        <li><a href="/docs/spark-coder.html">SPARK_CODER.md</a> · <a href="/docs/tools-helpers.html">TOOLS_HELPERS.md</a></li>
+        <li><a href="/docs/spark-coder.html">Spark coder</a> · <a href="/docs/tools-helpers.html">TOOLS_HELPERS.md</a></li>
         <li><a href="/docs/knowledge-safety.html">knowledge/SAFETY_LIMITS.md</a></li>
         </ul>
       </article>

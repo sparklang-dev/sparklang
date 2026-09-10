@@ -1,31 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>AI in 5 Minutes — Learn Spark</title>
-    <meta name="description" content="Learn Spark train→status→expect: orchestrate jobs, expect gates, classify, extract, pipeline." />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="shortcut icon" href="/favicon.svg" />
-    <link rel="stylesheet" href="/css/tokens.css?v=critique0902" />
-    <link rel="stylesheet" href="/css/site.css?v=critique0902" />
-  </head>
-  <body class="doc-page">
-    <header class="site-header">
-      <div class="shell header-inner">
-        <a class="site-brand" href="/" aria-label="SparkLang home">
-          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
-            <path d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z" fill="currentColor" />
-          </svg>
-          Spark
-        </a>
-        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
-          <span class="nav-toggle__bar"></span>
-          <span class="nav-toggle__bar"></span>
-          <span class="nav-toggle__bar"></span>
-        </button>
-        <div class="header-nav-wrap">
-          <nav class="site-nav" id="site-nav" aria-label="Primary">
+ <head>
+ <meta charset="utf-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1" />
+ <title>AI in 5 Minutes — Learn Spark</title>
+ <meta name="description" content="Learn Spark train→status→expect: orchestrate jobs, expect gates, classify, extract, pipeline." />
+ <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+ <link rel="shortcut icon" href="/favicon.svg" />
+ <link rel="stylesheet" href="/css/tokens.css?v=critique0902" />
+ <link rel="stylesheet" href="/css/site.css?v=critique0902" />
+ </head>
+ <body class="doc-page">
+ <header class="site-header">
+ <div class="shell header-inner">
+ <a class="site-brand" href="/" aria-label="SparkLang home">
+ <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+ <path d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z" fill="currentColor" />
+ </svg>
+ Spark
+ </a>
+ <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+ <span class="nav-toggle__bar"></span>
+ <span class="nav-toggle__bar"></span>
+ <span class="nav-toggle__bar"></span>
+ </button>
+ <div class="header-nav-wrap">
+ <nav class="site-nav" id="site-nav" aria-label="Primary">
             <!-- spark-primary-nav:begin -->
             <ul class="nav-primary">
               <li><a href="/workflow.html">Loop</a></li>
@@ -56,7 +56,7 @@
                   <li class="nav-sub">
                     <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
-                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
                       <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
                     </ul>
                   </li>
@@ -137,152 +137,152 @@
             <a href="/playground.html" class="nav-cta">Try</a>
             <!-- spark-primary-nav:end -->
           </nav>
-        </div>
-      </div>
-    </header>
+ </div>
+ </div>
+ </header>
 
-    <div class="shell doc-layout">
-      <aside class="doc-sidebar" aria-label="Table of contents">
-        <p class="doc-sidebar__title">On this page</p>
-        <nav id="doc-toc-list"></nav>
-        <hr style="border: none; border-top: 1px solid var(--spark-border-light); margin: 1rem 0" />
-        <p class="doc-sidebar__title">Tutorial trail</p>
-        <ul class="toc-list">
-          <li><a href="/learn/getting-started.html">Getting Started</a></li>
-          <li><a href="/learn/first-program.html">Your First Program</a></li>
-          <li><a href="/learn/ai-in-5-minutes.html" aria-current="page">AI in 5 Minutes</a></li>
-          <li><a href="/learn/build-model.html">Build a Model</a></li>
-        </ul>
-      </aside>
+ <div class="shell doc-layout">
+ <aside class="doc-sidebar" aria-label="Table of contents">
+ <p class="doc-sidebar__title">On this page</p>
+ <nav id="doc-toc-list"></nav>
+ <hr style="border: none; border-top: 1px solid var(--spark-border-light); margin: 1rem 0" />
+ <p class="doc-sidebar__title">Tutorial trail</p>
+ <ul class="toc-list">
+ <li><a href="/learn/getting-started.html">Getting Started</a></li>
+ <li><a href="/learn/first-program.html">Your First Program</a></li>
+ <li><a href="/learn/ai-in-5-minutes.html" aria-current="page">AI in 5 Minutes</a></li>
+ <li><a href="/learn/build-model.html">Build a Model</a></li>
+ </ul>
+ </aside>
 
-      <main class="doc-main">
-        <p class="doc-breadcrumb"><a href="/learn/">Learn</a> / AI in 5 Minutes</p>
-        <article class="doc__body">
-          <h1 id="ai-in-5-minutes">AI in 5 Minutes</h1>
-          <p>
-            Spark treats train→status→expect as language statements — not SDK
-            glue. Orchestrate and gate jobs first, then classify, extract, and
-            pipeline.
-          </p>
+ <main class="doc-main">
+ <p class="doc-breadcrumb"><a href="/learn/">Learn</a> / AI in 5 Minutes</p>
+ <article class="doc__body">
+ <h1 id="ai-in-5-minutes">AI in 5 Minutes</h1>
+ <p>
+ Spark treats train→status→expect as language statements — not SDK
+ glue. Orchestrate and gate jobs first, then classify, extract, and
+ pipeline.
+ </p>
 
-          <h2 id="model-workflow">Train → status → expect</h2>
-          <p>
-            <code class="inline-code">model train</code> /
-            <code class="inline-code">model build</code> submit via
-            <code class="inline-code">backend "http"</code> to a trainer you run
-            at <code class="inline-code">SPARK_TRAIN_URL</code>. Dry-run shows
-            the job path with fixtures (no GPU). Live needs that service.
-            Assert bound job and status with
-            <code class="inline-code">expect</code>:
-          </p>
-          <pre class="doc__pre"><code>model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" -> job
+ <h2 id="model-workflow">Train → status → expect</h2>
+ <p>
+ <code class="inline-code">model train</code> /
+ <code class="inline-code">model build</code> submit via
+ <code class="inline-code">backend "http"</code> to a trainer you run
+ at <code class="inline-code">SPARK_TRAIN_URL</code>. Dry-run shows
+ the job path with fixtures (no GPU). Live needs that service.
+ Assert bound job and status with
+ <code class="inline-code">expect</code>:
+ </p>
+ <pre class="doc__pre"><code>model train dataset "examples/fixtures/train/dataset.jsonl" base "fixture-base" out "out/train/job-dry-001" backend "http" -> job
 model status "job-dry-001" -> status
 expect contains job fixture "examples/fixtures/train/want_accepted.txt"
 expect contains status fixture "examples/fixtures/train/want_succeeded.txt"</code></pre>
-          <pre class="doc__pre"><code class="language-bash">./spark --dry-run examples/train_eval.spark</code></pre>
-          <p>
-            See
-            <a href="/docs/model-training.html">Model training</a>,
-            <a href="/playground.html">Playground</a>, or the
-            <a href="/learn/build-model.html">Build a Model</a> tutorial.
-          </p>
+ <pre class="doc__pre"><code class="language-bash">./spark --dry-run examples/train_eval.spark</code></pre>
+ <p>
+ See
+ <a href="/docs/model-training.html">Model training</a>,
+ <a href="/playground.html">Playground</a>, or the
+ <a href="/learn/build-model.html">Build a Model</a> tutorial.
+ </p>
 
-          <h2 id="classify">classify — label text</h2>
-          <pre class="doc__pre"><code>classify Intent { support, sales, spam }
-  from "My account is locked and I need help"
-  min_confidence 0.7
-  -> intent
+ <h2 id="classify">classify — label text</h2>
+ <pre class="doc__pre"><code>classify Intent { support, sales, spam }
+ from "My account is locked and I need help"
+ min_confidence 0.7
+ -> intent
 
 print intent</code></pre>
-          <pre class="doc__pre"><code class="language-bash">./spark --dry-run examples/classify_intent.spark</code></pre>
+ <pre class="doc__pre"><code class="language-bash">./spark --dry-run examples/classify_intent.spark</code></pre>
 
-          <h2 id="extract">extract — structured data</h2>
-          <pre class="doc__pre"><code>extract Person {
-  name: string
-  age: int
-  email?: string
+ <h2 id="extract">extract — structured data</h2>
+ <pre class="doc__pre"><code>extract Person {
+ name: string
+ age: int
+ email?: string
 } from "Ada Lovelace was born in 1815"
-  fixture "examples/fixtures/extract/person.json" -> person
+ fixture "examples/fixtures/extract/person.json" -> person
 
 print person</code></pre>
-          <p>
-            A field is required unless its name ends in
-            <code class="inline-code">?</code>. Dry-run validates the
-            JSON in <code class="inline-code">fixture</code> against the
-            schema — a missing required field or a wrong type stops the
-            run with a non-zero exit.
-          </p>
-          <pre class="doc__pre"><code class="language-bash">./spark --dry-run examples/extract_person.spark</code></pre>
+ <p>
+ A field is required unless its name ends in
+ <code class="inline-code">?</code>. Dry-run validates the
+ JSON in <code class="inline-code">fixture</code> against the
+ schema — a missing required field or a wrong type stops the
+ run with a non-zero exit.
+ </p>
+ <pre class="doc__pre"><code class="language-bash">./spark --dry-run examples/extract_person.spark</code></pre>
 
-          <h2 id="pipeline">pipeline — compose steps</h2>
-          <pre class="doc__pre"><code>let doc "Office printers need regular cleaning."
+ <h2 id="pipeline">pipeline — compose steps</h2>
+ <pre class="doc__pre"><code>let doc "Office printers need regular cleaning."
 
 pipeline {
-  ask "Summarize: {doc}" -> summary
-  | ask "Translate to Spanish: {summary}" -> es
+ ask "Summarize: {doc}" -> summary
+ | ask "Translate to Spanish: {summary}" -> es
 }
 
 print es</code></pre>
-          <p>
-            Steps share bindings. Prefix a step with
-            <code class="inline-code">|</code> inside the block.
-          </p>
+ <p>
+ Steps share bindings. Prefix a step with
+ <code class="inline-code">|</code> inside the block.
+ </p>
 
-          <h2 id="voice">voice — listen, think, speak (optional)</h2>
-          <p>
-            Speech pipelines are supported but not primary product positioning.
-            See the language reference for full voice surface.
-          </p>
-          <pre class="doc__pre"><code>voice {
-  listen -> user
-  classify Intent { support, sales } from user -> intent
-  ask "Reply helpfully to: {user}" -> reply
-  speak reply -> "out.wav"
+ <h2 id="voice">voice — listen, think, speak (optional)</h2>
+ <p>
+ Speech pipelines are supported but not primary product positioning.
+ See the language reference for full voice surface.
+ </p>
+ <pre class="doc__pre"><code>voice {
+ listen -> user
+ classify Intent { support, sales } from user -> intent
+ ask "Reply helpfully to: {user}" -> reply
+ speak reply -> "out.wav"
 }</code></pre>
 
-          <h2 id="try-interactive">Try it interactively</h2>
-          <p>
-            Open <a href="/playground.html">Playground</a> to edit classify and pipeline
-            samples and preview dry-run output before installing locally.
-          </p>
-          <p>
-            <a href="/learn/function-catalog.html"><strong>See all functions →</strong></a>
-            — browse 100+ language ops and stdlib helpers with search and filters.
-          </p>
+ <h2 id="try-interactive">Try it interactively</h2>
+ <p>
+ Open <a href="/playground.html">Playground</a> to edit classify and pipeline
+ samples and preview dry-run output before installing locally.
+ </p>
+ <p>
+ <a href="/learn/function-catalog.html"><strong>See all functions →</strong></a>
+ — browse 100+ language ops and stdlib helpers with search and filters.
+ </p>
 
-          <h2 id="next">Next lesson</h2>
-          <p>
-            <a href="/learn/function-catalog.html">Function Catalog</a> — full surface area
-            beyond model, classify, extract, and pipeline. Then
-            <a href="/learn/build-model.html">Build a Model</a> to submit a train
-            job (or eval helpers + optional <code class="inline-code">model plan</code>).
-          </p>
-        </article>
-      </main>
-    </div>
+ <h2 id="next">Next lesson</h2>
+ <p>
+ <a href="/learn/function-catalog.html">Function Catalog</a> — full surface area
+ beyond model, classify, extract, and pipeline. Then
+ <a href="/learn/build-model.html">Build a Model</a> to submit a train
+ job (or eval helpers + optional <code class="inline-code">model plan</code>).
+ </p>
+ </article>
+ </main>
+ </div>
 
-        <footer class="site-footer">
-      <div class="shell footer-inner">
-        <div class="footer-brand">
-          <span>SparkLang — the Spark programming language</span>
-          <span class="footer-meta">v0.6.3 · MIT</span>
-        </div>
-        <nav class="footer-nav" aria-label="Footer">
-          <a href="/workflow.html">Loop</a>
-          <a href="/about.html">About</a>
+ <footer class="site-footer">
+ <div class="shell footer-inner">
+ <div class="footer-brand">
+ <span>SparkLang — the Spark programming language</span>
+ <span class="footer-meta">v0.6.3 · MIT</span>
+ </div>
+ <nav class="footer-nav" aria-label="Footer">
+ <a href="/workflow.html">Loop</a>
+ <a href="/about.html">About</a>
 <a href="/LICENSE.txt">License</a>
-          <a href="/CHANGELOG.html">Changelog</a>
-          <a href="/learn/">Learn</a>
-          <a href="/downloads.html">Downloads</a>
-          <a href="/playground.html">Playground</a>
-        </nav>
-      </div>
-    
-      <div class="shell footer-trail">
-        <a href="/learn/first-program.html">← First Program</a>
-        <a href="/learn/build-model.html">Next: Build a Model →</a>
-      </div>
-    </footer>
-    <script src="/js/site.js"></script>
-  </body>
+ <a href="/CHANGELOG.html">Changelog</a>
+ <a href="/learn/">Learn</a>
+ <a href="/downloads.html">Downloads</a>
+ <a href="/playground.html">Playground</a>
+ </nav>
+ </div>
+ 
+ <div class="shell footer-trail">
+ <a href="/learn/first-program.html">← First Program</a>
+ <a href="/learn/build-model.html">Next: Build a Model →</a>
+ </div>
+ </footer>
+ <script src="/js/site.js"></script>
+ </body>
 </html>

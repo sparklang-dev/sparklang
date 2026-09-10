@@ -1,25 +1,25 @@
 {
-  "id": "examples/eval/suite.json",
-  "version": 1,
-  "mode_default": "dry",
-  "claim": "none",
-  "note": "Frozen tiny probes for Spark scores (+ optional Claude baseline if credentials exist). Does NOT claim beat Claude. beats_claude always false.",
-  "probes": [
-    {
-      "name": "copy_recall",
-      "kind": "copy_recall",
-      "fixture": "examples/eval/fixtures/copy_recall.jsonl",
-      "metric": "token_accuracy",
-      "dry_score": 1.0,
-      "note": "Dry oracle echoes want; weights mode teacher-forces want tokens"
-    },
-    {
-      "name": "next_token",
-      "kind": "next_token",
-      "fixture": "examples/eval/fixtures/next_token.jsonl",
-      "metric": "next_token_accuracy",
-      "dry_score": 1.0,
-      "note": "Dry oracle echoes want; weights mode argmax lm_head"
-    }
-  ]
+ "id": "examples/eval/suite.json",
+ "version": 1,
+ "mode_default": "dry",
+ "claim": "none",
+ "note": "Frozen tiny probes for Spark scores (+ optional frontier-API baseline if credentials exist). Does not publish a competitive AI win claim. no marketing-win flag.",
+ "probes": [
+ {
+ "name": "copy_recall",
+ "kind": "copy_recall",
+ "fixture": "examples/eval/fixtures/copy_recall.jsonl",
+ "metric": "token_accuracy",
+ "dry_score": 1.0,
+ "note": "Dry oracle echoes want; weights mode teacher-forces want tokens"
+ },
+ {
+ "name": "next_token",
+ "kind": "next_token",
+ "fixture": "examples/eval/fixtures/next_token.jsonl",
+ "metric": "next_token_accuracy",
+ "dry_score": 1.0,
+ "note": "Dry oracle echoes want; weights mode argmax lm_head"
+ }
+ ]
 }

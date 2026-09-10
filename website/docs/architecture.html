@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Architecture pieces — Spark</title>
-    <meta name="description" content="Embed, RMSNorm, lm_head, MLP/SwiGLU, attention honesty." />
+    <meta name="description" content="Embed, RMSNorm, lm_head, MLP/SwiGLU, attention status." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
     <link rel="stylesheet" href="/css/tokens.css?v=navsub0909" />
@@ -56,7 +56,7 @@
                   <li class="nav-sub">
                     <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
-                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
                       <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
                     </ul>
                   </li>
@@ -252,7 +252,7 @@
         <p>full block = pre-norm attn (GQA+RoPE) + SwiGLU MLP — shape-checked
         by <code class="inline-code">make test-sparkasm-control</code> only. RoPE still <strong>not</strong> in the
         Python CPU path.</p>
-        <p>Detail: <a href="/docs/attention-forward.html">ATTENTION_FORWARD.md</a>.</p>
+        <p>Detail: <a href="/docs/attention-forward.html">Attention / forward</a>.</p>
         <h2 id="safetensors-meta-honest-flags">Safetensors meta (honest flags)</h2>
         <p>Init emit sets <code class="inline-code">trained: false</code>, <code class="inline-code">served: false</code>, derivation notes
         tying tensors to SPARK_BC sha256. STEP updates <code class="inline-code">trained</code> only when
@@ -260,8 +260,8 @@
         honest <code class="inline-code">trained</code> from weights.</p>
         <h2 id="related">Related</h2>
         <ul class="doc__ul">
-        <li><a href="/docs/serve.html">SERVE.md</a> · <a href="/docs/train-loop.html">TRAIN_LOOP.md</a></li>
-        <li><a href="/docs/build-models.html">BUILD_MODELS.md</a> · <a href="/docs/factory.html">FACTORY.md</a></li>
+        <li><a href="/docs/serve.html">Serve</a> · <a href="/docs/train-loop.html">Train loop</a></li>
+        <li><a href="/docs/build-models.html">BUILD_MODELS.md</a> · <a href="/docs/factory.html">Factory hub</a></li>
         </ul>
       </article>
       </main>

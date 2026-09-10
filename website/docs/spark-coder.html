@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Spark coder — owned TinyCoder — Spark</title>
-    <meta name="description" content="In-repo TinyCoder layers + SGD on coding fixtures. Not HF/Claude. Prefers 5090; see coder honesty table." />
+    <meta name="description" content="In-repo TinyCoder layers + SGD on coding fixtures. Not a downloaded HF/Claude substitute; see coder status table." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
     <link rel="stylesheet" href="/css/tokens.css?v=navsub0909" />
@@ -56,7 +56,7 @@
                   <li class="nav-sub">
                     <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
-                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
                       <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
                     </ul>
                   </li>
@@ -181,9 +181,8 @@
       </nav>      <article class="doc__body">
         <h1 id="spark-coder-owned-tinycoder-spark-coder">Spark coder — owned TinyCoder (spark-coder)</h1>
         <p><strong>Written and trained in this repo.</strong> Not a HuggingFace / Claude /
-        OpenAI / Bifrost / vLLM wrapper. Prefers <strong>RTX 5090</strong> for GPU SGD
-        when available; CPU otherwise. <strong>Never</strong> the RTX PRO 6000. Does
-        <strong>not</strong> beat Claude.</p>
+        OpenAI / the AI gateway / vLLM wrapper. Prefers <strong>RTX 5090</strong> for GPU SGD
+        when available; CPU otherwise.</p>
         <h2 id="what-it-is">What it is</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
@@ -236,7 +235,7 @@
         is owned CE SGD (loss must drop) plus an optional factory
         <code class="inline-code">apply_sgd_step</code> companion. The <strong>brain</strong> is those tensors — tools
         only compile/verify.</p>
-        <h2 id="tiny-vs-large-honesty">Tiny vs large (honesty)</h2>
+        <h2 id="tiny-vs-large">Tiny vs large</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
@@ -270,64 +269,64 @@
         </tr>
         </tbody>
         </table></div>
-        <pre class="doc__pre"><code class="language-bash">./spark-code scales   # JSON honesty table
+        <pre class="doc__pre"><code class="language-bash">./spark-code scales # JSON scale table
         </code></pre>
         <p>SoT JSON: <code class="inline-code">examples/fixtures/coder/scale_config.json</code> (aligns with
         scale fixtures <code class="inline-code">examples/fixtures/train/scale_config.json</code> dims).</p>
-        <p><strong>Hard refuse:</strong> RTX PRO <strong>6000</strong> (voice-only). <strong>Never</strong> claim beat
-        Claude — larger dims ≠ Claude quality.</p>
+        <p><strong>Hard refuse:</strong> reserved voice GPUs for factory train. Larger dims are still
+        fixture-scale — <strong>measurement only</strong>, not a marketing win.</p>
         <p>Voice / weight play paths use the <strong>same</strong> tiny|large + 5090 /
-        never-6000 rules (siblings own playground cores; this lane exposes
-        knobs + honesty).</p>
+        consumer-GPU train rules (siblings own playground cores; this path exposes
+        knobs + scale table).</p>
         <h2 id="quick-start">Quick start</h2>
         <pre class="doc__pre"><code class="language-bash">make spark-bootstrap
-        make spark-coder-train          # tiny CI/default → models/spark-coder/
+        make spark-coder-train # tiny CI/default → models/spark-coder/
         ./spark-code status
         ./spark-code generate --prompt &quot;Say exactly: spark&quot; --max-new 8
         ./spark-code prove
         make test-spark-coder
         </code></pre>
         <h3 id="opt-in-large-local-not-gha">Opt-in large (local; not GHA)</h3>
-        <pre class="doc__pre"><code class="language-bash">make spark-coder-train-large    # → models/spark-coder-large/
+        <pre class="doc__pre"><code class="language-bash">make spark-coder-train-large # → models/spark-coder-large/
         # or:
         ./spark-code train --scale large --device auto \
-          --out models/spark-coder-large
+         --out models/spark-coder-large
         </code></pre>
         <p>Knobs: <code class="inline-code">SPARK_CODER_SCALE</code> (tiny train target), <code class="inline-code">SPARK_CODER_DEVICE</code>
         (<code class="inline-code">auto</code>/<code class="inline-code">cpu</code>/<code class="inline-code">5090</code>), <code class="inline-code">SPARK_CODER_OUTER</code> / <code class="inline-code">INNER</code> / <code class="inline-code">LR</code> (large).</p>
         <p>Tool loop (owned model ranks authored candidates, then compiles):</p>
         <pre class="doc__pre"><code class="language-bash">./spark-code tool-loop \
-          --task &quot;print hello spark&quot; \
-          --candidate examples/coder/print_hello.spark \
-          --candidate examples/coder/train_step_slice.spark \
-          --work out/spark-coder/tool-loop
+         --task &quot;print hello spark&quot; \
+         --candidate examples/coder/print_hello.spark \
+         --candidate examples/coder/train_step_slice.spark \
+         --work out/spark-coder/tool-loop
         </code></pre>
         <h2 id="honest-capability">Honest capability</h2>
         <ul class="doc__ul">
         <li>Byte-level LM (vocab 256, last-token pool) — <strong>useful for coding
-          next-byte / short mnemonic tasks after overfit</strong>, not a production
-          assistant. Large is still a stub vs Claude / HF bases.</li>
+         next-byte / short mnemonic tasks after overfit</strong>, not a production
+         assistant. Large is still a stub vs Claude / HF bases.</li>
         <li>Proves: loss drop, ≥50% accuracy on authored prove fixtures (tiny
-          gate), and real <code class="inline-code">--compile</code> of fixture <code class="inline-code">.spark</code> programs.</li>
-        <li>Does <strong>not</strong> claim beat Claude or full program synthesis from
-          scratch at Claude quality.</li>
+         gate), and real <code class="inline-code">--compile</code> of fixture <code class="inline-code">.spark</code> programs.</li>
+        <li>or full program synthesis from
+         scratch at Claude quality.</li>
         </ul>
         <h2 id="sdk-pack">SDK pack</h2>
         <p><code class="inline-code">make sdk-pack</code> includes <code class="inline-code">models/spark-coder/</code> (weights + arch +
         checkpoint) and <code class="inline-code">bin/spark-code</code> when present after
         <code class="inline-code">make spark-coder-train</code>. Large pack is opt-in local only.</p>
         <h2 id="grounding-anti-guess">Grounding / anti-guess</h2>
-        <p>TinyCoder still <strong>guesses</strong> next bytes. For operator Q&amp;A that must
+        <p>TinyCoder still <strong>guesses</strong> next bytes. For grounded Q&amp;A that must
         not invent facts, wrap answers with <code class="inline-code">./spark-ground</code> (expect /
         fixture / dump / schema) or language <code class="inline-code">expect</code> + abstain heads.
         External Qwen-class adapt stays attach-only via
         <code class="inline-code">model modify</code> / <code class="inline-code">spark-ground adapter-attach</code>; full SFT is opt-in
-        on <strong>5090</strong>, never <strong>6000</strong>.</p>
+        on a consumer GPU — not on reserved voice GPUs.</p>
         <p>Docs: <a href="/docs/knowledge-safety.html">knowledge/SAFETY_LIMITS.md</a>.</p>
         <h2 id="related">Related</h2>
         <ul class="doc__ul">
-        <li><a href="/docs/build-models.html">BUILD_MODELS.md</a> · <a href="/docs/train-loop.html">TRAIN_LOOP.md</a></li>
-        <li><a href="/docs/factory.html">FACTORY.md</a> · <a href="/docs/ai-models.html">AI_MODELS.md</a></li>
+        <li><a href="/docs/build-models.html">BUILD_MODELS.md</a> · <a href="/docs/train-loop.html">Train loop</a></li>
+        <li><a href="/docs/factory.html">Factory hub</a> · <a href="/docs/ai-models.html">AI_MODELS.md</a></li>
         <li><a href="/docs/knowledge-safety.html">knowledge/SAFETY_LIMITS.md</a></li>
         <li>Factory scale: <code class="inline-code">make spark-sgd-proof-scale</code></li>
         </ul>

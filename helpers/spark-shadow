@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Shadow copy / shadow-build dir / hash verify for Spark artifacts.
-# Never 6000. Does not claim beat Claude.
+# Local tools only.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 export PYTHONPATH="${ROOT}/python:${ROOT}/tools:${PYTHONPATH:-}"

@@ -56,7 +56,7 @@
   },
   "notes": [
     "CPU runtime only \u2014 never RTX PRO 6000",
-    "Does not claim beat Claude",
+    "Does not claim a competitive AI win",
     "GUI uses real --compile + bc_dump.format_dump",
     "Includes helpers + shadows + BC dump tools",
     "spark-coder owned weights when models/spark-coder present",

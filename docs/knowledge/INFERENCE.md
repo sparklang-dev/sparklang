@@ -8,9 +8,9 @@ under latency and VRAM budgets.
 ## Prefill vs decode
 
 1. **Prefill** — process the full prompt; build per-layer **K** and
-   **V** tensors (**KV cache**).
+ **V** tensors (**KV cache**).
 2. **Decode** — for each new token, compute a fresh **Q**, attend to
-   cached K/V, append new K/V, sample the next id.
+ cached K/V, append new K/V, sample the next id.
 
 Without a cache, every step would re-attend the whole prefix
 (`O(n^2)` blow-ups). Cache memory grows with sequence length ×
@@ -35,20 +35,19 @@ Temperature 0 ≈ argmax. High temperature + open tools = more chaos.
 Shrink weight (and sometimes activation/KV) bit-width:
 
 - **GPTQ** — post-training weight quant with Hessian-aware packing
-  ([Frantar et al.](https://arxiv.org/abs/2210.17323)).
+ ([Frantar et al.](https://arxiv.org/abs/2210.17323)).
 - **AWQ** — activation-aware channel protection
-  ([Lin et al.](https://arxiv.org/abs/2306.00978)).
+ ([Lin et al.](https://arxiv.org/abs/2306.00978)).
 - **NF4 / QLoRA** — 4-bit NormalFloat for finetune memory
-  ([Dettmers et al.](https://arxiv.org/abs/2305.14314)).
+ ([Dettmers et al.](https://arxiv.org/abs/2305.14314)).
 
 Accuracy vs speed is empirical — see ACL 2025 trade-off discussion
 ([Give Me BF16…](https://aclanthology.org/2025.acl-long.1304/)).
 
-## Spark honesty
-
+## Spark status
 Spark **serve** today is a **tiny CPU forward** plus HTTP helpers —
-[SERVE.md](SERVE.md). Do **not** read marketing KV-cache claims
+[Serve](SERVE.md). Do **not** read marketing KV-cache claims
 into the factory. 5090 OK for GPU experiments; ****.
 
 Next: [Multimodal](MULTIMODAL.md) · [Agents](AGENTS_TOOLS.md) ·
-[Attention honesty](ATTENTION_FORWARD.md).
+[Attention / forward](ATTENTION_FORWARD.md).

@@ -1,5 +1,5 @@
 # Expect fail — mismatch exits non-zero with a clear reason.
-#   ./spark --dry-run examples/expect_fail.spark ; echo $?
+# ./spark --dry-run examples/expect_fail.spark ; echo $?
 # → 1
 
 let answer "Ada Lovelace"

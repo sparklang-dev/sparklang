@@ -1,6 +1,6 @@
 # Spark Browser — sole dry language entry (no host GUI / no display).
 # Live product: ../spark-browser/browser/run.spark via
-#   cd ../spark-browser && make run → ./spark --live …
+# cd ../spark-browser && make run → ./spark --live …
 # GUI only: browser gui + --live → ./spark-browser-host (Qt).
 # Product default: QUIC ON (--enable-quic); optional mitm disable_quic on.
 

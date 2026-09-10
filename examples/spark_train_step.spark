@@ -4,10 +4,10 @@
 # No GPU. No 6000. No god copy. No Loom. No imported Claude/Grok.
 #
 # Compile:
-#   ./spark-bootstrap --compile examples/spark_train_step.spark \
-#     -o docs/examples/spark-train-step.sparkbc
+# ./spark-bootstrap --compile examples/spark_train_step.spark \
+# -o docs/examples/spark-train-step.sparkbc
 # Execute:
-#   ./spark-bootstrap --run-bc docs/examples/spark-train-step.sparkbc
+# ./spark-bootstrap --run-bc docs/examples/spark-train-step.sparkbc
 # Weights: out/train/job-dry-001/weights.safetensors (step_n>=1)
 
 model code

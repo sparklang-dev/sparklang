@@ -56,7 +56,7 @@
                   <li class="nav-sub">
                     <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
-                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
                       <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
                     </ul>
                   </li>
@@ -186,9 +186,9 @@
         <h2 id="prefill-vs-decode">Prefill vs decode</h2>
         <ol class="doc__ol">
         <li><strong>Prefill</strong> — process the full prompt; build per-layer <strong>K</strong> and
-           <strong>V</strong> tensors (<strong>KV cache</strong>).</li>
+         <strong>V</strong> tensors (<strong>KV cache</strong>).</li>
         <li><strong>Decode</strong> — for each new token, compute a fresh <strong>Q</strong>, attend to
-           cached K/V, append new K/V, sample the next id.</li>
+         cached K/V, append new K/V, sample the next id.</li>
         </ol>
         <p>Without a cache, every step would re-attend the whole prefix
         (<code class="inline-code">O(n^2)</code> blow-ups). Cache memory grows with sequence length ×
@@ -227,20 +227,20 @@
         <p>Shrink weight (and sometimes activation/KV) bit-width:</p>
         <ul class="doc__ul">
         <li><strong>GPTQ</strong> — post-training weight quant with Hessian-aware packing
-          (<a href="https://arxiv.org/abs/2210.17323">Frantar et al.</a>).</li>
+         (<a href="https://arxiv.org/abs/2210.17323">Frantar et al.</a>).</li>
         <li><strong>AWQ</strong> — activation-aware channel protection
-          (<a href="https://arxiv.org/abs/2306.00978">Lin et al.</a>).</li>
+         (<a href="https://arxiv.org/abs/2306.00978">Lin et al.</a>).</li>
         <li><strong>NF4 / QLoRA</strong> — 4-bit NormalFloat for finetune memory
-          (<a href="https://arxiv.org/abs/2305.14314">Dettmers et al.</a>).</li>
+         (<a href="https://arxiv.org/abs/2305.14314">Dettmers et al.</a>).</li>
         </ul>
         <p>Accuracy vs speed is empirical — see ACL 2025 trade-off discussion
         (<a href="https://aclanthology.org/2025.acl-long.1304/">Give Me BF16…</a>).</p>
-        <h2 id="spark-honesty">Spark honesty</h2>
+        <h2 id="spark-status">Spark status</h2>
         <p>Spark <strong>serve</strong> today is a <strong>tiny CPU forward</strong> plus HTTP helpers —
-        <a href="/docs/serve.html">SERVE.md</a>. Do <strong>not</strong> read marketing KV-cache claims
+        <a href="/docs/serve.html">Serve</a>. Do <strong>not</strong> read marketing KV-cache claims
         into the factory. 5090 OK for GPU experiments; ****.</p>
         <p>Next: <a href="/docs/knowledge-multimodal.html">Multimodal</a> · <a href="/docs/knowledge-agents.html">Agents</a> ·
-        <a href="/docs/attention-forward.html">Attention honesty</a>.</p>
+        <a href="/docs/attention-forward.html">Attention / forward</a>.</p>
       </article>
       </main>
     </div>

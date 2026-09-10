@@ -56,7 +56,7 @@
                   <li class="nav-sub">
                     <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
-                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
                       <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
                     </ul>
                   </li>
@@ -184,7 +184,7 @@
         Copy-paste from the repo root after <code class="inline-code">make spark-bootstrap</code> /
         <code class="inline-code">make spark</code> as needed. Spark / SparkLang only.</p>
         <p>ISA: <a href="/docs/spark-bc.html">SPARK_BC.md</a>. Story:
-        <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</p>
+        <a href="/docs/spark-builder.html">SPARK_BC Builder</a>.</p>
         <h2 id="core-gates">Core gates</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
@@ -252,7 +252,7 @@
         </tr>
         <tr>
         <td><code class="inline-code">make spark-eval</code></td>
-        <td>Frozen copy/recall + next-token probes; exit 0 = harness ran (<strong>not</strong> beat Claude)</td>
+        <td>Frozen copy/recall + next-token probes; exit 0 = harness ran (<strong>measurement only</strong>)</td>
         </tr>
         <tr>
         <td><code class="inline-code">make spark-eval-claude</code></td>
@@ -449,14 +449,14 @@
         docs match tip.</p>
         <h2 id="never">Never</h2>
         <ul class="doc__ul">
-        <li>Claim <code class="inline-code">spark-eval</code> scores beat Claude.</li>
-        <li>Raise train onto the RTX PRO 6000 from these targets.</li>
+        <li>Claim <code class="inline-code">spark-eval</code> scores as a competitive AI win.</li>
+        <li>Do not route factory train onto reserved voice GPUs.</li>
         <li>Treat empty / failing gates as soft success.</li>
         </ul>
         <h2 id="related">Related</h2>
         <ul class="doc__ul">
-        <li><a href="/docs/factory.html">FACTORY.md</a> · <a href="/docs/compile.html">COMPILE.md</a> · <a href="/docs/eval.html">EVAL.md</a></li>
-        <li><a href="/docs/ci-pages.html">CI_PAGES.md</a> · <a href="/docs/train-loop.html">TRAIN_LOOP.md</a></li>
+        <li><a href="/docs/factory.html">Factory hub</a> · <a href="/docs/compile.html">COMPILE.md</a> · <a href="/docs/eval.html">Eval</a></li>
+        <li><a href="/docs/ci-pages.html">CI_PAGES.md</a> · <a href="/docs/train-loop.html">Train loop</a></li>
         <li><a href="/docs/tools-helpers.html">TOOLS_HELPERS.md</a></li>
         </ul>
       </article>

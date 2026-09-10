@@ -17,15 +17,15 @@ never required for `make test`.
 | Gateway model strings | when `AI_GATEWAY_URL` set (you name them) |
 | Local listening vLLM (read-only) | e.g. local coder ports |
 
-**Not:** Bifrost-style alias roulette (inventing gateway aliases from task text).
+**Not:** the AI gateway-style alias roulette (inventing gateway aliases from task text).
 
 **Explicitly out of scope / protected:**
 
 - Inventing live leaderboard numbers
-- Killing or loading compute on reserved voice-only GPUs
+- Killing or loading compute on reserved reserved for voice GPUs
 - Public gateway probes without a probe credential — on 401:
-  report **credential unavailable**, continue with local/dry-run; **do not**
-  invent routing conclusions
+ report **credential unavailable**, continue with local/dry-run; **do not**
+ invent routing conclusions
 
 Catalog file: `data/model-catalog.jsonl` (fixture rows ship with the repo;
 live probe may append real listen results when `SPARK_ALLOW_NET=1`).
@@ -53,7 +53,7 @@ Every **compare** / **improve** result must include:
 1. **metrics** before/after or per-model (latency, tokens/s, quality proxy)
 2. **failure_modes** found
 3. **reasons** — concrete strings, e.g.
-   `code wins tool-call JSON validity 94% vs 71%`
+ `code wins tool-call JSON validity 94% vs 71%`
 4. **risks** (improve/build)
 5. Banner that numbers are fixtures/heuristics — **not** live leaderboards
 
@@ -76,5 +76,5 @@ make model-probe
 ```
 
 Read-only: list configured aliases + `/proc`/`ss`-style listen hints for
-local vLLM ports. Never `systemctl stop` voice units. Bifrost public URL
+local vLLM ports. Never `systemctl stop` voice units. the AI gateway public URL
 only with a probe-credential wrap; 401 → credential unavailable.

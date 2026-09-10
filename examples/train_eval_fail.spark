@@ -1,5 +1,5 @@
 # Train → status → expect fail (intentional mismatch; exit 1).
-#   ./spark --dry-run examples/train_eval_fail.spark ; echo $?
+# ./spark --dry-run examples/train_eval_fail.spark ; echo $?
 # → 1
 model code
 

@@ -30,24 +30,24 @@ Pure next-token prediction invents facts. Tools ground actions:
 
 - Language: `with tools [&]` — see programming guide / function catalog.
 - Behavior + tool loop diagram:
-  `docs/images/diagram-behavior-tool-loop.svg`
-- Model aspects tools row — [MODEL_ASPECTS.md](MODEL_ASPECTS.md)
+ `docs/images/diagram-behavior-tool-loop.svg`
+- Model aspects tools row — [Model aspects](MODEL_ASPECTS.md)
 - Dry tools return `stub:local` until live gated.
 
 ```mermaid
 sequenceDiagram
-  participant U as User
-  participant M as Model
-  participant T as Tool
-  U->>M: goal
-  M->>M: reason
-  M->>T: act
-  T->>M: observe
-  M->>U: answer or abstain
+ participant U as User
+ participant M as Model
+ participant T as Tool
+ U->>M: goal
+ M->>M: reason
+ M->>T: act
+ T->>M: observe
+ M->>U: answer or abstain
 ```
 
 Spark does **not** claim autonomous ops on production store systems
 from this hive page — factory + product gates still apply.
 
-Next: [Eval honesty](EVAL_HONESTY.md) · [Safety](SAFETY_LIMITS.md) ·
+Next: [Evaluation](EVAL_STATUS.md) · [Safety](SAFETY_LIMITS.md) ·
 [Factory](FACTORY.md).

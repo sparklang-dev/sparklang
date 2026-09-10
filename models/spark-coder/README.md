@@ -4,7 +4,7 @@ Owned TinyCoder weights trained in-repo (M-lane).
 
 - `weights.safetensors` — Spark tensors after SGD
 - `arch.json` — profile `spark-coder`, scale `tiny` (CI default)
-- `checkpoint.json` — loss curve (`beats_claude: false`)
+- `checkpoint.json` — loss curve (`claim: none`)
 
 ## Tiny (default) vs large (opt-in)
 
@@ -17,8 +17,7 @@ Owned TinyCoder weights trained in-repo (M-lane).
 make spark-coder-train
 ./spark-code scales
 ./spark-code train --scale large --device auto \
-  --out models/spark-coder-large
+ --out models/spark-coder-large
 ```
 
-Prefer RTX **5090**; never RTX PRO **6000**. Does not beat Claude.
-SoT: `examples/fixtures/coder/scale_config.json`.
+Prefer RTX **5090**; never reserved voice GPUs. SoT: `examples/fixtures/coder/scale_config.json`.

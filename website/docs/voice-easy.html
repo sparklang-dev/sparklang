@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Voice easy — train STT / TTS — Spark</title>
-    <meta name="description" content="Piece-of-cake owned voice heads (tiny CI + large opt-in). Prefer 5090. Not ElevenLabs overnight." />
+    <meta name="description" content="Piece-of-cake owned voice heads (tiny CI + large opt-in)." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
     <link rel="stylesheet" href="/css/tokens.css?v=navsub0909" />
@@ -56,7 +56,7 @@
                   <li class="nav-sub">
                     <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
-                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
                       <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
                     </ul>
                   </li>
@@ -182,11 +182,9 @@
         <h1 id="voice-easy-train-stt-tts-in-3-steps">Voice easy — train STT / TTS in 3 steps</h1>
         <p>Piece-of-cake path for <strong>owned</strong> Spark voice-related heads we write
         and train in this repo. Companion to <a href="/docs/voice.html">VOICE.md</a> and
-        <a href="/docs/model-aspects.html">MODEL_ASPECTS.md</a> (ears/speaking).</p>
-        <p><strong>Not</strong> ElevenLabs, Kokoro, or a downloaded mega TTS overnight.
-        <strong>Never</strong> trains on the RTX PRO <strong>6000</strong> (voice-serving only).
-        Prefers RTX <strong>5090</strong> for large. Does <strong>not</strong> beat Claude.
-        No API keys in git.</p>
+        <a href="/docs/model-aspects.html">Model aspects</a> (ears/speaking).</p>
+        <p>Owned Spark STT/TTS heads trained in this repo — not a vendor TTS SaaS.
+        Prefer CPU or a consumer GPU for optional train.</p>
         <h2 id="3-steps">3 steps</h2>
         <pre class="doc__pre"><code class="language-bash"># 1) Env check (no secrets)
         ./spark-voice env --dry
@@ -202,7 +200,7 @@
         <p>Outputs:</p>
         <ul class="doc__ul">
         <li><code class="inline-code">models/spark-voice-easy/weights.safetensors</code> (+ <code class="inline-code">arch.json</code>,
-          <code class="inline-code">checkpoint.json</code>)</li>
+         <code class="inline-code">checkpoint.json</code>)</li>
         <li><code class="inline-code">out/voice_easy/fixtures/</code> — owned tone WAVs + phrases</li>
         <li><code class="inline-code">out/voice_easy/roundtrip/</code> — TTS dry WAVs + <code class="inline-code">roundtrip.json</code></li>
         </ul>
@@ -231,19 +229,19 @@
         </tr>
         </tbody>
         </table></div>
-        <pre class="doc__pre"><code class="language-bash"># Large — opt-in; prefers 5090; fail closed if only 6000 visible
+        <pre class="doc__pre"><code class="language-bash"># Large — opt-in; prefers a consumer GPU; fail closed without one
         ./spark-voice easy --scale large --device auto
 
         # Large on CPU only when you explicitly ask (still owned weights)
         ./spark-voice easy --scale large --device cpu
         </code></pre>
         <p>Large ≠ production vendor quality. It is a <strong>bigger owned head</strong> for
-        local experiments — honest about fixture-scale STT classify + PCM
+        local experiments — covers fixture-scale STT classify + PCM
         tone TTS.</p>
-        <h3 id="fail-closed-6000">Fail closed (6000)</h3>
+        <h3 id="fail-closed-reserved-voice-gpu">Fail closed (reserved voice GPU)</h3>
         <p>If <code class="inline-code">VOICE_SCALE=large</code> / <code class="inline-code">--scale large</code> and the only visible GPU is
-        the RTX PRO 6000, Spark <strong>refuses</strong> (exit 2) unless you pass
-        <code class="inline-code">--device cpu</code>. Training never routes to the 6000.</p>
+        a reserved voice GPU, Spark <strong>refuses</strong> (exit 2) unless you pass
+        <code class="inline-code">--device cpu</code>. Training never routes to reserved voice GPUs.</p>
         <h2 id="flags">Flags</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
@@ -277,9 +275,9 @@
         owned head</strong> under <code class="inline-code">models/spark-voice-easy/</code> so the training path
         is obvious:</p>
         <pre class="doc__pre"><code class="language-text">ears (fixtures / spark-stt-tts)
-           → voice-easy STT head (classify phrases)
+         → voice-easy STT head (classify phrases)
         brain (optional spark-coder / dump ask)
-           → voice-easy TTS head (PCM params)
+         → voice-easy TTS head (PCM params)
         speaking (roundtrip WAV / spark-stt-tts speak)
         </code></pre>
         <h2 id="external-stt-tts-sidecars-later">External STT / TTS sidecars (later)</h2>
@@ -311,11 +309,11 @@
         <p>Spark IDE extension command <strong>“Spark: Voice easy train”</strong> runs
         <code class="inline-code">./spark-voice easy --dry</code> (CLI-first; stub task hook).</p>
         <h2 id="make-ci">Make / CI</h2>
-        <pre class="doc__pre"><code class="language-bash">make voice-easy          # dry tiny happy path
-        make test-voice-easy     # unittest + dry easy (GHA)
-        make voice-easy-large    # opt-in local large (not default CI)
+        <pre class="doc__pre"><code class="language-bash">make voice-easy # dry tiny happy path
+        make test-voice-easy # unittest + dry easy (GHA)
+        make voice-easy-large # opt-in local large (not default CI)
         </code></pre>
-        <h2 id="honesty-bar">Honesty bar</h2>
+        <h2 id="scope">Scope</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
@@ -337,12 +335,12 @@
         <td><strong>yes</strong></td>
         </tr>
         <tr>
-        <td>Replace ElevenLabs overnight</td>
-        <td><strong>no</strong></td>
+        <td>Vendor mega-TTS overnight</td>
+        <td>Out of scope</td>
         </tr>
         <tr>
-        <td>Beat Claude</td>
-        <td><strong>no</strong></td>
+        <td>Marketing win banners</td>
+        <td>Out of scope</td>
         </tr>
         </tbody>
         </table></div>

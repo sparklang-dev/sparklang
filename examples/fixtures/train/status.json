@@ -1,13 +1,13 @@
 {
-  "op": "status",
-  "mode": "dry-run",
-  "job_id": "job-dry-001",
-  "state": "succeeded",
-  "backend": "http",
-  "artifacts": {
-    "adapter": "out/train/job-dry-001/adapter.bin",
-    "checkpoint": "out/train/job-dry-001/checkpoint.json",
-    "marker": "out/train/job-dry-001/ARTIFACT"
-  },
-  "note": "dry-run fixture — weights not trained on this host"
+ "op": "status",
+ "mode": "dry-run",
+ "job_id": "job-dry-001",
+ "state": "succeeded",
+ "backend": "http",
+ "artifacts": {
+ "adapter": "out/train/job-dry-001/adapter.bin",
+ "checkpoint": "out/train/job-dry-001/checkpoint.json",
+ "marker": "out/train/job-dry-001/ARTIFACT"
+ },
+ "note": "dry-run fixture — weights not trained on this host"
 }

@@ -1,4 +1,4 @@
-# SparkLang shadows (K-lane)
+# SparkLang shadows
 
 Safety tooling so experiments do not clobber primary artifacts.
 
@@ -13,4 +13,4 @@ Default shadow build root: `build/shadow/` (override
 `SPARK_SHADOW_ROOT`). Primary `out/train/` stays untouched when you
 point `--weights` / checkpoints at the shadow dir.
 
-Never 6000. Does not claim beat Claude.
+Measurement only — not a marketing win.

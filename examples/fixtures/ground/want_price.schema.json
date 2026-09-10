@@ -1,8 +1,8 @@
 {
-  "type": "object",
-  "required": ["price_usd", "source"],
-  "properties": {
-    "price_usd": { "type": "number" },
-    "source": { "type": "string", "minLength": 1 }
-  }
+ "type": "object",
+ "required": ["price_usd", "source"],
+ "properties": {
+ "price_usd": { "type": "number" },
+ "source": { "type": "string", "minLength": 1 }
+ }
 }

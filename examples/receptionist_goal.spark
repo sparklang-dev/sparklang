@@ -1,7 +1,7 @@
 # [goal] Live transfer / hold / hangup language ops — not shipped yet.
 # Dry-runnable receptionist with expect gates:
-#   examples/receptionist.spark
-#   ./spark --dry-run examples/receptionist.spark
+# examples/receptionist.spark
+# ./spark --dry-run examples/receptionist.spark
 #
 # This file stays the production-telephony goal marker.
 # See docs/ADOPTION_BAR.md · docs/ROADMAP.md · docs/VOICE.md

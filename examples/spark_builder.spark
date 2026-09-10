@@ -3,10 +3,10 @@
 # Training lives in the same binary (TRAIN / TRAIN_STATUS ops).
 #
 # Compile (real bytes):
-#   ./spark-bootstrap --compile examples/spark_builder.spark \
-#     -o docs/examples/spark-builder.sparkbc
+# ./spark-bootstrap --compile examples/spark_builder.spark \
+# -o docs/examples/spark-builder.sparkbc
 # Dry-run (GAS):
-#   ./spark --dry-run examples/spark_builder.spark
+# ./spark --dry-run examples/spark_builder.spark
 #
 # Honest: SPARK_BC is the training program + orchestration.
 # Init weights stay trained: false. Emitting TRAIN is not a

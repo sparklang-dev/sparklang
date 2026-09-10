@@ -1,7 +1,7 @@
 # Spark IDE - proven ide save nopath fail-loud.
 # After keys-unknown c629cfe. Bare save with no remembered path
 # exits non-zero (open first or save "path").
-# Run: ./spark --dry-run examples/ide_save_nopath.spark  (expect rc!=0)
+# Run: ./spark --dry-run examples/ide_save_nopath.spark (expect rc!=0)
 # No Electron. No new asm - documents proven fail-loud only.
 
 ide save

@@ -24,7 +24,7 @@ Dry-run and `make test` stay **offline** unless you opt into `--allow-net` or
 
 See [LANGUAGE.md — Network](LANGUAGE.md#network) and
 [LANGUAGE.md — Browser / MITM](LANGUAGE.md#browser--mitm-language-sot) for
-canonical ops and honesty bounds (not full CSS, not Chromium product chrome).
+canonical ops and scope bounds (not full CSS, not Chromium product chrome).
 
 ---
 

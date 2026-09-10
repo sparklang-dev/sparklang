@@ -1,56 +1,56 @@
 {
-  "name": "spark-lang",
-  "displayName": "SparkLang",
-  "description": "SparkLang language support — highlighting, hover, completion, LSP diagnostics for .spark",
-  "version": "0.2.0",
-  "publisher": "sparklang",
-  "engines": { "vscode": "^1.85.0" },
-  "categories": ["Programming Languages", "Linters"],
-  "activationEvents": [
-    "onLanguage:spark",
-    "onCommand:spark.voiceEasyTrain",
-    "onCommand:spark.checkBuffer"
-  ],
-  "main": "./extension.js",
-  "contributes": {
-    "languages": [
-      {
-        "id": "spark",
-        "aliases": ["SparkLang", "Spark", "spark"],
-        "extensions": [".spark"],
-        "configuration": "./language-configuration.json"
-      }
-    ],
-    "grammars": [
-      {
-        "language": "spark",
-        "scopeName": "source.spark",
-        "path": "./syntaxes/spark.tmLanguage.json"
-      }
-    ],
-    "snippets": [
-      {
-        "language": "spark",
-        "path": "./snippets/playbooks.json"
-      }
-    ],
-    "commands": [
-      {
-        "command": "spark.voiceEasyTrain",
-        "title": "Spark: Voice easy train",
-        "category": "Spark"
-      },
-      {
-        "command": "spark.checkBuffer",
-        "title": "Spark: Check buffer (LSP diagnostics)",
-        "category": "Spark"
-      }
-    ],
-    "menus": {
-      "commandPalette": [
-        { "command": "spark.voiceEasyTrain" },
-        { "command": "spark.checkBuffer" }
-      ]
-    }
-  }
+ "name": "spark-lang",
+ "displayName": "SparkLang",
+ "description": "SparkLang language support — highlighting, hover, completion, LSP diagnostics for .spark",
+ "version": "0.2.0",
+ "publisher": "sparklang",
+ "engines": { "vscode": "^1.85.0" },
+ "categories": ["Programming Languages", "Linters"],
+ "activationEvents": [
+ "onLanguage:spark",
+ "onCommand:spark.voiceEasyTrain",
+ "onCommand:spark.checkBuffer"
+ ],
+ "main": "./extension.js",
+ "contributes": {
+ "languages": [
+ {
+ "id": "spark",
+ "aliases": ["SparkLang", "Spark", "spark"],
+ "extensions": [".spark"],
+ "configuration": "./language-configuration.json"
+ }
+ ],
+ "grammars": [
+ {
+ "language": "spark",
+ "scopeName": "source.spark",
+ "path": "./syntaxes/spark.tmLanguage.json"
+ }
+ ],
+ "snippets": [
+ {
+ "language": "spark",
+ "path": "./snippets/playbooks.json"
+ }
+ ],
+ "commands": [
+ {
+ "command": "spark.voiceEasyTrain",
+ "title": "Spark: Voice easy train",
+ "category": "Spark"
+ },
+ {
+ "command": "spark.checkBuffer",
+ "title": "Spark: Check buffer (LSP diagnostics)",
+ "category": "Spark"
+ }
+ ],
+ "menus": {
+ "commandPalette": [
+ { "command": "spark.voiceEasyTrain" },
+ { "command": "spark.checkBuffer" }
+ ]
+ }
+ }
 }

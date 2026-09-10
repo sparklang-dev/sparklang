@@ -9,12 +9,12 @@ success is not semantic fidelity**.
 ## Read first (canonical)
 
 - **LLM decompile research (keep intact):**
-  [research/LLM_DECOMPILE.md](research/LLM_DECOMPILE.md) →
-  [/docs/llm-decompile.html](/docs/llm-decompile.html)
+ [research/LLM_DECOMPILE.md](research/LLM_DECOMPILE.md) →
+ [/docs/llm-decompile.html](/docs/llm-decompile.html)
 - **Deterministic dump / inspect:**
-  [DECOMPILE.md](DECOMPILE.md) →
-  [/docs/decompile.html](/docs/decompile.html)
-- **Diagrams:** [DIAGRAMS.md](DIAGRAMS.md)
+ [Decompile](DECOMPILE.md) →
+ [/docs/decompile.html](/docs/decompile.html)
+- **Diagrams:** [Diagrams](DIAGRAMS.md)
 
 ## Core lesson
 
@@ -33,18 +33,18 @@ fields, and guards that look professional.
 | `dump.py` / `--compile` / `--run-bc` | **SoT** |
 | LLM assist | Author aid only |
 | OpenBin / commercial RE | Third-party reading — **not** Spark SoT |
-| Beat Claude / perfect decompile | **Never claimed** |
+| Competitive AI win / perfect decompile | **Never claimed** |
 
 ```mermaid
 flowchart LR
-  bin[Binary] --> dump[Deterministic dump]
-  bin --> llm[LLM assist]
-  dump --> soT[SPARK_BC truth]
-  llm --> human[Human review]
-  human --> soT
+ bin[Binary] --> dump[Deterministic dump]
+ bin --> llm[LLM assist]
+ dump --> soT[SPARK_BC truth]
+ llm --> human[Human review]
+ human --> soT
 ```
 
 Not an OpenBin UX clone. Continue on the research page for Quarkslab,
 LLM4Decompile, DecompileBench, HELIOS, AutoDecompiler, and friends.
 
-Hive: [KNOWLEDGE.md](KNOWLEDGE.md) · Factory: [FACTORY.md](FACTORY.md).
+Hive: [Knowledge](KNOWLEDGE.md) · Factory: [Factory hub](FACTORY.md).

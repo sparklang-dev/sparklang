@@ -1,7 +1,7 @@
 # Engine B display — PPM → show.json; live opens X11 via spark-engine-show.
-# Dry:  ./spark --dry-run examples/browser_show.spark  (display:false)
+# Dry: ./spark --dry-run examples/browser_show.spark (display:false)
 # Live: ./spark --live examples/browser_show.spark
-#       → ./spark-engine-show --ppm … --hold 2000 (needs DISPLAY)
+# → ./spark-engine-show --ppm … --hold 2000 (needs DISPLAY)
 # Pipeline PPM: examples/engine_pipeline.spark → out/engine/pipeline.ppm
 
 browser show "examples/fixtures/browser/engine_show.ppm" -> show

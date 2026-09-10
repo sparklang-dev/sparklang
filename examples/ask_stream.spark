@@ -2,8 +2,8 @@
 # Dry-run never dials; under --live, `ask stream` passes --stream
 # to ./spark-ask-http (token deltas, accumulate for -> bind).
 #
-#   ./spark --dry-run examples/ask_stream.spark
-#   ./spark --live examples/ask_stream.spark   # needs AI_GATEWAY_URL
+# ./spark --dry-run examples/ask_stream.spark
+# ./spark --live examples/ask_stream.spark # needs AI_GATEWAY_URL
 
 model fast
 

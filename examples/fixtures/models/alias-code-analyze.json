@@ -1,16 +1,16 @@
 {
-  "id": "alias-code",
-  "mode": "fixture",
-  "source": "examples/fixtures/models/alias-code-analyze.json",
-  "metrics": {
-    "latency_ms_p50": 420,
-    "tokens_per_s": 38.2,
-    "quality_proxy": 0.91,
-    "tool_call_json_valid_pct": 94
-  },
-  "failure_modes": ["occasional multi-tool order drift"],
-  "reasons": [
-    "tool-call JSON validity 94% on fixture suite",
-    "quality_proxy 0.91 vs suite floor 0.80"
-  ]
+ "id": "alias-code",
+ "mode": "fixture",
+ "source": "examples/fixtures/models/alias-code-analyze.json",
+ "metrics": {
+ "latency_ms_p50": 420,
+ "tokens_per_s": 38.2,
+ "quality_proxy": 0.91,
+ "tool_call_json_valid_pct": 94
+ },
+ "failure_modes": ["occasional multi-tool order drift"],
+ "reasons": [
+ "tool-call JSON validity 94% on fixture suite",
+ "quality_proxy 0.91 vs suite floor 0.80"
+ ]
 }

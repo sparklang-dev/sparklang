@@ -1,11 +1,11 @@
 # AI knowledge hive
 
 Engineer-grade **AI concepts** framed for **Spark / SparkLang** —
-transformers, training, inference, multimodal, agents, eval honesty,
+transformers, training, inference, multimodal, agents, evaluation,
 and decompile limits. Original diagrams (not scraped paper figures).
 Citations point at primary papers and surveys.
 
-**Never** claims beat Claude. Spark factory train prefers CPU / RTX 5090 (see [FACTORY.md](FACTORY.md) GPU policy). Not an OpenBin clone.
+**Never** publishes competitive AI win claims. Spark factory train prefers CPU / RTX 5090 (see [Factory hub](FACTORY.md) GPU policy). Not an OpenBin clone.
 
 Topics below follow the same **category → subcategory** map as the
 Hive nav: Foundations · Systems · Safety / Eval · RE.
@@ -29,7 +29,7 @@ Hive nav: Foundations · Systems · Safety / Eval · RE.
 
 | Topic | Page | What you get |
 |-------|------|--------------|
-| Eval honesty | [knowledge/EVAL_HONESTY.md](knowledge/EVAL_HONESTY.md) | Benchmarks, baselines, no win theater |
+| Evaluation | [knowledge/EVAL_STATUS.md](knowledge/EVAL_STATUS.md) | Benchmarks, baselines, frozen probes |
 | Safety & limits | [knowledge/SAFETY_LIMITS.md](knowledge/SAFETY_LIMITS.md) | Model limits → Guardrails → Grounding (`./spark-ground`) |
 
 ## RE
@@ -43,15 +43,15 @@ Hive nav: Foundations · Systems · Safety / Eval · RE.
 
 | Surface | Doc |
 |---------|-----|
-| Factory hub | [FACTORY.md](FACTORY.md) |
+| Factory hub | [Factory hub](FACTORY.md) |
 | Workflow loop | [/workflow.html](/workflow.html) |
 | Voice / STT / TTS | [VOICE.md](VOICE.md) |
-| Model aspects | [MODEL_ASPECTS.md](MODEL_ASPECTS.md) |
-| Spark coder | [SPARK_CODER.md](SPARK_CODER.md) |
-| Train loop | [TRAIN_LOOP.md](TRAIN_LOOP.md) |
+| Model aspects | [Model aspects](MODEL_ASPECTS.md) |
+| Spark coder | [Spark coder](SPARK_CODER.md) |
+| Train loop | [Train loop](TRAIN_LOOP.md) |
 | Tokenizer / BPE | [TOKENIZER.md](TOKENIZER.md) |
-| Attention honesty | [ATTENTION_FORWARD.md](ATTENTION_FORWARD.md) |
-| Eval harness | [EVAL.md](EVAL.md) |
+| Attention / forward | [Attention / forward](ATTENTION_FORWARD.md) |
+| Eval harness | [Eval](EVAL.md) |
 | LLM decompile research | [research/LLM_DECOMPILE.md](research/LLM_DECOMPILE.md) |
 | Tutorials | [/learn/](/learn/) |
 
@@ -64,18 +64,18 @@ Hive nav: Foundations · Systems · Safety / Eval · RE.
 
 ```mermaid
 flowchart LR
-  H[Knowledge hive] --> F[Foundations]
-  H --> S[Systems]
-  H --> SE[Safety / Eval]
-  H --> R[RE]
-  F --> T[Transformers]
-  F --> TR[Training]
-  F --> I[Inference]
-  S --> M[Multimodal]
-  S --> A[Agents]
-  SE --> E[Eval honesty]
-  SE --> Saf[Safety]
-  R --> D[Decompile RE]
-  D --> L[llm-decompile.html]
-  TR --> Fac[factory / spark-coder]
+ H[Knowledge hive] --> F[Foundations]
+ H --> S[Systems]
+ H --> SE[Safety / Eval]
+ H --> R[RE]
+ F --> T[Transformers]
+ F --> TR[Training]
+ F --> I[Inference]
+ S --> M[Multimodal]
+ S --> A[Agents]
+ SE --> E[Evaluation]
+ SE --> Saf[Safety]
+ R --> D[Decompile RE]
+ D --> L[llm-decompile.html]
+ TR --> Fac[factory / spark-coder]
 ```

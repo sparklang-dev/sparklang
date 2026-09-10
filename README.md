@@ -5,7 +5,7 @@ is a **language and runtime** for plain `.spark` files: dry-run fixtures,
 compile/BC, playbooks, and the Spark IDE are the **core** story. Network/web
 and voice/PSTN are **optional** language ops. Live `ask` against an
 OpenAI-compatible gateway (`AI_GATEWAY_URL`, `./spark --live`) is **optional** —
-not the product identity. Spark is **not** a Bifrost plugin, **not** Apache
+not the product identity. Spark is **not** tied to a single AI gateway, **not** Apache
 Spark, and **not** AdaCore SPARK.
 
 Default loop: dry-run / offline / no keys. Live gateway only when you opt in.
@@ -44,15 +44,15 @@ build, dry vs live, syntax with real `examples/`, layout, debug, tests.
 | **[Decompile](docs/DECOMPILE.md)** | Dump / inspect SPARK_BC |
 | **[Build models](docs/BUILD_MODELS.md)** | TRAIN / STEP / ARTIFACT / checkpoints |
 | **[Train loop](docs/TRAIN_LOOP.md)** | Outer/inner SGD, fixtures, loss curves |
-| **[Architecture](docs/ARCHITECTURE.md)** | Embed / RMSNorm / lm_head / MLP / attn honesty |
+| **[Architecture](docs/ARCHITECTURE.md)** | Embed / RMSNorm / lm_head / MLP / attn status |
 | **[Attention / serve](docs/ATTENTION_FORWARD.md)** | MLP0 vs attn (planned) |
 | **[Tokenizer](docs/TOKENIZER.md)** | Byte-level BPE seed vocab |
 | **[Serve](docs/SERVE.md)** | Tiny CPU SERVE + HTTP when G merges |
-| **[Eval](docs/EVAL.md)** | spark-eval + Claude baseline (no win claim) |
+| **[Eval](docs/EVAL.md)** | spark-eval + frontier-API baseline (no win claim) |
 | **[Make targets](docs/SPARKBC_MAKE.md)** | `test-sparkbc`, `sparkbc-e2e`, `spark-sgd-proof`, … |
 | **[CI / Pages](docs/CI_PAGES.md)** | Contributor CI + production Pages |
 | **[AI playbooks](docs/AI_PLAYBOOKS.md)** | Coding playbooks + explicit model line |
-| **[IDE](docs/IDE.md)** | Verified `ide` ops + interim Cursor editor |
+| **[IDE](docs/IDE.md)** | Verified `ide` ops + interim editor |
 | [LANGUAGE.md](docs/LANGUAGE.md) | Full statement reference |
 | [ASK_LIVE.md](docs/ASK_LIVE.md) | Optional live gateway `ask` |
 | [MODEL_ANALYSIS.md](docs/MODEL_ANALYSIS.md) | Model analyze/improve methodology |
@@ -64,8 +64,8 @@ build, dry vs live, syntax with real `examples/`, layout, debug, tests.
 ```bash
 make
 ./spark --dry-run examples/hello.spark
-./spark --dry-run examples/http_get.spark   # http get + fixture (no network)
-./spark --dry-run examples/ide.spark    # review → builder → implement (not the IDE)
+./spark --dry-run examples/http_get.spark # http get + fixture (no network)
+./spark --dry-run examples/ide.spark # review → builder → implement (not the IDE)
 PYTHONPATH=python python -c "from sparklang import run; print(run('examples/hello.spark').ok)"
 node -e "console.log(require('./js/sparklang').run('examples/hello.spark').ok)"
 make test
@@ -73,7 +73,7 @@ make test
 
 ## Spark IDE
 
-**Honesty:** not Electron / not PyQt / not a full IDE chrome.
+**Scope:** not Electron / not PyQt / not a full IDE chrome.
 
 **IDE language ops (verified):** `ide new|open|save|run|buffer|ask|show`
 + `ide keys` / `ide key`. Usable e2e: open→ask→show, open→run→show,
@@ -89,14 +89,14 @@ bootstrap (B); Spark-native assembler (C). GAS = disposable scaffold.
 ./spark --dry-run examples/ide_save_reopen.spark
 ./spark --dry-run examples/ide_new_chain.spark
 ./spark --dry-run examples/ide_keys.spark
-./spark --live examples/ask_live.spark   # optional; needs gateway
+./spark --live examples/ask_live.spark # optional; needs gateway
 ```
 
 Status: **[docs/IDE.md](docs/IDE.md)**. No `./spark ide` ELF subcommand.
 Flags: `--dry-run`, `--live`, `--allow-net`, `--allow-net-capture`,
 `--pstn-live`, `--version`.
 
-Optional interim: `make ide` → Cursor host (not product). Cursor Override
+Optional interim: `make ide` → editor host (not product). Editor model override
 model routing is separate from SparkLang — see [AGENTS.md](AGENTS.md).
 Spark `.spark` files use explicit model ids only (no alias pick).
 
@@ -154,47 +154,47 @@ file ./spark
 ./spark --dry-run examples/model_improve.spark
 
 make test
-make test-e2e-browser   # browser dry E2E (no display)
-make sparkbc-e2e        # TRAIN→STEP→ARTIFACT (dry; not SGD)
+make test-e2e-browser # browser dry E2E (no display)
+make sparkbc-e2e # TRAIN→STEP→ARTIFACT (dry; not SGD)
 ```
 
 ## Language surface
 
 - **`ask` / `generate`** — model calls with slots; optional live via
-  `./spark-ask-http` + `AI_GATEWAY_URL` ([docs/ASK_LIVE.md](docs/ASK_LIVE.md))
+ `./spark-ask-http` + `AI_GATEWAY_URL` ([docs/ASK_LIVE.md](docs/ASK_LIVE.md))
 - **`classify`** — single/multi label enums + confidence
 - **`extract`** — inline schemas
 - **`pipeline` / `|`** — chain steps
 - **`tool` / `with tools`** — declare tools once
 - **`listen` / `speak` / `voice`** — STT/TTS session +
-  `voice review|code|copy|model|pstn` ([docs/VOICE.md](docs/VOICE.md))
+ `voice review|code|copy|model|pstn` ([docs/VOICE.md](docs/VOICE.md))
 - **`review` / `builder` / `implement`** — static review (path/url/text),
-  level pick (lower/mid/higher), codegen into `out/`
+ level pick (lower/mid/higher), codegen into `out/`
 - **`model`** — set an explicit model id (HF / path / configured name)
-  **or** `train` / `build` / `status` (real jobs; dry fixtures) plus
-  `analyze` / `compare` / `improve` / `plan` (eval helpers)
-  sugar; see [docs/MODEL_ANALYSIS.md](docs/MODEL_ANALYSIS.md))
+ **or** `train` / `build` / `status` (real jobs; dry fixtures) plus
+ `analyze` / `compare` / `improve` / `plan` (eval helpers)
+ sugar; see [docs/MODEL_ANALYSIS.md](docs/MODEL_ANALYSIS.md))
 - **`cuda` / `memory` / `pcie`** — asm `/dev/nvidia*` + `NV_ESC_*`
-  ioctl; `mlock` pin; **live PCIe link** via sysfs
-  (`asm/pcie_ops.s` — gen/width current+max, `downgraded`)
+ ioctl; `mlock` pin; **live PCIe link** via sysfs
+ (`asm/pcie_ops.s` — gen/width current+max, `downgraded`)
 - **`binary`** — open / elf / disasm / understand / kernelmod / firmware.
-  Disasm/understand dump **every** ELF section under
-  `out/decompile/<basename>/` (`ALL_SECTIONS.*` + `.raw` + `lifted/`);
-  huge files stream fully (checkpoint/resume)
+ Disasm/understand dump **every** ELF section under
+ `out/decompile/<basename>/` (`ALL_SECTIONS.*` + `.raw` + `lifted/`);
+ huge files stream fully (checkpoint/resume)
 - **`network`** — capture probe / capture (fixture unless
-  `--allow-net-capture` + `CAP_NET_RAW`; CAP miss exit 4) /
-  open pcap / analyze / explain
+ `--allow-net-capture` + `CAP_NET_RAW`; CAP miss exit 4) /
+ open pcap / analyze / explain
 - **`os`** — design / specify / generate / build / explain AI-agent OS
-  blueprints (`out/os/<name>/`; [docs/OS_DESIGN.md](docs/OS_DESIGN.md))
+ blueprints (`out/os/<name>/`; [docs/OS_DESIGN.md](docs/OS_DESIGN.md))
 - **`browser` / `mitm`** — language SoT in `asm/browser_ops.s`:
-  `run` / `goto` / `gui` / `flags` + `ca-init|status|install` +
-  `enable` / `har export` / `disable_quic` / `quic status|smoke`
-  (real HAR under `out/browser/`). Host GUI only via
-  `browser gui` + `--live`
+ `run` / `goto` / `gui` / `flags` + `ca-init|status|install` +
+ `enable` / `har export` / `disable_quic` / `quic status|smoke`
+ (real HAR under `out/browser/`). Host GUI only via
+ `browser gui` + `--live`
 - **`crypto` / `encrypt` / `gateway`** — encrypt-to-model companion
-  (AES-256-GCM). Agent seals envelopes; `spark-enc-gateway` decrypts
-  at the model boundary then calls the configured chat backend. See
-  [docs/ENCRYPT_GATEWAY.md](docs/ENCRYPT_GATEWAY.md).
+ (AES-256-GCM). Agent seals envelopes; `spark-enc-gateway` decrypts
+ at the model boundary then calls the configured chat backend. See
+ [docs/ENCRYPT_GATEWAY.md](docs/ENCRYPT_GATEWAY.md).
 
 **MITM CA** mint/install stays `mitm ca-*` → `./spark-mitm-ca` (separate
 from the encrypt-to-model gateway).
@@ -232,7 +232,7 @@ only via `make run-host` in spark-browser).
 `cuda probe|memstat|prefer` are **asm syscalls** in `asm/cuda_ops.s`:
 `open` `/dev/nvidiactl` + `/dev/nvidia0` + `/dev/nvidia-uvm`, then
 `ioctl` `NV_ESC_CARD_INFO` / `CHECK_VERSION`. Prefer Device Minor **0** for interactive compute. Never prefer
-reserved voice-only GPU minors. `memory pin` =
+reserved reserved for voice GPU minors. `memory pin` =
 `mmap`+`mlock`.
 
 `cuda pcie` / `pcie probe` live in **`asm/pcie_ops.s`**: read
@@ -250,46 +250,46 @@ Optional NVML cross-check: `make spark-cuda`.
 See [docs/ASK_LIVE.md](docs/ASK_LIVE.md). Dry-run needs none of this.
 
 ```bash
-make                            # includes spark-ask-http
+make # includes spark-ask-http
 export AI_GATEWAY_URL=http://127.0.0.1:4000
-export OPENAI_API_KEY=…         # gateway Bearer; never commit
+export OPENAI_API_KEY=… # gateway Bearer; never commit
 ./spark --live examples/ask_live.spark
 ```
 
 - `AI_GATEWAY_URL` / `OPENAI_API_KEY` (or `SPARK_GATEWAY_KEY`)
 - Pass an **explicit** model id (HF / path / configured name)
 - Public gateway tunnel probes: dedicated probe credential via
-  `tools/ask/probe_public.sh` — 401 → credential unavailable
+ `tools/ask/probe_public.sh` — 401 → credential unavailable
 - `SPARK_STT_URL` / `SPARK_TTS_URL` — optional speech endpoints
-  (require `SPARK_STT_NET=1` / `SPARK_TTS_NET=1` or `SPARK_SPEECH_NET=1`)
+ (require `SPARK_STT_NET=1` / `SPARK_TTS_NET=1` or `SPARK_SPEECH_NET=1`)
 - Live speech: `./spark-stt-tts` via `--live` (`docs/VOICE.md`)
 - Dry-run / `make test` stay **offline** (never call spark-ask-http
-  or vendor STT/TTS)
+ or vendor STT/TTS)
 
 ## Layout
 
 ```
-asm/spark.s              # VM entry + flags + fork_exec_wait (GAS scaffold)
-asm/engine_*.s           # Engine B fetch/parse/css/layout/paint/js/show
-asm/ide_*.s              # IDE buffer / keys / paint wire
-tools/ask/               # spark-ask-http (OpenAI-compatible)
-tools/engine/            # spark-engine-fetch-tls (OpenSSL BIO)
-tools/browser/           # spark-engine-show + parked host helpers
-bootstrap/               # lane B thin C VM (spark-bootstrap)
-sparkasm/                # lane C Spark-native assembler (.sasm)
-selfhost/                # lane A seeds + lex.c goldens
-hdl/classify_score.v     # parallel classify HDL stub
+asm/spark.s # VM entry + flags + fork_exec_wait (GAS scaffold)
+asm/engine_*.s # Engine B fetch/parse/css/layout/paint/js/show
+asm/ide_*.s # IDE buffer / keys / paint wire
+tools/ask/ # spark-ask-http (OpenAI-compatible)
+tools/engine/ # spark-engine-fetch-tls (OpenSSL BIO)
+tools/browser/ # spark-engine-show + parked host helpers
+bootstrap/ # lane B thin C VM (spark-bootstrap)
+sparkasm/ # lane C Spark-native assembler (.sasm)
+selfhost/ # lane A seeds + lex.c goldens
+hdl/classify_score.v # parallel classify HDL stub
 examples/*.spark
-docs/AI_MODELS.md                # user-facing model create/modify + roadmap
-docs/ABSTAIN_HEADS.md      # IDK / abstain heads + spark-abstain
-docs/PROGRAMMING_GUIDE.md  # canonical programming guide
-docs/IDE.md                # Spark IDE + CLI loop
+docs/AI_MODELS.md # user-facing model create/modify + roadmap
+docs/ABSTAIN_HEADS.md # IDK / abstain heads + spark-abstain
+docs/PROGRAMMING_GUIDE.md # canonical programming guide
+docs/IDE.md # Spark IDE + CLI loop
 docs/LANGUAGE.md
 docs/ASK_LIVE.md
 docs/VOICE.md
 docs/OS_DESIGN.md
-docs/SELF_HOST.md          # A+B+C self-host path
-website/                   # sparklang.dev marketing (HTML docs only)
+docs/SELF_HOST.md # A+B+C self-host path
+website/ # sparklang.dev marketing (HTML docs only)
 LICENSE
 CHANGELOG.md
 Makefile
@@ -297,13 +297,13 @@ Makefile
 
 ## What this is not
 
-- Not a Bifrost plugin / not “Spark requires Bifrost”
+- not tied to a single AI gateway / not “Spark requires the AI gateway”
 - Not Apache Spark / Databricks; not AdaCore SPARK
 - Not a custom CPU ISA or a production bare-metal OS (os = **blueprint stubs**)
 - Not full ES / full CSS / Google.com / Electron / a finished self-host compiler
 - Not a vendor voice product — Spark stays generic STT/TTS
 - Not a claim of FPGA bitstream shipping in CI
 - Not silent GPU train — dry-run never starts jobs; live needs
-  `SPARK_TRAIN_*` + allowlist / URL (see MODEL_TRAINING.md)
+ `SPARK_TRAIN_*` + allowlist / URL (see MODEL_TRAINING.md)
 - Not a wipe/replace of the host Linux — never reboot / never `dd` live disks
 - Encrypt-to-model ≠ redact/tokenize; CA mint is still `mitm ca-*` only

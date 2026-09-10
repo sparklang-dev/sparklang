@@ -1,9 +1,8 @@
 # Spark coder — owned TinyCoder (spark-coder)
 
 **Written and trained in this repo.** Not a HuggingFace / Claude /
-OpenAI / Bifrost / vLLM wrapper. Prefers **RTX 5090** for GPU SGD
-when available; CPU otherwise. **Never** the RTX PRO 6000. Does
-**not** beat Claude.
+OpenAI / the AI gateway / vLLM wrapper. Prefers **RTX 5090** for GPU SGD
+when available; CPU otherwise.
 
 ## What it is
 
@@ -25,32 +24,31 @@ is owned CE SGD (loss must drop) plus an optional factory
 `apply_sgd_step` companion. The **brain** is those tensors — tools
 only compile/verify.
 
-## Tiny vs large (honesty)
-
+## Tiny vs large
 | Scale | CI default? | dim | n_layer | Train | Device | VRAM note |
 |-------|-------------|-----|---------|-------|--------|-----------|
 | **tiny** | **yes** | 32 | 2 | `make spark-coder-train` · `./spark-code train --scale tiny` | CPU default; **5090 OK** | CPU-fast; 5090 busy heuristic if >28 GiB used |
 | **large** | **no** (opt-in) | 64 | 4 | `make spark-coder-train-large` · `./spark-code train --scale large` | Prefer **5090**; CPU OK | Still tiny vs production LLMs; fits 5090 |
 
 ```bash
-./spark-code scales   # JSON honesty table
+./spark-code scales # JSON scale table
 ```
 
 SoT JSON: `examples/fixtures/coder/scale_config.json` (aligns with
 scale fixtures `examples/fixtures/train/scale_config.json` dims).
 
-**Hard refuse:** RTX PRO **6000** (voice-only). **Never** claim beat
-Claude — larger dims ≠ Claude quality.
+**Hard refuse:** reserved voice GPUs for factory train. Larger dims are still
+fixture-scale — **measurement only**, not a marketing win.
 
 Voice / weight play paths use the **same** tiny|large + 5090 /
-never-6000 rules (siblings own playground cores; this lane exposes
-knobs + honesty).
+consumer-GPU train rules (siblings own playground cores; this path exposes
+knobs + scale table).
 
 ## Quick start
 
 ```bash
 make spark-bootstrap
-make spark-coder-train          # tiny CI/default → models/spark-coder/
+make spark-coder-train # tiny CI/default → models/spark-coder/
 ./spark-code status
 ./spark-code generate --prompt "Say exactly: spark" --max-new 8
 ./spark-code prove
@@ -60,10 +58,10 @@ make test-spark-coder
 ### Opt-in large (local; not GHA)
 
 ```bash
-make spark-coder-train-large    # → models/spark-coder-large/
+make spark-coder-train-large # → models/spark-coder-large/
 # or:
 ./spark-code train --scale large --device auto \
-  --out models/spark-coder-large
+ --out models/spark-coder-large
 ```
 
 Knobs: `SPARK_CODER_SCALE` (tiny train target), `SPARK_CODER_DEVICE`
@@ -73,21 +71,21 @@ Tool loop (owned model ranks authored candidates, then compiles):
 
 ```bash
 ./spark-code tool-loop \
-  --task "print hello spark" \
-  --candidate examples/coder/print_hello.spark \
-  --candidate examples/coder/train_step_slice.spark \
-  --work out/spark-coder/tool-loop
+ --task "print hello spark" \
+ --candidate examples/coder/print_hello.spark \
+ --candidate examples/coder/train_step_slice.spark \
+ --work out/spark-coder/tool-loop
 ```
 
 ## Honest capability
 
 - Byte-level LM (vocab 256, last-token pool) — **useful for coding
-  next-byte / short mnemonic tasks after overfit**, not a production
-  assistant. Large is still a stub vs Claude / HF bases.
+ next-byte / short mnemonic tasks after overfit**, not a production
+ assistant. Large is still a stub vs Claude / HF bases.
 - Proves: loss drop, ≥50% accuracy on authored prove fixtures (tiny
-  gate), and real `--compile` of fixture `.spark` programs.
-- Does **not** claim beat Claude or full program synthesis from
-  scratch at Claude quality.
+ gate), and real `--compile` of fixture `.spark` programs.
+- or full program synthesis from
+ scratch at Claude quality.
 
 ## SDK pack
 
@@ -97,18 +95,18 @@ checkpoint) and `bin/spark-code` when present after
 
 ## Grounding / anti-guess
 
-TinyCoder still **guesses** next bytes. For operator Q&A that must
+TinyCoder still **guesses** next bytes. For grounded Q&A that must
 not invent facts, wrap answers with `./spark-ground` (expect /
 fixture / dump / schema) or language `expect` + abstain heads.
 External Qwen-class adapt stays attach-only via
 `model modify` / `spark-ground adapter-attach`; full SFT is opt-in
-on **5090**, never **6000**.
+on a consumer GPU — not on reserved voice GPUs.
 
 Docs: [knowledge/SAFETY_LIMITS.md](knowledge/SAFETY_LIMITS.md).
 
 ## Related
 
-- [BUILD_MODELS.md](BUILD_MODELS.md) · [TRAIN_LOOP.md](TRAIN_LOOP.md)
-- [FACTORY.md](FACTORY.md) · [AI_MODELS.md](AI_MODELS.md)
+- [BUILD_MODELS.md](BUILD_MODELS.md) · [Train loop](TRAIN_LOOP.md)
+- [Factory hub](FACTORY.md) · [AI_MODELS.md](AI_MODELS.md)
 - [knowledge/SAFETY_LIMITS.md](knowledge/SAFETY_LIMITS.md)
 - Factory scale: `make spark-sgd-proof-scale`

@@ -4,7 +4,7 @@
 # Bare save after open of hello would overwrite the fixture — so quote
 # first (sets path), then bare rewrite of the same out/ path.
 # Proof: both emit {"op":"ide.save","ok":true,"dirty":false};
-#        out/ide/ide_save_forms_rt.spark sha256/size == hello.spark.
+# out/ide/ide_save_forms_rt.spark sha256/size == hello.spark.
 # Run: ./spark --dry-run examples/ide_save_forms.spark
 # No Electron. No new asm — documents proven forms only.
 

@@ -176,7 +176,8 @@ MD_LINK_MAP = {
     "INFERENCE.md": "/docs/knowledge-inference.html",
     "MULTIMODAL.md": "/docs/knowledge-multimodal.html",
     "AGENTS_TOOLS.md": "/docs/knowledge-agents.html",
-    "EVAL_HONESTY.md": "/docs/knowledge-eval.html",
+    "EVAL_STATUS.md": "/docs/knowledge-eval.html",
+    "EVAL_HONESTY.md": "/docs/knowledge-eval.html",  # legacy alias
     "DECOMPILE_RE.md": "/docs/knowledge-decompile.html",
     "SAFETY_LIMITS.md": "/docs/knowledge-safety.html",
 }
@@ -188,7 +189,7 @@ DOC_PAGES = [
      "eval, serve, CI/Pages."),
     ("kh", "KNOWLEDGE.md", "knowledge.html", "AI knowledge hive",
      "Engineer-grade AI knowledge hub — transformers, training, "
-     "inference, agents, and eval honesty."),
+     "inference, agents, and evaluation practice."),
     ("kh", "knowledge/LLM_TRANSFORMERS.md", "knowledge-llm.html",
      "LLMs & transformers",
      "Tokens, embeddings, attention, transformers — Spark-framed."),
@@ -200,12 +201,12 @@ DOC_PAGES = [
      "Sampling, KV cache, quantization — GPTQ/AWQ/NF4."),
     ("kh", "knowledge/MULTIMODAL.md", "knowledge-multimodal.html",
      "Multimodal STT/TTS/vision",
-     "Speech and vision I/O with honest Spark status."),
+     "Speech and vision I/O with current Spark capability status."),
     ("kh", "knowledge/AGENTS_TOOLS.md", "knowledge-agents.html",
      "Agents and tools",
      "Tool loops, ReAct-style patterns, failure modes."),
-    ("kh", "knowledge/EVAL_HONESTY.md", "knowledge-eval.html",
-     "Eval honesty",
+    ("kh", "knowledge/EVAL_STATUS.md", "knowledge-eval.html",
+     "Evaluation",
      "Benchmarks as instruments — measurement, not marketing."),
     ("kh", "knowledge/DECOMPILE_RE.md", "knowledge-decompile.html",
      "Decompile + LLM RE",
@@ -226,8 +227,7 @@ DOC_PAGES = [
      "No OpenBin login. Tiny owned path."),
     ("ve", "VOICE_EASY.md", "voice-easy.html",
      "Voice easy — train STT / TTS",
-     "Piece-of-cake owned voice heads (tiny CI + large opt-in). "
-     "Prefer 5090. Not ElevenLabs overnight."),
+     "Piece-of-cake owned voice heads (tiny CI + large opt-in)."),
     ("dg", "DIAGRAMS.md", "diagrams.html", "Factory diagrams",
      "How Spark tools and LLM assist relate — compile, decompile, "
      "train, serve, shadows. Deterministic SoT."),
@@ -280,25 +280,25 @@ DOC_PAGES = [
     ("sc", "SPARK_CODER.md", "spark-coder.html",
      "Spark coder — owned TinyCoder",
      "In-repo TinyCoder layers + SGD on coding fixtures. "
-     "Not HF/Claude. Prefers 5090; see coder honesty table."),
+     "Not a downloaded HF/Claude substitute; see coder status table."),
     ("wg", "WEIGHT_GALLERY.md", "weight-gallery.html",
      "Weight gallery — view / play / understand",
      "Catalog tiny through xl Spark stub weights; inspect, "
-     "diff, play forward. Opt-in 5090 XL."),
+     "diff, play forward. Opt-in consumer-GPU XL."),
     ("ar", "ARCHITECTURE.md", "architecture.html",
      "Architecture pieces",
-     "Embed, RMSNorm, lm_head, MLP/SwiGLU, attention honesty."),
+     "Embed, RMSNorm, lm_head, MLP/SwiGLU, attention status."),
     ("af", "ATTENTION_FORWARD.md", "attention-forward.html",
      "Attention / MLP / serve",
-     "Honest status: init attn tensors, MLP0 serve forward, "
+     "Current status: init attn tensors, MLP0 serve forward, "
      "attention math planned."),
     ("tk", "TOKENIZER.md", "tokenizer.html", "Tokenizer — BPE seed vocab",
      "From-nothing byte-level BPE seed vocab for Spark."),
     ("sv", "SERVE.md", "serve.html", "Serve forward + HTTP",
      "Tiny CPU SERVE forward plus local HTTP/stdio predict API."),
     ("ev", "EVAL.md", "eval.html", "Eval harness",
-     "Frozen spark-eval probes + optional Claude baseline. "
-     "Measurement only — does not claim beat Claude."),
+     "Frozen spark-eval probes + optional frontier-API baseline. "
+     "Measurement only."),
     ("mk", "SPARKBC_MAKE.md", "sparkbc-make.html",
      "SPARK_BC makefile targets",
      "test-sparkbc, sparkbc-e2e, spark-sgd-proof, spark-eval, "

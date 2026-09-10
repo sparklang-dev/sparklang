@@ -13,9 +13,8 @@ Spark / SparkLang only. Documents tip/`main` after attention train + serve lande
 | Tiny CPU serve: attention (last-query causal MHA / GQA) | **implemented** | layer-0 attention; no RoPE math yet |
 | `control.sparkasm` ATTN / ROPE macros | **source + shape check** | `make test-sparkasm-control` — not a tensor VM |
 | Attention train (layer-0) | **implemented** | `apply_sgd_step` default `train_attn=True`; `--no-train-attn` = mean-pool CE |
-| HTTP serve API | **implemented** | `make spark-serve-api` — see [SERVE.md](SERVE.md) |
-| Beat Claude | **not** | never claim from docs |
-| RTX PRO 6000 train | **never** | voice-only; 5090 OK |
+| HTTP serve API | **implemented** | `make spark-serve-api` — see [Serve](SERVE.md) |
+| Optional GPU train | **CPU default** | Prefer consumer GPU (e.g. RTX 5090) when used |
 
 ## Serve forward (what exists)
 
@@ -24,8 +23,8 @@ make spark-serve
 ./spark-serve docs/examples/spark-builder.sparkbc /tmp/serve-dry-001
 # or:
 PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
-  docs/examples/spark-builder.sparkbc \
-  --serve /tmp/serve-dry-001
+ docs/examples/spark-builder.sparkbc \
+ --serve /tmp/serve-dry-001
 ```
 
 Writes `SERVE` with `forward=true` and honest `trained` from
@@ -46,16 +45,16 @@ RoPE. Fixture-scale only.
 
 ```bash
 make spark-sgd-proof
-# asserts train_attn, copy_recall>0, next_token>0, beats_claude=false
+# asserts train_attn, copy_recall>0, next_token>0, claim=none
 ```
 
 - Module: `python/sparklang/model_lab/attn.py` (last-query causal
-  MHA forward + backward).
+ MHA forward + backward).
 - SGD: `weights.py` `apply_sgd_step(..., train_attn=True)` via
-  `tools/spark-bc-dump/apply_step.py`.
+ `tools/spark-bc-dump/apply_step.py`.
 - Eval path uses attn0 when weights present
-  (`tools/spark-eval/run.py`).
-- Docs: [SPARK_BUILDER.md](SPARK_BUILDER.md). Changelog **0.6.44**.
+ (`tools/spark-eval/run.py`).
+- Docs: [SPARK_BC Builder](SPARK_BUILDER.md). Changelog **0.6.44**.
 
 **Not** claiming multi-head production quality or Claude-parity.
 
@@ -77,6 +76,6 @@ Do not call sparkasm “SPARK_BC decompile.”
 
 ## Related
 
-- [SPARK_BUILDER.md](SPARK_BUILDER.md) · [TRAIN_LOOP.md](TRAIN_LOOP.md)
-- [SERVE.md](SERVE.md) · [ARCHITECTURE.md](ARCHITECTURE.md)
-- [FACTORY.md](FACTORY.md) · [EVAL.md](EVAL.md)
+- [SPARK_BC Builder](SPARK_BUILDER.md) · [Train loop](TRAIN_LOOP.md)
+- [Serve](SERVE.md) · [Architecture](ARCHITECTURE.md)
+- [Factory hub](FACTORY.md) · [Eval](EVAL.md)

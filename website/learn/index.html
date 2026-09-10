@@ -1,37 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Learn SparkLang</title>
-    <meta
-      name="description"
-      content="SparkLang tutorials — dry-run first, train→status→expect, playbooks, IDE."
-    />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="shortcut icon" href="/favicon.svg" />
-    <link rel="stylesheet" href="/css/tokens.css?v=critique0902" />
-    <link rel="stylesheet" href="/css/site.css?v=critique0902" />
-  </head>
-  <body class="doc-page">
-    <header class="site-header">
-      <div class="shell header-inner">
-        <a class="site-brand" href="/" aria-label="SparkLang home">
-          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
-            <path
-              d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z"
-              fill="currentColor"
-            />
-          </svg>
-          Spark
-        </a>
-        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
-          <span class="nav-toggle__bar"></span>
-          <span class="nav-toggle__bar"></span>
-          <span class="nav-toggle__bar"></span>
-        </button>
-        <div class="header-nav-wrap">
-          <nav class="site-nav" id="site-nav" aria-label="Primary">
+ <head>
+ <meta charset="utf-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1" />
+ <title>Learn SparkLang</title>
+ <meta
+ name="description"
+ content="SparkLang tutorials — dry-run first, train→status→expect, playbooks, IDE."
+ />
+ <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+ <link rel="shortcut icon" href="/favicon.svg" />
+ <link rel="stylesheet" href="/css/tokens.css?v=critique0902" />
+ <link rel="stylesheet" href="/css/site.css?v=critique0902" />
+ </head>
+ <body class="doc-page">
+ <header class="site-header">
+ <div class="shell header-inner">
+ <a class="site-brand" href="/" aria-label="SparkLang home">
+ <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+ <path
+ d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z"
+ fill="currentColor"
+ />
+ </svg>
+ Spark
+ </a>
+ <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+ <span class="nav-toggle__bar"></span>
+ <span class="nav-toggle__bar"></span>
+ <span class="nav-toggle__bar"></span>
+ </button>
+ <div class="header-nav-wrap">
+ <nav class="site-nav" id="site-nav" aria-label="Primary">
             <!-- spark-primary-nav:begin -->
             <ul class="nav-primary">
               <li><a href="/workflow.html">Loop</a></li>
@@ -62,7 +62,7 @@
                   <li class="nav-sub">
                     <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
-                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
                       <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
                     </ul>
                   </li>
@@ -143,205 +143,205 @@
             <a href="/playground.html" class="nav-cta">Try</a>
             <!-- spark-primary-nav:end -->
           </nav>
-        </div>
-      </div>
-    </header>
+ </div>
+ </div>
+ </header>
 
-    <div class="shell doc-layout">
-      <aside class="doc-sidebar" aria-label="Table of contents">
-        <p class="doc-sidebar__title">On this page</p>
-        <nav id="doc-toc-list"></nav>
-        <hr style="border: none; border-top: 1px solid var(--spark-border-light); margin: 1rem 0" />
-        <p class="doc-sidebar__title">Tutorial trail</p>
-        <ul class="toc-list">
-          <li><a href="/learn/getting-started.html">Getting Started</a></li>
-          <li><a href="/learn/first-program.html">Your First Program</a></li>
-          <li><a href="/learn/ai-in-5-minutes.html">AI in 5 Minutes</a></li>
-          <li><a href="/learn/function-catalog.html">Function Catalog</a></li>
-          <li><a href="/learn/build-model.html">Build a Model</a></li>
-          <li><a href="/docs/spark-builder.html">Builder factory</a></li>
-          <li><a href="/docs/knowledge.html">AI knowledge hive</a></li>
-        </ul>
-      </aside>
+ <div class="shell doc-layout">
+ <aside class="doc-sidebar" aria-label="Table of contents">
+ <p class="doc-sidebar__title">On this page</p>
+ <nav id="doc-toc-list"></nav>
+ <hr style="border: none; border-top: 1px solid var(--spark-border-light); margin: 1rem 0" />
+ <p class="doc-sidebar__title">Tutorial trail</p>
+ <ul class="toc-list">
+ <li><a href="/learn/getting-started.html">Getting Started</a></li>
+ <li><a href="/learn/first-program.html">Your First Program</a></li>
+ <li><a href="/learn/ai-in-5-minutes.html">AI in 5 Minutes</a></li>
+ <li><a href="/learn/function-catalog.html">Function Catalog</a></li>
+ <li><a href="/learn/build-model.html">Build a Model</a></li>
+ <li><a href="/docs/spark-builder.html">Builder factory</a></li>
+ <li><a href="/docs/knowledge.html">AI knowledge hive</a></li>
+ </ul>
+ </aside>
 
-      <main class="doc-main">
-        <p class="doc-breadcrumb"><a href="/">Home</a> / Learn</p>
-        <article class="doc__body">
-          <h1 id="learn-spark">Learn SparkLang</h1>
-          <p>
-            Tutorials for orchestrating and gating train jobs: dry-run first,
-            then train→status→expect, classify, playbooks, and the IDE. Built
-            for solo and small teams who want reviewable pipelines in PRs
-            without SDK glue.
-          </p>
+ <main class="doc-main">
+ <p class="doc-breadcrumb"><a href="/">Home</a> / Learn</p>
+ <article class="doc__body">
+ <h1 id="learn-spark">Learn SparkLang</h1>
+ <p>
+ Tutorials for orchestrating and gating train jobs: dry-run first,
+ then train→status→expect, classify, playbooks, and the IDE. Built
+ for solo and small teams who want reviewable pipelines in PRs
+ without SDK glue.
+ </p>
 
-          <h2 id="tutorial-trail">Tutorial trail</h2>
-          <div class="card-grid">
-            <article class="card">
-              <h3 class="card__title">
-                <a href="/learn/getting-started.html">1. Getting Started</a>
-              </h3>
-              <p class="card__body">
-                Download, install, verify with
-                <code class="inline-code">--dry-run</code>, configure
-                dry-run first; optional gateway key for live ask.
-              </p>
-            </article>
-            <article class="card">
-              <h3 class="card__title">
-                <a href="/learn/first-program.html">2. Your First Program</a>
-              </h3>
-              <p class="card__body">
-                Write train_eval.spark: train, status, and expect.
-              </p>
-            </article>
-            <article class="card">
-              <h3 class="card__title">
-                <a href="/learn/ai-in-5-minutes.html">3. AI in 5 Minutes</a>
-              </h3>
-              <p class="card__body">
-                Train→expect, classify, extract, pipeline — the loop in one
-                lesson.
-              </p>
-            </article>
-            <article class="card">
-              <h3 class="card__title">
-                <a href="/learn/build-model.html">4. Build a Model</a>
-              </h3>
-              <p class="card__body">
-                model train, status, expect — interactive wizard.
-              </p>
-            </article>
-            <article class="card">
-              <h3 class="card__title">
-                <a href="/docs/spark-builder.html">5. Builder factory</a>
-              </h3>
-              <p class="card__body">
-                SPARK_BC seed, TRAIN/STEP/STATUS opcodes,
-                <code class="inline-code">--compile</code> /
-                <code class="inline-code">--run-bc</code>, init weights,
-                sha256 proofs. Dry ≠ trained.
-              </p>
-            </article>
-            <article class="card">
-              <h3 class="card__title">
-                <a href="/docs/knowledge.html">AI knowledge hive</a>
-              </h3>
-              <p class="card__body">
-                Engineer explainers — transformers, training, inference,
-                multimodal, agents, eval honesty, decompile limits. Cited
-                sources; original diagrams.
-              </p>
-            </article>
-          </div>
+ <h2 id="tutorial-trail">Tutorial trail</h2>
+ <div class="card-grid">
+ <article class="card">
+ <h3 class="card__title">
+ <a href="/learn/getting-started.html">1. Getting Started</a>
+ </h3>
+ <p class="card__body">
+ Download, install, verify with
+ <code class="inline-code">--dry-run</code>, configure
+ dry-run first; optional gateway key for live ask.
+ </p>
+ </article>
+ <article class="card">
+ <h3 class="card__title">
+ <a href="/learn/first-program.html">2. Your First Program</a>
+ </h3>
+ <p class="card__body">
+ Write train_eval.spark: train, status, and expect.
+ </p>
+ </article>
+ <article class="card">
+ <h3 class="card__title">
+ <a href="/learn/ai-in-5-minutes.html">3. AI in 5 Minutes</a>
+ </h3>
+ <p class="card__body">
+ Train→expect, classify, extract, pipeline — the loop in one
+ lesson.
+ </p>
+ </article>
+ <article class="card">
+ <h3 class="card__title">
+ <a href="/learn/build-model.html">4. Build a Model</a>
+ </h3>
+ <p class="card__body">
+ model train, status, expect — interactive wizard.
+ </p>
+ </article>
+ <article class="card">
+ <h3 class="card__title">
+ <a href="/docs/spark-builder.html">5. Builder factory</a>
+ </h3>
+ <p class="card__body">
+ SPARK_BC seed, TRAIN/STEP/STATUS opcodes,
+ <code class="inline-code">--compile</code> /
+ <code class="inline-code">--run-bc</code>, init weights,
+ sha256 proofs. Dry ≠ trained.
+ </p>
+ </article>
+ <article class="card">
+ <h3 class="card__title">
+ <a href="/docs/knowledge.html">AI knowledge hive</a>
+ </h3>
+ <p class="card__body">
+ Engineer explainers — transformers, training, inference,
+ multimodal, agents, evaluation, decompile limits. Cited
+ sources; original diagrams.
+ </p>
+ </article>
+ </div>
 
-          <h2 id="beyond-trail">Beyond the 5-minute trail</h2>
-          <div class="card-grid">
-            <article class="card">
-              <h3 class="card__title">
-                <a href="/learn/function-catalog.html">Function Catalog</a>
-              </h3>
-              <p class="card__body">
-                Search 100+ ops — model, AI, review, browser, network, CUDA,
-                IDE, crypto, and stdlib recipes.
-              </p>
-            </article>
-            <article class="card">
-              <h3 class="card__title">
-                <a href="/playground.html">Playground</a>
-              </h3>
-              <p class="card__body">
-                Edit samples in the browser with catalog-driven presets and
-                dry-run preview.
-              </p>
-            </article>
-            <article class="card">
-              <h3 class="card__title">
-                <a href="/docs/language.html">Language Reference</a>
-              </h3>
-              <p class="card__body">
-                Full statement spec — dry-run vs live notes per op.
-              </p>
-            </article>
-          </div>
+ <h2 id="beyond-trail">Beyond the 5-minute trail</h2>
+ <div class="card-grid">
+ <article class="card">
+ <h3 class="card__title">
+ <a href="/learn/function-catalog.html">Function Catalog</a>
+ </h3>
+ <p class="card__body">
+ Search 100+ ops — model, AI, review, browser, network, CUDA,
+ IDE, crypto, and stdlib recipes.
+ </p>
+ </article>
+ <article class="card">
+ <h3 class="card__title">
+ <a href="/playground.html">Playground</a>
+ </h3>
+ <p class="card__body">
+ Edit samples in the browser with catalog-driven presets and
+ dry-run preview.
+ </p>
+ </article>
+ <article class="card">
+ <h3 class="card__title">
+ <a href="/docs/language.html">Language Reference</a>
+ </h3>
+ <p class="card__body">
+ Full statement spec — dry-run vs live notes per op.
+ </p>
+ </article>
+ </div>
 
-          <h2 id="reference">Reference &amp; tools</h2>
-          <ul class="doc__ul">
-            <li>
-              <a href="/docs/factory.html">Factory hub</a> — full map:
-              compile, decompile, opcodes, build models, train loop,
-              architecture, tokenizer, serve, eval, make, CI/Pages
-            </li>
-            <li>
-              <a href="/docs/model-aspects.html">AI model aspects</a> —
-              behaviors, ears/STT, eyes/vision, speaking/TTS, thinking,
-              tools, train, eval, serve (honest status table)
-            </li>
-            <li>
-              <a href="/docs/voice.html">Voice</a> — listen/speak
-              companions, gated STT/TTS, PSTN defaults off
-            </li>
-            <li>
-              <a href="/docs/diagrams.html">Diagrams</a> — tool map,
-              shadows, LLM assist vs Spark deterministic SoT
-            </li>
-            <li>
-              <a href="/docs/spark-builder.html">Builder</a> — SPARK_BC
-              factory E2E: opcodes <code class="inline-code">0x26</code> /
-              <code class="inline-code">0x28</code> /
-              <code class="inline-code">0x27</code>,
-              <code class="inline-code">--compile</code> /
-              <code class="inline-code">--run-bc</code>, init weights,
-              sha256 proofs; dry ≠ trained
-            </li>
-            <li>
-              <a href="/docs/compile.html">Compile</a> ·
-              <a href="/docs/decompile.html">Decompile</a> ·
-              <a href="/docs/build-models.html">Build models</a> ·
-              <a href="/docs/train-loop.html">Train loop</a>
-            </li>
-            <li>
-              <a href="/docs/architecture.html">Architecture</a> ·
-              <a href="/docs/serve.html">Serve</a> ·
-              <a href="/docs/eval.html">Eval</a> ·
-              <a href="/docs/tokenizer.html">Tokenizer</a>
-            </li>
-            <li>
-              <a href="/docs/ai-models.html">AI models</a> — analyze, compare,
-              improve, build; dry-run vs gateway
-            </li>
-            <li>
-              <a href="/docs/language.html">Language reference</a> — full
-              statement spec
-            </li>
-            <li>
-              <a href="/docs/programming-guide.html">Programming guide</a> — CLI,
-              build, verified examples
-            </li>
-            <li><a href="/playground.html">Playground</a> — edit samples in the browser</li>
-            <li><a href="/downloads.html">Downloads</a> — installers by platform</li>
-          </ul>
-        </article>
-      </main>
-    </div>
+ <h2 id="reference">Reference &amp; tools</h2>
+ <ul class="doc__ul">
+ <li>
+ <a href="/docs/factory.html">Factory hub</a> — full map:
+ compile, decompile, opcodes, build models, train loop,
+ architecture, tokenizer, serve, eval, make, CI/Pages
+ </li>
+ <li>
+ <a href="/docs/model-aspects.html">AI model aspects</a> —
+ behaviors, ears/STT, eyes/vision, speaking/TTS, thinking,
+ tools, train, eval, serve (honest status table)
+ </li>
+ <li>
+ <a href="/docs/voice.html">Voice</a> — listen/speak
+ companions, gated STT/TTS, PSTN defaults off
+ </li>
+ <li>
+ <a href="/docs/diagrams.html">Diagrams</a> — tool map,
+ shadows, LLM assist vs Spark deterministic SoT
+ </li>
+ <li>
+ <a href="/docs/spark-builder.html">Builder</a> — SPARK_BC
+ factory E2E: opcodes <code class="inline-code">0x26</code> /
+ <code class="inline-code">0x28</code> /
+ <code class="inline-code">0x27</code>,
+ <code class="inline-code">--compile</code> /
+ <code class="inline-code">--run-bc</code>, init weights,
+ sha256 proofs; dry ≠ trained
+ </li>
+ <li>
+ <a href="/docs/compile.html">Compile</a> ·
+ <a href="/docs/decompile.html">Decompile</a> ·
+ <a href="/docs/build-models.html">Build models</a> ·
+ <a href="/docs/train-loop.html">Train loop</a>
+ </li>
+ <li>
+ <a href="/docs/architecture.html">Architecture</a> ·
+ <a href="/docs/serve.html">Serve</a> ·
+ <a href="/docs/eval.html">Eval</a> ·
+ <a href="/docs/tokenizer.html">Tokenizer</a>
+ </li>
+ <li>
+ <a href="/docs/ai-models.html">AI models</a> — analyze, compare,
+ improve, build; dry-run vs gateway
+ </li>
+ <li>
+ <a href="/docs/language.html">Language reference</a> — full
+ statement spec
+ </li>
+ <li>
+ <a href="/docs/programming-guide.html">Programming guide</a> — CLI,
+ build, verified examples
+ </li>
+ <li><a href="/playground.html">Playground</a> — edit samples in the browser</li>
+ <li><a href="/downloads.html">Downloads</a> — installers by platform</li>
+ </ul>
+ </article>
+ </main>
+ </div>
 
-        <footer class="site-footer">
-      <div class="shell footer-inner">
-        <div class="footer-brand">
-          <span>SparkLang — the Spark programming language</span>
-          <span class="footer-meta">v0.6.2 · MIT</span>
-        </div>
-        <nav class="footer-nav" aria-label="Footer">
-          <a href="/workflow.html">Loop</a>
-          <a href="/about.html">About</a>
+ <footer class="site-footer">
+ <div class="shell footer-inner">
+ <div class="footer-brand">
+ <span>SparkLang — the Spark programming language</span>
+ <span class="footer-meta">v0.6.2 · MIT</span>
+ </div>
+ <nav class="footer-nav" aria-label="Footer">
+ <a href="/workflow.html">Loop</a>
+ <a href="/about.html">About</a>
 <a href="/LICENSE.txt">License</a>
-          <a href="/CHANGELOG.html">Changelog</a>
-          <a href="/learn/">Learn</a>
-          <a href="/downloads.html">Downloads</a>
-          <a href="/playground.html">Playground</a>
-        </nav>
-      </div>
-    </footer>
-    <script src="/js/site.js"></script>
-  </body>
+ <a href="/CHANGELOG.html">Changelog</a>
+ <a href="/learn/">Learn</a>
+ <a href="/downloads.html">Downloads</a>
+ <a href="/playground.html">Playground</a>
+ </nav>
+ </div>
+ </footer>
+ <script src="/js/site.js"></script>
+ </body>
 </html>

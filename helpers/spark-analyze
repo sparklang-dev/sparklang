@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # One-shot Spark project loop: compile → dump → local analysis folder.
 # Optional: --serve (tiny CPU) · --ask (owned spark-coder or honesty note).
-# No cloud upload. Never 6000. Does not claim beat Claude.
+# No cloud upload. Local tools only.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"

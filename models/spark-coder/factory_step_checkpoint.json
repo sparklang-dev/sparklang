@@ -40,5 +40,5 @@
   "device": "cpu",
   "never": "rtx-pro-6000",
   "sparkbc_sha256": "d08925b52bf8c840de626c9cfec619d4dbae5a674b94bb8c7c5837eb1ac64551",
-  "note": "CPU multi-outer SGD updated lm_head+embed; trained=true; not_sgd=false; not beat Claude"
+  "note": "CPU multi-outer SGD updated lm_head+embed; trained=true; not_sgd=false; measurement only"
 }

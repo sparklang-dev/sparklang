@@ -3,7 +3,7 @@
 # Transfer intent uses the shell escape hatch (dry allowlist echo).
 # Expectation pass/fail gates the dry path (exit 0/1).
 #
-#   ./spark --dry-run examples/receptionist.spark
+# ./spark --dry-run examples/receptionist.spark
 #
 # Live transfer/hold language ops remain a goal — see
 # examples/receptionist_goal.spark and docs/ADOPTION_BAR.md.

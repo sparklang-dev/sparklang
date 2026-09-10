@@ -2,11 +2,11 @@
 model code
 
 tool weather(city: string) -> string {
-  "stub:local"
+ "stub:local"
 }
 
 with tools [weather] {
-  ask "What's the weather hint for Springfield?" -> answer
+ ask "What's the weather hint for Springfield?" -> answer
 }
 
 print answer

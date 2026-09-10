@@ -34,7 +34,7 @@ Example:
 
 Copied from `templates/os/ai_agent/`:
 
-- `README.md` — honesty bounds + build notes
+- `README.md` — scope bounds + build notes
 - `SPEC.md` — target, AI knobs, security
 - `MEMORY_MAP.md` — flat map + isolates
 - `WHY.md` — exact why for agents
@@ -50,7 +50,7 @@ Copied from `templates/os/ai_agent/`:
 - Tool bus + capability tokens
 - Fair RR scheduler notes for multi-agent
 - Optional network + binary-analyze hooks (reference Spark
-  `network` / `binary` ops; codegen stays in `asm/os_ops.s`)
+ `network` / `binary` ops; codegen stays in `asm/os_ops.s`)
 
 ## Implementation
 
@@ -87,7 +87,7 @@ explain).
 Copied from `templates/os/browser/` — **layout hooks**, not a second
 MITM implementation and **not** AgentOS `boot.s` / `kernel_stub.s`:
 
-- `README.md` / `SPEC.md` / `WHY.md` / `LAYOUT.md` — honesty + path map
+- `README.md` / `SPEC.md` / `WHY.md` / `LAYOUT.md` — scope + path map
 - `Makefile` / `.gitignore` — owner hooks mirroring product
 - `docs/ARCHITECTURE.md` — proxy / inspector / HAR diagram
 - `spark_browser/**/HOOKS.md` — package / mitm / inspector / cdp hooks
@@ -95,18 +95,17 @@ MITM implementation and **not** AgentOS `boot.s` / `kernel_stub.s`:
 - `data/ca/README.md` — CA dir contract (**no** private keys emitted)
 - `optional/spark_network_hooks.md` — Spark `network analyze` bridge
 
-### Honesty (browser)
-
+### Browser scope
 - MITM is **127.0.0.1 / this browser only**
 - Never auto-install CA; never reboot the developer host
 - Live Python MITM/CA stay in `spark-browser/` — templates document
-  layout only
+ layout only
 - Do not claim Chrome replacement or Speedometer wins without benches
 
 ```bash
-./spark --dry-run examples/browser_mitm.spark   # scaffold + flags
-./spark --dry-run examples/browser_main.spark   # dry language SoT
+./spark --dry-run examples/browser_mitm.spark # scaffold + flags
+./spark --dry-run examples/browser_main.spark # dry language SoT
 make browser-scaffold
-cd ../spark-browser && make run                 # sole live entry
+cd ../spark-browser && make run # sole live entry
 # dry E2E (no display): make test-e2e-browser
 ```

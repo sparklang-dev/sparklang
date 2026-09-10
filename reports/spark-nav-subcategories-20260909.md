@@ -15,7 +15,7 @@ keeps marketing + docs HTML consistent. Mobile-friendly nested menus
 | **Hive** | *(hub)* | Knowledge hub |
 | **Hive** | Foundations | LLMs & transformers · Training · Inference |
 | **Hive** | Systems | Multimodal · Agents & tools |
-| **Hive** | Safety / Eval | Eval honesty · Safety & limits |
+| **Hive** | Safety / Eval | Evaluation · Safety & limits |
 | **Hive** | RE | Decompile + RE · LLM decompile research |
 | **Forge** | Senses | Voice / STT / TTS · Voice ask · Voice easy |
 | **Forge** | Models | Model aspects · Diagrams · Spark coder · Weight gallery · AI models |

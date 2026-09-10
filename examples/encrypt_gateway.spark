@@ -1,5 +1,5 @@
 # Encrypt-to-model gateway (offline)
-# Agent seals → gateway decrypts at model boundary → Bifrost when --live
+# Agent seals → gateway decrypts at model boundary → the AI gateway when --live
 # Off by default until gateway encrypt on + key.
 
 crypto keygen -> key

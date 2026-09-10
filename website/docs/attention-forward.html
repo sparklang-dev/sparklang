@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Attention / MLP / serve — Spark</title>
-    <meta name="description" content="Honest status: init attn tensors, MLP0 serve forward, attention math planned." />
+    <meta name="description" content="Current status: init attn tensors, MLP0 serve forward, attention math planned." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
     <link rel="stylesheet" href="/css/tokens.css?v=navsub0909" />
@@ -56,7 +56,7 @@
                   <li class="nav-sub">
                     <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
-                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
                       <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
                     </ul>
                   </li>
@@ -225,17 +225,12 @@
         <tr>
         <td>HTTP serve API</td>
         <td><strong>implemented</strong></td>
-        <td><code class="inline-code">make spark-serve-api</code> — see <a href="/docs/serve.html">SERVE.md</a></td>
+        <td><code class="inline-code">make spark-serve-api</code> — see <a href="/docs/serve.html">Serve</a></td>
         </tr>
         <tr>
-        <td>Beat Claude</td>
-        <td><strong>not</strong></td>
-        <td>never claim from docs</td>
-        </tr>
-        <tr>
-        <td>RTX PRO 6000 train</td>
-        <td><strong>never</strong></td>
-        <td>voice-only; 5090 OK</td>
+        <td>Optional GPU train</td>
+        <td><strong>CPU default</strong></td>
+        <td>Prefer consumer GPU (e.g. RTX 5090) when used</td>
         </tr>
         </tbody>
         </table></div>
@@ -244,8 +239,8 @@
         ./spark-serve docs/examples/spark-builder.sparkbc /tmp/serve-dry-001
         # or:
         PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
-          docs/examples/spark-builder.sparkbc \
-          --serve /tmp/serve-dry-001
+         docs/examples/spark-builder.sparkbc \
+         --serve /tmp/serve-dry-001
         </code></pre>
         <p>Writes <code class="inline-code">SERVE</code> with <code class="inline-code">forward=true</code> and honest <code class="inline-code">trained</code> from
         weights meta. Path string when layer-0 attn (+ optional MLP)
@@ -259,16 +254,16 @@
         RoPE. Fixture-scale only.</p>
         <h2 id="attention-train-layer-0-attention-on-tip">Attention train (layer-0 attention on tip)</h2>
         <pre class="doc__pre"><code class="language-bash">make spark-sgd-proof
-        # asserts train_attn, copy_recall&gt;0, next_token&gt;0, beats_claude=false
+        # asserts train_attn, copy_recall&gt;0, next_token&gt;0, claim=none
         </code></pre>
         <ul class="doc__ul">
         <li>Module: <code class="inline-code">python/sparklang/model_lab/attn.py</code> (last-query causal
-          MHA forward + backward).</li>
+         MHA forward + backward).</li>
         <li>SGD: <code class="inline-code">weights.py</code> <code class="inline-code">apply_sgd_step(..., train_attn=True)</code> via
-          <code class="inline-code">tools/spark-bc-dump/apply_step.py</code>.</li>
+         <code class="inline-code">tools/spark-bc-dump/apply_step.py</code>.</li>
         <li>Eval path uses attn0 when weights present
-          (<code class="inline-code">tools/spark-eval/run.py</code>).</li>
-        <li>Docs: <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>. Changelog <strong>0.6.44</strong>.</li>
+         (<code class="inline-code">tools/spark-eval/run.py</code>).</li>
+        <li>Docs: <a href="/docs/spark-builder.html">SPARK_BC Builder</a>. Changelog <strong>0.6.44</strong>.</li>
         </ul>
         <p><strong>Not</strong> claiming multi-head production quality or Claude-parity.</p>
         <h2 id="mlp0-what-exists">MLP0 (what exists)</h2>
@@ -301,9 +296,9 @@
         <p>Do not call sparkasm “SPARK_BC decompile.”</p>
         <h2 id="related">Related</h2>
         <ul class="doc__ul">
-        <li><a href="/docs/spark-builder.html">SPARK_BUILDER.md</a> · <a href="/docs/train-loop.html">TRAIN_LOOP.md</a></li>
-        <li><a href="/docs/serve.html">SERVE.md</a> · <a href="/docs/architecture.html">ARCHITECTURE.md</a></li>
-        <li><a href="/docs/factory.html">FACTORY.md</a> · <a href="/docs/eval.html">EVAL.md</a></li>
+        <li><a href="/docs/spark-builder.html">SPARK_BC Builder</a> · <a href="/docs/train-loop.html">Train loop</a></li>
+        <li><a href="/docs/serve.html">Serve</a> · <a href="/docs/architecture.html">Architecture</a></li>
+        <li><a href="/docs/factory.html">Factory hub</a> · <a href="/docs/eval.html">Eval</a></li>
         </ul>
       </article>
       </main>

@@ -2,8 +2,8 @@
 # Dry-run (no --allow-net-capture): fixture + claimed:false
 # Probe CAP: network capture probe / ./spark-net-capture --probe
 # Live: ./spark --dry-run --allow-net-capture this.file
-#   needs CAP_NET_RAW: sudo setcap cap_net_raw,cap_net_admin+ep ./spark-net-capture
-#   CAP miss → exit 4, claimed:false
+# needs CAP_NET_RAW: sudo setcap cap_net_raw,cap_net_admin+ep ./spark-net-capture
+# CAP miss → exit 4, claimed:false
 
 network capture interface "lo" duration 2s -> pcap
 network analyze pcap -> traffic_report

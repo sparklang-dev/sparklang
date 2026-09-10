@@ -1,45 +1,45 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 260" role="img" aria-labelledby="t3 d3">
-  <title id="t3">Helpers shadow-build and GUI placement</title>
-  <desc id="d3">Where helpers shadow-build and SDK GUI sit around SPARK_BC compile decompile</desc>
-  <defs>
-    <style>
-      .core { fill:#fef3c7; stroke:#92400e; stroke-width:1.75; rx:8; }
-      .helper { fill:#e0f2fe; stroke:#0369a1; stroke-width:1.5; rx:6; }
-      .shadow { fill:#f1f5f9; stroke:#64748b; stroke-width:1.5; rx:6; stroke-dasharray:4 3; }
-      .gui { fill:#ede9fe; stroke:#5b21b6; stroke-width:1.5; rx:6; }
-      .lbl { font:600 13px ui-sans-serif,system-ui,sans-serif; fill:#0f172a; }
-      .sub { font:11px ui-sans-serif,system-ui,sans-serif; fill:#475569; }
-      .cap { font:12px ui-sans-serif,system-ui,sans-serif; fill:#334155; }
-      .link { stroke:#64748b; stroke-width:1.25; fill:none; stroke-dasharray:3 3; }
-    </style>
-  </defs>
-  <rect x="8" y="8" width="904" height="244" fill="#f8fafc" stroke="#cbd5e1" rx="8"/>
-  <text x="20" y="28" class="cap">Tool layout  helpers · shadow-build · SDK/IDE GUI around SPARK_BC SoT</text>
+ <title id="t3">Helpers shadow-build and GUI placement</title>
+ <desc id="d3">Where helpers shadow-build and SDK GUI sit around SPARK_BC compile decompile</desc>
+ <defs>
+ <style>
+ .core { fill:#fef3c7; stroke:#92400e; stroke-width:1.75; rx:8; }
+ .helper { fill:#e0f2fe; stroke:#0369a1; stroke-width:1.5; rx:6; }
+ .shadow { fill:#f1f5f9; stroke:#64748b; stroke-width:1.5; rx:6; stroke-dasharray:4 3; }
+ .gui { fill:#ede9fe; stroke:#5b21b6; stroke-width:1.5; rx:6; }
+ .lbl { font:600 13px ui-sans-serif,system-ui,sans-serif; fill:#0f172a; }
+ .sub { font:11px ui-sans-serif,system-ui,sans-serif; fill:#475569; }
+ .cap { font:12px ui-sans-serif,system-ui,sans-serif; fill:#334155; }
+ .link { stroke:#64748b; stroke-width:1.25; fill:none; stroke-dasharray:3 3; }
+ </style>
+ </defs>
+ <rect x="8" y="8" width="904" height="244" fill="#f8fafc" stroke="#cbd5e1" rx="8"/>
+ <text x="20" y="28" class="cap">Tool layout  helpers Â· shadow-build Â· SDK/IDE GUI around SPARK_BC SoT</text>
 
-  <rect class="core" x="310" y="70" width="300" height="100"/>
-  <text x="460" y="108" text-anchor="middle" class="lbl">Deterministic SPARK_BC SoT</text>
-  <text x="460" y="128" text-anchor="middle" class="sub">--compile · dump.py · --run-bc</text>
-  <text x="460" y="146" text-anchor="middle" class="sub">TRAIN / STEP / serve (CPU)</text>
+ <rect class="core" x="310" y="70" width="300" height="100"/>
+ <text x="460" y="108" text-anchor="middle" class="lbl">Deterministic SPARK_BC SoT</text>
+ <text x="460" y="128" text-anchor="middle" class="sub">--compile Â· dump.py Â· --run-bc</text>
+ <text x="460" y="146" text-anchor="middle" class="sub">TRAIN / STEP / serve (CPU)</text>
 
-  <rect class="helper" x="24" y="56" width="200" height="70"/>
-  <text x="124" y="84" text-anchor="middle" class="lbl">Helpers</text>
-  <text x="124" y="102" text-anchor="middle" class="sub">Makefile · sparkc · test-sparkbc</text>
-  <path class="link" d="M224 91 H310"/>
+ <rect class="helper" x="24" y="56" width="200" height="70"/>
+ <text x="124" y="84" text-anchor="middle" class="lbl">Helpers</text>
+ <text x="124" y="102" text-anchor="middle" class="sub">Makefile Â· sparkc Â· test-sparkbc</text>
+ <path class="link" d="M224 91 H310"/>
 
-  <rect class="shadow" x="24" y="150" width="200" height="70"/>
-  <text x="124" y="178" text-anchor="middle" class="lbl">Shadow-build</text>
-  <text x="124" y="196" text-anchor="middle" class="sub">published docs/examples/*.sparkbc</text>
-  <path class="link" d="M224 185 H310 185 150"/>
+ <rect class="shadow" x="24" y="150" width="200" height="70"/>
+ <text x="124" y="178" text-anchor="middle" class="lbl">Shadow-build</text>
+ <text x="124" y="196" text-anchor="middle" class="sub">published docs/examples/*.sparkbc</text>
+ <path class="link" d="M224 185 H310 185 150"/>
 
-  <rect class="gui" x="696" y="56" width="200" height="70"/>
-  <text x="796" y="84" text-anchor="middle" class="lbl">SDK / IDE GUI</text>
-  <text x="796" y="102" text-anchor="middle" class="sub">bin/spark-bc-gui (tkinter)</text>
-  <path class="link" d="M696 91 H610"/>
+ <rect class="gui" x="696" y="56" width="200" height="70"/>
+ <text x="796" y="84" text-anchor="middle" class="lbl">SDK / IDE GUI</text>
+ <text x="796" y="102" text-anchor="middle" class="sub">bin/spark-bc-gui (tkinter)</text>
+ <path class="link" d="M696 91 H610"/>
 
-  <rect class="gui" x="696" y="150" width="200" height="70"/>
-  <text x="796" y="178" text-anchor="middle" class="lbl">IDE language ops</text>
-  <text x="796" y="196" text-anchor="middle" class="sub">ide open|run|show (not BC dump)</text>
-  <path class="link" d="M696 185 H610 185 150"/>
+ <rect class="gui" x="696" y="150" width="200" height="70"/>
+ <text x="796" y="178" text-anchor="middle" class="lbl">IDE language ops</text>
+ <text x="796" y="196" text-anchor="middle" class="sub">ide open|run|show (not BC dump)</text>
+ <path class="link" d="M696 185 H610 185 150"/>
 
-  <text x="310" y="230" class="sub">GUI and packs call the same SoT  they do not replace dump.py / bootstrap.</text>
+ <text x="310" y="230" class="sub">GUI and packs call the same SoT  they do not replace dump.py / bootstrap.</text>
 </svg>

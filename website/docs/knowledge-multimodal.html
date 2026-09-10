@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Multimodal STT/TTS/vision — Spark</title>
-    <meta name="description" content="Speech and vision I/O with honest Spark status." />
+    <meta name="description" content="Speech and vision I/O with current Spark capability status." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
     <link rel="stylesheet" href="/css/tokens.css?v=navsub0909" />
@@ -56,7 +56,7 @@
                   <li class="nav-sub">
                     <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
-                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
                       <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
                     </ul>
                   </li>
@@ -194,24 +194,24 @@
         latency and voice cloning ethics matter in production.</p>
         <p><strong>Spark:</strong> <code class="inline-code">speak</code> companions, dry/live gated — same voice doc.
         Product voice stacks elsewhere may pin GPUs; <strong>Spark docs never
-        claim the RTX PRO 6000</strong> for train.</p>
+        claim reserved voice GPUs</strong> for train.</p>
         <h2 id="vision">Vision</h2>
         <p>Image encoders (ViT-style patches, CNN towers) project pixels into
         embeddings the LLM can attend to — “see” as <strong>tokens</strong>, not magic.</p>
         <p><strong>Spark:</strong> eyes / vision runtime is an <strong>honest stub</strong> —
-        <a href="/docs/model-aspects.html">MODEL_ASPECTS.md</a>. Do not invent live vision.</p>
+        <a href="/docs/model-aspects.html">Model aspects</a>. Do not invent live vision.</p>
         <pre class="mermaid">flowchart LR
-          mic[Audio] --> stt[STT]
-          cam[Image] --> vit[Vision encoder]
-          stt --> llm[LLM / policy]
-          vit --> llm
-          llm --> txt[Text]
-          llm --> tts[TTS]</pre>
+         mic[Audio] --> stt[STT]
+         cam[Image] --> vit[Vision encoder]
+         stt --> llm[LLM / policy]
+         vit --> llm
+         llm --> txt[Text]
+         llm --> tts[TTS]</pre>
         <h2 id="cross-links">Cross-links</h2>
         <ul class="doc__ul">
         <li>Ears → brain → voice SVG lives under <code class="inline-code">docs/images/</code> (model aspects).</li>
         <li>Workflow: <a href="/workflow.html">/workflow.html</a></li>
-        <li>Hive home: <a href="/docs/knowledge.html">KNOWLEDGE.md</a></li>
+        <li>Hive home: <a href="/docs/knowledge.html">Knowledge</a></li>
         </ul>
         <p>Next: <a href="/docs/knowledge-agents.html">Agents &amp; tools</a> · <a href="/docs/knowledge-safety.html">Safety</a>.</p>
       </article>

@@ -9,10 +9,10 @@
 os design name "browser_mitm" kind browser features [net, mitm, webview] -> blueprint
 
 os specify blueprint {
-  target: x86_64
-  memory_model: host_process
-  ai: { agent_runtime: false, tool_bus: false, mitm_inspector: true }
-  drivers: [webview_host, virtio_net_stub]
+ target: x86_64
+ memory_model: host_process
+ ai: { agent_runtime: false, tool_bus: false, mitm_inspector: true }
+ drivers: [webview_host, virtio_net_stub]
 } -> spec
 
 os generate spec into "out/os/browser_mitm" -> tree

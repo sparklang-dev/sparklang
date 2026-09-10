@@ -7,9 +7,7 @@ to improve **our** loop — not to clone their product.
 
 Prior art link only: [https://openbin.ai/](https://openbin.ai/).
 Spark remains local-first SPARK_BC. Dump / `--compile` / `--run-bc`
-are SoT. **Never** 6000. Does **not** beat Claude.
-
-Hub: [FACTORY.md](FACTORY.md) · Loop UX: [/workflow.html](/workflow.html)
+are SoT. Hub: [Factory hub](FACTORY.md) · Loop UX: [/workflow.html](/workflow.html)
 · Helpers: [TOOLS_HELPERS.md](TOOLS_HELPERS.md) · Research:
 [research/LLM_DECOMPILE.md](research/LLM_DECOMPILE.md).
 
@@ -20,7 +18,7 @@ Hub: [FACTORY.md](FACTORY.md) · Loop UX: [/workflow.html](/workflow.html)
 | One CLI path that lands you in an inspectable **project** | `helpers/spark-analyze` → `out/analyze/<name>/` with dump, ops list, REPORT stub |
 | Clear **local-first** story for native binaries | Keep binary / SPARK_BC **local**; analysis folder never uploads |
 | Side-by-side inspect vocabulary | Existing `dump.py` + `spark-bc-gui` + loop UX (`/workflow.html`, the loop UX) |
-| Optional **Ask** after inspect | `--ask` stub via **owned** `spark-coder` or honesty note — not their SaaS |
+| Optional **Ask** after inspect | `--ask` stub via **owned** `spark-coder` or status note — not their SaaS |
 | Publish / share findings | Docs + Pages share (examples gallery) — **not** a malware community feed |
 | apk vs elf as separate worker paths | Spark stays SPARK_BC-only; no JADX/Ghidra workers in this lane |
 
@@ -34,7 +32,7 @@ Hub: [FACTORY.md](FACTORY.md) · Loop UX: [/workflow.html](/workflow.html)
 | Pixel-clone of OpenBin / OpenAPK UI | Original Spark loop branding (the loop UX) |
 | Ghidra/JADX Docker workers as Spark runtime | Different problem (ELF/APK RE vs SPARK_BC orchestration) |
 | “AI recovered perfect source” marketing | Forbidden; LLM research stays cited and non-SoT |
-| Beat Claude / use RTX PRO 6000 | Standing Spark policy |
+| Marketing-win claims from eval scores | Standing Spark policy |
 
 ## CLI quick path (Spark)
 
@@ -53,5 +51,5 @@ Gate: `make test-spark-analyze` (or `PYTHONPATH=python:tools python3 -m unittest
 The OpenBin CLI (**v0.10.0**) belongs in a **gated lab** container
 (`openbin-lab` DinD) when used at all — not as a parallel SPARK_BC
 SoT. Do not dump proprietary worker image layers for redistribution.
-Login/BYOK for deeper OpenBin probes is optional operator work; this
+Login/BYOK for deeper OpenBin probes is optional lab setup; this
 doc does not require it.

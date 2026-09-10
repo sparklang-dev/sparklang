@@ -1,48 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>The Spark loop — compile · inspect · train · serve · share</title>
-    <meta
-      name="description"
-      content="SparkLang five-step loop: compile SPARK_BC, dump/inspect locally, train or step with owned spark-coder, serve helpers/shadows, share docs on Pages. Original Spark UX — not a third-party clone."
-    />
-    <meta
-      name="keywords"
-      content="SparkLang, SPARK_BC, spark-bc-dump, spark-coder, Spark loop, workflow"
-    />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="shortcut icon" href="/favicon.svg" />
-    <link rel="stylesheet" href="/css/tokens.css?v=polish0909" />
-    <link rel="stylesheet" href="/css/site.css?v=polish0909" />
-  </head>
-  <body>
-    <a class="skip-link" href="#main">Skip to content</a>
-    <header class="site-header">
-      <div class="shell header-inner">
-        <a class="site-brand" href="/" aria-label="SparkLang home">
-          <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
-            <path
-              d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z"
-              fill="currentColor"
-            />
-          </svg>
-          Spark
-        </a>
-        <button
-          class="nav-toggle"
-          type="button"
-          aria-expanded="false"
-          aria-controls="site-nav"
-          aria-label="Open menu"
-        >
-          <span class="nav-toggle__bar"></span>
-          <span class="nav-toggle__bar"></span>
-          <span class="nav-toggle__bar"></span>
-        </button>
-        <div class="header-nav-wrap">
-          <nav class="site-nav" id="site-nav" aria-label="Primary">
+ <head>
+ <meta charset="utf-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1" />
+ <title>The Spark loop — compile · inspect · train · serve · share</title>
+ <meta
+ name="description"
+ content="SparkLang five-step loop: compile SPARK_BC, dump/inspect locally, train or step with owned spark-coder, serve helpers/shadows, share docs on Pages. Original Spark design. "
+ />
+ <meta
+ name="keywords"
+ content="SparkLang, SPARK_BC, spark-bc-dump, spark-coder, Spark loop, workflow"
+ />
+ <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+ <link rel="shortcut icon" href="/favicon.svg" />
+ <link rel="stylesheet" href="/css/tokens.css?v=polish0909" />
+ <link rel="stylesheet" href="/css/site.css?v=polish0909" />
+ </head>
+ <body>
+ <a class="skip-link" href="#main">Skip to content</a>
+ <header class="site-header">
+ <div class="shell header-inner">
+ <a class="site-brand" href="/" aria-label="SparkLang home">
+ <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+ <path
+ d="M18.2 4.5 9.5 17.2h5.1l-1.4 10.3 9.4-14.2h-5.4L18.2 4.5Z"
+ fill="currentColor"
+ />
+ </svg>
+ Spark
+ </a>
+ <button
+ class="nav-toggle"
+ type="button"
+ aria-expanded="false"
+ aria-controls="site-nav"
+ aria-label="Open menu"
+ >
+ <span class="nav-toggle__bar"></span>
+ <span class="nav-toggle__bar"></span>
+ <span class="nav-toggle__bar"></span>
+ </button>
+ <div class="header-nav-wrap">
+ <nav class="site-nav" id="site-nav" aria-label="Primary">
             <!-- spark-primary-nav:begin -->
             <ul class="nav-primary">
               <li><a href="/workflow.html">Loop</a></li>
@@ -73,7 +73,7 @@
                   <li class="nav-sub">
                     <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
-                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
                       <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
                     </ul>
                   </li>
@@ -154,333 +154,332 @@
             <a href="/playground.html" class="nav-cta">Try</a>
             <!-- spark-primary-nav:end -->
           </nav>
-        </div>
-      </div>
-    </header>
+ </div>
+ </div>
+ </header>
 
-    <main id="main">
-      <section class="hero hero--workshop shell">
-        <p class="hero__eyebrow">SparkLang · product loop</p>
-        <h1 class="hero__title">
-          Compile. Inspect. Train. Serve. Share.
-        </h1>
-        <p class="hero__lede">
-          One Spark-native path from a reviewable
-          <code class="inline-code">.spark</code> file to
-          <code class="inline-code">SPARK_BC</code>, local dump, owned
-          tiny coder steps, helpers on the wire, and docs on Pages —
-          CLI first, GUI where it helps.
-        </p>
-        <div class="cta-row">
-          <a class="btn btn--primary" href="/downloads.html">Download Spark</a>
-          <a class="btn btn--secondary" href="/docs/factory.html"
-            >Factory map</a
-          >
-          <a class="btn btn--ghost" href="/playground.html">Playground</a>
-        </div>
-        <figure class="workshop-figure">
-          <img
-            src="/docs/images/diagram-spark-loop.svg?v=0.6.58"
-            alt="Five-step Spark loop diagram: compile, decompile, train, serve, share"
-            width="960"
-            height="220"
-          />
-          <figcaption class="workshop-figure__cap">
-            Original Spark diagram — SPARK_BC orchestration bytecode, not
-            imported neural weights.
-          </figcaption>
-        </figure>
-      </section>
+ <main id="main">
+ <section class="hero hero--workshop shell">
+ <p class="hero__eyebrow">SparkLang · product loop</p>
+ <h1 class="hero__title">
+ Compile. Inspect. Train. Serve. Share.
+ </h1>
+ <p class="hero__lede">
+ One Spark-native path from a reviewable
+ <code class="inline-code">.spark</code> file to
+ <code class="inline-code">SPARK_BC</code>, local dump, owned
+ tiny coder steps, helpers on the wire, and docs on Pages —
+ CLI first, GUI where it helps.
+ </p>
+ <div class="cta-row">
+ <a class="btn btn--primary" href="/downloads.html">Download Spark</a>
+ <a class="btn btn--secondary" href="/docs/factory.html"
+ >Factory map</a
+ >
+ <a class="btn btn--ghost" href="/playground.html">Playground</a>
+ </div>
+ <figure class="workshop-figure">
+ <img
+ src="/docs/images/diagram-spark-loop.svg?v=0.6.60"
+ alt="Five-step Spark loop diagram: compile, decompile, train, serve, share"
+ width="960"
+ height="220"
+ />
+ <figcaption class="workshop-figure__cap">
+ Original Spark diagram — SPARK_BC orchestration bytecode, not
+ imported neural weights.
+ </figcaption>
+ </figure>
+ </section>
 
-      <section class="section shell" aria-labelledby="steps-title">
-        <h2 id="steps-title" class="section__title">Five steps, Spark tools</h2>
-        <p class="section__lede">
-          Inspired by clear CLI→inspect→publish loops elsewhere — rebuilt
-          around <strong>our</strong> binaries, dumps, and honest model
-          claims. No third-party branding on this page.
-        </p>
-        <div class="step-detail">
-          <article class="step-detail__item" id="compile">
-            <span class="step-detail__num" aria-hidden="true">01</span>
-            <div class="step-detail__body">
-              <h3>Compile / assemble SPARK_BC</h3>
-              <p>
-                Author a <code class="inline-code">.spark</code> program,
-                then
-                <code class="inline-code">./spark-bootstrap --compile</code>
-                (or open an existing pack). Output is Spark’s own
-                <code class="inline-code">SPARK_BC</code> — orchestration
-                ops like <code class="inline-code">TRAIN</code> /
-                <code class="inline-code">STEP</code>, not a weight dump.
-              </p>
-              <p>
-                <a href="/docs/compile.html">Compile docs</a> ·
-                <a href="/docs/spark-builder.html">Builder</a> ·
-                <a href="/docs/spark-bc.html">Opcodes / ISA</a>
-              </p>
-              <pre class="terminal code-block"><code><span class="comment"># Produce SPARK_BC from a Spark program</span>
+ <section class="section shell" aria-labelledby="steps-title">
+ <h2 id="steps-title" class="section__title">Five steps, Spark tools</h2>
+ <p class="section__lede">
+ Inspired by clear CLI→inspect→publish loops elsewhere — rebuilt
+ around <strong>our</strong> binaries, dumps, and honest model
+ claims. No third-party branding on this page.
+ </p>
+ <div class="step-detail">
+ <article class="step-detail__item" id="compile">
+ <span class="step-detail__num" aria-hidden="true">01</span>
+ <div class="step-detail__body">
+ <h3>Compile / assemble SPARK_BC</h3>
+ <p>
+ Author a <code class="inline-code">.spark</code> program,
+ then
+ <code class="inline-code">./spark-bootstrap --compile</code>
+ (or open an existing pack). Output is Spark’s own
+ <code class="inline-code">SPARK_BC</code> — orchestration
+ ops like <code class="inline-code">TRAIN</code> /
+ <code class="inline-code">STEP</code>, not a weight dump.
+ </p>
+ <p>
+ <a href="/docs/compile.html">Compile docs</a> ·
+ <a href="/docs/spark-builder.html">Builder</a> ·
+ <a href="/docs/spark-bc.html">Opcodes / ISA</a>
+ </p>
+ <pre class="terminal code-block"><code><span class="comment"># Produce SPARK_BC from a Spark program</span>
 <span class="cmd">./spark-bootstrap --compile examples/spark_train_step.spark \
-  -o out/spark-train-step.sparkbc</span></code></pre>
-            </div>
-          </article>
+ -o out/spark-train-step.sparkbc</span></code></pre>
+ </div>
+ </article>
 
-          <article class="step-detail__item" id="inspect">
-            <span class="step-detail__num" aria-hidden="true">02</span>
-            <div class="step-detail__body">
-              <h3>Decompile / dump / inspect locally</h3>
-              <p>
-                Primary SoT:
-                <code class="inline-code">tools/spark-bc-dump/dump.py</code>
-                — hex, header, mnemonics. One-shot project loop:
-                <code class="inline-code">./helpers/spark-analyze</code>
-                → local
-                <code class="inline-code">out/analyze/&lt;name&gt;/</code>
-                (dump, ops list, REPORT stub; optional
-                <code class="inline-code">--serve</code> /
-                <code class="inline-code">--ask</code>). Optional
-                <code class="inline-code">spark-bc-gui</code> for a
-                readable pane. Deterministic inspect first; LLM research
-                is a separate, cited lane.
-              </p>
-              <p>
-                <a href="/docs/decompile.html">Decompile docs</a> ·
-                <a href="/docs/decompile-compete.html">Compete / scoreboard</a> ·
-                <a href="/docs/tools-helpers.html">Tools &amp; helpers</a> ·
-                <a href="/docs/methods-openbin.html">Methods vs OpenBin</a> ·
-                <a href="/docs/llm-decompile.html">LLM research notes</a>
-              </p>
-              <pre class="terminal code-block"><code><span class="comment"># Local analysis folder — no upload</span>
+ <article class="step-detail__item" id="inspect">
+ <span class="step-detail__num" aria-hidden="true">02</span>
+ <div class="step-detail__body">
+ <h3>Decompile / dump / inspect locally</h3>
+ <p>
+ Primary SoT:
+ <code class="inline-code">tools/spark-bc-dump/dump.py</code>
+ — hex, header, mnemonics. One-shot project loop:
+ <code class="inline-code">./helpers/spark-analyze</code>
+ → local
+ <code class="inline-code">out/analyze/&lt;name&gt;/</code>
+ (dump, ops list, REPORT stub; optional
+ <code class="inline-code">--serve</code> /
+ <code class="inline-code">--ask</code>). Optional
+ <code class="inline-code">spark-bc-gui</code> for a
+ readable pane. Deterministic inspect first; LLM research
+ is a separate, cited lane.
+ </p>
+ <p>
+ <a href="/docs/decompile.html">Decompile docs</a> ·
+ <a href="/docs/decompile-compete.html">Compete / scoreboard</a> ·
+ <a href="/docs/tools-helpers.html">Tools &amp; helpers</a> ·
+ <a href="/docs/methods-openbin.html">Methods vs OpenBin</a> ·
+ <a href="/docs/llm-decompile.html">LLM research notes</a>
+ </p>
+ <pre class="terminal code-block"><code><span class="comment"># Local analysis folder — no upload</span>
 <span class="cmd">./helpers/spark-analyze docs/examples/spark-train-step.sparkbc</span>
 <span class="cmd">./helpers/spark-analyze examples/spark_train_step.spark --ask</span></code></pre>
-              <div class="inspect-split">
-                <figure class="shot-frame">
-                  <img
-                    src="/docs/images/decompile-cli-dump.png?v=0.6.58"
-                    alt="Spark CLI dump.py output showing SPARK_BC hex and header"
-                    width="980"
-                    height="1020"
-                    loading="lazy"
-                  />
-                  <figcaption class="shot-frame__cap">
-                    Real Spark CLI dump — not a third-party UI screenshot.
-                  </figcaption>
-                </figure>
-                <figure class="shot-frame">
-                  <img
-                    src="/docs/images/decompile-gui-sparkbc.png?v=0.6.58"
-                    alt="Annotated spark-bc-gui view of SPARK_BC"
-                    width="980"
-                    height="640"
-                    loading="lazy"
-                  />
-                  <figcaption class="shot-frame__cap">
-                    Annotated spark-bc-gui — Spark / SparkLang only.
-                  </figcaption>
-                </figure>
-              </div>
-              <figure class="workshop-figure" style="margin-top: 1rem">
-                <img
-                  src="/docs/images/mock-spark-inspect-panes.svg?v=0.6.58"
-                  alt="SVG mock of Spark dump and function panes using SPARK_BC capture style"
-                  width="920"
-                  height="360"
-                  loading="lazy"
-                />
-                <figcaption class="workshop-figure__cap">
-                  IDE-ish panes mock built from Spark dump vocabulary
-                  (SPBC magic, TRAIN/STEP) — clearly Spark, not pseudo-C
-                  malware reverse engineering.
-                </figcaption>
-              </figure>
-              <h4 id="voice-ask">Voice ask the dump</h4>
-              <p>
-                After inspect, ask in text or speech — ears (STT) →
-                dump context + owned TinyCoder → speaking (TTS).
-                Local only; <strong>no</strong> OpenBin login.
-                TinyCoder is tiny: dump facts stay SoT; open-ended RE
-                answers carry an honesty note.
-              </p>
-              <p>
-                <a href="/docs/voice-ask.html">Voice ask docs</a> ·
-                <a href="/docs/voice.html">Voice / STT / TTS</a> ·
-                <a href="/docs/model-aspects.html">Model aspects</a>
-              </p>
-              <pre class="terminal code-block"><code><span class="comment"># Text ask (no mic)</span>
+ <div class="inspect-split">
+ <figure class="shot-frame">
+ <img
+ src="/docs/images/decompile-cli-dump.png?v=0.6.60"
+ alt="Spark CLI dump.py output showing SPARK_BC hex and header"
+ width="980"
+ height="1020"
+ loading="lazy"
+ />
+ <figcaption class="shot-frame__cap">
+ Spark CLI dump from `dump.py`.
+ </figcaption>
+ </figure>
+ <figure class="shot-frame">
+ <img
+ src="/docs/images/decompile-gui-sparkbc.png?v=0.6.60"
+ alt="Annotated spark-bc-gui view of SPARK_BC"
+ width="980"
+ height="640"
+ loading="lazy"
+ />
+ <figcaption class="shot-frame__cap">
+ Annotated spark-bc-gui — Spark / SparkLang only.
+ </figcaption>
+ </figure>
+ </div>
+ <figure class="workshop-figure" style="margin-top: 1rem">
+ <img
+ src="/docs/images/mock-spark-inspect-panes.svg?v=0.6.60"
+ alt="SVG mock of Spark dump and function panes using SPARK_BC capture style"
+ width="920"
+ height="360"
+ loading="lazy"
+ />
+ <figcaption class="workshop-figure__cap">
+ IDE-ish panes mock built from Spark dump vocabulary
+ (SPBC magic, TRAIN/STEP) — clearly Spark, not pseudo-C
+ malware reverse engineering.
+ </figcaption>
+ </figure>
+ <h4 id="voice-ask">Voice ask the dump</h4>
+ <p>
+ After inspect, ask in text or speech — ears (STT) →
+ dump context + owned TinyCoder → speaking (TTS).
+ Local only; <strong>no</strong> OpenBin login.
+ TinyCoder is tiny: dump facts stay SoT; open-ended RE
+ answers carry an status note.
+ </p>
+ <p>
+ <a href="/docs/voice-ask.html">Voice ask docs</a> ·
+ <a href="/docs/voice.html">Voice / STT / TTS</a> ·
+ <a href="/docs/model-aspects.html">Model aspects</a>
+ </p>
+ <pre class="terminal code-block"><code><span class="comment"># Text ask (no mic)</span>
 <span class="cmd">./spark-ask docs/examples/spark-train-step.sparkbc \
-  --text "What opcodes are in this dump?"</span>
+ --text "What opcodes are in this dump?"</span>
 <span class="comment"># Voice loop — dry stub for CI; --mic for live</span>
 <span class="cmd">./spark-speak-ask docs/examples/spark-train-step.sparkbc --dry</span></code></pre>
-            </div>
-          </article>
+ </div>
+ </article>
 
-          <article class="step-detail__item" id="train">
-            <span class="step-detail__num" aria-hidden="true">03</span>
-            <div class="step-detail__body">
-              <h3>Train / step / spark-coder / voice-easy</h3>
-              <p>
-                Run <code class="inline-code">model train</code> →
-                <code class="inline-code">model status</code> →
-                <code class="inline-code">expect</code> in one file.
-                Owned <code class="inline-code">spark-coder</code> is a
-                <strong>tiny</strong> capability — useful for Spark
-                factory loops, not a claim to beat frontier models.
-              </p>
-              <p>
-                <strong>Train voice / STT / TTS in 3 steps</strong> —
-                <a href="/docs/voice-easy.html">Voice easy</a>
-                (<code class="inline-code">make voice-easy</code>):
-                tiny CI default or
-                <code class="inline-code">--scale large</code> on an
-                RTX 5090 (or CPU). Owned heads — not ElevenLabs overnight.
-              </p>
-              <p>
-                <a href="/docs/train-loop.html">Train loop</a> ·
-                <a href="/docs/spark-coder.html">Spark coder</a> ·
-                <a href="/docs/voice-easy.html">Voice easy</a> ·
-                <a href="/docs/model-training.html">Model training</a>
-              </p>
-              <pre class="terminal code-block"><code><span class="comment"># Dry-run — fixtures, no keys</span>
+ <article class="step-detail__item" id="train">
+ <span class="step-detail__num" aria-hidden="true">03</span>
+ <div class="step-detail__body">
+ <h3>Train / step / spark-coder / voice-easy</h3>
+ <p>
+ Run <code class="inline-code">model train</code> →
+ <code class="inline-code">model status</code> →
+ <code class="inline-code">expect</code> in one file.
+ Owned <code class="inline-code">spark-coder</code> is a
+ <strong>tiny</strong> capability — useful for Spark
+ factory loops, not a claim to beat frontier models.
+ </p>
+ <p>
+ <strong>Train voice / STT / TTS in 3 steps</strong> —
+ <a href="/docs/voice-easy.html">Voice easy</a>
+ (<code class="inline-code">make voice-easy</code>):
+ tiny CI default or
+ <code class="inline-code">--scale large</code> on an
+ RTX 5090 (or CPU). Owned heads — </p>
+ <p>
+ <a href="/docs/train-loop.html">Train loop</a> ·
+ <a href="/docs/spark-coder.html">Spark coder</a> ·
+ <a href="/docs/voice-easy.html">Voice easy</a> ·
+ <a href="/docs/model-training.html">Model training</a>
+ </p>
+ <pre class="terminal code-block"><code><span class="comment"># Dry-run — fixtures, no keys</span>
 <span class="cmd">./spark --dry-run examples/train_eval.spark</span>
 <span class="comment"># Voice easy (tiny / CI)</span>
 <span class="cmd">make voice-easy</span>
 <span class="comment"># Large opt-in (prefer 5090)</span>
 <span class="cmd">./spark-voice easy --scale large --device auto</span></code></pre>
-              <p class="honest-note">
-                Honest bar: CPU reference methods and owned tiny coder /
-                voice heads. Does <strong>not</strong> claim to beat Claude
-                or replace a vendor TTS stack overnight.
-              </p>
-            </div>
-          </article>
+ <p class="honest-note">
+ Honest bar: CPU reference methods and owned tiny coder /
+ voice heads. Does <strong>not</strong> publish a competitive AI win claim.
+ or replace a vendor TTS stack overnight.
+ </p>
+ </div>
+ </article>
 
-          <article class="step-detail__item" id="serve">
-            <span class="step-detail__num" aria-hidden="true">04</span>
-            <div class="step-detail__body">
-              <h3>Serve / helpers / shadows</h3>
-              <p>
-                Local HTTP surfaces for helpers and shadows — wire a
-                trainer at
-                <code class="inline-code">SPARK_TRAIN_URL</code>, probe
-                serve APIs, keep dry-run as the default gate.
-              </p>
-              <p>
-                <a href="/docs/serve.html">Serve</a> ·
-                <a href="/docs/tools-helpers.html">Tools &amp; helpers</a>
-              </p>
-            </div>
-          </article>
+ <article class="step-detail__item" id="serve">
+ <span class="step-detail__num" aria-hidden="true">04</span>
+ <div class="step-detail__body">
+ <h3>Serve / helpers / shadows</h3>
+ <p>
+ Local HTTP surfaces for helpers and shadows — wire a
+ trainer at
+ <code class="inline-code">SPARK_TRAIN_URL</code>, probe
+ serve APIs, keep dry-run as the default gate.
+ </p>
+ <p>
+ <a href="/docs/serve.html">Serve</a> ·
+ <a href="/docs/tools-helpers.html">Tools &amp; helpers</a>
+ </p>
+ </div>
+ </article>
 
-          <article class="step-detail__item" id="share">
-            <span class="step-detail__num" aria-hidden="true">05</span>
-            <div class="step-detail__body">
-              <h3>Docs / share (Pages)</h3>
-              <p>
-                Ship factory docs and examples on
-                <a href="https://sparklang.dev/">sparklang.dev</a>
-                (Cloudflare Pages). Share packs and captures from the
-                gallery below — Spark-appropriate examples, not a malware
-                community feed.
-              </p>
-              <p>
-                <a href="/docs/ci-pages.html">CI / Pages</a> ·
-                <a href="/docs/factory.html">Factory hub</a>
-              </p>
-            </div>
-          </article>
-        </div>
-      </section>
+ <article class="step-detail__item" id="share">
+ <span class="step-detail__num" aria-hidden="true">05</span>
+ <div class="step-detail__body">
+ <h3>Docs / share (Pages)</h3>
+ <p>
+ Ship factory docs and examples on
+ <a href="https://sparklang.dev/">sparklang.dev</a>
+ (Cloudflare Pages). Share packs and captures from the
+ gallery below — Spark-appropriate examples, not a malware
+ community feed.
+ </p>
+ <p>
+ <a href="/docs/ci-pages.html">CI / Pages</a> ·
+ <a href="/docs/factory.html">Factory hub</a>
+ </p>
+ </div>
+ </article>
+ </div>
+ </section>
 
-      <section class="section shell" aria-labelledby="gallery-title">
-        <h2 id="gallery-title" class="section__title">Examples gallery</h2>
-        <p class="section__lede">
-          Curated Spark programs and captures you can dry-run or open in
-          the dump tools.
-        </p>
-        <div class="gallery-grid">
-          <a class="gallery-card" href="/learn/first-program.html">
-            <p class="gallery-card__meta">train → status → expect</p>
-            <h3 class="gallery-card__title">train_eval.spark</h3>
-            <p class="gallery-card__body">
-              Minimal CI gate with fixture artifacts — no API keys.
-            </p>
-          </a>
-          <a class="gallery-card" href="/docs/spark-builder.html">
-            <p class="gallery-card__meta">SPARK_BC factory</p>
-            <h3 class="gallery-card__title">spark_train_step</h3>
-            <p class="gallery-card__body">
-              TRAIN / STEP / TRAIN_STATUS in bytecode — dump with
-              spark-bc-dump.
-            </p>
-          </a>
-          <a
-            class="gallery-card"
-            href="/docs/images/spark-train-step-bc-capture.txt"
-          >
-            <p class="gallery-card__meta">capture · text</p>
-            <h3 class="gallery-card__title">SPARK_BC dump capture</h3>
-            <p class="gallery-card__body">
-              Real hex + header from examples/spark_train_step.sparkbc.
-            </p>
-          </a>
-          <a class="gallery-card" href="/docs/spark-coder.html">
-            <p class="gallery-card__meta">owned model</p>
-            <h3 class="gallery-card__title">spark-coder</h3>
-            <p class="gallery-card__body">
-              Tiny owned coding model notes — capability, not hype.
-            </p>
-          </a>
-          <a class="gallery-card" href="/playground.html">
-            <p class="gallery-card__meta">browser</p>
-            <h3 class="gallery-card__title">Playground</h3>
-            <p class="gallery-card__body">
-              Edit and dry-run sample programs in the browser.
-            </p>
-          </a>
-          <a class="gallery-card" href="/docs/diagrams.html">
-            <p class="gallery-card__meta">diagrams</p>
-            <h3 class="gallery-card__title">Factory diagrams</h3>
-            <p class="gallery-card__body">
-              Compile / decompile / helpers paths as Spark SVGs.
-            </p>
-          </a>
-        </div>
-      </section>
+ <section class="section shell" aria-labelledby="gallery-title">
+ <h2 id="gallery-title" class="section__title">Examples gallery</h2>
+ <p class="section__lede">
+ Curated Spark programs and captures you can dry-run or open in
+ the dump tools.
+ </p>
+ <div class="gallery-grid">
+ <a class="gallery-card" href="/learn/first-program.html">
+ <p class="gallery-card__meta">train → status → expect</p>
+ <h3 class="gallery-card__title">train_eval.spark</h3>
+ <p class="gallery-card__body">
+ Minimal CI gate with fixture artifacts.
+ </p>
+ </a>
+ <a class="gallery-card" href="/docs/spark-builder.html">
+ <p class="gallery-card__meta">SPARK_BC factory</p>
+ <h3 class="gallery-card__title">spark_train_step</h3>
+ <p class="gallery-card__body">
+ TRAIN / STEP / TRAIN_STATUS in bytecode — dump with
+ spark-bc-dump.
+ </p>
+ </a>
+ <a
+ class="gallery-card"
+ href="/docs/images/spark-train-step-bc-capture.txt"
+ >
+ <p class="gallery-card__meta">capture · text</p>
+ <h3 class="gallery-card__title">SPARK_BC dump capture</h3>
+ <p class="gallery-card__body">
+ Hex + header from examples/spark_train_step.sparkbc.
+ </p>
+ </a>
+ <a class="gallery-card" href="/docs/spark-coder.html">
+ <p class="gallery-card__meta">owned model</p>
+ <h3 class="gallery-card__title">spark-coder</h3>
+ <p class="gallery-card__body">
+ Tiny owned coding model notes — capability, not hype.
+ </p>
+ </a>
+ <a class="gallery-card" href="/playground.html">
+ <p class="gallery-card__meta">browser</p>
+ <h3 class="gallery-card__title">Playground</h3>
+ <p class="gallery-card__body">
+ Edit and dry-run sample programs in the browser.
+ </p>
+ </a>
+ <a class="gallery-card" href="/docs/diagrams.html">
+ <p class="gallery-card__meta">diagrams</p>
+ <h3 class="gallery-card__title">Factory diagrams</h3>
+ <p class="gallery-card__body">
+ Compile / decompile / helpers paths as Spark SVGs.
+ </p>
+ </a>
+ </div>
+ </section>
 
-      <section class="section shell" aria-labelledby="next-title">
-        <h2 id="next-title" class="section__title">Start here</h2>
-        <div class="cta-row">
-          <a class="btn btn--primary" href="/learn/getting-started.html"
-            >Getting started</a
-          >
-          <a class="btn btn--secondary" href="/docs/decompile.html"
-            >Decompile guide</a
-          >
-          <a class="btn btn--ghost" href="/downloads.html">Installers</a>
-        </div>
-      </section>
-    </main>
+ <section class="section shell" aria-labelledby="next-title">
+ <h2 id="next-title" class="section__title">Start here</h2>
+ <div class="cta-row">
+ <a class="btn btn--primary" href="/learn/getting-started.html"
+ >Getting started</a
+ >
+ <a class="btn btn--secondary" href="/docs/decompile.html"
+ >Decompile guide</a
+ >
+ <a class="btn btn--ghost" href="/downloads.html">Installers</a>
+ </div>
+ </section>
+ </main>
 
-    <footer class="site-footer">
-      <div class="shell footer-inner">
-        <div class="footer-brand">
-          <span>SparkLang</span>
-          <span class="footer-meta"
-            >v0.6.3 · <a href="/LICENSE.txt">MIT</a></span
-          >
-        </div>
-        <nav class="footer-nav" aria-label="Footer">
-          <a href="/workflow.html">Loop</a>
-          <a href="/about.html">About</a>
-          <a href="/LICENSE.txt">License</a>
-          <a href="/CHANGELOG.html">Changelog</a>
-          <a href="/learn/">Learn</a>
-          <a href="/downloads.html">Downloads</a>
-          <a href="/playground.html">Playground</a>
-          <a href="https://github.com/sparklang-dev/sparklang">Source</a>
-          <a href="mailto:hello@sparklang.dev">Contact</a>
-        </nav>
-      </div>
-    </footer>
-    <script src="/js/site.js"></script>
-  </body>
+ <footer class="site-footer">
+ <div class="shell footer-inner">
+ <div class="footer-brand">
+ <span>SparkLang</span>
+ <span class="footer-meta"
+ >v0.6.3 · <a href="/LICENSE.txt">MIT</a></span
+ >
+ </div>
+ <nav class="footer-nav" aria-label="Footer">
+ <a href="/workflow.html">Loop</a>
+ <a href="/about.html">About</a>
+ <a href="/LICENSE.txt">License</a>
+ <a href="/CHANGELOG.html">Changelog</a>
+ <a href="/learn/">Learn</a>
+ <a href="/downloads.html">Downloads</a>
+ <a href="/playground.html">Playground</a>
+ <a href="https://github.com/sparklang-dev/sparklang">Source</a>
+ <a href="mailto:hello@sparklang.dev">Contact</a>
+ </nav>
+ </div>
+ </footer>
+ <script src="/js/site.js"></script>
+ </body>
 </html>

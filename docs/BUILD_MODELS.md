@@ -1,11 +1,10 @@
 # Build models — TRAIN / STEP / ARTIFACT
 
 How Spark **programs** training in SPARK_BC and what lands on disk.
-Does **not** beat Claude. Never trains on the RTX PRO 6000
-(voice GPU). CPU fixtures only unless a future owner grant says
+Prefer CPU or a consumer GPU for train. (voice GPU). CPU fixtures only unless a future owner grant says
 otherwise.
 
-Full factory: [SPARK_BUILDER.md](SPARK_BUILDER.md). Language verbs:
+Full factory: [SPARK_BC Builder](SPARK_BUILDER.md). Language verbs:
 [MODEL_TRAINING.md](MODEL_TRAINING.md) · [LANGUAGE.md](LANGUAGE.md).
 
 ## Opcodes in the binary
@@ -26,7 +25,7 @@ Source: `examples/spark_train_step.spark` → published
 
 ```bash
 ./spark-bootstrap --compile examples/spark_train_step.spark \
-  -o /tmp/spark-train-step.sparkbc
+ -o /tmp/spark-train-step.sparkbc
 ./spark-bootstrap --run-bc /tmp/spark-train-step.sparkbc
 # → out/train/job-dry-001/ARTIFACT (+ weights after STEP)
 ```
@@ -35,24 +34,23 @@ Helper (same SGD as STEP path):
 
 ```bash
 PYTHONPATH=python python3 tools/spark-bc-dump/apply_step.py \
-  --sparkbc docs/examples/spark-train-step.sparkbc \
-  --weights /tmp/weights.safetensors \
-  --checkpoint /tmp/checkpoint.json \
-  --dataset examples/fixtures/train/dataset.jsonl \
-  --outer 4 --inner 8 --step 1
+ --sparkbc docs/examples/spark-train-step.sparkbc \
+ --weights /tmp/weights.safetensors \
+ --checkpoint /tmp/checkpoint.json \
+ --dataset examples/fixtures/train/dataset.jsonl \
+ --outer 4 --inner 8 --step 1
 ```
 
 Implementation: `python/sparklang/model_lab/` (`apply_sgd_step`).
 **Not** a second training SoT in docs — link the code.
 
-## ARTIFACT / checkpoint honesty
-
+## ARTIFACT / checkpoint status
 - `ARTIFACT` — job marker text; after successful STEP lists
-  weights + checkpoint paths and `not_sgd=false`.
+ weights + checkpoint paths and `not_sgd=false`.
 - `weights.safetensors` — Spark tensors; meta `trained` must match
-  reality (`false` for init-only, `true` after SGD).
+ reality (`false` for init-only, `true` after SGD).
 - `checkpoint.json` — includes `loss_curve`, `loss_before` /
-  `loss_after`, `beats_claude: false`, `device` (CPU).
+ `loss_after`, `claim: false`, `device` (CPU).
 
 Gates fail loud if loss does not drop.
 
@@ -65,15 +63,15 @@ Gates fail loud if loss does not drop.
 
 Init tensor layout (including **unused** attn Q/K/V/O slots):
 `python/sparklang/model_lab/weights.py`. Serve path today uses
-MLP0 only — [ATTENTION_FORWARD.md](ATTENTION_FORWARD.md).
+MLP0 only — [Attention / forward](ATTENTION_FORWARD.md).
 
 ## Makefile targets
 
 ```bash
-make test-sparkbc        # includes dump + SGD loss-drop asserts
-make sparkbc-e2e         # TRAIN→STEP→ARTIFACT (+ GAS --run-bc)
-make spark-sgd-proof     # SGD then measurement-only spark-eval
-make spark-eval          # frozen probes; exit 0 ≠ beat Claude
+make test-sparkbc # includes dump + SGD loss-drop asserts
+make sparkbc-e2e # TRAIN→STEP→ARTIFACT (+ GAS --run-bc)
+make spark-sgd-proof # SGD then measurement-only spark-eval
+make spark-eval # frozen probes; exit 0 ≠ marketing win
 make spark-eval WEIGHTS=out/train/sgd-proof/weights.safetensors
 ```
 
@@ -88,12 +86,12 @@ is parsed and skipped in SPARK_BC (not an operand).
 ## Honest bar
 
 - Multi-outer CPU SGD on tiny Spark tensors — **yes** (tip
-  `make spark-sgd-proof`).
-- Production LLM / beat Claude — **no**.
-- 6000 / GPU-1 train — **never** from this lane.
+ `make spark-sgd-proof`).
+- Production LLM / Competitive AI win claims — **no**.
+- 6000 train — **never** from this lane.
 
 ## Related
 
 - [Compile](COMPILE.md) · [Decompile](DECOMPILE.md)
 - [Attention / forward](ATTENTION_FORWARD.md)
-- [SPARK_BUILDER.md](SPARK_BUILDER.md) · [AI_MODELS.md](AI_MODELS.md)
+- [SPARK_BC Builder](SPARK_BUILDER.md) · [AI_MODELS.md](AI_MODELS.md)

@@ -56,7 +56,7 @@
                   <li class="nav-sub">
                     <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
-                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
                       <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
                     </ul>
                   </li>
@@ -192,8 +192,8 @@
         <li><code class="inline-code">../examples/hello.spark</code> — <code class="inline-code">model</code> / <code class="inline-code">ask</code> / <code class="inline-code">print</code></li>
         <li>GAS + C bootstrap dry-run stdout (same model/ask/→/print lines)</li>
         <li>Existing dry fixtures in <code class="inline-code">bootstrap/vm.c</code> /
-           <code class="inline-code">bootstrap/dry_ask.c</code> <code class="inline-code">spark_pick_ask_reply</code> (copied from
-           <code class="inline-code">pick_ask_reply</code>; do not invent new reply prose)</li>
+         <code class="inline-code">bootstrap/dry_ask.c</code> <code class="inline-code">spark_pick_ask_reply</code> (copied from
+         <code class="inline-code">pick_ask_reply</code>; do not invent new reply prose)</li>
         </ol>
         <p><strong>No inventing.</strong> If a form is not in LANGUAGE.md, not in
         <code class="inline-code">examples/hello.spark</code>, and not an existing dry helper string: do
@@ -201,14 +201,14 @@
         LANGUAGE statement starts already wired for hello, plus a VM
         terminator.</p>
         <h2 id="file-layout-little-endian-packed-no-padding">File layout (little-endian, packed, no padding)</h2>
-        <pre class="doc__pre"><code class="inline-code">offset 0  : 4 bytes magic  'S' 'P' 'B' 'C'
-        offset 4  : 1 byte  version 0x01
-                  : u16     nstrings
-                  : nstrings × { u16 nbytes; nbytes UTF-8 bytes }
-                  : u16     nconsts
-                  : nconsts × { u8 kind; u16 payload }
-                  : u32     ncode
-                  : ncode bytes (opcode + operands)
+        <pre class="doc__pre"><code class="inline-code">offset 0 : 4 bytes magic 'S' 'P' 'B' 'C'
+        offset 4 : 1 byte version 0x01
+         : u16 nstrings
+         : nstrings × { u16 nbytes; nbytes UTF-8 bytes }
+         : u16 nconsts
+         : nconsts × { u8 kind; u16 payload }
+         : u32 ncode
+         : ncode bytes (opcode + operands)
         </code></pre>
         <p>Version <strong>must</strong> be <code class="inline-code">0x01</code>. Other versions fail loud.
         Bad magic / truncated section / unknown opcode / unknown const
@@ -491,7 +491,7 @@
         indices, same shape as <code class="inline-code">ASK</code>:</p>
         <ol class="doc__ol">
         <li><strong>from-text</strong> — the <code class="inline-code">from</code> STRING. GAS / <code class="inline-code">vm.c</code> <code class="inline-code">op_classify</code>
-           uses only <code class="inline-code">extract_quote</code> of that string.</li>
+         uses only <code class="inline-code">extract_quote</code> of that string.</li>
         <li><strong>bind</strong> — IDENT after <code class="inline-code">-&gt;</code>. Bound value is the dry JSON.</li>
         </ol>
         <p><strong>Not encoded (same as <code class="inline-code">vm.c</code>):</strong> schema name (<code class="inline-code">Intent</code> / <code class="inline-code">Tags</code>),
@@ -506,9 +506,9 @@
         <p>GAS classify_dry body (compare SoT; banner may differ):</p>
         <pre class="doc__pre"><code class="inline-code">[model] fast
         [classify] My account is locked
-          → {&quot;label&quot;:&quot;support&quot;,&quot;confidence&quot;:0.91,&quot;reasons&quot;:[&quot;dry-run&quot;]}
+         → {&quot;label&quot;:&quot;support&quot;,&quot;confidence&quot;:0.91,&quot;reasons&quot;:[&quot;dry-run&quot;]}
         [classify] Please help me buy a card
-          → {&quot;label&quot;:&quot;sales&quot;,&quot;confidence&quot;:0.88,&quot;reasons&quot;:[&quot;dry-run&quot;]}
+         → {&quot;label&quot;:&quot;sales&quot;,&quot;confidence&quot;:0.88,&quot;reasons&quot;:[&quot;dry-run&quot;]}
         [print] {&quot;label&quot;:&quot;support&quot;,&quot;confidence&quot;:0.91,&quot;reasons&quot;:[&quot;dry-run&quot;]}
         [print] {&quot;label&quot;:&quot;sales&quot;,&quot;confidence&quot;:0.88,&quot;reasons&quot;:[&quot;dry-run&quot;]}
         [spark] ok
@@ -516,16 +516,16 @@
         <h3 id="extract">EXTRACT</h3>
         <p>LANGUAGE form in <code class="inline-code">selfhost/fixtures/extract_dry.spark</code>:</p>
         <pre class="doc__pre"><code class="inline-code">extract Person { name: string, age: int }
-          from &quot;…&quot; fixture &quot;examples/fixtures/extract/person.json&quot; -&gt; person
+         from &quot;…&quot; fixture &quot;examples/fixtures/extract/person.json&quot; -&gt; person
         </code></pre>
         <p><strong>Encoded operands:</strong> three <code class="inline-code">u16</code> const indices.</p>
         <ol class="doc__ol">
         <li><strong>schema</strong> — the declaration re-serialized to one line,
-           <code class="inline-code">extract NAME { f: type, g?: type }</code>. The compiler joins the
-           block's tokens; source newlines and commas both separate fields,
-           so the encoded text is canonical regardless of layout.</li>
+         <code class="inline-code">extract NAME { f: type, g?: type }</code>. The compiler joins the
+         block's tokens; source newlines and commas both separate fields,
+         so the encoded text is canonical regardless of layout.</li>
         <li><strong>fixture</strong> — the <code class="inline-code">fixture</code> STRING. Required: a compile without
-           one is an error, because dry-run has no other source of values.</li>
+         one is an error, because dry-run has no other source of values.</li>
         <li><strong>bind</strong> — IDENT after <code class="inline-code">-&gt;</code>.</li>
         </ol>
         <p>The schema travels as text, not a packed field table, so
@@ -550,20 +550,20 @@
         <p><strong>Cited <code class="inline-code">vm.c</code> before encoding:</strong></p>
         <ul class="doc__ul">
         <li><code class="inline-code">op_tool</code> (~588) — name before <code class="inline-code">(</code>, print
-          <code class="inline-code">[tool] registered %s</code>. Signature / <code class="inline-code">{ "stub:local" }</code> ignored.</li>
+         <code class="inline-code">[tool] registered %s</code>. Signature / <code class="inline-code">{ "stub:local" }</code> ignored.</li>
         <li><code class="inline-code">op_with</code> (~608) — requires <code class="inline-code">tools</code>, prior registration, <code class="inline-code">[list]</code>;
-          copies bytes between <code class="inline-code">[</code> and <code class="inline-code">]</code> into <code class="inline-code">tools_scope</code>; sets
-          <code class="inline-code">tools_active = 1</code>; prints the existing JSON line.</li>
+         copies bytes between <code class="inline-code">[</code> and <code class="inline-code">]</code> into <code class="inline-code">tools_scope</code>; sets
+         <code class="inline-code">tools_active = 1</code>; prints the existing JSON line.</li>
         <li><code class="inline-code">}</code> (~1559–1562) — <code class="inline-code">tools_active = 0</code>; no stdout. That is
-          <code class="inline-code">WITH_END</code> (not invented: LANGUAGE + this clear).</li>
+         <code class="inline-code">WITH_END</code></li>
         <li><code class="inline-code">op_ask</code> (~468–471) — when <code class="inline-code">tools_active &amp;&amp; tool_reg_len</code>: reply
-          is the existing <code class="inline-code">[tool:NAME] stub:local</code> (not <code class="inline-code">pick_ask_reply</code>).</li>
+         is the existing <code class="inline-code">[tool:NAME] stub:local</code> (not <code class="inline-code">pick_ask_reply</code>).</li>
         </ul>
         <p><strong>Encoded operands (proven by that fixture + dry-run):</strong></p>
         <ol class="doc__ol">
         <li><code class="inline-code">TOOL</code> — one <code class="inline-code">u16</code> const: tool <strong>name</strong> (<code class="inline-code">weather</code>).</li>
         <li><code class="inline-code">WITH</code> — one <code class="inline-code">u16</code> const: list text between <code class="inline-code">[</code> and <code class="inline-code">]</code>
-           (<code class="inline-code">weather</code> for <code class="inline-code">[weather]</code>).</li>
+         (<code class="inline-code">weather</code> for <code class="inline-code">[weather]</code>).</li>
         <li><code class="inline-code">WITH_END</code> — no operands.</li>
         </ol>
         <p><strong>Not encoded (same as <code class="inline-code">vm.c</code>):</strong> <code class="inline-code">(city: string)</code>, <code class="inline-code">-&gt; string</code>,
@@ -574,7 +574,7 @@
         [tool] registered weather
         [with] {&quot;op&quot;:&quot;with_tools&quot;,&quot;tools&quot;:&quot;weather&quot;,&quot;active&quot;:true}
         [ask] What's the weather hint for Springfield?
-          → [tool:weather] stub:local
+         → [tool:weather] stub:local
         [print] [tool:weather] stub:local
         [spark] ok
         </code></pre>
@@ -587,7 +587,7 @@
         <pre class="doc__pre"><code class="inline-code">[spark] dry-run via assembly VM (machine code)
         [model] code
         [ask] Explain gravity in one sentence
-          → Gravity pulls masses together.
+         → Gravity pulls masses together.
         [print] Gravity pulls masses together.
         [spark] ok
         </code></pre>
@@ -596,7 +596,7 @@
         </code></pre>
         <p>then the same <code class="inline-code">[model]</code> / <code class="inline-code">[ask]</code> / <code class="inline-code">→</code> / <code class="inline-code">[print]</code> / <code class="inline-code">[spark] ok</code>.</p>
         <p>ASK reply: <code class="inline-code">spark_pick_ask_reply</code> — <code class="inline-code">contains_ci</code> <code class="inline-code">"gravity"</code> →
-        <code class="inline-code">"Gravity pulls masses together."</code> (existing fixture; not invented).</p>
+        <code class="inline-code">"Gravity pulls masses together."</code> (existing fixture).</p>
         <p>PRINT of a bound name: <code class="inline-code">[print] &lt;value&gt;\n</code> (<code class="inline-code">vm.c</code> <code class="inline-code">op_print</code>).
         Unbound name prints the ident (same as <code class="inline-code">vm.c</code>).
         MODEL: <code class="inline-code">[model] &lt;alias&gt;\n</code>.</p>
@@ -609,16 +609,16 @@
         strings 2+4 + 2+31 + 2+4 + nconsts 2 + 3×3 + ncode 4 + 12 code).
         Code section starts at <strong>file offset 67</strong>.</p>
         <p>Code bytes:</p>
-        <pre class="doc__pre"><code class="inline-code">01 00 00          MODEL const0
-        02 01 00 02 00    ASK   const1 const2
-        03 02 00          PRINT const2
-        00                HALT
+        <pre class="doc__pre"><code class="inline-code">01 00 00 MODEL const0
+        02 01 00 02 00 ASK const1 const2
+        03 02 00 PRINT const2
+        00 HALT
         </code></pre>
         <h2 id="builder-spark-created-binary-weights">Builder (Spark-created binary + weights)</h2>
         <p><strong>SPARK_BC is the orchestration ISA — not neural weights.</strong> Full
         engineer reproduction (programs, commands, sha256 table, GAS
         <code class="inline-code">--compile</code> / <code class="inline-code">--run-bc</code>, model lab, Pages deploy):
-        <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.</p>
+        <a href="/docs/spark-builder.html">SPARK_BC Builder</a>.</p>
         <p>Spark compiling Spark: <code class="inline-code">selfhost/compile.spark</code> →
         <code class="inline-code">docs/examples/spark-self.sparkbc</code> (sha256
         <code class="inline-code">a33f3232752c2fdd75db728773cb589a4eaf8e0bb70ac2539d2519b2dc7df6e8</code>).
@@ -642,10 +642,10 @@
         Focused e2e: <code class="inline-code">make sparkbc-e2e</code> (compile → dump TRAIN/STEP →
         <code class="inline-code">--run-bc</code> → assert <code class="inline-code">ARTIFACT</code>; STEP = multi-outer CPU SGD). STEP
         weights + loss drop via <code class="inline-code">make test-sparkbc</code>.
-        Factory page: <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.
+        Factory page: <a href="/docs/spark-builder.html">SPARK_BC Builder</a>.
         TRAIN accept is still a dry marker. <code class="inline-code">STEP</code> applies multi-outer CPU
         SGD (<code class="inline-code">trained=true</code> / <code class="inline-code">not_sgd=false</code> only after grads;
-        <code class="inline-code">checkpoint.json</code> loss curve). <strong>Not beat Claude.</strong>
+        <code class="inline-code">checkpoint.json</code> loss curve). <strong>Measurement only.</strong>
         No 6000 train. <code class="inline-code">./spark --compile</code> and <code class="inline-code">./spark --run-bc</code> thin-wrap
         bootstrap (C lowering / bc_vm remain SoT).</p>
         <h2 id="out-of-scope-do-not-add">Out of scope (do not add)</h2>

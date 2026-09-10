@@ -48,7 +48,7 @@ NAV_MENUS: tuple[NavMenu, ...] = (
             (
                 "Safety / Eval",
                 (
-                    ("/docs/knowledge-eval.html", "Eval honesty"),
+                    ("/docs/knowledge-eval.html", "Evaluation"),
                     ("/docs/knowledge-safety.html", "Safety & limits"),
                 ),
             ),

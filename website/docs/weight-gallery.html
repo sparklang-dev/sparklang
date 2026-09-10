@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Weight gallery — view / play / understand — Spark</title>
-    <meta name="description" content="Catalog tiny through xl Spark stub weights; inspect, diff, play forward. Opt-in 5090 XL." />
+    <meta name="description" content="Catalog tiny through xl Spark stub weights; inspect, diff, play forward. Opt-in consumer-GPU XL." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
     <link rel="stylesheet" href="/css/tokens.css?v=navsub0909" />
@@ -56,7 +56,7 @@
                   <li class="nav-sub">
                     <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
-                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
                       <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
                     </ul>
                   </li>
@@ -183,12 +183,10 @@
         <p>Catalog <strong>many weight kinds</strong> Spark already produces (or can emit):
         init / dry ARTIFACT, post-STEP SGD, checkpoints, scale
         fixtures, owned <strong>spark-coder</strong>, and <strong>large / xl</strong> multi-layer
-        profiles. Play on CPU; opt-in generate XL on <strong>RTX 5090</strong>;
-        <strong>never</strong> the voice RTX PRO <strong>6000</strong>.</p>
-        <p><strong>Honesty:</strong> these are tiny-to-xl <strong>control stubs</strong>, not production
-        LLM weights. Dump/compile stay SoT for SPARK_BC. Does <strong>not</strong> beat
-        Claude.</p>
-        <p>Hub: <a href="/docs/factory.html">FACTORY.md</a>. Arch roles: <a href="/docs/architecture.html">ARCHITECTURE.md</a>.</p>
+        profiles. Play on CPU; opt-in generate XL on a consumer GPU.
+        These are tiny-to-xl <strong>control stubs</strong>, not production LLM weights.
+        Dump/compile stay SoT for SPARK_BC.</p>
+        <p>Hub: <a href="/docs/factory.html">Factory hub</a>. Arch roles: <a href="/docs/architecture.html">Architecture</a>.</p>
         <h2 id="size-profiles-tiny-xl">Size profiles (tiny → xl)</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
@@ -272,10 +270,10 @@
         </tbody>
         </table></div>
         <h2 id="view">View</h2>
-        <pre class="doc__pre"><code class="language-bash">make weight-gallery          # catalog JSON + sample emits
+        <pre class="doc__pre"><code class="language-bash">make weight-gallery # catalog JSON + sample emits
         PYTHONPATH=python python3 tools/spark-weights/cli.py catalog
         PYTHONPATH=python python3 tools/spark-weights/cli.py inspect \
-          docs/examples/spark-self.init.safetensors
+         docs/examples/spark-self.init.safetensors
         PYTHONPATH=python python3 tools/spark-weights/cli.py explain attn
         </code></pre>
         <p>Each tensor row: <strong>name</strong>, <strong>shape</strong>, <strong>dtype</strong> (F32), <strong>sha256</strong>,
@@ -283,14 +281,14 @@
         <h2 id="play">Play</h2>
         <pre class="doc__pre"><code class="language-bash"># Forward / predict (CPU; works on large/xl stubs too)
         PYTHONPATH=python python3 tools/spark-weights/cli.py play \
-          docs/examples/spark-self.init.safetensors --prompt &quot;hi&quot;
+         docs/examples/spark-self.init.safetensors --prompt &quot;hi&quot;
 
         # Diff norms between two weight files
         PYTHONPATH=python python3 tools/spark-weights/cli.py diff A.safetensors B.safetensors
 
         # Histogram / L2 stats (CPU)
         PYTHONPATH=python python3 tools/spark-weights/cli.py stats \
-          out/gallery/large/weights.safetensors --name spark.embed.weight
+         out/gallery/large/weights.safetensors --name spark.embed.weight
         </code></pre>
         <p>Website: <a href="/docs/weight-gallery.html">/docs/weight-gallery.html</a>
         and interactive browser <a href="/weight-playground.html">/weight-playground.html</a>
@@ -336,7 +334,7 @@
         </tbody>
         </table></div>
         <p>Forward sketch: <code class="inline-code">embed → attn0? → mlp0? → rms_norm → lm_head</code>
-        (<a href="/docs/serve.html">SERVE.md</a>, <a href="/docs/attention-forward.html">ATTENTION_FORWARD.md</a>).</p>
+        (<a href="/docs/serve.html">Serve</a>, <a href="/docs/attention-forward.html">Attention / forward</a>).</p>
         <h2 id="make-targets">Make targets</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
@@ -365,9 +363,9 @@
         keeps tiny/scale smoke — XL is opt-in).</p>
         <h2 id="related">Related</h2>
         <ul class="doc__ul">
-        <li><a href="/docs/build-models.html">BUILD_MODELS.md</a> · <a href="/docs/train-loop.html">TRAIN_LOOP.md</a></li>
-        <li><a href="/docs/spark-coder.html">SPARK_CODER.md</a> · <a href="/docs/sparkbc-make.html">SPARKBC_MAKE.md</a></li>
-        <li><a href="/docs/eval.html">EVAL.md</a> — measurement only; never beat Claude</li>
+        <li><a href="/docs/build-models.html">BUILD_MODELS.md</a> · <a href="/docs/train-loop.html">Train loop</a></li>
+        <li><a href="/docs/spark-coder.html">Spark coder</a> · <a href="/docs/sparkbc-make.html">SPARKBC_MAKE.md</a></li>
+        <li><a href="/docs/eval.html">Eval</a> — measurement only; </li>
         </ul>
       </article>
       </main>

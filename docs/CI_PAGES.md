@@ -6,8 +6,8 @@ SparkLang only. Full release cut: [RELEASE.md](RELEASE.md).
 ## Local docs regen + check
 
 ```bash
-make docs-html    # python3 tools/md_to_doc_html.py --all-stale
-make docs-check   # regen + --check + tools/test_docs_nav.py
+make docs-html # python3 tools/md_to_doc_html.py --all-stale
+make docs-check # regen + --check + tools/test_docs_nav.py
 ```
 
 Mirror `CHANGELOG.md` into `website/CHANGELOG.html` when cutting a
@@ -39,12 +39,12 @@ Project: **`sparklang-dev`**. Branch: **`production`**.
 make docs-html
 # mirror CHANGELOG.html if needed
 npx wrangler pages deploy website \
-  --project-name=sparklang-dev \
-  --branch=production \
-  --commit-hash="$(git rev-parse HEAD)"
+ --project-name=sparklang-dev \
+ --branch=production \
+ --commit-hash="$(git rev-parse HEAD)"
 ```
 
-**Auth:** Wrangler OAuth on the operator host is often under
+**Auth:** Wrangler OAuth on the deploy host is often under
 `~/.config/.wrangler/` (leading **dot**). That is not
 `~/.config/wrangler/`. Do not invent or print tokens.
 
@@ -72,15 +72,15 @@ If CLI/auth absent → Cloudflare dashboard Direct Upload of
 - https://sparklang.dev/data/decompile-scoreboard.json
 - https://sparklang.dev/downloads.html
 - **Images MIME (required):**
-  `curl -sI https://sparklang.dev/docs/images/decompile-cli-dump.png?v=0.6.58`
-  must show `Content-Type: image/png` (not `text/html`).
-  SVG: `…/diagram-spark-loop.svg` → `image/svg+xml` only
-  (no dual `text/html`). `nosniff` + wrong MIME = blank screenshots.
+ `curl -sI https://sparklang.dev/docs/images/decompile-cli-dump.png?v=0.6.58`
+ must show `Content-Type: image/png` (not `text/html`).
+ SVG: `…/diagram-spark-loop.svg` → `image/svg+xml` only
+ (no dual `text/html`). `nosniff` + wrong MIME = blank screenshots.
 
 Record the Pages deployment id next to the git tip. Tip ≠ live
 site: say so if deploy lags.
 
 ## Related
 
-- [FACTORY.md](FACTORY.md) · [SPARKBC_MAKE.md](SPARKBC_MAKE.md)
-- [RELEASE.md](RELEASE.md) · [SPARK_BUILDER.md](SPARK_BUILDER.md)
+- [Factory hub](FACTORY.md) · [SPARKBC_MAKE.md](SPARKBC_MAKE.md)
+- [RELEASE.md](RELEASE.md) · [SPARK_BC Builder](SPARK_BUILDER.md)

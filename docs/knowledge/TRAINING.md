@@ -46,22 +46,22 @@ Survey:
 **QLoRA** keeps the base in 4-bit (NF4) while training adapters
 ([Dettmers et al., 2023](https://arxiv.org/abs/2305.14314)).
 
-Spark homepage honesty: owned methods are **not LoRA theater**. See
-[SPARK_CODER.md](SPARK_CODER.md) and [TRAIN_LOOP.md](TRAIN_LOOP.md).
+Spark homepage methods are owned (not LoRA theater). See
+[Spark coder](SPARK_CODER.md) and [Train loop](TRAIN_LOOP.md).
 
 ```mermaid
 flowchart TB
-  PT[Pretrain CE] --> SFT[SFT demos]
-  SFT --> Pref[RLHF / RLAIF / DPO]
-  Pref --> PEFT[Optional LoRA/QLoRA]
-  PEFT --> Serve[Serve / eval]
+ PT[Pretrain CE] --> SFT[SFT demos]
+ SFT --> Pref[RLHF / RLAIF / DPO]
+ Pref --> PEFT[Optional LoRA/QLoRA]
+ PEFT --> Serve[Serve / eval]
 ```
 
 ## Spark cross-links
 
-- Outer/inner SGD fixtures — [TRAIN_LOOP.md](TRAIN_LOOP.md)
-- Builder TRAIN opcodes — [SPARK_BUILDER.md](SPARK_BUILDER.md)
+- Outer/inner SGD fixtures — [Train loop](TRAIN_LOOP.md)
+- Builder TRAIN opcodes — [SPARK_BC Builder](SPARK_BUILDER.md)
 - Model train HTTP — [MODEL_TRAINING.md](MODEL_TRAINING.md)
-- Factory hub — [FACTORY.md](FACTORY.md)
+- Factory hub — [Factory hub](FACTORY.md)
 
-Next: [Inference](INFERENCE.md) · [Eval honesty](EVAL_HONESTY.md).
+Next: [Inference](INFERENCE.md) · [Evaluation](EVAL_STATUS.md).

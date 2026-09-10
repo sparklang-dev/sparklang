@@ -5,7 +5,7 @@ Copy-paste from the repo root after `make spark-bootstrap` /
 `make spark` as needed. Spark / SparkLang only.
 
 ISA: [SPARK_BC.md](SPARK_BC.md). Story:
-[SPARK_BUILDER.md](SPARK_BUILDER.md).
+[SPARK_BC Builder](SPARK_BUILDER.md).
 
 ## Core gates
 
@@ -25,7 +25,7 @@ ISA: [SPARK_BC.md](SPARK_BC.md). Story:
 | `make weight-gallery` | Catalog + emit scale/large samples + website catalog JSON |
 | `make test-weights-play` | Weight gallery unit + CLI play/diff/stats |
 | `make weight-gallery-xl` | Opt-in XL emit (prefer 5090) |
-| `make spark-eval` | Frozen copy/recall + next-token probes; exit 0 = harness ran (**not** beat Claude) |
+| `make spark-eval` | Frozen copy/recall + next-token probes; exit 0 = harness ran (**measurement only**) |
 | `make spark-eval-claude` | Same + optional Anthropic baseline (skip if no key) |
 | `make test-spark-eval` | Unit gate for eval harness |
 | `make docs-html` / `make docs-check` | Regen `website/docs/*` + nav link check |
@@ -109,12 +109,12 @@ docs match tip.
 
 ## Never
 
-- Claim `spark-eval` scores beat Claude.
-- Raise train onto the RTX PRO 6000 from these targets.
+- Claim `spark-eval` scores as a competitive AI win.
+- Do not route factory train onto reserved voice GPUs.
 - Treat empty / failing gates as soft success.
 
 ## Related
 
-- [FACTORY.md](FACTORY.md) · [COMPILE.md](COMPILE.md) · [EVAL.md](EVAL.md)
-- [CI_PAGES.md](CI_PAGES.md) · [TRAIN_LOOP.md](TRAIN_LOOP.md)
+- [Factory hub](FACTORY.md) · [COMPILE.md](COMPILE.md) · [Eval](EVAL.md)
+- [CI_PAGES.md](CI_PAGES.md) · [Train loop](TRAIN_LOOP.md)
 - [TOOLS_HELPERS.md](TOOLS_HELPERS.md)

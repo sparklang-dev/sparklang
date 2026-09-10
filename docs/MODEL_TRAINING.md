@@ -8,11 +8,11 @@ path; live requires that service. Optional `model plan` is markdown only.
 Eval helpers (`model analyze` / `compare` / `improve`) stay offline
 sugar. Optional plan export is `model plan` (markdown). Live gateway
 `ask` is **optional** for post-train inference checks — SparkLang is
-not a Bifrost plugin.
+not tied to a single AI gateway.
 
 Full language forms: [LANGUAGE.md](LANGUAGE.md).
 Factory / SPARK_BC bytecode train ops (`0x26` / `0x28` / `0x27`) and
-published proofs: [SPARK_BUILDER.md](SPARK_BUILDER.md).
+published proofs: [SPARK_BC Builder](SPARK_BUILDER.md).
 
 ## Verbs
 
@@ -43,9 +43,9 @@ the statement with `./spark-train-http --spark-line`. Status polls the
 ## Job lifecycle
 
 ```
-submit  →  accepted (job_id)
-        →  running
-        →  succeeded | failed | cancelled
+submit → accepted (job_id)
+ → running
+ → succeeded | failed | cancelled
 artifact paths appear on accept (planned) and again on success
 ```
 
@@ -75,16 +75,16 @@ Generic interface — SparkLang is not hard-wired to one machine.
 
 # Live
 export SPARK_TRAIN_BACKEND=http
-export SPARK_TRAIN_URL=https://train.example/v1   # your API
-# optional: SPARK_TRAIN_TOKEN=…   (never commit)
+export SPARK_TRAIN_URL=https://train.example/v1 # your API
+# optional: SPARK_TRAIN_TOKEN=… (never commit)
 # optional: SPARK_TRAIN_METHOD=spark_distill_cpu|spark_pref_pack|spark_playbook_fit|spark_faq_index|spark_reply_pack
-# optional: SPARK_TRAIN_OUT=out/train/job-…   (live out override)
+# optional: SPARK_TRAIN_OUT=out/train/job-… (live out override)
 ./spark --live examples/model_train.spark
 # or:
 ./spark-train-http --live --submit \
-  --method spark_pref_pack \
-  --dataset data/train.jsonl --base spark_pref_pack \
-  --out out/train/demo
+ --method spark_pref_pack \
+ --dataset data/train.jsonl --base spark_pref_pack \
+ --out out/train/demo
 ./spark-train-http --live --status <job_id>
 ```
 
@@ -97,7 +97,7 @@ Exact shapes `./spark-train-http` sends and prints (no other endpoints):
 ```
 POST {SPARK_TRAIN_URL}/jobs
 Content-Type: application/json
-Authorization: Bearer {SPARK_TRAIN_TOKEN}   # optional
+Authorization: Bearer {SPARK_TRAIN_TOKEN} # optional
 
 {"dataset":"…","base":"…","out":"…","backend":"http","method":"spark_distill_cpu"}
 ```
@@ -116,7 +116,7 @@ reference trainer may also treat a matching `base` as the method id.
 
 ```
 GET {SPARK_TRAIN_URL}/jobs/{job_id}
-Authorization: Bearer {SPARK_TRAIN_TOKEN}   # optional
+Authorization: Bearer {SPARK_TRAIN_TOKEN} # optional
 ```
 
 Response body:
@@ -133,7 +133,7 @@ config error).
 
 `tools/spark-train-ref/` implements the HTTP contract with **four**
 SparkLang-native CPU methods. None are LoRA / HF PEFT. None use a
-voice-reserved GPU. None invent `train@` grants.
+reserved GPU. None invent `train@` grants.
 
 | Method | One sentence | Primary artifacts |
 |--------|--------------|-------------------|
@@ -146,7 +146,7 @@ voice-reserved GPU. None invent `train@` grants.
 Select via (first match wins):
 
 1. Language `method "…"` on `model train` / `model build` (live
-   `--spark-line`)
+ `--spark-line`)
 2. Companion `--method` / POST body `method` / env `SPARK_TRAIN_METHOD`
 3. Or `base` equal to a method id (reference trainer only)
 4. Default: `spark_distill_cpu`
@@ -186,11 +186,11 @@ Only when **all** hold:
 1. `SPARK_TRAIN_BACKEND=local-yield`
 2. Unit name is in `SPARK_TRAIN_UNIT_ALLOWLIST` (comma-separated)
 3. Operator has a real owner train-grant for that unit elsewhere —
-   Spark **does not** invent train-grant tokens
+ Spark **does not** invent train-grant tokens
 
 Then the companion may run `systemctl start train@<unit>`. Training
 compute policy on shared hosts: coding GPU only via the yield unit;
-never place Spark training on a voice-only GPU.
+do not place Spark training on reserved voice GPUs.
 
 ## What `model build` means now
 
@@ -228,7 +228,7 @@ model that has **no voice**, or **change major behaviors** (greeting,
 transfer, IDK) without LoRA. Inventable rows need a SoT file; missing
 SoT **fails loud** (no fabricated hours/prices/IDs). That is the
 product story: not LoRA-by-default, not a marker file pretending to be
-weights. Larger full-SFT / multi-node remain operator backends behind
+weights. Larger full-SFT / multi-node remain advanced backends behind
 the same contract.
 
 ## Voice + text overlay (`spark_reply_pack`)
@@ -262,5 +262,5 @@ Example: `examples/model_train_reply.spark` +
 - Hugging Face Hub publish
 - Full LoRA studio / multi-node scheduler UI
 - Invented owner train-grant strings
-- Bifrost alias pickers as “Step 2” of building a model
+- the AI gateway alias pickers as “Step 2” of building a model
 - Language-level `method "…"` keyword on `model train` (use env / companion)

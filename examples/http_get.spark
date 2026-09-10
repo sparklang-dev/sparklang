@@ -1,5 +1,5 @@
 # First-class http get — dry-run reads a real fixture (no network).
-#   ./spark --dry-run examples/http_get.spark
+# ./spark --dry-run examples/http_get.spark
 # Live (real HTTP): ./spark --live examples/http_get_live.spark
 
 model fast

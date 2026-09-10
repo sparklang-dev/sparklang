@@ -1,10 +1,10 @@
 [
-  {"id": "syscall60", "context": "mov rax,", "want": " 60"},
-  {"id": "exit42", "context": "mov rdi,", "want": " 42"},
-  {"id": "train_step", "context": "opcode TRAIN", "want": "STEP"},
-  {"id": "sparkbc", "context": "SPARK_B", "want": "C"},
-  {"id": "profile", "context": "spark coder profile", "want": "spark-coder"},
-  {"id": "device", "context": "device for train", "want": "cpu"},
-  {"id": "exact_spark", "context": "Say exactly: spark", "want": "spark"},
-  {"id": "exact_step", "context": "Say exactly: STEP", "want": "STEP"}
+ {"id": "syscall60", "context": "mov rax,", "want": " 60"},
+ {"id": "exit42", "context": "mov rdi,", "want": " 42"},
+ {"id": "train_step", "context": "opcode TRAIN", "want": "STEP"},
+ {"id": "sparkbc", "context": "SPARK_B", "want": "C"},
+ {"id": "profile", "context": "spark coder profile", "want": "spark-coder"},
+ {"id": "device", "context": "device for train", "want": "cpu"},
+ {"id": "exact_spark", "context": "Say exactly: spark", "want": "spark"},
+ {"id": "exact_step", "context": "Say exactly: STEP", "want": "STEP"}
 ]

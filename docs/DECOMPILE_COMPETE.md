@@ -5,10 +5,10 @@ false marketing. Spark / SparkLang only.
 
 **Never** publish “Spark beats Ghidra / IDA / Binary Ninja /
 LLM4Decompile / OpenBin” without the measured JSON from
-`make decompile-bench`. **Never** 6000. **Does not** beat Claude.
+`make decompile-bench`. **Measurement only.**
 Do **not** copy OpenBin code.
 
-Related: [DECOMPILE.md](DECOMPILE.md) ·
+Related: [Decompile](DECOMPILE.md) ·
 [research/LLM_DECOMPILE.md](research/LLM_DECOMPILE.md) ·
 site [/docs/decompile-compete.html](/docs/decompile-compete.html).
 
@@ -48,33 +48,33 @@ claimed). Values are also emitted in
 
 ```bash
 make spark-bootstrap spark
-make test-decompile-compete   # unit: richer dump + project
-make decompile-roundtrip      # compile→dump→recompile hash
-make decompile-bench          # metrics + scoreboard JSON
+make test-decompile-compete # unit: richer dump + project
+make decompile-roundtrip # compile→dump→recompile hash
+make decompile-bench # metrics + scoreboard JSON
 # also records elf_local_probe from ./spark-binary-probe --elf
 ./spark-binary-probe --elf ./spark
 ```
 
 Local ELF probe emits `claim: local_elf_probe_not_ghidra` and a
 `sections[]` index — **still a loss** on Multi-format ELF/PE vs
-Ghidra/IDA/Binja/OpenBin. Honesty, not a domain flip.
+Ghidra/IDA/Binja/OpenBin. Status note, not a domain flip.
 
 Analysis project (single file):
 
 ```bash
 PYTHONPATH=python python3 tools/spark-bc-dump/analyze_project.py \
-  docs/examples/spark-train-step.sparkbc \
-  -o out/analyze/train-step \
-  --source examples/spark_train_step.spark
+ docs/examples/spark-train-step.sparkbc \
+ -o out/analyze/train-step \
+ --source examples/spark_train_step.spark
 ```
 
 Richer dump exports:
 
 ```bash
 PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
-  docs/examples/spark-train-step.sparkbc --json -o /tmp/bc.json
+ docs/examples/spark-train-step.sparkbc --json -o /tmp/bc.json
 PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
-  docs/examples/spark-train-step.sparkbc --html -o /tmp/bc.html
+ docs/examples/spark-train-step.sparkbc --html -o /tmp/bc.html
 ```
 
 ## Measured scoreboard (data-driven)
@@ -103,14 +103,14 @@ present but not a SPARK_BC decoder → `verdict: na-sparkbc`.
 
 ## Related
 
-- [DECOMPILE.md](DECOMPILE.md) · [SPARK_BC.md](SPARK_BC.md)
+- [Decompile](DECOMPILE.md) · [SPARK_BC.md](SPARK_BC.md)
 - [TOOLS_HELPERS.md](TOOLS_HELPERS.md) · [SPARKBC_MAKE.md](SPARKBC_MAKE.md)
-- [FACTORY.md](FACTORY.md) · [CI_PAGES.md](CI_PAGES.md)
+- [Factory hub](FACTORY.md) · [CI_PAGES.md](CI_PAGES.md)
 
 <div id="decompile-scoreboard-mount" class="doc__callout" role="region" aria-label="Measured scoreboard">
-  <p><strong>Live measured scoreboard</strong> — loaded from
-  <code>/data/decompile-scoreboard.json</code> after
-  <code>make decompile-bench</code>. Empty box means regenerate JSON.</p>
-  <div id="decompile-scoreboard-body"></div>
+ <p><strong>Live measured scoreboard</strong> — loaded from
+ <code>/data/decompile-scoreboard.json</code> after
+ <code>make decompile-bench</code>. Empty box means regenerate JSON.</p>
+ <div id="decompile-scoreboard-body"></div>
 </div>
 <script src="/js/decompile-scoreboard.js"></script>

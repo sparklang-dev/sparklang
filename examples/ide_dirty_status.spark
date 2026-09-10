@@ -2,7 +2,7 @@
 # After keys-run (ff7b545). Keymap n→new NOT proven — do not invent.
 # Flow: open (clean) → new with path (empty buffer = dirty *) → save (clean).
 # Proof: JSON dirty true/false; out/ide/status_dirty.txt ends with *;
-#        out/ide/status.txt after save has no trailing *.
+# out/ide/status.txt after save has no trailing *.
 # Run: ./spark --dry-run examples/ide_dirty_status.spark
 # No Electron.
 

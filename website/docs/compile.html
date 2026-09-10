@@ -56,7 +56,7 @@
                   <li class="nav-sub">
                     <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
-                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
                       <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
                     </ul>
                   </li>
@@ -185,8 +185,8 @@
         <p>This page does <strong>not</strong> reimplement the compiler. It points at
         makefile targets and in-tree tools. ISA detail:
         <a href="/docs/spark-bc.html">SPARK_BC.md</a>. Factory story:
-        <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>.
-        <strong>Diagrams:</strong> <a href="/docs/diagrams.html">DIAGRAMS.md</a> (tools + LLM assist vs SoT).</p>
+        <a href="/docs/spark-builder.html">SPARK_BC Builder</a>.
+        <strong>Diagrams:</strong> <a href="/docs/diagrams.html">Diagrams</a> (tools + LLM assist vs SoT).</p>
         <h2 id="what-compile-means-here">What “compile” means here</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
@@ -231,22 +231,22 @@
         <p><img class="doc__img" alt="Compile path" src="/docs/images/diagram-compile-path.svg?v=0.6.58" /></p>
         <p><em>Caption: <code class="inline-code">.spark</code> → bootstrap/GAS → <code class="inline-code">.sparkbc</code> → run/train/serve.
         Full decompile diagrams + screenshots:
-        <a href="/docs/decompile.html">DECOMPILE.md</a>. LLM assist layout:
+        <a href="/docs/decompile.html">Decompile</a>. LLM assist layout:
         <a href="/docs/llm-decompile.html">research/LLM_DECOMPILE.md</a>.</em></p>
         <h2 id="bootstrap-emit-sot">Bootstrap emit (SoT)</h2>
-        <pre class="doc__pre"><code class="language-bash">make spark-bootstrap   # or: make sparkc
+        <pre class="doc__pre"><code class="language-bash">make spark-bootstrap # or: make sparkc
         ./spark-bootstrap --compile examples/hello.spark -o /tmp/hello.sparkbc
         ./spark-bootstrap --compile examples/spark_train_step.spark \
-          -o /tmp/spark-train-step.sparkbc
+         -o /tmp/spark-train-step.sparkbc
         </code></pre>
         <p>C lowering (<code class="inline-code">bootstrap/</code> + <code class="inline-code">selfhost/lex.c</code>) remains the encode
         SoT. Published bytes live under <code class="inline-code">docs/examples/*.sparkbc</code> — rebuild
-        with the commands in <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>; do not
+        with the commands in <a href="/docs/spark-builder.html">SPARK_BC Builder</a>; do not
         invent hex.</p>
         <h2 id="gas-spark---compile">GAS <code class="inline-code">./spark --compile</code></h2>
         <pre class="doc__pre"><code class="language-bash">make spark
         ./spark --compile examples/spark_builder.spark \
-          -o /tmp/spark-builder.sparkbc
+         -o /tmp/spark-builder.sparkbc
         </code></pre>
         <p>Implemented as a <strong>thin wrap</strong> of <code class="inline-code">./spark-bootstrap</code> (exit status
         propagates). GAS does <strong>not</strong> reimplement <code class="inline-code">.sparkbc</code> packing.</p>
@@ -275,7 +275,7 @@
         <a href="/docs/attention-forward.html">Attention / forward</a>.</p>
         <h2 id="product-wrapper">Product wrapper</h2>
         <pre class="doc__pre"><code class="language-bash">make spark-bc
-        ./scripts/spark-bc   # phase-6 product wrapper; see scripts/spark-bc
+        ./scripts/spark-bc # phase-6 product wrapper; see scripts/spark-bc
         </code></pre>
         <p>Prefer <code class="inline-code">--compile</code> on bootstrap or GAS for engineer reproduction.</p>
         <h2 id="gates">Gates</h2>
@@ -306,7 +306,7 @@
         <ul class="doc__ul">
         <li><a href="/docs/decompile.html">Decompile / dump</a></li>
         <li><a href="/docs/build-models.html">Build models (TRAIN/STEP)</a></li>
-        <li><a href="/docs/spark-bc.html">SPARK_BC.md</a> · <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a></li>
+        <li><a href="/docs/spark-bc.html">SPARK_BC.md</a> · <a href="/docs/spark-builder.html">SPARK_BC Builder</a></li>
         </ul>
       </article>
       </main>

@@ -3,15 +3,15 @@
 # Prefer SoT / expect before free generate. Companion CLI forces
 # verify-before-speak (wrong expect → abstain exit 2):
 #
-#   ./spark-ground ask --prompt "…" --sot-ok \
-#     --expect "2.50" --candidate "2.50"
-#   ./spark-ground ask … --candidate "9.99"   # exits 2
-#   make test-ground
+# ./spark-ground ask --prompt "…" --sot-ok \
+# --expect "2.50" --candidate "2.50"
+# ./spark-ground ask … --candidate "9.99" # exits 2
+# make test-ground
 #
 # Honesty: alignment does not erase all lies
 # (arxiv.org/abs/2407.16216). Spark makes guessing fail CI via
 # forced grounding — not "impossible to lie."
-# Recompile ≠ semantics. Never 6000. Does not beat Claude.
+# Recompile ≠ semantics. Measurement only — not a marketing win.
 
 # 1) Source of truth (dry fixture — no network invent)
 http get "https://example.invalid/sot/dryer-start" fixture "examples/fixtures/abstain/sot_dryer_price.json" timeout 5 -> sot

@@ -56,7 +56,7 @@
                   <li class="nav-sub">
                     <span class="nav-sub__label" id="nav-hive-safety-eval">Safety / Eval</span>
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-safety-eval">
-                      <li><a href="/docs/knowledge-eval.html">Eval honesty</a></li>
+                      <li><a href="/docs/knowledge-eval.html">Evaluation</a></li>
                       <li><a href="/docs/knowledge-safety.html">Safety & limits</a></li>
                     </ul>
                   </li>
@@ -190,20 +190,20 @@
         <li>Dry-run escape hatch: <code class="inline-code">shell</code> / <code class="inline-code">run</code> allowlist fixtures</li>
         <li>Live <code class="inline-code">--allow-shell</code>: <code class="inline-code">./spark-shell</code> argv <code class="inline-code">execve</code> (echo|true|false)</li>
         <li>Host embed: Python + JS (<code class="inline-code">js/sparklang</code>) + C (<code class="inline-code">host/c/sparklang.h</code>);
-          <code class="inline-code">./spark --embed</code> JSON handshake</li>
+         <code class="inline-code">./spark --embed</code> JSON handshake</li>
         <li>Per-<code class="inline-code">ask</code> <code class="inline-code">[accounting]</code> line (dry zeros; live wall-clock + usage)</li>
         <li>Live run-level <code class="inline-code">[accounting-run]</code> rollup (<code class="inline-code">spark-ask-http --rollup</code>)</li>
         <li>Streaming <code class="inline-code">ask</code>: <code class="inline-code">./spark-ask-http --stream</code> SSE + <code class="inline-code">ask stream</code>
-          language form (live); dry prints <code class="inline-code">stream=1</code></li>
+         language form (live); dry prints <code class="inline-code">stream=1</code></li>
         <li>Live <code class="inline-code">extract</code>: schema validate + retry-on-miss (<code class="inline-code">--retries</code>,
-          <code class="inline-code">--stub-file</code> offline); forks <code class="inline-code">./spark-ask-http</code></li>
-        <li>Positioning: not a Bifrost plugin; dry-run first</li>
+         <code class="inline-code">--stub-file</code> offline); forks <code class="inline-code">./spark-ask-http</code></li>
+        <li>Positioning: not tied to a single AI gateway; dry-run first</li>
         <li><code class="inline-code">http get</code> / <code class="inline-code">http post</code> + timeout + dry fixture files + live
-          <code class="inline-code">./spark-http</code> with <code class="inline-code">bearer</code> / <code class="inline-code">header</code> + <code class="inline-code">retries</code> / <code class="inline-code">backoff</code></li>
+         <code class="inline-code">./spark-http</code> with <code class="inline-code">bearer</code> / <code class="inline-code">header</code> + <code class="inline-code">retries</code> / <code class="inline-code">backoff</code></li>
         <li><strong>SPARK_BC Builder factory (init):</strong> <code class="inline-code">--compile</code> Spark → <code class="inline-code">.sparkbc</code>
-          with <code class="inline-code">TRAIN</code>/<code class="inline-code">STEP</code>/<code class="inline-code">TRAIN_STATUS</code>; bootstrap <code class="inline-code">--run-bc</code> dry;
-          Spark-created init safetensors; published dumps + sha256. See
-          <a href="/docs/spark-builder.html">SPARK_BUILDER.md</a>. Dry ≠ trained.</li>
+         with <code class="inline-code">TRAIN</code>/<code class="inline-code">STEP</code>/<code class="inline-code">TRAIN_STATUS</code>; bootstrap <code class="inline-code">--run-bc</code> dry;
+         Spark-created init safetensors; published dumps + sha256. See
+         <a href="/docs/spark-builder.html">SPARK_BC Builder</a>. Dry ≠ trained.</li>
         </ul>
         <h2 id="next">Next</h2>
         <div class="doc__table-wrap"><table class="doc__table">
@@ -236,7 +236,7 @@
         </tr>
         <tr>
         <td>Builder</td>
-        <td>STEP→weights <strong>done</strong> (dry <code class="inline-code">weights.safetensors</code>); later owner train toward beat-Claude — not claimed today</td>
+        <td>STEP→weights <strong>done</strong> (dry <code class="inline-code">weights.safetensors</code>); later owner train/eval growth — not claimed today</td>
         </tr>
         <tr>
         <td>LSP</td>
@@ -293,7 +293,7 @@
         <td>Gaps remain (barge-in, EOU, SM, adapters) — gated demo only</td>
         </tr>
         <tr>
-        <td>Bifrost-as-identity</td>
+        <td>Single-gateway-as-identity</td>
         <td>Gateway optional; any OpenAI-compatible URL</td>
         </tr>
         </tbody>

@@ -2,16 +2,16 @@
 
 **SparkLang** (the Spark programming language) is a **language and runtime**
 for creating and modifying AI workflows efficiently — not a pile of training
-scripts and SDK glue, and **not** a Bifrost plugin. Model work, optional live
+scripts and SDK glue, and **not** a the AI gateway plugin. Model work, optional live
 gateway routing, retrieval (`embed` / `retrieve`), and AI coding live in
 plain `.spark` files you can diff, dry-run, and ship.
 
 **Default story:** dry-run / offline / no keys. Live `ask` / `embed` /
 `retrieve` via gateway env is **optional** (`./spark --live`).
 
-**Related:** [MODEL_ASPECTS.md](MODEL_ASPECTS.md) (behaviors + ears/eyes/speaking +
+**Related:** [Model aspects](MODEL_ASPECTS.md) (behaviors + ears/eyes/speaking +
 thinking + tools — honest status) ·
-[SPARK_BUILDER.md](SPARK_BUILDER.md) (full factory E2E —
+[SPARK_BC Builder](SPARK_BUILDER.md) (full factory E2E —
 SPARK_BC vs weights; `TRAIN` `0x26` / `STEP` `0x28` /
 `TRAIN_STATUS` `0x27`; sha256 table; GAS `--run-bc`/`--compile` wrappers; dry ≠ trained) ·
 [SPARK_BC.md](SPARK_BC.md) (bytecode ISA) ·
@@ -31,7 +31,7 @@ SPARK_BC vs weights; `TRAIN` `0x26` / `STEP` `0x28` /
 | **Train / build** real jobs | `model train` / `model build` → job; `model status` | Dry fixtures; live `./spark-train-http`. **`spark_reply_pack`** overlays voice+text on text-only bases and refuses inventable rows without SoT — see [MODEL_TRAINING.md](MODEL_TRAINING.md) |
 | **Reverse / inspect** | `model reverse` / `model inspect` → architecture JSON | Local `config.json` + index names only; [MODEL_LAB.md](MODEL_LAB.md) |
 | **Compile program** | `model compile "….spark" into "….sparkbc"` | SPARK_BC of the **program**, not a transformer compiler |
-| **Builder from SPARK_BC** | `--compile` Spark → `.sparkbc` (incl. `0x26`/`0x28`/`0x27`); dump; emit init weights; `--run-bc` TRAIN dry + STEP CPU SGD (bootstrap or GAS) | Tiny SGD ≠ Claude; GAS `--run-bc` / `--compile` wrappers **implemented**; STEP→weights **CPU SGD** (`trained=true`); later stages aim to beat Claude; [SPARK_BUILDER.md](SPARK_BUILDER.md) |
+| **Builder from SPARK_BC** | `--compile` Spark → `.sparkbc` (incl. `0x26`/`0x28`/`0x27`); dump; emit init weights; `--run-bc` TRAIN dry + STEP CPU SGD (bootstrap or GAS) | Tiny SGD ≠ Claude; GAS `--run-bc` / `--compile` wrappers **implemented**; STEP→weights **CPU SGD** (`trained=true`); later stages may grow train/eval (not a published claim); [SPARK_BC Builder](SPARK_BUILDER.md) |
 | **Modify existing** | `model modify keep_existing …` | Attach adapters/heads; **never** delete special training |
 | **Abstain / IDK heads** | `head abstain|train|attach|ask` | Probe on frozen local LLM; SELECT before SAMPLE; [ABSTAIN_HEADS.md](ABSTAIN_HEADS.md) |
 | **Analyze** reachable models | `model analyze "…" -> report` | Dry-run = fixtures under `examples/fixtures/models/`; not live leaderboards |
@@ -62,7 +62,7 @@ model "fixtures/tiny-lm"
 model analyze "fixtures/tiny-lm" -> report
 
 model compare ["fixtures/tiny-lm", "fixtures/other-lm"]
-  on suite "examples/eval_suite.json" -> comparison
+ on suite "examples/eval_suite.json" -> comparison
 
 model improve from report prefer quality -> blueprint
 
@@ -78,15 +78,15 @@ model plan blueprint into "out/my-model.md"
 Default `./spark --dry-run` and `make test` stay **offline**:
 
 - **Model ops** — fixture JSON from `examples/fixtures/models/` and
-  `examples/eval_suite.json`; banner says numbers are not live Elo scores
+ `examples/eval_suite.json`; banner says numbers are not live Elo scores
 - **`ask` / `classify` / `extract` / `embed` / `retrieve`** — heuristic
-  stubs / fixtures (`examples/fixtures/rag/` for RAG)
+ stubs / fixtures (`examples/fixtures/rag/` for RAG)
 - **`use auto`** — keeps prior configured model; prints
-  `[model] prior … (no alias pick)` — never invents gateway aliases
+ `[model] prior … (no alias pick)` — never invents gateway aliases
 - **Playbooks** — goldens under `bootstrap/fixtures/playbooks/`;
-  `make test-ai-playbooks`
+ `make test-ai-playbooks`
 - **IDE** — `ide new|open|save|run|buffer|ask|show` + keymap traces under
-  `out/ide/` (PPM paint wire, not product Electron)
+ `out/ide/` (PPM paint wire, not product Electron)
 
 Dry-run is the primary loop for CI, learning, and readable diffs **before**
 you spend on live inference.
@@ -98,20 +98,20 @@ OpenAI-compatible base URL (and rag-gateway for retrieve):
 
 | Integration | Role | Env / companion |
 |-------------|------|-----------------|
-| **OpenAI-compatible gateway** (`AI_GATEWAY_URL`) | Chat + embeddings with an **explicit** model id (HF / path / configured string). Bifrost is one optional backend, not a Spark requirement. | **`SPARK_GATEWAY_KEY`** preferred; `OPENAI_API_KEY` wire-compat only; `./spark-ask-http` / `./spark-rag-http --embed` |
+| **OpenAI-compatible gateway** (`AI_GATEWAY_URL`) | Chat + embeddings with an **explicit** model id (HF / path / configured string). the AI gateway is one optional backend, not a Spark requirement. | **`SPARK_GATEWAY_KEY`** preferred; `OPENAI_API_KEY` wire-compat only; `./spark-ask-http` / `./spark-rag-http --embed` |
 | **rag-gateway** (`RAG_GATEWAY_URL`) | `POST /v1/retrieve` (project + audience; retrieval grading on operator/cursor) | Default `:4620`; `RAG_GATEWAY_API_KEY` or `SPARK_GATEWAY_KEY`; `./spark-rag-http --retrieve` |
 | **Model probe** (optional) | Read-only configured models + local vLLM port discovery | `make model-probe`; `SPARK_ALLOW_NET=1` |
 | **Encrypt-to-model** | Seal prompt; gateway decrypts at model boundary | [ENCRYPT_GATEWAY.md](ENCRYPT_GATEWAY.md); `./spark-enc-gateway` |
 | **Public gateway probe** | Credential check only | a gateway probe credential; HTTP 401 → stop, no routing verdict |
 
 Pass an **explicit** model id in `.spark` / `--model` — never invent one
-from task-text heuristics, and do not treat Spark as a Bifrost alias
+from task-text heuristics, and do not treat Spark as a the AI gateway alias
 picker. Inventable live prompts **IDK** unless `--sot-ok`
 (see [ASK_LIVE.md](ASK_LIVE.md)).
 
 ```bash
 export AI_GATEWAY_URL=http://127.0.0.1:4000
-export SPARK_GATEWAY_KEY=sk-…   # never commit; preferred over OPENAI_API_KEY
+export SPARK_GATEWAY_KEY=sk-… # never commit; preferred over OPENAI_API_KEY
 ./spark --live examples/ask_live.spark
 ./spark --live examples/ask_live_explicit.spark
 ./spark --live examples/retrieve_embed_live.spark
@@ -144,7 +144,7 @@ and add one); copy a playbook from
 `extract`, `review`, `builder`, `implement` — not scattered Python modules.
 
 **Verified IDE surface** ([IDE.md](IDE.md)): terminal-first `ide` ops + optional
-interim Cursor workspace (`make ide`). Not Electron / not PyQt product chrome.
+interim editor workspace (`make ide`). Not Electron / not PyQt product chrome.
 
 Voice (`listen` / `speak` / `voice { … }`) remains in the language for
 speech pipelines — it is an **optional** surface, not primary positioning. See
@@ -152,14 +152,14 @@ speech pipelines — it is an **optional** surface, not primary positioning. See
 
 ## What Spark is not
 
-- Not a Bifrost plugin — gateway is optional live backend for `ask` /
-  `embed` / `retrieve`
+- not tied to a single AI gateway — gateway is optional live backend for `ask` /
+ `embed` / `retrieve`
 - Not Apache Spark / AdaCore SPARK
 - Not a replacement narrative for “throw away Python + OpenAI SDK” — Spark
-  complements gateways and existing stacks with a reviewable language surface
+ complements gateways and existing stacks with a reviewable language surface
 - Train jobs need a configured backend — dry-run never starts GPU work
 - Not in-process retrieval grading — grade/retry stay on rag-gateway; Spark surfaces
-  `crag` JSON from `retrieve` and composes with `ask`
+ `crag` JSON from `retrieve` and composes with `ask`
 - Not a vendor voice-product codebase — Spark stays a general AI language
 
 ## Contributor internals

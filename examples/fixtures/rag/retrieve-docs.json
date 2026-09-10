@@ -1,28 +1,28 @@
 {
-  "chunks": [
-    {
-      "chunk_id": "docs/LANGUAGE.md#embed",
-      "id": "docs/LANGUAGE.md#embed",
-      "content": "<<<RAG_CHUNK>>>\nembed \"text\" -> vec  (Bifrost embed-rag)\n<<<END_RAG_CHUNK>>>",
-      "score": 0.91,
-      "source": "spark-docs",
-      "title": "LANGUAGE.md"
-    },
-    {
-      "chunk_id": "docs/AI_MODELS.md#retrieval",
-      "id": "docs/AI_MODELS.md#retrieval",
-      "content": "<<<RAG_CHUNK>>>\nretrieve from project uses rag-gateway POST /v1/retrieve\n<<<END_RAG_CHUNK>>>",
-      "score": 0.87,
-      "source": "spark-docs",
-      "title": "AI_MODELS.md"
-    }
-  ],
-  "by_source": { "spark-docs": 2 },
-  "gateway_available": true,
-  "audience": "operator",
-  "project": "docs",
-  "backends_used": ["fixture"],
-  "cache_hit": false,
-  "crag": { "grade": "correct", "retried": false },
-  "note": "dry-run fixture — CRAG fields mirror gateway operator/cursor"
+ "chunks": [
+ {
+ "chunk_id": "docs/LANGUAGE.md#embed",
+ "id": "docs/LANGUAGE.md#embed",
+ "content": "<<<RAG_CHUNK>>>\nembed \"text\" -> vec (the AI gateway embed-rag)\n<<<END_RAG_CHUNK>>>",
+ "score": 0.91,
+ "source": "spark-docs",
+ "title": "LANGUAGE.md"
+ },
+ {
+ "chunk_id": "docs/AI_MODELS.md#retrieval",
+ "id": "docs/AI_MODELS.md#retrieval",
+ "content": "<<<RAG_CHUNK>>>\nretrieve from project uses rag-gateway POST /v1/retrieve\n<<<END_RAG_CHUNK>>>",
+ "score": 0.87,
+ "source": "spark-docs",
+ "title": "AI_MODELS.md"
+ }
+ ],
+ "by_source": { "spark-docs": 2 },
+ "gateway_available": true,
+ "audience": "operator",
+ "project": "docs",
+ "backends_used": ["fixture"],
+ "cache_hit": false,
+ "crag": { "grade": "correct", "retried": false },
+ "note": "dry-run fixture — retrieval grading fields mirror gateway operator/cursor"
 }

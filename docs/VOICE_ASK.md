@@ -8,25 +8,22 @@ Inspired by clear “ask the binary” product loops elsewhere;
 OpenBin remains a separate research/lab note
 ([research/LLM_DECOMPILE.md](research/LLM_DECOMPILE.md)).
 
-Dump / `--compile` / `--run-bc` stay SoT. **Never** 6000.
-Does **not** beat Claude. No API keys in git.
-
-Companions: `./spark-stt-tts` · brain: owned `spark-coder`
+Dump / `--compile` / `--run-bc` stay SoT. Companions: `./spark-stt-tts` · brain: owned `spark-coder`
 (TinyCoder) and/or dump-fact answers · map:
-[MODEL_ASPECTS.md](MODEL_ASPECTS.md) · voice surface:
+[Model aspects](MODEL_ASPECTS.md) · voice surface:
 [VOICE.md](VOICE.md).
 
 ## Quick start
 
 ```bash
 make helpers
-make spark-stt-tts          # optional for live STT/TTS
+make spark-stt-tts # optional for live STT/TTS
 # optional tiny brain:
 make spark-coder-train
 
 # Text (no mic) — dump facts / TinyCoder
 ./spark-ask docs/examples/spark-train-step.sparkbc \
-  --text "What opcodes are in this dump?"
+ --text "What opcodes are in this dump?"
 
 # Voice loop, offline CI (stub STT + stub WAV)
 ./spark-speak-ask docs/examples/spark-train-step.sparkbc --dry
@@ -56,15 +53,14 @@ Root `./spark-ask` and `./spark-speak-ask` are thin aliases of
 | `--weights PATH` | TinyCoder safetensors |
 | `--json` | Machine-readable result |
 
-## Brain honesty
-
+## Answer quality
 1. **Dump facts** — opcodes, sha256, magic SPBC, TRAIN presence
-   answered from decoded dump (preferred SoT).
+ answered from decoded dump (preferred SoT).
 2. **TinyCoder** — when `models/spark-coder/weights.safetensors`
-   exists, inject dump excerpt + question; greedy generate.
-3. **Weak / missing** — honesty footer: TinyCoder is **tiny**, not
-   OpenBin-level RE Q&A, does **not** beat Claude. Prefer
-   `dump.txt` / `ops.json`.
+ exists, inject dump excerpt + question; greedy generate.
+3. **Weak / missing** — note: TinyCoder is **tiny**, not
+ OpenBin-level RE Q&A, Prefer
+ `dump.txt` / `ops.json`.
 
 ## STT / TTS gates
 
@@ -85,7 +81,7 @@ URL without gate → fail closed (exit 2). Never print Bearer keys.
 make test-spark-ask
 # or:
 PYTHONPATH=python:tools python3 -m unittest \
-  tools.spark_ask.test_voice_ask -v
+ tools.spark_ask.test_voice_ask -v
 ```
 
 ## Grounding / anti-guess
@@ -96,17 +92,16 @@ expect / fixture / dump match:
 
 ```bash
 ./spark-ground ask --prompt "…" --dump dump.txt \
-  --candidate "…"   # miss → exit 2
+ --candidate "…" # miss → exit 2
 make test-ground
 ```
 
 See [knowledge/SAFETY_LIMITS.md](knowledge/SAFETY_LIMITS.md)
 (Grounded generation / anti-guess). Recompile ≠ semantics.
-Does **not** beat Claude.
 
 ## Related
 
 - Loop UX: [/workflow.html](/workflow.html)
 - Analyze project folder: `helpers/spark-analyze` (when present)
-- [SPARK_CODER.md](SPARK_CODER.md) · [TOOLS_HELPERS.md](TOOLS_HELPERS.md)
+- [Spark coder](SPARK_CODER.md) · [TOOLS_HELPERS.md](TOOLS_HELPERS.md)
 - [knowledge/SAFETY_LIMITS.md](knowledge/SAFETY_LIMITS.md)

@@ -5,11 +5,11 @@ Describe the task, pick a playbook, write almost no code.
 ## Quick start
 
 1. Start with an **explicit** model line (`model "…"` HF id / path /
-   configured name) or `include "lib/ai.spark"` (docs only — set model).
+ configured name) or `include "lib/ai.spark"` (docs only — set model).
 2. Copy a block from `lib/playbooks.spark` or a fixture under
-   `bootstrap/fixtures/playbooks/`.
+ `bootstrap/fixtures/playbooks/`.
 3. Or pick one in the **website playground** (Preset → AI playbooks) or
-   insert a `spark-playbook-*` snippet in Cursor/`make ide`.
+ insert a `spark-playbook-*` snippet in the local editor / `make ide`.
 4. Dry-run offline: `./spark-bootstrap --dry-run my_task.spark`
 5. Verify goldens: `make test-ai-playbooks`
 
@@ -23,13 +23,13 @@ Model-focused overview: [AI_MODELS.md](AI_MODELS.md).
 
 ## Model line (explicit)
 
-SparkLang is **not** a Bifrost plugin. There is **no** per-task alias
+SparkLang is **not** a the AI gateway plugin. There is **no** per-task alias
 roulette (`auto` inventing gateway aliases from task text).
 
 - Set `model "hf-org/name"` / `model "path/to/checkpoint"` / your
-  configured gateway model string.
+ configured gateway model string.
 - `use auto` keeps the **prior** configured line (`spark.toml` /
-  earlier `model`) and prints `[model] prior … (no alias pick)`.
+ earlier `model`) and prints `[model] prior … (no alias pick)`.
 - Dry-run never invents a model id from prompt text.
 
 ## Playbook catalog
@@ -59,8 +59,8 @@ print fix
 
 - Training / fine-tune pipeline (not this slice)
 - First-class `retrieve` / `embed` language ops — **shipped** (see
-  [AI_MODELS.md](AI_MODELS.md) + [LANGUAGE.md](LANGUAGE.md));
-  dry fixtures + `make test-rag-gateway`
+ [AI_MODELS.md](AI_MODELS.md) + [LANGUAGE.md](LANGUAGE.md));
+ dry fixtures + `make test-rag-gateway`
 
 Optional live gateway: `./spark-ask-http --model <explicit-id> …`.
 Gate: `make test-ask-gateway`.

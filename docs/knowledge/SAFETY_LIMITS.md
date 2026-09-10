@@ -37,14 +37,14 @@ ship is **forced grounding**: guessing should fail CI.
 
 | Guardrail | Where |
 |-----------|--------|
-| Never beat Claude | Eval, coder, hive, homepage |
-| Never train on RTX PRO 6000 | Factory / coder docs |
+| | Eval, coder, hive, homepage |
+| Prefer CPU or consumer GPU for train | Factory / coder docs |
 | Dry-run first | Learn trail, CI |
 | Abstain heads | [ABSTAIN_HEADS.md](../ABSTAIN_HEADS.md) |
 | Grounded generation / anti-guess | This page · `./spark-ground` |
 | LLM decompile ≠ SoT | [llm-decompile](../research/LLM_DECOMPILE.md) |
 | Recompile ≠ semantics | [DECOMPILE_RE.md](DECOMPILE_RE.md) · arXiv:2609.05370 |
-| Eyes vision stub only | [MODEL_ASPECTS.md](../MODEL_ASPECTS.md) |
+| Eyes vision stub only | [Model aspects](../MODEL_ASPECTS.md) |
 
 ## Grounding
 
@@ -52,16 +52,15 @@ ship is **forced grounding**: guessing should fail CI.
 
 **Goal:** make it **nearly impossible to pass CI while guessing** —
 abstain, retrieve/expect, tool allowlists, verify-before-speak,
-structured outputs. Not magic honesty weights.
-
+structured outputs. Not magic weights.
 ### Modify / adapt path (Qwen-class + Spark-owned)
 
 Language already has attach-only modify:
 
 ```text
 model modify keep_existing "out/train/existing-lora" \
-  add "out/train/job-dry-001/adapter.bin" \
-  head "out/heads/abstain.pt" -> modified
+ add "out/train/job-dry-001/adapter.bin" \
+ head "out/heads/abstain.pt" -> modified
 ```
 
 Companion API (manifest only — no Hub download, no PEFT train in
@@ -69,21 +68,20 @@ this tool):
 
 ```bash
 ./spark-ground adapter-attach \
-  --base qwen \
-  --keep-existing out/train/existing-lora \
-  --add out/train/job-dry-001/adapter.bin \
-  --add out/heads/abstain.pt \
-  --out out/ground/adapter_manifest.json
+ --base qwen \
+ --keep-existing out/train/existing-lora \
+ --add out/train/job-dry-001/adapter.bin \
+ --add out/heads/abstain.pt \
+ --out out/ground/adapter_manifest.json
 ```
 
 - **Spark-owned** bases (TinyCoder / STEP / reply-pack): train on
-  CPU or **5090** via existing factory / coder lanes.
+ CPU or **5090** via existing factory / coder lanes.
 - **External bases** (e.g. local Qwen HF dir): reverse/inspect via
-  `./spark-model-lab`; attach adapters/heads with
-  `keep_special_training`. **Full Qwen SFT** is operator **opt-in
-  large** on **5090** — **never** the RTX PRO **6000** (voice-only).
-- Owned homepage methods are **not** LoRA theater; see
-  [TRAINING.md](TRAINING.md) · [MODEL_LAB.md](../MODEL_LAB.md).
+ `./spark-model-lab`; attach adapters/heads with
+ `keep_special_training`. **Full Qwen SFT** is **opt-in
+ large** on **5090** — **never** the reserved voice GPUs. - Owned homepage methods are **not** LoRA theater; see
+ [TRAINING.md](TRAINING.md) · [MODEL_LAB.md](../MODEL_LAB.md).
 
 ### Functions (forced grounding)
 
@@ -105,14 +103,14 @@ Refuses to answer unless dump / fixture / expect (or schema) match:
 make spark-ground
 # Wrong guess fails CI (exit 2):
 ./spark-ground ask --prompt "dryer start price right now?" \
-  --sot-ok --expect "2.50" --candidate "9.99"
+ --sot-ok --expect "2.50" --candidate "9.99"
 # Match passes:
 ./spark-ground ask --prompt "dryer start price right now?" \
-  --sot-ok --expect "2.50" --candidate "2.50"
+ --sot-ok --expect "2.50" --candidate "2.50"
 # Structured verify (stdlib JSON Schema subset — no xgrammar dep):
 ./spark-ground verify \
-  --candidate '{"price_usd":2.5,"source":"fixture"}' \
-  --schema examples/fixtures/ground/want_price.schema.json
+ --candidate '{"price_usd":2.5,"source":"fixture"}' \
+ --schema examples/fixtures/ground/want_price.schema.json
 make test-ground
 ```
 
@@ -121,17 +119,17 @@ Flagship dry playbook: `examples/grounded_ask.spark` (with
 
 Optional constrained decode via **xgrammar** is **not** required;
 Spark verifies JSON against a small schema subset after generate.
-Heavier constrained-decode stacks stay opt-in operator choice.
+Heavier constrained-decode stacks stay opt-in.
 
 ```mermaid
 flowchart TB
-  ask[Request] --> tools{Tool allowlist?}
-  tools -->|denied| abs[Abstain]
-  tools -->|ok| inv{Inventable?}
-  inv -->|yes, no SoT| abs
-  inv -->|SoT / safe| ver[verify-before-speak]
-  ver -->|expect/dump/schema miss| abs
-  ver -->|match| ans[Answer + cite]
+ ask[Request] --> tools{Tool allowlist?}
+ tools -->|denied| abs[Abstain]
+ tools -->|ok| inv{Inventable?}
+ inv -->|yes, no SoT| abs
+ inv -->|SoT / safe| ver[verify-before-speak]
+ ver -->|expect/dump/schema miss| abs
+ ver -->|match| ans[Answer + cite]
 ```
 
 ## Practical checklist
@@ -142,19 +140,19 @@ flowchart TB
 4. Treat benchmark wins as **hypotheses**.
 5. When unsure — **abstain** and ask a human.
 6. Run **`make test-ground`** before claiming inventable facts are
-   safe.
+ safe.
 
 ```mermaid
 flowchart TB
-  ask[Request] --> ground{Grounded?}
-  ground -->|yes| ans[Answer + cite]
-  ground -->|no| tools[Tools / retrieve]
-  tools --> ground
-  ground -->|still no| abs[Abstain]
+ ask[Request] --> ground{Grounded?}
+ ground -->|yes| ans[Answer + cite]
+ ground -->|no| tools[Tools / retrieve]
+ tools --> ground
+ ground -->|still no| abs[Abstain]
 ```
 
-Hive home: [KNOWLEDGE.md](../KNOWLEDGE.md) · Learn:
-[/learn/](/learn/) · Factory: [FACTORY.md](../FACTORY.md) ·
-Behaviors: [MODEL_ASPECTS.md](../MODEL_ASPECTS.md) ·
+Hive home: [Knowledge](../KNOWLEDGE.md) · Learn:
+[/learn/](/learn/) · Factory: [Factory hub](../FACTORY.md) ·
+Behaviors: [Model aspects](../MODEL_ASPECTS.md) ·
 Voice ask: [VOICE_ASK.md](../VOICE_ASK.md) ·
-Coder: [SPARK_CODER.md](../SPARK_CODER.md).
+Coder: [Spark coder](../SPARK_CODER.md).
