@@ -1,8 +1,7 @@
 # Build models — TRAIN / STEP / ARTIFACT
 
 How Spark **programs** training in SPARK_BC and what lands on disk.
-Prefer CPU or a consumer GPU for train. (voice GPU). CPU fixtures only unless a future owner grant says
-otherwise.
+Train runs on CPU (default) or a consumer GPU. CPU fixtures only.
 
 Full factory: [SPARK_BC Builder](SPARK_BUILDER.md). Language verbs:
 [MODEL_TRAINING.md](MODEL_TRAINING.md) · [LANGUAGE.md](LANGUAGE.md).
@@ -12,7 +11,7 @@ Full factory: [SPARK_BC Builder](SPARK_BUILDER.md). Language verbs:
 | Byte | Mnemonic | LANGUAGE | Disk / stdout |
 |------|----------|----------|---------------|
 | `0x26` | `TRAIN` | `model train` / `model build` | dry job JSON; writes `ARTIFACT` under `out/train/<job>/`; `trained=false` until STEP |
-| `0x28` | `STEP` | `model step` | multi-outer **CPU SGD** → `weights.safetensors` + `checkpoint.json`; `trained=true` / `not_sgd=false` when grads apply |
+| `0x28` | `STEP` | `model step` | multi-pass **CPU SGD** → `weights.safetensors` + `checkpoint.json`; `trained=true` / `not_sgd=false` when grads apply |
 | `0x27` | `TRAIN_STATUS` | `model status` | dry status JSON |
 
 Dry fixture SoT: `bootstrap/dry_train.c`. Emitting TRAIN ≠ trained
@@ -59,11 +58,11 @@ Gates fail loud if loss does not drop.
 | Artifact | Meaning |
 |----------|---------|
 | Init safetensors from `dump.py --weights` | Derived from SPARK_BC bytes; Xavier; **not** trained |
-| STEP weights | Multi-outer CE on `lm_head` (+ optional embed); tiny fixture |
+| STEP weights | Multi-pass CE on `lm_head` (+ optional embed); tiny fixture |
 
 Init tensor layout (including **unused** attn Q/K/V/O slots):
 `python/sparklang/model_lab/weights.py`. Serve path today uses
-MLP0 only — [Attention / forward](ATTENTION_FORWARD.md).
+the MLP only — [Attention / forward](ATTENTION_FORWARD.md).
 
 ## Makefile targets
 
@@ -82,13 +81,6 @@ Details: [SPARKBC_MAKE.md](SPARKBC_MAKE.md).
 `./spark-train-http` remains the live HTTP job path
 ([MODEL_TRAINING.md](MODEL_TRAINING.md)). `backend` on train lines
 is parsed and skipped in SPARK_BC (not an operand).
-
-## Honest bar
-
-- Multi-outer CPU SGD on tiny Spark tensors — **yes** (tip
- `make spark-sgd-proof`).
-- Production LLM / Competitive AI win claims — **no**.
-- 6000 train — **never** from this lane.
 
 ## Related
 

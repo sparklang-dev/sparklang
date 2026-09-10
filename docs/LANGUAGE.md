@@ -106,9 +106,9 @@ as `TRAIN_STATUS` (`0x27`).
 Selfhost train seed: `selfhost/compile_train.spark` →
 `docs/examples/spark-selfhost-train.sparkbc`. Bootstrap
 `./spark-bootstrap --run-bc` **or** GAS `./spark --run-bc` runs that
-binary (TRAIN accept dry; STEP = multi-outer CPU SGD). GAS `./spark --dry-run`
+binary (TRAIN accept dry; STEP = multi-pass CPU SGD). GAS `./spark --dry-run`
 runs train verbs from source; GAS `--compile` wraps bootstrap emit.
-Emitting TRAIN/STEP ≠ beating Claude. See [SPARK_BC.md](SPARK_BC.md)
+Emitting TRAIN/STEP ≠ a trained production model. See [SPARK_BC.md](SPARK_BC.md)
 and [SPARK_BC Builder](SPARK_BUILDER.md) (sha256 table + reproduce
 commands). STEP→weights is **CPU SGD**
 (`out/train/<job>/weights.safetensors`; `trained=true` /
@@ -137,7 +137,7 @@ model status "job-dry-001" -> status # polls that job id
 
 ### `model step` (SPARK_BC `STEP` `0x28`)
 
-One training-loop tick in the binary — **multi-outer CPU SGD** on
+One training-loop tick in the binary — **multi-pass CPU SGD** on
 Spark tensors (fixture JSONL → CE on `lm_head`+embed; loss curve in
 `checkpoint.json`). Syntax:
 `model step "job-id" -> bind`. Compiles to `STEP` (job_id, bind).
@@ -152,7 +152,7 @@ loud if stub).
 Focused gate: `make sparkbc-e2e` (compile → dump TRAIN/STEP →
 `--run-bc` → assert `ARTIFACT`). Step-updated weights are
 **CPU SGD** (`weights.safetensors`; `trained=true`;
-`not_sgd=false`; loss must drop). Multi-outer; **measurement only.**.
+`not_sgd=false`; loss must drop). Multi-pass; **measurement only.**
 
 Optional **`method "…"`** selects the training algorithm
 (`spark_distill_cpu` | `spark_pref_pack` | `spark_playbook_fit` |
@@ -577,7 +577,7 @@ network). **A** opt-in — remote `http(s)://` + `--allow-net` → curl fetch
 a clear error instructing `--allow-net` — never dial, never a silent stub,
 never a permanent QUESTION menu.
 
-Honest framing: implement = codegen into `.spark` / suggestion files the
+Implement = codegen into `.spark` / suggestion files the
 asm VM can re-run or humans can read — not magical self-modifying Linux apps.
 
 ## IDE core (`ide`)
@@ -892,7 +892,7 @@ Same dry/`--live` split: `examples/browser_show.spark`,
  (product default is QUIC ON; use on for TCP h2/h1-only MITM).
 - **mitm quic status|listen|smoke|divert** — HTTP/3 lane; `smoke`
  forks `./spark-mitm-quic` (aioquic forge + SNI leaves). UDP MITM
- via divert→listen (CONNECT-UDP is honest 501 on Qt TCP proxy).
+ via divert→listen (CONNECT-UDP returns 501 on Qt TCP proxy).
 - **mitm har export** — writes a real HAR 1.2 file (byte-written).
  Requires `mitm enable`. Dry HAR is a synthetic single-entry from
  goto URL (valid 1.2); live multi-flow HAR comes from

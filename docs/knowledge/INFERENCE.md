@@ -47,7 +47,7 @@ Accuracy vs speed is empirical — see ACL 2025 trade-off discussion
 ## Spark status
 Spark **serve** today is a **tiny CPU forward** plus HTTP helpers —
 [Serve](SERVE.md). Do **not** read marketing KV-cache claims
-into the factory. 5090 OK for GPU experiments; ****.
+into the factory. A consumer GPU is optional for experiments.
 
 Next: [Multimodal](MULTIMODAL.md) · [Agents](AGENTS_TOOLS.md) ·
 [Attention / forward](ATTENTION_FORWARD.md).

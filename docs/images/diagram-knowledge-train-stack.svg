@@ -25,7 +25,7 @@
  <line x1="440" y1="140" x2="480" y2="140" stroke="#334155" stroke-width="2" marker-end="url(#b)"/>
  <line x1="660" y1="140" x2="700" y2="140" stroke="#334155" stroke-width="2" marker-end="url(#b)"/>
  <rect x="40" y="240" width="820" height="100" rx="10" fill="#fff" stroke="#cbd5e1" stroke-width="2"/>
- <text x="60" y="275" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#0f172a">Spark parallel (honest)</text>
- <text x="60" y="300" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#334155">Owned TinyCoder + five CPU reference methods + multi-outer SGD fixtures — not LoRA theater, not InstructGPT-scale RLHF.</text>
+ <text x="60" y="275" font-family="ui-sans-serif,system-ui,sans-serif" font-size="13" font-weight="700" fill="#0f172a">Spark parallel</text>
+ <text x="60" y="300" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#334155">Owned TinyCoder + five CPU reference methods + multi-pass SGD fixtures — not LoRA theater, not InstructGPT-scale RLHF.</text>
  <text x="60" y="322" font-family="ui-sans-serif,system-ui,sans-serif" font-size="12" fill="#64748b">See /docs/spark-coder.html · /docs/train-loop.html · /docs/factory.html</text>
 </svg>

@@ -161,11 +161,11 @@
 <p>All notable user-facing releases of <strong>SparkLang</strong> (the Spark programming language) are listed here. Site and installers track <code>website/downloads/manifest.json</code>.</p>
 <h2>0.6.60 — 2026-09-09</h2>
 <ul>
-<li><strong>Competitive weaknesses close:</strong> editor <strong>LSP</strong> (<code>tools/spark_lsp</code> + extension v0.2 hover/completion/diagnostics; <code>make test-spark-lsp</code>); dry <strong>receptionist</strong> with <code>expect</code> gates (<code>examples/receptionist.spark</code>); local <strong>ELF probe</strong> sections JSON (<code>spark-binary-probe --elf</code>, scoreboard <code>elf_local_probe</code> — still honest <strong>loss</strong> vs Ghidra on Multi-format ELF/PE); ROADMAP/ADOPTION sync (eval + LSP done; live transfer SM remains goal).</li>
+<li><strong>Competitive weaknesses close:</strong> editor <strong>LSP</strong> (<code>tools/spark_lsp</code> + extension v0.2 hover/completion/diagnostics; <code>make test-spark-lsp</code>); dry <strong>receptionist</strong> with <code>expect</code> gates (<code>examples/receptionist.spark</code>); local <strong>ELF probe</strong> sections JSON (<code>spark-binary-probe --elf</code>, scoreboard <code>elf_local_probe</code> — still a <strong>loss</strong> vs Ghidra on Multi-format ELF/PE); ROADMAP/ADOPTION sync (eval + LSP done; live transfer SM remains goal).</li>
 </ul>
 <h2>0.6.59 — 2026-09-09</h2>
 <ul>
-<li><strong>Site polish / leak scrub:</strong> drop <code>(owner hierarchy)</code> from public language tiers + README lowest-level heading; scrub operator parentheticals (<code>owner cite</code>, <code>owner addendum</code>, <code>OWNER-CONFIRM</code>, lane letters in living docs headings/body); trim meta-description &quot;a marketing win.&quot; / &quot;&quot; spam (honest eval/coder/factory notes stay once where they belong); remove the host-local report path from public README. <code>make docs-html</code> / <code>docs-check</code> green.</li>
+<li><strong>Site polish / leak scrub:</strong> drop <code>(owner hierarchy)</code> from public language tiers + README lowest-level heading; scrub operator parentheticals (<code>owner cite</code>, <code>owner addendum</code>, <code>OWNER-CONFIRM</code>, lane letters in living docs headings/body); trim meta-description &quot;a marketing win.&quot; / &quot;&quot; spam (eval/coder/factory notes stay once where they belong); remove the host-local report path from public README. <code>make docs-html</code> / <code>docs-check</code> green.</li>
 </ul>
 <h2>0.6.58 — 2026-09-09</h2>
 <ul>
@@ -181,7 +181,7 @@
 </ul>
 <h2>0.6.55 — 2026-09-09</h2>
 <ul>
-<li><strong>Grounded generation / anti-guess:</strong> <code>./spark-ground</code> forces verify-before-speak — wrong expect / fixture / dump / schema → abstain (exit 2). Thin <code>adapter-attach</code> manifest for Qwen-class + Spark-owned modify hooks (<code>keep_special_training</code>; full external SFT opt-in on <strong>5090</strong>). Stdlib JSON Schema subset (no xgrammar dep). Docs: <a href="docs/knowledge/SAFETY_LIMITS.md">SAFETY_LIMITS.md</a> → <a href="/docs/knowledge-safety.html">/docs/knowledge-safety.html</a>. Gate: <code>make test-ground</code>. Does <strong>not</strong> claim impossible to lie; Measurement only. Playbook: <code>examples/grounded_ask.spark</code>.</li>
+<li><strong>Grounded generation / anti-guess:</strong> <code>./spark-ground</code> forces verify-before-speak — wrong expect / fixture / dump / schema → abstain (exit 2). Thin <code>adapter-attach</code> manifest for Qwen-class + Spark-owned modify hooks (<code>keep_special_training</code>; full external SFT opt-in on a consumer GPU). Stdlib JSON Schema subset (no xgrammar dep). Docs: <a href="docs/knowledge/SAFETY_LIMITS.md">SAFETY_LIMITS.md</a> → <a href="/docs/knowledge-safety.html">/docs/knowledge-safety.html</a>. Gate: <code>make test-ground</code>. Does <strong>not</strong> claim impossible to lie; Measurement only. Playbook: <code>examples/grounded_ask.spark</code>.</li>
 </ul>
 <h2>0.6.54 — 2026-09-09</h2>
 <ul>
@@ -189,11 +189,11 @@
 </ul>
 <h2>0.6.53 — 2026-09-09</h2>
 <ul>
-<li><strong>Sensory mapping 100× (Model aspects):</strong> expand <a href="docs/MODEL_ASPECTS.md">MODEL_ASPECTS.md</a> → <a href="/docs/model-aspects.html">/docs/model-aspects.html</a> with hero explainer, deep Ears/Eyes/Speaking/Thinking/Behaviors sections (dataflows, opcodes/CLI/make, tiny vs large, gaps), agentic system loop SVG, Spark vs OpenBin Ask vs phone-voice comparison (local SoT — not clones), 15-min how-to lab. Keeps summary status table. New diagrams under <code>docs/images/diagram-*sense*</code> + <code>diagram-agentic-sensory-loop.svg</code> + <code>diagram-spark-vs-external-stacks.svg</code>. Cross-links Knowledge hive, Voice ask, Voice easy, Methods vs OpenBin. Forge nav lists Model aspects. <strong>Honest:</strong> eyes planned stub only; measurement only.; no OpenBin/phone clone. Also fix <code>md_to_doc_html.py</code> so <code>!<a href="images/*.svg">…</a></code> publishes as <code>&lt;img&gt;</code> under <code>/docs/images/</code> (was incorrectly rewritten to inline code).</li>
+<li><strong>Sensory mapping 100× (Model aspects):</strong> expand <a href="docs/MODEL_ASPECTS.md">MODEL_ASPECTS.md</a> → <a href="/docs/model-aspects.html">/docs/model-aspects.html</a> with hero explainer, deep Ears/Eyes/Speaking/Thinking/Behaviors sections (dataflows, opcodes/CLI/make, tiny vs large, gaps), agentic system loop SVG, Spark vs OpenBin Ask vs phone-voice comparison (local SoT — not clones), 15-min how-to lab. Keeps summary status table. New diagrams under <code>docs/images/diagram-*sense*</code> + <code>diagram-agentic-sensory-loop.svg</code> + <code>diagram-spark-vs-external-stacks.svg</code>. Cross-links Knowledge hive, Voice ask, Voice easy, Methods vs OpenBin. Forge nav lists Model aspects. <strong>Note:</strong> eyes not available; measurement only; no OpenBin/phone clone. Also fix <code>md_to_doc_html.py</code> so <code>!<a href="images/*.svg">…</a></code> publishes as <code>&lt;img&gt;</code> under <code>/docs/images/</code> (was incorrectly rewritten to inline code).</li>
 </ul>
 <h2>0.6.52 — 2026-09-09</h2>
 <ul>
-<li><strong>Voice easy train (tiny + large):</strong> piece-of-cake owned STT/TTS heads — <code>make voice-easy</code> / <code>./spark-voice easy</code> (env → fixtures → train → dry round-trip). Default <strong>tiny</strong> for CI; opt-in <code>--scale large</code> / <code>VOICE_SCALE=large</code> (bigger dims/steps; prefer <strong>RTX 5090</strong>, ~2 GiB hint; <strong>fail closed</strong> if only PRO <strong>6000</strong> visible unless <code>--device cpu</code>). Docs: <a href="docs/VOICE_EASY.md">VOICE_EASY.md</a> → <a href="/docs/voice-easy.html">/docs/voice-easy.html</a>. IDE command <strong>Spark: Voice easy train</strong>. Gate: <code>make test-voice-easy</code>.</li>
+<li><strong>Voice easy train (tiny + large):</strong> piece-of-cake owned STT/TTS heads — <code>./spark-voice easy</code> (env → fixtures → train → dry round-trip). Default <strong>tiny</strong> for CI; opt-in <code>--scale large</code> / <code>VOICE_SCALE=large</code> (bigger dims/steps; consumer GPU suggested, ~2 GiB hint; <strong>fail closed</strong> if no suitable device unless <code>--device cpu</code>). Docs: <a href="docs/VOICE_EASY.md">VOICE_EASY.md</a> → <a href="/docs/voice-easy.html">/docs/voice-easy.html</a>. IDE command <strong>Spark: Voice easy train</strong>. Gate: <code>make test-voice-easy</code>.</li>
 </ul>
 <h2>0.6.51 — 2026-09-09</h2>
 <ul>
@@ -209,16 +209,16 @@
 </ul>
 <h2>0.6.48 — 2026-09-09</h2>
 <ul>
-<li><strong>Weight gallery (tiny → xl):</strong> catalog init / SGD / checkpoints / scale fixtures / spark-coder / large+xl multi-layer stubs. CLI <code>tools/spark-weights/cli.py</code> (inspect, play, diff, stats, generate). Docs <a href="/docs/weight-gallery.html">/docs/weight-gallery.html</a> + <a href="/weight-playground.html">/weight-playground.html</a>. <code>make weight-gallery</code> / <code>make test-weights-play</code>; <code>make weight-gallery-xl</code> prefers <strong>5090</strong>, Stub weights only — not production LLMs; Measurement only.</li>
+<li><strong>Weight gallery (tiny → xl):</strong> catalog init / SGD / checkpoints / scale fixtures / spark-coder / large+xl multi-layer stubs. CLI <code>tools/spark-weights/cli.py</code> (inspect, play, diff, stats, generate). Docs <a href="/docs/weight-gallery.html">/docs/weight-gallery.html</a> + <a href="/weight-playground.html">/weight-playground.html</a>. <code>make weight-gallery</code> / <code>make test-weights-play</code>; <code>make weight-gallery-xl</code> is opt-in. Stub weights only — not production LLMs; Measurement only.</li>
 </ul>
 <h2>0.6.47 — 2026-09-09</h2>
 <ul>
 <li><strong>AI knowledge hive:</strong> engineer-grade explainers at <a href="https://sparklang.dev/docs/knowledge.html">/docs/knowledge.html</a> (aliases <code>/docs/knowledge</code>, <code>/learn/knowledge</code>) with topic pages for transformers, training (SFT/RLHF/LoRA), inference (KV/quant), multimodal, agents/tools, evaluation, decompile+RE (links existing llm-decompile; recompile≠semantics), and safety. Original SVG diagrams; cited papers. Nav: <strong>Knowledge</strong> + <strong>Hive</strong> menu beside Learn / Forge / Bench. Measurement only.; not an OpenBin clone.</li>
-<li><strong>Tiny vs large (spark-coder scales):</strong> spark-coder <code>./spark-code train --scale {tiny,large}</code> + <code>make spark-coder-train-large</code> (opt-in dim 64 / n_layer 4). Tiny remains CI/default. Prefer <strong>RTX 5090</strong>; hard-refuse <strong>6000</strong>. status table in <a href="docs/SPARK_CODER.md">SPARK_CODER.md</a> → <a href="/docs/spark-coder.html">/docs/spark-coder.html</a>; voice/weight play notes in <a href="docs/VOICE.md">VOICE.md</a>; SoT <code>examples/fixtures/coder/scale_config.json</code>. <code>./spark-code scales</code>. <strong>measurement only.</strong></li>
+<li><strong>Tiny vs large (spark-coder scales):</strong> spark-coder <code>./spark-code train --scale {tiny,large}</code> (opt-in dim 64 / n_layer 4). Tiny remains CI/default; large runs on a consumer GPU or CPU. status table in <a href="docs/SPARK_CODER.md">SPARK_CODER.md</a> → <a href="/docs/spark-coder.html">/docs/spark-coder.html</a>; voice/weight play notes in <a href="docs/VOICE.md">VOICE.md</a>; SoT <code>examples/fixtures/coder/scale_config.json</code>. <code>./spark-code scales</code>. <strong>measurement only.</strong></li>
 </ul>
 <h2>0.6.46 — 2026-09-09</h2>
 <ul>
-<li><strong>Docs status after attention + TinyCoder land:</strong> rebase <a href="docs/ATTENTION_FORWARD.md">Attention / forward</a>, <a href="docs/ARCHITECTURE.md">ARCHITECTURE.md</a>, <a href="docs/FACTORY.md">FACTORY.md</a>, <a href="docs/SERVE.md">SERVE.md</a>, <a href="docs/TRAIN_LOOP.md">TRAIN_LOOP.md</a>, <a href="docs/MODEL_ASPECTS.md">MODEL_ASPECTS.md</a> so tip claims match merged D layer-0 attn train+serve and M owned TinyCoder. still <strong>measurement only</strong>.; no RoPE / multi-layer / KV-cache claim.</li>
+<li><strong>Docs status after attention + TinyCoder land:</strong> rebase <a href="docs/ATTENTION_FORWARD.md">Attention / forward</a>, <a href="docs/ARCHITECTURE.md">ARCHITECTURE.md</a>, <a href="docs/FACTORY.md">FACTORY.md</a>, <a href="docs/SERVE.md">SERVE.md</a>, <a href="docs/TRAIN_LOOP.md">TRAIN_LOOP.md</a>, <a href="docs/MODEL_ASPECTS.md">MODEL_ASPECTS.md</a> so doc claims match the merged attention train+serve and the owned TinyCoder. Still <strong>measurement only</strong>; no multi-layer / KV-cache claim.</li>
 </ul>
 <h2>0.6.45 — 2026-09-09</h2>
 <ul>
@@ -226,7 +226,7 @@
 </ul>
 <h2>0.6.44 — 2026-09-09</h2>
 <ul>
-<li><strong>layer-0 attention layer-0 attention train + serve:</strong> <code>STEP</code> / <code>apply_sgd_step</code> defaults to sequence next-token CE through last-query causal MHA (GQA) on <code>spark.layers.0</code> q/k/v/o (+ embed + lm_head). CPU by default; <strong>RTX 5090 OK</strong>; <strong>NEVER</strong> reserved voice GPUs. <code>--no-train-attn</code> keeps mean-pool CE. Serve / eval use <code>embed→attn0→(mlp0)→norm→lm_head</code> when tensors exist. Train fixture oversamples frozen eval probes. Gate: <code>make test-sparkbc</code>, <code>make sparkbc-e2e</code>, <code>make spark-sgd-proof</code> (asserts copy_recall&gt;0 and next_token&gt;0). <strong>measurement only.</strong> Docs: <a href="docs/SPARK_BUILDER.md">SPARK_BUILDER.md</a>.</li>
+<li><strong>Attention train + serve:</strong> <code>STEP</code> / <code>apply_sgd_step</code> defaults to sequence next-token CE through causal attention (GQA) on <code>spark.layers.0</code> q/k/v/o (+ embed + lm_head). CPU by default; a consumer GPU is optional. <code>--no-train-attn</code> keeps mean-pool CE. Serve / eval use <code>embed→attn→(mlp)→norm→lm_head</code> when tensors exist. Train fixture oversamples eval probes. Gate: <code>make test-sparkbc</code>, <code>make sparkbc-e2e</code>, <code>make spark-sgd-proof</code> (asserts copy_recall&gt;0 and next_token&gt;0). <strong>measurement only.</strong> Docs: <a href="docs/SPARK_BUILDER.md">SPARK_BUILDER.md</a>.</li>
 </ul>
 <h2>0.6.43 — 2026-09-09</h2>
 <ul>
@@ -234,16 +234,15 @@
 </ul>
 <h2>0.6.42 — 2026-09-09</h2>
 <ul>
-<li><strong>Owned Spark coder:</strong> in-repo TinyCoder (<code>python/sparklang/spark_coder/</code>) — layers, embed, MLP, lm_head — trained with CPU SGD (optional <strong>RTX 5090</strong> torch path; <strong>never</strong> reserved voice GPUs) on authored coding fixtures (<code>examples/fixtures/coder/</code>). CLI <code>./spark-code</code> train / generate / prove / tool-loop. Packaged under <code>models/spark-coder/</code> and SDK pack when trained. Docs: <a href="docs/SPARK_CODER.md">SPARK_CODER.md</a> → <code>/docs/spark-coder.html</code>. Gate: <code>make test-spark-coder</code> / <code>make spark-coder-train</code>. <strong>Not</strong> a HF / frontier-API / gateway brain. Measurement only.</li>
+<li><strong>Owned Spark coder:</strong> in-repo TinyCoder (<code>python/sparklang/spark_coder/</code>) — layers, embed, MLP, lm_head — trained with CPU SGD (optional consumer-GPU torch path) on authored coding fixtures (<code>examples/fixtures/coder/</code>). CLI <code>./spark-code</code> train / generate / prove / tool-loop. Packaged under <code>models/spark-coder/</code> and SDK pack when trained. Docs: <a href="docs/SPARK_CODER.md">SPARK_CODER.md</a> → <code>/docs/spark-coder.html</code>. Gate: <code>make test-spark-coder</code>. <strong>Not</strong> a HF / frontier-API / gateway brain. Measurement only.</li>
 </ul>
 <h2>0.6.41 — 2026-09-09</h2>
 <ul>
 <li><strong>Helpers / shadows / tools:</strong> enhances SDK-pack minimal helpers with ergonomic CLIs under <code>helpers/</code> (compile→run→inspect, train-proof shortcut, env check, BC pretty-print + diff, shadow copy / <code>build/shadow/</code> / hash verify), kit under <code>tools/spark_kit/</code> (hexdump, opcode sheet, fixture lint, vocab inspect), pack overlay via <code>tools/package_helpers_k.sh</code> into <code>dist/spark-sdk/</code> and SDK-pack <code>out/sdk-pack/</code> when present. Gates: <code>make helpers</code>, <code>make tools-test</code> (with <code>make sdk-pack</code> / <code>make test-sdk-pack</code>). Docs: <a href="docs/TOOLS_HELPERS.md">TOOLS_HELPERS.md</a> → <code>/docs/tools-helpers.html</code>. </li>
 </ul>
 <ul>
-<li><strong>AI model aspects:</strong> engineer hub for behaviors, ears/STT, eyes/vision, speaking/TTS, thinking/generation, memory, tools, train, eval, and serve wiring. Page: <a href="docs/MODEL_ASPECTS.md">MODEL_ASPECTS.md</a> → <code>/docs/model-aspects.html</code>. Voice detail also published at <code>/docs/voice.html</code>. SVG diagrams: ears→brain→voice and behavior/tool loop under <code>docs/images/</code>. Thin <strong>planned</strong> vision stub: <code>python/sparklang/senses/</code> (<code>make test-senses</code>). Honest: STT/TTS language surface exists; vision runtime <strong>not</strong> shipped; attention decode still partial; <strong>measurement only</strong>.</li>
+<li><strong>AI model aspects:</strong> engineer hub for behaviors, ears/STT, eyes/vision, speaking/TTS, thinking/generation, memory, tools, train, eval, and serve wiring. Page: <a href="docs/MODEL_ASPECTS.md">MODEL_ASPECTS.md</a> → <code>/docs/model-aspects.html</code>. Voice detail also published at <code>/docs/voice.html</code>. SVG diagrams: ears→brain→voice and behavior/tool loop under <code>docs/images/</code>. STT/TTS language surface exists; vision runtime <strong>not</strong> shipped; attention decode still partial; <strong>measurement only</strong>.</li>
 </ul>
-<h2>0.6.40 — 2026-09-09</h2>
 <h2>0.6.39 — 2026-09-09</h2>
 <ul>
 <li><strong>Decompile UX + LLM research:</strong> step-by-step <a href="docs/DECOMPILE.md">DECOMPILE.md</a> with CLI screenshots, annotated SDK GUI mock, and SVG tool-function diagrams (compile path, decompile path, helpers/GUI, deterministic vs LLM, LLM assist flows). Research <a href="docs/research/LLM_DECOMPILE.md">docs/research/LLM_DECOMPILE.md</a> → <code>/docs/llm-decompile.html</code> (LLM4Decompile, Nova, SK2, Decompile-Bench, AutoDecompiler, Ghidra+LLM — cited). Complements Mermaid <a href="docs/DIAGRAMS.md">DIAGRAMS.md</a> and SDK-pack <code>spark-bc-gui</code>. Dump stays SoT. <strong>Never</strong> perfect SPARK_BC LLM claim. Measurement only. Images: <code>website/docs/images/decompile-*</code>, <code>diagram-*</code>.</li>
@@ -258,7 +257,7 @@
 </ul>
 <h2>0.6.36 — 2026-09-09</h2>
 <ul>
-<li><strong>Factory docs (full map):</strong> engineer Pages for the whole SPARK_BC factory — compile/assemble, decompile/inspect, opcodes (ISA), build models + weights/checkpoints, tokenizer/BPE, train loop (outer/inner SGD; scale fixture linked), architecture (embed/RMSNorm/lm_head/MLP; attention honest/partial), serve forward + HTTP/stdio API (serve API path linked), eval harness (frontier-API baseline linked; measurement only), makefile targets, CI/Pages contributor how-to. Hub: <a href="docs/FACTORY.md">FACTORY.md</a> → <code>/docs/factory.html</code>. Also: <code>/docs/compile.html</code>, <code>/docs/decompile.html</code>, <code>/docs/spark-bc.html</code>, <code>/docs/build-models.html</code>, <code>/docs/train-loop.html</code>, <code>/docs/architecture.html</code>, <code>/docs/attention-forward.html</code>, <code>/docs/tokenizer.html</code>, <code>/docs/serve.html</code>, <code>/docs/eval.html</code>, <code>/docs/sparkbc-make.html</code>, <code>/docs/ci-pages.html</code>. Regen/check: <code>make docs-html</code> / <code>make docs-check</code>.</li>
+<li><strong>Factory docs (full map):</strong> engineer Pages for the whole SPARK_BC factory — compile/assemble, decompile/inspect, opcodes (ISA), build models + weights/checkpoints, tokenizer/BPE, train loop (outer/inner SGD; scale fixture linked), architecture (embed/RMSNorm/lm_head/MLP; attention partial), serve forward + HTTP/stdio API (serve API path linked), eval harness (measurement only), makefile targets, CI/Pages contributor how-to. Hub: <a href="docs/FACTORY.md">FACTORY.md</a> → <code>/docs/factory.html</code>. Also: <code>/docs/compile.html</code>, <code>/docs/decompile.html</code>, <code>/docs/spark-bc.html</code>, <code>/docs/build-models.html</code>, <code>/docs/train-loop.html</code>, <code>/docs/architecture.html</code>, <code>/docs/attention-forward.html</code>, <code>/docs/tokenizer.html</code>, <code>/docs/serve.html</code>, <code>/docs/eval.html</code>, <code>/docs/sparkbc-make.html</code>, <code>/docs/ci-pages.html</code>. Regen/check: <code>make docs-html</code> / <code>make docs-check</code>.</li>
 </ul>
 <h2>0.6.35 — 2026-09-09</h2>
 <ul>
@@ -270,21 +269,20 @@
 </ul>
 <h2>0.6.33 — 2026-09-09</h2>
 <ul>
-<li><strong>Claude eval baseline (honest):</strong> <code>make spark-eval-claude</code> / <code>CLAUDE=auto|on|off</code> runs Spark frozen probes plus an optional Anthropic Messages baseline <strong>only if</strong> credentials already exist on the box. No key → <code>skipped_no_credentials</code> (clear status). Side-by-side comparison table; <code>claim</code> always <strong>false</strong>. Never publishes competitive AI win claims. Gate: <code>make test-spark-eval</code>. Docs: Evaluation in <a href="docs/SPARK_BUILDER.md">SPARK_BUILDER.md</a>.</li>
 </ul>
 <h2>0.6.32 — 2026-09-09</h2>
 <ul>
-<li><strong>Multi-outer CPU SGD + checkpoint:</strong> <code>STEP</code> / <code>apply_sgd_step</code> runs outer×inner CE on a larger train fixture (36 pairs), optional embed grads, writes <code>checkpoint.json</code> with an honest <code>loss_curve</code>. Defaults: <code>--outer 4 --inner 8</code>. Gate: <code>make test-sparkbc</code>, <code>make sparkbc-e2e</code>, <code>make spark-sgd-proof</code> (SGD then measurement-only <code>spark-eval</code>). <strong>measurement only.</strong></li>
-<li><strong>Serve MLP0:</strong> tiny CPU forward uses layer-0 SwiGLU MLP when tensors exist (<code>embed→mlp0→norm→lm_head</code>). Still not production.</li>
+<li><strong>Multi-pass CPU SGD + checkpoint:</strong> <code>STEP</code> / <code>apply_sgd_step</code> runs outer×inner CE on a larger train fixture (36 pairs), optional embed grads, writes <code>checkpoint.json</code> with a <code>loss_curve</code>. Defaults: <code>--outer 4 --inner 8</code>. Gate: <code>make test-sparkbc</code>, <code>make sparkbc-e2e</code>, <code>make spark-sgd-proof</code> (SGD then measurement-only <code>spark-eval</code>). <strong>measurement only.</strong></li>
+<li><strong>Serve MLP:</strong> tiny CPU forward uses a single-layer SwiGLU MLP when tensors exist (<code>embed→mlp→norm→lm_head</code>). Still not production.</li>
 <li>Docs: <a href="docs/SPARK_BUILDER.md">SPARK_BUILDER.md</a>.</li>
 </ul>
 <h2>0.6.31 — 2026-09-08</h2>
 <ul>
-<li><strong>STEP CPU SGD:</strong> <code>--run-bc</code> <code>STEP</code> (<code>0x28</code>) runs real CPU SGD on Spark-created <code>lm_head</code> from <code>examples/fixtures/train/dataset.jsonl</code> (mean-pool embed → CE). Writes <code>weights.safetensors</code> with <code>trained=true</code> / <code>not_sgd=false</code> only when loss drops and grads apply; fails loud otherwise. Helper <code>apply_sgd_step</code> / <code>tools/spark-bc-dump/apply_step.py</code>. Gates: <code>make test-sparkbc</code> (loss drop), <code>make sparkbc-e2e</code>. <strong>measurement only.</strong> No 6000 Docs: <a href="docs/SPARK_BUILDER.md">SPARK_BUILDER.md</a>.</li>
+<li><strong>STEP CPU SGD:</strong> <code>--run-bc</code> <code>STEP</code> (<code>0x28</code>) runs real CPU SGD on Spark-created <code>lm_head</code> from <code>examples/fixtures/train/dataset.jsonl</code> (mean-pool embed → CE). Writes <code>weights.safetensors</code> with <code>trained=true</code> / <code>not_sgd=false</code> only when loss drops and grads apply; fails loud otherwise. Helper <code>apply_sgd_step</code> / <code>tools/spark-bc-dump/apply_step.py</code>. Gates: <code>make test-sparkbc</code> (loss drop), <code>make sparkbc-e2e</code>. <strong>measurement only.</strong> Docs: <a href="docs/SPARK_BUILDER.md">SPARK_BUILDER.md</a>.</li>
 </ul>
 <h2>0.6.30 — 2026-09-09</h2>
 <ul>
-<li><strong>Tiny CPU serve forward:</strong> <code>dump.py --serve</code> / <code>./spark-serve</code> load Spark safetensors (or emit init), run one embed→RMSNorm→lm_head matmul on CPU, write <code>SERVE</code> with <code>forward=true</code> and honest <code>trained</code> from weights meta. Tiny forward serve for SPARK_BC / safetensors. Gate: <code>make test-sparkbc</code>. Docs: <a href="docs/SPARK_BUILDER.md">SPARK_BUILDER.md</a>.</li>
+<li><strong>Tiny CPU serve forward:</strong> <code>dump.py --serve</code> / <code>./spark-serve</code> load Spark safetensors (or emit init), run one embed→RMSNorm→lm_head matmul on CPU, write <code>SERVE</code> with <code>forward=true</code> and <code>trained</code> from weights meta. Tiny forward serve for SPARK_BC / safetensors. Gate: <code>make test-sparkbc</code>. Docs: <a href="docs/SPARK_BUILDER.md">SPARK_BUILDER.md</a>.</li>
 </ul>
 <h2>0.6.29 — 2026-09-08</h2>
 <ul>
@@ -302,7 +300,7 @@
 </ul>
 <h2>0.6.26 — 2026-09-08</h2>
 <ul>
-<li><strong>Builder / SPARK_BC factory:</strong> Spark compiles Spark to SPARK_BC (<code>selfhost/compile.spark</code> → <code>docs/examples/spark-self.sparkbc</code>) and emits <strong>Spark-created init weights</strong> from those bytes (<code>docs/examples/spark-self.init.safetensors</code>). Training is also in the binary: <code>TRAIN</code> <code>0x26</code> / <code>STEP</code> <code>0x28</code> / <code>TRAIN_STATUS</code> <code>0x27</code>. Builder: <code>examples/spark_builder.spark</code> → <code>docs/examples/spark-builder.sparkbc</code>. Selfhost train seed: <code>selfhost/compile_train.spark</code> → <code>docs/examples/spark-selfhost-train.sparkbc</code>. STEP proof stream TRAIN→STEP→TRAIN_STATUS: <code>examples/spark_train_step.spark</code> → <code>docs/examples/spark-train-step.sparkbc</code> (sha256 <code>d08925b52bf8c840de626c9cfec619d4dbae5a674b94bb8c7c5837eb1ac64551</code>). Syntax: <code>model step &quot;job-id&quot; -&gt; bind</code>. Dump: <code>docs/examples/spark-builder-bc.txt</code>. Execute from published <code>.sparkbc</code>: <code>./spark-bootstrap --run-bc</code> (dry fixture + ARTIFACT marker; <code>trained=false</code>; not SGD). Dry ≠ trained. GAS <code>./spark --dry-run</code> runs train verbs from source; GAS does <strong>not emit</strong> <code>.sparkbc</code> (use bootstrap <code>--compile</code>). GAS <code>--run-bc</code> added later (0.6.29). Page: <a href="docs/SPARK_BUILDER.md">SPARK_BUILDER.md</a> / <code>/docs/spark-builder.html</code>. Honest: init, not trained. No imported weights. Emitting TRAIN/STEP ≠ a trained model. Later train grows under measurement (not a published claim). Companion <code>tools/spark-bc-dump/dump.py</code>.</li>
+<li><strong>Builder / SPARK_BC factory:</strong> Spark compiles Spark to SPARK_BC (<code>selfhost/compile.spark</code> → <code>docs/examples/spark-self.sparkbc</code>) and emits <strong>Spark-created init weights</strong> from those bytes (<code>docs/examples/spark-self.init.safetensors</code>). Training is also in the binary: <code>TRAIN</code> <code>0x26</code> / <code>STEP</code> <code>0x28</code> / <code>TRAIN_STATUS</code> <code>0x27</code>. Builder: <code>examples/spark_builder.spark</code> → <code>docs/examples/spark-builder.sparkbc</code>. Selfhost train seed: <code>selfhost/compile_train.spark</code> → <code>docs/examples/spark-selfhost-train.sparkbc</code>. STEP proof stream TRAIN→STEP→TRAIN_STATUS: <code>examples/spark_train_step.spark</code> → <code>docs/examples/spark-train-step.sparkbc</code> (sha256 <code>d08925b52bf8c840de626c9cfec619d4dbae5a674b94bb8c7c5837eb1ac64551</code>). Syntax: <code>model step &quot;job-id&quot; -&gt; bind</code>. Dump: <code>docs/examples/spark-builder-bc.txt</code>. Execute from published <code>.sparkbc</code>: <code>./spark-bootstrap --run-bc</code> (dry fixture + ARTIFACT marker; <code>trained=false</code>; not SGD). Dry ≠ trained. GAS <code>./spark --dry-run</code> runs train verbs from source; GAS does <strong>not emit</strong> <code>.sparkbc</code> (use bootstrap <code>--compile</code>). GAS <code>--run-bc</code> added later (0.6.29). Page: <a href="docs/SPARK_BUILDER.md">SPARK_BUILDER.md</a> / <code>/docs/spark-builder.html</code>. Init, not trained. No imported weights. Emitting TRAIN/STEP ≠ a trained model. Later train grows under measurement (not a published claim). Companion <code>tools/spark-bc-dump/dump.py</code>.</li>
 </ul>
 <h2>0.6.25 — 2026-09-08</h2>
 <ul>
@@ -336,11 +334,11 @@
 </ul>
 <h2>0.6.18 — 2026-09-02</h2>
 <ul>
-<li><strong>Flagship no-invent example:</strong> <code>examples/no_invent.spark</code> — SoT/<code>expect</code> first for inventable facts, <code>head abstain</code> + gated <code>head ask</code> for open asks (IDK + HALT). Honest scope: architecture prevents inventable open-decode, not “all hallucination forever.” Docs: <a href="docs/ABSTAIN_HEADS.md">docs/ABSTAIN_HEADS.md</a>, PROGRAMMING_GUIDE / LANGUAGE. Gate: <code>make test-abstain</code>.</li>
+<li><strong>Flagship no-invent example:</strong> <code>examples/no_invent.spark</code> — SoT/<code>expect</code> first for inventable facts, <code>head abstain</code> + gated <code>head ask</code> for open asks (IDK + HALT). Scope: architecture prevents inventable open-decode, not “all hallucination forever.” Docs: <a href="docs/ABSTAIN_HEADS.md">docs/ABSTAIN_HEADS.md</a>, PROGRAMMING_GUIDE / LANGUAGE. Gate: <code>make test-abstain</code>.</li>
 </ul>
 <h2>0.6.17 — 2026-09-02</h2>
 <ul>
-<li><strong>Abstain held-out eval + continue-SAMPLE:</strong> <code>./spark-abstain --live eval</code> stratified train/held-out split, retrain on train fold, precision/recall/F1 on held-out (fixture/synthetic/host only — not production SOTA). Corpus seed ~105 rows. Continue path covered: HF <code>generate</code> when gate continues; <code>SPARK_ABSTAIN_SAMPLE_URL</code> OpenAI-compat SAMPLE; honest deferred note otherwise. Docs: <a href="docs/ABSTAIN_HEADS.md">docs/ABSTAIN_HEADS.md</a>. Gate: <code>make test-abstain</code> (optional kl3m eval if smoke dir present).</li>
+<li><strong>Abstain held-out eval + continue-SAMPLE:</strong> <code>./spark-abstain --live eval</code> stratified train/held-out split, retrain on train fold, precision/recall/F1 on held-out (fixture/synthetic/host only — not production SOTA). Corpus seed ~105 rows. Continue path covered: HF <code>generate</code> when gate continues; <code>SPARK_ABSTAIN_SAMPLE_URL</code> OpenAI-compat SAMPLE; deferred note otherwise. Docs: <a href="docs/ABSTAIN_HEADS.md">docs/ABSTAIN_HEADS.md</a>. Gate: <code>make test-abstain</code> (optional kl3m eval if smoke dir present).</li>
 </ul>
 <h2>0.6.16 — 2026-09-02</h2>
 <ul>
@@ -384,7 +382,7 @@
 <ul>
 <li><strong>Fourth CPU train method:</strong> <strong><code>spark_faq_index</code></strong> — FAQ corpus + dual-encoder retriever → <code>faq_index.json</code> + <code>encoder.pt</code>. Not LoRA / not a marker stub. Same HTTP <code>method</code> field as distill / pref / playbook.</li>
 <li>Example: <code>examples/model_train_faq.spark</code>.</li>
-<li>Docs / hero list four methods honestly.</li>
+<li>Docs / hero list four methods.</li>
 </ul>
 <h2>0.6.7 — 2026-09-02</h2>
 <ul>
@@ -397,12 +395,12 @@
 <li><strong>Three CPU train methods</strong> (not LoRA) behind the same HTTP contract: - <strong><code>spark_distill_cpu</code></strong> — reply-class student → <code>weights.pt</code> - <strong><code>spark_pref_pack</code></strong> — preference pairs + ranker → <code>pref_pack.json</code> + <code>ranker.pt</code> - <strong><code>spark_playbook_fit</code></strong> — intent→playbook router → <code>playbooks.json</code> + <code>router.pt</code></li>
 <li>Select via POST <code>method</code>, companion <code>--method</code>, or <code>SPARK_TRAIN_METHOD</code> (default <code>spark_distill_cpu</code>). Reference trainer <code>tools/spark-train-ref/</code> dispatches all three on CPU.</li>
 <li>Live captures: <code>website/docs/examples/live-train-capture.txt</code>, <code>website/docs/examples/live-train-methods-capture.txt</code>.</li>
-<li>Hero / What&#x27;s real today list the three methods honestly.</li>
+<li>Hero / What&#x27;s real today list the three methods.</li>
 <li>Examples: <code>examples/model_train_pref.spark</code>, <code>examples/model_train_playbook.spark</code>.</li>
 </ul>
 <h2>0.6.5 — 2026-09-02</h2>
 <ul>
-<li><strong>Custom train proof:</strong> reference trainer runs <strong><code>spark_distill_cpu</code></strong> — tiny PyTorch student on CPU that mimics teacher replies from chat JSONL. Writes real <code>weights.pt</code> (+ checkpoint). Not LoRA / not HF PEFT / no voice GPU. Live capture: <code>website/docs/examples/live-train-capture.txt</code> via <code>./spark --live examples/model_train.spark</code>.</li>
+<li><strong>Custom train proof:</strong> reference trainer runs <strong><code>spark_distill_cpu</code></strong> — tiny PyTorch student on CPU that mimics teacher replies from chat JSONL. Writes real <code>weights.pt</code> (+ checkpoint). Not LoRA / not HF PEFT. Live capture: <code>website/docs/examples/live-train-capture.txt</code> via <code>./spark --live examples/model_train.spark</code>.</li>
 <li><strong>Hero:</strong> “Train specialists — CPU distill, not LoRA” (covers what the reference path trains).</li>
 <li><strong><code>expect</code> form on homepage / Learn / examples:</strong> prefer <code>expect contains NAME fixture &quot;PATH&quot;</code> (fail-loud fixtures) — one form for the flagship snippets.</li>
 <li><strong><code>expect equal</code> / <code>expect contains</code>:</strong> assert a bound name against a literal or <code>fixture &quot;PATH&quot;</code>. Pass exits <strong>0</strong>; fail exits <strong>1</strong> with the reason (missing fixture / unknown name / mismatch). Wired in GAS (<code>./spark-expect</code>), bootstrap, and SPARK_BC <code>0x25</code>. Gate: <code>make test-expect</code>. Examples: <code>examples/expect_pass.spark</code>, <code>examples/expect_fail.spark</code>.</li>

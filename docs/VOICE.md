@@ -141,10 +141,9 @@ Templates: `templates/voice_models/`. Artifacts under
 ## Voice easy train (owned heads)
 
 Piece-of-cake path for **training** owned STT/TTS heads (tiny CI or
-large opt-in). Not vendor neural clone. Prefer 5090
+large opt-in). Not a vendor neural clone.
 
 ```bash
-make voice-easy
 ./spark-voice easy --dry --device auto
 ./spark-voice easy --scale large --device auto # opt-in
 ```
@@ -219,14 +218,13 @@ scale table as spark-coder + factory scale fixtures:
 | Scale | Default | How |
 |-------|---------|-----|
 | **tiny** | CI / dry demos | Stub WAV, tiny STT (`tiny.en`), tiny coder/SGD fixtures |
-| **large** | Opt-in local | `make spark-coder-train-large` / `make spark-sgd-proof-scale`; prefer **RTX 5090** |
+| **large** | Opt-in local | `./spark-code train --scale large` / `make spark-sgd-proof-scale`; consumer GPU optional |
 
-**Never** route Spark voice/weight **train** onto GPUs reserved for
-other production voice stacks — prefer CPU / RTX **5090**
-([Factory hub](FACTORY.md)). Larger stubs still **measurement only**.
+Spark train runs on CPU (default) or a consumer GPU. Larger stubs
+still **measurement only**.
 Details: [Spark coder](SPARK_CODER.md) · [Train loop](TRAIN_LOOP.md).
 
-## Production gaps (honest — not sold as telephony)
+## Production gaps (not sold as telephony)
 
 Spark voice is a **language/demo surface**, not a production call center.
 

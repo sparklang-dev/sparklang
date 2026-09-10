@@ -179,7 +179,7 @@
         <a href="/docs/programming-guide.html">Programming guide</a>
         <a href="/downloads.html">Downloads</a>
       </nav>      <article class="doc__body">
-        <h1 id="architecture-pieces-honest">Architecture pieces (honest)</h1>
+        <h1 id="architecture-pieces">Architecture pieces</h1>
         <p>Tiny Spark control stack next to SPARK_BC. Product: <strong>Spark /
         SparkLang</strong> only. Tensor names from
         <code class="inline-code">python/sparklang/model_lab/weights.py</code>. Forward from
@@ -212,29 +212,29 @@
         <td><code class="inline-code">spark.final_norm</code> (RMSNorm)</td>
         <td><strong>yes</strong></td>
         <td>via attn path</td>
-        <td><strong>yes</strong> (after attn0/MLP0)</td>
+        <td><strong>yes</strong> (after attention/MLP)</td>
         </tr>
         <tr>
         <td>Layer MLP SwiGLU (<code class="inline-code">mlp_up/gate/down</code>, <code class="inline-code">mlp_norm</code>)</td>
         <td><strong>yes</strong></td>
         <td>no (serve only)</td>
-        <td><strong>MLP0 yes</strong></td>
+        <td><strong>yes</strong></td>
         </tr>
         <tr>
         <td>Layer attn (<code class="inline-code">q/k/v/o</code>, <code class="inline-code">attn_norm</code>)</td>
         <td><strong>yes</strong></td>
-        <td><strong>layer-0 yes</strong> (D)</td>
-        <td><strong>attn0 yes</strong> (D)</td>
+        <td><strong>yes</strong> (D)</td>
+        <td><strong>yes</strong> (D)</td>
         </tr>
         <tr>
-        <td>RoPE / multi-layer / KV cache</td>
+        <td>Rotary embeddings / multi-layer / KV cache</td>
         <td>sparkasm macros only</td>
         <td><strong>no</strong></td>
         <td><strong>no</strong></td>
         </tr>
         </tbody>
         </table></div>
-        <h2 id="defaults-tip">Defaults (tip)</h2>
+        <h2 id="defaults">Defaults</h2>
         <p>Arch is derived from SPARK_BC bytes (tiny stub). Typical control
         shapes match <code class="inline-code">control.sparkasm</code> comments (e.g. small <code class="inline-code">dim</code>, few
         layers, GQA head counts) — <strong>re-read</strong> <code class="inline-code">weights.py</code> /
@@ -242,22 +242,22 @@
         <p>Opt-in larger <code class="inline-code">dim</code> / <code class="inline-code">n_layer</code> for CPU-fast stubs: <strong>scale fixtures</strong>
         (<code class="inline-code">make spark-sgd-proof-scale</code>).</p>
         <h2 id="embed-logits-paths">Embed → logits paths</h2>
-        <p><strong>Serve (implemented, layer-0 attention):</strong></p>
-        <p><code class="inline-code">embed -&gt; attn0 -&gt; mlp0 -&gt; rms_norm -&gt; lm_head</code></p>
-        <p>(when layer-0 attn tensors exist; else mean-pool → MLP0 path)</p>
-        <p><strong>Train STEP (implemented, layer-0 attention):</strong></p>
-        <p>last-query causal MHA CE on layer-0 q/k/v/o (+ embed / lm_head).
+        <p><strong>Serve (implemented, single-layer attention):</strong></p>
+        <p><code class="inline-code">embed -&gt; attn -&gt; mlp -&gt; rms_norm -&gt; lm_head</code></p>
+        <p>(when attention tensors exist; else mean-pool → MLP path)</p>
+        <p><strong>Train STEP (implemented, single-layer attention):</strong></p>
+        <p>Causal MHA CE on the attention q/k/v/o (+ embed / lm_head).
         <code class="inline-code">--no-train-attn</code> keeps mean-pool CE.</p>
         <p><strong>sparkasm documented (not a VM):</strong></p>
-        <p>full block = pre-norm attn (GQA+RoPE) + SwiGLU MLP — shape-checked
-        by <code class="inline-code">make test-sparkasm-control</code> only. RoPE still <strong>not</strong> in the
-        Python CPU path.</p>
+        <p>full block = pre-norm attn (GQA+rotary) + SwiGLU MLP — shape-checked
+        by <code class="inline-code">make test-sparkasm-control</code> only. Rotary embeddings still <strong>not</strong>
+        in the Python CPU path.</p>
         <p>Detail: <a href="/docs/attention-forward.html">Attention / forward</a>.</p>
-        <h2 id="safetensors-meta-honest-flags">Safetensors meta (honest flags)</h2>
+        <h2 id="safetensors-meta">Safetensors meta</h2>
         <p>Init emit sets <code class="inline-code">trained: false</code>, <code class="inline-code">served: false</code>, derivation notes
         tying tensors to SPARK_BC sha256. STEP updates <code class="inline-code">trained</code> only when
         SGD applies. Serve writes <code class="inline-code">SERVE</code> with <code class="inline-code">forward=true</code> and copies
-        honest <code class="inline-code">trained</code> from weights.</p>
+        <code class="inline-code">trained</code> from weights.</p>
         <h2 id="related">Related</h2>
         <ul class="doc__ul">
         <li><a href="/docs/serve.html">Serve</a> · <a href="/docs/train-loop.html">Train loop</a></li>

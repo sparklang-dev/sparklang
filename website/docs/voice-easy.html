@@ -190,8 +190,6 @@
         ./spark-voice env --dry
 
         # 2) Tiny happy path (CI / laptop) — fixtures → train → prove
-        make voice-easy
-        # same as:
         ./spark-voice easy --dry --device auto
 
         # 3) Status
@@ -225,7 +223,7 @@
         <td><strong>large</strong> (opt-in)</td>
         <td><code class="inline-code">--scale large</code> or <code class="inline-code">VOICE_SCALE=large</code></td>
         <td>dim 256, ~80 steps</td>
-        <td>Prefer <strong>5090</strong>; ~2 GiB VRAM hint</td>
+        <td>Consumer GPU suggested; ~2 GiB VRAM hint</td>
         </tr>
         </tbody>
         </table></div>
@@ -238,10 +236,10 @@
         <p>Large ≠ production vendor quality. It is a <strong>bigger owned head</strong> for
         local experiments — covers fixture-scale STT classify + PCM
         tone TTS.</p>
-        <h3 id="fail-closed-reserved-voice-gpu">Fail closed (reserved voice GPU)</h3>
-        <p>If <code class="inline-code">VOICE_SCALE=large</code> / <code class="inline-code">--scale large</code> and the only visible GPU is
-        a reserved voice GPU, Spark <strong>refuses</strong> (exit 2) unless you pass
-        <code class="inline-code">--device cpu</code>. Training never routes to reserved voice GPUs.</p>
+        <h3 id="fail-closed-device-guard">Fail closed (device guard)</h3>
+        <p>If <code class="inline-code">--scale large</code> and the visible GPU is reserved for other
+        workloads, Spark <strong>refuses</strong> (exit 2) unless you pass
+        <code class="inline-code">--device cpu</code>. Training never routes to reserved devices.</p>
         <h2 id="flags">Flags</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
@@ -253,11 +251,11 @@
         <tbody>
         <tr>
         <td><code class="inline-code">--dry</code></td>
-        <td>CI-friendly (clamped steps); used by <code class="inline-code">make voice-easy</code> / <code class="inline-code">make test-voice-easy</code></td>
+        <td>CI-friendly (clamped steps)</td>
         </tr>
         <tr>
-        <td><code class="inline-code">--device auto\|cpu\|5090</code></td>
-        <td>auto prefers RTX 5090 (or CPU)</td>
+        <td><code class="inline-code">--device auto\|cpu\|…</code></td>
+        <td>device pick; auto prefers a consumer GPU (or CPU)</td>
         </tr>
         <tr>
         <td><code class="inline-code">--scale tiny\|large</code></td>
@@ -308,10 +306,9 @@
         <h2 id="ide">IDE</h2>
         <p>Spark IDE extension command <strong>“Spark: Voice easy train”</strong> runs
         <code class="inline-code">./spark-voice easy --dry</code> (CLI-first; stub task hook).</p>
-        <h2 id="make-ci">Make / CI</h2>
-        <pre class="doc__pre"><code class="language-bash">make voice-easy # dry tiny happy path
-        make test-voice-easy # unittest + dry easy (GHA)
-        make voice-easy-large # opt-in local large (not default CI)
+        <h2 id="cli-ci">CLI / CI</h2>
+        <pre class="doc__pre"><code class="language-bash">./spark-voice easy --dry # dry tiny happy path
+        ./spark-voice easy --scale large --device auto # opt-in local large
         </code></pre>
         <h2 id="scope">Scope</h2>
         <div class="doc__table-wrap"><table class="doc__table">
@@ -329,10 +326,6 @@
         <tr>
         <td>CI dry green</td>
         <td><strong>yes</strong> (<code class="inline-code">make test-voice-easy</code>)</td>
-        </tr>
-        <tr>
-        <td>Prefer RTX 5090 (or CPU) for GPU train</td>
-        <td><strong>yes</strong></td>
         </tr>
         <tr>
         <td>Vendor mega-TTS overnight</td>

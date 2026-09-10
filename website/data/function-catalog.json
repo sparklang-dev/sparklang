@@ -1132,7 +1132,7 @@
  "id": "lib-data-ask-parse-csv",
  "name": "data_ask_parse_csv",
  "category": "Data",
- "description": "Use ask to parse csv-ish row (honest heuristic)",
+ "description": "Use ask to parse csv-ish row (heuristic)",
  "syntax": "let row \"WASH-1,3,19.99\"\nask \"Parse CSV row into JSON: {row}\" -> parsed",
  "mode": "dry-run",
  "source": "stdlib",

@@ -1935,16 +1935,6 @@ pre.mermaid svg {
   max-width: 44rem;
 }
 
-.honest-note {
-  margin: var(--space-4) 0 0;
-  padding: var(--space-3);
-  border-left: 3px solid var(--spark-brand);
-  background: var(--spark-brand-light);
-  color: var(--spark-text);
-  font-size: 0.9375rem;
-  max-width: 44rem;
-}
-
 /* —— Smooth polish layer (2026-09-09) —— */
 
 @keyframes spark-menu-in {
@@ -2022,11 +2012,6 @@ pre.mermaid svg {
 
 .doc__body a {
   transition: color var(--motion-fast) var(--ease-out);
-}
-
-.honest-note {
-  border-radius: 0 var(--radius-md) var(--radius-md) 0;
-  transition: background var(--motion-fast) var(--ease-out);
 }
 
 .step-detail__num {

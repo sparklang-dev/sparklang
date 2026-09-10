@@ -180,7 +180,7 @@
         <a href="/downloads.html">Downloads</a>
       </nav>      <article class="doc__body">
         <h1 id="whats-shipping-today-sparklang">What's shipping today (SparkLang)</h1>
-        <p>Honest checklist against the critique: table stakes, escape hatch,
+        <p>Checklist against the critique: table stakes, escape hatch,
         worth-using ops, voice status, what we drop, and the production-style
         workflow goal. <strong>Spark is not tied to a single AI gateway</strong> — gateway is optional
         live I/O.</p>
@@ -270,7 +270,7 @@
         <tr>
         <td>Voice production telephony</td>
         <td><strong>won't (soon)</strong></td>
-        <td>Gated demo + honest gaps in VOICE.md / ROADMAP — not sold as production</td>
+        <td>Gated demo + gaps in VOICE.md / ROADMAP — not sold as production</td>
         </tr>
         <tr>
         <td>Packet capture / MITM / browser automation</td>
@@ -289,8 +289,8 @@
         </tr>
         <tr>
         <td>SPARK_BC Builder factory</td>
-        <td><strong>done (multi-outer + scale fixture)</strong></td>
-        <td>Spark → <code class="inline-code">--compile</code> → <code class="inline-code">.sparkbc</code> with <code class="inline-code">TRAIN</code>/<code class="inline-code">STEP</code>/<code class="inline-code">TRAIN_STATUS</code>; <code class="inline-code">--run-bc</code> TRAIN dry + STEP multi-outer CPU SGD (bootstrap or GAS); <code class="inline-code">checkpoint.json</code> loss curve; post-STEP <code class="inline-code">trained=true</code> / <code class="inline-code">not_sgd=false</code> when grads apply. Serve optional MLP0. Opt-in <code class="inline-code">make spark-sgd-proof-scale</code> (larger JSONL + dim/n_layer; CI stays tiny). GAS wrappers <strong>implemented</strong>. <strong>Measurement only.</strong> Hub: <a href="/docs/factory.html">Factory hub</a> / <code class="inline-code">/docs/factory.html</code>; Builder <a href="/docs/spark-builder.html">SPARK_BC Builder</a></td>
+        <td><strong>done (multi-pass + scale fixture)</strong></td>
+        <td>Spark → <code class="inline-code">--compile</code> → <code class="inline-code">.sparkbc</code> with <code class="inline-code">TRAIN</code>/<code class="inline-code">STEP</code>/<code class="inline-code">TRAIN_STATUS</code>; <code class="inline-code">--run-bc</code> TRAIN dry + STEP multi-pass CPU SGD (bootstrap or GAS); <code class="inline-code">checkpoint.json</code> loss curve; post-STEP <code class="inline-code">trained=true</code> / <code class="inline-code">not_sgd=false</code> when grads apply. Serve optional MLP. Opt-in <code class="inline-code">make spark-sgd-proof-scale</code> (larger JSONL + dim/n_layer; CI stays tiny). GAS wrappers <strong>implemented</strong>. <strong>Measurement only.</strong> Hub: <a href="/docs/factory.html">Factory hub</a> / <code class="inline-code">/docs/factory.html</code>; Builder <a href="/docs/spark-builder.html">SPARK_BC Builder</a></td>
         </tr>
         <tr>
         <td>SDK + IDE + GUI download pack</td>
@@ -328,7 +328,7 @@
         (<code class="inline-code">examples/receptionist.spark</code>). Still missing for production paths:
         live transfer / hold / hangup language (see
         <code class="inline-code">examples/receptionist_goal.spark</code>).</p>
-        <h2 id="voice-honest">Voice — honest</h2>
+        <h2 id="voice">Voice</h2>
         <p>Optional <code class="inline-code">listen</code> / <code class="inline-code">speak</code> / <code class="inline-code">voice</code> / gated PSTN exist as language
         surface and dry demos. <strong>Not</strong> production barge-in / EOU / SM transfer
         / named telephony adapters. See <a href="/docs/voice.html">VOICE.md</a> gaps.</p>

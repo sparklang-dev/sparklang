@@ -56,7 +56,7 @@ Prioritized against the adoption bar. Status: **done** / **next** / **won't**
 | Production voice/telephony claim | Gaps remain (barge-in, EOU, SM, adapters) — gated demo only |
 | Single-gateway-as-identity | Gateway optional; any OpenAI-compatible URL |
 
-## Voice gaps (honest)
+## Voice gaps
 
 If not shipping soon, keep voice off the production claim list:
 

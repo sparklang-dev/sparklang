@@ -19,16 +19,15 @@ hybrids; many products wrap cloud STT behind an API.
 TTS maps text (or phonemes) to audio. Neural vocoders dominate;
 latency and voice cloning ethics matter in production.
 
-**Spark:** `speak` companions, dry/live gated — same voice doc.
-Product voice stacks elsewhere may pin GPUs; **Spark docs never
-claim reserved voice GPUs** for train.
+**Spark:** `speak` companions, gated live — same voice doc.
+Spark train stays on CPU or a consumer GPU.
 
 ## Vision
 
 Image encoders (ViT-style patches, CNN towers) project pixels into
 embeddings the LLM can attend to — “see” as **tokens**, not magic.
 
-**Spark:** eyes / vision runtime is an **honest stub** —
+**Spark:** eyes / vision runtime is a **stub** —
 [Model aspects](MODEL_ASPECTS.md). Do not invent live vision.
 
 ```mermaid

@@ -188,7 +188,7 @@
         <p><strong>Default story:</strong> dry-run / offline / no keys. Live <code class="inline-code">ask</code> / <code class="inline-code">embed</code> /
         <code class="inline-code">retrieve</code> via gateway env is <strong>optional</strong> (<code class="inline-code">./spark --live</code>).</p>
         <p><strong>Related:</strong> <a href="/docs/model-aspects.html">Model aspects</a> (behaviors + ears/eyes/speaking +
-        thinking + tools — honest status) ·
+        thinking + tools — status) ·
         <a href="/docs/spark-builder.html">SPARK_BC Builder</a> (full factory E2E —
         SPARK_BC vs weights; <code class="inline-code">TRAIN</code> <code class="inline-code">0x26</code> / <code class="inline-code">STEP</code> <code class="inline-code">0x28</code> /
         <code class="inline-code">TRAIN_STATUS</code> <code class="inline-code">0x27</code>; sha256 table; GAS <code class="inline-code">--run-bc</code>/<code class="inline-code">--compile</code> wrappers; dry ≠ trained) ·
@@ -207,7 +207,7 @@
         <tr>
         <th>Goal</th>
         <th>Spark today</th>
-        <th>Honest limits</th>
+        <th>Limits</th>
         </tr>
         </thead>
         <tbody>
@@ -229,7 +229,7 @@
         <tr>
         <td><strong>Builder from SPARK_BC</strong></td>
         <td><code class="inline-code">--compile</code> Spark → <code class="inline-code">.sparkbc</code> (incl. <code class="inline-code">0x26</code>/<code class="inline-code">0x28</code>/<code class="inline-code">0x27</code>); dump; emit init weights; <code class="inline-code">--run-bc</code> TRAIN dry + STEP CPU SGD (bootstrap or GAS)</td>
-        <td>Tiny SGD ≠ Claude; GAS <code class="inline-code">--run-bc</code> / <code class="inline-code">--compile</code> wrappers <strong>implemented</strong>; STEP→weights <strong>CPU SGD</strong> (<code class="inline-code">trained=true</code>); later stages may grow train/eval (not a published claim); <a href="/docs/spark-builder.html">SPARK_BC Builder</a></td>
+        <td>Tiny fixture-scale SGD; GAS <code class="inline-code">--run-bc</code> / <code class="inline-code">--compile</code> wrappers <strong>implemented</strong>; STEP→weights <strong>CPU SGD</strong> (<code class="inline-code">trained=true</code>); later stages may grow train/eval (not a published claim); <a href="/docs/spark-builder.html">SPARK_BC Builder</a></td>
         </tr>
         <tr>
         <td><strong>Modify existing</strong></td>

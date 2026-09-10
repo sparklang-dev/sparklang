@@ -180,19 +180,14 @@
         <a href="/downloads.html">Downloads</a>
       </nav>      <article class="doc__body">
         <h1 id="eval-harness-measurement-only">Eval harness (measurement only)</h1>
-        <p>Frozen probes for Spark weights. <strong><em>* Exit 0
+        <p>Frozen probes for Spark weights. Exit 0
         means the harness ran — not a marketing win. Never invents API keys.
-        Prefer CPU or a consumer GPU for train. optional frontier-API baseline is </em>*merged</strong> on tip. Code:
+        Prefer CPU or a consumer GPU for train. Code:
         <code class="inline-code">tools/spark-eval/</code>. Suite: <code class="inline-code">examples/eval/</code>.</p>
         <h2 id="commands">Commands</h2>
         <pre class="doc__pre"><code class="language-bash">make spark-eval
         make spark-eval WEIGHTS=docs/examples/spark-self.init.safetensors
         # or: SPARK_EVAL_WEIGHTS=/path/to/weights.safetensors make spark-eval
-
-        # optional frontier-API baseline:
-        make spark-eval-claude
-        # or: make spark-eval CLAUDE=auto
-        # require key: make spark-eval CLAUDE=on
 
         make test-spark-eval
         </code></pre>
@@ -216,24 +211,15 @@
         <td>Weights</td>
         <td>Teacher-forced / next-token on <code class="inline-code">spark.embed</code> + <code class="inline-code">spark.lm_head</code> (CPU)</td>
         </tr>
-        <tr>
-        <td>frontier-API baseline</td>
-        <td>Anthropic Messages <strong>only if</strong> a key already exists on the box</td>
-        </tr>
         </tbody>
         </table></div>
-        <p>Credential env / file names (read <code class="inline-code">tools/spark-eval/claude_baseline.py</code>
-        or SPARK_BUILDER eval section — do not invent):
-        <code class="inline-code">SPARK_EVAL_CLAUDE_API_KEY</code>, <code class="inline-code">ANTHROPIC_API_KEY</code>, <code class="inline-code">CLAUDE_API_KEY</code>,
-        or <code class="inline-code">SPARK_EVAL_CLAUDE_KEY_FILE</code>. No key →
-        <code class="inline-code">skipped_no_credentials</code>. <code class="inline-code">CLAUDE=on</code> fails closed if missing.</p>
         <h2 id="eval-contract">Eval contract</h2>
         <ul class="doc__ul">
         <li>Suite JSON <code class="inline-code">claim: none</code>.</li>
         <li>Harness sets <code class="inline-code">claim: none</code> (no marketing-win flag).</li>
         <li>Side-by-side Spark vs frontier-API scores are <strong>measurement</strong>.</li>
         <li>Dry oracle scores ≠ model quality.</li>
-        <li>Weights-mode <code class="inline-code">0.0</code> scores are honest misses until proven otherwise.</li>
+        <li>Weights-mode <code class="inline-code">0.0</code> scores are misses until proven otherwise.</li>
         <li>Product name in prose: <strong>Spark</strong> / <strong>SparkLang</strong> only.</li>
         </ul>
         <h2 id="related">Related</h2>

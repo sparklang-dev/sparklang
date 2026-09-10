@@ -640,13 +640,13 @@
         <code class="inline-code">docs/examples/spark-self.init.safetensors</code> (sha256
         <code class="inline-code">60b9b7297cb5e2d8362702144a9d9c15487e65dd11783ba7d499499b500198cf</code>).
         Focused e2e: <code class="inline-code">make sparkbc-e2e</code> (compile → dump TRAIN/STEP →
-        <code class="inline-code">--run-bc</code> → assert <code class="inline-code">ARTIFACT</code>; STEP = multi-outer CPU SGD). STEP
+        <code class="inline-code">--run-bc</code> → assert <code class="inline-code">ARTIFACT</code>; STEP = multi-pass CPU SGD). STEP
         weights + loss drop via <code class="inline-code">make test-sparkbc</code>.
         Factory page: <a href="/docs/spark-builder.html">SPARK_BC Builder</a>.
-        TRAIN accept is still a dry marker. <code class="inline-code">STEP</code> applies multi-outer CPU
+        TRAIN accept is still a dry marker. <code class="inline-code">STEP</code> applies multi-pass CPU
         SGD (<code class="inline-code">trained=true</code> / <code class="inline-code">not_sgd=false</code> only after grads;
         <code class="inline-code">checkpoint.json</code> loss curve). <strong>Measurement only.</strong>
-        No 6000 train. <code class="inline-code">./spark --compile</code> and <code class="inline-code">./spark --run-bc</code> thin-wrap
+        <code class="inline-code">./spark --compile</code> and <code class="inline-code">./spark --run-bc</code> thin-wrap
         bootstrap (C lowering / bc_vm remain SoT).</p>
         <h2 id="out-of-scope-do-not-add">Out of scope (do not add)</h2>
         <p>include, <code class="inline-code">set</code>, live ask. Phase 3 C <code class="inline-code">--compile</code> lowers

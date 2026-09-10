@@ -169,7 +169,7 @@ source / `.sparkbc`, save dump, load sample. See also
 *Caption: Annotated layout matching `tools/spark_bc_gui` chrome.
 Right pane text is **real** `dump.py` output (same capture as the
 CLI screenshot). Interactive Tk GUI ships with the SDK download
-pack — headed capture was blocked; this mock is labeled honestly.*
+pack — headed capture was blocked; this mock is labeled as a mock.*
 
 ## Model lab reverse / inspect
 

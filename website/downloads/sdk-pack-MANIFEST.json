@@ -55,7 +55,7 @@
     "shadow": "./bin/spark-shadow-copy <name> && ./bin/spark-shadow-build <name>"
   },
   "notes": [
-    "CPU runtime only \u2014 never RTX PRO 6000",
+    "CPU runtime only",
     "Does not claim a competitive AI win",
     "GUI uses real --compile + bc_dump.format_dump",
     "Includes helpers + shadows + BC dump tools",

@@ -2,7 +2,7 @@
  "generated_at": "2026-09-10T00:41Z",
  "generator": "tools/spark-bc-dump/decompile_bench.py",
  "domain": "SPARK_BC",
- "honesty": "Measured Spark metrics on SPARK_BC fixtures only. Do not publish cross-tool win claims without this JSON. Classic tools win ELF/PE; Spark wins SPBC round-trip + local structured dump + privacy + train/weights.",
+ "note": "Measured Spark metrics on SPARK_BC fixtures only. Do not publish cross-tool win claims without this JSON. Classic tools win ELF/PE; Spark wins SPBC round-trip + local structured dump + privacy + train/weights.",
  "beat_axes": [
   {
    "axis": "100% SPARK_BC round-trip hash",
@@ -327,7 +327,7 @@
  },
  "never": [
   "false marketing beats-all",
-  "reserved voice GPUs",
+  "reserved devices",
   "a marketing win. invention",
   "copy OpenBin code"
  ]

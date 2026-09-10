@@ -14,8 +14,6 @@ Prefer CPU or a consumer GPU for optional train.
 ./spark-voice env --dry
 
 # 2) Tiny happy path (CI / laptop) — fixtures → train → prove
-make voice-easy
-# same as:
 ./spark-voice easy --dry --device auto
 
 # 3) Status
@@ -34,7 +32,7 @@ Outputs:
 | Scale | How | Dims / steps | Device |
 |-------|-----|--------------|--------|
 | **tiny** (default) | `--scale tiny` or omit | dim 16, ~12 steps | CPU fine; CI |
-| **large** (opt-in) | `--scale large` or `VOICE_SCALE=large` | dim 256, ~80 steps | Prefer **5090**; ~2 GiB VRAM hint |
+| **large** (opt-in) | `--scale large` or `VOICE_SCALE=large` | dim 256, ~80 steps | Consumer GPU suggested; ~2 GiB VRAM hint |
 
 ```bash
 # Large — opt-in; prefers a consumer GPU; fail closed without one
@@ -48,18 +46,18 @@ Large ≠ production vendor quality. It is a **bigger owned head** for
 local experiments — covers fixture-scale STT classify + PCM
 tone TTS.
 
-### Fail closed (reserved voice GPU)
+### Fail closed (device guard)
 
-If `VOICE_SCALE=large` / `--scale large` and the only visible GPU is
-a reserved voice GPU, Spark **refuses** (exit 2) unless you pass
-`--device cpu`. Training never routes to reserved voice GPUs.
+If `--scale large` and the visible GPU is reserved for other
+workloads, Spark **refuses** (exit 2) unless you pass
+`--device cpu`. Training never routes to reserved devices.
 
 ## Flags
 
 | Flag / env | Meaning |
 |------------|---------|
-| `--dry` | CI-friendly (clamped steps); used by `make voice-easy` / `make test-voice-easy` |
-| `--device auto\|cpu\|5090` | auto prefers RTX 5090 (or CPU) |
+| `--dry` | CI-friendly (clamped steps) |
+| `--device auto\|cpu\|…` | device pick; auto prefers a consumer GPU (or CPU) |
 | `--scale tiny\|large` | model size |
 | `VOICE_SCALE=large` | same as `--scale large` when flag omitted |
 
@@ -95,12 +93,11 @@ URL without gate → fail closed. Never commit Bearer keys.
 Spark IDE extension command **“Spark: Voice easy train”** runs
 `./spark-voice easy --dry` (CLI-first; stub task hook).
 
-## Make / CI
+## CLI / CI
 
 ```bash
-make voice-easy # dry tiny happy path
-make test-voice-easy # unittest + dry easy (GHA)
-make voice-easy-large # opt-in local large (not default CI)
+./spark-voice easy --dry # dry tiny happy path
+./spark-voice easy --scale large --device auto # opt-in local large
 ```
 
 ## Scope
@@ -108,6 +105,5 @@ make voice-easy-large # opt-in local large (not default CI)
 |-------|--------|
 | Owned STT/TTS heads we train | **yes** (tiny + large) |
 | CI dry green | **yes** (`make test-voice-easy`) |
-| Prefer RTX 5090 (or CPU) for GPU train | **yes** |
 | Vendor mega-TTS overnight | Out of scope |
 | Marketing win banners | Out of scope |

@@ -91,7 +91,7 @@ not a running attention VM:
 make test-sparkasm-control
 ```
 
-Honest status is in the file header and on
+Status is in the file header and on
 [Attention / forward](ATTENTION_FORWARD.md).
 
 ## Product wrapper

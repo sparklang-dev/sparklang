@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>AI model aspects — Spark</title>
-    <meta name="description" content="Behaviors, ears/STT, eyes/vision, speaking/TTS, thinking, memory, tools, train, eval, serve — honest status table." />
+    <meta name="description" content="Behaviors, ears/STT, eyes/vision, speaking/TTS, thinking, memory, tools, train, eval, serve — status table." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
     <link rel="stylesheet" href="/css/tokens.css?v=navsub0909" />
@@ -184,8 +184,7 @@
         system</strong>: how text, tools, memory, and optional senses plug into
         bytecode + weights + serve. Not marketing. Not God/Loom metaphors.</p>
         <p>Eval scores are <strong>measurement only</strong>, not marketing wins.
-        (voice-serving GPU elsewhere — not Spark train). Prefer <strong>CPU</strong> or
-        <strong>RTX 5090</strong> for opt-in large local work.</p>
+        Prefer <strong>CPU</strong> or a consumer GPU for opt-in large local work.</p>
         <p>Factory hub: <a href="/docs/factory.html">Factory hub</a>. Knowledge hive:
         <a href="/docs/knowledge.html">Knowledge</a> (agents/tools · multimodal · eval).
         Voice surface: <a href="/docs/voice.html">VOICE.md</a>. Voice easy train:
@@ -259,7 +258,7 @@
         </tr>
         <tr>
         <td>Thinking oversold</td>
-        <td>Fixture-scale MLP0 gets narrated as a frontier model</td>
+        <td>Fixture-scale MLP gets narrated as a frontier model</td>
         </tr>
         <tr>
         <td>Behaviors implicit</td>
@@ -267,7 +266,7 @@
         </tr>
         </tbody>
         </table></div>
-        <p><strong>Sensory mapping</strong> is the honest contract between <em>plain language</em>
+        <p><strong>Sensory mapping</strong> is the contract between <em>plain language</em>
         (“ears / eyes / speaking / thinking / behaviors”) and <em>engineering</em>
         (STT sidecar, vision stub, TTS PCM, tiny CPU forward, <code class="inline-code">.spark</code>
         policies). It is how Spark stays a <strong>local SoT language</strong> instead of
@@ -280,7 +279,8 @@
         <li><strong>Behaviors own the loop.</strong> Tools and reply packs are first-class,
          not afterthoughts bolted onto logits.</li>
         <li><strong>Tiny vs large is explicit.</strong> CI stays tiny; large is opt-in on
-         <strong>5090</strong> / CPU — 4. <strong>Comparison without cloning.</strong> OpenBin Ask / production phone
+         a consumer GPU or CPU.</li>
+        <li><strong>Comparison without cloning.</strong> OpenBin Ask / production phone
          voice stacks solve different jobs; Spark documents <em>its</em> loop and
          refuses to fake theirs.</li>
         </ol>
@@ -315,7 +315,7 @@
         <tr>
         <td><strong>Thinking</strong></td>
         <td>LLM forward / generation</td>
-        <td>Tiny CPU <code class="inline-code">embed→attn0→MLP0→RMSNorm→lm_head</code> (layer-0 attention); fixture-scale</td>
+        <td>Tiny CPU <code class="inline-code">embed→attention→MLP→RMSNorm→lm_head</code>; fixture-scale</td>
         </tr>
         <tr>
         <td><strong>Behaviors</strong></td>
@@ -333,7 +333,7 @@
         <a href="#how-to-lab-15-minutes">How-to lab</a> ·
         <a href="#capability-status">Capability status</a>.</p>
         <hr class="doc__hr" />
-        <h2 id="status-table-honest-engineering-aspects">Status table (honest — engineering aspects)</h2>
+        <h2 id="status-table-engineering-aspects">Status table (engineering aspects)</h2>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
@@ -354,19 +354,19 @@
         <td>Init + serve; optional STEP grads</td>
         </tr>
         <tr>
-        <td>Layers / MLP (SwiGLU MLP0)</td>
+        <td>Layers / MLP (SwiGLU)</td>
         <td><strong>implemented</strong> (serve)</td>
-        <td><a href="/docs/serve.html">Serve</a>; MLP0 in forward</td>
+        <td><a href="/docs/serve.html">Serve</a>; MLP in forward</td>
         </tr>
         <tr>
         <td>Attention (QKVO / GQA)</td>
-        <td><strong>implemented</strong> (layer-0)</td>
-        <td>layer-0 attention — last-query MHA train+serve; <strong>no</strong> RoPE</td>
+        <td><strong>implemented</strong></td>
+        <td>Single-layer causal MHA train+serve; no rotary embeddings</td>
         </tr>
         <tr>
         <td>RMSNorm / <code class="inline-code">lm_head</code></td>
         <td><strong>implemented</strong></td>
-        <td>Serve path after attn0/MLP0</td>
+        <td>Serve path after attention/MLP</td>
         </tr>
         <tr>
         <td>Memory / context window</td>
@@ -386,7 +386,7 @@
         <tr>
         <td>Eyes / vision</td>
         <td><strong>planned</strong></td>
-        <td>Stub module only — <strong>no</strong> <code class="inline-code">look</code> opcode on tip</td>
+        <td>Stub module only — <strong>no</strong> <code class="inline-code">look</code> opcode yet</td>
         </tr>
         <tr>
         <td>Speaking / TTS</td>
@@ -400,8 +400,8 @@
         </tr>
         <tr>
         <td>Train / adaptation</td>
-        <td><strong>implemented</strong> (CPU/5090)</td>
-        <td>STEP SGD + owned TinyCoder (owned TinyCoder) —</td>
+        <td><strong>implemented</strong> (CPU)</td>
+        <td>STEP SGD + owned TinyCoder</td>
         </tr>
         <tr>
         <td>Eval / benchmarks</td>
@@ -411,7 +411,7 @@
         <tr>
         <td>Runtime serve</td>
         <td><strong>implemented</strong></td>
-        <td><code class="inline-code">spark-serve</code> / <code class="inline-code">spark-serve-api</code> attn0+MLP0 CPU</td>
+        <td><code class="inline-code">spark-serve</code> / <code class="inline-code">spark-serve-api</code> attention+MLP CPU</td>
         </tr>
         <tr>
         <td>Multimodal fused I/O</td>
@@ -432,7 +432,7 @@
         <pre class="mermaid">flowchart LR
          EAR["Ears — listen / STT<br/>spark-stt-tts"]
          TOK["Tokenizer / bindings"]
-         BRN["Thinking — tiny CPU forward<br/>embed → attn0 → MLP0 → lm_head"]
+         BRN["Thinking — tiny CPU forward<br/>embed → attention → MLP → lm_head"]
          TOOL["Tools / behaviors<br/>classify · ask · reply pack"]
          VOC["Speaking — speak / TTS<br/>PCM or SPARK_TTS_*"]
          EAR --> TOK --> BRN
@@ -440,7 +440,7 @@
          TOOL --> VOC
          VOC -.->|next turn transcript| EAR
          TOOL -.->|tool result text| BRN
-         EYE["Eyes — vision<br/>planned stub only"] -.->|not wired| BRN</pre>
+         EYE["Eyes — vision<br/>not available"] -.->|not wired| BRN</pre>
         <p><strong>Loop reading (plain):</strong> ears (or typed text) become tokens → thinking
         produces logits / ask text → behaviors pick tools, SoT, or abstain →
         speaking (or <code class="inline-code">print</code>) leaves the system → the next turn may listen
@@ -544,7 +544,7 @@
         </tr>
         </tbody>
         </table></div>
-        <h3 id="tiny-vs-large-5090-ok">Tiny vs large (5090 OK)</h3>
+        <h3 id="tiny-vs-large">Tiny vs large</h3>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
@@ -566,8 +566,8 @@
         </tr>
         <tr>
         <td>Opt-in owned voice heads</td>
-        <td>tiny / <strong>large</strong> via <a href="/docs/voice-easy.html">Voice easy</a> (<code class="inline-code">make voice-easy</code>)</td>
-        <td>Prefer <strong>5090</strong>; refuse <strong>6000</strong></td>
+        <td>tiny / <strong>large</strong> via <a href="/docs/voice-easy.html">Voice easy</a></td>
+        <td>Consumer GPU or CPU</td>
         </tr>
         </tbody>
         </table></div>
@@ -606,16 +606,16 @@
         <a href="/docs/ci-pages.html">CI_PAGES.md</a>.</p>
         <hr class="doc__hr" />
         <h2 id="eyes-vision-image-in">Eyes — vision / image in</h2>
-        <p><img class="doc__img" alt="Eyes planned stub" src="/docs/images/diagram-sense-eyes.svg" /></p>
+        <p><img class="doc__img" alt="Eyes vision stub" src="/docs/images/diagram-sense-eyes.svg" /></p>
         <h3 id="plain-language">Plain language</h3>
         <p><strong>Eyes</strong> would turn images into captions or visual tokens the brain
-        can use. Spark tip does <strong>not</strong> have working eyes.</p>
-        <h3 id="engineering-stack-honest">Engineering stack (honest)</h3>
+        can use. Spark does <strong>not</strong> have working eyes today.</p>
+        <h3 id="engineering-stack">Engineering stack</h3>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
         <th>Claim</th>
-        <th>Reality on tip</th>
+        <th>Reality</th>
         </tr>
         </thead>
         <tbody>
@@ -652,9 +652,8 @@
          EMB["spark.embed — not wired"]
          IMG -.-> ENC -.-> TOK -.-> EMB</pre>
         <h3 id="tiny-vs-large">Tiny vs large</h3>
-        <p>N/A for runtime. Do <strong>not</strong> route hypothetical vision train to the
-        <strong>6000</strong>. Any future large vision experiment follows the same
-        <strong>5090-or-CPU</strong> discipline as coder / weights.</p>
+        <p>N/A for runtime. Any future large vision experiment follows the same
+        consumer-GPU-or-CPU discipline as coder / weights.</p>
         <h3 id="gaps-vs-roadmap">Gaps vs roadmap</h3>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
@@ -765,7 +764,7 @@
         </tr>
         </tbody>
         </table></div>
-        <h3 id="tiny-vs-large-5090-ok">Tiny vs large (5090 OK)</h3>
+        <h3 id="tiny-vs-large">Tiny vs large</h3>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
@@ -788,7 +787,7 @@
         </tr>
         <tr>
         <td>Opt-in owned TTS heads</td>
-        <td>Prefer <strong>5090</strong>; ****</td>
+        <td>Consumer GPU or CPU</td>
         </tr>
         </tbody>
         </table></div>
@@ -808,8 +807,8 @@
         gateway</strong> <code class="inline-code">ask</code> (not required for dry demos).</p>
         <h3 id="engineering-stack-tiny-cpu-serve-weights">Engineering stack — tiny CPU serve (weights)</h3>
         <p>When MLP tensors exist (<a href="/docs/serve.html">Serve</a>):</p>
-        <pre class="doc__pre"><code class="language-text">embed (mean pool) → attn0 (layer-0 last-query MHA, layer-0 attention)
-         → MLP0 (SwiGLU) → RMSNorm → lm_head
+        <pre class="doc__pre"><code class="language-text">embed (mean pool) → attention (single-layer causal MHA)
+         → MLP (SwiGLU) → RMSNorm → lm_head
         </code></pre>
         <p>Code: <code class="inline-code">python/sparklang/model_lab/serve.py</code>. HTTP/stdio:
         <code class="inline-code">./spark-serve-api</code> (<code class="inline-code">/v1/predict</code>, <code class="inline-code">/v1/embeddings</code>).</p>
@@ -826,11 +825,11 @@
         <td><strong>yes</strong></td>
         </tr>
         <tr>
-        <td>MLP0 SwiGLU</td>
+        <td>MLP (SwiGLU)</td>
         <td><strong>yes</strong> in serve</td>
         </tr>
         <tr>
-        <td>Layer-0 last-query attn (layer-0 attention)</td>
+        <td>Single-layer causal attention</td>
         <td><strong>yes</strong> train + serve</td>
         </tr>
         <tr>
@@ -838,7 +837,7 @@
         <td><strong>no</strong></td>
         </tr>
         <tr>
-        <td>RoPE / KV cache</td>
+        <td>Rotary embeddings / KV cache</td>
         <td>sparkasm macros / shape check — <strong>not</strong> in Python path</td>
         </tr>
         </tbody>
@@ -872,8 +871,8 @@
         <pre class="mermaid">flowchart LR
          IN["Tokens / prompt"]
          EMB["embed"]
-         AT["attn0"]
-         MLP["MLP0"]
+         AT["attention"]
+         MLP["MLP"]
          HN["RMSNorm"]
          LH["lm_head"]
          OUT["logits / text"]
@@ -891,7 +890,7 @@
         ./spark-ask-http --dry --model fixtures/tiny-lm --prompt &quot;Reply: pong&quot;
         make test-ask-gateway
         </code></pre>
-        <h3 id="tiny-vs-large-5090-ok">Tiny vs large (5090 OK)</h3>
+        <h3 id="tiny-vs-large">Tiny vs large</h3>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
         <tr>
@@ -906,15 +905,11 @@
         </tr>
         <tr>
         <td><strong>large</strong></td>
-        <td>Opt-in <code class="inline-code">make spark-coder-train-large</code> / weight gallery large+xl stubs — prefer <strong>5090</strong></td>
-        </tr>
-        <tr>
-        <td><strong>6000</strong></td>
-        <td><strong>Never</strong> for train</td>
+        <td>Opt-in <code class="inline-code">./spark-code train --scale large</code> / weight gallery large+xl stubs — consumer GPU</td>
         </tr>
         </tbody>
         </table></div>
-        <p>Stub / gallery weights are <strong>not</strong> production LLMs and do <strong>measurement only</strong> Catalog: <a href="/docs/weight-gallery.html">Weight gallery</a>.</p>
+        <p>Stub / gallery weights are <strong>not</strong> production LLMs and do <strong>measurement only</strong>. Catalog: <a href="/docs/weight-gallery.html">Weight gallery</a>.</p>
         <h3 id="gaps-vs-roadmap">Gaps vs roadmap</h3>
         <div class="doc__table-wrap"><table class="doc__table">
         <thead>
@@ -929,7 +924,7 @@
         <td><strong>No</strong></td>
         </tr>
         <tr>
-        <td>RoPE in Python serve</td>
+        <td>Rotary embeddings in Python serve</td>
         <td><strong>No</strong></td>
         </tr>
         <tr>
@@ -1048,7 +1043,7 @@
         <tr>
         <td>SPARK_BC <code class="inline-code">TRAIN</code> / <code class="inline-code">STEP</code></td>
         <td><strong>implemented</strong></td>
-        <td>Multi-outer CPU SGD</td>
+        <td>Multi-pass CPU SGD</td>
         </tr>
         <tr>
         <td>Five HTTP train methods</td>
@@ -1057,8 +1052,8 @@
         </tr>
         <tr>
         <td>Owned TinyCoder</td>
-        <td><strong>implemented</strong> (owned TinyCoder)</td>
-        <td>tiny CI + large opt-in —</td>
+        <td><strong>implemented</strong></td>
+        <td>tiny CI + large opt-in</td>
         </tr>
         <tr>
         <td>LoRA / voice-GPU</td>
@@ -1131,7 +1126,7 @@
         <tr>
         <td>Transformer KV cache</td>
         <td><strong>not</strong></td>
-        <td>Layer-0 last-query only; no KV cache</td>
+        <td>Single-layer attention only; no KV cache</td>
         </tr>
         <tr>
         <td>RAG <code class="inline-code">retrieve</code> / <code class="inline-code">embed</code></td>
@@ -1188,7 +1183,7 @@
         </tr>
         <tr>
         <td>Eyes</td>
-        <td><strong>Planned stub only</strong></td>
+        <td><strong>Not available</strong></td>
         <td>Screenshots ≠ Spark vision</td>
         <td>Optional vision elsewhere — not claimed here</td>
         </tr>
@@ -1200,13 +1195,13 @@
         </tr>
         <tr>
         <td>GPU</td>
-        <td>Train: CPU / <strong>RTX 5090</strong> (see <a href="/docs/factory.html">Factory hub</a>)</td>
+        <td>Train: CPU or consumer GPU</td>
         <td>Vendor / cloud</td>
-        <td>May reserve separate voice GPUs — <strong>out of Spark train</strong></td>
+        <td>Vendor-managed — out of scope</td>
         </tr>
         <tr>
         <td>Status</td>
-        <td>; never fake eyes</td>
+        <td>Measurement only; eyes not claimed</td>
         <td>Not Spark decompile SoT</td>
         <td>Not a Spark clone — do not reimplement here</td>
         </tr>
@@ -1217,8 +1212,6 @@
         <li>Treat OpenBin output as verified Spark recovery</li>
         <li>Clone OpenBin UX into sparklang.dev</li>
         <li>Sell Spark voice as a phone stack</li>
-        <li>Place Spark factory train on GPUs reserved for other voice products
-         (prefer CPU / 5090 — <a href="/docs/factory.html">Factory hub</a>)</li>
         </ul>
         <p>Decompile research context (OpenBin cited carefully):
         <a href="/docs/llm-decompile.html">research/LLM_DECOMPILE.md</a> →
@@ -1236,7 +1229,7 @@
         # 2) Companion smoke (local PCM / stub listen)
         make voice-test
 
-        # 3) Eyes status gate (planned stub)
+        # 3) Eyes status gate (stub)
         make test-senses
 
         # 4) Thinking — tiny serve dry
@@ -1277,7 +1270,7 @@
         </thead>
         <tbody>
         <tr>
-        <td>Ears/speaking language surface + dry/live gated companions</td>
+        <td>Ears/speaking language surface + gated live companions</td>
         <td><strong>Yes</strong></td>
         </tr>
         <tr>
@@ -1289,7 +1282,7 @@
         <td>Out of scope</td>
         </tr>
         <tr>
-        <td>Opt-in large on <strong>5090</strong> / CPU</td>
+        <td>Opt-in large on a consumer GPU / CPU</td>
         <td><strong>Yes</strong></td>
         </tr>
         <tr>
@@ -1328,7 +1321,7 @@
         </tr>
         <tr>
         <td>Attention math</td>
-        <td>Layer-0 last-query — <a href="/docs/attention-forward.html">Attention / forward</a></td>
+        <td>Single-layer causal MHA — <a href="/docs/attention-forward.html">Attention / forward</a></td>
         </tr>
         <tr>
         <td>Eval / scale / serve</td>

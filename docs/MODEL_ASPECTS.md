@@ -5,8 +5,7 @@ system**: how text, tools, memory, and optional senses plug into
 bytecode + weights + serve. Not marketing. Not God/Loom metaphors.
 
 Eval scores are **measurement only**, not marketing wins.
-(voice-serving GPU elsewhere — not Spark train). Prefer **CPU** or
-**RTX 5090** for opt-in large local work.
+Prefer **CPU** or a consumer GPU for opt-in large local work.
 
 Factory hub: [Factory hub](FACTORY.md). Knowledge hive:
 [Knowledge](KNOWLEDGE.md) (agents/tools · multimodal · eval).
@@ -50,10 +49,10 @@ the failure modes that dominate real agents:
 | Ears undefined | STT stubs look “smart” in dry CI; live mic / vendor paths surprise ops |
 | Eyes pretended | Screenshots or CDPs get sold as “vision” — they are not |
 | Speaking bolted on | TTS latency / net gates / stub WAVs leak into demos as “product voice” |
-| Thinking oversold | Fixture-scale MLP0 gets narrated as a frontier model |
+| Thinking oversold | Fixture-scale MLP gets narrated as a frontier model |
 | Behaviors implicit | Tools, SoT, abstain, turn policy — the actual agent — stay tribal knowledge |
 
-**Sensory mapping** is the honest contract between *plain language*
+**Sensory mapping** is the contract between *plain language*
 (“ears / eyes / speaking / thinking / behaviors”) and *engineering*
 (STT sidecar, vision stub, TTS PCM, tiny CPU forward, `.spark`
 policies). It is how Spark stays a **local SoT language** instead of
@@ -67,7 +66,8 @@ For agentic AI specifically:
 2. **Behaviors own the loop.** Tools and reply packs are first-class,
  not afterthoughts bolted onto logits.
 3. **Tiny vs large is explicit.** CI stays tiny; large is opt-in on
- **5090** / CPU — 4. **Comparison without cloning.** OpenBin Ask / production phone
+ a consumer GPU or CPU.
+4. **Comparison without cloning.** OpenBin Ask / production phone
  voice stacks solve different jobs; Spark documents *its* loop and
  refuses to fake theirs.
 
@@ -83,7 +83,7 @@ This page keeps the **summary status table** (below), then expands
 | **Ears** | STT / audio in | Language `listen` + `./spark-stt-tts` (dry stub / live sidecar) |
 | **Eyes** | Vision / image in | **Not in runtime** — thin Python interface stub only |
 | **Speaking** | TTS / audio out | Language `speak` + PCM synth / optional HTTP TTS |
-| **Thinking** | LLM forward / generation | Tiny CPU `embed→attn0→MLP0→RMSNorm→lm_head` (layer-0 attention); fixture-scale |
+| **Thinking** | LLM forward / generation | Tiny CPU `embed→attention→MLP→RMSNorm→lm_head`; fixture-scale |
 | **Behaviors** | Policies, tools, turn-taking, safety, train/eval | `.spark` language + reply packs + `tool` / dry ask |
 
 Jump: [Ears](#ears--stt--audio-in) · [Eyes](#eyes--vision--image-in) ·
@@ -97,24 +97,24 @@ Jump: [Ears](#ears--stt--audio-in) · [Eyes](#eyes--vision--image-in) ·
 
 ---
 
-## Status table (honest — engineering aspects)
+## Status table (engineering aspects)
 
 | Aspect | Status | Where / notes |
 |--------|--------|---------------|
 | Tokenizer (byte BPE seed) | **implemented** | [TOKENIZER.md](TOKENIZER.md); `python/sparklang/tokenize/` |
 | Token embed (`spark.embed`) | **implemented** | Init + serve; optional STEP grads |
-| Layers / MLP (SwiGLU MLP0) | **implemented** (serve) | [Serve](SERVE.md); MLP0 in forward |
-| Attention (QKVO / GQA) | **implemented** (layer-0) | layer-0 attention — last-query MHA train+serve; **no** RoPE |
-| RMSNorm / `lm_head` | **implemented** | Serve path after attn0/MLP0 |
+| Layers / MLP (SwiGLU) | **implemented** (serve) | [Serve](SERVE.md); MLP in forward |
+| Attention (QKVO / GQA) | **implemented** | Single-layer causal MHA train+serve; no rotary embeddings |
+| RMSNorm / `lm_head` | **implemented** | Serve path after attention/MLP |
 | Memory / context window | **partial** | Script bindings + dry fixtures; **no** KV-cache decode |
 | Tools / actions | **implemented** (dry) | `tool` / `with tools`; live tool bus **planned** |
 | Ears / STT | **implemented** (surface) | Dry stub; live sidecar / whisper / gated HTTP |
-| Eyes / vision | **planned** | Stub module only — **no** `look` opcode on tip |
+| Eyes / vision | **planned** | Stub module only — **no** `look` opcode yet |
 | Speaking / TTS | **implemented** (surface) | Dry WAV marker; live PCM synth / gated HTTP |
 | Behaviors / policies | **partial** | `spark_reply_pack`, abstain, expect, `./spark-ground`; no full SM |
-| Train / adaptation | **implemented** (CPU/5090) | STEP SGD + owned TinyCoder (owned TinyCoder) — |
+| Train / adaptation | **implemented** (CPU) | STEP SGD + owned TinyCoder |
 | Eval / benchmarks | **implemented** | `make spark-eval`; optional frontier-API baseline — **measurement only** |
-| Runtime serve | **implemented** | `spark-serve` / `spark-serve-api` attn0+MLP0 CPU |
+| Runtime serve | **implemented** | `spark-serve` / `spark-serve-api` attention+MLP CPU |
 | Multimodal fused I/O | **planned** | Text+voice demos exist; no joint vision+LM tensors |
 | Knowledge hive | **implemented** (docs) | [Knowledge](KNOWLEDGE.md) → [/docs/knowledge.html](/docs/knowledge.html); multimodal / agents topic pages |
 
@@ -130,7 +130,7 @@ Jump: [Ears](#ears--stt--audio-in) · [Eyes](#eyes--vision--image-in) ·
 flowchart LR
  EAR["Ears — listen / STT<br/>spark-stt-tts"]
  TOK["Tokenizer / bindings"]
- BRN["Thinking — tiny CPU forward<br/>embed → attn0 → MLP0 → lm_head"]
+ BRN["Thinking — tiny CPU forward<br/>embed → attention → MLP → lm_head"]
  TOOL["Tools / behaviors<br/>classify · ask · reply pack"]
  VOC["Speaking — speak / TTS<br/>PCM or SPARK_TTS_*"]
  EAR --> TOK --> BRN
@@ -138,7 +138,7 @@ flowchart LR
  TOOL --> VOC
  VOC -.->|next turn transcript| EAR
  TOOL -.->|tool result text| BRN
- EYE["Eyes — vision<br/>planned stub only"] -.->|not wired| BRN
+ EYE["Eyes — vision<br/>not available"] -.->|not wired| BRN
 ```
 
 **Loop reading (plain):** ears (or typed text) become tokens → thinking
@@ -208,13 +208,13 @@ make voice-test # local companion smoke
 | `SPARK_WHISPER_MODEL` | Whisper model id (default `tiny.en`) |
 | `SPARK_STT_WHISPER=0` | Disable whisper probe |
 
-### Tiny vs large (5090 OK)
+### Tiny vs large
 
 | Path | Scale | Device |
 |------|-------|--------|
 | Dry stub / CI whisper tiny | **tiny** | CPU |
 | Live sidecar + local whisper | small local | CPU |
-| Opt-in owned voice heads | tiny / **large** via [Voice easy](VOICE_EASY.md) (`make voice-easy`) | Prefer **5090**; refuse **6000** |
+| Opt-in owned voice heads | tiny / **large** via [Voice easy](VOICE_EASY.md) | Consumer GPU or CPU |
 
 Large STT heads are **owned experiments**, not a claim of vendor ASR
 parity. See [VOICE.md](VOICE.md) tiny-vs-large table.
@@ -238,16 +238,16 @@ discipline) · [Weight gallery](WEIGHT_GALLERY.md) ·
 
 ## Eyes — vision / image in
 
-![Eyes planned stub](images/diagram-sense-eyes.svg)
+![Eyes vision stub](images/diagram-sense-eyes.svg)
 
 ### Plain language
 
 **Eyes** would turn images into captions or visual tokens the brain
-can use. Spark tip does **not** have working eyes.
+can use. Spark does **not** have working eyes today.
 
-### Engineering stack (honest)
+### Engineering stack
 
-| Claim | Reality on tip |
+| Claim | Reality |
 |-------|----------------|
 | Vision encoder | **None** |
 | Image tokens into `spark.embed` | **None** |
@@ -273,9 +273,8 @@ flowchart LR
 
 ### Tiny vs large
 
-N/A for runtime. Do **not** route hypothetical vision train to the
-**6000**. Any future large vision experiment follows the same
-**5090-or-CPU** discipline as coder / weights.
+N/A for runtime. Any future large vision experiment follows the same
+consumer-GPU-or-CPU discipline as coder / weights.
 
 ### Gaps vs roadmap
 
@@ -348,14 +347,14 @@ flowchart TB
 | `SPARK_TTS_PLAY=1` / `--play` | Play after speak |
 | URL without gate | **exit 2** — fail closed |
 
-### Tiny vs large (5090 OK)
+### Tiny vs large
 
 | Path | What it is |
 |------|------------|
 | Dry stub WAV | CI SoT |
 | Live PCM synth | Local, not vendor quality |
 | Written voice models | Features under `out/voice_models/` |
-| Opt-in owned TTS heads | Prefer **5090**; **** |
+| Opt-in owned TTS heads | Consumer GPU or CPU |
 
 ### Gaps vs roadmap
 
@@ -385,8 +384,8 @@ gateway** `ask` (not required for dry demos).
 When MLP tensors exist ([Serve](SERVE.md)):
 
 ```text
-embed (mean pool) → attn0 (layer-0 last-query MHA, layer-0 attention)
- → MLP0 (SwiGLU) → RMSNorm → lm_head
+embed (mean pool) → attention (single-layer causal MHA)
+ → MLP (SwiGLU) → RMSNorm → lm_head
 ```
 
 Code: `python/sparklang/model_lab/serve.py`. HTTP/stdio:
@@ -395,10 +394,10 @@ Code: `python/sparklang/model_lab/serve.py`. HTTP/stdio:
 | Piece | Status |
 |-------|--------|
 | Embed + lm_head | **yes** |
-| MLP0 SwiGLU | **yes** in serve |
-| Layer-0 last-query attn (layer-0 attention) | **yes** train + serve |
+| MLP (SwiGLU) | **yes** in serve |
+| Single-layer causal attention | **yes** train + serve |
 | Multi-layer attn decode | **no** |
-| RoPE / KV cache | sparkasm macros / shape check — **not** in Python path |
+| Rotary embeddings / KV cache | sparkasm macros / shape check — **not** in Python path |
 
 ### Language `ask` / classify / extract
 
@@ -417,8 +416,8 @@ is **not** a the AI gateway plugin.
 flowchart LR
  IN["Tokens / prompt"]
  EMB["embed"]
- AT["attn0"]
- MLP["MLP0"]
+ AT["attention"]
+ MLP["MLP"]
  HN["RMSNorm"]
  LH["lm_head"]
  OUT["logits / text"]
@@ -441,22 +440,21 @@ make spark-ask-http
 make test-ask-gateway
 ```
 
-### Tiny vs large (5090 OK)
+### Tiny vs large
 
 | Scale | Thinking path |
 |-------|---------------|
 | **tiny** | Fixture dims; CI SGD; TinyCoder default ([Spark coder](SPARK_CODER.md)) |
-| **large** | Opt-in `make spark-coder-train-large` / weight gallery large+xl stubs — prefer **5090** |
-| **6000** | **Never** for train |
+| **large** | Opt-in `./spark-code train --scale large` / weight gallery large+xl stubs — consumer GPU |
 
-Stub / gallery weights are **not** production LLMs and do **measurement only** Catalog: [Weight gallery](WEIGHT_GALLERY.md).
+Stub / gallery weights are **not** production LLMs and do **measurement only**. Catalog: [Weight gallery](WEIGHT_GALLERY.md).
 
 ### Gaps vs roadmap
 
 | Gap | Status |
 |-----|--------|
 | Multi-layer decode + KV cache | **No** |
-| RoPE in Python serve | **No** |
+| Rotary embeddings in Python serve | **No** |
 | Competitive AI win claim | **Forbidden claim** — eval scores only ([Eval](EVAL.md)) |
 
 ### Links
@@ -534,9 +532,9 @@ flowchart TB
 
 | Path | Status | Status |
 |------|--------|---------|
-| SPARK_BC `TRAIN` / `STEP` | **implemented** | Multi-outer CPU SGD |
+| SPARK_BC `TRAIN` / `STEP` | **implemented** | Multi-pass CPU SGD |
 | Five HTTP train methods | **implemented** | distill / pref / playbook / FAQ / reply pack — CPU |
-| Owned TinyCoder | **implemented** (owned TinyCoder) | tiny CI + large opt-in — |
+| Owned TinyCoder | **implemented** | tiny CI + large opt-in |
 | LoRA / voice-GPU | **won't (claim)** | Not sold on sparklang.dev |
 | `make spark-eval` | **implemented** | Exit 0 = harness ran — **measurement only** |
 
@@ -567,7 +565,7 @@ flowchart TB
 | Statement bindings (`->`) | **implemented** | In-script memory for one run |
 | Pipeline `\|` chaining | **implemented** | Passes last values |
 | Gateway chat history | **external** | Only if the live gateway keeps it — not Spark KV |
-| Transformer KV cache | **not** | Layer-0 last-query only; no KV cache |
+| Transformer KV cache | **not** | Single-layer attention only; no KV cache |
 | RAG `retrieve` / `embed` | **implemented** (dry + live companion) | Project fixtures / `spark-rag-http` |
 | Long-term episodic store | **planned** | Not a shipped product claim |
 
@@ -588,18 +586,16 @@ for Spark recovery / serve proofs.
 | SoT | Local `dump.py` / `--compile` / `--run-bc` / dry fixtures | Cloud project + Ghidra-backed decompile — **not** SPARK_BC | Carrier + product journals — **not** Spark VM |
 | Ask path | Dry fixtures **or** optional `./spark-ask-http` + gateway ([ASK_LIVE.md](ASK_LIVE.md)); dump/binary Q&A via [VOICE_ASK.md](VOICE_ASK.md) (`./spark-ask` / `./spark-speak-ask`) — not OpenBin SaaS | Agent loop over RE tools / BYOK LLMs | Prompt + tools inside the voice worker |
 | Ears / speaking | Language `listen`/`speak` + `spark-stt-tts` (gated) | N/A (RE product) | Always-on production STT/TTS |
-| Eyes | **Planned stub only** | Screenshots ≠ Spark vision | Optional vision elsewhere — not claimed here |
+| Eyes | **Not available** | Screenshots ≠ Spark vision | Optional vision elsewhere — not claimed here |
 | Trust | Binaries stay local; fail-closed net gates | Upload / login trust surface — use a gated lab if at all | Product-specific privacy / retention — out of scope here |
-| GPU | Train: CPU / **RTX 5090** (see [Factory hub](FACTORY.md)) | Vendor / cloud | May reserve separate voice GPUs — **out of Spark train** |
-| Status | ; never fake eyes | Not Spark decompile SoT | Not a Spark clone — do not reimplement here |
+| GPU | Train: CPU or consumer GPU | Vendor / cloud | Vendor-managed — out of scope |
+| Status | Measurement only; eyes not claimed | Not Spark decompile SoT | Not a Spark clone — do not reimplement here |
 
 **Do not:**
 
 - Treat OpenBin output as verified Spark recovery
 - Clone OpenBin UX into sparklang.dev
 - Sell Spark voice as a phone stack
-- Place Spark factory train on GPUs reserved for other voice products
- (prefer CPU / 5090 — [Factory hub](FACTORY.md))
 
 Decompile research context (OpenBin cited carefully):
 [research/LLM_DECOMPILE.md](research/LLM_DECOMPILE.md) →
@@ -623,7 +619,7 @@ make spark-bootstrap spark
 # 2) Companion smoke (local PCM / stub listen)
 make voice-test
 
-# 3) Eyes status gate (planned stub)
+# 3) Eyes status gate (stub)
 make test-senses
 
 # 4) Thinking — tiny serve dry
@@ -666,10 +662,10 @@ stays token-id JSON for the tiny CPU stack.
 ## Capability status
 | Claim | Allowed? |
 |-------|----------|
-| Ears/speaking language surface + dry/live gated companions | **Yes** |
+| Ears/speaking language surface + gated live companions | **Yes** |
 | Eyes fully working / vision encoder shipped | **No** |
 | Marketing win banners | Out of scope |
-| Opt-in large on **5090** / CPU | **Yes** |
+| Opt-in large on a consumer GPU / CPU | **Yes** |
 | OpenBin clone / phone-stack clone | **No** |
 | Spark local SPARK_BC SoT | **Yes** |
 
@@ -685,7 +681,7 @@ Roadmap sketches: [ROADMAP.md](ROADMAP.md).
 | Factory hub + diagrams | Extended context — [Factory hub](FACTORY.md) / [Diagrams](DIAGRAMS.md) |
 | Decompile / OpenBin methods | Cross-link — [Decompile](DECOMPILE.md) / [Methods vs OpenBin](METHODS_OPENBIN.md) |
 | SDK / helpers / shadows | Authoring tools — [IDE.md](IDE.md) / [TOOLS_HELPERS.md](TOOLS_HELPERS.md) |
-| Attention math | Layer-0 last-query — [Attention / forward](ATTENTION_FORWARD.md) |
+| Attention math | Single-layer causal MHA — [Attention / forward](ATTENTION_FORWARD.md) |
 | Eval / scale / serve | Linked above — [Eval](EVAL.md) / [Train loop](TRAIN_LOOP.md) / [Serve](SERVE.md) |
 | Owned spark-coder | Tiny + large discipline — [Spark coder](SPARK_CODER.md) |
 | This sensory map | Expanded status on this page |

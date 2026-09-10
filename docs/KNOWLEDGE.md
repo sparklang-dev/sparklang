@@ -5,7 +5,7 @@ transformers, training, inference, multimodal, agents, evaluation,
 and decompile limits. Original diagrams (not scraped paper figures).
 Citations point at primary papers and surveys.
 
-**Never** publishes competitive AI win claims. Spark factory train prefers CPU / RTX 5090 (see [Factory hub](FACTORY.md) GPU policy). Not an OpenBin clone.
+**Never** publishes competitive AI win claims. Spark factory train runs on CPU (default) or a consumer GPU. Not an OpenBin clone.
 
 Topics below follow the same **category → subcategory** map as the
 Hive nav: Foundations · Systems · Safety / Eval · RE.

@@ -1,4 +1,4 @@
-# Architecture pieces (honest)
+# Architecture pieces
 
 Tiny Spark control stack next to SPARK_BC. Product: **Spark /
 SparkLang** only. Tensor names from
@@ -12,12 +12,12 @@ SparkLang** only. Tensor names from
 |-------|--------------|------------------|------------------------|
 | `spark.embed` | **yes** | optional grads (+ attn path) | last-token / mean-pool **yes** |
 | `spark.lm_head` | **yes** | **yes** (primary) | **yes** |
-| `spark.final_norm` (RMSNorm) | **yes** | via attn path | **yes** (after attn0/MLP0) |
-| Layer MLP SwiGLU (`mlp_up/gate/down`, `mlp_norm`) | **yes** | no (serve only) | **MLP0 yes** |
-| Layer attn (`q/k/v/o`, `attn_norm`) | **yes** | **layer-0 yes** (D) | **attn0 yes** (D) |
-| RoPE / multi-layer / KV cache | sparkasm macros only | **no** | **no** |
+| `spark.final_norm` (RMSNorm) | **yes** | via attn path | **yes** (after attention/MLP) |
+| Layer MLP SwiGLU (`mlp_up/gate/down`, `mlp_norm`) | **yes** | no (serve only) | **yes** |
+| Layer attn (`q/k/v/o`, `attn_norm`) | **yes** | **yes** (D) | **yes** (D) |
+| Rotary embeddings / multi-layer / KV cache | sparkasm macros only | **no** | **no** |
 
-## Defaults (tip)
+## Defaults
 
 Arch is derived from SPARK_BC bytes (tiny stub). Typical control
 shapes match `control.sparkasm` comments (e.g. small `dim`, few
@@ -29,31 +29,31 @@ Opt-in larger `dim` / `n_layer` for CPU-fast stubs: **scale fixtures**
 
 ## Embed → logits paths
 
-**Serve (implemented, layer-0 attention):**
+**Serve (implemented, single-layer attention):**
 
-`embed -> attn0 -> mlp0 -> rms_norm -> lm_head`
+`embed -> attn -> mlp -> rms_norm -> lm_head`
 
-(when layer-0 attn tensors exist; else mean-pool → MLP0 path)
+(when attention tensors exist; else mean-pool → MLP path)
 
-**Train STEP (implemented, layer-0 attention):**
+**Train STEP (implemented, single-layer attention):**
 
-last-query causal MHA CE on layer-0 q/k/v/o (+ embed / lm_head).
+Causal MHA CE on the attention q/k/v/o (+ embed / lm_head).
 `--no-train-attn` keeps mean-pool CE.
 
 **sparkasm documented (not a VM):**
 
-full block = pre-norm attn (GQA+RoPE) + SwiGLU MLP — shape-checked
-by `make test-sparkasm-control` only. RoPE still **not** in the
-Python CPU path.
+full block = pre-norm attn (GQA+rotary) + SwiGLU MLP — shape-checked
+by `make test-sparkasm-control` only. Rotary embeddings still **not**
+in the Python CPU path.
 
 Detail: [Attention / forward](ATTENTION_FORWARD.md).
 
-## Safetensors meta (honest flags)
+## Safetensors meta
 
 Init emit sets `trained: false`, `served: false`, derivation notes
 tying tensors to SPARK_BC sha256. STEP updates `trained` only when
 SGD applies. Serve writes `SERVE` with `forward=true` and copies
-honest `trained` from weights.
+`trained` from weights.
 
 ## Related
 

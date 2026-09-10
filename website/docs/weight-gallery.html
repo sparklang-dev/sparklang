@@ -220,7 +220,7 @@
         <td><code class="inline-code">xl</code></td>
         <td>256</td>
         <td>8</td>
-        <td>Opt-in; prefer 5090 generate</td>
+        <td>Opt-in; consumer GPU suggested</td>
         </tr>
         </tbody>
         </table></div>
@@ -297,9 +297,7 @@
         <pre class="doc__pre"><code class="language-bash"># CPU scale + large samples under out/gallery/
         make weight-gallery
 
-        # XL prefers 5090 (falls back to CPU)
-        PYTHONPATH=python python3 tools/spark-weights/cli.py generate xl --5090
-        # or force CPU:
+        # XL on CPU:
         PYTHONPATH=python python3 tools/spark-weights/cli.py generate xl --cpu
         </code></pre>
         <h2 id="understand-roles-in-the-spark-forward-path">Understand (roles in the Spark forward path)</h2>
@@ -321,7 +319,7 @@
         </tr>
         <tr>
         <td><strong>mlp</strong></td>
-        <td>SwiGLU up/gate/down; layer-0 in tiny CPU serve</td>
+        <td>SwiGLU up/gate/down; single-layer in tiny CPU serve</td>
         </tr>
         <tr>
         <td><strong>norm</strong></td>
@@ -333,7 +331,7 @@
         </tr>
         </tbody>
         </table></div>
-        <p>Forward sketch: <code class="inline-code">embed → attn0? → mlp0? → rms_norm → lm_head</code>
+        <p>Forward sketch: <code class="inline-code">embed → attn? → mlp? → rms_norm → lm_head</code>
         (<a href="/docs/serve.html">Serve</a>, <a href="/docs/attention-forward.html">Attention / forward</a>).</p>
         <h2 id="make-targets">Make targets</h2>
         <div class="doc__table-wrap"><table class="doc__table">
@@ -354,7 +352,7 @@
         </tr>
         <tr>
         <td><code class="inline-code">make weight-gallery-xl</code></td>
-        <td>Opt-in XL emit (<code class="inline-code">--5090</code>)</td>
+        <td>Opt-in XL emit</td>
         </tr>
         </tbody>
         </table></div>

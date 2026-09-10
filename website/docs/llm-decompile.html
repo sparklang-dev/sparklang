@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>LLM decompile research — Spark</title>
-    <meta name="description" content="Survey of LLM decompile tools vs Spark SPARK_BC deterministic dump — citations and honest limits." />
+    <meta name="description" content="Survey of LLM decompile tools vs Spark SPARK_BC deterministic dump — citations and limits." />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="shortcut icon" href="/favicon.svg" />
     <link rel="stylesheet" href="/css/tokens.css?v=navsub0909" />
@@ -304,7 +304,7 @@
         map linearized assembly → C in one generative pass.</p>
         <p>Reddit thread:
         https://www.reddit.com/r/ReverseEngineering/comments/1kt2gcb/decompai_an_llmpowered_reverse_engineering_agent/</p>
-        <p>Honest limits: exploratory RE accelerator for supported binaries —
+        <p>Limits: exploratory RE accelerator for supported binaries —
         <strong>not</strong> a verified SPARK_BC→<code class="inline-code">.spark</code> recovery pipeline, and not
         proof that agent output is ground truth.</p>
         <h2 id="survey-cited">Survey (cited)</h2>
@@ -445,7 +445,7 @@
         </tr>
         <tr>
         <td><strong>GhidraMCP / ReVa / Better-Ghidra-MCP / GhidraGPT</strong></td>
-        <td>MCP or plugin bridges so Claude/GPT/Codex rename, comment, explain</td>
+        <td>MCP or plugin bridges so hosted LLM assistants rename, comment, explain</td>
         <td>e.g. <a href="https://github.com/LaurieWired/GhidraMCP">LaurieWired/GhidraMCP</a>, <a href="https://github.com/cyberkaida/reverse-engineering-assistant">cyberkaida/reverse-engineering-assistant</a>, <a href="https://github.com/TheFlashBold/Better-Ghidra-MCP">Better-Ghidra-MCP</a>, <a href="https://github.com/weirdmachine64/GhidraGPT">GhidraGPT</a></td>
         </tr>
         <tr>
@@ -454,7 +454,7 @@
         <td><a href="https://github.com/louisgthier/decompai">GitHub</a> · <a href="https://www.reddit.com/r/ReverseEngineering/comments/1kt2gcb/decompai_an_llmpowered_reverse_engineering_agent/">Reddit</a></td>
         </tr>
         <tr>
-        <td><strong>Claude / GPT / Codex as RE assistants</strong></td>
+        <td><strong>Hosted LLM assistants as RE helpers</strong></td>
         <td>Read dump/pseudocode; suggest names, summaries, patches</td>
         <td>Useful for readability; <strong>not</strong> proven SPARK_BC→<code class="inline-code">.spark</code> fidelity</td>
         </tr>
@@ -577,7 +577,7 @@
         <li>Optional later: LLM assist lane that consumes <strong>dump text</strong> only
          (comments / rename proposals) — never silent rewrite of <code class="inline-code">.sparkbc</code>.</li>
         <li>Do <strong>not</strong> claim Spark “beats” LLM4Decompile / Nova / DecompAI /
-         Claude / OpenBin on native binary benchmarks — different problem,
+         OpenBin on native binary benchmarks — different problem,
          different metrics.</li>
         <li>If evaluating assist: measure dump→suggested-name accuracy and
          recompile round-trip — and remember <strong>recompile more ≠ preserve
@@ -586,8 +586,7 @@
          Quarkslab caution: tool traces can still cheat or invent; require
          dump/<code class="inline-code">--run-bc</code> gates. Prefer <strong>local</strong> artifacts over third-party
          upload for proprietary SPARK_BC.</li>
-        <li>Prefer CPU / RTX <strong>5090</strong> for any SPARK_BC factory GPU train
-         (see <a href="/docs/factory.html">Factory hub</a>); leave reserved GPUs alone.</li>
+        <li>Prefer CPU or a consumer GPU for any SPARK_BC factory GPU train.</li>
         </ol>
         <h2 id="operator-brief-short">Operator brief (short)</h2>
         <ul class="doc__ul">
@@ -612,8 +611,6 @@
          guaranteed recovery.</li>
         <li>Spark path: compile/dump/run deterministic; LLM optional for docs-
          level assist only.</li>
-        <li>Honest bar: no perfect SPARK_BC decompile claim; no competitive AI win claim /
-         no beat these models/products. GPU train: see factory policy.</li>
         </ul>
         <h2 id="related">Related</h2>
         <ul class="doc__ul">

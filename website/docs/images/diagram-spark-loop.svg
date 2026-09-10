@@ -39,7 +39,7 @@
  <text x="408" y="74" class="num">03</text>
  <text x="471" y="96" text-anchor="middle" class="lbl">Train / step</text>
  <text x="471" y="114" text-anchor="middle" class="sub">spark-coder</text>
- <text x="471" y="130" text-anchor="middle" class="sub">tiny · honest</text>
+ <text x="471" y="130" text-anchor="middle" class="sub">tiny</text>
 
  <path class="flow" d="M550 96 H578"/>
 

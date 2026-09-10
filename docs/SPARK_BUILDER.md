@@ -10,18 +10,18 @@ files under `docs/examples/`.
 | Artifact | What it is | What it is **not** |
 |----------|------------|---------------------|
 | **SPARK_BC** (`.sparkbc`) | Orchestration **ISA** — packed magic `SPBC`, string/const pools, opcode stream (`MODEL` / `ASK` / `PRINT` / `TRAIN` / `STEP` / `TRAIN_STATUS` / `HALT`, …) | Neural weights, a tensor ISA, HuggingFace, CUDA kernels |
-| **Init safetensors** | Spark-created tensors **derived from** those bytecode bytes (Xavier / fan-in; embed rows mix in magic + opcodes + strings) | A Claude-beating checkpoint, an imported hub weight dump |
-| **STEP weights** | Multi-outer **CPU SGD** on Spark `lm_head`(+embed+layer-0 attn) from fixture JSONL (`trained=true`, `not_sgd=false`, `checkpoint.json` loss curve; frozen eval can score >0) | A production LLM; beating Claude |
+| **Init safetensors** | Spark-created tensors **derived from** those bytecode bytes (Xavier / fan-in; embed rows mix in magic + opcodes + strings) | An imported hub weight dump |
+| **STEP weights** | Multi-pass **CPU SGD** on Spark `lm_head`(+embed+attn) from fixture JSONL (`trained=true`, `not_sgd=false`, `checkpoint.json` loss curve; eval can score >0) | A production LLM |
 
 
 Bytecode is the **training program + orchestration**. Init tensors stay
 `trained: false` until `STEP` runs. Emitting `TRAIN` alone ≠ trained.
-`STEP` now applies **multi-outer CPU SGD** on tiny Spark tensors
-(layer-0 last-query causal attention + embed + lm_head; larger
+`STEP` now applies **multi-pass CPU SGD** on tiny Spark tensors
+(single-layer causal attention + embed + lm_head; larger
 fixture; loss curve in `checkpoint.json`; loss must drop or fail
 loud). Frozen `make spark-eval` probes can score **>0** after that
-train — still **** CPU default; RTX 5090 OK; Do not
-import Claude or Grok weights.
+train — still measurement only. CPU default; consumer GPU optional.
+Do not import third-party weights.
 
 **ISA SoT:** [SPARK_BC.md](SPARK_BC.md).
 
@@ -37,13 +37,13 @@ import Claude or Grok weights.
 4. **`--run-bc`** — `./spark-bootstrap --run-bc ….sparkbc` **or**
  `./spark --run-bc ….sparkbc` (GAS thin fork → bootstrap bc_vm)
  runs `TRAIN` as a dry job accept (`trained=false` until STEP),
- then **`STEP` as multi-outer CPU SGD** on Spark safetensors
+ then **`STEP` as multi-pass CPU SGD** on Spark safetensors
  (`ARTIFACT` + `weights.safetensors` + `checkpoint.json`;
  `trained=true` / `not_sgd=false` only after real grads; loss must
  drop). Helper: `tools/spark-bc-dump/apply_step.py` →
- `apply_sgd_step` (outer×inner sequence CE via layer-0 attn;
+ `apply_sgd_step` (outer×inner sequence CE via attn;
  optional embed grads; `--no-train-attn` for mean-pool CE).
- **Measurement only.** No 6000.
+ **Measurement only.**
 5. **GAS dry-run + wrappers** — `./spark --dry-run file.spark` runs
  train verbs from **source**. `./spark --run-bc` and
  `./spark --compile … -o …` thin-wrap bootstrap (bc_vm / C
@@ -150,7 +150,7 @@ txt/json dumps there when regenerating the site; do not invent hex.
 # TRAIN accept is still a dry job marker; STEP runs CPU SGD.
 # trained=true / not_sgd=false only after apply_sgd_step grads.
 # tools/spark-bc-dump/apply_step.py → apply_sgd_step
-# (multi-outer CE + checkpoint.json; not hash toy).
+# (multi-pass CE + checkpoint.json; not hash toy).
 ls -la out/train/job-dry-001/ARTIFACT \
  out/train/job-dry-001/weights.safetensors \
  out/train/job-dry-001/checkpoint.json
@@ -199,7 +199,7 @@ PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
  --command './spark-bootstrap --compile examples/spark_builder.spark -o docs/examples/spark-builder.sparkbc' \
  --serve /tmp/serve-dry-001
 # → /tmp/serve-dry-001/SERVE (forward=true, trained=false)
-# path embed->attn0->mlp0->rms_norm->lm_head when layer-0
+# path embed->attn->mlp->rms_norm->lm_head when
 # attn+MLP tensors exist; + weights.safetensors (init if missing)
 # Or: ./spark-serve docs/examples/spark-builder.sparkbc /tmp/serve-dry-001
 ```
@@ -208,7 +208,7 @@ PYTHONPATH=python python3 tools/spark-bc-dump/dump.py \
 
 Wraps the same tiny CPU forward behind a local JSON API
 (predict next-token + embeddings). Uses whatever tensors
-`serve.py` already runs (attn0 when present — layer-0 attention).
+`serve.py` already runs (attention when present).
 **Not production.**
 
 ```bash
@@ -242,7 +242,7 @@ wrapper `scripts/sparkbc-e2e`). Compiles
 `./spark-bootstrap --run-bc` **and** `./spark --run-bc`, asserts
 `out/train/job-dry-001/ARTIFACT` (`not_sgd=false`, `trained=true`,
 `step_n=1`) + `checkpoint.json`. `make test-sparkbc` asserts STEP
-weights + `loss_after < loss_before` (multi-outer SGD + attn).
+weights + `loss_after < loss_before` (multi-pass SGD + attn).
 **Measurement only.**
 
 Attn train proof (SGD then measurement-only eval; scores >0 on
@@ -281,31 +281,22 @@ make spark-eval
 # optional Spark weights (init or later train artifact):
 make spark-eval WEIGHTS=docs/examples/spark-self.init.safetensors
 # or: SPARK_EVAL_WEIGHTS=/path/to/weights.safetensors make spark-eval
-# optional frontier-API baseline (skips if no key on box):
-make spark-eval-claude
-# or: make spark-eval CLAUDE=auto
 ```
 
 - **Dry** (default): oracle fixture path — prints scores, exits **0**.
-- **Weights**: teacher-forced / next-token accuracy via layer-0
- attn when present (else mean-pool) + `lm_head` (CPU / consumer GPU). After `make spark-sgd-proof`, frozen probes score **>0**
+- **Weights**: teacher-forced / next-token accuracy via
+ attention when present (else mean-pool) + `lm_head` (CPU / consumer GPU). After `make spark-sgd-proof`, frozen probes score **>0**
  — still **measurement only**
-- **frontier-API baseline (optional):** `CLAUDE=auto` / `make spark-eval-claude`
- calls Anthropic **only** when a key already exists
- (`SPARK_EVAL_CLAUDE_API_KEY`, `ANTHROPIC_API_KEY`, `CLAUDE_API_KEY`,
- or `SPARK_EVAL_CLAUDE_KEY_FILE`). Otherwise status
- `skipped_no_credentials`. `CLAUDE=on` fails closed if missing.
  - Suite JSON: `examples/eval/suite.json` (`claim: none`).
 - Gate: `make test-spark-eval`.
 
 ### Evaluation (Spark / SparkLang)
 - Product name in docs and scores: **Spark** / **SparkLang** only.
 - Harness output always sets `claim: none` and no marketing-win flag.
-- Side-by-side Spark vs Claude scores are **measurement**, not a
- marketing win. A higher Spark score on tiny fixtures **does not**
+- A higher Spark score on tiny fixtures **does not**
  authorize competitive AI win claims.”
 - Dry Spark oracle scores are fixture plumbing, not model quality.
-- Weights-mode scores of `0.0` are honest misses until proven otherwise.
+- Weights-mode scores of `0.0` are misses until proven otherwise.
 
 ## Published files — sha256
 
@@ -352,10 +343,10 @@ make test-model-lab
 | GAS `./spark --run-bc` | **implemented** — thin fork → bootstrap bc_vm |
 | Dry ARTIFACT / `--run-bc` TRAIN accept | **implemented** — fixture until STEP |
 | Init safetensors from SPARK_BC | **implemented** — `trained: false` until STEP |
-| STEP CPU SGD weights | **implemented** (multi-outer; layer-0 attn+embed+lm_head; `weights.safetensors` + `checkpoint.json` loss curve; `trained=true`; `not_sgd=false`; loss must drop; eval probes can be >0) |
-| Tiny CPU serve forward | **implemented** (`dump.py --serve` → `SERVE` with `forward=true`; optional layer-0 attn+MLP; `trained` from weights meta; not production) |
+| STEP CPU SGD weights | **implemented** (multi-pass; attn+embed+lm_head; `weights.safetensors` + `checkpoint.json` loss curve; `trained=true`; `not_sgd=false`; loss must drop; eval probes can be >0) |
+| Tiny CPU serve forward | **implemented** (`dump.py --serve` → `SERVE` with `forward=true`; optional attn+MLP; `trained` from weights meta; not production) |
 | Serve HTTP / stdio API | **implemented** (`./spark-serve-api` — `/health` `/version` `/v1/predict` `/v1/embeddings`; gate `make test-serve-api`; not production) |
-| Competitive AI win / production LLM | **not** — multi-stage later; multi-outer SGD ≠ Claude |
+| Competitive AI win / production LLM | **not** — multi-stage later |
 
 | Cloudflare Pages deploy | Prefer Wrangler OAuth (`npx wrangler pages deploy website …`); if CLI/auth absent → **dashboard** upload of `website/` from a known SHA (see [RELEASE.md](RELEASE.md) step 5) |
 
@@ -377,7 +368,7 @@ make test-model-lab
 | Round-trip hello SPARK_BC | **tested** (`make test-sparkbc`) |
 | Model lab reverse/compile/modify | **tested** (`make test-model-lab`) |
 | STEP real CPU SGD | **implemented** (tiny; attn train; loss drop + eval>0 proven; measurement only.) |
-| Tiny CPU serve forward | **implemented** (`SERVE`; `forward=true`; attn0+mlp0; not production) |
+| Tiny CPU serve forward | **implemented** (`SERVE`; `forward=true`; attn+MLP; not production) |
 | Serve HTTP / stdio API (serve API path) | **implemented** (`spark-serve-api`; predict + embeddings; not production) |
 | Competitive AI win | **not** |
 
