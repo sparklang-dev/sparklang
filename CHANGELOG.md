@@ -7,7 +7,7 @@ language) are listed here. Site and installers track
 ## 0.6.62 — 2026-09-09
 
 - **Public claims tone scrub:** remove authenticity/honesty-theater
-  framing from public docs and site copy; rename EVAL honesty map
+  framing from public docs and site copy; rename evaluation map
   surface toward product-status wording (`EVAL_STATUS`); keep
   measurement language without operator-constraint dumps. Companion
   restore: `spark-self.init.safetensors` if dropped by docs rsync.
@@ -41,7 +41,7 @@ language) are listed here. Site and installers track
   language tiers + README lowest-level heading; scrub operator
   parentheticals (`owner cite`, `owner addendum`, `confirm`,
   lane letters in living docs headings/body); trim meta-description
-  "beat Claude" / "dedicated voice GPU only when configured" spam (honest eval/coder/factory notes
+  competitive-win / dedicated-voice-GPU meta spam (measurement notes
   stay once where they belong); remove local report path from
   public README. `make docs-html` / `docs-check` green.
 
@@ -139,7 +139,7 @@ language) are listed here. Site and installers track
  train → dry round-trip). Default **tiny** for CI; opt-in
  `--scale large` / `VOICE_SCALE=large` (bigger dims/steps; prefer
  **RTX 5090**, ~2 GiB hint; **fail closed** if only the voice GPU
- visible unless `--device cpu`). Not ElevenLabs overnight. Measurement only. Docs: [VOICE_EASY.md](docs/VOICE_EASY.md) →
+ visible unless `--device cpu`). Owned heads only. Measurement only. Docs: [VOICE_EASY.md](docs/VOICE_EASY.md) →
  [/docs/voice-easy.html](/docs/voice-easy.html). IDE command
  **Spark: Voice easy train**. Gate: `make test-voice-easy`.
 
@@ -212,7 +212,7 @@ language) are listed here. Site and installers track
  [/docs/knowledge.html](https://sparklang.dev/docs/knowledge.html)
  (aliases `/docs/knowledge`, `/learn/knowledge`) with topic pages
  for transformers, training (SFT/RLHF/LoRA), inference (KV/quant)
- multimodal, agents/tools, eval honesty, decompile+RE (links
+ multimodal, agents/tools, evaluation, decompile+RE (links
  existing llm-decompile; recompile≠semantics), and safety.
  Original SVG diagrams; cited papers. Nav: **Knowledge** + **Hive**
  menu beside Learn / Forge / Bench; not an OpenBin clone.
@@ -449,7 +449,7 @@ language) are listed here. Site and installers track
  Anthropic Messages baseline **only if** credentials already exist
  on the box. No key → `skipped_no_credentials` (clear status).
  Side-by-side comparison table; Never invents keys.
- Gate: `make test-spark-eval`. Docs: Eval honesty in
+ Gate: `make test-spark-eval`. Docs: Evaluation in
  [SPARK_BUILDER.md](docs/SPARK_BUILDER.md).
 
 ## 0.6.32 — 2026-09-09
