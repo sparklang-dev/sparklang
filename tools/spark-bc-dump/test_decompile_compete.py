@@ -16,9 +16,7 @@ from analyze_project import write_project
 from decompile_bench import (
     NOT_PROBED,
     PARITY_TOOLS,
-    _TOOL_ROW_NAME,
-    _parity_matrix,
-    _probe_tool_sparkbc,
+    _capability_matrix,
     build_scoreboard,
 )
 from sparklang.model_lab.bc_dump import (
@@ -87,7 +85,7 @@ def test_analyze_project_writes_artifacts() -> None:
 
 def _fake_rt(status: str, pct: float, n_pass: int = 1,
              n_total: int = 1) -> dict:
-    """Synthetic roundtrip summary for parity-matrix unit checks."""
+    """Synthetic roundtrip summary for capability-matrix checks."""
     return {
         "status": status,
         "round_trip_pct": pct,
@@ -108,17 +106,13 @@ def _fake_fixture(ok: bool = True) -> dict:
 def test_parity_badges_computed_not_declared() -> None:
     """No badge is a constant: flip the measured inputs, the cells flip."""
     fixtures = [_fake_fixture()]
-    absent = [
-        {"tool": name, "status": "absent", "verdict": "skip"}
-        for name in ("objdump", "openbin", "ghidra", "ida", "binja")
-    ]
     rt_pass = _fake_rt("pass", 100.0)
     rt_fail = _fake_rt("fail", 0.0, n_pass=0)
     elf_ok = {"status": "ok", "format": "elf", "section_count": 8}
     elf_skip = {"status": "skip"}
     project_ok = {"files": ["dump.txt", "report.md"]}
 
-    m = _parity_matrix(fixtures, rt_pass, elf_ok, project_ok, absent)
+    m = _capability_matrix(fixtures, rt_pass, elf_ok, project_ok)
     by_cat = {row["category"]: row for row in m}
     assert by_cat["Native dump fidelity (SPARK_BC)"]["spark"] == "win"
     assert (
@@ -130,47 +124,35 @@ def test_parity_badges_computed_not_declared() -> None:
     assert by_cat["Batch / fixtures harness"]["spark"] == "win"
     assert by_cat["Local privacy (no upload)"]["spark"] == "win"
 
-    # Every absent competitor → every cell "not probed" (never declared).
+    # Spark-only schema: no third-party tool keys anywhere.
     for row in m:
-        for tool in ("objdump", "openbin", "ghidra", "ida", "binja",
-                     "llm4decompile"):
-            assert row[tool] == NOT_PROBED, (row["category"], tool)
+        assert set(row) == {"category", "spark", "note"}, row
 
     # Roundtrip failure flips the Spark badge to a measured loss.
-    m2 = _parity_matrix(fixtures, rt_fail, elf_ok, project_ok, absent)
+    m2 = _capability_matrix(fixtures, rt_fail, elf_ok, project_ok)
     c2 = {row["category"]: row for row in m2}
     assert c2["Round-trip reassemble (compile hash)"]["spark"] == "loss"
     # No ELF probe → the ELF cell degrades to "not probed", never declared.
-    m3 = _parity_matrix(fixtures, rt_pass, elf_skip, project_ok, absent)
+    m3 = _capability_matrix(fixtures, rt_pass, elf_skip, project_ok)
     c3 = {row["category"]: row for row in m3}
     assert c3["Multi-format ELF/PE"]["spark"] == NOT_PROBED
     # No fixtures → fidelity/extraction/batch cells are measured losses.
-    m4 = _parity_matrix([], _fake_rt("fail", 0.0, 0, 0), elf_skip, {},
-                        absent)
+    m4 = _capability_matrix([], _fake_rt("fail", 0.0, 0, 0), elf_skip, {})
     c4 = {row["category"]: row for row in m4}
     assert c4["Native dump fidelity (SPARK_BC)"]["spark"] == "loss"
     assert c4["Symbol + xref extraction (SPARK_BC)"]["spark"] == "loss"
     assert c4["Batch / fixtures harness"]["spark"] == "loss"
 
-    # No scripted byte-level probe exists for ghidra → always not probed.
-    assert _probe_tool_sparkbc("ghidra", STEP_BC) is None
-
 
 def test_scoreboard_parity_cells_are_probe_derived() -> None:
-    """Live scoreboard: absent tools are all-not-probed; no stale constants."""
+    """Live scoreboard: every cell measured; schema carries no tool columns."""
     sb = build_scoreboard()
     matrix = sb["parity"]
-    by_status = {
-        str(r.get("tool")): r.get("status") for r in sb["external_tools"]
-    }
     for row in matrix:
         for tool in PARITY_TOOLS:
             assert tool in row, (row["category"], tool)
             cell = row[tool]
             assert cell in {"win", "tie", "loss", "na", NOT_PROBED}
-            row_name = _TOOL_ROW_NAME.get(tool, tool)
-            if tool != "spark" and by_status.get(row_name) != "present":
-                assert cell == NOT_PROBED, (tool, row["category"], cell)
     # Spark's own badges are computed from measured inputs that exist here.
     by_cat = {row["category"]: row for row in matrix}
     assert by_cat["Native dump fidelity (SPARK_BC)"]["spark"] == "win"
@@ -178,7 +160,12 @@ def test_scoreboard_parity_cells_are_probe_derived() -> None:
         by_cat["Round-trip reassemble (compile hash)"]["spark"] == "win"
     )
     counts = sb["summary_counts"]
-    assert any(c.get(NOT_PROBED, 0) > 0 for c in counts.values())
+    assert set(counts) == {"spark"}
+    # Methodology field renamed from the old schema key.
+    assert "methodology" in sb
+    assert "honesty" not in sb
+    # No third-party probe list is published.
+    assert "external_tools" not in sb
 
 
 def main() -> int:

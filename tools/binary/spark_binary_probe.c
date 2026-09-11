@@ -176,7 +176,7 @@ static int understand(const char *path, const char *focus, int exports_only,
   const Elf64_Ehdr *eh = (const Elf64_Ehdr *)p;
   printf("{\"op\":\"%s\",\"ok\":true,\"path\":\"%s\",\"size\":%lld,"
          "\"focus\":\"%s\",\"machine_disasm\":\"use_spark_binary_disasm\","
-         "\"claim\":\"local_elf_probe_not_ghidra\",",
+         "\"claim\":\"local_elf_probe_headers_sections\",",
          elf_mode ? "elf" : "understand", path, (long long)st.st_size,
          focus ? focus : "general");
   print_elf_hdr_fields(eh);
@@ -664,7 +664,7 @@ static int pe_parse(const unsigned char *p, size_t map_sz,
       printf("\"import_function_count\":%d,", fn_total);
       printf("\"import_ordinal_count\":%d", ord_total);
     }
-    printf(",\"claim\":\"local_pe_probe_not_ghidra\"}\n");
+    printf(",\"claim\":\"local_pe_probe_headers_sections\"}\n");
   }
   return 0;
 }

@@ -1,23 +1,16 @@
 /**
- * Render measured decompile scoreboard from JSON.
+ * Render the measured decompile-capabilities scoreboard from JSON.
  * Every badge is computed by tools/spark-bc-dump/decompile_bench.py
- * from measured probe output. Tools without a byte-level probe on
- * the bench box render "not probed" — never a declared win/tie/loss.
+ * from measured probe output on the bench box. A capability whose
+ * probe did not run renders "not probed" — never a declared
+ * win/tie/loss. Spark capabilities only; no third-party columns.
  */
 (function () {
   "use strict";
   var mount = document.getElementById("decompile-scoreboard-body");
   if (!mount) return;
 
-  var TOOLS = [
-    ["spark", "Spark"],
-    ["objdump", "objdump"],
-    ["openbin", "OpenBin"],
-    ["ghidra", "Ghidra"],
-    ["ida", "IDA"],
-    ["binja", "Binja"],
-    ["llm4decompile", "LLM4Decompile"],
-  ];
+  var COLUMNS = [["spark", "Spark (measured)"]];
 
   function esc(s) {
     return String(s)
@@ -87,7 +80,7 @@
         esc(String(rt.n_total)) +
         ")</p>";
       html +=
-        "<p>Spark counts — win " +
+        "<p>Measured results — win " +
         esc(String(spark.win || 0)) +
         ", tie " +
         esc(String(spark.tie || 0)) +
@@ -100,14 +93,14 @@
         "</p>";
       html +=
         '<div class="doc__table-wrap"><table class="doc__table">' +
-        "<thead><tr><th>Category</th>";
-      TOOLS.forEach(function (t) {
+        "<thead><tr><th>Capability</th>";
+      COLUMNS.forEach(function (t) {
         html += "<th>" + esc(t[1]) + "</th>";
       });
-      html += "<th>Note</th></tr></thead><tbody>";
+      html += "<th>Evidence</th></tr></thead><tbody>";
       (data.parity || []).forEach(function (row) {
         html += "<tr><td>" + esc(row.category) + "</td>";
-        TOOLS.forEach(function (t) {
+        COLUMNS.forEach(function (t) {
           html += "<td>" + badge(row[t[0]]) + "</td>";
         });
         html += "<td>" + esc(row.note || "") + "</td></tr>";
@@ -115,25 +108,8 @@
       html += "</tbody></table></div>";
       html +=
         "<p><em>" +
-        esc(data.honesty || "") +
+        esc(data.methodology || "") +
         "</em></p>";
-      var ext = data.external_tools || [];
-      if (ext.length) {
-        html += "<p><strong>External probes</strong></p><ul>";
-        ext.forEach(function (t) {
-          html +=
-            "<li>" +
-            esc(t.tool) +
-            ": " +
-            esc(t.status) +
-            " / " +
-            esc(t.verdict) +
-            " — " +
-            esc(t.note || "") +
-            "</li>";
-        });
-        html += "</ul>";
-      }
       mount.innerHTML = html;
     })
     .catch(function (err) {

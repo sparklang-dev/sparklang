@@ -34,8 +34,7 @@ make test-spark-analyze
 
 Project loop: `spark-analyze` writes a **local** folder
 `out/analyze/<name>/` (dump, `ops.json`, REPORT stub, screenshot
-placeholder; optional `--serve` / `--ask`). No upload. Methods note:
-[Methods vs OpenBin](METHODS_OPENBIN.md).
+placeholder; optional `--serve` / `--ask`). No upload.
 
 ## Layout
 

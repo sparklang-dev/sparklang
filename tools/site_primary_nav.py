@@ -56,7 +56,6 @@ NAV_MENUS: tuple[NavMenu, ...] = (
                 "RE",
                 (
                     ("/docs/knowledge-decompile.html", "Decompile + RE"),
-                    ("/docs/llm-decompile.html", "LLM decompile research"),
                 ),
             ),
         ),
@@ -103,7 +102,7 @@ NAV_MENUS: tuple[NavMenu, ...] = (
                 (
                     ("/docs/compile.html", "Compile"),
                     ("/docs/decompile.html", "Decompile"),
-                    ("/docs/decompile-compete.html", "Decompile compete"),
+                    ("/docs/decompile-capabilities.html", "Decompile capabilities"),
                     ("/docs/spark-bc.html", "Opcodes / ISA"),
                     ("/docs/programming-guide.html", "Programming guide"),
                 ),

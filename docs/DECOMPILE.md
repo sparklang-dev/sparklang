@@ -5,21 +5,17 @@ step, with screenshots and tool-layout diagrams. Dump tools read
 **real** `.sparkbc` from `--compile`. This page is **inspect /
 disasm**, not lossless source recovery.
 
-Related research: [LLM decompile research](research/LLM_DECOMPILE.md)
-(site: [/docs/llm-decompile.html](/docs/llm-decompile.html)) —
-DecompAI (agent) vs seq2seq models, LLM4Decompile, EmergentMind
-survey, Quarkslab article + RE category (LLM ≠ verified SoT),
-Plain English demystify overview, OpenBin (online product — not
-Spark SoT; third-party trust/IP), recompile ≠ semantic fidelity.
-**Compete / scoreboard:** [DECOMPILE_COMPETE.md](DECOMPILE_COMPETE.md)
-([/docs/decompile-compete.html](/docs/decompile-compete.html)) —
-parity matrix + measured `make decompile-bench` JSON (no fake
-“beats all”).
+Related policy: `docs/DECOMPILE_ASSIST_POLICY.md` (repo) —
+deterministic dump / `--run-bc` is SoT; optional LLM assist
+consumes dump text only; recompile ≠ semantic fidelity.
+**Capabilities / scoreboard:**
+[DECOMPILE_CAPABILITIES.md](DECOMPILE_CAPABILITIES.md)
+([/docs/decompile-capabilities.html](/docs/decompile-capabilities.html)) —
+measured `make decompile-bench` JSON, computed badges only.
 Mermaid factory overview: [Diagrams](DIAGRAMS.md)
 ([/docs/diagrams.html](/docs/diagrams.html)).
 
-**Never** claim an LLM perfectly decompiles SPARK_BC. Do **not** publish “beats
-Ghidra/IDA/…” without measured scoreboard JSON.
+**Never** claim an LLM perfectly decompiles SPARK_BC.
 
 ## Tool-function diagrams
 
@@ -187,7 +183,8 @@ make test-model-lab
 ```bash
 make machine-proof # ELF64 + _start when binary exists
 ./spark-binary-probe --elf ./spark # hdr + sections JSON
-# claim: local_elf_probe_not_ghidra — still not Ghidra-class
+# claim: local_elf_probe_headers_sections — an index, not full
+# multi-format decompilation
 make decompile-bench # records elf_local_probe
 ```
 
@@ -212,9 +209,9 @@ SPARK_BC↔ELF round-trip claim beyond `test-bc-emit`.
 | Symbols / xrefs / sections / JSON+HTML | **implemented** (`analyze_bc`) |
 | Compile→dump→recompile hash | **implemented** (`decompile-roundtrip`) |
 | Analysis project folder + report | **implemented** (`analyze_project.py`) |
-| Measured compete scoreboard | **implemented** (`decompile-bench`) |
+| Measured capabilities scoreboard | **implemented** (`decompile-bench`) |
 | Recover original `.spark` losslessly | **not** — inspect, not source decompiler |
-| Beat Ghidra/IDA on ELF/PE | **not claimed** (loss / N/A on that domain) |
+| Full multi-format ELF/PE decompile | **not claimed** — headers/sections probe only |
 | LLM perfectly decompiles SPARK_BC | **never claimed** |
 | Attention head activation maps | **not** — see [Attention / forward](ATTENTION_FORWARD.md) |
 | Closed-weight model theft | **forbidden** — reverse stays index-only |

@@ -31,8 +31,8 @@ invented menus. Language `ide` ops remain on the GAS scaffold.
 
 ## 0. Spark IDE GUI (functions first)
 
-`tools/spark_bc_gui` — dark engineer chrome, **Spark palette** (not an
-OpenBin clone). Lessons from public IDE pane workflows only.
+`tools/spark_bc_gui` — dark engineer chrome, **Spark palette**.
+Original Spark design throughout.
 
 | Action | Behavior |
 |--------|----------|

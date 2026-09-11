@@ -32,7 +32,6 @@ fields, and guards that look professional.
 |-------|------|
 | `dump.py` / `--compile` / `--run-bc` | **SoT** |
 | LLM assist | Author aid only |
-| OpenBin / commercial RE | Third-party reading — **not** Spark SoT |
 | Competitive AI win / perfect decompile | **Never claimed** |
 
 ```mermaid
@@ -44,7 +43,7 @@ flowchart LR
  human --> soT
 ```
 
-Not an OpenBin UX clone. Continue on the research page for Quarkslab,
-LLM4Decompile, DecompileBench, HELIOS, AutoDecompiler, and friends.
+The assist policy — dump text in, suggestions out, never rewrite
+`.sparkbc` — lives in `docs/DECOMPILE_ASSIST_POLICY.md` (repo).
 
 Hive: [Knowledge](KNOWLEDGE.md) · Factory: [Factory hub](FACTORY.md).

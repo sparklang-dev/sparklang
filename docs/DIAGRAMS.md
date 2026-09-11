@@ -8,17 +8,15 @@ GPU / evaluation: see [Factory hub](FACTORY.md) and [Eval](EVAL.md).
 Hub: [Factory hub](FACTORY.md). Builder: [SPARK_BC Builder](SPARK_BUILDER.md).
 Helpers/shadows CLIs: [TOOLS_HELPERS.md](TOOLS_HELPERS.md).
 **Model aspects:** [Model aspects](MODEL_ASPECTS.md) — sensory
-mapping 100× (hero, per-sense deep sections, agentic loop + vs
-OpenBin/phone comparison SVGs). Factory tool diagrams on this page
+mapping 100× (hero, per-sense deep sections, agentic loop SVG).
+Factory tool diagrams on this page
 stay SoT for compile/decompile/helpers — aspects does not replace them.
 
-**Decompile how-to + LLM research:** decompile how-to with CLI
+**Decompile how-to + assist policy:** decompile how-to with CLI
 captures + SVG tool diagrams — [Decompile](DECOMPILE.md) /
-[/docs/decompile.html](/docs/decompile.html). LLM survey (cited:
-DecompAI agent vs seq2seq, LLM4Decompile, EmergentMind,
-Quarkslab article + RE category, Plain English overview) —
-[research/LLM_DECOMPILE.md](research/LLM_DECOMPILE.md) /
-[/docs/llm-decompile.html](/docs/llm-decompile.html). This file
+[/docs/decompile.html](/docs/decompile.html). The LLM-assist
+policy (dump text in, suggestions out, never rewrite `.sparkbc`)
+lives in `docs/DECOMPILE_ASSIST_POLICY.md` (repo). This file
 keeps **Mermaid flow** diagrams; prefer DECOMPILE for screenshots.
 LLM remains assist-only; dump/`--run-bc` stay SoT.
 
@@ -30,10 +28,7 @@ inspect → train → serve → share. SVG:
 `website/docs/images/`). Inspect panes mock:
 `docs/images/mock-spark-inspect-panes.svg`. Screenshots on that
 page are **Spark** CLI/GUI only (`decompile-cli-dump.png`,
-`decompile-gui-sparkbc.png`). Original product UX — not a clone of
-third-party RE platforms. OpenBin may appear as related reading on
-[LLM decompile research](research/LLM_DECOMPILE.md) only — never on
-the hero.
+`decompile-gui-sparkbc.png`). Original product UX.
 
 ## 1) How Spark tools function
 

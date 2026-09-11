@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-09-10T09:35Z",
+  "generated_at": "2026-09-10T12:08Z",
   "generator": "tools/spark-bc-dump/decompile_bench.py",
   "domain": "SPARK_BC",
-  "honesty": "Every badge in this JSON is computed from measured probe output on this box (round-trip %, symbol/xref extraction on real bytes, local ELF probe, byte-level tool probes). Absent or unprobed tools render 'not probed' \u2014 never a declared win/tie/loss.",
+  "methodology": "Every badge in this JSON is computed from measured probe output on this box (round-trip %, symbol/xref extraction on real bytes, local ELF probe, sample project write). A capability whose probe did not run renders 'not probed' \u2014 never a declared win/tie/loss.",
   "beat_axes": [
     {
       "axis": "100% SPARK_BC round-trip hash",
@@ -10,12 +10,12 @@
       "round_trip_pct": 100.0
     },
     {
-      "axis": "Best structured SPARK_BC dump",
+      "axis": "Structured SPARK_BC dump",
       "status": "measured",
       "fixtures_ok": 3
     },
     {
-      "axis": "Best local privacy (no upload)",
+      "axis": "Local privacy (no upload)",
       "status": "design",
       "note": "dump/analyze stay on disk"
     },
@@ -115,132 +115,51 @@
       "html_export": true
     }
   ],
-  "external_tools": [
-    {
-      "tool": "objdump",
-      "status": "present",
-      "path": "/usr/bin/objdump",
-      "verdict": "na-sparkbc",
-      "note": "Installed, but not a SPARK_BC SoT decoder \u2014 skip compete on SPBC domain. snippet='GNU objdump (GNU Binutils for Ubuntu) 2.42\\nCopyright (C) 2024 Free Software Foundation, Inc.\\nThis program is free softwa'"
-    },
-    {
-      "tool": "radare2",
-      "status": "absent",
-      "verdict": "skip",
-      "note": "r2 not on PATH"
-    },
-    {
-      "tool": "ghidra",
-      "status": "absent",
-      "verdict": "skip",
-      "note": "ghidraRun not on PATH"
-    },
-    {
-      "tool": "ida",
-      "status": "absent",
-      "verdict": "skip",
-      "note": "idat64 not on PATH"
-    },
-    {
-      "tool": "binaryninja",
-      "status": "absent",
-      "verdict": "skip",
-      "note": "binaryninja not on PATH"
-    },
-    {
-      "tool": "openbin",
-      "status": "absent",
-      "verdict": "skip",
-      "note": "openbin not on PATH"
-    }
-  ],
   "elf_local_probe": {
     "status": "ok",
     "op": "elf",
-    "claim": "local_elf_probe_not_ghidra",
+    "claim": "local_elf_probe_headers_sections",
     "section_count": 8,
     "n_sections_listed": 8,
     "elf_class": 2,
     "machine": 62,
-    "note": "Local ELF64 hdr+sections JSON \u2014 still loss vs Ghidra/IDA/Binja on Multi-format ELF/PE axis"
+    "note": "Local ELF64 headers+sections JSON \u2014 an index, not full multi-format decompilation"
   },
   "parity": [
     {
       "category": "Native dump fidelity (SPARK_BC)",
       "spark": "win",
-      "objdump": "na",
-      "openbin": "not probed",
-      "ghidra": "not probed",
-      "ida": "not probed",
-      "binja": "not probed",
-      "llm4decompile": "not probed",
-      "note": "Spark: 3/3 published fixtures decoded with symbols+xrefs+sections. Competitors need a byte-level SPARK_BC probe to score."
+      "note": "3/3 published fixtures decoded with symbols+xrefs+sections from real bytes."
     },
     {
       "category": "Round-trip reassemble (compile hash)",
       "spark": "win",
-      "objdump": "not probed",
-      "openbin": "not probed",
-      "ghidra": "not probed",
-      "ida": "not probed",
-      "binja": "not probed",
-      "llm4decompile": "not probed",
-      "note": "Spark: compile\u2192dump\u2192recompile 100.0% (3/3) on published fixtures. No competitor SPARK_BC round-trip probe exists."
+      "note": "compile\u2192dump\u2192recompile 100.0% (3/3) on published fixtures."
     },
     {
       "category": "Symbol + xref extraction (SPARK_BC)",
       "spark": "win",
-      "objdump": "na",
-      "openbin": "not probed",
-      "ghidra": "not probed",
-      "ida": "not probed",
-      "binja": "not probed",
-      "llm4decompile": "not probed",
-      "note": "Spark: string-pool symbols + const/op xrefs verified on 3 fixture(s) from real bytes."
+      "note": "String-pool symbols + const/op xrefs verified on 3 fixture(s) from real bytes."
     },
     {
       "category": "Report export (txt/json/html project)",
       "spark": "win",
-      "objdump": "not probed",
-      "openbin": "not probed",
-      "ghidra": "not probed",
-      "ida": "not probed",
-      "binja": "not probed",
-      "llm4decompile": "not probed",
-      "note": "Spark: analyze_project wrote dump.txt, dump.json, dump.html, report.md, roundtrip.json."
+      "note": "analyze_project wrote dump.txt, dump.json, dump.html, report.md, roundtrip.json."
     },
     {
       "category": "Multi-format ELF/PE",
       "spark": "loss",
-      "objdump": "win",
-      "openbin": "not probed",
-      "ghidra": "not probed",
-      "ida": "not probed",
-      "binja": "not probed",
-      "llm4decompile": "not probed",
-      "note": "Spark: spark-binary-probe --elf status=ok (hdr+sections only \u2014 not Ghidra-class). Competitors need a byte-level ELF probe."
+      "note": "spark-binary-probe --elf status=ok \u2014 headers+sections index only, not full multi-format decompilation."
     },
     {
       "category": "Batch / fixtures harness",
       "spark": "win",
-      "objdump": "not probed",
-      "openbin": "not probed",
-      "ghidra": "not probed",
-      "ida": "not probed",
-      "binja": "not probed",
-      "llm4decompile": "not probed",
-      "note": "Spark: make decompile-bench measured 3/3 fixtures ok this run."
+      "note": "make decompile-bench measured 3/3 fixtures ok this run."
     },
     {
       "category": "Local privacy (no upload)",
       "spark": "win",
-      "objdump": "not probed",
-      "openbin": "not probed",
-      "ghidra": "not probed",
-      "ida": "not probed",
-      "binja": "not probed",
-      "llm4decompile": "not probed",
-      "note": "Spark: this bench parsed 3 fixture(s) in-process on disk; no network calls. Competitor privacy is not probeable here."
+      "note": "This bench parsed 3 fixture(s) in-process on disk; no network calls."
     }
   ],
   "summary_counts": {
@@ -250,48 +169,6 @@
       "loss": 1,
       "na": 0,
       "not probed": 0
-    },
-    "objdump": {
-      "win": 1,
-      "tie": 0,
-      "loss": 0,
-      "na": 2,
-      "not probed": 4
-    },
-    "openbin": {
-      "win": 0,
-      "tie": 0,
-      "loss": 0,
-      "na": 0,
-      "not probed": 7
-    },
-    "ghidra": {
-      "win": 0,
-      "tie": 0,
-      "loss": 0,
-      "na": 0,
-      "not probed": 7
-    },
-    "ida": {
-      "win": 0,
-      "tie": 0,
-      "loss": 0,
-      "na": 0,
-      "not probed": 7
-    },
-    "binja": {
-      "win": 0,
-      "tie": 0,
-      "loss": 0,
-      "na": 0,
-      "not probed": 7
-    },
-    "llm4decompile": {
-      "win": 0,
-      "tie": 0,
-      "loss": 0,
-      "na": 0,
-      "not probed": 7
     }
   },
   "sample_project": {
@@ -306,9 +183,8 @@
     ]
   },
   "never": [
-    "false marketing beats-all",
-    "RTX PRO 6000",
-    "frontier-win invention",
-    "copy OpenBin code"
+    "invented win claims",
+    "unmeasured badges",
+    "third-party upload of proprietary bytecode"
   ]
 }

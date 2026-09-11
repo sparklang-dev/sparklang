@@ -9,6 +9,14 @@
 /try       /playground.html  301
 /try.html  /playground.html  301
 
+# Retired competitor-framed docs slugs → measured capabilities page
+/docs/decompile-compete       /docs/decompile-capabilities  301
+/docs/decompile-compete.html  /docs/decompile-capabilities  301
+/docs/methods-openbin         /docs/decompile-capabilities  301
+/docs/methods-openbin.html    /docs/decompile-capabilities  301
+/docs/llm-decompile           /docs/decompile-capabilities  301
+/docs/llm-decompile.html      /docs/decompile-capabilities  301
+
 # Knowledge hive: Pages already pretty-serves /docs/knowledge from
 # knowledge.html (308 .html → extensionless). Do NOT redirect
 # /docs/knowledge → knowledge.html (loop). Optional Learn alias only:

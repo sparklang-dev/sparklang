@@ -34,8 +34,7 @@ DOC_NAV = """\
         <a href="/docs/spark-builder.html"{bc}>Builder</a>
         <a href="/docs/compile.html"{cp}>Compile</a>
         <a href="/docs/decompile.html"{dc}>Decompile</a>
-        <a href="/docs/decompile-compete.html"{dcc}>Compete</a>
-        <a href="/docs/llm-decompile.html"{rd}>LLM research</a>
+        <a href="/docs/decompile-capabilities.html"{dcc}>Capabilities</a>
         <a href="/docs/spark-bc.html"{isa}>Opcodes / ISA</a>
         <a href="/docs/build-models.html"{bm}>Build models</a>
         <a href="/docs/train-loop.html"{tl}>Train loop</a>
@@ -47,7 +46,6 @@ DOC_NAV = """\
         <a href="/docs/eval.html"{ev}>Eval</a>
         <a href="/docs/sparkbc-make.html"{mk}>Make targets</a>
         <a href="/docs/tools-helpers.html"{th}>Tools & helpers</a>
-        <a href="/docs/methods-openbin.html"{mo}>Methods vs OpenBin</a>
         <a href="/docs/ci-pages.html"{ci}>CI / Pages</a>
         <a href="/docs/adoption-bar.html"{ab}>Adoption bar</a>
         <a href="/docs/language.html">Language</a>
@@ -154,8 +152,7 @@ MD_LINK_MAP = {
     "DIAGRAMS.md": "/docs/diagrams.html",
     "COMPILE.md": "/docs/compile.html",
     "DECOMPILE.md": "/docs/decompile.html",
-    "DECOMPILE_COMPETE.md": "/docs/decompile-compete.html",
-    "LLM_DECOMPILE.md": "/docs/llm-decompile.html",
+    "DECOMPILE_CAPABILITIES.md": "/docs/decompile-capabilities.html",
     "BUILD_MODELS.md": "/docs/build-models.html",
     "TRAIN_LOOP.md": "/docs/train-loop.html",
     "SPARK_CODER.md": "/docs/spark-coder.html",
@@ -166,7 +163,6 @@ MD_LINK_MAP = {
     "EVAL.md": "/docs/eval.html",
     "SPARKBC_MAKE.md": "/docs/sparkbc-make.html",
     "TOOLS_HELPERS.md": "/docs/tools-helpers.html",
-    "METHODS_OPENBIN.md": "/docs/methods-openbin.html",
     "CI_PAGES.md": "/docs/ci-pages.html",
     "MODEL_LAB.md": "/docs/model-training.html",
     "ABSTAIN_HEADS.md": "/docs/abstain-heads.html",
@@ -223,11 +219,12 @@ DOC_PAGES = [
      "and PSTN. Not production telephony."),
     ("va", "VOICE_ASK.md", "voice-ask.html",
      "Voice ask — dump / binary Q&A",
-     "STT → SPARK_BC dump context → TinyCoder → TTS. "
-     "No OpenBin login. Tiny owned path."),
+     "Ask a compiled Spark program questions by text or voice — "
+     "recognition, answers, and synthesis all run locally."),
     ("ve", "VOICE_EASY.md", "voice-easy.html",
-     "Voice easy — train STT / TTS",
-     "Piece-of-cake owned voice heads (tiny CI + large opt-in)."),
+     "Voice easy — real ears and voice in 3 steps",
+     "Open speech models, self-hosted: fetch once, run the "
+     "measured eval, everything offline after the download."),
     ("dg", "DIAGRAMS.md", "diagrams.html", "Factory diagrams",
      "How Spark tools and LLM assist relate — compile, decompile, "
      "train, serve, shadows. Deterministic SoT."),
@@ -262,14 +259,11 @@ DOC_PAGES = [
      "Decompile / inspect SPARK_BC",
      "Dump, inspect, and disassemble SPARK_BC and related "
      "binaries — hex mnemonics, not source recovery."),
-    ("dcc", "DECOMPILE_COMPETE.md", "decompile-compete.html",
-     "Decompile compete — measured scoreboard",
-     "SPARK_BC parity matrix and measured scoreboard vs "
-     "OpenBin / classic RE / LLM4Decompile — no fake beats-all."),
-    ("rd", "research/LLM_DECOMPILE.md", "llm-decompile.html",
-     "LLM decompile research",
-     "Survey of LLM decompile tools vs Spark SPARK_BC "
-     "deterministic dump — citations and limits."),
+    ("dcc", "DECOMPILE_CAPABILITIES.md", "decompile-capabilities.html",
+     "Decompile capabilities — measured",
+     "Spark's measured decompile capabilities on SPARK_BC — "
+     "round-trip, structured dump, probes — rerunnable from the "
+     "repo."),
     ("bm", "BUILD_MODELS.md", "build-models.html",
      "Build models — TRAIN / STEP",
      "TRAIN, STEP, ARTIFACT, weights, and checkpoints on CPU "
@@ -278,10 +272,10 @@ DOC_PAGES = [
      "Train loop — outer / inner SGD",
      "Multi-pass CPU SGD, fixtures, checkpoints, loss curves."),
     ("sc", "SPARK_CODER.md", "spark-coder.html",
-     "Spark coder — owned TinyCoder",
-     "In-repo TinyCoder layers + SGD on coding fixtures. "
-     "Not a downloaded frontier-model substitute; see the coder "
-     "status table."),
+     "Spark coder — self-hosted code model",
+     "Spark's code model is a self-hosted 30B endpoint; the "
+     "in-repo reference trainer proves the pipeline. "
+     "Execution-graded eval."),
     ("wg", "WEIGHT_GALLERY.md", "weight-gallery.html",
      "Weight gallery — view / play / understand",
      "Catalog tiny through xl Spark stub weights; inspect, "
@@ -308,10 +302,6 @@ DOC_PAGES = [
      "Tools & helpers",
      "Helpers, shadows, and spark_kit — compile/run/inspect, "
      "shadow build, opcode sheet."),
-    ("mo", "METHODS_OPENBIN.md", "methods-openbin.html",
-     "Methods vs OpenBin",
-     "What Spark adopted vs rejected from public OpenBin "
-     "methods — local analyze loop, no clone."),
     ("isa", "SPARK_BC.md", "spark-bc.html", "SPARK_BC ISA",
      "Spark bytecode ISA — opcodes, pools, dry-run contracts."),
     ("", "LANGUAGE.md", "language.html", "Language reference",
