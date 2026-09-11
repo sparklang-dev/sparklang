@@ -1,0 +1,30 @@
+{
+  "started_at": "2026-09-10T08:48:10.383250+00:00",
+  "finished_at": "2026-09-10T09:26:53.974488+00:00",
+  "elapsed_s": 2323.6,
+  "generated_this_run": 2000,
+  "failed_this_run": 0,
+  "stop_early": null,
+  "minutes_generated_this_run": 180.72,
+  "chars_billed_local_this_run": 206052,
+  "utterances_per_minute": 51.6,
+  "quarantined_total": 365,
+  "verify": {
+    "total_pairs": 2029,
+    "scored_pairs": 2029,
+    "passed": 1664,
+    "pass_rate": 0.8201,
+    "wer_mean": 0.0513,
+    "wer_max": 1.0
+  },
+  "spend": {
+    "at": "2026-09-10T09:26:53.970563+00:00",
+    "note": "batch stop",
+    "utterances_done": 2000,
+    "chars_billed_local": 206052,
+    "el_tier": "pro",
+    "el_character_count": 778036,
+    "el_character_limit": 878796,
+    "el_quota_remaining": 100760
+  }
+}

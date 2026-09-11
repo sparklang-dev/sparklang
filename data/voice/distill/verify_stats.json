@@ -1,0 +1,21 @@
+{
+  "model": "nova-3",
+  "pass_wer_threshold": 0.1,
+  "total_pairs": 2029,
+  "scored_pairs": 2029,
+  "passed": 1664,
+  "pass_rate": 0.8201,
+  "passed_strict_normalization": 1655,
+  "pass_rate_strict": 0.8157,
+  "wer_mean": 0.0513,
+  "wer_median": 0.0,
+  "wer_max": 1.0,
+  "wer_histogram": {
+    "0.00": 1275,
+    "(0,0.05]": 127,
+    "(0.05,0.1]": 262,
+    "(0.1,0.25]": 276,
+    ">0.25": 89
+  },
+  "unscored_ids": []
+}

@@ -1,0 +1,43 @@
+{
+  "generated_at": "2026-09-10T08:05:46.927450+00:00",
+  "total_clips": 25,
+  "total_minutes": 1.11,
+  "total_seconds": 66.7,
+  "distinct_voices": [
+    "rachel-elevenlabs-flash-v2.5"
+  ],
+  "sample_rate_hz": 22050,
+  "tts_dirs_searched": [
+    "/home/mike/workspaces/callsback-a105-lw-cents/bench/tts",
+    "/home/mike/workspaces/callsback.ai-wt-a108-16switches/bench/tts",
+    "/home/mike/workspaces/callsback.ai-wt-a45-ivr-status/bench/tts",
+    "/home/mike/workspaces/callsback.ai-wt-a67-gate0/bench/tts",
+    "/home/mike/workspaces/callsback.ai-wt-block10/bench/tts",
+    "/home/mike/workspaces/callsback.ai-wt-d7715ce1-beaver-ivr/bench/tts",
+    "/home/mike/workspaces/callsback.ai-wt-fallback-ivr/bench/tts",
+    "/home/mike/workspaces/callsback.ai-wt-serving-poll/bench/tts",
+    "/home/mike/workspaces/callsback.ai/bench/tts",
+    "/home/mike/workspaces/cb-pr-a-service-standard/bench/tts",
+    "/home/mike/workspaces/.wt-0cf4e408-ivr-nodollar/bench/tts",
+    "/home/mike/workspaces/.wt-rachel-keep34-freeze/bench/tts",
+    "/home/mike/workspaces/.wt-vram-proof-tok/bench/tts"
+  ],
+  "text_only_pairs": {
+    "files": {},
+    "total_text_pairs": 0,
+    "per_class": {},
+    "note": "el-pairs rows are text captures (el_turn/our_turn); they carry no audio and are excluded from the wav manifest."
+  },
+  "per_source": {
+    "/home/mike/workspaces/callsback-a105-lw-cents": 25
+  },
+  "per_bucket": {
+    "greeting": 5,
+    "price-info": 5,
+    "spell-back": 5,
+    "closing": 5,
+    "hold-transfer-text": 5
+  },
+  "duplicate_clips_skipped": 300,
+  "script_rows_missing_audio": []
+}
