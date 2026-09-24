@@ -61,7 +61,7 @@ artifact paths appear on accept (planned) and again on success
 |----|------|
 | `http` | **Default MVP.** POST job JSON to `SPARK_TRAIN_URL`; poll status |
 | `local-yield` | Optional host adapter: `systemctl start train@<unit>` when allowlisted |
-| `huggingface` | Reserved id — not wired in MVP (do not claim Hub publish) |
+| `huggingface` | Reserved id — not wired in MVP (Hub publish not wired) |
 
 Generic interface — SparkLang is not hard-wired to one machine.
 
@@ -129,9 +129,28 @@ Response body:
 (TLS must terminate upstream for `https://` — MVP dies with a clear
 config error).
 
+### Replay (helper score)
+
+```
+POST {SPARK_TRAIN_URL}/replay
+Content-Type: application/json
+
+{"fixture":"examples/fixtures/voice_loop/stall.spark","helper":"out/pref-001"}
+```
+
+Response:
+
+```
+{"op":"replay","fixture":"…","helper":"…","score":0.73,"note":"…"}
+```
+
+Also implemented on `tools/spark-serve-ref` as `POST /replay`.
+Used by language `expect score replay …`. Gate:
+`make test-train-replay`.
+
 ## Reference methods (in-repo) — not LoRA
 
-`tools/spark-train-ref/` implements the HTTP contract with **four**
+`tools/spark-train-ref/` implements the HTTP contract with **five**
 SparkLang-native CPU methods. None are LoRA / HF PEFT. None use a
 reserved GPU. None invent `train@` grants.
 
@@ -162,7 +181,8 @@ When `out` basename matches `job-*`, that basename is the `job_id`.
 Live captures:
 
 - Distill: [website/docs/examples/live-train-capture.txt](../website/docs/examples/live-train-capture.txt)
-- All four: [website/docs/examples/live-train-methods-capture.txt](../website/docs/examples/live-train-methods-capture.txt)
+- All five: [docs/examples/live-train-five-methods-capture.txt](examples/live-train-five-methods-capture.txt)
+  (CPU live; not LoRA)
 
 ```bash
 python3 tools/spark-train-ref/server.py --host 127.0.0.1 --port 8090

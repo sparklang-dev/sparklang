@@ -24,6 +24,8 @@ from torch.nn import functional as F
 
 from common import load_pairs, tokenize, write_marker
 
+METHOD = "spark_distill_cpu"
+
 
 class Student(nn.Module):
     """Tiny bag-of-words embedder → reply-class logits."""

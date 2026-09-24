@@ -1,0 +1,4 @@
+# live capture — model pairs (CPU dry companion)
+[spark] dry-run via assembly VM (machine code)
+[model] {"op":"pairs","mode":"dry-run","source":"examples/fixtures/voice_loop/turns.jsonl","schema":["context","target_turn","candidate_turn","score_target","score_candidate","class"],"filters":{"class":"stall","min_gap":2},"n_in":9,"n_out":2,"pref_inputs":[{"context":"caller asks about desk hours","chosen":"Desk hours are nine to five on weekdays.","rejected":"Um, I think we are open somehow.","class":"stall","score_chosen":9.0,"score_rejected":2.0},{"context":"caller asks catalog price","chosen":"The catalog price is twelve dollars.","rejected":"Probably cheap, not sure.","class":"stall","score_chosen":8.5,"score_rejected":1.5}],"note":"CPU pairs emit \u2014 not a trained model","artifact":"out/voice_loop/pairs-ds.json"}
+[spark] ok

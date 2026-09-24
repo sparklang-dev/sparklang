@@ -1,0 +1,4 @@
+# bench — synthetic agent-a vs agent-b scoreboard.
+# ./spark --dry-run examples/bench_agents.spark
+
+bench fixtures "examples/fixtures/voice_loop/*.spark" against "agent-a" "agent-b" classes "turn_taking,stall,dead_air,interrupt,filler,handoff,grounded" -> board

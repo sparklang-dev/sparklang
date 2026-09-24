@@ -1,0 +1,2 @@
+# Synthetic voice fixture — handoff / dead_air / interrupt cues.
+print "handoff dead_air interrupt filler turn_taking"

@@ -1,0 +1,5 @@
+# model serve helper — dry-run plans local HTTP (CPU).
+# ./spark --dry-run examples/serve_helper.spark
+# Live: python3 tools/spark-serve-ref/server.py --helper out/pref-001 ...
+
+model serve helper "out/pref-001" as "ranker" port 8091 mode "shadow"

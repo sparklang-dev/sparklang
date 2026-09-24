@@ -1,0 +1,4 @@
+# pairs dataset primitive — synthetic turns only.
+# ./spark --dry-run examples/pairs_basic.spark
+
+model pairs from "examples/fixtures/voice_loop/turns.jsonl" schema "context,target_turn,candidate_turn,score_target,score_candidate,class" where class = "stall" min_gap 2 -> ds

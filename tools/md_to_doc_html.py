@@ -176,6 +176,7 @@ MD_LINK_MAP = {
     "INFERENCE.md": "/docs/knowledge-inference.html",
     "MULTIMODAL.md": "/docs/knowledge-multimodal.html",
     "AGENTS_TOOLS.md": "/docs/knowledge-agents.html",
+    "VOICE_AGENT_LOOP.md": "/docs/knowledge-voice-loop.html",
     "EVAL_STATUS.md": "/docs/knowledge-eval.html",
     "EVAL_HONESTY.md": "/docs/knowledge-eval.html",  # legacy alias
     "DECOMPILE_RE.md": "/docs/knowledge-decompile.html",
@@ -205,6 +206,11 @@ DOC_PAGES = [
     ("kh", "knowledge/AGENTS_TOOLS.md", "knowledge-agents.html",
      "Agents and tools",
      "Tool loops, ReAct-style patterns, failure modes."),
+    ("kh", "knowledge/VOICE_AGENT_LOOP.md",
+     "knowledge-voice-loop.html",
+     "Voice agent loop",
+     "Capture → pairs → train → expect → serve → bench "
+     "(synthetic fixtures, CPU/dry)."),
     ("kh", "knowledge/EVAL_STATUS.md", "knowledge-eval.html",
      "Evaluation",
      "Benchmarks as instruments — measurement, not marketing."),

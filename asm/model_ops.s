@@ -19,6 +19,7 @@
 
 .intel_syntax noprefix
 .global model_ops_dispatch
+.extern voice_loop_model_hook
 
 # Match bootstrap/bc_opcodes.h (verbs in GAS; emit BLOCKED).
 .set SPBC_OP_TRAIN, 0x26
@@ -570,6 +571,13 @@ modify_artifact_body_len = . - modify_artifact_body
 # ------------------------------------------------------------
 model_ops_dispatch:
     push    rbx
+    # voice-loop: model pairs | model serve helper
+    call    voice_loop_model_hook
+    test    rax, rax
+    jz      mod_after_vl
+    pop     rbx
+    ret
+mod_after_vl:
     lea     rdi, [rip+linebuf]
     lea     rsi, [rip+needle_analyze]
     call    contains

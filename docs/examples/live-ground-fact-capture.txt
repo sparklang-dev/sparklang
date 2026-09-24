@@ -1,0 +1,5 @@
+# live capture — ground fact
+[spark] dry-run via assembly VM (machine code)
+{"op":"ground","mode":"dry-run","key":"desk_hours","value":"09:00-17:00","abstain":false,"source":"examples/fixtures/voice_loop/facts.json","note":"grounded from facts file"}
+{"op":"ground","mode":"dry-run","key":"catalog_price","value":"12.00","abstain":false,"source":"examples/fixtures/voice_loop/facts.json","note":"grounded from facts file"}
+[spark] ok

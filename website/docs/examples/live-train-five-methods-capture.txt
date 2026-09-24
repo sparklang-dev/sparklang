@@ -1,0 +1,119 @@
+# SparkLang five CPU methods — live capture (not LoRA)
+# methods=spark_distill_cpu,spark_pref_pack,spark_playbook_fit,spark_faq_index,spark_reply_pack
+
+## spark_distill_cpu
+{
+  "method": "spark_distill_cpu",
+  "job_id": "cap-distill",
+  "out": "out/train/cap-distill",
+  "meta": {
+    "method": "spark_distill_cpu",
+    "job_id": "cap-distill",
+    "base": "fixture-base",
+    "dataset": "examples/fixtures/train/dataset.jsonl",
+    "pairs": 96,
+    "vocab_size": 54,
+    "n_replies": 20,
+    "steps": 200,
+    "final_loss": 1.3e-05,
+    "device": "cpu",
+    "elapsed_s": 2.633,
+    "weights": "out/train/cap-distill/weights.pt",
+    "note": "Spark custom path: CPU distill student (not LoRA, not HF PEFT, no GPU)"
+  }
+}
+
+## spark_pref_pack
+{
+  "method": "spark_pref_pack",
+  "job_id": "cap-pref",
+  "out": "out/train/cap-pref",
+  "meta": {
+    "method": "spark_pref_pack",
+    "job_id": "cap-pref",
+    "base": "spark_pref_pack",
+    "dataset": "examples/fixtures/train/dataset.jsonl",
+    "pairs": 96,
+    "vocab_size": 61,
+    "steps": 200,
+    "final_loss": 0.441512,
+    "device": "cpu",
+    "elapsed_s": 0.38,
+    "pref_pack": "out/train/cap-pref/pref_pack.json",
+    "ranker": "out/train/cap-pref/ranker.pt",
+    "note": "Spark method: preference pack + CPU ranker (not LoRA, not HF PEFT)"
+  }
+}
+
+## spark_playbook_fit
+{
+  "method": "spark_playbook_fit",
+  "job_id": "cap-play",
+  "out": "out/train/cap-play",
+  "meta": {
+    "method": "spark_playbook_fit",
+    "job_id": "cap-play",
+    "base": "spark_playbook_fit",
+    "dataset": "examples/fixtures/train/dataset.jsonl",
+    "pairs": 96,
+    "n_playbooks": 20,
+    "vocab_size": 54,
+    "steps": 200,
+    "final_loss": 1.6e-05,
+    "device": "cpu",
+    "elapsed_s": 0.205,
+    "playbooks": "out/train/cap-play/playbooks.json",
+    "router": "out/train/cap-play/router.pt",
+    "note": "Spark method: playbook fit router on CPU (not LoRA, not HF PEFT)"
+  }
+}
+
+## spark_faq_index
+{
+  "method": "spark_faq_index",
+  "job_id": "cap-faq",
+  "out": "out/train/cap-faq",
+  "meta": {
+    "method": "spark_faq_index",
+    "job_id": "cap-faq",
+    "base": "spark_faq_index",
+    "dataset": "examples/fixtures/train/dataset.jsonl",
+    "pairs": 96,
+    "n_faqs": 20,
+    "vocab_size": 61,
+    "steps": 200,
+    "final_loss": 1.982614,
+    "device": "cpu",
+    "elapsed_s": 0.793,
+    "faq_index": "out/train/cap-faq/faq_index.json",
+    "encoder": "out/train/cap-faq/encoder.pt",
+    "note": "Spark method: FAQ index + CPU dual-encoder (not LoRA, not HF PEFT)"
+  }
+}
+
+## spark_reply_pack
+{
+  "method": "spark_reply_pack",
+  "job_id": "cap-reply",
+  "out": "out/train/cap-reply",
+  "meta": {
+    "method": "spark_reply_pack",
+    "job_id": "cap-reply",
+    "base": "spark_reply_pack",
+    "dataset": "examples/fixtures/train/reply_pack.jsonl",
+    "pairs": 7,
+    "n_replies": 4,
+    "vocab_size": 20,
+    "steps": 200,
+    "final_loss": 0.0,
+    "device": "cpu",
+    "elapsed_s": 0.092,
+    "replies": "out/train/cap-reply/replies.json",
+    "gate": "out/train/cap-reply/gate.json",
+    "router": "out/train/cap-reply/router.pt",
+    "overlay_voice_on_text_base": true,
+    "no_fabricate": true,
+    "note": "Spark method: voice+text reply overlay on CPU (not LoRA, not voice-GPU, never fabricate)"
+  }
+}
+

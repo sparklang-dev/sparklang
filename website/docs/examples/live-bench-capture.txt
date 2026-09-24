@@ -1,0 +1,4 @@
+# live capture — bench agents
+[spark] dry-run via assembly VM (machine code)
+{"op":"bench","mode":"dry-run","fixtures":"examples/fixtures/voice_loop/*.spark","agents":["agent-a","agent-b"],"classes":["turn_taking","stall","dead_air","interrupt","filler","handoff","grounded"],"helpers":{"agent_a":"examples/fixtures/voice_loop/agents/agent-a","agent_b":"examples/fixtures/voice_loop/agents/agent-b"},"board":{"turn_taking":{"agent_a":0.8787,"agent_b":0.8787,"gap":0.0},"stall":{"agent_a":0.8181,"agent_b":0.8181,"gap":0.0},"dead_air":{"agent_a":0.8787,"agent_b":0.8787,"gap":0.0},"interrupt":{"agent_a":0.8787,"agent_b":0.8787,"gap":0.0},"filler":{"agent_a":0.8787,"agent_b":0.8787,"gap":0.0},"handoff":{"agent_a":0.8787,"agent_b":0.8787,"gap":0.0},"grounded":{"agent_a":0.8181,"agent_b":0.8181,"gap":0.0}},"n_fixtures":4,"note":"synthetic two-agent scoreboard \u2014 CPU only","artifact":"out/voice_loop/bench-board.json"}
+[spark] ok

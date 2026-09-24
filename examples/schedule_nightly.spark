@@ -1,0 +1,4 @@
+# schedule nightly — capture → pairs → train → expect → serve summary.
+# ./spark --dry-run examples/schedule_nightly.spark
+
+schedule nightly "examples/pairs_basic.spark" pairs "examples/fixtures/voice_loop/turns.jsonl" helper "out/pref-001" -> summary

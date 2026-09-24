@@ -43,6 +43,10 @@ NAV_MENUS: tuple[NavMenu, ...] = (
                 (
                     ("/docs/knowledge-multimodal.html", "Multimodal"),
                     ("/docs/knowledge-agents.html", "Agents & tools"),
+                    (
+                        "/docs/knowledge-voice-loop.html",
+                        "Voice agent loop",
+                    ),
                 ),
             ),
             (

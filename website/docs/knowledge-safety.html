@@ -51,6 +51,7 @@
                     <ul class="nav-sub__list" aria-labelledby="nav-hive-systems">
                       <li><a href="/docs/knowledge-multimodal.html">Multimodal</a></li>
                       <li><a href="/docs/knowledge-agents.html">Agents & tools</a></li>
+                      <li><a href="/docs/knowledge-voice-loop.html">Voice agent loop</a></li>
                     </ul>
                   </li>
                   <li class="nav-sub">
@@ -187,11 +188,11 @@
         <h3 id="hallucination">Hallucination</h3>
         <p>Fluent falsehoods without tools or grounding. Prefer retrieve /
         expect / tests over vibes.</p>
-        <h3 id="jailbreaks--prompt-injection">Jailbreaks / prompt injection</h3>
+        <h3 id="jailbreaks-prompt-injection">Jailbreaks / prompt injection</h3>
         <p>Untrusted text steers tools. Keep tools on allowlists; default dry.</p>
         <h3 id="data-exfiltration">Data exfiltration</h3>
         <p>Tool calls or verbose logs can leak secrets. Log args; redact.</p>
-        <h3 id="bias--dual-use">Bias &amp; dual-use</h3>
+        <h3 id="bias-dual-use">Bias &amp; dual-use</h3>
         <p>Capability ≠ permission. Do not treat model output as policy.</p>
         <h3 id="eval-hacking">Eval hacking</h3>
         <p>Optimize the benchmark, miss the job. Treat wins as hypotheses.</p>
@@ -229,6 +230,10 @@
         <td>This page · <code class="inline-code">./spark-ground</code></td>
         </tr>
         <tr>
+        <td><code class="inline-code">ground fact "…" from "…" else abstain</code></td>
+        <td>Language verify-before-speak (voice loop)</td>
+        </tr>
+        <tr>
         <td>LLM decompile ≠ SoT</td>
         <td><a href="/docs/llm-decompile.html">llm-decompile</a></td>
         </tr>
@@ -243,11 +248,17 @@
         </tbody>
         </table></div>
         <h2 id="grounding">Grounding</h2>
-        <h3 id="grounded-generation--anti-guess">Grounded generation / anti-guess</h3>
+        <h3 id="grounded-generation-anti-guess">Grounded generation / anti-guess</h3>
         <p><strong>Goal:</strong> make it <strong>nearly impossible to pass CI while guessing</strong> —
         abstain, retrieve/expect, tool allowlists, verify-before-speak,
         structured outputs. Not magic weights.</p>
-        <h3 id="modify--adapt-path-qwen-class--spark-owned">Modify / adapt path (Qwen-class + Spark-owned)</h3>
+        <p>Language form (synthetic facts only):</p>
+        <pre class="doc__pre"><code class="language-text">ground fact &quot;desk_hours&quot; from &quot;examples/fixtures/voice_loop/facts.json&quot; \
+         else abstain
+        </code></pre>
+        <p>Dry-run: <code class="inline-code">./spark --dry-run examples/ground_fact.spark</code>.
+        Gate: <code class="inline-code">make test-ground-lang</code>. See <a href="/docs/knowledge-voice-loop.html">VOICE_AGENT_LOOP.md</a>.</p>
+        <h3 id="modify-adapt-path-qwen-class-spark-owned">Modify / adapt path (Qwen-class + Spark-owned)</h3>
         <p>Language already has attach-only modify:</p>
         <pre class="doc__pre"><code class="language-text">model modify keep_existing &quot;out/train/existing-lora&quot; \
          add &quot;out/train/job-dry-001/adapter.bin&quot; \
@@ -264,12 +275,11 @@
         </code></pre>
         <ul class="doc__ul">
         <li><strong>Spark-owned</strong> bases (TinyCoder / STEP / reply-pack): train on
-         CPU or a consumer GPU via existing factory / coder lanes.</li>
+         CPU or <strong>5090</strong> via existing factory / coder lanes.</li>
         <li><strong>External bases</strong> (e.g. local Qwen HF dir): reverse/inspect via
          <code class="inline-code">./spark-model-lab</code>; attach adapters/heads with
          <code class="inline-code">keep_special_training</code>. <strong>Full Qwen SFT</strong> is <strong>opt-in
-         large</strong> on a consumer GPU.</li>
-        <li>Owned homepage methods are <strong>not</strong> LoRA theater; see
+         large</strong> on <strong>5090</strong> — <strong>never</strong> the reserved voice GPUs. - Owned homepage methods are <strong>not</strong> LoRA theater; see
          <a href="/docs/knowledge-training.html">TRAINING.md</a> · <a href="/docs/model-training.html">MODEL_LAB.md</a>.</li>
         </ul>
         <h3 id="functions-forced-grounding">Functions (forced grounding)</h3>

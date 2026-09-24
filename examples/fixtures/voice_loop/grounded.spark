@@ -1,0 +1,4 @@
+# class:grounded handoff
+# Synthetic agent fixture — grounded catalog price.
+ground fact "catalog_price" from "examples/fixtures/voice_loop/facts.json" else abstain
+speak "The catalog price is twelve dollars."
